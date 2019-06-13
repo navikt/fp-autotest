@@ -1,7 +1,5 @@
 # AutoTest
 
-### Skal flyttes til eget repository. 
-
 
 ## 1 Instalasjon
 

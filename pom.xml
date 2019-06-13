@@ -14,6 +14,7 @@
         <aspectj.version>1.9.2</aspectj.version>
         <revision>1.0.0</revision>
         <sha1></sha1>
+        <vtp.versjon>1.0_20190613183118_8792a38</vtp.versjon>
         <changelist>-SNAPSHOT</changelist>
     </properties>
 
@@ -36,6 +37,14 @@
             <id>fpsak</id>
             <properties>
                 <includeTestsTags>fpsak</includeTestsTags>
+                <excludeTestsTags>test, pending</excludeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>svangerskapspenger</id>
+            <properties>
+                <includeTestsTags>svangerskapspenger</includeTestsTags>
                 <excludeTestsTags>test, pending</excludeTestsTags>
                 <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
             </properties>
@@ -96,9 +105,6 @@
                     </includes>
                     <groups>${includeTestsTags}</groups>
                     <excludedGroups>${excludeTestsTags}</excludedGroups>
-                    <systemPropertyVariables>
-                        <application.root>${maven.multiModuleProjectDirectory}</application.root>
-                    </systemPropertyVariables>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -189,17 +195,17 @@
         <dependency>
             <groupId>no.nav.vedtak.fpmock2</groupId>
             <artifactId>testmodell</artifactId>
-            <version>1.0_20190612164313_7e25786</version>
+            <version>${vtp.versjon}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.vedtak.fpmock2</groupId>
             <artifactId>dokumentgenerator</artifactId>
-            <version>1.0_20190612164313_7e25786</version>
+            <version>${vtp.versjon}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.vedtak.fpmock2</groupId>
             <artifactId>core</artifactId>
-            <version>1.0_20190612164313_7e25786</version>
+            <version>${vtp.versjon}</version>
         </dependency>
 
         <!-- NAV biblioteker -->
