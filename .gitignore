@@ -21,3 +21,31 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+.settings
+target
+.project
+.classpath
+*.iml
+.idea
+_*.sh
+*.local
+*.localz
+es.properties
+*.zip
+*.versionsBackup
+bin
+mock*.log
+mock.log.*
+.mvn/maven.config
+.flattened
+logs
+*.log
+APP_LOG_HOME_IS_UNDEFINED
+application-local.properties
+.allure
+.allure/*
+allure-results/*
+*-result.json
+server/src/main/resources/webapps
+resources/ssl-terminator/localhost.*
