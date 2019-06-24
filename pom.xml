@@ -14,7 +14,7 @@
         <aspectj.version>1.9.2</aspectj.version>
         <revision>1.0.0</revision>
         <sha1></sha1>
-        <vtp.versjon>1.0_20190613183118_8792a38</vtp.versjon>
+        <vtp.versjon>1.0_20190621171615_a77eefd</vtp.versjon>
         <changelist>-SNAPSHOT</changelist>
     </properties>
 
