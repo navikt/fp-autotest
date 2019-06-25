@@ -28,6 +28,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
     @Test
     public void morSøkerSvangerskapspengerHelTilretteleggingFireUkerFørTermin() throws Exception {
         TestscenarioDto testscenario = opprettScenario("50");
+
         String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
         int beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
@@ -51,6 +52,36 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         fordel.sendInnInntektsmelding(inntektsmeldingerSøker, testscenario, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
+    }
+    @Test
+    public void mor_SVP_imFørSøknad() throws Exception {
+        //Feiler på venter.
+//        TestscenarioDto testscenario = opprettScenario("50");
+//
+//        String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+//        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+//        int beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+//        String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+//        Virksomhet morVirksomhet = ArbeidsforholdErketyper.virksomhet(orgNrMor);
+//
+//        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+//        InntektsmeldingBuilder inntektsmeldingerSøker = createDefaultSvangerskapspenger(beløpMor, fnrMor, orgNrMor);
+//        Long saksnummer = fordel.sendInnInntektsmelding(inntektsmeldingerSøker, testscenario, null);
+//
+//
+//        ForeldrepengesoknadBuilder soknad = ForeldrepengesoknadBuilder.startBuilding()
+//                .withSvangerskapspengeYtelse(
+//                        SvangerskapspengerYtelseErketyper.svangerskapspenger(
+//                                LocalDate.now().plusWeeks(4),
+//                                MedlemskapErketyper.medlemskapNorge(),
+//                                Arrays.asList(TilretteleggingsErketyper.helTilrettelegging(LocalDate.now(),LocalDate.now().plusWeeks(1),morVirksomhet))
+//                        )
+//                )
+//                .withSoeker(morSoeker(morAktoerId))
+//                .withMottattDato(LocalDate.now());
+//        fordel.sendInnSøknad(soknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER, saksnummer);
+//
+//        saksbehandler.hentFagsak(saksnummer);
     }
 
 
