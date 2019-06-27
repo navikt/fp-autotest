@@ -61,6 +61,7 @@ public class OpenamKlient extends VTPKlient {
        */
         String issuer;
         if(null != System.getenv("ENABLE_CUSTOM_TRUSTSTORE") && System.getenv("ENABLE_CUSTOM_TRUSTSTORE").equalsIgnoreCase("true")) {
+            System.out.println("Enable custom keystore blir kalt");
             // @todo Hvor blir dette brukt. Kan det bruke samme instilling som
             issuer = System.getProperty("isso.oauth2.issuer", "https://fpmock2:8063/rest/isso/oauth2");
         } else {

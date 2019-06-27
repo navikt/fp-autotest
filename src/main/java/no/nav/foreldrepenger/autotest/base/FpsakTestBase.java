@@ -54,6 +54,12 @@ public class FpsakTestBase extends TestScenarioTestBase {
 
         foreldrepengeSøknadErketyper = new ForeldrepengesoknadXmlErketyper();
         inntektsmeldingErketype = new InntektsmeldingErketype();
+
+        Map<String, String> getenv = System.getenv();
+        getenv.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .forEach(System.out::println);
     }
 
     protected Kodeverk hentKodeverk() {
