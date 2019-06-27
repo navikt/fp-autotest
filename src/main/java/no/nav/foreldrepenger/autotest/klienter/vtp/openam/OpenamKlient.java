@@ -41,6 +41,8 @@ public class OpenamKlient extends VTPKlient {
 
     private void loginBypass(String rolle) {
         BasicClientCookie cookie = loginCookies.computeIfAbsent(rolle, this::createCookie);
+        System.out.println("Cookie name: " + cookie.getName());
+        System.out.println("Cookie value: " + cookie.getValue());
         session.leggTilCookie(cookie);
     }
 
