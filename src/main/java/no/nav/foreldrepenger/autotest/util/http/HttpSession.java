@@ -57,6 +57,7 @@ public interface HttpSession {
 
         for (Cookie cookie : cookiesList) {
             cookies.append(String.format("%s=%s; ", cookie.getName(), cookie.getValue()));
+            System.out.println(String.format("%s=%s; ", cookie.getName(), cookie.getValue()));
         }
         request.addHeader("Cookie", cookies.toString());
     }
