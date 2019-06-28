@@ -67,7 +67,7 @@ public abstract class AbstractHttpSession implements HttpSession {
     public HttpResponse post(String url, HttpEntity entity, Map<String, String> headers) throws IOException {
         HttpPost request = new HttpPost(url);
         request.setEntity(entity);
-
+        System.out.println(String.format("Post request til [%s] med content [%s]", url,entity.getContent()));
         return execute(request, headers);
     }
 
@@ -125,7 +125,7 @@ public abstract class AbstractHttpSession implements HttpSession {
     public String getCurrentUrl() {
         return ((HttpUriRequest) context.getAttribute(HttpCoreContext.HTTP_REQUEST)).getURI().toString();
     }
-    
+
     protected static ConnectionKeepAliveStrategy createKeepAliveStrategy(int seconds) {
         ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
             @Override
