@@ -41,29 +41,13 @@ public class OpenamKlient extends VTPKlient {
 
     private void loginBypass(String rolle) {
         BasicClientCookie cookie = loginCookies.computeIfAbsent(rolle, this::createCookie);
-        System.out.println("Cookie name: " + cookie.getName());
-        System.out.println("Cookie value: " + cookie.getValue());
         session.leggTilCookie(cookie);
     }
 
     BasicClientCookie createCookie(String rolle) {
-       /*
-       String token;
-       try {
-           token = fetchToken(rolle);
-       } catch (IOException e) {
-           log.warn("Klarte ikke å hente token fra VTP.");
-           token = generateToken(rolle);
-       }
-       BasicClientCookie cookie = new BasicClientCookie("ID_token", token);
-       cookie.setPath("/");
-       cookie.setDomain("");
-       cookie.setExpiryDate(new Date(LocalDateTime.now().plusHours(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
-       return cookie;
-       */
         String issuer;
-        if(null != System.getenv("ENABLE_CUSTOM_TRUSTSTORE") && System.getenv("ENABLE_CUSTOM_TRUSTSTORE").equalsIgnoreCase("true")) {
-            System.out.println("Enable custom keystore blir kalt");
+        if(null != System.getenv("IS_PIPELINE") && System.getenv("IS_PIPELINE").equalsIgnoreCase("true")) {
+            System.out.println("isso issuer blir fpmock2");
             // @todo Hvor blir dette brukt. Kan det bruke samme instilling som
             issuer = System.getProperty("isso.oauth2.issuer", "https://fpmock2:8063/rest/isso/oauth2");
         } else {
