@@ -1,8 +1,11 @@
 package no.nav.foreldrepenger.autotest.util.http;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
@@ -28,6 +31,8 @@ import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractHttpSession implements HttpSession {
 
@@ -67,7 +72,11 @@ public abstract class AbstractHttpSession implements HttpSession {
     public HttpResponse post(String url, HttpEntity entity, Map<String, String> headers) throws IOException {
         HttpPost request = new HttpPost(url);
         request.setEntity(entity);
-        System.out.println(String.format("Post request til [%s] med content [%s]", url,entity.getContent()));
+
+        System.out.println(String.format("Post request til [%s] med content [%s]", url, new BufferedReader(
+                new InputStreamReader(entity.getContent())).lines().parallel().collect(Collectors.joining("\n"))
+        ));
+        System.out.println(new ObjectMapper().writeValueAsString(headers));
         return execute(request, headers);
     }
 
