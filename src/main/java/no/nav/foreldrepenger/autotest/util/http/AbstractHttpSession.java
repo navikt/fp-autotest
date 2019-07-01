@@ -65,6 +65,7 @@ public abstract class AbstractHttpSession implements HttpSession {
     @Override
     public HttpResponse get(String url, Map<String, String> headers) throws IOException {
         HttpGet request = new HttpGet(url);
+        System.out.println(String.format("Get request til [%s]"));
         return execute(request, headers);
     }
 
