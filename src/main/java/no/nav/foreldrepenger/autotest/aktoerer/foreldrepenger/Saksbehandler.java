@@ -268,7 +268,7 @@ public class Saksbehandler extends Aktoer {
                 return behandlingerKlient.behandlingInntektArbeidYtelse(request);
             }));
 
-            // de neste sjeldent i bruk. Kunne kanskje unngått å gjøre REST kall med mindre man trenger det? 
+            // de neste sjeldent i bruk. Kunne kanskje unngått å gjøre REST kall med mindre man trenger det?
             valgtBehandling.setBeregningResultatEngangsstonad(Deffered.defferedLazy(() -> {
                 return behandlingerKlient.behandlingBeregningsresultatEngangsstønad(request);
             }));
@@ -284,7 +284,7 @@ public class Saksbehandler extends Aktoer {
             valgtBehandling.setOpptjening(Deffered.defferedLazy(() -> {
                 return behandlingerKlient.behandlingOpptjening(request);
             }));
-            
+
             valgtBehandling.setKontrollerFaktaData(Deffered.defferedLazy(() -> {
                 return behandlingerKlient.behandlingKontrollerFaktaPerioder(request);
             }));
@@ -303,7 +303,7 @@ public class Saksbehandler extends Aktoer {
         if (!ikkeVentPåStatus) {
             Vent.til(() -> {
                 return verifiserStatusForBehandling(behandling);
-            }, 90, () -> {
+            }, 45, () -> {
                 List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
                 String prosessTaskList = "";
                 for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
