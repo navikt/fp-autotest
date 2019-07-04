@@ -56,6 +56,7 @@ public class Behandling {
     private Deffered<Medlem> medlem;
     private Deffered<KlageInfo> klagevurdering;
     private Deffered<Saldoer> saldoer;
+    private Deffered<Tilrettelegging> tilrettelegging;
     
     public List<UttakResultatPeriode> hentUttaksperioder() {
         return getUttakResultatPerioder().getPerioderForSøker().stream().sorted(Comparator.comparing(UttakResultatPeriode::getFom)).collect(Collectors.toList());
@@ -171,6 +172,9 @@ public class Behandling {
 
     public void setOpptjening(Deffered<Opptjening> dOpptjening) {
         this.opptjening = dOpptjening;
+    }
+    public void setTilrettelegging(Deffered<Tilrettelegging> dTilrettelegging) {
+        this.tilrettelegging = dTilrettelegging;
     }
 
     public InntektArbeidYtelse getInntektArbeidYtelse() {

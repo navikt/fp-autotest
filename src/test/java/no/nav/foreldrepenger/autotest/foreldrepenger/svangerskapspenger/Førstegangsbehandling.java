@@ -6,6 +6,8 @@ import static no.nav.foreldrepenger.fpmock2.dokumentgenerator.inntektsmelding.er
 import java.time.LocalDate;
 import java.util.Arrays;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -40,7 +42,8 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
                         SvangerskapspengerYtelseErketyper.svangerskapspenger(
                                 LocalDate.now().plusWeeks(4),
                                 MedlemskapErketyper.medlemskapNorge(),
-                                Arrays.asList(TilretteleggingsErketyper.helTilrettelegging(LocalDate.now(),LocalDate.now().plusWeeks(1),morVirksomhet))
+                                Arrays.asList(TilretteleggingsErketyper.helTilrettelegging(
+                                        LocalDate.now(),LocalDate.now().plusWeeks(1),morVirksomhet))
                         )
                 )
                 .withSoeker(morSoeker(morAktoerId))
@@ -52,7 +55,17 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         InntektsmeldingBuilder inntektsmeldingerSøker = createDefaultSvangerskapspenger(beløpMor, fnrMor, orgNrMor);
         fordel.sendInnInntektsmelding(inntektsmeldingerSøker, testscenario, saksnummer);
 
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
+
+        verifiser(saksbehandler.harAksjonspunkt(AksjonspunktKoder.AVKLAR_FØDSEL_OG_TILRETTELEGGING),
+                "Mangler aksjonspunkt om fødsel og tilrettelegging");
+
+        AvklarFaktaFødselOgTilrettelegging bekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+        bekreftelse.setBegrunnelse("omg yes");
+        saksbehandler.bekreftAksjonspunktBekreftelse(bekreftelse);
+
     }
     @Test
     @Disabled
