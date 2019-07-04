@@ -296,6 +296,9 @@ public class Saksbehandler extends Aktoer {
             valgtBehandling.setMedlem(Deffered.defferedLazy(() -> {
                 return behandlingerKlient.behandlingMedlemskap(valgtBehandling.uuid);
             }));
+//            valgtBehandling.setTilrettelegging(Deffered.defferedLazy(() -> {
+////               return behandlingerKlient.behandlingT
+//            }));
 
         }
 

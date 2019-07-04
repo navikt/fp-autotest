@@ -393,4 +393,8 @@ public class BehandlingerKlient extends FpsakKlient {
         return getOgHentJson(url, PeriodeGrense.class, StatusRange.STATUS_SUCCESS);
     }
 
+    /*
+     * hent tilrettelegging for behandling
+     */
+
 }
