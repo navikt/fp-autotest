@@ -38,11 +38,11 @@ public class SvpArbeidsforhold {
         this.tilretteleggingBehovFom = tilretteleggingBehovFom;
     }
 
-    public List<SvpTilretteleggingDatoDto> getTilretteleggingDatoer() {
+    public List<SvpTilretteleggingDato> getTilretteleggingDatoer() {
         return tilretteleggingDatoer;
     }
 
-    public SvpArbeidsforholdDto setTilretteleggingDatoer(List<SvpTilretteleggingDatoDto> tilretteleggingDatoer) {
+    public SvpArbeidsforhold setTilretteleggingDatoer(List<SvpTilretteleggingDato> tilretteleggingDatoer) {
         this.tilretteleggingDatoer = tilretteleggingDatoer;
         return this;
     }
@@ -67,7 +67,7 @@ public class SvpArbeidsforhold {
         return tilretteleggingId;
     }
 
-    public SvpArbeidsforholdDto setTilretteleggingId(Long tilretteleggingId) {
+    public SvpArbeidsforhold setTilretteleggingId(Long tilretteleggingId) {
         this.tilretteleggingId = tilretteleggingId;
         return this;
     }
@@ -76,7 +76,7 @@ public class SvpArbeidsforhold {
         return opplysningerOmRisiko;
     }
 
-    public SvpArbeidsforholdDto setOpplysningerOmRisiko(String opplysningerOmRisiko) {
+    public SvpArbeidsforhold setOpplysningerOmRisiko(String opplysningerOmRisiko) {
         this.opplysningerOmRisiko = opplysningerOmRisiko;
         return this;
     }
@@ -85,7 +85,7 @@ public class SvpArbeidsforhold {
         return opplysningerOmTilrettelegging;
     }
 
-    public SvpArbeidsforholdDto setOpplysningerOmTilrettelegging(String opplysningerOmTilrettelegging) {
+    public SvpArbeidsforhold setOpplysningerOmTilrettelegging(String opplysningerOmTilrettelegging) {
         this.opplysningerOmTilrettelegging = opplysningerOmTilrettelegging;
         return this;
     }
@@ -113,4 +113,5 @@ public class SvpArbeidsforhold {
     public void setMottattTidspunkt(LocalDateTime mottattTidspunkt) {
         this.mottattTidspunkt = mottattTidspunkt;
     }
+
 }

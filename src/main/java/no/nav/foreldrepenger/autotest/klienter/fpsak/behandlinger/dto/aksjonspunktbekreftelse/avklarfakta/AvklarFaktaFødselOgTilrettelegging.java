@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.SvpArbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
@@ -22,28 +23,6 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
 
     public AvklarFaktaFødselOgTilrettelegging(Fagsak fagsak, Behandling behandling){
         super(fagsak, behandling);
-    }
-
-
-    public class SvpArbeidsforhold{
-
-        protected Long tilretteleggingId;
-        protected LocalDate tilretteleggingBehovFom;
-        protected List<SvpTilretteleggingDato> tilretteleggingDatoer = new ArrayList<>();
-        protected String arbeidsgiverNavn;
-        protected String arbeidsgiverIdent;
-        protected String opplysningerOmRisiko;
-        protected String opplysningerOmTilrettelegging;
-        protected Boolean kopiertFraTidligereBehandling;
-        protected LocalDateTime mottattTidspunkt;
-        protected String begrunnelse;
-
-    }
-
-    public class SvpTilretteleggingDato {
-        protected LocalDate fom;
-        protected TilretteleggingsErketyper type;
-        protected BigDecimal stillingsprosent;
     }
 
 }
