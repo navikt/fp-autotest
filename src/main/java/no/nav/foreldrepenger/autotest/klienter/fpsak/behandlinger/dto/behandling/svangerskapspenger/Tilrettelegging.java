@@ -13,11 +13,16 @@ public class Tilrettelegging {
     protected LocalDate fødselsdato;
     protected List<Arbeidsforhold> arbeidsforholdListe;
 
+    public LocalDate getTermindato(){
+        return this.termindato;
+    }
 
+    public LocalDate getFødselsdato() {
+        return this.fødselsdato;
+    }
 
-
-
-
-
+    public List<Arbeidsforhold> getArbeidsforholdList() {
+        return this.arbeidsforholdListe;
+    }
 
 }
