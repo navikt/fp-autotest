@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.*;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilrettelegging;
 import org.apache.http.HttpResponse;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakKlient;
@@ -18,16 +20,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.KlageVurde
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.Ytelsefordeling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.OverstyrAksjonspunkter;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Familiehendelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.InnsynInfo;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KlageInfo;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerFaktaData;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Personopplysning;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Verge;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
@@ -81,6 +73,9 @@ public class BehandlingerKlient extends FpsakKlient{
     private static final String BEHANDLING_UTTAK_STONADSKONTOER_URL = BEHANDLING_UTTAK + "/stonadskontoer";
     private static final String BEHANDLING_UTTAK_RESULTAT_PERIODER_URL = BEHANDLING_UTTAK + "/resultat-perioder";
     private static final String BEHANDLING_UTTAK_PERIODE_GRENSE_URL = BEHANDLING_UTTAK + "/periode-grense";
+
+    private static final String BEHANDLING_SVANGERSKAPSPENGER = BEHANDLING_URL + "/svangerskapspenger";
+    private static final String BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL = BEHANDLING_SVANGERSKAPSPENGER + "/tilrettelegging?behandlingId=%s";
 
 
     public BehandlingerKlient(HttpSession session) {
@@ -388,5 +383,10 @@ public class BehandlingerKlient extends FpsakKlient{
     /*
      * hent tilrettelegging for behandling
      */
+
+    public Tilrettelegging behandlingTilrettelegging(Integer behandlingId) throws IOException {
+        String url = hentRestRotUrl() + String.format(BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL, behandlingId);
+        return getOgHentJson(url,Tilrettelegging.class,StatusRange.STATUS_SUCCESS);
+    }
 
 }
