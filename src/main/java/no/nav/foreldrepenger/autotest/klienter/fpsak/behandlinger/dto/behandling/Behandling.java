@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.medlem.Medlem;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.Opptjening;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
@@ -175,9 +176,6 @@ public class Behandling {
     public void setOpptjening(Deffered<Opptjening> dOpptjening) {
         this.opptjening = dOpptjening;
     }
-    public void setTilrettelegging(Deffered<Tilrettelegging> dTilrettelegging) {
-        this.tilrettelegging = dTilrettelegging;
-    }
 
     public InntektArbeidYtelse getInntektArbeidYtelse() {
         return get(inntektArbeidYtelse);
@@ -223,9 +221,16 @@ public class Behandling {
         return get(aksjonspunkter);
     }
 
-    public void setAksjonspunkter(Deffered<List<Aksjonspunkt>> dAksonspunkter) {
-        this.aksjonspunkter = dAksonspunkter;
+    public void setAksjonspunkter(Deffered<List<Aksjonspunkt>> dAksjonspunkter) {
+        this.aksjonspunkter = dAksjonspunkter;
     }
+
+    public Tilrettelegging getTilrettelegging() { return get(tilrettelegging);}
+
+    public void setTilrettelegging(Deffered<Tilrettelegging> dTilrettelegging) {
+        this.tilrettelegging = dTilrettelegging;
+    }
+
     
     private static <V> V get(Deffered<V> deferred) {
         try {
