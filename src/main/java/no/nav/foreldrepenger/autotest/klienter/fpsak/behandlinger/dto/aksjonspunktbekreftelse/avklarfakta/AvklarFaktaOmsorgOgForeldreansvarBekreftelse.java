@@ -23,7 +23,7 @@ public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBe
     protected List<OmsorgovertakelseBarn> barn = new ArrayList<>();
     protected List<OmsorgovertakelseForelder> foreldre = new ArrayList<>();
     protected List<Object> ytelser = new ArrayList<>();
-    
+
     public AvklarFaktaOmsorgOgForeldreansvarBekreftelse(Fagsak fagsak, Behandling behandling) {
         super(fagsak, behandling);
         //Set antall barn fra søknad

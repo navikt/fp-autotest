@@ -312,7 +312,7 @@ public class Saksbehandler extends Aktoer {
         if (!ikkeVentPåStatus) {
             Vent.til(() -> {
                 return verifiserStatusForBehandling(behandling);
-            }, 45, () -> {
+            }, 60, () -> {
                 List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
                 String prosessTaskList = "";
                 for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {

@@ -42,9 +42,9 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         forhold.setOverstyrtTom(overstyrtTom);
     }
 
-    public void bekreftArbeidsforholdErRelevant(Arbeidsforhold forhold, boolean fortsettUtenInntekt) {
+    public void bekreftArbeidsforholdErRelevant(Arbeidsforhold forhold, boolean fortsettUtenInntektsmelding) {
         forhold.setBrukArbeidsforholdet(true);
-        forhold.setFortsettBehandlingUtenInntektsmelding(fortsettUtenInntekt);
+        forhold.setFortsettBehandlingUtenInntektsmelding(fortsettUtenInntektsmelding);
     }
 
     public void bekreftArbeidsforholdErIkkeRelevant(String navn) {
