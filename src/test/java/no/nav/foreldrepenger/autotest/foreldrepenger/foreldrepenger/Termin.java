@@ -87,9 +87,11 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandling er ikke satt på vent etter uten inntektsmelding");
 
+
+        saksbehandler.gjenopptaBehandling();
         saksbehandler.gjenopptaBehandling();
 
-
+        verifiser(saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD), "Mangler aksonspunkt for vurdering av arbeidsforhold (8050)");
         saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarArbeidsforholdBekreftelse.class);
@@ -100,7 +102,7 @@ public class Termin extends ForeldrepengerTestBase {
         List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario, startDatoForeldrepenger);
         fordel.sendInnInntektsmeldinger(inntektsmeldinger, testscenario, saksnummer);
 
-        saksbehandler.refreshBehandling();
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
         verifiser(!saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN), "Har uventet aksonspunkt - vurdering av fakta arbeid frilans (5058)");
 
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);

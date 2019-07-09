@@ -25,7 +25,7 @@ public class Vent {
                 throw new RuntimeException(String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds, errorMessageProducer.call()));
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(
                     String.format("Async venting interrupted ut etter %s sekunder fordi: %s", ChronoUnit.SECONDS.between(start, LocalDateTime.now()), errorMessageProducer.call()), e);
