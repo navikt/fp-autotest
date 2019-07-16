@@ -16,6 +16,10 @@ import no.nav.foreldrepenger.autotest.util.IndexClasses;
 
 public abstract class AksjonspunktBekreftelse {
 
+    @JsonProperty("@type")
+    protected String kode;
+    protected String begrunnelse;
+
     private static final List<Class<? extends AksjonspunktBekreftelse>> aksjonspunktBekreftelseClasses;
     static {
         try {
@@ -26,9 +30,6 @@ public abstract class AksjonspunktBekreftelse {
         }
     }
 
-    @JsonProperty("@type")
-    protected String kode;
-    protected String begrunnelse;
     
     @SuppressWarnings("unused")
     public AksjonspunktBekreftelse(Fagsak fagsak, Behandling behandling) {
@@ -62,8 +63,9 @@ public abstract class AksjonspunktBekreftelse {
         return fromKode(fagsak, behandling, aksjonspunkt.getDefinisjon().kode);
     }
     
-    public void setBegrunnelse(String begrunnelse) {
+    public AksjonspunktBekreftelse setBegrunnelse(String begrunnelse) {
         this.begrunnelse = begrunnelse;
+        return this;
     }
 
     @Override
