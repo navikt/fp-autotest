@@ -119,6 +119,7 @@ KAFKA_TOPIC=privat-foreldrepenger-mottatBehandling-fpsak
 BOOTSTRAP_SERVERS=fpmock2:9093
 KAFKA_AKSJONSPUNKTHENDELSE_SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
 SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
+FP_TILKJENTYTELSE_V1_TOPIC_URL=privat-foreldrepenger-tilkjentytelse-v1-t4
 
 CLIENT_ID=KP-privat-foreldrepenger-mottatBehandling-fpsak
 
