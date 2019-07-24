@@ -521,7 +521,7 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate samtidigUttakFOM = familiehendelse.plusWeeks(6);
         LocalDate samtidigUttakTOM = familiehendelse.plusWeeks(14).minusDays(1);
         perioderMor.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, familiehendelse.minusWeeks(3), familiehendelse.minusDays(1)));
-        perioderMor.add(FordelingErketyper.oppholdsperiode(STØNADSKONTOTYPE_MØDREKVOTE, familiehendelse, familiehendelse.plusWeeks(6).minusDays(1)));
+        perioderMor.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, familiehendelse, familiehendelse.plusWeeks(6).minusDays(1)));
         perioderMor.add(new UttaksperiodeBuilder()
                 .medTidsperiode(samtidigUttakFOM, samtidigUttakTOM)
                 .medStønadskontoType(STØNADSKONTOTYPE_MØDREKVOTE)
