@@ -1,7 +1,7 @@
 # AutoTest
 
 
-## 1 Instalasjon
+## 1 Installasjon
 
 Instalasjonsinformasjon for AutoTest
 
@@ -30,8 +30,7 @@ Miljøkonfigurasjon ligger under src/main/resources/<Miljø>
 
 ## 2 Kjøre Tester
 
-1. cd autotest
-2. mvn test -P <Smoke,Regresjon>
+mvn test -P fpsak
 
 ### 2.1 Lokalt
 
