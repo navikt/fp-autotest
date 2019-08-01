@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.JsonRest;
 
-public class VTPKlient extends JsonRest{
+public class VTPKlient extends JsonRest {
 
     protected Logger log;
 
@@ -17,12 +17,15 @@ public class VTPKlient extends JsonRest{
 
     @Override
     public String hentRestRotUrl() {
-        if (null != System.getenv("AUTOTEST_VTP_BASE_URL")) {
-            return System.getenv("AUTOTEST_VTP_BASE_URL") + "/rest/api";
-        } else {
-            return System.getProperty("autotest.vtp.url")+":" + System.getProperty("autotest.vtp.port") + "/rest/api";
-        }
+        return hentRotUrl() + "/rest/api";
     }
 
+    public String hentRotUrl() {
+        if (null != System.getenv("AUTOTEST_VTP_BASE_URL")) {
+            return System.getenv("AUTOTEST_VTP_BASE_URL");
+        } else {
+            return System.getProperty("autotest.vtp.url") + ":" + System.getProperty("autotest.vtp.port");
+        }
+    }
 
 }
