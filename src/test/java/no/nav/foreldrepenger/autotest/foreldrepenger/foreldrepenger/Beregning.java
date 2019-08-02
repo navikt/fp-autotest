@@ -1,5 +1,24 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static java.time.LocalDate.now;
+import static java.util.Collections.singletonList;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.addPeriode;
+import static no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.addStønadskontotype;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -43,6 +62,11 @@ import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandli
 import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.foreldrepengesøknadFødselErketype;
 import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.foreldrepengesøknadTerminErketype;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Foreldrepenger;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Gradering;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
 
 /**
  * Tester i denne klassen vil ikkje kjøres i felles pipeline med mindre dei har Tag "fpsak"
@@ -630,6 +654,127 @@ public class Beregning extends ForeldrepengerTestBase {
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning()).isNull();
     }
 
+    @Test
+    @DisplayName("SN og Arbeidsforhold tilkommer etter stp")
+    @Description("Mor er SN ny i arbeidslivet og har arbeidsforhold som tilkommer etter stp")
+    @Tag("beregning")
+    public void SN_ny_arbeidslivet_med_arbeidsforhold_tilkommer_etter_stp() throws Exception {
+        TestscenarioDto testscenario = opprettScenario("164");
+
+        String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+        List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
+        Arbeidsforhold tilkommet = arbeidsforhold.get(0);
+        String orgNr = tilkommet.getArbeidsgiverOrgnr();
+        int inntektPerMåned = 30_000;
+        BigDecimal refusjon = BigDecimal.valueOf(10_000);
+
+        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(true, BigInteger.valueOf(550000), false);
+        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMor(søkerAktørIdent, fødselsdato);
+        Foreldrepenger ytelse = ForeldrepengeYtelseErketyper.foreldrepengerYtelseNorskBorgerINorgeFødselMor(fødselsdato);
+        ytelse.setOpptjening(opptjening);
+        søknad.withForeldrepengerYtelse(ytelse);
+
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
+                orgNr, Optional.empty(), Optional.of(refusjon), Optional.empty());
+        fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
+        debugLoggBehandling(saksbehandler.valgtBehandling);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_FOR_SN_NY_I_ARBEIDSLIVET);
+
+    }
+
+    @Test
+    @DisplayName("SN med gradering og Arbeidsforhold med refusjon over 6G")
+    @Description("Mor er SN som søker gradering og har arbeidsgiver som søker refusjon over 6G")
+    @Tag("beregning")
+    public void SN_med_gradering_og_arbeidsforhold_som_søker_refusjon_over_6G() throws Exception {
+        TestscenarioDto testscenario = opprettScenario("165");
+
+        String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+        List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
+        Arbeidsforhold tilkommet = arbeidsforhold.get(0);
+        String orgNr = tilkommet.getArbeidsgiverOrgnr();
+        int inntektPerMåned = 60_000;
+        BigDecimal refusjon = BigDecimal.valueOf(60_000);
+
+        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, BigInteger.valueOf(30_000), false);
+        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMor(søkerAktørIdent, fødselsdato);
+        Foreldrepenger ytelse = ForeldrepengeYtelseErketyper.foreldrepengerYtelseNorskBorgerINorgeFødselMor(fødselsdato);
+        ytelse.setOpptjening(opptjening);
+        leggTilGradering(fødselsdato, ytelse);
+        søknad.withForeldrepengerYtelse(ytelse);
+
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
+                orgNr, Optional.empty(), Optional.of(refusjon), Optional.empty());
+        fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
+        debugLoggBehandling(saksbehandler.valgtBehandling);
+    }
+
+
+    @Test
+    @DisplayName("SN med gradering og Arbeidsforhold med refusjon under 6G og beregningsgrunnlag over 6G")
+    @Description("Mor er SN som søker gradering og har arbeidsgiver som søker refusjon under 6G og har beregningsgrunnlag 6G.")
+    @Tag("beregning")
+    public void SN_med_gradering_og_arbeidsforhold_som_søker_refusjon_under_6G_med_bg_over_6G() throws Exception {
+        TestscenarioDto testscenario = opprettScenario("165");
+
+        String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+        List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
+        Arbeidsforhold tilkommet = arbeidsforhold.get(0);
+        String orgNr = tilkommet.getArbeidsgiverOrgnr();
+        int inntektPerMåned = 60_000;
+        BigDecimal refusjon = BigDecimal.valueOf(30_000);
+
+        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, BigInteger.valueOf(30_000), false);
+        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMor(søkerAktørIdent, fødselsdato);
+        Foreldrepenger ytelse = ForeldrepengeYtelseErketyper.foreldrepengerYtelseNorskBorgerINorgeFødselMor(fødselsdato);
+        ytelse.setOpptjening(opptjening);
+        leggTilGradering(fødselsdato, ytelse);
+        søknad.withForeldrepengerYtelse(ytelse);
+
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
+                orgNr, Optional.empty(), Optional.of(refusjon), Optional.empty());
+        fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
+        debugLoggBehandling(saksbehandler.valgtBehandling);
+    }
+
+    private void leggTilGradering(LocalDate fødselsdato, Foreldrepenger ytelse) {
+        Fordeling fordeling = ytelse.getFordeling();
+        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
+        Gradering gradering = new Gradering();
+        gradering.setArbeidsforholdSomSkalGraderes(true);
+        gradering.setArbeidtidProsent(50);
+        gradering.setErArbeidstaker(false);
+        gradering.setErSelvstNæringsdrivende(true);
+        addStønadskontotype(FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE, gradering);
+        LocalDate fom = fødselsdato.plusWeeks(10L).plusDays(1);
+        LocalDate tom = fødselsdato.plusWeeks(15L);
+        addPeriode(fom, tom, gradering);
+        perioder.add(gradering);
+    }
 
     @Test
     @DisplayName("Arbeidsforhold tilkommer etter stp")
