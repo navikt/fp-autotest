@@ -10,12 +10,13 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.builders.UttaksperiodeBuilder;
 
 @BekreftelseKode(kode="5071")
 public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<UttakResultatPeriode> perioder = new ArrayList<>();
-    
+
     public FastsettUttaksperioderManueltBekreftelse(Fagsak fagsak, Behandling behandling) {
         super(fagsak, behandling);
         
@@ -31,6 +32,13 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         for (UttakResultatPeriode uttakResultatPeriode : perioder) {
             godkjennPeriode(uttakResultatPeriode, 100);
             uttakResultatPeriode.setBegrunnelse("Begrunnelse autotest");
+        }
+    }
+    public void godkjennAlleManuellePerioder(int utbetalingsgrad){
+        for(UttakResultatPeriode uttakPeriode : perioder) {
+            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
+                godkjennPeriode(uttakPeriode, 100);
+            }
         }
     }
     
@@ -155,5 +163,5 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
         return null;
     }
-    
+
 }

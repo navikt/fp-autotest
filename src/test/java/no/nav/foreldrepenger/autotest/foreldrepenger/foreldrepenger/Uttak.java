@@ -9,14 +9,12 @@ import java.util.*;
 
 import io.qameta.allure.Description;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.*;
 import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.builders.GraderingBuilder;
 import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.*;
 import no.nav.foreldrepenger.fpmock2.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
-import no.nav.vedtak.felles.xml.soeknad.felles.v3.AnnenForelder;
-import no.nav.vedtak.felles.xml.soeknad.felles.v3.Foedsel;
-import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.*;
-import no.nav.foreldrepenger.fpmock2.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
-import no.nav.vedtak.felles.xml.soeknad.felles.v3.AnnenForelder;
+import no.nav.foreldrepenger.fpmock2.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
+import no.nav.vedtak.felles.xml.soeknad.felles.v3.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -27,10 +25,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.builders.UttaksperiodeBuilder;
@@ -38,8 +32,6 @@ import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.soekn
 import no.nav.foreldrepenger.fpmock2.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.fpmock2.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.fpmock2.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.vedtak.felles.xml.soeknad.felles.v3.Rettigheter;
-import no.nav.vedtak.felles.xml.soeknad.felles.v3.UkjentForelder;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Utsettelsesaarsaker;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Gradering;
@@ -445,181 +437,114 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Testcase koblet sak med oppholdsperioder")
     @Description("Test for behandling med oppholdsperioder i koblet sak, far søker bare delvis det mor ønsker")
-    public void testcase_morOgFar_kobletsak_medOppholdsperioder_delvisOppfylling() throws Exception {
+    public void testcase_morOgFar_kobletsak_medOppholdsperioder() throws Exception {
         TestscenarioDto testscenario = opprettScenario("82");
-        Søker morSøker = new SøkerBuilder(testscenario)
-                .medArbeidsforohld(0)
+        Søker morSøker = new SøkerBuilder(testscenario, false)
+                .medArbeidsforohld()
                 .medBarn()
                 .medAnnenForelder()
                 .build();
         LocalDate fødselsdato = morSøker.barnFødselsdato;
         LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
-        morSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL,
-                fpStartdatoMor, fødselsdato.minusDays(1)));
-        morSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE,
-                fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
-        morSøker.perioder.add(FordelingErketyper.oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER,
-                fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15).minusDays(1)));
-        morSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE,
-                fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30).minusDays(1)));
-        ForeldrepengesoknadBuilder søknadMor = foreldrepengeSøknadErketyper.uttakMedFordeling(morSøker.aktørID,
-                morSøker.annenForelderAktørID,
-                morSøker.fordelinger.get(0),
-                SoekersRelasjonErketyper.fødsel(1,fødselsdato) );
+        morSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)));
+        morSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
+        morSøker.perioderRef.add(FordelingErketyper.oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15).minusDays(1)));
+        morSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30).minusDays(1)));
+        ForeldrepengesoknadBuilder søknadMor = foreldrepengeSøknadErketyper.uttakMedFordeling(morSøker.aktørID, morSøker.annenForelderAktørID, morSøker.getSisteFordeling(), SoekersRelasjonErketyper.fødsel(1,fødselsdato) );
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerMor = fordel.sendInnSøknad(søknadMor.build(),
-                testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        InntektsmeldingBuilder inntektsmeldingerMor =  lagInntektsmeldingBuilder(
-                morSøker.inntektPerMåned,
-                morSøker.ident,
-                fpStartdatoMor,
-                morSøker.orgNr,
-                Optional.of(morSøker.arbeidsforholdID),
-                Optional.empty(),
-                Optional.empty());
+        Long saksnummerMor = fordel.sendInnSøknad(søknadMor.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder inntektsmeldingerMor =  lagInntektsmeldingBuilder(morSøker.getInntektPerMåned(0), morSøker.ident, fpStartdatoMor, morSøker.getOrgNr(0), Optional.of(morSøker.getArbeidsforholdID(0)), Optional.empty(), Optional.empty());
         fordel.sendInnInntektsmeldinger(Arrays.asList(inntektsmeldingerMor), testscenario, saksnummerMor);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.velgFørstegangsbehandling();
-        Søker farSøker = new AnnenSøkerBuilder(testscenario)
+        Søker farSøker = new SøkerBuilder(testscenario, true)
                 .medBarn()
-                .medArbeidsforohld(0)
+                .medArbeidsforohld()
                 .medAnnenForelder()
                 .build();
         LocalDate fpStartDatoFar = fødselsdato.plusWeeks(6);
-        farSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE,
-                fpStartDatoFar, fødselsdato.plusWeeks(10).minusDays(1)));
-        ForeldrepengesoknadBuilder søknadFar = foreldrepengeSøknadErketyper.fodselfunnetstedFarMedMor(
-                farSøker.aktørID,
-                farSøker.annenForelderAktørID,
-                fødselsdato,
-                LocalDate.now(),
-                farSøker.fordelinger.get(0));
+        farSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStartDatoFar, fødselsdato.plusWeeks(10).minusDays(1)));
+        ForeldrepengesoknadBuilder søknadFar = foreldrepengeSøknadErketyper.fodselfunnetstedFarMedMor(farSøker.aktørID, farSøker.annenForelderAktørID, fødselsdato, LocalDate.now(), farSøker.getSisteFordeling());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerFar = fordel.sendInnSøknad(søknadFar.build(),
-                farSøker.aktørID,
-                farSøker.ident,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        InntektsmeldingBuilder inntektsmeldingerFar =  lagInntektsmeldingBuilder(
-                farSøker.inntektPerMåned,
-                farSøker.ident,
-                fpStartDatoFar,
-                farSøker.orgNr,
-                Optional.of(farSøker.arbeidsforholdID),
-                Optional.empty(),
-                Optional.empty());
+        Long saksnummerFar = fordel.sendInnSøknad(søknadFar.build(), farSøker.aktørID, farSøker.ident, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder inntektsmeldingerFar =  lagInntektsmeldingBuilder(farSøker.getInntektPerMåned(0), farSøker.ident, fpStartDatoFar, farSøker.getOrgNr(0), Optional.of(farSøker.getArbeidsforholdID(0)), Optional.empty(), Optional.empty());
         fordel.sendInnInntektsmeldinger(Arrays.asList(inntektsmeldingerFar), farSøker.aktørID, farSøker.ident, saksnummerFar);
     }
     @Test
     @DisplayName("Testcase endringssøknader i koblet sak")
     @Description("Test for rekkefølge på behandling ved at begge sender endringssøknader i koblet sak.")
-    public void testcase_morOgFar_kobletsak_medEndringssøknader() throws Exception {
+    public void testcase_morOgFar_kobletsak_medSamtidigEndringssøknader() throws Exception {
         TestscenarioDto testscenario = opprettScenario("82");
-        Søker morSøker = new SøkerBuilder(testscenario)
-                .medArbeidsforohld(0)
+        Søker morSøker = new SøkerBuilder(testscenario, false)
+                .medArbeidsforohld()
                 .medBarn()
                 .medAnnenForelder()
                 .build();
 
         LocalDate fødselsdato = morSøker.barnFødselsdato;
         LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
-        morSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL,
-                fpStartdatoMor, fødselsdato.minusDays(1)));
-        morSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE,
-                fødselsdato, fødselsdato.plusWeeks(6)));
-        morSøker.perioder.add(FordelingErketyper.utsettelsePeriode(UTSETTELSETYPE_ARBEID,
-                fødselsdato.plusWeeks(6).plusDays(1), fødselsdato.plusWeeks(15).minusDays(1)));
-        morSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE,
-                fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30).minusDays(1)));
-        ForeldrepengesoknadBuilder søknadMor = foreldrepengeSøknadErketyper.uttakMedFordeling(
-                morSøker.aktørID,
-                morSøker.annenForelderAktørID,
-                morSøker.fordelinger.get(0),
-                SoekersRelasjonErketyper.fødsel(1,fødselsdato) );
+        SoekersRelasjonTilBarnet relasjon = SoekersRelasjonErketyper.fødsel(1,fødselsdato);
+        morSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)));
+        morSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6)));
+        morSøker.perioderRef.add(FordelingErketyper.utsettelsePeriode(UTSETTELSETYPE_ARBEID, fødselsdato.plusWeeks(6).plusDays(1), fødselsdato.plusWeeks(15).minusDays(1)));
+        morSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(30).minusDays(1)));
+        ForeldrepengesoknadBuilder søknadMor = foreldrepengeSøknadErketyper.uttakMedFordeling(morSøker.aktørID, morSøker.annenForelderAktørID, morSøker.getSisteFordeling(), relasjon);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerMor = fordel.sendInnSøknad(søknadMor.build(),
-                testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        InntektsmeldingBuilder inntektsmeldingerMor =  lagInntektsmeldingBuilder(
-                morSøker.inntektPerMåned,
-                morSøker.ident,
-                fpStartdatoMor,
-                morSøker.orgNr,
-                Optional.of(morSøker.arbeidsforholdID),
-                Optional.empty(),
-                Optional.empty());
+        Long saksnummerMor = fordel.sendInnSøknad(søknadMor.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder inntektsmeldingerMor =  lagInntektsmeldingBuilder(morSøker.getInntektPerMåned(0), morSøker.ident, fpStartdatoMor, morSøker.getOrgNr(0), Optional.of(morSøker.getArbeidsforholdID(0)), Optional.empty(), Optional.empty());
         fordel.sendInnInntektsmeldinger(Arrays.asList(inntektsmeldingerMor), testscenario, saksnummerMor);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.velgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        Søker farSøker = new SøkerBuilder(testscenario)
-                .medArbeidsforohld(0)
+
+        Søker farSøker = new SøkerBuilder(testscenario, true)
+                .medArbeidsforohld()
                 .medAnnenForelder()
                 .build();
         LocalDate fpStartDatoFar = fødselsdato.plusWeeks(6);
-        farSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE,
-                fpStartDatoFar, fødselsdato.plusWeeks(10).minusDays(1)));
-        ForeldrepengesoknadBuilder søknadFar = foreldrepengeSøknadErketyper.fodselfunnetstedFarMedMor(
-                farSøker.aktørID,
-                farSøker.annenForelderAktørID,
-                fødselsdato,
-                LocalDate.now(),
-                farSøker.fordelinger.get(0));
+        farSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStartDatoFar, fødselsdato.plusWeeks(10).minusDays(1)));
+        ForeldrepengesoknadBuilder søknadFar = foreldrepengeSøknadErketyper.fodselfunnetstedFarMedMor(farSøker.aktørID, farSøker.annenForelderAktørID, fødselsdato, LocalDate.now(), farSøker.getSisteFordeling());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerFar = fordel.sendInnSøknad(søknadFar.build(),
-                farSøker.aktørID,
-                farSøker.ident,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        InntektsmeldingBuilder inntektsmeldingerFar =  lagInntektsmeldingBuilder(
-                farSøker.inntektPerMåned,
-                farSøker.ident,
-                fpStartDatoFar,
-                farSøker.orgNr,
-                Optional.of(farSøker.arbeidsforholdID),
-                Optional.empty(),
-                Optional.empty());
-        fordel.sendInnInntektsmeldinger(Arrays.asList(inntektsmeldingerFar),
-                farSøker.aktørID,
-                farSøker.ident,
-                saksnummerFar);
+        Long saksnummerFar = fordel.sendInnSøknad(søknadFar.build(), farSøker.aktørID, farSøker.ident, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder inntektsmeldingerFar =  lagInntektsmeldingBuilder(farSøker.getInntektPerMåned(0), farSøker.ident, fpStartDatoFar, farSøker.getOrgNr(0), Optional.of(farSøker.getArbeidsforholdID(0)), Optional.empty(), Optional.empty());
+        fordel.sendInnInntektsmeldinger(Arrays.asList(inntektsmeldingerFar), farSøker.aktørID, farSøker.ident, saksnummerFar);
         saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
 
-        Thread.sleep(10000);
-
         LocalDate endringssøknadMorStart = fødselsdato.plusWeeks(15);
         morSøker.nyFordeling();
-        morSøker.perioder.add(utsettelsePeriode(UTSETTELSETYPE_LOVBESTEMT_FERIE,
-                endringssøknadMorStart, endringssøknadMorStart.plusWeeks(2).minusDays(1)));
-        morSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE,
-                endringssøknadMorStart.plusWeeks(2), endringssøknadMorStart.plusWeeks(6).minusDays(1)));
-        ForeldrepengesoknadBuilder søknadEndringMor = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(
-                morSøker.aktørID,
-                morSøker.fordelinger.get(1),
-                saksnummerMor.toString());
+        morSøker.perioderRef.add(utsettelsePeriode(UTSETTELSETYPE_LOVBESTEMT_FERIE, endringssøknadMorStart, endringssøknadMorStart.plusWeeks(2).minusDays(1)));
+        morSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, endringssøknadMorStart.plusWeeks(2), endringssøknadMorStart.plusWeeks(6).minusDays(1)));
+        morSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, endringssøknadMorStart.plusWeeks(6), endringssøknadMorStart.plusWeeks(6).plusDays(1)));
+        ForeldrepengesoknadBuilder søknadEndringMor = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(morSøker.aktørID, morSøker.getSisteFordeling(), saksnummerMor.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        fordel.sendInnSøknad(søknadEndringMor.build(),
-                morSøker.aktørID,
-                morSøker.ident,
-                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummerMor);
+        fordel.sendInnSøknad(søknadEndringMor.build(), morSøker.aktørID, morSøker.ident, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummerMor);
 
-        Thread.sleep(5000);
         LocalDate endringssøknadFarStart = fødselsdato.plusWeeks(10);
         farSøker.nyFordeling();
-        farSøker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE,
-                endringssøknadFarStart, endringssøknadFarStart.plusWeeks(5).minusDays(1)));
-        ForeldrepengesoknadBuilder søknadEndringFar = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(
-                farSøker.aktørID,
-                farSøker.fordelinger.get(1),
-                saksnummerMor.toString());
+        farSøker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, endringssøknadFarStart, endringssøknadFarStart.plusWeeks(5).minusDays(1)));
+        ForeldrepengesoknadBuilder søknadEndringFar = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(farSøker.aktørID, farSøker.getSisteFordeling(), saksnummerMor.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        fordel.sendInnSøknad(søknadEndringFar.build(),
-                farSøker.aktørID,
-                farSøker.ident,
-                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummerFar);
+        fordel.sendInnSøknad(søknadEndringFar.build(), farSøker.aktørID, farSøker.ident, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummerFar);
+
+        saksbehandler.ventTilSakHarXAntallBehandlinger(3);
+        saksbehandler.velgSisteBehandling();
+        //TODO automatisk behandle aksjonspunkt på mor. Får feil ved bekrefting av perioder.
+//        saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+//                .godkjennAlleManuellePerioder(100);
+//        saksbehandler.bekreftAksjonspunktBekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
+//        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+//        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
+//        beslutter.hentFagsak(saksnummerMor);
+//        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+//                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER));
+//        beslutter.fattVedtakOgVentTilAvsluttetBehandling();
+
+
     }
     @Test
     @DisplayName("Testcase mor tom for dager")
@@ -965,31 +890,28 @@ public class Uttak extends ForeldrepengerTestBase {
     @Description("Mor sender inn en endringssøknad på en åpen endringssøknad. Teste hvordan endringssøknader blir henlagt")
     public void testcase_mor_endringssøknad_åpenEndringssøknad() throws Exception {
         TestscenarioDto testscenario = opprettScenario("75");
-        Søker søker = new SøkerBuilder(testscenario)
-                .medArbeidsforohld(0)
+        Søker søker = new SøkerBuilder(testscenario, false)
+                .medArbeidsforohld()
                 .medBarn()
                 .build();
         LocalDate fødselsdato = søker.barnFødselsdato;
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        //TODO legge til bedre støtte for adding av perioder.
-        søker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
-        søker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)));
-        søker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(24).plusDays(2)));
-        //TODO legge til støtte for søker objekt i ForeldrepengesoknadBuilder
+        søker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
+        søker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)));
+        søker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(24).plusDays(2)));
         ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.uttakMedFordeling(
                 søker.aktørID,
-                søker.fordelinger.get(0),
+                søker.getSisteFordeling(),
                 SoekersRelasjonErketyper.søkerTermin(1, fødselsdato));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        //TODO legge til støtte for søker objekt i lagInntektsmeldingBuilder
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(
-                søker.inntektPerMåned,
+                søker.getInntektPerMåned(0),
                 søker.ident,
                 fpStartdato,
-                søker.orgNr,
-                Optional.of(søker.arbeidsforholdID),
+                søker.getOrgNr(0),
+                Optional.of(søker.getArbeidsforholdID(0)),
                 Optional.empty(),
                 Optional.empty());
         fordel.sendInnInntektsmeldinger(Arrays.asList(inntektsmeldingBuilder), testscenario, saksnummer);
@@ -1001,41 +923,24 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate endringssøknadFOM = fødselsdato.plusWeeks(24).plusDays(3);
         LocalDate endringssøknadTOM = fødselsdato.plusWeeks(31).minusDays(1);
         søker.nyFordeling();
-        søker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL,
+        søker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL,
                 endringssøknadFOM.plusWeeks(1), endringssøknadTOM.plusWeeks(1)));
         ForeldrepengesoknadBuilder søknadEndring = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(
                 søker.aktørID,
-                søker.fordelinger.get(1),
+                søker.getSisteFordeling(),
                 saksnummer.toString());
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknadEndring.build(),
                 søker.aktørID,
                 søker.ident,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD,
                 saksnummer);
 
-      Thread.sleep(1000);
       søker.nyFordeling();
-      søker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER,
-              endringssøknadFOM.minusDays(4), endringssøknadTOM.minusDays(2)));
-      ForeldrepengesoknadBuilder søknadEndring2 = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(
-              søker.aktørID,
-              søker.fordelinger.get(2),
-              saksnummer.toString());
-      fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-      fordel.sendInnSøknad(søknadEndring2.build(),
-              søker.aktørID,
-              søker.ident,
-              DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD,
-              saksnummer);
-
-      Thread.sleep(1000);
-      søker.nyFordeling();
-      søker.perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE,
+      søker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE,
               endringssøknadFOM, endringssøknadTOM));
       ForeldrepengesoknadBuilder søknadEndring3 = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(
               søker.aktørID,
-              søker.fordelinger.get(3),
+              søker.getSisteFordeling(),
               saksnummer.toString());
       fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
       fordel.sendInnSøknad(søknadEndring3.build(),
@@ -1043,17 +948,6 @@ public class Uttak extends ForeldrepengerTestBase {
               søker.ident,
               DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD,
               saksnummer);
-/*
-      saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-      saksbehandler.hentFagsak(saksnummer);
-      saksbehandler.ventTilSakHarRevurdering();
-      AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
-      verifiser(saksbehandler.harRevurderingBehandling(), "Det er ikke opprettet revurdering.");
-      saksbehandler.velgRevurderingBehandling();
-      saksbehandler.refreshFagsak();
-      saksbehandler.refreshBehandling();
- */
-
     }
     @Test
     @DisplayName("Mor sender to førstegangssøknader")
@@ -1601,57 +1495,64 @@ public class Uttak extends ForeldrepengerTestBase {
         return utsettelse;
     }
     public class Søker{
+        private boolean erAnnenSøker;
         public String aktørID;
         public String ident;
-
         public String annenForelderAktørID;
         public AnnenForelder annenForelder = new UkjentForelder();
-
         public LocalDate barnFødselsdato;
-        public int antallBarn;
+        public List<Arbeidsforhold> arbeidsforholdList;
+        private List<Inntektsperiode> inntektsperiodeList;
+        private List<Fordeling> fordelinger = new ArrayList<>();
+        public List<LukketPeriodeMedVedlegg> perioderRef;
 
-        public Long saksnummer;
-
-        //TODO lage lister
-        public Arbeidsforhold arbeidsforhold;
-        public String orgNr;
-        public String arbeidsforholdID;
-        public int inntektPerMåned;
-
-        public List<Fordeling> fordelinger = new ArrayList<>();
-        private int antallFordelinger = 0;
-        public List<LukketPeriodeMedVedlegg> perioder;
-        //Holder på referansen til perioden for siste fordeling
-
+        public String getOrgNr(int arbeidsfoholdIndex){
+            return arbeidsforholdList.get(arbeidsfoholdIndex).getArbeidsgiverOrgnr();
+        }
+        public String getArbeidsforholdID(int arbeidsfoholdIndex){
+            return arbeidsforholdList.get(arbeidsfoholdIndex).getArbeidsforholdId();
+        }
+        public int getInntektPerMåned(int arbeidsfoholdIndex){
+            return inntektsperiodeList.get(arbeidsfoholdIndex).getBeløp();
+        }
         public void nyFordeling(){
             fordelinger.add(new ObjectFactory().createFordeling());
-            fordelinger.get(antallFordelinger).setAnnenForelderErInformert(true);
-            perioder = fordelinger.get(antallFordelinger).getPerioder();
-            antallFordelinger ++;
+            fordelinger.get(fordelinger.size()-1).setAnnenForelderErInformert(true);
+            perioderRef = fordelinger.get(fordelinger.size()-1).getPerioder();
         }
+        public Fordeling getSisteFordeling(){
+            return fordelinger.get(fordelinger.size()-1);
+        }
+
 
     }
     public class SøkerBuilder{
         private Søker kladd;
         private TestscenarioDto testscenario;
 
-        public SøkerBuilder(TestscenarioDto testscenario){
+        public SøkerBuilder(TestscenarioDto testscenario, boolean erAnnenSøker){
             this.testscenario = testscenario;
             kladd =  new Søker();
-            kladd.aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-            kladd.ident = testscenario.getPersonopplysninger().getSøkerIdent();
+            kladd.erAnnenSøker = erAnnenSøker;
+            if(kladd.erAnnenSøker){
+                kladd.aktørID = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
+                kladd.ident = testscenario.getPersonopplysninger().getAnnenpartIdent();
+            }
+            else {
+                kladd.aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+                kladd.ident = testscenario.getPersonopplysninger().getSøkerIdent();
+            }
             kladd.nyFordeling();
         }
-        public SøkerBuilder medArbeidsforohld(int arbeidsforholdNr){
-            if(testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(arbeidsforholdNr) != null){
-                this.kladd.arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(arbeidsforholdNr);
-                this.kladd.orgNr = kladd.arbeidsforhold.getArbeidsgiverOrgnr();
-                if(kladd.arbeidsforhold.getArbeidsforholdId() != null ){
-                    this.kladd.arbeidsforholdID = kladd.arbeidsforhold.getArbeidsforholdId();
-                }
+
+        public SøkerBuilder medArbeidsforohld(){
+            if(kladd.erAnnenSøker) {
+                kladd.arbeidsforholdList = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold();
+                kladd.inntektsperiodeList = testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder();
             }
-            if(testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(arbeidsforholdNr) != null){
-                this.kladd.inntektPerMåned = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(arbeidsforholdNr).getBeløp();
+            else{
+                kladd.arbeidsforholdList = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
+                kladd.inntektsperiodeList = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder();
             }
             return this;
         }
@@ -1662,54 +1563,18 @@ public class Uttak extends ForeldrepengerTestBase {
             return this;
         }
         public SøkerBuilder medAnnenForelder(){
-            kladd.annenForelderAktørID = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-            kladd.annenForelder = standardAnnenForelder(kladd.annenForelderAktørID);
+            if(kladd.erAnnenSøker){
+                kladd.annenForelderAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+                kladd.annenForelder = standardAnnenForelder(kladd.annenForelderAktørID);
+            }
+            else {
+                kladd.annenForelderAktørID = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
+                kladd.annenForelder = standardAnnenForelder(kladd.annenForelderAktørID);
+            }
             return this;
         }
-
         public Søker build(){
-//            Objects.requireNonNull(kladd.perioder, "Perioder kan ikke være tom");
-            return this.kladd;
-        }
-    }
-    public class AnnenSøkerBuilder{
-        private Søker kladd;
-        private TestscenarioDto testscenario;
-
-        public AnnenSøkerBuilder(TestscenarioDto testscenario){
-            this.testscenario = testscenario;
-            kladd =  new Søker();
-            kladd.aktørID = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-            kladd.ident = testscenario.getPersonopplysninger().getAnnenpartIdent();
-            kladd.nyFordeling();
-        }
-        public AnnenSøkerBuilder medArbeidsforohld(int arbeidsforholdNr){
-            if(testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(arbeidsforholdNr) != null){
-                this.kladd.arbeidsforhold = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(arbeidsforholdNr);
-                this.kladd.orgNr = kladd.arbeidsforhold.getArbeidsgiverOrgnr();
-                if(kladd.arbeidsforhold.getArbeidsforholdId() != null ){
-                    this.kladd.arbeidsforholdID = kladd.arbeidsforhold.getArbeidsforholdId();
-                }
-            }
-            if(testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(arbeidsforholdNr) != null){
-                this.kladd.inntektPerMåned = testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(arbeidsforholdNr).getBeløp();
-            }
-            return this;
-        }
-        public AnnenSøkerBuilder medBarn(){
-            if(testscenario.getPersonopplysninger().getFødselsdato() != null){
-                kladd.barnFødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-            }
-            return this;
-        }
-        public AnnenSøkerBuilder medAnnenForelder(){
-            kladd.annenForelderAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-            kladd.annenForelder = standardAnnenForelder(kladd.annenForelderAktørID);
-            return this;
-        }
-
-        public Søker build(){
-//            Objects.requireNonNull(kladd.perioder, "Perioder kan ikke være tom");
+//            Objects.requireNonNull(kladd.perioderRef, "Perioder kan ikke være tom");
             return this.kladd;
         }
     }
