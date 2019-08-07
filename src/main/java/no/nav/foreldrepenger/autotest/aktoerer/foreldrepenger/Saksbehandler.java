@@ -187,6 +187,15 @@ public class Saksbehandler extends Aktoer {
     public void velgRevurderingBehandling() throws Exception {
         velgBehandling(kodeverk.BehandlingType.getKode("BT-004"));
     }
+    public void velgSisteBehandling() throws Exception {
+        Behandling behandling = behandlinger.get(behandlinger.size()-1);
+        this.valgtBehandling = behandling;
+        if (null != behandling) {
+            velgBehandling(behandling);
+        } else {
+            throw new RuntimeException("Valgt fagsak har ikke behandling");
+        }
+    }
 
     public void velgDokumentInnsynBehandling() throws Exception {
         velgBehandling(kodeverk.BehandlingType.getKode("BT-006"));
@@ -669,6 +678,16 @@ public class Saksbehandler extends Aktoer {
         }, 30, "Saken har ikke fått behandling av type: " + behandlingType);
     }
 
+    @Step("Venter på at fagsak får x antall behandlinger")
+    public void ventTilSakHarXAntallBehandlinger(int antallBehandlinger) throws Exception {
+        if (behandlinger.size() >= antallBehandlinger) {
+            return;
+        }
+        Vent.til(() -> {
+            refreshFagsak();
+            return behandlinger.size() >= antallBehandlinger;
+        }, 30, "Saken har ikke riktig anntal behandlinger" );
+    }
     protected boolean harBehandling(Kode behandlingType) {
         for (Behandling behandling : behandlinger) {
             if (behandling.type.kode.equals(behandlingType.kode)) {
