@@ -129,3 +129,5 @@ KAFKA_RISIKOKLASSIFISERING_SCHEMA_REGISTRY_URL=https://kafka-test-schema-registr
 KAFKA_DOKUMENTBESTILLING_TOPIC=privat-foreldrepenger-dokumenthendelse-lokal-dummy
 KAFKA_HISTORIKKINNSLAG_TOPIC=privat-foreldrepenger-historikkinnslag-lokal-dummy
 KAFKA_KONTROLL_RESULTAT_TOPIC=privat-foreldrepenger-kontroll-resultat-lokal
+
+FPOPPDRAG_OVERRIDE_DIREKTE_URL=https://localhost:8063/rest/fpoppdrag
