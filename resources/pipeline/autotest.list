@@ -130,4 +130,5 @@ KAFKA_DOKUMENTBESTILLING_TOPIC=privat-foreldrepenger-dokumenthendelse-lokal-dumm
 KAFKA_HISTORIKKINNSLAG_TOPIC=privat-foreldrepenger-historikkinnslag-lokal-dummy
 KAFKA_KONTROLL_RESULTAT_TOPIC=privat-foreldrepenger-kontroll-resultat-lokal
 
-FPOPPDRAG_OVERRIDE_DIREKTE_URL=https://fpmock2:8063/rest/fpoppdrag
+FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpmock2:8060/rest/fpoppdrag
+
