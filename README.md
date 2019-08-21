@@ -30,7 +30,7 @@ Miljøkonfigurasjon ligger under src/main/resources/<Miljø>
 
 ## 2 Kjøre Tester
 
-mvn test -P fpsak
+mvn test -P fpsak -ff -Dit.test=NameOfTheFailedIntegrationTest verify
 
 ### 2.1 Lokalt
 

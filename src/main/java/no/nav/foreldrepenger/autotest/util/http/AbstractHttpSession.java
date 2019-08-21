@@ -65,8 +65,10 @@ public abstract class AbstractHttpSession implements HttpSession {
     @Override
     public HttpResponse get(String url, Map<String, String> headers) throws IOException {
         HttpGet request = new HttpGet(url);
-        System.out.println(String.format("Get request til [%s]", url));
-        return execute(request, headers);
+
+        HttpResponse response =  execute(request, headers);
+        System.out.println(String.format("GET[%s]: [%s]", url, response.getStatusLine().getStatusCode()));
+        return response;
     }
 
     @Override
@@ -74,11 +76,14 @@ public abstract class AbstractHttpSession implements HttpSession {
         HttpPost request = new HttpPost(url);
         request.setEntity(entity);
 
-        System.out.println(String.format("Post request til [%s] med content [%s]", url, new BufferedReader(
-                new InputStreamReader(entity.getContent())).lines().parallel().collect(Collectors.joining("\n"))
+        HttpResponse response = execute(request, headers);
+        System.out.println(String.format("POST[%s]: [%s] med content [%s]",
+                url,
+                response.getStatusLine().getStatusCode(),
+                new BufferedReader(new InputStreamReader(entity.getContent())).lines().parallel().collect(Collectors.joining("\n"))
         ));
-        System.out.println(new ObjectMapper().writeValueAsString(headers));
-        return execute(request, headers);
+        System.out.println("    Headers: " + new ObjectMapper().writeValueAsString(headers));
+        return response;
     }
 
     @Override
@@ -96,7 +101,7 @@ public abstract class AbstractHttpSession implements HttpSession {
 
     @Override
     public void setRedirect(boolean doRedirect) {
-        client = doRedirect?redirectClient:nonredirectClient;
+        client = doRedirect ? redirectClient : nonredirectClient;
     }
 
     protected abstract CloseableHttpClient opprettKlient(boolean doRedirect);
@@ -141,13 +146,13 @@ public abstract class AbstractHttpSession implements HttpSession {
             @Override
             public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
                 HeaderElementIterator it = new BasicHeaderElementIterator
-                    (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                        (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
                 while (it.hasNext()) {
                     HeaderElement he = it.nextElement();
                     String param = he.getName();
                     String value = he.getValue();
                     if (value != null && param.equalsIgnoreCase
-                       ("timeout")) {
+                            ("timeout")) {
                         return Long.parseLong(value) * 1000;
                     }
                 }

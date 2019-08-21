@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ import no.nav.foreldrepenger.autotest.util.deferred.Deffered;
 public class Behandling {
     
     public int id;
+    public UUID uuid;
     public int versjon;
     public long fagsakId;
     public Kode type;

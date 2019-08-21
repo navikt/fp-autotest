@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.Behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdPost;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingResourceRequest;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.KlageVurderingResultatAksjonspunktMellomlagringDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
@@ -206,7 +205,7 @@ public class Saksbehandler extends Aktoer {
         ventPåStatus(behandling);
 
         Deffered<Behandling> dBehandling = Deffered.deffered(() -> {
-            return behandlingerKlient.getBehandling(behandling.id);
+            return behandlingerKlient.getBehandling(behandling.uuid);
         });
         Deffered<List<HistorikkInnslag>> dHistorikkInnslag = Deffered.deffered(() -> {
             return historikkKlient.hentHistorikk(valgtFagsak.saksnummer);
@@ -229,10 +228,10 @@ public class Saksbehandler extends Aktoer {
     private void populateBehandling(Behandling behandling) throws Exception {
 
         valgtBehandling.setAksjonspunkter(Deffered.deffered(() -> {
-            return behandlingerKlient.getBehandlingAksjonspunkt(behandling.id);
+            return behandlingerKlient.getBehandlingAksjonspunkt(behandling.uuid);
         }));
         valgtBehandling.setVilkar(Deffered.deffered(() -> {
-            return behandlingerKlient.behandlingVilkår(behandling.id);
+            return behandlingerKlient.behandlingVilkår(behandling.uuid);
         }));
 
         /*
@@ -247,22 +246,19 @@ public class Saksbehandler extends Aktoer {
         if (behandling.type.kode.equalsIgnoreCase("BT-006") /* Dokumentinnsyn */) {
 
         } else if (behandling.type.kode.equalsIgnoreCase("BT-003" /* Klage */)) {
-            var behandlingId = behandling.id;
             valgtBehandling.setKlagevurdering(Deffered.deffered(() -> {
-                return behandlingerKlient.klage(behandlingId);
+                return behandlingerKlient.klage(behandling.uuid);
             }));
         } else {
-            BehandlingResourceRequest request = new BehandlingResourceRequest(valgtBehandling.id, valgtFagsak.saksnummer);
-
             // FIXME: Forespørslene her burde konsultere resultat for valgtbehandling for å sjekke om URLene er tilgjengelig før de kjører.
             // URLene kan endre seg, men koden i behandlingerKlient tar ikke hensyn til det p.t. I tillegg er det unødvendig å spørre på noe som ikke
             // finnes slik det skjer nå.
 
             valgtBehandling.setUttakResultatPerioder(Deffered.deffered(() -> {
-                UttakResultatPerioder uttakResultatPerioder = behandlingerKlient.behandlingUttakResultatPerioder(request);
+                UttakResultatPerioder uttakResultatPerioder = behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid);
                 if (!uttakResultatPerioder.getPerioderForSøker().isEmpty()) {
                     Deffered<Saldoer> dStonadskontoer = Deffered.defferedLazy(() -> {
-                        return behandlingerKlient.behandlingUttakStonadskontoer(request);
+                        return behandlingerKlient.behandlingUttakStonadskontoer(valgtBehandling.uuid);
                     });
                     valgtBehandling.setSaldoer(dStonadskontoer);
                 }
@@ -271,34 +267,34 @@ public class Saksbehandler extends Aktoer {
             }));
 
             valgtBehandling.setBeregningsgrunnlag(Deffered.deffered(() -> {
-                return behandlingerKlient.behandlingBeregningsgrunnlag(request);
+                return behandlingerKlient.behandlingBeregningsgrunnlag(valgtBehandling.uuid);
             }));
             valgtBehandling.setInntektArbeidYtelse(Deffered.deffered(() -> {
-                return behandlingerKlient.behandlingInntektArbeidYtelse(request);
+                return behandlingerKlient.behandlingInntektArbeidYtelse(valgtBehandling.uuid);
             }));
 
             // de neste sjeldent i bruk. Kunne kanskje unngått å gjøre REST kall med mindre man trenger det?
             valgtBehandling.setBeregningResultatEngangsstonad(Deffered.defferedLazy(() -> {
-                return behandlingerKlient.behandlingBeregningsresultatEngangsstønad(request);
+                return behandlingerKlient.behandlingBeregningsresultatEngangsstønad(valgtBehandling.uuid);
             }));
             valgtBehandling.setBeregningResultatForeldrepenger(Deffered.defferedLazy(() -> {
-                return behandlingerKlient.behandlingBeregningsresultatForeldrepenger(request);
+                return behandlingerKlient.behandlingBeregningsresultatForeldrepenger(valgtBehandling.uuid);
             }));
             valgtBehandling.setPersonopplysning(Deffered.defferedLazy(() -> {
-                return behandlingerKlient.behandlingPersonopplysninger(request);
+                return behandlingerKlient.behandlingPersonopplysninger(valgtBehandling.uuid);
             }));
             valgtBehandling.setSoknad(Deffered.defferedLazy(() -> {
-                return behandlingerKlient.behandlingSøknad(request);
+                return behandlingerKlient.behandlingSøknad(valgtBehandling.uuid);
             }));
             valgtBehandling.setOpptjening(Deffered.defferedLazy(() -> {
-                return behandlingerKlient.behandlingOpptjening(request);
+                return behandlingerKlient.behandlingOpptjening(valgtBehandling.uuid);
             }));
 
             valgtBehandling.setKontrollerFaktaData(Deffered.defferedLazy(() -> {
-                return behandlingerKlient.behandlingKontrollerFaktaPerioder(request);
+                return behandlingerKlient.behandlingKontrollerFaktaPerioder(valgtBehandling.uuid);
             }));
             valgtBehandling.setMedlem(Deffered.defferedLazy(() -> {
-                return behandlingerKlient.behandlingMedlemskap(request);
+                return behandlingerKlient.behandlingMedlemskap(valgtBehandling.uuid);
             }));
 
         }
@@ -324,7 +320,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     private boolean verifiserStatusForBehandling(Behandling behandling) throws Exception {
-        AsyncPollingStatus status = behandlingerKlient.statusAsObject(behandling.id, null);
+        AsyncPollingStatus status = behandlingerKlient.statusAsObject(behandling.uuid, null);
 
         if (status == null) {
             return true;
@@ -404,7 +400,7 @@ public class Saksbehandler extends Aktoer {
         }
         AllureHelper.debugLoggBehandling("Behandling mangler aksjonspunkt: ", valgtBehandling);
         throw new RuntimeException(
-            "Valgt behandling (" + valgtBehandling.id + " - " + valgtFagsak.saksnummer + ") har ikke aksjonspunktbekreftelse: " + type.getName());
+                "Valgt behandling (" + valgtBehandling.id + " - " + valgtFagsak.saksnummer + ") har ikke aksjonspunktbekreftelse: " + type.getName());
     }
 
     /*
@@ -501,9 +497,9 @@ public class Saksbehandler extends Aktoer {
     @Step("Sender breev med malkode {brevmalKode} til mottaker {mottaker}")
     public void sendBrev(String brevmalKode, String mottaker, String fritekst) throws IOException {
         brevKlient.bestill(new BestillBrev(valgtBehandling.id,
-            mottaker,
-            brevmalKode,
-            fritekst));
+                mottaker,
+                brevmalKode,
+                fritekst));
     }
 
     /*
@@ -749,13 +745,13 @@ public class Saksbehandler extends Aktoer {
 
     public void mellomlagreKlage() throws Exception {
         behandlingerKlient.mellomlagre(
-            new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling, hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
+                new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling, hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
         refreshBehandling();
     }
 
     public void mellomlagreOgGjennåpneKlage() throws Exception {
         behandlingerKlient.mellomlagreGjennapne(
-            new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling, hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
+                new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling, hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
         refreshBehandling();
     }
 

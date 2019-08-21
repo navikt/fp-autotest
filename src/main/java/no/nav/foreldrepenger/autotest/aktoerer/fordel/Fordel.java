@@ -100,7 +100,7 @@ public class Fordel extends Aktoer {
                 Thread.sleep(5000);
             }
             AllureHelper.debugLoggBehandlingsliste(behandlinger);
-            return !behandlinger.isEmpty() && behandlingerKlient.statusAsObject(behandlinger.get(0).id, null) == null;
+            return !behandlinger.isEmpty() && behandlingerKlient.statusAsObject(behandlinger.get(0).uuid, null) == null;
         }, 60, "Saken hadde ingen behandlinger");
 
         if (DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD.equals(dokumenttypeId)) {
