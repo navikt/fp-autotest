@@ -41,6 +41,8 @@ public class AksjonspunktKoder {
     public static final String MANUELL_VURDERING_AV_OMSORGSVILKÅRET = new String("5011"); //$NON-NLS-1$
     public static final String MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET = new String("5007"); //$NON-NLS-1$
 
+    public static final String AVKLAR_FØDSEL_OG_TILRETTELEGGING = new String ("5091");
+    public static final String BEKREFT_SVANGERSKAPSPENGER_VILKÅR = new String("5092");
 
     public static final String OVERSTYRING_AV_ADOPSJONSVILKÅRET = new String("6004"); //$NON-NLS-1$
     public static final String OVERSTYRING_AV_ADOPSJONSVILKÅRET_FP = new String("6010"); //$NON-NLS-1$

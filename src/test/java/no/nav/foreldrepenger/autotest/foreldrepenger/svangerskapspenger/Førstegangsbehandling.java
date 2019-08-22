@@ -8,6 +8,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -29,15 +35,16 @@ import no.nav.foreldrepenger.fpmock2.testmodell.inntektytelse.inntektkomponent.I
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Svangerskapspenger;
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Virksomhet;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 
-@Tag("develop") //TODO (OL): Gjør til fpsak når klar
+@Tag("fpsak") //TODO (OL): Gjør til fpsak når klar
 @Tag("svangerskapspenger")
 public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
     @Test
-    @DisplayName("Mor søker SVP med et arbeidsforhold, fire uke før termin, hel tilrettelegging")
-    @Description("Mor søker SVP med et arbeidsforhold, fire uke før termin, hel tilrettelegging")
-    public void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_EtArbeidsforhold() throws Exception {
+    @DisplayName("Mor søker SVP - ingen tilrettelegging")
+    @Description("Mor søker SVP med ett arbeidsforhold fire uke før termin. ingen tilrettelegging")
+    public void morSøkerSvp_IngenTilrettelegging_FireUkerFørTermin_EttArbeidsforhold() throws Exception {
 
         final TestscenarioDto testscenario = opprettScenario("50");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -46,9 +53,9 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         final String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
         final int beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
 
-        final Tilrettelegging tilrettelegging = TilretteleggingsErketyper.helTilrettelegging(
+        final Tilrettelegging tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
                 LocalDate.now(),
-                LocalDate.now().plusWeeks(1),
+                LocalDate.now().plusDays(2),
                 ArbeidsforholdErketyper.virksomhet(orgNrMor));
 
         final Svangerskapspenger svangerskapspenger = SvangerskapspengerYtelseErketyper.svangerskapspenger(
@@ -68,11 +75,32 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         final InntektsmeldingBuilder inntektsmelding = createDefaultSvangerskapspenger(beløpMor, fnrMor, orgNrMor);
         fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
 
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+
         saksbehandler.hentFagsak(saksnummer);
+
+        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
+                .setBegrunnelse("Test");
+        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+
+        saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
+                .setBegrunnelse("Test");
+        saksbehandler.bekreftAksjonspunktBekreftelse(BekreftSvangerskapspengervilkår.class);
+
+        saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .leggTilInntekt(beløpMor * 12,1L);
+        saksbehandler.bekreftAksjonspunktBekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
+
+        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+
 
     }
 
     @Test
+    @Disabled
     @DisplayName("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
     @Description("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
     public void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() throws Exception {
@@ -119,9 +147,9 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
     }
 
     @Test
+    @Disabled
     @DisplayName("mor_SVP_imFørSøknad")
     @Description("mor_SVP_imFørSøknad")
-    @Disabled
     public void mor_SVP_imFørSøknad() throws Exception {
 
         // TODO: Gjør ferdig, feiler på tilkjentytelse.
@@ -156,6 +184,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         fordel.sendInnSøknad(soknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
+
 
     }
 

@@ -297,6 +297,15 @@ public class Saksbehandler extends Aktoer {
                 return behandlingerKlient.behandlingMedlemskap(valgtBehandling.uuid);
             }));
 
+            valgtBehandling.setTilrettelegging(Deffered.defferedLazy(() -> {
+                return behandlingerKlient.behandlingTilrettelegging(valgtBehandling.id);
+            }));
+
+
+//            valgtBehandling.setTilrettelegging(Deffered.defferedLazy(() -> {
+////               return behandlingerKlient.behandlingT
+//            }));
+
         }
 
         for (Aksjonspunkt aksjonspunkt : valgtBehandling.getAksjonspunkter()) {
