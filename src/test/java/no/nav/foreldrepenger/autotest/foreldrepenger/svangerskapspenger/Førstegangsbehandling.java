@@ -37,7 +37,7 @@ import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Virksomhet;
 import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 
-@Tag("develop") //TODO (OL): Gjør til fpsak når klar
+@Tag("fpsak") //TODO (OL): Gjør til fpsak når klar
 @Tag("svangerskapspenger")
 public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
