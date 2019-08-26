@@ -20,6 +20,7 @@ public abstract class AksjonspunktBekreftelse {
     protected String kode;
     protected String begrunnelse;
 
+
     private static final List<Class<? extends AksjonspunktBekreftelse>> aksjonspunktBekreftelseClasses;
     static {
         try {
@@ -30,7 +31,7 @@ public abstract class AksjonspunktBekreftelse {
         }
     }
 
-    
+
     @SuppressWarnings("unused")
     public AksjonspunktBekreftelse(Fagsak fagsak, Behandling behandling) {
         if(null == this.getClass().getAnnotation(BekreftelseKode.class)) {
@@ -38,13 +39,13 @@ public abstract class AksjonspunktBekreftelse {
         }
         kode = this.getClass().getAnnotation(BekreftelseKode.class).kode();
     }
-    
+
     public static AksjonspunktBekreftelse fromKode(Fagsak fagsak, Behandling behandling, String kode) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-                
+
         for (Class<? extends AksjonspunktBekreftelse> klasse : aksjonspunktBekreftelseClasses) {
-            
+
             BekreftelseKode annotation = klasse.getDeclaredAnnotation(BekreftelseKode.class);
-            
+
             if(Modifier.isAbstract(klasse.getModifiers())) {
                 continue; //trenger trenger ikke skjekke klasser som er abstrakte
             }
@@ -55,14 +56,14 @@ public abstract class AksjonspunktBekreftelse {
                 return klasse.getDeclaredConstructor(Fagsak.class, Behandling.class).newInstance(fagsak, behandling);
             }
         }
-        
+
         return null;
     }
-    
+
     public static AksjonspunktBekreftelse fromAksjonspunkt(Fagsak fagsak, Behandling behandling, Aksjonspunkt aksjonspunkt) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         return fromKode(fagsak, behandling, aksjonspunkt.getDefinisjon().kode);
     }
-    
+
     public AksjonspunktBekreftelse setBegrunnelse(String begrunnelse) {
         this.begrunnelse = begrunnelse;
         return this;
