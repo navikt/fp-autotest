@@ -178,6 +178,7 @@
             <version>2.1.1.Final</version>
         </dependency>
 
+
         <!-- VTP prosjektavhengigheter -->
         <dependency>
             <groupId>no.nav.vedtak.fpmock2</groupId>
@@ -202,12 +203,6 @@
             <version>2.0_20180730135256_2912e61</version>
             <classifier>jaxb</classifier>
         </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.oppdrag</groupId>
-            <artifactId>oppdrag-klient</artifactId>
-            <version>1.0_20190110115356_1239f94</version>
-            <classifier>jaxb</classifier>
-        </dependency>
 
         <dependency>
             <groupId>org.assertj</groupId>
@@ -221,6 +216,11 @@
             <artifactId>jersey-common</artifactId>
             <version>2.29</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>2.1.5</version>
         </dependency>
 
     </dependencies>
