@@ -533,18 +533,17 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.ventTilSakHarXAntallBehandlinger(3);
         saksbehandler.velgSisteBehandling();
-        //TODO automatisk behandle aksjonspunkt på mor. Får feil ved bekrefting av perioder.
-//        saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-//                .godkjennAlleManuellePerioder(100);
-//        saksbehandler.bekreftAksjonspunktBekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-//        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
-//        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
-//        beslutter.hentFagsak(saksnummerMor);
-//        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-//                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER));
-//        beslutter.fattVedtakOgVentTilAvsluttetBehandling();
+        saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+                .godkjennAlleManuellePerioder(100);
+        saksbehandler.bekreftAksjonspunktBekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
 
-
+        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummerMor);
+        beslutter.velgSisteBehandling();
+        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER));
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling();
     }
     @Test
     @DisplayName("Testcase mor tom for dager")
