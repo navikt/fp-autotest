@@ -718,9 +718,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderPerioderOpptjeningBekreftelse.class);
 
         //Verifiser Beregningsgrunnlag
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);//ikke sikker på denne
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode, "AT");
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 2);
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 1);
         List<BeregningsgrunnlagPrStatusOgAndelDto> andelerFørstePeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
         verifiserLikhet(andelerFørstePeriode.size(), 1);
@@ -731,6 +731,17 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .leggTilInntekt(overstyrtInntekt, 1L)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
+
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
+
+        //Verifiser Beregningsgrunnlag
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode, "AT");
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 2);
+        andelerFørstePeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
+                .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
+        verifiserLikhet(andelerFørstePeriode.size(), 1);
+        verifiserLikhet(andelerFørstePeriode.get(0).getAktivitetStatus().kode, "AT");
 
         // Assert refusjon
         BeregningsresultatPeriode[] resultatPerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
