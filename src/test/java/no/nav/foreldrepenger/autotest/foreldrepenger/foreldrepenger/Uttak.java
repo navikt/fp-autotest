@@ -69,7 +69,34 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.velgFørstegangsbehandling();
     }
-
+    @Test
+    @DisplayName("Mor fødselshendelse")
+    @Description("Mor fødselshendelse")
+    public void testcase_mor_fødselHendelse() throws Exception {
+        TestscenarioDto testscenario = opprettScenario("75");
+        Søker søker = new SøkerBuilder(testscenario, false)
+                .medBarn()
+                .medArbeidsforohld()
+                .build();
+        LocalDate fpStartdatoMor = søker.barnFødselsdato.minusWeeks(3);
+        søker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL,
+                fpStartdatoMor, søker.barnFødselsdato.minusDays(1)));
+        søker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE,
+                søker.barnFødselsdato, søker.barnFødselsdato.plusWeeks(8).minusDays(1)));
+        søker.perioderRef.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE,
+                søker.barnFødselsdato.plusWeeks(8), søker.barnFødselsdato.plusWeeks(13).minusDays(1)));
+        ForeldrepengesoknadBuilder søknadMor = foreldrepengeSøknadErketyper.uttakMedFordeling(søker.aktørID,
+                søker.getSisteFordeling(), SoekersRelasjonErketyper.fødsel(1,søker.barnFødselsdato) );
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        long saksnummerMor = fordel.sendInnSøknad(søknadMor.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        List<InntektsmeldingBuilder> inntektsmeldingerMor = makeInntektsmeldingFromTestscenario(testscenario, fpStartdatoMor);
+        fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, testscenario, saksnummerMor);
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.velgFørstegangsbehandling();
+        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.sendFødselsHendelse(søker.aktørID, søker.barnFødselsdato);
+    }
     @Test
     @DisplayName("Mor prematuruker")
     @Description("Mor prematuruker")

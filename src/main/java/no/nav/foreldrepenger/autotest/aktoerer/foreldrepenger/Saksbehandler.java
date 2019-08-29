@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.hendelse.HendelseKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.hendelse.dto.FødselHendelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.hendelse.dto.Hendelse;
 import org.apache.http.HttpResponse;
 
 import io.qameta.allure.Step;
@@ -69,6 +72,7 @@ public class Saksbehandler extends Aktoer {
     private BrevKlient brevKlient;
     private HistorikkKlient historikkKlient;
     private ProsesstaskKlient prosesstaskKlient;
+    private HendelseKlient hendelseKlient;
 
     public Kodeverk kodeverk;
 
@@ -83,6 +87,7 @@ public class Saksbehandler extends Aktoer {
         brevKlient = new BrevKlient(session);
         historikkKlient = new HistorikkKlient(session);
         prosesstaskKlient = new ProsesstaskKlient(session);
+        hendelseKlient = new HendelseKlient(session);
     }
 
     public Saksbehandler(Rolle rolle) throws IOException {
@@ -806,5 +811,10 @@ public class Saksbehandler extends Aktoer {
         } catch (ExecutionException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public void sendFødselsHendelse(String aktørIdForeldre, LocalDate fødselsdato) throws Exception{
+        FødselHendelse fødselHendelse= new FødselHendelse(aktørIdForeldre, fødselsdato);
+        hendelseKlient.sendHendelse(fødselHendelse);
     }
 }
