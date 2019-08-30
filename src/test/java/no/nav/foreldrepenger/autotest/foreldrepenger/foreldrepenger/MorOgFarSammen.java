@@ -408,10 +408,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         saksbehandler.opprettBehandlingRevurdering("RE-FRDLING");
         saksbehandler.velgRevurderingBehandling();
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
-            .bekreftDokumentasjonForeligger(1, fødselsdato);
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderManglendeFodselBekreftelse.class);
-
         saksbehandler.hentAksjonspunktbekreftelse(KontrollerOpplysningerOmFordelingAvStonadsperioden.class)
             .godkjennAllePerioder();
         saksbehandler.bekreftAksjonspunktBekreftelse(KontrollerOpplysningerOmFordelingAvStonadsperioden.class);
@@ -426,8 +422,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         beslutter.velgRevurderingBehandling();
 
         beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-            .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.KONTROLLER_OPPLYSNINGER_OM_FORDELING_AV_STØNADSPERIODEN))
-            .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL));
+            .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.KONTROLLER_OPPLYSNINGER_OM_FORDELING_AV_STØNADSPERIODEN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling();
     }
 
