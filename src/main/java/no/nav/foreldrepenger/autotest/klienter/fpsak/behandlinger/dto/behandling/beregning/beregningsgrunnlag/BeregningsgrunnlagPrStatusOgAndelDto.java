@@ -27,6 +27,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     protected Kode inntektskategori;
     protected BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
     protected boolean fastsattAvSaksbehandler;
+    protected double bortfaltNaturalytelse;
     
     public Kode getAktivitetStatus() {
         return aktivitetStatus;
@@ -42,5 +43,13 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
 
     public double getBeregnetPrAar() {
         return beregnetPrAar;
+    }
+
+    public double getBortfaltNaturalytelse() {
+        return bortfaltNaturalytelse;
+    }
+
+    public double getBruttoPrAar() {
+        return bruttoPrAar;
     }
 }

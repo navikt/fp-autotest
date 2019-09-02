@@ -36,6 +36,10 @@ public class Beregningsgrunnlag {
         return beregningsgrunnlagPeriode.get(index);
     }
 
+    public List<BeregningsgrunnlagPeriodeDto> getBeregningsgrunnlagPerioder() {
+        return beregningsgrunnlagPeriode;
+    }
+
     public LocalDate getSkjaeringstidspunktBeregning() {
         return skjaeringstidspunktBeregning;
     }
