@@ -19,6 +19,14 @@
     </properties>
 
     <profiles>
+        <profile>
+            <id>fpsak</id>
+            <properties>
+                <includeTestsTags>fpsak</includeTestsTags>
+                <excludeTestsTags>test, pending</excludeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
     	<profile>
             <id>spberegning</id>
             <properties>
@@ -34,11 +42,10 @@
             </properties>
         </profile>
         <profile>
-            <id>fpsak</id>
+            <id>fprisk</id>
             <properties>
-                <includeTestsTags>fpsak</includeTestsTags>
-                <excludeTestsTags>test, pending</excludeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+                <testTags>fprisk</testTags>
+                <testPackage>no.nav.foreldrepenger.autotest.fprisk.**</testPackage>
             </properties>
         </profile>
         <profile>

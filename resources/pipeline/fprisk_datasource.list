@@ -1,0 +1,5 @@
+APP_NAME=fprisk
+NAIS_APP_NAME=fprisk
+DEFAULTDS_URL=jdbc:oracle:thin:@host.docker.internal:1521/xe
+DEFAULTDS_USERNAME=vtp_fprisk
+DEFAULTDS_PASSWORD=passord
