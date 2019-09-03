@@ -30,8 +30,8 @@ import no.nav.foreldrepenger.fpmock2.testmodell.dokument.modell.koder.Dokumentty
 public class Termin extends EngangsstonadTestBase {
 
     @Test
-    @DisplayName("Mor søker terming - godkjent")
-    @Description("Mor søker terming - godkjent happy case")
+    @DisplayName("Mor søker termin - godkjent")
+    @Description("Mor søker termin - godkjent happy case")
     public void morSøkerTerminGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettScenario("55");
         ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.terminMorEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent());
@@ -64,8 +64,8 @@ public class Termin extends EngangsstonadTestBase {
 
     @Disabled //Disabled til Kafka støtte for brev er i VTP
     @Test
-    @DisplayName("Mor søker terming men mangler dokumentasjon")
-    @Description("Mor søker terming men mangler dokumentasjon og sender melding om manglende brev")
+    @DisplayName("Mor søker termin men mangler dokumentasjon")
+    @Description("Mor søker termin men mangler dokumentasjon og sender melding om manglende brev")
     public void morSøkerTerminManglerDokumentasjon() throws Exception {
         TestscenarioDto testscenario = opprettScenario("55");
         ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.terminMorEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent());
@@ -182,8 +182,8 @@ public class Termin extends EngangsstonadTestBase {
     }
     
     @Test
-    @DisplayName("Mor søker terming 25 dager etter fødsel")
-    @Description("Mor søker terming 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
+    @DisplayName("Mor søker termin 25 dager etter fødsel")
+    @Description("Mor søker termin 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
     public void morSøkerTermin25DagerTilbakeITid() throws Exception {
         TestscenarioDto testscenario = opprettScenario("55");
         ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.terminMorEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent(), LocalDate.now().minusDays(26));
