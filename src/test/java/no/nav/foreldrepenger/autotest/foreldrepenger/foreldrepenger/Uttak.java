@@ -1058,7 +1058,7 @@ public class Uttak extends ForeldrepengerTestBase {
         //TODO endre på fodselfunnetstedKunMorEndring til uttakMedFordeling
         ForeldrepengesoknadBuilder endretSøknad = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring( søkerAktørIdent, fordelingEndring, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerE = fordel.sendInnSøknad(endretSøknad.buildEndring(), søkerAktørIdent, søkerIdent,
+        Long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
@@ -1110,7 +1110,7 @@ public class Uttak extends ForeldrepengerTestBase {
         //TODO endre på fodselfunnetstedKunMorEndring til uttakMedFordeling
         ForeldrepengesoknadBuilder endretSøknad = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring( søkerAktørIdent, fordelingEndring, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerE = fordel.sendInnSøknad(endretSøknad.buildEndring(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+        Long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
         List<InntektsmeldingBuilder> inntektsmeldingEndret = makeInntektsmeldingFromTestscenario(testscenario, fpStartdato);
         for (InntektsmeldingBuilder im : inntektsmeldingEndret) {
             im.addGradertperiode(BigDecimal.valueOf(46),familieHendelse.plusWeeks(15), familieHendelse.plusWeeks(31).minusDays(1));

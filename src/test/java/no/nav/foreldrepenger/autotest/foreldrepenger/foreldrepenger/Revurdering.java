@@ -134,7 +134,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         // Endringssøknad
         ForeldrepengesoknadBuilder søknadE = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMorEndring(søkerAktørIdent, fpStartdato, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerE = fordel.sendInnSøknad(søknadE.buildEndring(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+        Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
@@ -264,7 +264,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         ForeldrepengesoknadBuilder endretSøknad = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(
                 søkerAktørIdent, fordelingUtsettelse, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerE = fordel.sendInnSøknad(endretSøknad.buildEndring(), søkerAktørIdent, søkerIdent,
+        Long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -319,7 +319,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         ForeldrepengesoknadBuilder endretSøknad = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(
                 søkerAktørIdent, fordelingGradering, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerE = fordel.sendInnSøknad(endretSøknad.buildEndring(), søkerAktørIdent, søkerIdent,
+        Long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
