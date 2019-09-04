@@ -128,10 +128,12 @@ CLIENT_ID=KP-privat-foreldrepenger-mottatBehandling-fpsak
 KAFKA_RISIKOKLASSIFISERING_TOPIC=privat-foreldrepenger-fprisk
 KAFKA_RISIKOKLASSIFISERING_CLIENT_ID=KP-privat-foreldrepenger-fprisk
 KAFKA_RISIKOKLASSIFISERING_SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
+KAFKA_KONTROLL_RESULTAT_TOPIC=privat-foreldrepenger-kontroll-resultat
 KAFKA_KONTROLL_RESULTAT_SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
-KAFKA_DOKUMENTBESTILLING_TOPIC=privat-foreldrepenger-dokumenthendelse-lokal-dummy
-KAFKA_HISTORIKKINNSLAG_TOPIC=privat-foreldrepenger-historikkinnslag-lokal-dummy
-KAFKA_KONTROLL_RESULTAT_TOPIC=privat-foreldrepenger-kontroll-resultat-lokal
+KAFKA_KONTROLL_RESULTAT_CLIENT_ID=KC-privat-foreldrepenger-kontroll-resultat
+
+KAFKA_DOKUMENTBESTILLING_TOPIC=privat-foreldrepenger-dokumenthendelse
+KAFKA_HISTORIKKINNSLAG_TOPIC=privat-foreldrepenger-historikkinnslag
 
 FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpmock2:8060/rest/fpoppdrag
 
