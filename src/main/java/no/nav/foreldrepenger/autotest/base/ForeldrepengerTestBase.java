@@ -36,8 +36,8 @@ public class ForeldrepengerTestBase extends FpsakTestBase {
         return FordelingErketyper.oppholdsperiode(stonadskontotype, fom, tom);
     }
 
-    protected Gradering graderingsperiode(String stønadskontotype, LocalDate fom, LocalDate tom, String arbeidsgiverIdentifikator, BigDecimal arbeidstidsprosent) {
-        return FordelingErketyper.graderingPeriode(stønadskontotype, fom, tom, arbeidsgiverIdentifikator, arbeidstidsprosent);
-    }
+//    protected Gradering graderingsperiode(String stønadskontotype, LocalDate fom, LocalDate tom, String arbeidsgiverIdentifikator, BigDecimal arbeidstidsprosent) {
+//        return FordelingErketyper.graderingPeriode(stønadskontotype, fom, tom, arbeidsgiverIdentifikator, arbeidstidsprosent);
+//    }
 
 }

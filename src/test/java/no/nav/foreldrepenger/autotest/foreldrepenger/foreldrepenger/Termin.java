@@ -2,9 +2,7 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggHistorikkinnslag;
-import static no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE;
-import static no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.STØNADSKONTOTYPE_MØDREKVOTE;
+import static no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -136,11 +134,11 @@ public class Termin extends ForeldrepengerTestBase {
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
         perioder.add(uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)));
         perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)));
-        perioder.add(graderingsperiode(STØNADSKONTOTYPE_MØDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1), orgnr2, BigDecimal.valueOf(40)));
+        perioder.add(graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_MØDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1), orgnr2, 40));
         perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, termindato.plusWeeks(9), termindato.plusWeeks(12).minusDays(1)));
-        perioder.add(graderingsperiode(STØNADSKONTOTYPE_MØDREKVOTE, termindato.plusWeeks(12), termindato.plusWeeks(15).minusDays(1), orgnr1, BigDecimal.valueOf(10)));
-        perioder.add(graderingsperiode(STØNADSKONTOTYPE_FELLESPERIODE, termindato.plusWeeks(15), termindato.plusWeeks(18).minusDays(1), orgnr2, BigDecimal.valueOf(20)));
-        perioder.add(graderingsperiode(STØNADSKONTOTYPE_FELLESPERIODE, termindato.plusWeeks(18), termindato.plusWeeks(21).minusDays(1), orgnr1, BigDecimal.valueOf(30)));
+        perioder.add(graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_MØDREKVOTE, termindato.plusWeeks(12), termindato.plusWeeks(15).minusDays(1), orgnr1, 10));
+        perioder.add(graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_FELLESPERIODE, termindato.plusWeeks(15), termindato.plusWeeks(18).minusDays(1), orgnr2, 20));
+        perioder.add(graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_FELLESPERIODE, termindato.plusWeeks(18), termindato.plusWeeks(21).minusDays(1), orgnr1, 30));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.termindatoUttakKunMor(søkerAktørId, fordeling, termindato);
