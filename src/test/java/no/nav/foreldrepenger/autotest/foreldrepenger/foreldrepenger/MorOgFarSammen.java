@@ -737,7 +737,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
         perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
-        perioder.add(FordelingErketyper.utsettelsePeriode(UTSETTELSETYPE_ARBEID, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
+        perioder.add(FordelingErketyper.utsettelsesperiode(UTSETTELSETYPE_ARBEID, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
         ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedMorMedFar(
                 søkerAktørid,
                 annenPartAktørid,
