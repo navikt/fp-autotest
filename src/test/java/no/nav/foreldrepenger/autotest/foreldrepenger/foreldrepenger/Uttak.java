@@ -1327,20 +1327,19 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.velgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
         søker.nyFordeling();
-        søker.perioderRef.add(graderingsperiodeFLSN(
+        søker.perioderRef.add(graderingsperiodeSN(
                 STØNADSKONTOTYPE_FELLESPERIODE,
                 fødselsdato.plusWeeks(20),
                 fødselsdato.plusWeeks(25),
-                false, true,
                 40));
         ForeldrepengesoknadBuilder søknadEndring = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(søker.aktørID, søker.getSisteFordeling(), saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknadEndring.build(), søker.aktørID, søker.ident, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
         søker.nyFordeling();
-        søker.perioderRef.add(graderingsperiodeFLSN(
+        søker.perioderRef.add(graderingsperiodeSN(
                 STØNADSKONTOTYPE_MØDREKVOTE,
                 fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20),
-                false, true, 40));
+                 40));
         søker.perioderRef.add(utsettelsesperiode(UTSETTELSETYPE_ARBEID, fødselsdato.plusWeeks(20).plusDays(1), fødselsdato.plusWeeks(30)));
         ForeldrepengesoknadBuilder søknadEndringTO = foreldrepengeSøknadErketyper.fodselfunnetstedKunMorEndring(søker.aktørID, søker.getSisteFordeling(), saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
