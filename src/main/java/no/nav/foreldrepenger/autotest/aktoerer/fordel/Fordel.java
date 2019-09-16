@@ -133,9 +133,15 @@ public class Fordel extends Aktoer {
      * Sender inn søknad og returnerer saksinformasjon
      */
     @Step("Sender inn papirsøknad")
-    public long sendInnPapirsøkand(TestscenarioDto testscenario, DokumenttypeId dokumenttypeId) throws Exception {
-        return sendInnSøknad(null, testscenario, dokumenttypeId);
+    public long sendInnPapirsøknadForeldrepenger(TestscenarioDto testscenario) throws Exception {
+        return sendInnSøknad(null, testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
     }
+
+    @Step("Sender inn endringssøknad på papir")
+    public long sendInnPapirsøknadEndringForeldrepenger(TestscenarioDto testscenario, Long saksnummer) throws Exception {
+        return sendInnSøknad(null, testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+    }
+
 
     /*
      * Opprett sak
