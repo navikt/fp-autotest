@@ -872,11 +872,11 @@ public class Fodsel extends ForeldrepengerTestBase {
         LocalDate graderingFom = fødselsdato.plusWeeks(10).plusDays(1);
         LocalDate graderingTom = fødselsdato.plusWeeks(12);
         BigDecimal arbeidstidsprosent = BigDecimal.TEN;
-        perioder.add(FordelingErketyper.graderingPeriode(FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE, graderingFom, graderingTom, gradetArbeidsgiver,
-                arbeidstidsprosent));
+        perioder.add(FordelingErketyper.graderingsperiodeArbeidstaker(FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE, graderingFom, graderingTom, gradetArbeidsgiver,
+                arbeidstidsprosent.intValue()));
         LocalDate utsettelseFom = fødselsdato.plusWeeks(12).plusDays(1);
         LocalDate utsettelseTom = fødselsdato.plusWeeks(14);
-        perioder.add(FordelingErketyper.utsettelsePeriode(FordelingErketyper.UTSETTELSETYPE_ARBEID, utsettelseFom, utsettelseTom));
+        perioder.add(FordelingErketyper.utsettelsesperiode(FordelingErketyper.UTSETTELSETYPE_ARBEID, utsettelseFom, utsettelseTom));
         ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMor(søkerAktørIdent, fordeling, fødselsdato);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
@@ -1129,10 +1129,10 @@ public class Fodsel extends ForeldrepengerTestBase {
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
         perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødsel.minusDays(1)));
         perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødsel, fødsel.plusWeeks(6).minusDays(1)));
-        perioder.add(FordelingErketyper.utsettelsesperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødsel.plusWeeks(6), fødsel.plusWeeks(9).minusDays(1), UTSETTELSETYPE_INNLAGTBARN, true));
-        perioder.add(FordelingErketyper.utsettelsesperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødsel.plusWeeks(9), fødsel.plusWeeks(12).minusDays(1), UTSETTELSETYPE_INNLAGTSØKER, true));
-        perioder.add(FordelingErketyper.utsettelsesperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødsel.plusWeeks(12), fødsel.plusWeeks(15).minusDays(1), UTSETTELSETYPE_SYKDOMSKADE, true));
-        perioder.add(FordelingErketyper.utsettelsesperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødsel.plusWeeks(15), fødsel.plusWeeks(18).minusDays(1), UTSETTELSETYPE_ARBEID, true));
+        perioder.add(FordelingErketyper.utsettelsesperiode(UTSETTELSETYPE_INNLAGTBARN, fødsel.plusWeeks(6), fødsel.plusWeeks(9).minusDays(1)));
+        perioder.add(FordelingErketyper.utsettelsesperiode(UTSETTELSETYPE_INNLAGTSØKER, fødsel.plusWeeks(9), fødsel.plusWeeks(12).minusDays(1)));
+        perioder.add(FordelingErketyper.utsettelsesperiode(UTSETTELSETYPE_SYKDOMSKADE, fødsel.plusWeeks(12), fødsel.plusWeeks(15).minusDays(1)));
+        perioder.add(FordelingErketyper.utsettelsesperiode(UTSETTELSETYPE_ARBEID, fødsel.plusWeeks(15), fødsel.plusWeeks(18).minusDays(1)));
         perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødsel.plusWeeks(18), fødsel.plusWeeks(21).minusDays(1)));
 
         // sender inn søknad
