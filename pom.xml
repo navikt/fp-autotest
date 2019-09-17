@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <aspectj.version>1.9.2</aspectj.version>
         <revision>1.0.0</revision>
-        <sha1></sha1>
+        <sha1/>
         <vtp.versjon>1.0_20190916100916_f1f3362</vtp.versjon>
         <changelist>-SNAPSHOT</changelist>
     </properties>
@@ -153,7 +153,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.8</version>
+            <version>2.10.0.pr3</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
