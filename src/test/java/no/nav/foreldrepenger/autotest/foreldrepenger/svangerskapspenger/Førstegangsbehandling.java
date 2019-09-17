@@ -188,4 +188,18 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
     }
 
+    @Test
+    @Disabled
+    @DisplayName("Papirsøknad for Svangerskapspenger")
+    public void morSøkerSvangersskapspengerMedPapirsøknad() throws Exception {
+        TestscenarioDto testscenario = opprettScenario("50");
+
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnPapirsøkand(testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+
+
+    }
+
 }
