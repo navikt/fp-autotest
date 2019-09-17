@@ -195,7 +195,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         TestscenarioDto testscenario = opprettScenario("50");
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnPapirsøkand(testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+        long saksnummer = fordel.sendInnPapirsøknadSvangerskapspenger(testscenario);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
 
