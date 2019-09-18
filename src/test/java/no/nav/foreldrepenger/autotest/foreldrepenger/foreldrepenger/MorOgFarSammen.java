@@ -31,8 +31,8 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerOpplysningerOmFordelingAvStonadsperioden;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerBosattBekreftelse;
@@ -400,31 +400,18 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     public void KobletSakMorSøkerEtterFar() throws Exception {
         TestscenarioDto testscenario = opprettScenario("84");
         LocalDate fødselsdato = LocalDate.now().minusDays(15);
-        long saksnummerFar = behandleSøknadForFarSattPåVent(testscenario, fødselsdato);
+        behandleSøknadForFarSattPåVent(testscenario, fødselsdato);
         long saksnummerMor = behandleSøknadForMorUregistrert(testscenario, fødselsdato);
 
         saksbehandler.hentFagsak(saksnummerMor);
 
-        // Bruk når  revurdering fungerer
         saksbehandler.opprettBehandlingRevurdering("RE-FRDLING");
         saksbehandler.velgRevurderingBehandling();
 
-        saksbehandler.hentAksjonspunktbekreftelse(KontrollerOpplysningerOmFordelingAvStonadsperioden.class)
-            .godkjennAllePerioder();
-        saksbehandler.bekreftAksjonspunktBekreftelse(KontrollerOpplysningerOmFordelingAvStonadsperioden.class);
-
         saksbehandler.bekreftAksjonspunktbekreftelserer(
                 saksbehandler.hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class),
-                saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class));
-
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
-
-        beslutter.hentFagsak(saksnummerMor);
-        beslutter.velgRevurderingBehandling();
-
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-            .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.KONTROLLER_OPPLYSNINGER_OM_FORDELING_AV_STØNADSPERIODEN));
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling();
+                saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakManueltBekreftelse.class));
+        saksbehandler.ventTilAvsluttetBehandling();
     }
 
     @Test
@@ -492,9 +479,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER));
         beslutter.bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
-
-        //TODO: slik fpsak fungerer nå blir det opprettet ny berørt sak på far etter at man har ryddet opp hos mor.
-        /* Dette skal ikke være nødvendig. Veldig mye merarbeid for saksbehandler. Sakskomplekset er dermed ikke avsluttet. */
 
         //TODO: legg til valideringer før testen taes i bruk.
 
