@@ -135,5 +135,6 @@ KAFKA_KONTROLL_RESULTAT_CLIENT_ID=KC-privat-foreldrepenger-kontroll-resultat
 KAFKA_DOKUMENTBESTILLING_TOPIC=privat-foreldrepenger-dokumenthendelse
 KAFKA_HISTORIKKINNSLAG_TOPIC=privat-foreldrepenger-historikkinnslag
 
-FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/fpoppdrag
+FPOPPDRAG_OVERRIDE_PROXY_URL=http://vtp:8060/rest/dummy/fpoppdrag
+FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/fpoppdrag
 
