@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.util.konfigurasjon.MiljoKonfigurasjon;
-import no.nav.foreldrepenger.fpmock2.felles.PropertiesUtils;
+import no.nav.foreldrepenger.vtp.felles.PropertiesUtils;
 
 public abstract class TestBase {
 

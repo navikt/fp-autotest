@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.autotest.base;
 
-import java.io.IOException;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.vtp.expect.ExpectKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
-import no.nav.foreldrepenger.fpmock2.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+
+import java.io.IOException;
 
 public abstract class TestScenarioTestBase extends TestBase {
     

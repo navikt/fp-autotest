@@ -5,7 +5,7 @@ import java.io.IOException;
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPKlient;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
-import no.nav.foreldrepenger.fpmock2.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 public class TestscenarioKlient extends VTPKlient{
 

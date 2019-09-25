@@ -14,7 +14,7 @@
         <aspectj.version>1.9.2</aspectj.version>
         <revision>1.0.0</revision>
         <sha1></sha1>
-        <vtp.versjon>1.0_20190916100916_f1f3362</vtp.versjon>
+        <vtp.versjon>1.0-SNAPSHOT</vtp.versjon>
         <changelist>-SNAPSHOT</changelist>
     </properties>
 
@@ -188,17 +188,17 @@
 
         <!-- VTP prosjektavhengigheter -->
         <dependency>
-            <groupId>no.nav.vedtak.fpmock2</groupId>
+            <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>testmodell</artifactId>
             <version>${vtp.versjon}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.vedtak.fpmock2</groupId>
+            <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>dokumentgenerator</artifactId>
             <version>${vtp.versjon}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.vedtak.fpmock2</groupId>
+            <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>core</artifactId>
             <version>${vtp.versjon}</version>
         </dependency>

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import no.nav.foreldrepenger.fpmock2.testmodell.identer.LokalIdentIndeks;
-import no.nav.foreldrepenger.fpmock2.testmodell.util.VariabelContainer;
+import no.nav.foreldrepenger.vtp.testmodell.identer.LokalIdentIndeks;
+import no.nav.foreldrepenger.vtp.testmodell.util.VariabelContainer;
 
 public class JsonKlient {
 

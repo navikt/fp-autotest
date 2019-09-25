@@ -21,9 +21,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.Behandli
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.SimulerOppdragDto;
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.SimuleringDto;
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.SimuleringResultatDto;
-import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.util.DateUtil;
-import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.util.JaxbHelper;
-import no.nav.foreldrepenger.fpmock2.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.util.DateUtil;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.util.JaxbHelper;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Attestant180;
 import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Avstemming115;
 import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Grad170;
