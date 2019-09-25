@@ -100,8 +100,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
     }
 
     @Test
-    @Disabled
-    @DisplayName("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
+    @DisplayName("Mor søker SVP med to arbeidsforhold - hel tilrettelegging")
     @Description("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
     public void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() throws Exception {
 
@@ -144,6 +143,15 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
+        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
+                .setBegrunnelse("Begrunnelse");
+        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+
+
+        saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
+                .setBegrunnelse("Test");
+        saksbehandler.bekreftAksjonspunktBekreftelse(BekreftSvangerskapspengervilkår.class);
+
     }
 
     @Test
@@ -153,6 +161,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
     public void mor_SVP_imFørSøknad() throws Exception {
 
         // TODO: Gjør ferdig, feiler på tilkjentytelse.
+        // TODO (OL) Utvide med videre funksjonalitet
 
         final TestscenarioDto testscenario = opprettScenario("50");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
