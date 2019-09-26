@@ -6,9 +6,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode="5053")
-public class AvklarFaktaMedlemskapBekreftelse extends AksjonspunktBekreftelse {
-    
-    
+public class AvklarFaktaMedlemskapBekreftelse extends BekreftedePerioderMalDto {
+
+
     public AvklarFaktaMedlemskapBekreftelse(Fagsak fagsak, Behandling behandling) {
         super(fagsak, behandling);
     }
