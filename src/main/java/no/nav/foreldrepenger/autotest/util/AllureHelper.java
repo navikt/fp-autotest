@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.util;
 import java.util.List;
 
 import io.qameta.allure.Step;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 
@@ -48,5 +49,10 @@ public class AllureHelper {
         for(Behandling behandling : behandlinger){
             debugLoggBehandling(behandling);
         }
+    }
+
+    @Step("Informasjon om aksjonspunkt: {aksjonspunkt}")
+    public static void debugAksjonspunkt(Aksjonspunkt aksjonspunkt) {
+
     }
 }
