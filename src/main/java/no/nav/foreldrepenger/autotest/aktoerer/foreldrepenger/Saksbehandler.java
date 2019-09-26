@@ -336,7 +336,7 @@ public class Saksbehandler extends Aktoer {
     private boolean verifiserStatusForBehandling(Behandling behandling) throws Exception {
         AsyncPollingStatus status = behandlingerKlient.statusAsObject(behandling.uuid, null);
 
-        if (status == null) {
+        if (status == null || status.getStatusCode() == null) {
             return true;
         } else if (status.getStatusCode() == 418) {
             if (status.getStatus() != AsyncPollingStatus.Status.DELAYED) {

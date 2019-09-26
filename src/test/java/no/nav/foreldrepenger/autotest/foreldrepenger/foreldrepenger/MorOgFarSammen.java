@@ -277,6 +277,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         verifiser(morDispFPFF == farDispFPFF, "Partene har forskjellig saldo for Foreldrepenger før fødsel");
     }
 
+
     @Test
     @DisplayName("Koblet sak endringssøknad ingen endring")
     @Description("Sender inn søknad mor. Sender inn søknad far uten overlapp. Sender inn endringssøknad mor som er lik " +
@@ -604,6 +605,8 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         return saksnummer;
     }
+
+
 
     @Step("Behandle søknad for far uten overlapp")
     public long behandleSøknadForFarUtenOverlapp(TestscenarioDto testscenario, LocalDate fødselsdato) throws Exception {
