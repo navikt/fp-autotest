@@ -3,25 +3,25 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.medlem.BekreftedePerioderDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5020")
-public class AvklarBrukerBosattBekreftelse extends AksjonspunktBekreftelse {
+import java.util.List;
 
-    protected boolean bosattVurdering;
-    
+@BekreftelseKode(kode="5020")
+public class AvklarBrukerBosattBekreftelse extends BekreftedePerioderMalDto {
     public AvklarBrukerBosattBekreftelse(Fagsak fagsak, Behandling behandling) {
         super(fagsak, behandling);
     }
-    
+
     public void bekreftBrukerErBosatt() {
-        bosattVurdering = true;
+        List<BekreftedePerioderDto> medlemskapPerioder = behandling.getMedlem().getMedlemskapPerioder();
+        for (BekreftedePerioderDto bekreftedePerioderDto : medlemskapPerioder) {
+            bekreftedePerioderDto.setBosattVurdering(true);
+
+        }
     }
-    
-    public void bekreftBrukerErIkkeBosatt() {
-        bosattVurdering = false;
-    }
-    
-    
+
 
 }
+

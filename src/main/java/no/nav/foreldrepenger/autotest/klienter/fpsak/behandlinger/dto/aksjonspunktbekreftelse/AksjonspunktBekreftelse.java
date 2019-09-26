@@ -19,6 +19,9 @@ public abstract class AksjonspunktBekreftelse {
     @JsonProperty("@type")
     protected String kode;
     protected String begrunnelse;
+    protected Fagsak fagsak;
+    protected Behandling behandling;
+
 
 
     private static final List<Class<? extends AksjonspunktBekreftelse>> aksjonspunktBekreftelseClasses;
@@ -38,6 +41,8 @@ public abstract class AksjonspunktBekreftelse {
             throw new RuntimeException("Kode annotation er ikke satt for " + this.getClass().getTypeName());
         }
         kode = this.getClass().getAnnotation(BekreftelseKode.class).kode();
+        this.fagsak = fagsak;
+        this.behandling = behandling;
     }
 
     public static AksjonspunktBekreftelse fromKode(Fagsak fagsak, Behandling behandling, String kode) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
