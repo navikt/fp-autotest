@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
-import java.time.LocalDate;
-
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
@@ -17,9 +8,22 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.soeknad.ForeldrepengesoknadBuilder;
-import no.nav.foreldrepenger.fpmock2.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.fpmock2.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
+import java.time.LocalDate;
+
+import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.engangstønadsøknadFødselErketype;
+import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.engangstønadsøknadTerminErketype;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -31,7 +35,11 @@ public class Innsyn extends EngangsstonadTestBase {
     @Description("Behandle innsyn for mor - godkjent happy case")
     public void behandleInnsynMorGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettScenario("50");
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMorEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent());
+        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.MOR,
+                1,
+                testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -66,7 +74,11 @@ public class Innsyn extends EngangsstonadTestBase {
     @Description("Behandle innsyn for mor - avvist ved vurdering")
     public void behandleInnsynMorAvvist() throws Exception {
         TestscenarioDto testscenario = opprettScenario("50");
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMorEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent());
+        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.MOR,
+                1,
+                testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -98,7 +110,11 @@ public class Innsyn extends EngangsstonadTestBase {
     @Description("Behandle innsyn for far - avvist ved vurdering")
     public void behandleInnsynFarAvvist() throws Exception {
         TestscenarioDto testscenario = opprettScenario("61");
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.terminFarEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent());
+        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.FAR,
+                1,
+                LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);

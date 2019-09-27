@@ -1,12 +1,5 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
@@ -18,9 +11,19 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.soeknad.ForeldrepengesoknadBuilder;
-import no.nav.foreldrepenger.fpmock2.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.fpmock2.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
+import java.time.LocalDate;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -32,7 +35,13 @@ public class Medlemskap extends EngangsstonadTestBase {
     @Description("Mor søker fødsel og er utvandret. Skal føre til aksjonspunkt angående medlemskap - avslått")
     public void morSøkerFødselErUtvandret() throws Exception {
         TestscenarioDto testscenario = opprettScenario("51");
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMorEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent());
+
+
+        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.MOR,
+                1,
+                testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -73,8 +82,11 @@ public class Medlemskap extends EngangsstonadTestBase {
     @Description("Mor søker med personstatus uregistrert, får askjonspunkt så hennlegges")
     public void morSøkerFødselUregistrert() throws Exception {
         TestscenarioDto testscenario = opprettScenario("120");
-        
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMorEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent());
+        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.MOR,
+                1,
+                testscenario.getPersonopplysninger().getFødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
         
@@ -94,8 +106,11 @@ public class Medlemskap extends EngangsstonadTestBase {
     @Description("Mor søker med utelandsk adresse")
     public void morSøkerFødselUtenlandsadresse() throws Exception {
         TestscenarioDto testscenario = opprettScenario("121");
-        
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMorEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent());
+        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.MOR,
+                1,
+                testscenario.getPersonopplysninger().getFødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
         

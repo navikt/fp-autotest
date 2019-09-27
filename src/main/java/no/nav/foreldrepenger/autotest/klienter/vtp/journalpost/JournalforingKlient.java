@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.VTPKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.dto.JournalpostId;
 import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
-import no.nav.foreldrepenger.fpmock2.testmodell.dokument.modell.JournalpostModell;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
 
 public class JournalforingKlient extends VTPKlient{
 

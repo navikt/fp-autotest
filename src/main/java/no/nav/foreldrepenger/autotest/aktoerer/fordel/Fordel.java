@@ -1,27 +1,12 @@
 package no.nav.foreldrepenger.autotest.aktoerer.fordel;
 
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostId;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostKnyttning;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostMottak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.OpprettSak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.Saksnummer;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.*;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
@@ -32,16 +17,27 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.tpsFeed.TpsFeedKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.soeknad.ForeldrepengesoknadBuilder;
-import no.nav.foreldrepenger.fpmock2.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.fpmock2.kontrakter.PersonhendelseDto;
-import no.nav.foreldrepenger.fpmock2.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.fpmock2.testmodell.dokument.ControllerHelper;
-import no.nav.foreldrepenger.fpmock2.testmodell.dokument.JournalpostModellGenerator;
-import no.nav.foreldrepenger.fpmock2.testmodell.dokument.modell.JournalpostModell;
-import no.nav.foreldrepenger.fpmock2.testmodell.dokument.modell.koder.Dokumentkategori;
-import no.nav.foreldrepenger.fpmock2.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.ControllerHelper;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGenerator;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.v3.Soeknad;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
 
 public class Fordel extends Aktoer {
 
@@ -76,10 +72,10 @@ public class Fordel extends Aktoer {
     public long sendInnSøknad(Soeknad søknad, String aktørId, String fnr, DokumenttypeId dokumenttypeId, Long saksnummer) throws Exception {
         String xml = null;
         if (null != søknad) {
-            xml = ForeldrepengesoknadBuilder.tilXML(søknad);
+            xml = SøknadBuilder.tilXML(søknad);
         }
 
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpost(xml == null ? "" : xml, fnr, dokumenttypeId);
+        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml == null ? "" : xml, fnr, dokumenttypeId);
         if (saksnummer != null && saksnummer.longValue() != 0L) {
             journalpostModell.setSakId(saksnummer.toString());
         }
@@ -128,13 +124,27 @@ public class Fordel extends Aktoer {
         String fnr = scenario.getPersonopplysninger().getSøkerIdent();
         return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
     }
+    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId, Long saksnummer, boolean annenPart) throws Exception {
+        String aktørId;
+        String fnr;
+        if(annenPart) {
+            aktørId = scenario.getPersonopplysninger().getAnnenPartAktørIdent();
+            fnr = scenario.getPersonopplysninger().getAnnenpartIdent();
+        }
+        else {
+            aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
+            fnr = scenario.getPersonopplysninger().getSøkerIdent();
+        }
+
+        return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
+    }
 
     /*
      * Sender inn søknad og returnerer saksinformasjon
      */
     @Step("Sender inn papirsøknad foreldrepenger")
-    public long sendInnPapirsøknadForeldrepenger(TestscenarioDto testscenario) throws Exception {
-        return sendInnSøknad(null, testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+    public long sendInnPapirsøknadForeldrepenger(TestscenarioDto testscenario, boolean erAnnenPart) throws Exception {
+        return sendInnSøknad(null, testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null, erAnnenPart);
     }
 
     @Step("Sender inn endringssøknad på papir")
@@ -179,7 +189,7 @@ public class Fordel extends Aktoer {
         String dokumentKategori = Dokumentkategori.IKKE_TOLKBART_SKJEMA.getKode();
         String dokumentTypeIdOffisiellKode = DokumenttypeId.INNTEKTSMELDING.getKode();
 
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpost(xml, fnr, DokumenttypeId.INNTEKTSMELDING);
+        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, fnr, DokumenttypeId.INNTEKTSMELDING);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
 
         long nyttSaksnummer = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, gammeltSaksnummer);
@@ -244,7 +254,7 @@ public class Fordel extends Aktoer {
     public String journalførInnektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto scenario, Long saksnummer) throws IOException {
         String xml = inntektsmelding.createInntektesmeldingXML();
         String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpost(xml, aktørId, DokumenttypeId.INNTEKTSMELDING);
+        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, aktørId, DokumenttypeId.INNTEKTSMELDING);
         String id = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
         if (saksnummer != null) {
             journalpostModell.setSakId(saksnummer.toString());
@@ -261,7 +271,7 @@ public class Fordel extends Aktoer {
         String dokumentKategori = Dokumentkategori.KLAGE_ANKE.getKode();
         String dokumentTypeIdOffisiellKode = DokumenttypeId.KLAGEANKE.getKode();
 
-        JournalpostModell journalpostModell = JournalpostModellGenerator.makeUstrukturertDokumentJournalpost(scenario.getPersonopplysninger().getSøkerIdent(), DokumenttypeId.KLAGEANKE);
+        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostUstrukturertDokument(scenario.getPersonopplysninger().getSøkerIdent(), DokumenttypeId.KLAGEANKE);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
 
         long sakId = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);

@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.autotest.klienter.spberegning.beregning.dto.beregni
 import no.nav.foreldrepenger.autotest.klienter.spberegning.kodeverk.KodeverkKlient;
 import no.nav.foreldrepenger.autotest.klienter.spberegning.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.klienter.spberegning.kodeverk.dto.Kodeverk;
-import no.nav.foreldrepenger.fpmock2.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 public class Saksbehandler extends Aktoer {
 

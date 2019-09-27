@@ -1,17 +1,18 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.eksempler;
 
-import java.time.LocalDate;
-
-import org.junit.jupiter.api.Tag;
-
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.soeknad.ForeldrepengesoknadBuilder;
-import no.nav.foreldrepenger.fpmock2.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.fpmock2.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import org.junit.jupiter.api.Tag;
+
+import java.time.LocalDate;
 
 @Tag("eksempel")
 public class Totrinnskontroll extends FpsakTestBase {
@@ -19,7 +20,11 @@ public class Totrinnskontroll extends FpsakTestBase {
     public void behandleTotrinnskontrollAvTerminsøknad() throws Exception {
         //Oprett scenario og søknad
         TestscenarioDto testscenario = opprettScenario("50");
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.terminMorEngangstonad(testscenario.getPersonopplysninger().getSøkerAktørIdent());
+        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.MOR,
+                1,
+                LocalDate.now().plusWeeks(3));
 
         //Send inn søknad
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
