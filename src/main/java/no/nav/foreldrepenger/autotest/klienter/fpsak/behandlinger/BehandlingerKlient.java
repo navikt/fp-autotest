@@ -53,7 +53,7 @@ public class BehandlingerKlient extends FpsakKlient {
     private static final String BEHANDLING_URL = "/behandling";
     private static final String BEHANDLING_PERSONOPPLYSNINGER_URL = BEHANDLING_URL + "/person/personopplysninger";
     private static final String BEHANDLING_VERGE_URL = BEHANDLING_URL + "/person/verge";
-    private static final String BEHANDLING_PERSON_MEDLEMSKAP = BEHANDLING_URL + "/person/medlemskap";
+    private static final String BEHANDLING_PERSON_MEDLEMSKAP = BEHANDLING_URL + "/person/medlemskap-v2";
     private static final String BEHANDLING_ENGANGSSTØNAD_URL = BEHANDLING_URL + "/beregningsresultat/engangsstonad";
     private static final String BEHANDLING_FORELDREPENGER_URL = BEHANDLING_URL + "/beregningsresultat/foreldrepenger";
     private static final String BEHANDLING_BEREGNINGSGRUNNALG_URL = BEHANDLING_URL + "/beregningsgrunnlag";
