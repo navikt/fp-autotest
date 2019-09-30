@@ -983,10 +983,10 @@ public class Fodsel extends ForeldrepengerTestBase {
         assertThat(utsettelse.getUtsettelseType().kode).isEqualTo(UTSETTELSETYPE_ARBEID);
         assertThat(utsettelse.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.ZERO);
         assertThat(utsettelse.getAktiviteter().get(0).getTrekkdagerDesimaler()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(utsettelse.getAktiviteter().get(0).getStønadskontoType().kode).isEqualTo(FordelingErketyper.STØNADSKONTOTYPE_MØDREKVOTE);
+        assertThat(utsettelse.getAktiviteter().get(0).getStønadskontoType().kode).isEqualTo("-");
         assertThat(utsettelse.getAktiviteter().get(1).getUtbetalingsgrad()).isEqualTo(BigDecimal.ZERO);
         assertThat(utsettelse.getAktiviteter().get(1).getTrekkdagerDesimaler()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(utsettelse.getAktiviteter().get(1).getStønadskontoType().kode).isEqualTo(FordelingErketyper.STØNADSKONTOTYPE_MØDREKVOTE);
+        assertThat(utsettelse.getAktiviteter().get(1).getStønadskontoType().kode).isEqualTo("-");
 
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().size() == 4, "Feil i antall stønadskontoer, skal være 4.");
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get("FORELDREPENGER_FØR_FØDSEL").getSaldo() >= 0, "FPFF skal ikke være i minus.");
