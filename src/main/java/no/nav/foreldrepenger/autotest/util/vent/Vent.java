@@ -17,15 +17,15 @@ public class Vent {
     }
 
     public static void til(Callable<Boolean> callable, int timeoutInSeconds, Callable<String> errorMessageProducer) throws Exception {
-        LocalDateTime start = LocalDateTime.now(); 
+        LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusSeconds(timeoutInSeconds);
-        
+
         while (!callable.call()) {
             if (LocalDateTime.now().isAfter(end)) {
                 throw new RuntimeException(String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds, errorMessageProducer.call()));
             }
             try {
-                Thread.sleep(1500);
+                Thread.sleep(2500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(
                     String.format("Async venting interrupted ut etter %s sekunder fordi: %s", ChronoUnit.SECONDS.between(start, LocalDateTime.now()), errorMessageProducer.call()), e);
