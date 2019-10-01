@@ -549,7 +549,7 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             refreshBehandling();
             return harHistorikkinnslag(type);
-        }, 60, () -> "Saken  hadde ikke historikkinslag " + type + "\n\tHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
+        }, 30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
     }
 
     /*
@@ -560,7 +560,7 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             velgBehandling(valgtBehandling);
             return harAntallHistorikkinnslag(type) == antallHistorikkInnslag;
-        }, sekunder, () -> "Saken  hadde ikke historikkinslag " + type + "\n\tHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
+        }, sekunder, () -> "Saken  hadde ikke historikkinslag " + type + " \nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
     }
 
     public boolean harHistorikkinnslag(HistorikkInnslag.Type type) {
