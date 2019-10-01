@@ -138,3 +138,9 @@ KAFKA_HISTORIKKINNSLAG_TOPIC=privat-foreldrepenger-historikkinnslag
 FPOPPDRAG_OVERRIDE_PROXY_URL=http://vtp:8060/rest/dummy/fpoppdrag
 FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/fpoppdrag
 
+FPFORMIDLING_BESTILLBREV_URL=https://vtp:8063/rest/fpformidling/brev/bestill
+FPFORMIDLING_HENTBREVMALER_URL=https://vtp:8063/rest/fpformidling/brev/maler
+FPFORMIDLING_ERDOKUMENTPRODUSERT_URL=https://vtp:8063/rest/fpformidling/brev/dokument-sendt
+FPFORMIDLING_LAGRESAKSBEHANDLERTEKST_URL=https://vtp:8063/rest/fpformidling/saksbehandlertekst/lagre
+FPFORMIDLING_HENTSAKSBEHANDLERTEKST_URL=https://vtp:8063/rest/fpformidling/saksbehandlertekst/hent
+
