@@ -491,12 +491,6 @@ public class Fodsel extends ForeldrepengerTestBase {
         result = expectKlient.checkExpectation(expectXml);
         verifiser(result.isExpectationMet(), "xml brev ikke truffet");
 
-        //String xml = result.getResultData();
-        //System.out.println(xml);
-        //BrevMalXml mal1 = BrevMalXml.fromString(xml);
-        //BrevMalXml mal2 = BrevMalXml.fromString(xml);
-
-        //verifiser(mal1.isComparable(mal2));
     }
 
     @Test
@@ -995,8 +989,6 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
     }
 
     @Test
@@ -1058,7 +1050,6 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
     }
 
     @Test
