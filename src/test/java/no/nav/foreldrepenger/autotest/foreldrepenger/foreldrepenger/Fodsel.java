@@ -113,7 +113,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         verifiserLikhet(andeler.get(1).getAktivitetStatus().kode, "FL");
 
         //Legg til og fjern ytelser for å se tilbakehopp og opprettelse av akjsonspunkter
-        verifiser(saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS));
+        verifiser(saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS),"Har ikke aksjonspunkt for FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS");
         saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL.kode)
@@ -147,7 +147,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
         verifiserUttak(2, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
@@ -215,7 +215,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), false);
 
@@ -274,7 +274,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
         verifiserUttak(2, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
@@ -325,7 +325,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
@@ -369,7 +369,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
         verifiserUttak(2, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
 
@@ -397,7 +397,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT), "Brev har ikke blitt sendt");
         verifiserUttak(1, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -425,7 +425,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
         verifiserUttak(2, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -527,7 +527,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
         verifiserUttak(1, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
 
@@ -692,7 +692,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -792,7 +792,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
     }
 
@@ -1058,7 +1058,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT));
+        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT),"Brev har ikke blitt sendt");
     }
 
     @Test

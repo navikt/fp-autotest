@@ -549,7 +549,7 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             refreshBehandling();
             return harHistorikkinnslag(type);
-        }, 20, () -> "Saken  hadde ikke historikkinslag " + type + "\n\tHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
+        }, 60, () -> "Saken  hadde ikke historikkinslag " + type + "\n\tHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
     }
 
     /*
