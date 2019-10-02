@@ -1,6 +1,6 @@
 APP_NAME=spberegning
 NAIS_APP_NAME=spberegning
 DEFAULTDS_URL=jdbc:oracle:thin:@host.docker.internal:1521/xe
-DEFAULTDS_USERNAME=vtp_spberegning
-DEFAULTDS_PASSWORD=passord
+DEFAULTDS_USERNAME=spberegning
+DEFAULTDS_PASSWORD=spberegning
 DVHDS_URL=jdbc:oracle:thin:@host.docker.internal:1521/xe
