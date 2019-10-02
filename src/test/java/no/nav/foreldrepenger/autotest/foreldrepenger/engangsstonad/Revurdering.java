@@ -63,7 +63,6 @@ public class Revurdering extends EngangsstonadTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingsresultat");
 
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
 
         saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");

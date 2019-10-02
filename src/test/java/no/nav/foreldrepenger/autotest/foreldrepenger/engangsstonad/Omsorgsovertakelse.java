@@ -68,7 +68,7 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling();
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
-        beslutter.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
+        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
 
     @Test
@@ -173,9 +173,9 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling();
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
-        beslutter.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
+        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
-    
+
     @Test
     @DisplayName("Far søker Foreldreansvar 2. ledd - godkjent")
     @Description("Far søker Foreldreansvar 2. ledd - får godkjent aksjonspunkt og blir invilget")
@@ -198,7 +198,7 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
                 .setVilkårType(saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_8"));
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
 
-        
+
         saksbehandler.hentAksjonspunktbekreftelse(VurderingAvForeldreansvarAndreLedd.class)
                 .bekreftGodkjent();
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderingAvForeldreansvarAndreLedd.class);
@@ -213,6 +213,6 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling();
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
-        beslutter.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
+        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
 }

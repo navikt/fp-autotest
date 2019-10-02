@@ -99,7 +99,6 @@ public class Termin extends EngangsstonadTestBase {
         //verifiser(saksbehandler.harDokument(""), "Behandling har ikke dokument");
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
     }
 
     @Test
@@ -202,12 +201,12 @@ public class Termin extends EngangsstonadTestBase {
 
         saksbehandler.gjenopptaBehandling();
         verifiser(!saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er satt på vent");
-        
+
         saksbehandler.henleggBehandling(saksbehandler.kodeverk.BehandlingResultatType.getKode("HENLAGT_SØKNAD_TRUKKET"));
         verifiser(saksbehandler.valgtBehandling.erHenlagt(), "Behandlingen ble uventet ikke henlagt");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU", "behandlingsstatus");
     }
-    
+
     @Test
     @DisplayName("Mor søker termin 25 dager etter fødsel")
     @Description("Mor søker termin 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
@@ -224,17 +223,17 @@ public class Termin extends EngangsstonadTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        
+
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
 
         saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
                 .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderManglendeFodselBekreftelse.class);
-        
+
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
 
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
-        
+
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
@@ -242,5 +241,5 @@ public class Termin extends EngangsstonadTestBase {
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling();
     }
-    
+
 }

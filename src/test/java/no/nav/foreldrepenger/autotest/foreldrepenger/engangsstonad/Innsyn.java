@@ -63,10 +63,9 @@ public class Innsyn extends EngangsstonadTestBase {
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         AllureHelper.debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_INNVILGET", "Behandlingstatus");
         verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_BESTILT), "Brev er ikke bestilt etter innsyn er godkjent");
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT), "Brev er ikke sendt etter innsyn er godkjent");
+        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
 
     @Test
@@ -99,10 +98,10 @@ public class Innsyn extends EngangsstonadTestBase {
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_AVVIST", "Behandlingstatus");
         verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_BESTILT), "Brev er ikke bestilt etter innsyn er godkjent");
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT), "Brev er ikke sendt etter innsyn er godkjent");
+        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
     @Disabled //Disabled til Kafka støtte for brev er i VTP
     @Test
@@ -135,9 +134,8 @@ public class Innsyn extends EngangsstonadTestBase {
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_AVVIST", "Behandlingstatus");
         verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_BESTILT), "Brev er ikke bestilt etter innsyn er godkjent");
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENDT), "Brev er ikke sendt etter innsyn er godkjent");
+        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
 }
