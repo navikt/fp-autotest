@@ -19,6 +19,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     protected double bruttoPrAar;
     protected double avkortetPrAar;
     protected double redusertPrAar;
+    protected double fordeltPrAar;
     protected boolean erTidsbegrensetArbeidsforhold;
     protected boolean erNyIArbeidslivet;
     protected boolean lonnsendringIBeregningsperioden;
@@ -52,4 +53,10 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     public double getBruttoPrAar() {
         return bruttoPrAar;
     }
+
+    public double getFordeltPrAar() {
+        return fordeltPrAar;
+    }
+
+
 }
