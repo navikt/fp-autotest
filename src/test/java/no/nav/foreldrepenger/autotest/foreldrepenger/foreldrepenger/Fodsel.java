@@ -485,11 +485,6 @@ public class Fodsel extends ForeldrepengerTestBase {
         verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.VEDTAK_FATTET), "behandling har ikke historikkinslag 'Vedtak fattet'");
         beslutter.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
 
-        ExpectResultDto result = expectKlient.checkExpectation(token);
-        verifiser(result.isExpectationMet(), "Forventningen er ikke møtt");
-
-        result = expectKlient.checkExpectation(expectXml);
-        verifiser(result.isExpectationMet(), "xml brev ikke truffet");
 
     }
 
