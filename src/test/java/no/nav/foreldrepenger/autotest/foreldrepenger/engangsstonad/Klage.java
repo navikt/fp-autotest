@@ -73,7 +73,7 @@ public class Klage extends EngangsstonadTestBase {
         verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
 
     }
-    
+
     @Test
     @DisplayName("Behandle klage via NFP - påklaget vedtak opphevet")
     @Description("Behandle klage via NFP - stadfestet af NFP og opphevet av KA")
@@ -139,7 +139,7 @@ public class Klage extends EngangsstonadTestBase {
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
 
     }
-    
+
     @Test
     @DisplayName("Behandle klage via KA - påklaget vedtak omgjort/medhold")
     @Description("Behandle klage via KA - stadfestet af NFP og medhold av KA")
@@ -180,15 +180,15 @@ public class Klage extends EngangsstonadTestBase {
                 .godkjennAlleFormkrav()
                 .setBegrunnelse("blabla begrunnelse");
         klagebehandler.bekreftAksjonspunktBekreftelse(KlageFormkravKa.class);
-        
+
         klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
             .bekreftMedholdGunst("NYE_OPPLYSNINGER")
             .fritekstBrev("Brev");
         klagebehandler.bekreftAksjonspunktBekreftelse(VurderingAvKlageNkBekreftelse.class);
-        
+
         klagebehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
-        
-        
+
+
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
@@ -340,8 +340,7 @@ public class Klage extends EngangsstonadTestBase {
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
 
         verifiserBehandlingsresultat(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNVILGET");
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
-        
+
         saksbehandler.ventTilAvsluttetBehandling();
     }
 

@@ -56,8 +56,7 @@ public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingsresultat");
 
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
-        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        saksbehandler.ventTilAvsluttetBehandling();
 
         saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
         saksbehandler.velgRevurderingBehandling();
