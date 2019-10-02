@@ -89,9 +89,9 @@ public class Klage extends ForeldrepengerTestBase {
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        
+
         ExpectTokenDto expectXml = expectKlient.createExpectation(new ExpectRequestDto(Mock.DOKUMENTPRODUKSJON.toString(), "produserIkkeredigerbartDokument", new ExpectPredicate("aktør", testscenario.getPersonopplysninger().getSøkerIdent())));
-        
+
         beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));
         beslutter.bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
@@ -101,11 +101,8 @@ public class Klage extends ForeldrepengerTestBase {
         verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(), fritekstBrev);
         verifiserLikhet(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageMedholdArsak(), "ULIK_VURDERING", "Årsak");
         verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
-        
-        ExpectResultDto result = expectKlient.checkExpectation(expectXml);
-        Felles fellesxml = Felles.fromString(result.getResultData());
-        fellesxml.valider();
-        
+
+
     }
 
     @Test
