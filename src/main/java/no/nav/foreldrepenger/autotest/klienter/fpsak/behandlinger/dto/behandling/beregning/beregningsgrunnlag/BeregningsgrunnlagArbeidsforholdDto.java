@@ -13,6 +13,7 @@ public class BeregningsgrunnlagArbeidsforholdDto {
     protected String arbeidsforholdId;
     protected Kode arbeidsforholdType;
     protected AktørId aktørId;
+    protected double refusjonPrAar;
 
     public String getArbeidsgiverNavn() {
         return arbeidsgiverNavn;
@@ -40,5 +41,9 @@ public class BeregningsgrunnlagArbeidsforholdDto {
 
     public AktørId getAktørId() {
         return aktørId;
+    }
+
+    public double getRefusjonPrAar() {
+        return refusjonPrAar;
     }
 }

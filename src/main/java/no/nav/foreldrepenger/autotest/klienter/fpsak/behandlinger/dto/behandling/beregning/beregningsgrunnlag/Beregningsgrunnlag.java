@@ -13,6 +13,7 @@ public class Beregningsgrunnlag {
     protected List<Kode> aktivitetStatus;
     protected List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
     protected FaktaOmBeregningDto faktaOmBeregning;
+    protected FaktaOmFordelingDto faktaOmFordeling;
     protected long halvG;
     protected String ledetekstAvkortet;
     protected String ledetekstBrutto;
@@ -48,4 +49,7 @@ public class Beregningsgrunnlag {
         return faktaOmBeregning;
     }
 
+    public FaktaOmFordelingDto getFaktaOmFordeling() {
+        return faktaOmFordeling;
+    }
 }
