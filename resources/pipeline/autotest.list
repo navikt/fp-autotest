@@ -144,3 +144,4 @@ FPFORMIDLING_ERDOKUMENTPRODUSERT_URL=https://vtp:8063/rest/fpformidling/brev/dok
 FPFORMIDLING_LAGRESAKSBEHANDLERTEKST_URL=https://vtp:8063/rest/fpformidling/saksbehandlertekst/lagre
 FPFORMIDLING_HENTSAKSBEHANDLERTEKST_URL=https://vtp:8063/rest/fpformidling/saksbehandlertekst/hent
 
+FPTILBAKE_OVERRIDE_DIREKTE_URL=https://vtp:8063/rest/dummy/boolean/false
