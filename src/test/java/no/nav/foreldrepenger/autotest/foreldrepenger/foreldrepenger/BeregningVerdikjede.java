@@ -244,13 +244,13 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         // AVVIK I BEREGNING //
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
         saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt(25_000, 1L)
+                .leggTilInntekt(300_000, 1L)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
 
         // ASSERT BEREGNINGSGRUNNLAG //
         Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0), lagBGAndel(OrgNummer.KUNSTIG_ORG, 0, 25_000, 0));
+        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0), lagBGAndel(OrgNummer.KUNSTIG_ORG, 300_000, 300_000, 0));
 
         // FORESLÅ VEDTAK //
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
