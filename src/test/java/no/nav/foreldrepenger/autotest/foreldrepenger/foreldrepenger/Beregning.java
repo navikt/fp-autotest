@@ -580,7 +580,7 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSLONN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING.kode)
-                .leggTilMottarYtelse(false, singletonList(new ArbeidstakerandelUtenIMMottarYtelse(1, true)))
+                .leggTilMottarYtelse(singletonList(new ArbeidstakerandelUtenIMMottarYtelse(1, true)))
                 .leggTilMaanedsinntektUtenInntektsmelding(singletonList(new FastsettMaanedsinntektUtenInntektsmeldingAndel(1, 30000)));
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
 

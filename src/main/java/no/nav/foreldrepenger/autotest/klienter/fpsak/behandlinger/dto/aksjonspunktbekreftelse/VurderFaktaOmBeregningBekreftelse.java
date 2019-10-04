@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.util.ArrayList;
 import java.util.List;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
@@ -29,11 +28,15 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilMottarYtelse(boolean mottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses){
-        fakta.leggTilMottarYtelse(mottarYtelse, arbeidstakerandelUtenIMMottarYtelses);
+    public VurderFaktaOmBeregningBekreftelse leggTilMottarYtelse(List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses){
+        fakta.leggTilMottarYtelse(false, arbeidstakerandelUtenIMMottarYtelses);
         return this;
     }
 
+    public VurderFaktaOmBeregningBekreftelse leggTilMottarYtelseFrilans(boolean frilansMottarYtelse){
+        fakta.leggTilMottarYtelse(frilansMottarYtelse, List.of());
+        return this;
+    }
 
     public VurderFaktaOmBeregningBekreftelse leggTilMaanedsinntektUtenInntektsmelding(List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe){
         fakta.leggTilMaanedsinntektUtenInntektsmelding(andelListe);

@@ -29,6 +29,20 @@ public class Arbeidsforhold {
     protected Boolean tilVurdering = null;
     protected Boolean vurderOmSkalErstattes = null;
     protected LocalDate overstyrtTom = null;
+    protected Boolean lagtTilAvSaksbehandler;
+
+
+    public Arbeidsforhold() {
+        // jaxb
+    }
+
+    public Arbeidsforhold(String navn, LocalDate fomDato, LocalDate tomDato, BigDecimal stillingsprosent, Boolean lagtTilAvSaksbehandler) {
+        this.navn = navn;
+        this.fomDato = fomDato;
+        this.tomDato = tomDato;
+        this.stillingsprosent = stillingsprosent;
+        this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
+    }
 
     public Boolean getBrukArbeidsforholdet() {
         return brukArbeidsforholdet;
