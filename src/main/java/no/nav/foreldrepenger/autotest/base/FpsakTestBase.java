@@ -7,6 +7,7 @@ import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper
 import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingErketype;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenariodataDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
 import no.nav.inntektsmelding.xml.kodeliste._20180702.YtelseKodeliste;
@@ -73,6 +74,31 @@ public class FpsakTestBase extends TestScenarioTestBase {
             inntektsperioder = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioderSplittMånedlig();
             arbeidsforholdEtterStartdatoFP = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
         }
+        arbeidsforholdEtterStartdatoFP.stream()
+                .filter(arbeidsforhold ->
+                        arbeidsforhold.getAnsettelsesperiodeTom() == null ||
+                                !arbeidsforhold.getAnsettelsesperiodeTom().isBefore(startDatoForeldrepenger))
+                .collect(Collectors.toList());
+        List<InntektsmeldingBuilder> inntektsmeldinger = new ArrayList<>();
+        for (var arbeidsforhold : arbeidsforholdEtterStartdatoFP) {
+            String arbeidsgiverOrgnr = arbeidsforhold.getArbeidsgiverOrgnr();
+            Inntektsperiode sisteInntektsperiode = inntektsperioder.stream()
+                    .filter(inntektsperiode -> inntektsperiode.getOrgnr().equals(arbeidsgiverOrgnr))
+                    .max(Comparator.comparing(Inntektsperiode::getTom))
+                    .orElseThrow(() -> new IllegalStateException("Utvikler feil: Arbeidsforhold mangler inntektsperiode"));
+            Integer beløp = sisteInntektsperiode.getBeløp();
+            inntektsmeldinger.add(lagInntektsmeldingBuilder(beløp, søkerIdent, startDatoForeldrepenger, arbeidsgiverOrgnr, Optional.empty(), Optional.empty(), Optional.empty()));
+        }
+
+        return inntektsmeldinger;
+    }
+    protected List<InntektsmeldingBuilder> makeInntektsmeldingFromtestscenariodata(TestscenariodataDto testscenariodata, String søkerIdent, LocalDate startDatoForeldrepenger) {
+
+        List<Inntektsperiode> inntektsperioder;
+        List<Arbeidsforhold> arbeidsforholdEtterStartdatoFP;
+        inntektsperioder = testscenariodata.getInntektskomponentModell().getInntektsperioderSplittMånedlig();
+        arbeidsforholdEtterStartdatoFP = testscenariodata.getArbeidsforholdModell().getArbeidsforhold();
+
         arbeidsforholdEtterStartdatoFP.stream()
                 .filter(arbeidsforhold ->
                         arbeidsforhold.getAnsettelsesperiodeTom() == null ||

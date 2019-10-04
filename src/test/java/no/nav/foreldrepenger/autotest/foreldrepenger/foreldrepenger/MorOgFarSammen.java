@@ -517,43 +517,43 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         Fordeling fordelingFar = new Fordeling();
         fordelingFar.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> periodeFar = fordelingFar.getPerioder();
-        periodeFar.add(new UttaksperiodeBuilder()
-                .medFlerbarnsdager(true)
-                .medSamtidigUttak(true, BigDecimal.valueOf(100))
-                .medStønadskontoType(STØNADSKONTOTYPE_FELLESPERIODE)
-                .medTidsperiode(fødsel.plusWeeks(2), fødsel.plusWeeks(6).minusDays(1))
+        periodeFar.add(new UttaksperiodeBuilder(
+                STØNADSKONTOTYPE_FELLESPERIODE,
+                fødsel.plusWeeks(2), fødsel.plusWeeks(6).minusDays(1))
+                .medFlerbarnsdager()
+                .medSamtidigUttak(BigDecimal.valueOf(100))
                 .build());
-        periodeFar.add(new UttaksperiodeBuilder()
-                .medFlerbarnsdager(true)
-                .medSamtidigUttak(true, BigDecimal.valueOf(100))
-                .medStønadskontoType(STØNADSKONTOTYPE_FEDREKVOTE)
-                .medTidsperiode(fødsel.plusWeeks(6), fødsel.plusWeeks(9).minusDays(1))
+        periodeFar.add(new UttaksperiodeBuilder(
+                STØNADSKONTOTYPE_FEDREKVOTE,
+                fødsel.plusWeeks(6), fødsel.plusWeeks(9).minusDays(1))
+                .medFlerbarnsdager()
+                .medSamtidigUttak(BigDecimal.valueOf(100))
                 .build());
-        periodeFar.add(new UttaksperiodeBuilder()
-                .medFlerbarnsdager(true)
-                .medStønadskontoType(STØNADSKONTOTYPE_FEDREKVOTE)
-                .medTidsperiode(fødsel.plusWeeks(9), fødsel.plusWeeks(10).minusDays(1))
+        periodeFar.add(new UttaksperiodeBuilder(
+                STØNADSKONTOTYPE_FEDREKVOTE,
+                fødsel.plusWeeks(9), fødsel.plusWeeks(10).minusDays(1))
+                .medFlerbarnsdager()
                 .build());
-        periodeFar.add(new UttaksperiodeBuilder()
-                .medSamtidigUttak(true, BigDecimal.valueOf(50))
-                .medStønadskontoType(STØNADSKONTOTYPE_FEDREKVOTE)
-                .medTidsperiode(fødsel.plusWeeks(10), fødsel.plusWeeks(11).minusDays(1))
+        periodeFar.add(new UttaksperiodeBuilder(
+                STØNADSKONTOTYPE_FEDREKVOTE,
+                fødsel.plusWeeks(10), fødsel.plusWeeks(11).minusDays(1))
+                .medSamtidigUttak(BigDecimal.valueOf(50))
                 .build());
-        periodeFar.add(new UttaksperiodeBuilder()
-                .medFlerbarnsdager(true)
-                .medSamtidigUttak(true, BigDecimal.valueOf(100))
-                .medStønadskontoType(STØNADSKONTOTYPE_FEDREKVOTE)
-                .medTidsperiode(fødsel.plusWeeks(23), fødsel.plusWeeks(27).minusDays(1))
+        periodeFar.add(new UttaksperiodeBuilder(
+                STØNADSKONTOTYPE_FEDREKVOTE,
+                fødsel.plusWeeks(23), fødsel.plusWeeks(27).minusDays(1))
+                .medFlerbarnsdager()
+                .medSamtidigUttak(BigDecimal.valueOf(100))
                 .build());
-        periodeFar.add(new UttaksperiodeBuilder()
-                .medStønadskontoType(STØNADSKONTOTYPE_FELLESPERIODE)
-                .medTidsperiode(fødsel.plusWeeks(27), fødsel.plusWeeks(31).minusDays(1))
+        periodeFar.add(new UttaksperiodeBuilder(
+                STØNADSKONTOTYPE_FELLESPERIODE,
+                fødsel.plusWeeks(27), fødsel.plusWeeks(31).minusDays(1))
                 .build());
-        periodeFar.add(new UttaksperiodeBuilder()
-                .medFlerbarnsdager(true)
-                .medSamtidigUttak(true, BigDecimal.valueOf(100))
-                .medStønadskontoType(STØNADSKONTOTYPE_FELLESPERIODE)
-                .medTidsperiode(fødsel.plusWeeks(31), fødsel.plusWeeks(38).minusDays(1))
+        periodeFar.add(new UttaksperiodeBuilder(
+                STØNADSKONTOTYPE_FELLESPERIODE,
+                fødsel.plusWeeks(31), fødsel.plusWeeks(38).minusDays(1))
+                .medFlerbarnsdager()
+                .medSamtidigUttak(BigDecimal.valueOf(100))
                 .build());
         periodeFar.add(uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødsel.plusWeeks(38), fødsel.plusWeeks(42).minusDays(1)));
         return fordelingFar;
