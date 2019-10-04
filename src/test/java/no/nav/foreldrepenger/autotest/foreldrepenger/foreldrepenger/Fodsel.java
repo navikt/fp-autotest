@@ -23,7 +23,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.klienter.vtp.expect.dto.ExpectRequestDto;
-import no.nav.foreldrepenger.autotest.klienter.vtp.expect.dto.ExpectResultDto;
 import no.nav.foreldrepenger.autotest.klienter.vtp.expect.dto.ExpectTokenDto;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
@@ -53,7 +52,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggHistorikkinnslag;
 import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -100,7 +98,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
         saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode)
-                .leggTilMottarYtelse(false, Collections.emptyList());
+                .leggTilMottarYtelse(Collections.emptyList());
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
 
         //Verifiser Beregningsgrunnlag
@@ -117,14 +115,14 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL.kode)
-                .leggTilMottarYtelse(true, Collections.emptyList())
+                .leggTilMottarYtelse(Collections.emptyList())
                 .leggTilMaanedsinntekt(25800);
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         verifiser(!saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS), "Fått AP hvor det ikke skal være det");
 
         saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode)
-                .leggTilMottarYtelse(false, Collections.emptyList());
+                .leggTilMottarYtelse(Collections.emptyList());
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
 
         saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)

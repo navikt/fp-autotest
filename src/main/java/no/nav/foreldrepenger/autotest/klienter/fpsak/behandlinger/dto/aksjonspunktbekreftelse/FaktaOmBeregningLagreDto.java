@@ -2,6 +2,9 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.MottarYtelse;
@@ -10,6 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FaktaOmBeregningLagreDto {
 
     protected FastsettMaanedsinntektFL fastsettMaanedsinntektFL;
@@ -30,8 +34,12 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilMottarYtelse(boolean mottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses){
-        this.mottarYtelse = new MottarYtelse(mottarYtelse, arbeidstakerandelUtenIMMottarYtelses);
+    public FaktaOmBeregningLagreDto leggTilMottarYtelse(Boolean frilansMottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses){
+        if (this.mottarYtelse != null) {
+            arbeidstakerandelUtenIMMottarYtelses.forEach(this.mottarYtelse::leggTilArbeidstakerandelUtenIMMottarYtelse);
+        } else {
+            this.mottarYtelse = new MottarYtelse(frilansMottarYtelse, arbeidstakerandelUtenIMMottarYtelses);
+        }
         return this;
     }
 

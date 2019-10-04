@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +76,12 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
                 return arbeidsforhold;
             }
         }
+        return null;
+    }
+
+    public Arbeidsforhold leggTilArbeidsforhold(String navn, LocalDate startDato, LocalDate sluttDato, int stillingsprosent) {
+        Arbeidsforhold arbeid = new Arbeidsforhold(navn, startDato, sluttDato, BigDecimal.valueOf(stillingsprosent), true);
+        arbeidsforhold.add(arbeid);
         return null;
     }
 

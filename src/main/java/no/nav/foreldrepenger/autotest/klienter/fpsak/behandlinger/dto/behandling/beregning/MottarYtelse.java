@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MottarYtelse {
 
-    protected boolean frilansMottarYtelse;
+    protected Boolean frilansMottarYtelse;
     protected List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerUtenIMMottarYtelse;
 
-    public MottarYtelse(boolean frilansMottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses){
+    public MottarYtelse(Boolean frilansMottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses){
         this.frilansMottarYtelse = frilansMottarYtelse;
         this.arbeidstakerUtenIMMottarYtelse = arbeidstakerandelUtenIMMottarYtelses;
     }
