@@ -42,7 +42,8 @@ public class Termin extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor søker med ett arbeidsforhold. Inntektmelding innsendt før søknad")
-    @Description("Mor med ett arbeidsforhold sender inn inntektsmelding før søknad. Forventer at vedtak bli fattet og brev blir sendt")
+    @Description("Mor med ett arbeidsforhold sender inn inntektsmelding før søknad. " +
+            "Forventer at vedtak bli fattet og det blir bare opprettet en behandling")
     public void MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad() throws Exception {
         TestscenarioDto testscenario = opprettScenario("55");
         LocalDate termindato = LocalDate.now().plusWeeks(3);
@@ -52,19 +53,18 @@ public class Termin extends ForeldrepengerTestBase {
         List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario, startDatoForeldrepenger);
         Long saksnummer = fordel.sendInnInntektsmeldinger(inntektsmeldinger, testscenario);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        SøknadBuilder søknad = SøknadErketyper.foreldrepengesøknadTerminErketype(aktørID, SøkersRolle.MOR, 1, termindato);
-        fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, saksnummer);
-
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-
-        //TODO (OL): Flyttet til ventende sjekk - OK?
         saksbehandler.hentFagsak(saksnummer);
-        debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
-        debugLoggBehandling(saksbehandler.valgtBehandling);
+        saksbehandler.velgSisteBehandling();
+        verifiser(saksbehandler.behandlinger.size() == 1, "Antall behandlinger er ikke 1");
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VENT_PÅ_SØKNAD);
 
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDTAK_FATTET);
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+        SøknadBuilder søknad = SøknadErketyper.foreldrepengesøknadTerminErketype(aktørID, SøkersRolle.MOR, 1, termindato);
+        fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+        //TODO EW legge til validering på om antall behandlinger er riktig.
+
     }
 
     @Test
