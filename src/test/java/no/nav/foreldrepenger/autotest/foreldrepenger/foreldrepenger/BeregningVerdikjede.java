@@ -33,6 +33,7 @@ import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Foreldrepenger;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.seres.xsd.nav.inntektsmelding_m._20181211.NaturalytelseDetaljer;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -269,6 +270,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     }
 
     @Test
+    @Disabled
     @DisplayName("Mor søker fødsel med skjæringstidspunkt på mandag. Arbeidsforhold avslutter fredag og nytt starter på lørdag.")
     public void morSøkerFødselMedStpPåMandagMedTilkommetArbeidIHelga() throws Exception {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
