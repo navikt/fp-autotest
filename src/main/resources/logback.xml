@@ -15,15 +15,16 @@
 		<file>autotest.log</file>
 		<encoder>
             <charset>UTF-8</charset>
-            <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] - %msg%n</pattern>
+            <pattern>%d [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] - %msg%n</pattern>
         </encoder>
 	</appender>
 
 	<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
 		<appender-ref ref="FILE" />
+		<discardingThreshold>0</discardingThreshold>
 	</appender>
 
-	<logger name="autotest" level="${log.level.no.nav:-INFO}" additivity="false">
+	<logger name="autotest.log" level="INFO" additivity="false">
 	   <appender-ref ref="ASYNC" />
 	</logger>
 

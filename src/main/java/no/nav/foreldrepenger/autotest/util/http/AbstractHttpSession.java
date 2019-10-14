@@ -44,7 +44,7 @@ public abstract class AbstractHttpSession implements HttpSession {
     protected HttpClientContext context;
     protected CookieStore cookies;
     
-    private final Logger log = LoggerFactory.getLogger("autotest.request");
+    private final Logger log = LoggerFactory.getLogger("autotest.log");
 
     public AbstractHttpSession() {
         this.context = HttpClientContext.create();
