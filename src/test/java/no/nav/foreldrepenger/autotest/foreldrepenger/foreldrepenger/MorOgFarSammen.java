@@ -420,6 +420,8 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
     }
 
+    //TODO (sagrada) skriv ferdig testen
+    @Disabled
     @Test
     @DisplayName("Koblet sak med flerbarnsdager og samtidig uttak")
     @Description("Mor søker med blabla. Far søker med blabla.")
@@ -460,10 +462,8 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         List<InntektsmeldingBuilder> inntektsmeldingerFar = makeInntektsmeldingFromTestscenarioMedIdent(testscenario, farIdent, fødsel.plusWeeks(2), true);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerFar, farAktørIdent, farIdent, saksnummerFar);
         saksbehandler.hentFagsak(saksnummerFar);
-        Kode godkjennFellesperiode = saksbehandler.kodeverk.InnvilgetÅrsak.getKode("2002");
         saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .godkjennPeriode(fødsel.plusWeeks(27), fødsel.plusWeeks(31).minusDays(1), godkjennFellesperiode, 100)
-                .godkjennPeriode(fødsel.plusWeeks(36), fødsel.plusWeeks(38).minusDays(1), 100, godkjennFellesperiode, false, false);
+                .godkjennAlleManuellePerioder(100);
         saksbehandler.bekreftAksjonspunktBekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
 
@@ -477,13 +477,8 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.velgRevurderingBehandling();
-        Kode godkjennInnvilget = saksbehandler.kodeverk.InnvilgetÅrsak.getKode("2003");
         saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .godkjennPeriode(fødsel.plusWeeks(2), fødsel.plusWeeks(6).minusDays(1), 100, godkjennInnvilget, true, 100)
-                .godkjennPeriode(fødsel.plusWeeks(6), fødsel.plusWeeks(9).minusDays(1), 100, godkjennInnvilget, true, 100)
-                .godkjennPeriode(fødsel.plusWeeks(10), fødsel.plusWeeks(11).minusDays(1), 100, godkjennFellesperiode, true, 100)
-                .godkjennPeriode(fødsel.plusWeeks(23), fødsel.plusWeeks(27).minusDays(1), 100, godkjennInnvilget, true, 100)
-                .godkjennPeriode(fødsel.plusWeeks(31), fødsel.plusWeeks(36).minusDays(1), 100, godkjennFellesperiode, true, 100);
+                .godkjennAlleManuellePerioder(100);
         saksbehandler.bekreftAksjonspunktBekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
 
