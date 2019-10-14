@@ -31,6 +31,8 @@ import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -41,6 +43,8 @@ public abstract class AbstractHttpSession implements HttpSession {
     protected CloseableHttpClient client;
     protected HttpClientContext context;
     protected CookieStore cookies;
+    
+    private final Logger log = LoggerFactory.getLogger("autotest.request");
 
     public AbstractHttpSession() {
         this.context = HttpClientContext.create();
@@ -67,7 +71,8 @@ public abstract class AbstractHttpSession implements HttpSession {
         HttpGet request = new HttpGet(url);
 
         HttpResponse response =  execute(request, headers);
-        System.out.println(String.format("GET[%s]: [%s]", url, response.getStatusLine().getStatusCode()));
+        
+        log.info("GET[{}]: [{}]", url, response.getStatusLine().getStatusCode());
         return response;
     }
 
@@ -77,12 +82,12 @@ public abstract class AbstractHttpSession implements HttpSession {
         request.setEntity(entity);
 
         HttpResponse response = execute(request, headers);
-        System.out.println(String.format("POST[%s]: [%s] med content [%s]",
+        log.info("POST[{}]: [{}] med content\n\t[{}]\n\tHeaders: {}",
                 url,
                 response.getStatusLine().getStatusCode(),
-                new BufferedReader(new InputStreamReader(entity.getContent())).lines().parallel().collect(Collectors.joining("\n"))
-        ));
-        System.out.println("    Headers: " + new ObjectMapper().writeValueAsString(headers));
+                new BufferedReader(new InputStreamReader(entity.getContent())).lines().parallel().collect(Collectors.joining("\n")),
+                new ObjectMapper().writeValueAsString(headers)
+        );
         return response;
     }
 
