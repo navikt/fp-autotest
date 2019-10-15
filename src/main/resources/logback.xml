@@ -11,6 +11,23 @@
 		</filter>
 	</appender>
 
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>autotest.log</file>
+		<encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] - %msg%n</pattern>
+        </encoder>
+	</appender>
+
+	<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="FILE" />
+		<discardingThreshold>0</discardingThreshold>
+	</appender>
+
+	<logger name="autotest.log" level="INFO" additivity="false">
+	   <appender-ref ref="ASYNC" />
+	</logger>
+
 	<logger name="no.nav" level="${log.level.no.nav:-INFO}" />
 
 	<!-- skru paa for aa logge all sql statements med parametere -->
@@ -22,20 +39,21 @@
 	<logger name="ch.qos.logback" level="${log.level.ch.qos.logback:-WARN}" />
 	<logger name="org.flywaydb" level="${log.level.org.flywaydb:-INFO}" />
 	<logger name="org.apache" level="${log.level.org.apache:-ERROR}" />
-	
+
 	<logger name="org.eclipse.jetty" level="${log.level.org.eclipse.jetty:-INFO}" />
-	
+
 	<!-- ESSV: genererer en del støy for webservice -->
 	<logger name="org.jboss.weld" level="${log.level.org.jboss.weld:-WARN}" />
 	<logger name="org.jboss.resteasy" level="${log.level.org.jboss.resteasy:-WARN}" />
 
 	<logger name="no.nav.modig" level="${log.level.no.nav.modig:-WARN}" />
+	
 	<!-- denne logger passord på INFO nivå! -->
-	<logger name="no.nav.modig.core.test.PropertySetter"
-			level="${log.level.no.nav.modig.core.test.PropertySetter:-WARN}" />
+	<logger name="no.nav.modig.core.test.PropertySetter" level="${log.level.no.nav.modig.core.test.PropertySetter:-WARN}" />
 
 	<root level="${log.level.root:-WARN}">
 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ASYNC" />
 	</root>
 
 </configuration>

@@ -9,11 +9,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 public class TestscenarioKlient extends VTPKlient{
 
-    private static final String TESTSCENARIO_URL = "/testscenario";
     private static final String TESTSCENARIO_POST_URL = "/testscenario/%s";
-    private static final String TESTSCENARIO_TEMPLATES_URL = TESTSCENARIO_URL + "/templates";
-    private static final String TESTSCENARIO_TEMPLATES_SINGLE_URL = TESTSCENARIO_URL + "/templates/%s";
-
 
     public TestscenarioKlient(HttpSession session) {
         super(session);
