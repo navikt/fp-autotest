@@ -1,24 +1,5 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
-import static java.time.LocalDate.now;
-import static java.util.Collections.singletonList;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-import static no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.addPeriode;
-import static no.nav.foreldrepenger.fpmock2.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.addStønadskontotype;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -32,6 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.GraderingBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.ytelse.ForeldrepengerYtelseBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper;
@@ -45,6 +27,8 @@ import no.nav.vedtak.felles.xml.soeknad.felles.v3.SoekersRelasjonTilBarnet;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Foreldrepenger;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Gradering;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -52,6 +36,7 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -59,18 +44,15 @@ import java.util.Optional;
 import static java.time.LocalDate.now;
 import static java.util.Collections.singletonList;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.*;
 import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.foreldrepengesøknadFødselErketype;
 import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.foreldrepengesøknadTerminErketype;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Foreldrepenger;
-import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Gradering;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
 
 /**
  * Tester i denne klassen vil ikkje kjøres i felles pipeline med mindre dei har Tag "fpsak"
  */
+
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("beregning")
 @Tag("foreldrepenger")
@@ -671,11 +653,14 @@ public class Beregning extends ForeldrepengerTestBase {
         int inntektPerMåned = 30_000;
         BigDecimal refusjon = BigDecimal.valueOf(10_000);
 
-        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(true, BigInteger.valueOf(550000), false);
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMor(søkerAktørIdent, fødselsdato);
-        Foreldrepenger ytelse = ForeldrepengeYtelseErketyper.foreldrepengerYtelseNorskBorgerINorgeFødselMor(fødselsdato);
-        ytelse.setOpptjening(opptjening);
-        søknad.withForeldrepengerYtelse(ytelse);
+        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(
+                true, BigInteger.valueOf(550000), false);
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsdato),
+                FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato))
+                .medSpesiellOpptjening(opptjening)
+                .build();
+        SøknadBuilder søknad = new SøknadBuilder(foreldrepenger, søkerAktørIdent, SøkersRolle.MOR);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
@@ -707,12 +692,23 @@ public class Beregning extends ForeldrepengerTestBase {
         int inntektPerMåned = 60_000;
         BigDecimal refusjon = BigDecimal.valueOf(60_000);
 
-        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, BigInteger.valueOf(30_000), false);
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMor(søkerAktørIdent, fødselsdato);
-        Foreldrepenger ytelse = ForeldrepengeYtelseErketyper.foreldrepengerYtelseNorskBorgerINorgeFødselMor(fødselsdato);
-        ytelse.setOpptjening(opptjening);
-        leggTilGradering(fødselsdato, ytelse);
-        søknad.withForeldrepengerYtelse(ytelse);
+        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(
+                false, BigInteger.valueOf(30_000), false);
+        Fordeling fordeling = new Fordeling();
+        fordeling.setAnnenForelderErInformert(true);
+        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
+        perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
+        perioder.add(new GraderingBuilder()
+                .medTidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
+                .medStønadskontoType(STØNADSKONTOTYPE_FELLESPERIODE)
+                .medGraderingSN(50)
+                .build());
+
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsdato), fordeling)
+                .medSpesiellOpptjening(opptjening)
+                .build();
+        SøknadBuilder søknad = new SøknadBuilder(foreldrepenger, søkerAktørIdent, SøkersRolle.MOR);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
@@ -743,12 +739,23 @@ public class Beregning extends ForeldrepengerTestBase {
         int inntektPerMåned = 60_000;
         BigDecimal refusjon = BigDecimal.valueOf(30_000);
 
-        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, BigInteger.valueOf(30_000), false);
-        ForeldrepengesoknadBuilder søknad = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMor(søkerAktørIdent, fødselsdato);
-        Foreldrepenger ytelse = ForeldrepengeYtelseErketyper.foreldrepengerYtelseNorskBorgerINorgeFødselMor(fødselsdato);
-        ytelse.setOpptjening(opptjening);
-        leggTilGradering(fødselsdato, ytelse);
-        søknad.withForeldrepengerYtelse(ytelse);
+        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(
+                false, BigInteger.valueOf(30_000), false);
+        Fordeling fordeling = new Fordeling();
+        fordeling.setAnnenForelderErInformert(true);
+        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
+        perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
+        perioder.add(new GraderingBuilder()
+                .medTidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
+                .medStønadskontoType(STØNADSKONTOTYPE_FELLESPERIODE)
+                .medGraderingSN(50)
+                .build());
+
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsdato), fordeling)
+                .medSpesiellOpptjening(opptjening)
+                .build();
+        SøknadBuilder søknad = new SøknadBuilder(foreldrepenger, søkerAktørIdent, SøkersRolle.MOR);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
@@ -759,21 +766,6 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
         debugLoggBehandling(saksbehandler.valgtBehandling);
-    }
-
-    private void leggTilGradering(LocalDate fødselsdato, Foreldrepenger ytelse) {
-        Fordeling fordeling = ytelse.getFordeling();
-        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        Gradering gradering = new Gradering();
-        gradering.setArbeidsforholdSomSkalGraderes(true);
-        gradering.setArbeidtidProsent(50);
-        gradering.setErArbeidstaker(false);
-        gradering.setErSelvstNæringsdrivende(true);
-        addStønadskontotype(FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE, gradering);
-        LocalDate fom = fødselsdato.plusWeeks(10L).plusDays(1);
-        LocalDate tom = fødselsdato.plusWeeks(15L);
-        addPeriode(fom, tom, gradering);
-        perioder.add(gradering);
     }
 
     @Test
