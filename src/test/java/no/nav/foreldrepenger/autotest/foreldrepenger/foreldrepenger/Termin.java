@@ -6,12 +6,11 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.ytelse.ForeldrepengerYtelseBuilder;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SoekersRelasjonErketyper;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
@@ -31,8 +30,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggHistorikkinnslag;
 import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.*;
 
 @Execution(ExecutionMode.CONCURRENT)
@@ -48,23 +45,24 @@ public class Termin extends ForeldrepengerTestBase {
         TestscenarioDto testscenario = opprettScenario("55");
         LocalDate termindato = LocalDate.now().plusWeeks(3);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
+        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario, startDatoForeldrepenger);
         Long saksnummer = fordel.sendInnInntektsmeldinger(inntektsmeldinger, testscenario);
-        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.velgSisteBehandling();
-        verifiser(saksbehandler.behandlinger.size() == 1, "Antall behandlinger er ikke 1");
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VENT_PÅ_SØKNAD);
+        List<Behandling> behandlinger = saksbehandler.hentAlleBehandlingerForFagsak(saksnummer);
+        verifiser(behandlinger.size() == 1, "Antall behandlinger er ikke 1");
 
         SøknadBuilder søknad = SøknadErketyper.foreldrepengesøknadTerminErketype(aktørID, SøkersRolle.MOR, 1, termindato);
         fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        //TODO EW legge til validering på om antall behandlinger er riktig.
 
+        behandlinger = saksbehandler.hentAlleBehandlingerForFagsak(saksnummer);
+        verifiser(behandlinger.size() == 1, "Antall behandlinger er ikke 1");
     }
 
     @Test
