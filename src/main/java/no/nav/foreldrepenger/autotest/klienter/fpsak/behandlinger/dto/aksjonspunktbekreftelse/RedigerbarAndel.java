@@ -1,19 +1,34 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
+import java.time.LocalDate;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
 class RedigerbarAndel {
 
     protected String andel;
     protected int andelsnr;
+    protected String arbeidsgiverId;
     protected String arbeidsforholdId;
     protected Boolean nyAndel;
     protected Boolean lagtTilAvSaksbehandler;
+    protected Kode aktivitetStatus;
+    protected Kode arbeidsforholdType;
+    protected LocalDate beregningsperiodeFom;
+    protected LocalDate beregningsperiodeTom;
 
-    public RedigerbarAndel(String andel, int andelsnr, String arbeidsforholdId, Boolean nyAndel, Boolean lagtTilAvSaksbehandler) {
+    public RedigerbarAndel(String andel, int andelsnr, String arbeidsgiverId, String arbeidsforholdId, Boolean nyAndel, Boolean lagtTilAvSaksbehandler,
+                           Kode aktivitetStatus, LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom, Kode arbeidsforholdType) {
         this.andel = andel;
         this.andelsnr = andelsnr;
+        this.arbeidsgiverId = arbeidsgiverId;
         this.arbeidsforholdId = arbeidsforholdId;
         this.nyAndel = nyAndel;
         this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
+        this.aktivitetStatus = aktivitetStatus;
+        this.beregningsperiodeFom = beregningsperiodeFom;
+        this.beregningsperiodeTom = beregningsperiodeTom;
+        this.arbeidsforholdType = arbeidsforholdType;
     }
 
     public String getAndel() {
@@ -54,5 +69,9 @@ class RedigerbarAndel {
 
     public void setLagtTilAvSaksbehandler(Boolean lagtTilAvSaksbehandler) {
         this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
+    }
+
+    public String getArbeidsgiverId() {
+        return arbeidsgiverId;
     }
 }

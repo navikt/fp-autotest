@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
 
@@ -14,5 +16,9 @@ public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
     protected BigDecimal fastsattForrigePrAar;
     protected BigDecimal refusjonskravFraInntektsmeldingPrAar;
     protected boolean nyttArbeidsforhold;
+    protected Kode arbeidsforholdType;
 
+    public Kode getArbeidsforholdType() {
+        return arbeidsforholdType;
+    }
 }

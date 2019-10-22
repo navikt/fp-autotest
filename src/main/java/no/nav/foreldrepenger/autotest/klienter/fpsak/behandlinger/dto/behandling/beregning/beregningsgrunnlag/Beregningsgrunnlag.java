@@ -37,6 +37,10 @@ public class Beregningsgrunnlag {
         return beregningsgrunnlagPeriode.get(index);
     }
 
+    public BeregningsgrunnlagPeriodeDto getBeregningsgrunnlagPeriode(LocalDate fom) {
+        return beregningsgrunnlagPeriode.stream().filter(p -> p.getBeregningsgrunnlagPeriodeFom().equals(fom)).findFirst().orElseThrow();
+    }
+
     public List<BeregningsgrunnlagPeriodeDto> getBeregningsgrunnlagPerioder() {
         return beregningsgrunnlagPeriode;
     }
