@@ -58,5 +58,19 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
         return fordeltPrAar;
     }
 
+    public LocalDate getBeregningsperiodeFom() {
+        return beregningsperiodeFom;
+    }
 
+    public LocalDate getBeregningsperiodeTom() {
+        return beregningsperiodeTom;
+    }
+
+    public LocalDate getBeregningsgrunnlagTom() {
+        return beregningsgrunnlagTom;
+    }
+
+    public LocalDate getBeregningsgrunnlagFom() {
+        return beregningsgrunnlagFom;
+    }
 }

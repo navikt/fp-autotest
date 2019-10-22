@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.FordelBeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
@@ -19,11 +21,15 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
 
     public FordelBeregningsgrunnlagBekreftelse(Fagsak fagsak, Behandling behandling) {
         super(fagsak, behandling);
-        endretBeregningsgrunnlagPerioder = behandling.getBeregningsgrunnlag().getFaktaOmFordeling().getFordelBeregningsgrunnlag()
+        Beregningsgrunnlag beregningsgrunnlag = behandling.getBeregningsgrunnlag();
+        endretBeregningsgrunnlagPerioder = beregningsgrunnlag.getFaktaOmFordeling().getFordelBeregningsgrunnlag()
                 .getFordelBeregningsgrunnlagPerioder()
                 .stream()
                 .filter(FordelBeregningsgrunnlagPeriodeDto::isHarPeriodeAarsakGraderingEllerRefusjon)
-                .map(FastsettBeregningsgrunnlagPeriodeDto::new).collect(Collectors.toList());
+                .map(p -> {
+                    BeregningsgrunnlagPeriodeDto bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPeriode(p.getFom());
+                    return new FastsettBeregningsgrunnlagPeriodeDto(p, bgPeriode);
+                }).collect(Collectors.toList());
     }
 
     public FordelBeregningsgrunnlagBekreftelse settFastsattBeløpOgInntektskategori(LocalDate fom, int fastsattBeløp, Kode inntektskategori, int andelsnr){
