@@ -156,6 +156,11 @@ public class Behandling {
     public UttakResultatPerioder getUttakResultatPerioder() {
         return get(uttakResultatPerioder);
     }
+    public List<UttakResultatPeriode> getUttakResultatPerioderMedManuellBehandlingÅrsak () {
+        return get(uttakResultatPerioder).getPerioderForSøker().stream()
+                .filter(uttakResultatPeriode -> !uttakResultatPeriode.getManuellBehandlingÅrsak().kode.equals("-"))
+                .collect(Collectors.toList());
+    }
 
     public void setUttakResultatPerioder(Deffered<UttakResultatPerioder> dUttakResultatPerioder) {
         this.uttakResultatPerioder = dUttakResultatPerioder;

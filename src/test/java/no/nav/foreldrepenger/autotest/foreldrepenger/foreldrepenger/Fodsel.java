@@ -116,7 +116,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL.kode)
                 .leggTilMottarYtelse(Collections.emptyList())
-                .leggTilMaanedsinntekt(25800);
+                .leggTilMaanedsinntektFL(25800);
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         verifiser(!saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS), "Fått AP hvor det ikke skal være det");
 

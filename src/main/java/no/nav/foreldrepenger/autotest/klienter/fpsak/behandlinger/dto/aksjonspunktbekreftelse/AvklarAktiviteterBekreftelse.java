@@ -1,12 +1,11 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @BekreftelseKode(kode="5052")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -33,7 +32,18 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
         vurdering.skalBrukes = skalBrukes;
         return this;
     }
-
-
-
+        public AvklarAktiviteterBekreftelse godkjennOpptjeningsAktivitet(String opptjeningsAktivitetType){
+        BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
+                .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
+                .findFirst().get();
+        vurdering.skalBrukes = true;
+        return this;
+    }
+    public AvklarAktiviteterBekreftelse avvisOpptjeningsAktivitet(String opptjeningsAktivitetType){
+        BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
+                .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
+                .findFirst().get();
+        vurdering.skalBrukes = false;
+        return this;
+    }
 }

@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.UttaksperiodeBuilder;
 
 @BekreftelseKode(kode="5071")
 public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekreftelse {
@@ -39,6 +39,30 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
             if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
                 godkjennPeriode(uttakPeriode, 100, false, false);
             }
+        }
+    }
+    public List<UttakResultatPeriode> getManuellePerioder() {
+        return perioder.stream().
+                filter(uttakResultatPeriode -> !uttakResultatPeriode.getManuellBehandlingÅrsak().kode.equals("-"))
+                .collect(Collectors.toList());
+    }
+    public void delvisGodkjennAvslåAktivitetManuellePerioder(String aktivitetNavn) {
+        delvisGodkjennAvslåForAktivitet(getManuellePerioder(), aktivitetNavn);
+    }
+    public void delvisGodkjennAvslåForAktivitet(List<UttakResultatPeriode> perioder, String aktivitetNavn) {
+        for (UttakResultatPeriode periode : perioder) {
+            for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
+                if (aktivitet.getUttakArbeidType().kode.equals(aktivitetNavn)) {
+                    aktivitet.setTrekkdagerDesimaler(BigDecimal.valueOf(0));
+                    aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(0));
+                }
+                else {
+                    aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(100));
+                }
+            }
+            periode.setBegrunnelse("Begrunnelse");
+            periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
+            periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         }
     }
 

@@ -106,6 +106,7 @@ public class Termin extends ForeldrepengerTestBase {
     @Tag("pending")
     @Test
     @Disabled
+    @Deprecated
     public void MorSøkerMedEttArbeidsforholdOvergangFraYtelse() throws Exception {
         //TODO
     }

@@ -6,6 +6,7 @@ import java.util.List;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.OpptjeningAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @BekreftelseKode(kode="5051")
 public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse {
@@ -29,7 +30,21 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
             opptjeningAktivitetList.add(opptjeningAktivitet);
         }
     }
-    
+
+    public VurderPerioderOpptjeningBekreftelse godkjennOpptjening(String aktivitetType) {
+        OpptjeningAktivitet kladd = opptjeningAktivitetList.stream()
+                .filter(aktivitet -> aktivitet.getAktivitetType().kode.equals(aktivitetType)).findFirst().get();
+        kladd.vurder(true, "Godkjent", false);
+        return this;
+    }
+
+    public VurderPerioderOpptjeningBekreftelse avvisOpptjening(String aktivitetType) {
+        OpptjeningAktivitet kladd = opptjeningAktivitetList.stream()
+                .filter(aktivitet -> aktivitet.getAktivitetType().kode.equals(aktivitetType)).findFirst().get();
+        kladd.vurder(false, "Avvist", false);
+        return this;
+    }
+
     public void godkjennOpptjening(OpptjeningAktivitet aktivitet) {
         aktivitet.vurder(true, "Godkjent", false);
     }
