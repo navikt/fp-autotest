@@ -698,9 +698,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
         perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
-        perioder.add(new GraderingBuilder()
-                .medTidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
-                .medStønadskontoType(STØNADSKONTOTYPE_FELLESPERIODE)
+        perioder.add(new GraderingBuilder(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
                 .medGraderingSN(50)
                 .build());
 
@@ -745,9 +743,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
         perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
-        perioder.add(new GraderingBuilder()
-                .medTidsperiode(fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
-                .medStønadskontoType(STØNADSKONTOTYPE_FELLESPERIODE)
+        perioder.add(new GraderingBuilder(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
                 .medGraderingSN(50)
                 .build());
 

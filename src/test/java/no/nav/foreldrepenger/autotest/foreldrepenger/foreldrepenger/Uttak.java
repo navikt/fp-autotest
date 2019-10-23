@@ -139,6 +139,40 @@ public class Uttak extends ForeldrepengerTestBase {
                 );
         System.out.println("saksnummer Mor" +saksnummerMor);
     }
+    @Test
+    public void testcase_far_endringsøknad_perioderFørFørstegangssøknad() throws Exception {
+        TestscenarioDto testscenario = opprettScenario("60");
+
+        LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStart = fødselsDato.plusWeeks(10);
+        Fordeling fordeling = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStart, fpStart.plusWeeks(12))
+        );
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsDato),
+                fordeling)
+                .build();
+        SøknadBuilder søknad = new SøknadBuilder(
+                foreldrepenger,
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.FAR);
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(),
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
+                null);
+        List<InntektsmeldingBuilder> inntektsmeldinger =  makeInntektsmeldingFromtestscenariodata(
+                testscenario.getScenariodata(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                fpStart);
+        fordel.sendInnInntektsmelding(
+                inntektsmeldinger.get(0),
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                saksnummer);
+
+    }
 
     @Test
     public void testcase_mor_endringsSøknad_medGradering_FL_AAP() throws Exception {
