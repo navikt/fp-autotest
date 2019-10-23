@@ -62,7 +62,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
             }
             periode.setBegrunnelse("Begrunnelse");
             periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
-            periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
+            periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2002"));
         }
     }
 

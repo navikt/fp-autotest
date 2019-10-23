@@ -426,7 +426,7 @@ public class Saksbehandler extends Aktoer {
         }
         return null;
     }
-    @Step("Henter aksjonspunkt som skal til totrinns knotroll")
+    @Step("Henter aksjonspunkt som skal til totrinns kontroll")
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
         return valgtBehandling.getAksjonspunkter().stream()
                 .filter(aksjonspunkt -> aksjonspunkt.skalTilToTrinnsBehandling())
