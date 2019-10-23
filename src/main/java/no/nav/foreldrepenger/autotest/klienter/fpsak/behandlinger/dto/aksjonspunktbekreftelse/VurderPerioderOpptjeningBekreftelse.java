@@ -2,10 +2,12 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.OpptjeningAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @BekreftelseKode(kode="5051")
 public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse {
@@ -29,7 +31,25 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
             opptjeningAktivitetList.add(opptjeningAktivitet);
         }
     }
-    
+    public List<OpptjeningAktivitet> hentOpptjeningAktiviteter(String aktivitetType) {
+        return opptjeningAktivitetList.stream()
+                .filter(aktivitet -> aktivitet.getAktivitetType().kode.equals(aktivitetType)).collect(Collectors.toList());
+    }
+
+    public VurderPerioderOpptjeningBekreftelse godkjennOpptjening(String aktivitetType) {
+        for (OpptjeningAktivitet aktivitet : hentOpptjeningAktiviteter(aktivitetType)) {
+            aktivitet.vurder(true, "Godkjent", false);
+        }
+        return this;
+    }
+
+    public VurderPerioderOpptjeningBekreftelse avvisOpptjening(String aktivitetType) {
+        for (OpptjeningAktivitet aktivitet : hentOpptjeningAktiviteter(aktivitetType)) {
+            aktivitet.vurder(false, "Avvist", false);
+        }
+        return this;
+    }
+
     public void godkjennOpptjening(OpptjeningAktivitet aktivitet) {
         aktivitet.vurder(true, "Godkjent", false);
     }

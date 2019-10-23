@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.util.List;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.MottarYtelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
@@ -43,8 +43,8 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilMaanedsinntekt(int maanedsinntekt) {
-        fakta.leggTilMaanedsinntekt(maanedsinntekt);
+    public VurderFaktaOmBeregningBekreftelse leggTilMaanedsinntektFL(int maanedsinntekt) {
+        fakta.leggTilMaanedsinntektFL(maanedsinntekt);
         return this;
     }
 
@@ -58,5 +58,10 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         fakta.leggTilAndelerEndretBg(periode, andel, fastsatteVerdier);
         return this;
     }
-
+    public void behandleFrilansMottar(int maanedsinntekt) {
+        fakta.leggTilMaanedsinntektFL(maanedsinntekt);
+        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode);
+        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL.kode);
+        fakta.leggTilMottarYtelse(true, List.of());
+    }
 }

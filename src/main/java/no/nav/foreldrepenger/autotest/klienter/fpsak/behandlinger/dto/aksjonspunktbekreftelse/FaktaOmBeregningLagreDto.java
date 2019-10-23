@@ -49,7 +49,7 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilMaanedsinntekt(int maanedsinntekt) {
+    public FaktaOmBeregningLagreDto leggTilMaanedsinntektFL(int maanedsinntekt) {
         fastsettMaanedsinntektFL = new FastsettMaanedsinntektFL(maanedsinntekt);
         return this;
     }
