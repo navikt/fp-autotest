@@ -7,8 +7,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
-public class TestscenarioReader {
+public class TestscenarioRepositoryImpl implements TestscenarioRepository {
 
     public static final String PERSONOPPLYSNING_JSON_FIL_NAVN = "personopplysning.json";
     public static final String INNTEKTYTELSE_SØKER_JSON_FIL_NAVN = "inntektytelse-søker.json";
@@ -16,15 +19,22 @@ public class TestscenarioReader {
     public static final String ORGANISASJON_JSON_FIL_NAVN = "organisasjon.json";
     public static final String VARS_JSON_FIL_NAVN = "vars.json";
 
+    private final Map<String, Object> scenarioObjects = new TreeMap<>();
+
     private final ObjectMapper mapper;
     private final File rootDir;
 
-    public TestscenarioReader() {
+    public TestscenarioRepositoryImpl() {
         mapper = new ObjectMapper();
         rootDir = new File("target/classes/scenarios");
     }
 
     public Object LesOgReturnerScenarioFraJsonfil(String scenarioNummer) {
+
+        if (scenarioObjects.containsKey(scenarioNummer)) {
+            return hentScenario(scenarioNummer);
+        }
+
         File scenarioFiles = hentScenarioFileneSomStarterMed(scenarioNummer);
         if (scenarioFiles == null) {
             System.out.println("Testscenario: [" + scenarioNummer + "] eksisterer ikke. ");
@@ -38,7 +48,9 @@ public class TestscenarioReader {
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, ORGANISASJON_JSON_FIL_NAVN, "organisasjon");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, VARS_JSON_FIL_NAVN, "vars");
 
-        return mapper.convertValue(root, new TypeReference<>(){});
+        Object obj = mapper.convertValue(root, new TypeReference<>(){});
+        scenarioObjects.put(scenarioNummer, obj);
+        return obj;
     }
 
 
@@ -68,5 +80,15 @@ public class TestscenarioReader {
             return filesFiltered[0];
         }
         return null;
+    }
+
+    @Override
+    public Collection<Object> hentAlleScenarioer() {
+        return scenarioObjects.values();
+    }
+
+    @Override
+    public Object hentScenario(String scenarioNummer) {
+        return scenarioObjects.get(scenarioNummer);
     }
 }
