@@ -20,21 +20,27 @@ public class TestscenarioRepositoryImpl implements TestscenarioRepository {
     public static final String VARS_JSON_FIL_NAVN = "vars.json";
 
     private final Map<String, Object> scenarioObjects = new TreeMap<>();
-
-    private final ObjectMapper mapper;
-    private final File rootDir;
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final File rootDir = new File("target/classes/scenarios");
 
     public TestscenarioRepositoryImpl() {
-        mapper = new ObjectMapper();
-        rootDir = new File("target/classes/scenarios");
     }
 
-    public Object LesOgReturnerScenarioFraJsonfil(String scenarioNummer) {
+    @Override
+    public Collection<Object> hentAlleScenarioer() {
+        return scenarioObjects.values();
+    }
 
+    @Override
+    public Object hentScenario(String scenarioNummer) {
         if (scenarioObjects.containsKey(scenarioNummer)) {
-            return hentScenario(scenarioNummer);
+            return scenarioObjects.get(scenarioNummer);
         }
+        return LesOgReturnerScenarioFraJsonfil(scenarioNummer);
+    }
 
+
+    private Object LesOgReturnerScenarioFraJsonfil(String scenarioNummer) {
         File scenarioFiles = hentScenarioFileneSomStarterMed(scenarioNummer);
         if (scenarioFiles == null) {
             System.out.println("Testscenario: [" + scenarioNummer + "] eksisterer ikke. ");
@@ -80,15 +86,5 @@ public class TestscenarioRepositoryImpl implements TestscenarioRepository {
             return filesFiltered[0];
         }
         return null;
-    }
-
-    @Override
-    public Collection<Object> hentAlleScenarioer() {
-        return scenarioObjects.values();
-    }
-
-    @Override
-    public Object hentScenario(String scenarioNummer) {
-        return scenarioObjects.get(scenarioNummer);
     }
 }

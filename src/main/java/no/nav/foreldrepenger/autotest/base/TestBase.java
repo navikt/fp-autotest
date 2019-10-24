@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioRepositoryImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ public abstract class TestBase {
 
     //Logger for testruns
     protected Logger log;
+    protected static TestscenarioRepositoryImpl testscenarioRepositoryImpl;
 
     public TestBase() {
         log = LoggerFactory.getLogger(this.getClass());
@@ -29,6 +31,7 @@ public abstract class TestBase {
         String propertiesDir = System.getProperty("application.root");
         PropertiesUtils.initProperties(propertiesDir == null ? ".." : propertiesDir);
         MiljoKonfigurasjon.initProperties();
+        testscenarioRepositoryImpl = new TestscenarioRepositoryImpl();
     }
 
     /*

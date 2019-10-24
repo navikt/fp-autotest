@@ -14,7 +14,6 @@ import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -66,7 +65,6 @@ public class OpprettTestscenario extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandling();
-
     }
 
     @Test
@@ -112,13 +110,5 @@ public class OpprettTestscenario extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandling();
-
     }
-
-    @Test
-    public void testTestscenarioRepositoryImpl() throws IOException {
-        TestscenarioDto testscenario = initialiserScenario("75");
-
-    }
-
 }
