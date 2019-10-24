@@ -52,6 +52,7 @@ public class TestscenarioReader {
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke lese " + jsonFilNavn + "for scenario", e);
         }
+
     }
 
     private File hentFilSomMatcherStreng(File scenarioFiles, String FilNavnPåJsonFil) {
