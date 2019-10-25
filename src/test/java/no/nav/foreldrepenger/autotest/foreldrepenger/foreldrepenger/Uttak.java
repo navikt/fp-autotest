@@ -4,6 +4,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
+import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.*;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
@@ -12,6 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.OverføringÅrsak;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.GraderingBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
@@ -140,38 +142,102 @@ public class Uttak extends ForeldrepengerTestBase {
         System.out.println("saksnummer Mor" +saksnummerMor);
     }
     @Test
-    public void testcase_far_endringsøknad_perioderFørFørstegangssøknad() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("60");
+    public void testcase_morOgfar_endringsøknad_overføringperioderFørstePeriodeTilFørstegangssøknad() throws Exception {
+        TestscenarioDto testscenario = opprettScenario("140");
+
+        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
+        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
 
         LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
-        LocalDate fpStart = fødselsDato.plusWeeks(10);
-        Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStart, fpStart.plusWeeks(12))
-        );
-        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(
+        LocalDate fpStartMor = fødselsDato;
+        LocalDate fpStartFar =  fødselsDato.plusWeeks(8);
+
+        Fordeling fordelingMor = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato, fødselsDato.plusWeeks(8).minusDays(1)),
+                oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato.plusWeeks(10), fødselsDato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsDato.plusWeeks(15), fødselsDato.plusWeeks(20).minusDays(1)),
+                oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsDato.plusWeeks(24), fødselsDato.plusWeeks(28).minusDays(1)),
+                oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsDato.plusWeeks(32), fødselsDato.plusWeeks(36)));
+        Foreldrepenger foreldrepengerMor = new ForeldrepengerYtelseBuilder(
                 SoekersRelasjonErketyper.fødsel(1, fødselsDato),
-                fordeling)
+                fordelingMor)
                 .build();
-        SøknadBuilder søknad = new SøknadBuilder(
-                foreldrepenger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                SøkersRolle.FAR);
+        SøknadBuilder søknadMor = new SøknadBuilder(
+                foreldrepengerMor,
+                aktørIdMor,
+                SøkersRolle.MOR);
+
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+        long saksnummerMor = fordel.sendInnSøknad(
+                søknadMor.build(),
+                aktørIdMor,
+                fnrMor,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
         List<InntektsmeldingBuilder> inntektsmeldinger =  makeInntektsmeldingFromtestscenariodata(
                 testscenario.getScenariodata(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                fpStart);
+                fnrMor,
+                fpStartMor);
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger.get(0),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                saksnummer);
+                aktørIdMor,
+                fnrMor,
+                saksnummerMor);
 
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        Fordeling fordelingFar = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)));
+
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsDato),
+                fordelingFar)
+                .build();
+        SøknadBuilder søknadFar = new SøknadBuilder(
+                foreldrepenger,
+                aktørIdFar,
+                SøkersRolle.FAR);
+        long saksnummerFar = fordel.sendInnSøknad(søknadFar.build(),
+                aktørIdFar,
+                fnrFar,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
+                null);
+        List<InntektsmeldingBuilder> inntektsmeldingerFar =  makeInntektsmeldingFromtestscenariodata(
+                testscenario.getScenariodataAnnenpart(),
+                fnrFar,
+                fpStartFar);
+        fordel.sendInnInntektsmelding(
+                inntektsmeldingerFar.get(0),
+                aktørIdFar,
+                fnrFar,
+                saksnummerFar);
+
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        Fordeling endringFordeling = generiskFordeling(
+                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato.plusWeeks(7), fødselsDato.plusWeeks(8).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)));
+        SøknadBuilder søknadEndring = SøknadErketyper.endringssøknadErketype(
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.FAR,
+                endringFordeling,
+                String.valueOf(saksnummerFar));
+        fordel.sendInnSøknad(søknadEndring.build(),
+                aktørIdFar,
+                fnrFar,
+                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummerFar);
     }
 
     @Test
