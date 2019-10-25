@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.vtp.testscenario;
+package no.nav.foreldrepenger.autotest.klienter.vtp.scenario;
 
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPKlient;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
@@ -9,14 +9,14 @@ import java.io.IOException;
 
 public class TestscenarioFraAutotestKlient extends VTPKlient {
 
-    private static final String TESTSCENARIO_FRA_AUTOTEST_POST_URL = "/testscenario/test/initialiser";
+    private static final String TESTSCENARIO_FRA_AUTOTEST_URL = "/testscenario";
 
     public TestscenarioFraAutotestKlient(HttpSession session){
         super(session);
     }
 
     public TestscenarioDto initialiserTestscenario(String key, Object testscenarioObject) throws IOException {
-        String url = hentRestRotUrl() + TESTSCENARIO_FRA_AUTOTEST_POST_URL;
+        String url = hentRestRotUrl() + TESTSCENARIO_FRA_AUTOTEST_URL;
         TestscenarioDto testscenarioDto = postOgHentJson(url, testscenarioObject, TestscenarioDto.class, StatusRange.STATUS_SUCCESS);
         System.out.println("Testscenario initialisert: [" + key + "] med hovedsøker: [" + testscenarioDto.getPersonopplysninger().getSøkerIdent() + "]");
         return testscenarioDto;

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.vtp.testscenario;
+package no.nav.foreldrepenger.autotest.klienter.vtp.scenario;
 
 import java.io.IOException;
 

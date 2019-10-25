@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.util.testscenario;
+package no.nav.foreldrepenger.autotest.util.scenario;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class TestscenarioRepositoryImpl implements TestscenarioRepository {
+public class TestscenarioRepositoryImpl {
 
     public static final String PERSONOPPLYSNING_JSON_FIL_NAVN = "personopplysning.json";
     public static final String INNTEKTYTELSE_SØKER_JSON_FIL_NAVN = "inntektytelse-søker.json";
@@ -26,24 +26,24 @@ public class TestscenarioRepositoryImpl implements TestscenarioRepository {
     public TestscenarioRepositoryImpl() {
     }
 
-    @Override
     public Collection<Object> hentAlleScenarioer() {
         return scenarioObjects.values();
     }
 
-    @Override
-    public Object hentScenario(String scenarioNummer) {
-        if (scenarioObjects.containsKey(scenarioNummer)) {
-            return scenarioObjects.get(scenarioNummer);
+    public Object hentScenario(String scenarioId) {
+        if (scenarioObjects.containsKey(scenarioId)) {
+            return scenarioObjects.get(scenarioId);
         }
-        return LesOgReturnerScenarioFraJsonfil(scenarioNummer);
+        return LesOgReturnerScenarioFraJsonfil(scenarioId);
     }
 
 
-    private Object LesOgReturnerScenarioFraJsonfil(String scenarioNummer) {
-        File scenarioFiles = hentScenarioFileneSomStarterMed(scenarioNummer);
+    private Object LesOgReturnerScenarioFraJsonfil(String scenarioId) {
+        File scenarioFiles = hentScenarioFileneSomStarterMed(scenarioId);
         if (scenarioFiles == null) {
-            System.out.println("Testscenario: [" + scenarioNummer + "] eksisterer ikke. ");
+            System.out.println("Testscenario: [" + scenarioId + "] eksisterer ikke. ");
+            // scenarioFiles.exists()
+            // throw new FileNotFoundException("Fant ikke scenario med scenario nummer [" + scenarioId + "]");
             return null;
         }
 
@@ -55,7 +55,7 @@ public class TestscenarioRepositoryImpl implements TestscenarioRepository {
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, VARS_JSON_FIL_NAVN, "vars");
 
         Object obj = mapper.convertValue(root, new TypeReference<>(){});
-        scenarioObjects.put(scenarioNummer, obj);
+        scenarioObjects.put(scenarioId, obj);
         return obj;
     }
 
@@ -87,4 +87,5 @@ public class TestscenarioRepositoryImpl implements TestscenarioRepository {
         }
         return null;
     }
+
 }

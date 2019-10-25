@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioRepositoryImpl;
+import no.nav.foreldrepenger.autotest.util.scenario.TestscenarioRepositoryImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
