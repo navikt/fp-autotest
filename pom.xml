@@ -14,13 +14,13 @@
         <revision>1.0.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
-	
-	<vtp.versjon>1.0_20191023124910_a34bc67</vtp.versjon>
-	    
+
+	<vtp.versjon>1.0_20191025123914_b1c1b21</vtp.versjon>
+
 	<aspectj.version>1.9.4</aspectj.version>
-	    
-	<jackson.version>2.10.0</jackson.version>   
-	 
+
+	<jackson.version>2.10.0</jackson.version>
+
     </properties>
 
     <profiles>
