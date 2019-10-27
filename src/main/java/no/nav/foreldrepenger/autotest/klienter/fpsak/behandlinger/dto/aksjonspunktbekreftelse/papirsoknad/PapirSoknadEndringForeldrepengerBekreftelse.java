@@ -11,11 +11,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 @BekreftelseKode(kode="5057")
 public class PapirSoknadEndringForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
 
-    protected String tema = "IKKE_RELEVANT";
+    // FamilieHendelseType
+    protected String tema = "FODSL";
 
-    protected String soker = "IKKE_RELEVANT";
+    // ForeldreType  // burde vært RelasjonsRolleType?
+    protected String soker = "MOR";
 
-    protected String soknadstype = "ENDRING_FP";
+    // FagsakYtelseType
+    protected String soknadstype = "FP";
 
     protected LocalDate mottattDato = LocalDate.now();
 

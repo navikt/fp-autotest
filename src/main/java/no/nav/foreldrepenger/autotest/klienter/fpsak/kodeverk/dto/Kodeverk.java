@@ -40,6 +40,7 @@ public class Kodeverk{
     public KodeListe IkkeOppfyltÅrsak;
     public KodeListe SkatteOgAvgiftsregelType;
     public KodeListe Inntektskategori;
+    public KodeListe VurderÅrsak;
 
 
     @JsonIgnoreProperties(ignoreUnknown = true)
