@@ -21,7 +21,7 @@ public class TestscenarioRepositoryImpl {
 
     private final Map<String, Object> scenarioObjects = new TreeMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
-    private final File rootDir = new File("target/classes/scenarios");
+    private final File rootDir = new File(this.getClass().getClassLoader().getResource("scenarios").getFile());
 
     public TestscenarioRepositoryImpl() {
     }
@@ -48,6 +48,7 @@ public class TestscenarioRepositoryImpl {
         }
 
         final ObjectNode root = mapper.createObjectNode();
+        root.set("scenario-navn", mapper.convertValue(scenarioFiles.getName(), new TypeReference<>() {}));
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, PERSONOPPLYSNING_JSON_FIL_NAVN, "personopplysninger");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, INNTEKTYTELSE_SØKER_JSON_FIL_NAVN, "inntektytelse-søker");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN, "inntektytelse-annenpart");
