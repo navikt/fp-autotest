@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.util.scenario;
+package no.nav.foreldrepenger.autotest.util.testscenario;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;

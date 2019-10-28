@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.base;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.vtp.expect.ExpectKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.scenario.TestscenarioKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 

@@ -11,7 +11,7 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.spberegning.Saksbehandler;
-import no.nav.foreldrepenger.autotest.klienter.vtp.scenario.TestscenarioKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingErketype;
