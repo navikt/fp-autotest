@@ -17,7 +17,7 @@ public class OppretteRevurdering extends FpsakTestBase {
 
     public void opretteRevurderingPåTerminsøknad() throws Exception {
         //Opprett scenario og søknad
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,

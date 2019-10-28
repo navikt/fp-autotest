@@ -52,7 +52,7 @@ public class Revurdering extends ForeldrepengerTestBase {
             "Overstyrer medlemskap. Vedtaket opphører.")
     public void opprettRevurderingManuelt() throws Exception {
 
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -101,7 +101,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Endringssøknad med ekstra uttaksperiode.")
     @Description("Førstegangsbehandling til positivt vedtak. Søker sender inn endringsøknad. Endring i uttak. Vedtak fortsatt løpende.")
     public void endringssøknad() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         // Førstegangssøknad
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -155,7 +155,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Revurdering og ny IM når behandling er hos beslutter.")
     @Description("Førstegangsbehandling til positivt vedtak. Revurdering, og ny IM kommer når behandling er hos beslutter. Vedtak fortsatt løpende.")
     public void nyInntektsmeldingUnderÅpenRevurdering() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -235,7 +235,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Endringssøknad med utsettelse")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med utsettelse fra bruker. Vedtak fortsatt løpende.")
     public void endringssøknadMedUtsettelse() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -294,7 +294,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Endringssøknad med gradering")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med gradering fra bruker. Vedtak fortsatt løpende.")
     public void endringssøknadMedGradering() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();

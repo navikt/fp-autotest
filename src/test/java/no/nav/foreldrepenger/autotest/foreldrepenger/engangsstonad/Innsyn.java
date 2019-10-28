@@ -22,9 +22,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.time.LocalDate;
 
-import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.engangstønadsøknadFødselErketype;
-import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.engangstønadsøknadTerminErketype;
-
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -34,7 +31,7 @@ public class Innsyn extends EngangsstonadTestBase {
     @DisplayName("Behandle innsyn for mor - godkjent")
     @Description("Behandle innsyn for mor - godkjent happy case")
     public void behandleInnsynMorGodkjent() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -72,7 +69,7 @@ public class Innsyn extends EngangsstonadTestBase {
     @DisplayName("Behandle innsyn for mor - avvist")
     @Description("Behandle innsyn for mor - avvist ved vurdering")
     public void behandleInnsynMorAvvist() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -108,7 +105,7 @@ public class Innsyn extends EngangsstonadTestBase {
     @DisplayName("Behandle innsyn for far - avvist")
     @Description("Behandle innsyn for far - avvist ved vurdering")
     public void behandleInnsynFarAvvist() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("61");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR,

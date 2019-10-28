@@ -29,7 +29,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
     @DisplayName("Midlertidig test for å sjekke aksjonspunkter")
     public void stoppAksjonspunktFoedsel() throws Exception {
 
-        TestscenarioDto testscenario = opprettScenario("160");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("160");
 
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);

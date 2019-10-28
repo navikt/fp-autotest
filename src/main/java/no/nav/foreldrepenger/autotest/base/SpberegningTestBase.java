@@ -42,11 +42,11 @@ public class SpberegningTestBase extends TestBase {
     }
 
     protected TestscenarioDto opprettScenario(String id) throws IOException {
-        return testscenarioKlient.opprettTestscenario(id);
+        return testscenarioKlient.opprettTestscenarioFraVTPTemplate(id);
     }
 
     protected TestscenarioDto opprettScenarioMedPrivatArbeidsgiver(String id, String aktorId) throws IOException {
-        return testscenarioKlient.opprettTestscenarioMedAktorId(id, aktorId);
+        return testscenarioKlient.opprettTestscenarioMedAktorIdFraVTPTemplate(id, aktorId);
     }
 
     protected String opprettSak(TestscenarioDto testscenarioDto, String fagområde) throws IOException {

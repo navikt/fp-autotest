@@ -22,17 +22,19 @@ public abstract class TestScenarioTestBase extends TestBase {
     }
 
     @Step("Oppretter testscenario {id} fra Json fil lokalisert i VTP")
-    protected TestscenarioDto opprettScenario(String id) throws IOException {
-        return testscenarioKlient.opprettTestscenario(id);
+    @Deprecated
+    protected TestscenarioDto opprettTestscenarioFraVTPTemplate(String id) throws IOException {
+        return testscenarioKlient.opprettTestscenarioFraVTPTemplate(id);
     }
 
     @Step("Oppretter testscenario {id} fra Json fil lokalisert i VTP")
-    protected TestscenarioDto opprettScenarioMedPrivatArbeidsgiver(String id, String aktorId) throws IOException {
-        return testscenarioKlient.opprettTestscenarioMedAktorId(id, aktorId);
+    @Deprecated
+    protected TestscenarioDto opprettScenarioMedPrivatArbeidsgiverFraVTPTemplate(String id, String aktorId) throws IOException {
+        return testscenarioKlient.opprettTestscenarioMedAktorIdFraVTPTemplate(id, aktorId);
     }
 
     @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
-    protected TestscenarioDto initialiserScenario(String id) throws IOException {
+    protected TestscenarioDto opprettTestscenario(String id) throws IOException {
         Object testscenarioObject = testscenarioRepositoryImpl.hentScenario(id);
         return (testscenarioObject == null ? null : testscenarioFraAutotestKlient.initialiserTestscenario(id, testscenarioObject));
     }

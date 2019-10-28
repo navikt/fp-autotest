@@ -83,7 +83,7 @@ public class TestscenarioRepositoryImpl {
 
     private File hentScenarioFileneSomStarterMed(String scenarioNummer) {
         File[] filesFiltered = rootDir.listFiles((dir, name) -> name.startsWith(scenarioNummer));
-        if (filesFiltered.length > 0) {
+        if (filesFiltered != null && filesFiltered.length > 0) {
             return filesFiltered[0];
         }
         return null;

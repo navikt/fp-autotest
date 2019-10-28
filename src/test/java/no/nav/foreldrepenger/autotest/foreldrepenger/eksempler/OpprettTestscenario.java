@@ -24,7 +24,7 @@ public class OpprettTestscenario extends ForeldrepengerTestBase {
 
     @Test
     public void opprettTestScenarioFraJsonFilerIAutotest() throws Exception {
-        TestscenarioDto testscenario = initialiserScenario("75");
+        TestscenarioDto testscenario = opprettTestscenario("75");
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
@@ -70,7 +70,7 @@ public class OpprettTestscenario extends ForeldrepengerTestBase {
 
     @Test
     public void opprettTestScenarioFraJsonFilerIVTP() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("75");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("75");
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);

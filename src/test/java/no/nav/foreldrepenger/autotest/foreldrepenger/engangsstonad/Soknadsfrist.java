@@ -37,7 +37,7 @@ public class Soknadsfrist extends EngangsstonadTestBase {
     @DisplayName("Mor søker for sent men får godkjent")
     @Description("Mor søker for sent men får godkjent alikevel")
     public void behandleFødselEngangstønadSøknadsfristGodkjent() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("52");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("52");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.fødsel(1, fødselsdato);
@@ -63,12 +63,12 @@ public class Soknadsfrist extends EngangsstonadTestBase {
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
         */
     }
-    
+
     @Test
     @DisplayName("Behandle søknadsfrist og sent tilbake")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist")
     public void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.fødsel(1, fødselsdato);
@@ -85,33 +85,33 @@ public class Soknadsfrist extends EngangsstonadTestBase {
         saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
             .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderManglendeFodselBekreftelse.class);
-        
+
         saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristBekreftelse.class)
             .bekreftVilkårErOk();
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderSoknadsfristBekreftelse.class);
-        
-        
+
+
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
-        
+
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
-        
+
         beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL))
                 .avvisAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET), new Kode("FEIL_FAKTA"));
         beslutter.bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
-        
+
         saksbehandler.hentFagsak(saksnummer);
         verifiserLikhet(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode, "UTFO");
         verifiserLikhet(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET).getStatus().kode, "OPPR");
     }
-    
+
     @Test
     @DisplayName("Behandle søknadsfrist og sent tilbake på grunn av fødsel")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av fødsel - tester tilbakesending")
     public void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.fødsel(1, fødselsdato);
@@ -128,23 +128,23 @@ public class Soknadsfrist extends EngangsstonadTestBase {
         saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
             .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderManglendeFodselBekreftelse.class);
-        
+
         saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristBekreftelse.class)
             .bekreftVilkårErOk();
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderSoknadsfristBekreftelse.class);
-        
-        
+
+
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
-        
+
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
-        
+
         beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET))
                 .avvisAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL), new Kode("FEIL_FAKTA"));
         beslutter.bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
-        
+
         saksbehandler.hentFagsak(saksnummer);
         verifiserLikhet(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode, "OPPR");
         verifiser(!saksbehandler.harAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET), "Behandling hadde aksjonspunkt " + AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET + " selv om det ikke var forventet");

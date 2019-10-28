@@ -19,7 +19,7 @@ public class Inntektsmelding extends FpsakTestBase {
 
     @Test
     public void oppretteInntektsmeldingerBasertPåTestscenarioUtenFagsak() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario, LocalDate.now());
         InntektsmeldingBuilder inntektsmelding = inntektsmeldinger.get(0);
         inntektsmelding.addGradertperiode(BigDecimal.TEN, LocalDate.now().plusWeeks(3), LocalDate.now().plusWeeks(5));
@@ -35,7 +35,7 @@ public class Inntektsmelding extends FpsakTestBase {
 
     @Test
     public void opprettInntektsmeldingEgendefinert() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         LocalDate fpStartdato = LocalDate.now().minusDays(3);

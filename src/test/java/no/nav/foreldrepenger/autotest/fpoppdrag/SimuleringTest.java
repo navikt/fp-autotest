@@ -45,7 +45,7 @@ public class SimuleringTest extends FpoppdragTestBase {
     public void starterSimuleringHenterResultatOgKansellererSimulering() throws IOException, JAXBException, SAXException {
         /*********** Steg 1: Start simulering **************/
         // Arrange
-        TestscenarioDto testscenarioDto = testscenarioKlient.opprettTestscenario("49");
+        TestscenarioDto testscenarioDto = testscenarioKlient.opprettTestscenarioFraVTPTemplate("49");
         String søkerIdent = testscenarioDto.getPersonopplysninger().getSøkerIdent();
         long behandlingId = new Random().nextInt(999999990) + 1;
         BehandlingIdDto behandlingIdDto = new BehandlingIdDto(String.valueOf(behandlingId));
