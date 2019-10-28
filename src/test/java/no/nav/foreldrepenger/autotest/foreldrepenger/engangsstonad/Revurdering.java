@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.engangstønadsøknadAdopsjonErketype;
-
 @Tag("fpsak")
 @Tag("engangsstonad")
 public class Revurdering extends EngangsstonadTestBase {
@@ -33,7 +31,7 @@ public class Revurdering extends EngangsstonadTestBase {
     @DisplayName("Manuelt opprettet revurdering")
     @Description("Manuelt opprettet revurdering etter avsluttet behandling med utsendt varsel")
     public void manueltOpprettetRevurderingSendVarsel() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,false);

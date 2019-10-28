@@ -13,7 +13,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrBeregning;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.ytelse.EngangstønadYtelseBuilder;
@@ -40,7 +39,7 @@ public class Fodsel extends EngangsstonadTestBase {
     @DisplayName("Mor søker fødsel - godkjent")
     @Description("Mor søker fødsel - godkjent happy case")
     public void morSøkerFødselGodkjent() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -61,7 +60,7 @@ public class Fodsel extends EngangsstonadTestBase {
     @DisplayName("Mor søker fødsel - avvist")
     @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i tps")
     public void morSøkerFødselAvvist() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -96,7 +95,7 @@ public class Fodsel extends EngangsstonadTestBase {
     @DisplayName("Far søker registrert fødsel")
     @Description("Far søker registrert fødsel og blir avvist fordi far søker")
     public void farSøkerFødselRegistrert() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("60");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("60");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -118,7 +117,7 @@ public class Fodsel extends EngangsstonadTestBase {
     @DisplayName("Mor søker fødsel overstyrt vilkår")
     @Description("Mor søker fødsel overstyrt vilkår adopsjon fra godkjent til avslått")
     public void morSøkerFødselOverstyrt() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -161,7 +160,7 @@ public class Fodsel extends EngangsstonadTestBase {
     @DisplayName("Mor søker fødsel - beregning overstyrt")
     @Description("Mor søker fødsel - beregning overstyrt fra ett beløp til 10 kroner")
     public void morSøkerFødselBeregningOverstyrt() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -202,7 +201,7 @@ public class Fodsel extends EngangsstonadTestBase {
     @DisplayName("Mor søker fødsel med flere barn")
     @Description("Mor søker fødsel med flere barn - happy case flere barn")
     public void morSøkerFødselFlereBarn() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("53");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("53");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 aktørID, SøkersRolle.MOR,
@@ -241,7 +240,7 @@ public class Fodsel extends EngangsstonadTestBase {
     @DisplayName("Mor søker fødsel med verge")
     @Description("Mor søker fødsel med verge - skal få aksjonspunkt om registrering av verge når man er under 18")
     public void morSøkerFødselMedVerge() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("54");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("54");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -285,7 +284,7 @@ public class Fodsel extends EngangsstonadTestBase {
     @DisplayName("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel")
     @Description("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel. Behandlingen skal bli satt på vent")
     public void morSøkerUregistrertFødselMindreEnn14DagerEtter() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusWeeks(1);
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.fødsel(1, fødselsdato);
@@ -305,7 +304,7 @@ public class Fodsel extends EngangsstonadTestBase {
     @DisplayName("Medmor søker fødsel")
     @Description("Medmor søker fødsel - søkand blir avslått fordi søker er medmor")
     public void medmorSøkerFødsel() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("90");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("90");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MEDMOR,

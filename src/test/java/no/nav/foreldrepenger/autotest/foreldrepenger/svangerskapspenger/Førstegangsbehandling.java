@@ -40,7 +40,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
     @Description("Mor søker SVP med ett arbeidsforhold fire uke før termin. ingen tilrettelegging")
     public void morSøkerSvp_IngenTilrettelegging_FireUkerFørTermin_EttArbeidsforhold() throws Exception {
 
-        final TestscenarioDto testscenario = opprettScenario("50");
+        final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
@@ -96,7 +96,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
     @Description("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
     public void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() throws Exception {
 
-        final TestscenarioDto testscenario = opprettScenario("56");
+        final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("56");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
@@ -153,7 +153,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         // TODO: Gjør ferdig, feiler på tilkjentytelse.
         // TODO (OL) Utvide med videre funksjonalitet
 
-        final TestscenarioDto testscenario = opprettScenario("50");
+        final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
@@ -189,7 +189,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
     @Disabled
     @DisplayName("Papirsøknad for Svangerskapspenger")
     public void morSøkerSvangersskapspengerMedPapirsøknad() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnPapirsøknadSvangerskapspenger(testscenario);

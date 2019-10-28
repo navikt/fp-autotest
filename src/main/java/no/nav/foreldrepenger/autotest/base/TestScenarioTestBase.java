@@ -9,22 +9,30 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import java.io.IOException;
 
 public abstract class TestScenarioTestBase extends TestBase {
-    
+
     protected TestscenarioKlient testscenarioKlient;
     protected ExpectKlient expectKlient;
-    
+
     public TestScenarioTestBase() {
         testscenarioKlient = new TestscenarioKlient(BasicHttpSession.session());
         expectKlient = new ExpectKlient(BasicHttpSession.session());
     }
 
-    @Step("Oppretter testscenario {id}")
-    protected TestscenarioDto opprettScenario(String id) throws IOException {
-        return testscenarioKlient.opprettTestscenario(id);
+    @Step("Oppretter testscenario {id} fra Json fil lokalisert i VTP")
+    @Deprecated
+    protected TestscenarioDto opprettTestscenarioFraVTPTemplate(String id) throws IOException {
+        return testscenarioKlient.opprettTestscenarioFraVTPTemplate(id);
     }
 
-    @Step("Oppretter testscenario {id}")
-    protected TestscenarioDto opprettScenarioMedPrivatArbeidsgiver(String id, String aktorId) throws IOException {
-        return testscenarioKlient.opprettTestscenarioMedAktorId(id, aktorId);
+    @Step("Oppretter testscenario {id} fra Json fil lokalisert i VTP")
+    @Deprecated
+    protected TestscenarioDto opprettScenarioMedPrivatArbeidsgiverFraVTPTemplate(String id, String aktorId) throws IOException {
+        return testscenarioKlient.opprettTestscenarioMedAktorIdFraVTPTemplate(id, aktorId);
+    }
+
+    @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
+    protected TestscenarioDto opprettTestscenario(String id) throws IOException {
+        Object testscenarioObject = testscenarioRepositoryImpl.hentScenario(id);
+        return testscenarioKlient.opprettTestscenario(id, testscenarioObject);
     }
 }

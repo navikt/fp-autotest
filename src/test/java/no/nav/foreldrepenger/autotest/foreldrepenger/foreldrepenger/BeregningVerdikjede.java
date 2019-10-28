@@ -57,7 +57,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold og tre bortfalte naturalytelser på forskjellige tidspunkt")
     public void morSøkerFødselMedEttArbeidsforhold() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("49");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("49");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -116,7 +116,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som tilkommer etter skjæringstidspunktet")
     public void morSøkerFødselMedFullAAPOgArbeidsforhold() throws Exception {
         // LAG SØKNAD OG SEND INN INNTEKTSMELDING //
-        TestscenarioDto testscenario = opprettScenario("166");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("166");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         SøknadBuilder søknad = SøknadErketyper.foreldrepengesøknadFødselErketype(søkerAktørIdent, SøkersRolle.MOR, 1, fødselsdato);
@@ -156,7 +156,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som ikke skal benyttes.")
     public void morSøkerFødselMedFullAAPOgArbeidsforholdSomErAktivtPåStp() throws Exception {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
-        TestscenarioDto testscenario = opprettScenario("167");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("167");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -202,7 +202,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Mor søker termin uten aktiviteter i aareg. Legger til fiktivt arbeidsforhold.")
     public void morSøkerTerminUtenAktiviteterIAareg() throws Exception {
         // SØKNAD //
-        TestscenarioDto testscenario = opprettScenario("168");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("168");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String annenPartAktørid = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
         LocalDate fødselsdato = LocalDate.now().plusDays(2);
@@ -274,7 +274,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med skjæringstidspunkt på mandag. Arbeidsforhold avslutter fredag og nytt starter på lørdag.")
     public void morSøkerFødselMedStpPåMandagMedTilkommetArbeidIHelga() throws Exception {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
-        TestscenarioDto testscenario = opprettScenario("169");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("169");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -321,7 +321,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med skjæringstidspunkt på mandag. Ett arbeidsforhold avslutter fredag og ett løper videre over skjæringstidspunktet.")
     public void morSøkerFødselMedStpPåMandagMedAvsluttetArbeidsforholdPåFredagOgEttLøpende() throws Exception {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
-        TestscenarioDto testscenario = opprettScenario("170");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("170");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);

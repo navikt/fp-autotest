@@ -11,12 +11,10 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 import java.time.LocalDate;
 
-import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.engangstønadsøknadTerminErketype;
-
 public class OverstyringAvGradering extends FpsakTestBase {
 
     public void skalKunneOverstyreGradering() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,

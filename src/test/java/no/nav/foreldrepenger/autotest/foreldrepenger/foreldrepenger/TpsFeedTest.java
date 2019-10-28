@@ -32,7 +32,7 @@ public class TpsFeedTest extends ForeldrepengerTestBase {
     @Test
     @Disabled
     public void mottaFøselshendelse() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         LocalDate termindato = LocalDate.now().plusWeeks(3);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(5);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -63,7 +63,7 @@ public class TpsFeedTest extends ForeldrepengerTestBase {
     @Test
     @Disabled
     public void mottaDødhendelse() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         LocalDate termindato = LocalDate.now().plusWeeks(3);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(5);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();

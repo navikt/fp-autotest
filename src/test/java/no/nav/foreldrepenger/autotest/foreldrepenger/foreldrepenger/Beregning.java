@@ -27,7 +27,6 @@ import no.nav.vedtak.felles.xml.soeknad.felles.v3.SoekersRelasjonTilBarnet;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Foreldrepenger;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Gradering;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -64,7 +63,7 @@ public class Beregning extends ForeldrepengerTestBase {
             "Aksjonspunkt i beregning for avklaring om ventelønn og vartpenger skal benyttes i beregning.")
     @Tag("beregning")
     public void mor_med_ventelønn_og_vartpenger() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("150");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("150");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -107,7 +106,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @Description("Mor med kortvarig arbeidsforhold")
     @Tag("beregning")
     public void vurder_tidsbegrenset_uten_inntektsmelding() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("151");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("151");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -153,7 +152,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @Description("Mor med kortvarig arbeidsforhold med inntektsmelding")
     @Tag("beregning")
     public void vurder_tidsbegrenset_med_inntektsmelding() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("151");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("151");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -195,7 +194,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @Description("Tilkommer nytt arbeidsforhold med refusjonskrav på STP")
     @Tag("beregning")
     public void morSøkerFødselMedToArbeidsforholdDerDetEneTilkommerPåSTP() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("161");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("161");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -227,7 +226,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @Tag("beregning")
     public void mor_søker_fødsel_med_to_arbeidsforhold_i_samme_organisasjon_inntektsmelding_for_en_med_id_velger_og_sette_det_andre_til_inaktivt() throws Exception {
 
-        TestscenarioDto testscenario = opprettScenario("57");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("57");
 
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -266,7 +265,7 @@ public class Beregning extends ForeldrepengerTestBase {
             "Aksjonspunkt for omfordeling av beregningsgrunnlag.")
     @Tag("beregning")
     public void endret_beregningsgrunnlag_med_kortvarig() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("151");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("151");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -333,7 +332,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @DisplayName("Vurder besteberegning: Mor med arbeidsforhold og dagpenger i opptjeningsperioden")
     @Description("Vurder besteberegning: Mor med arbeidsforhold og dagpenger i opptjeningsperioden.")
     public void vurder_besteberegning() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("156");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("156");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -379,7 +378,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @DisplayName("Vurder besteberegning: Mor med arbeidsforhold og dagpenger i opptjeningsperioden. Uten inntektsmelding.")
     @Description("Vurder besteberegning: Mor med arbeidsforhold og dagpenger i opptjeningsperioden. Uten inntektsmelding")
     public void vurder_besteberegning_vurder_mottar_ytelse() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("156");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("156");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -421,7 +420,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @DisplayName("Vurder besteberegning: Mor med arbeidsforhold og dagpenger i opptjeningsperioden. Uten inntektsmelding, med lønnsendring")
     @Description("Vurder besteberegning: Mor med arbeidsforhold og dagpenger i opptjeningsperioden. Uten inntektsmelding, med lønnsendring")
     public void vurder_besteberegning_vurder_mottar_ytelse_vurder_lonnsendring() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("159");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("159");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -463,7 +462,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @DisplayName("Uten inntektsmelding, med lønnsendring")
     @Description("Uten inntektsmelding, med lønnsendring")
     public void vurder_mottar_ytelse_vurder_lonnsendring() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("161");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("161");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -489,7 +488,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @DisplayName("ATFL i samme org med lønnsendring")
     @Description("ATFL i samme org med lønnsendring")
     public void ATFL_samme_org_med_lønnendring_uten_inntektsmelding() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("163");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("163");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -522,7 +521,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @DisplayName("Vurder besteberegning: Mor med arbeidsforhold og dagpenger på skjæringstidspunktet")
     @Description("Vurder besteberegning: Mor med arbeidsforhold og dagpenger på skjæringstidspunktet.")
     public void vurder_besteberegning_dagpenger_på_skjæringstidspunktet() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("158");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("158");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -555,7 +554,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @Description("Mor med arbeidsforhold uten inntektsmelding som mottar ytelse. Produksjonshendelse som feilet i frontend.")
     @Tag("beregning")
     public void vurder_mottar_ytelse() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("155");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("155");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -641,7 +640,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @Description("Mor er SN ny i arbeidslivet og har arbeidsforhold som tilkommer etter stp")
     @Tag("beregning")
     public void SN_ny_arbeidslivet_med_arbeidsforhold_tilkommer_etter_stp() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("164");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("164");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -680,7 +679,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @Description("Mor er SN som søker gradering og har arbeidsgiver som søker refusjon over 6G")
     @Tag("beregning")
     public void SN_med_gradering_og_arbeidsforhold_som_søker_refusjon_over_6G() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("165");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("165");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -725,7 +724,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @Description("Mor er SN som søker gradering og har arbeidsgiver som søker refusjon under 6G og har beregningsgrunnlag 6G.")
     @Tag("beregning")
     public void SN_med_gradering_og_arbeidsforhold_som_søker_refusjon_under_6G_med_bg_over_6G() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("165");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("165");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -769,7 +768,7 @@ public class Beregning extends ForeldrepengerTestBase {
     @Description("Arbeidsforhold tilkommer etter stp")
     @Tag("beregning")
     public void arbeidsforhold_tilkommer_etter_stp() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("157");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("157");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();

@@ -24,8 +24,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.time.LocalDate;
 
-import static no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.engangstønadsøknadAdopsjonErketype;
-
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -35,7 +33,7 @@ public class Adopsjon extends EngangsstonadTestBase {
     @DisplayName("Mor søker adopsjon - godkjent")
     @Description("Mor søker adopsjon - godkjent happy case")
     public void morSøkerAdopsjonGodkjent() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,false);
@@ -69,7 +67,7 @@ public class Adopsjon extends EngangsstonadTestBase {
     @DisplayName("Mor søker adopsjon - avvist - barn er over 15 år")
     @Description("Mor søker adopsjon - avvist - barn er over 15 år og blir dermed avlått")
     public void morSøkerAdopsjonAvvist() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,false);
@@ -104,7 +102,7 @@ public class Adopsjon extends EngangsstonadTestBase {
     @DisplayName("Mor søker adopsjon med overstyrt vilkår")
     @Description("Mor søker adopsjon med overstyrt vilkår som tar behandlingen fra innvilget til avslått")
     public void morSøkerAdopsjonOverstyrt() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,false);
@@ -148,7 +146,7 @@ public class Adopsjon extends EngangsstonadTestBase {
     @DisplayName("Far søker adopsjon - godkjent")
     @Description("Far søker adopsjon - godkjent happy case")
     public void farSøkerAdopsjonGodkjent() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("61");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR,false);
@@ -181,12 +179,12 @@ public class Adopsjon extends EngangsstonadTestBase {
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
 
     }
-    
+
     @Test
     @DisplayName("Far søker adopsjon av ektefelles barn")
     @Description("Far søker adopsjon av ektefelles barn fører til avvist behandling")
     public void farSøkerAdopsjonAvvist() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("61");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR,true);
@@ -209,7 +207,7 @@ public class Adopsjon extends EngangsstonadTestBase {
 
         verifiserLikhet(saksbehandler.vilkårStatus("FP_VK_4").kode, "IKKE_OPPFYLT", "Vilkårstatus for adopsjon");
         verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), "1005", "Avslagsårsak (Ektefelles/samboers barn)");
-        
+
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);

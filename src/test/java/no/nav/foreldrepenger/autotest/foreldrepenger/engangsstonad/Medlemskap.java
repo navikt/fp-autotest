@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import java.time.LocalDate;
-
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -34,7 +32,7 @@ public class Medlemskap extends EngangsstonadTestBase {
     @DisplayName("Mor søker fødsel er utvandret")
     @Description("Mor søker fødsel og er utvandret. Skal føre til aksjonspunkt angående medlemskap - avslått")
     public void morSøkerFødselErUtvandret() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("51");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("51");
 
 
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
@@ -76,12 +74,12 @@ public class Medlemskap extends EngangsstonadTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
     }
-    
+
     @Test
     @DisplayName("Mor søker med personstatus uregistrert")
     @Description("Mor søker med personstatus uregistrert, får askjonspunkt så hennlegges")
     public void morSøkerFødselUregistrert() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("120");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("120");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -89,14 +87,14 @@ public class Medlemskap extends EngangsstonadTestBase {
                 testscenario.getPersonopplysninger().getFødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
-        
-        
+
+
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaPersonstatusBekreftelse.class)
             .bekreftHenleggBehandling();
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaPersonstatusBekreftelse.class);
-        
+
         verifiser(saksbehandler.valgtBehandling.erHenlagt(), "Behandlingen ble ikke henlagt etter bekreftet ugyldig status");
     }
 
@@ -105,7 +103,7 @@ public class Medlemskap extends EngangsstonadTestBase {
     @DisplayName("Mor søker med utenlandsk adresse")
     @Description("Mor søker med utelandsk adresse")
     public void morSøkerFødselUtenlandsadresse() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("121");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("121");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -113,19 +111,19 @@ public class Medlemskap extends EngangsstonadTestBase {
                 testscenario.getPersonopplysninger().getFødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
-        
-        
+
+
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        
+
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
-        
+
         saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerBosattBekreftelse.class)
             .bekreftBrukerErBosatt();
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarBrukerBosattBekreftelse.class);
-        
+
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
-        
+
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 

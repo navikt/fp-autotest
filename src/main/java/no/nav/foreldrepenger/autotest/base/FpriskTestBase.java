@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.base;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import no.nav.foreldrepenger.autotest.aktoerer.fprisk.Saksbehandler;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.AktørId;
@@ -10,7 +9,6 @@ import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
-import java.util.UUID;
 
 
 public class FpriskTestBase extends TestScenarioTestBase {

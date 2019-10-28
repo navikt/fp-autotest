@@ -19,7 +19,7 @@ public class Totrinnskontroll extends FpsakTestBase {
 
     public void behandleTotrinnskontrollAvTerminsøknad() throws Exception {
         //Oprett scenario og søknad
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,

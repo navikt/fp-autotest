@@ -22,7 +22,7 @@ public class OppretteFagsak extends FpsakTestBase {
 
     public void oppretteTerminsøknad() throws Exception {
         //Opprett scenario og søknad
-        TestscenarioDto testscenario = opprettScenario("50");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.termin(1, testscenario.getPersonopplysninger().getFødselsdato());
         Fordeling fordeling = FordelingErketyper.fordelingHappyCase(testscenario.getPersonopplysninger().getFødselsdato(), SøkersRolle.MOR);
         Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(relasjonTilBarnet, fordeling).build();

@@ -10,7 +10,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaOmsorgOgForeldreansvarBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
@@ -36,7 +35,7 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     @DisplayName("Mor søker Omsorgsovertakelse - godkjent")
     @Description("Mor søker Omsorgsovertakelse - godkjent happy case")
     public void MorSøkerOmsorgsovertakelseGodkjent() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
@@ -75,7 +74,7 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     @DisplayName("Mor søker Omsorgsovertakelse - avvist")
     @Description("Mor søker Omsorgsovertakelse - avvist fordi mor ikke er død")
     public void morSøkerOmsorgsovertakelseAvvist() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
@@ -112,7 +111,7 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     @Test
     @Disabled("TODO hvorfor")
     public void behenadleOmsorgsovertakelseMorOverstyrt() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("55");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
@@ -141,7 +140,7 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     @DisplayName("Far søker Omsorgsovertakelse - godkjent")
     @Description("Far søker Omsorgsovertakelse - får godkjent aksjonspunkt og blir invilget")
     public void farSøkerOmsorgsovertakelseGodkjent() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("61");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
@@ -180,7 +179,7 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     @DisplayName("Far søker Foreldreansvar 2. ledd - godkjent")
     @Description("Far søker Foreldreansvar 2. ledd - får godkjent aksjonspunkt og blir invilget")
     public void farSøkerForeldreansvarGodkjent() throws Exception {
-        TestscenarioDto testscenario = opprettScenario("61");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
