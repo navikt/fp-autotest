@@ -6,22 +6,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public class TestscenarioRepositoryImpl {
 
-    public static final String PERSONOPPLYSNING_JSON_FIL_NAVN = "personopplysning.json";
-    public static final String INNTEKTYTELSE_SØKER_JSON_FIL_NAVN = "inntektytelse-søker.json";
-    public static final String INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN = "inntektytelse-annenpart.json";
-    public static final String ORGANISASJON_JSON_FIL_NAVN = "organisasjon.json";
-    public static final String VARS_JSON_FIL_NAVN = "vars.json";
+    private static final String PERSONOPPLYSNING_JSON_FIL_NAVN = "personopplysning.json";
+    private static final String INNTEKTYTELSE_SØKER_JSON_FIL_NAVN = "inntektytelse-søker.json";
+    private static final String INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN = "inntektytelse-annenpart.json";
+    private static final String ORGANISASJON_JSON_FIL_NAVN = "organisasjon.json";
+    private static final String VARS_JSON_FIL_NAVN = "vars.json";
 
     private final Map<String, Object> scenarioObjects = new TreeMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
-    private final File rootDir = new File(this.getClass().getClassLoader().getResource("scenarios").getFile());
+    private final File rootDir = new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource("scenarios")).getFile());
 
     public TestscenarioRepositoryImpl() {
     }
@@ -30,7 +32,7 @@ public class TestscenarioRepositoryImpl {
         return scenarioObjects.values();
     }
 
-    public Object hentScenario(String scenarioId) {
+    public Object hentScenario(String scenarioId) throws FileNotFoundException {
         if (scenarioObjects.containsKey(scenarioId)) {
             return scenarioObjects.get(scenarioId);
         }
@@ -38,13 +40,10 @@ public class TestscenarioRepositoryImpl {
     }
 
 
-    private Object LesOgReturnerScenarioFraJsonfil(String scenarioId) {
+    private Object LesOgReturnerScenarioFraJsonfil(String scenarioId) throws FileNotFoundException {
         File scenarioFiles = hentScenarioFileneSomStarterMed(scenarioId);
         if (scenarioFiles == null) {
-            System.out.println("Testscenario: [" + scenarioId + "] eksisterer ikke. ");
-            // scenarioFiles.exists()
-            // throw new FileNotFoundException("Fant ikke scenario med scenario nummer [" + scenarioId + "]");
-            return null;
+            throw new FileNotFoundException("Fant ikke scenario med scenario nummer [" + scenarioId + "]");
         }
 
         final ObjectNode root = mapper.createObjectNode();
@@ -73,9 +72,9 @@ public class TestscenarioRepositoryImpl {
         }
     }
 
-    private File hentFilSomMatcherStreng(File scenarioFiles, String FilNavnPåJsonFil) {
-        File[] files = scenarioFiles.listFiles((dir, name) -> name.equalsIgnoreCase(FilNavnPåJsonFil));
-        if (files.length > 0) {
+    private File hentFilSomMatcherStreng(File scenarioFiler, String FilNavnPåJsonFil) {
+        File[] files = scenarioFiler.listFiles((dir, name) -> name.equalsIgnoreCase(FilNavnPåJsonFil));
+        if (files != null && files.length > 0) {
             return files[0];
         }
         return null;
