@@ -14,9 +14,9 @@
         <revision>1.0.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
-	
-	<vtp.versjon>1.0_20191025135311_ef3e56b</vtp.versjon>
-	    
+
+	<vtp.versjon>1.0_20191028164312_1964333</vtp.versjon>
+
 	<aspectj.version>1.9.4</aspectj.version>
 
 	<jackson.version>2.10.0</jackson.version>
