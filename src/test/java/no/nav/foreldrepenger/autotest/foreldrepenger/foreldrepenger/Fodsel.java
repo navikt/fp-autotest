@@ -633,7 +633,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         // Send inn inntektsmelding
-        int inntektPerMaaned = 20_000;
+        int inntektPerMaaned = 10_000;
         LocalDate startDatoForeldrepenger = fødselsdato.minusWeeks(3);
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilderPrivatArbeidsgiver(inntektPerMaaned, fnr,
@@ -706,7 +706,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         // Send inn inntektsmelding
-        int inntektPerMaaned = 20_000;
+        int inntektPerMaaned = 10_000;
         int refusjon = 25_000;
         int endret_refusjon = 10_000;
         LocalDate endringsdato = fødselsdato.plusMonths(1);
