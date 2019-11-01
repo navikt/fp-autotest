@@ -31,7 +31,7 @@ import java.util.List;
 
 import static no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder.createDefaultSvangerskapspenger;
 
-@Tag("fpsak") //TODO (OL): Gjør til fpsak når klar
+@Tag("fpsak")
 @Tag("svangerskapspenger")
 public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
@@ -45,7 +45,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
         final String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
-        final int beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        final int beløpMor = 45_000;
 
         final Tilrettelegging tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
                 LocalDate.now(),
