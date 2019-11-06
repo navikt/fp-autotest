@@ -1,5 +1,6 @@
 FASIT_ENVIRONMENT_NAME=q1
 ENVIRONMENT_NAME=q1
+NAIS_NAMESPACE=q1
 
 APP_VERSION=autotest
 APP_ENVIRONMENT=lokal
@@ -112,8 +113,6 @@ AUTOTEST_OAUTH2_ISSUER_URL=vtp
 AUTOTEST_OAUTH2_ISSUER_PATH=/rest/isso/oauth2
 LOGBACK_CONFIG=/app/lib/logback.xml
 
-NAIS_NAMESPACE=p
-FASIT_ENVIRONMENT_NAME=p
 KAFKA_AKSJONSPUNKTHENDELSE_TOPIC=privat-foreldrepenger-aksjonspunkthendelse-fpsak
 KAFKA_AKSJONSPUNKTHENDELSE_CLIENT_ID=KP-privat-foreldrepenger-aksjonspunkthendelse
 KAFKA_AKSJONSPUNKTHENDELSE_SCHEMA_REGISTRY.URL=https://kafka-test-schema-registry.nais.preprod.local
