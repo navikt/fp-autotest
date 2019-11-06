@@ -8,6 +8,27 @@ services:
     ports:
       - "5432:5432"
     container_name: postgres
+  vtp:
+    image: $VTP_IMAGE
+    environment:
+      - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/root/.modig/keystore.jks"
+      - "JAVAX_NET_SSL_TRUSTSTORE=/root/.modig/truststore.jks"
+      - "ISSO_OAUTH2_ISSUER=https://vtp:8063/rest/isso/oauth2"
+      - "VTP_KAFKA_HOST=localhost:9093"
+    volumes:
+      - "${WORKSPACE}/.modig:/root/.modig"
+    ports:
+      - "8060:8060"
+      - "8063:8063"
+      - "8636:8636"
+      - "9093:9093"
+      - "9092:9092"
+      - "8389:8389"
+    container_name: vtp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8060/rest/isReady"]
+      interval: 30s
+      timeout: 5s
   abakus:
     image: $ABAKUS_IMAGE
     container_name: abakus
@@ -49,8 +70,9 @@ services:
     env_file:
       - "lokalutvikling/abakus.properties"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "${WORKSPACE}/.modig:/var/run/secrets/naisd.io"
     ports:
       - "8043:8043"
     depends_on:
       - postgres
+      - vtp
