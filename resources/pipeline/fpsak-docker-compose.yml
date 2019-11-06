@@ -67,8 +67,6 @@ services:
       - "SYSTEMBRUKER_USERNAME=vtp"
       - "SYSTEMBRUKER_PASSWORD=vtp"
       - "NAIS_APP_NAME=FPABAKUS"
-    env_file:
-      - "lokalutvikling/abakus.properties"
     volumes:
       - "${WORKSPACE}/.modig:/var/run/secrets/naisd.io"
     ports:
