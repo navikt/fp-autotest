@@ -149,4 +149,4 @@ FPFORMIDLING_HENTSAKSBEHANDLERTEKST_URL=https://vtp:8063/rest/fpformidling/saksb
 
 FPTILBAKE_OVERRIDE_DIREKTE_URL=https://vtp:8063/rest/dummy/boolean/false
 
-FPABAKUS_URL=http://abakus:8063/fpabakus
+FPABAKUS_URL=http://abakus:8043/fpabakus
