@@ -36,6 +36,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -239,7 +240,88 @@ public class Uttak extends ForeldrepengerTestBase {
                 fnrFar,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummerFar);
     }
+    @Test
+    public void testcase_morOgFar_toArbeidsforhold() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("141");
+        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
+        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
 
+        LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartMor = fødselsDato;
+        LocalDate fpStartFar =  fødselsDato.plusWeeks(12);
+
+        Fordeling fordelingMor = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato, fpStartFar.minusDays(1)),
+                oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fpStartFar, fpStartFar.plusWeeks(7).minusDays(1)),
+                oppholdsperiode(OPPHOLDSTYPE_KVOTE_FELLESPERIODE_ANNEN_FORELDER, fpStartFar.plusWeeks(7), fpStartFar.plusWeeks(18).minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fpStartFar.plusWeeks(18), fpStartFar.plusWeeks(23).minusDays(1)));
+        Foreldrepenger foreldrepengerMor = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsDato), fordelingMor)
+                .build();
+        SøknadBuilder søknadMor = new SøknadBuilder(
+                foreldrepengerMor,
+                aktørIdMor,
+                SøkersRolle.MOR);
+
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        long saksnummerMor = fordel.sendInnSøknad(
+                søknadMor.build(),
+                aktørIdMor,
+                fnrMor,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
+                null);
+        InntektsmeldingBuilder inntektsmeldingMorEn = lagInntektsmeldingBuilder(
+                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                fnrMor,
+                fpStartMor,
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(),
+                Optional.empty(), Optional.empty(), Optional.empty());
+        InntektsmeldingBuilder inntektsmeldingMorTo = lagInntektsmeldingBuilder(
+                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp(),
+                fnrMor,
+                fpStartMor,
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr(),
+                Optional.empty(), Optional.empty(), Optional.empty());
+        List<InntektsmeldingBuilder> inntektsmeldingBuilderListMor = new ArrayList<>();
+        inntektsmeldingBuilderListMor.add(inntektsmeldingMorEn);
+        inntektsmeldingBuilderListMor.add(inntektsmeldingMorTo);
+        fordel.sendInnInntektsmeldinger(inntektsmeldingBuilderListMor, aktørIdMor, fnrMor, saksnummerMor);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        Fordeling fordelingFar = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fpStartFar, fpStartFar.plusWeeks(6).minusDays(1)),
+                graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_FELLESPERIODE, fpStartFar.plusWeeks(6), fpStartFar.plusWeeks(18).minusDays(1),
+                        testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(), 50));
+        Foreldrepenger foreldrepengerFar = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsDato),
+                fordelingFar)
+                .build();
+        SøknadBuilder søknadFar = new SøknadBuilder(foreldrepengerFar, aktørIdFar, SøkersRolle.FAR);
+        long saknsummerFar = fordel.sendInnSøknad(søknadFar.build(), aktørIdFar, fnrFar, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+
+        InntektsmeldingBuilder inntektsmeldingFarEn = lagInntektsmeldingBuilder(
+                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                fnrFar,
+                fpStartFar,
+                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(),
+                Optional.empty(), Optional.empty(), Optional.empty());
+        InntektsmeldingBuilder inntektsmeldingFarTo = lagInntektsmeldingBuilder(
+                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp(),
+                fnrFar,
+                fpStartFar,
+                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr(),
+                Optional.empty(), Optional.empty(), Optional.empty());
+        List<InntektsmeldingBuilder> inntektsmeldingBuilderListFar = new ArrayList<>();
+        inntektsmeldingBuilderListFar.add(inntektsmeldingFarEn);
+        inntektsmeldingBuilderListFar.add(inntektsmeldingFarTo);
+        fordel.sendInnInntektsmeldinger(inntektsmeldingBuilderListFar, aktørIdFar, fnrFar, saknsummerFar);
+
+    }
     @Test
     public void testcase_mor_endringsSøknad_medGradering_FL_AAP() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("30");
