@@ -15,10 +15,10 @@ public class UttakDokumentasjon {
 
     public UttakDokumentasjon() {}
 
-    public UttakDokumentasjon(LocalDate fom, LocalDate tom, Kode dokumentasjonType) {
+    public UttakDokumentasjon(LocalDate fom, LocalDate tom, DokumentasjonType dokumentasjonType) {
         super();
         this.fom = fom;
         this.tom = tom;
-        this.dokumentasjonType = dokumentasjonType;
+        this.dokumentasjonType = dokumentasjonType.tilKode();
     }
 }
