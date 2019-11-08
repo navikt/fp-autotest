@@ -5,6 +5,7 @@ import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.foreldrepenger.eksempler.Inntektsmelding;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.*;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
@@ -100,8 +101,8 @@ public class Uttak extends ForeldrepengerTestBase {
         fordeling.permisjonsPerioder.add(fk2);
         fordeling.permisjonsPerioder.add(fk3);
         fordeling.permisjonsPerioder.add(fk4);
-
         aksjonspunktBekreftelseFar.morSøkerFødsel(fordeling, fødselsdato, fødselsdato);
+
         saksbehandler.bekreftAksjonspunktBekreftelse(aksjonspunktBekreftelseFar);
         lagOgSendIm(testscenario.getScenariodataAnnenpart(), saksnummerFar, aktørIdFar, fnrFar, fpStartFar);
     }
@@ -229,7 +230,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
                 uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)));
         SøknadBuilder søknadEndring = SøknadErketyper.endringssøknadErketype(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                aktørIdFar,
                 SøkersRolle.FAR,
                 endringFordeling,
                 String.valueOf(saksnummerFar));
