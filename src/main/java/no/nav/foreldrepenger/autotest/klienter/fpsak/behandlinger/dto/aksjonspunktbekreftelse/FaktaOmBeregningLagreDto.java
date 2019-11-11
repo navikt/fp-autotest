@@ -54,9 +54,17 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilAndelerYtesle(double beløp, Kode inntektskategori) {
+    public FaktaOmBeregningLagreDto leggTilAndelerYtelse(double beløp, Kode inntektskategori) {
         kunYtelseFordeling = new YtelseForedeling();
         kunYtelseFordeling.leggTilYtelseAndeler(new YtelseAndeler(beløp, inntektskategori.kode));
+        return this;
+    }
+
+    public FaktaOmBeregningLagreDto settKunYtelseBesteberegning(boolean skalHaBesteberegning) {
+        if (kunYtelseFordeling == null) {
+            kunYtelseFordeling = new YtelseForedeling();
+        }
+        kunYtelseFordeling.skalBrukeBesteberegning = skalHaBesteberegning;
         return this;
     }
 
@@ -73,6 +81,7 @@ public class FaktaOmBeregningLagreDto {
     public class YtelseForedeling{
 
         public List<YtelseAndeler> andeler = new ArrayList<>();
+        public Boolean skalBrukeBesteberegning;
 
         public YtelseForedeling() {
             // TODO Auto-generated constructor stub

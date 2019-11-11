@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
@@ -11,6 +12,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLopendeVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.OrgNummer;
@@ -348,6 +351,59 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0), lagBGAndel(orgNr2, inntektPerMåned*12, inntektPerMåned*12,  0, inntektPerMåned*12));
     }
 
+    @Test
+    @DisplayName("Mor med kun ytelse på skjæringstidspunktet og dagpenger i opptjeningsperioden")
+    @Description("Mor med kun ytelse på skjæringstidspunktet og dagpenger i opptjeningsperioden")
+    public void kun_ytelse_med_vurdering_av_besteberegning() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("172");
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        SøknadBuilder søknad = SøknadErketyper.foreldrepengesøknadFødselErketype(søkerAktørIdent, SøkersRolle.MOR, 1, fødselsdato);
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+
+        // FAKTA OM FØDSEL: Avklar om søker har mottatt støtte
+        saksbehandler.hentAksjonspunktbekreftelse(AvklarLopendeVedtakBekreftelse.class).bekreftGodkjent();
+        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarLopendeVedtakBekreftelse.class);
+
+        // FAKTA OM MEDLEMSKAP
+        saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
+                .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"));
+        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
+
+        // FAKTA OM BERGNING: Vurder besteberegning og fastsett månedsinntekt fra ytelse
+        saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .leggTilFaktaOmBeregningTilfeller("FASTSETT_BG_KUN_YTELSE")
+                .leggTilFaktaOmBeregningTilfeller("VURDER_BESTEBEREGNING")
+                .leggTilAndelerYtelse(10000.0, new Kode("INNTEKTSKATEGORI", "ARBEIDSTAKER", ""))
+                .settSkalHaBesteberegningForKunYtelse(true);
+        saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+
+
+        // FORESLÅ VEDTAK //
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
+        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+
+        // FATTE VEDTAK //
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+        Aksjonspunkt apLopendeVedtak = beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE);
+        Aksjonspunkt apMedlemskap = beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_GYLDIG_MEDLEMSKAPSPERIODE);
+        Aksjonspunkt apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkter(List.of(apLopendeVedtak, apMedlemskap, apFaktaOmBeregning));
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling();
+
+        // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
+        saksbehandler.ventTilAvsluttetBehandling();
+        Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
+        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0), lagBGAndelMedBesteberegning("BA", 120_000));
+    }
+
     private void verifiserAndelerIPeriode(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode, BGAndelHelper BGAndelHelper) {
         if (beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndel().stream().noneMatch(a -> matchAndel(BGAndelHelper, a))) {
             throw new AssertionError("Finnes ingen andeler med detaljer " + BGAndelHelper.aktivitetstatus + " orgnr: " + BGAndelHelper.arbeidsgiverId);
@@ -410,6 +466,16 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         return andel;
     }
 
+    private BGAndelHelper lagBGAndelMedBesteberegning(String aktivitetstatus, int beregnetPrÅr) {
+        BGAndelHelper andel = new BGAndelHelper();
+        andel.aktivitetstatus = aktivitetstatus;
+        andel.beregnetPrÅr = beregnetPrÅr;
+        andel.bruttoPrÅr = beregnetPrÅr;
+        andel.besteberegningPrÅr = beregnetPrÅr;
+        return andel;
+    }
+
+
     private BortfaltnaturalytelseHelper lagBortfaltNaturalytelse(double mndBeløp, LocalDate fom) {
         BortfaltnaturalytelseHelper nat = new BortfaltnaturalytelseHelper();
         nat.beløpPrMnd = BigDecimal.valueOf(mndBeløp);
@@ -428,6 +494,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
     private class BGAndelHelper {
         public String aktivitetstatus;
+        private double besteberegningPrÅr;
         private double bruttoPrÅr;
         private double beregnetPrÅr;
         private double fordeltPrÅr;
