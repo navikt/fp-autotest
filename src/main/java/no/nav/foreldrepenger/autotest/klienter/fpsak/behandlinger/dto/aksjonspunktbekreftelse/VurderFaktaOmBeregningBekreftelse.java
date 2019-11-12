@@ -48,10 +48,16 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilAndelerYtesle(double beløp, Kode inntektskategori) {
-        fakta.leggTilAndelerYtesle(beløp, inntektskategori);
+    public VurderFaktaOmBeregningBekreftelse leggTilAndelerYtelse(double beløp, Kode inntektskategori) {
+        fakta.leggTilAndelerYtelse(beløp, inntektskategori);
         return this;
     }
+
+    public VurderFaktaOmBeregningBekreftelse settSkalHaBesteberegningForKunYtelse(boolean skalHaBesteberegning) {
+        fakta.settKunYtelseBesteberegning(skalHaBesteberegning);
+        return this;
+    }
+
 
 
     public VurderFaktaOmBeregningBekreftelse leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode, BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {

@@ -73,7 +73,7 @@ public class Ytelser extends ForeldrepengerTestBase {
 
         saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
             .leggTilFaktaOmBeregningTilfeller("FASTSETT_BG_KUN_YTELSE")
-            .leggTilAndelerYtesle(10000.0, new Kode("", "ARBEIDSTAKER", ""));//TODO hent kode
+            .leggTilAndelerYtelse(10000.0, new Kode("", "ARBEIDSTAKER", ""));//TODO hent kode
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
 
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
@@ -127,7 +127,7 @@ public class Ytelser extends ForeldrepengerTestBase {
 
         saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
             .leggTilFaktaOmBeregningTilfeller("FASTSETT_BG_KUN_YTELSE")
-            .leggTilAndelerYtesle(4000.0, new Kode("", "ARBEIDSTAKER", ""));//TODO hent kode
+            .leggTilAndelerYtelse(4000.0, new Kode("", "ARBEIDSTAKER", ""));//TODO hent kode
         saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
 
         verifiserLikhet(saksbehandler.vilkårStatus("FP_VK_41").kode, "IKKE_OPPFYLT"); //Beregning
