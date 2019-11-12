@@ -4,7 +4,8 @@ import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger.Saksbehandler;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kodeverk;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.ArbeidsforholdBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingErketype;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenariodataDto;
@@ -63,7 +64,11 @@ public class FpsakTestBase extends TestScenarioTestBase {
         return makeInntektsmeldingFromTestscenarioMedIdent(testscenario, søkerIdent, startDatoForeldrepenger, false);
     }
 
-    protected List<InntektsmeldingBuilder> makeInntektsmeldingFromTestscenarioMedIdent(TestscenarioDto testscenario, String søkerIdent, LocalDate startDatoForeldrepenger, boolean erAnnenpart) {
+    protected List<InntektsmeldingBuilder> makeInntektsmeldingFromTestscenarioMedIdent(
+            TestscenarioDto testscenario,
+            String søkerIdent,
+            LocalDate startDatoForeldrepenger,
+            boolean erAnnenpart) {
 
         List<Inntektsperiode> inntektsperioder;
         List<Arbeidsforhold> arbeidsforholdEtterStartdatoFP;
@@ -87,12 +92,15 @@ public class FpsakTestBase extends TestScenarioTestBase {
                     .max(Comparator.comparing(Inntektsperiode::getTom))
                     .orElseThrow(() -> new IllegalStateException("Utvikler feil: Arbeidsforhold mangler inntektsperiode"));
             Integer beløp = sisteInntektsperiode.getBeløp();
-            inntektsmeldinger.add(lagInntektsmeldingBuilder(beløp, søkerIdent, startDatoForeldrepenger, arbeidsgiverOrgnr, Optional.empty(), Optional.empty(), Optional.empty()));
+            inntektsmeldinger.add(lagInntektsmeldingBuilder(beløp, søkerIdent, startDatoForeldrepenger, arbeidsgiverOrgnr));
         }
 
         return inntektsmeldinger;
     }
-    protected List<InntektsmeldingBuilder> makeInntektsmeldingFromtestscenariodata(TestscenariodataDto testscenariodata, String søkerIdent, LocalDate startDatoForeldrepenger) {
+    protected List<InntektsmeldingBuilder> makeInntektsmeldingFromtestscenariodata(
+            TestscenariodataDto testscenariodata,
+            String søkerIdent,
+            LocalDate startDatoForeldrepenger) {
 
         List<Inntektsperiode> inntektsperioder;
         List<Arbeidsforhold> arbeidsforholdEtterStartdatoFP;
@@ -112,100 +120,75 @@ public class FpsakTestBase extends TestScenarioTestBase {
                     .max(Comparator.comparing(Inntektsperiode::getTom))
                     .orElseThrow(() -> new IllegalStateException("Utvikler feil: Arbeidsforhold mangler inntektsperiode"));
             Integer beløp = sisteInntektsperiode.getBeløp();
-            inntektsmeldinger.add(lagInntektsmeldingBuilder(beløp, søkerIdent, startDatoForeldrepenger, arbeidsgiverOrgnr, Optional.empty(), Optional.empty(), Optional.empty()));
+            inntektsmeldinger.add(lagInntektsmeldingBuilder(beløp, søkerIdent, startDatoForeldrepenger, arbeidsgiverOrgnr));
         }
 
         return inntektsmeldinger;
     }
 
-    protected InntektsmeldingBuilder lagInntektsmeldingBuilder(Integer beløp, String fnr, LocalDate fpStartdato, String orgNr,
-                                                               Optional<String> arbeidsforholdId, Optional<BigDecimal> refusjon, Optional<LocalDate> refusjonOpphørsdato) {
-        String inntektsmeldingID = UUID.randomUUID().toString().substring(0, 7);
-        InntektsmeldingBuilder builder = new InntektsmeldingBuilder(inntektsmeldingID,
-                YtelseKodeliste.FORELDREPENGER,
-                ÅrsakInnsendingKodeliste.NY,
-                fnr,
-                fpStartdato);
-        builder.setAvsendersystem(InntektsmeldingBuilder.createAvsendersystem(
-                "FS22",
-                "1.0"));
-        builder.setArbeidsforhold(InntektsmeldingBuilder.createArbeidsforhold(
-                arbeidsforholdId.orElse(null),
-                null,
-                new BigDecimal(beløp),
-                new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>()));
-        builder.setArbeidsgiver(InntektsmeldingBuilder.createArbeidsgiver(
-                orgNr,
-                "41925090"));
-        refusjon.ifPresent(_refusjon -> builder.setRefusjon(InntektsmeldingBuilder.createRefusjon(
-                _refusjon,
-                refusjonOpphørsdato.orElse(null),
-                Collections.emptyList())));
-        return builder;
+    protected InntektsmeldingBuilder createDefaultSvangerskapspenger(
+            Integer beløp,
+            String fnr,
+            String orgnummer) {
+        InntektsmeldingBuilder inntektsmelding = new InntektsmeldingBuilder()
+                .medArbeidstakerFNR(fnr)
+                .medBeregnetInntekt(BigDecimal.valueOf(beløp))
+                .medYtelse(YtelseKodeliste.SVANGERSKAPSPENGER)
+                .medAarsakTilInnsending(ÅrsakInnsendingKodeliste.NY)
+                .medArbeidsgiver(orgnummer, "41925090")
+                .medAvsendersystem("FS32", "1.0");
+        return inntektsmelding;
     }
-
-    protected InntektsmeldingBuilder lagInntektsmeldingBuilderMedGradering(Integer beløp, String fnr, LocalDate fpStartdato, String orgNr,
-                                                                           Optional<String> arbeidsforholdId, Optional<BigDecimal> refusjon,
-                                                                           Integer arbeidsprosent, LocalDate graderingFom, LocalDate graderingTom) {
-        InntektsmeldingBuilder builder = lagInntektsmeldingBuilder(beløp, fnr, fpStartdato, orgNr, arbeidsforholdId, refusjon, Optional.empty());
-        builder.addGradertperiode(BigDecimal.valueOf(arbeidsprosent), graderingFom, graderingTom);
-        return builder;
+    protected InntektsmeldingBuilder lagInntektsmeldingBuilder(
+            Integer beløp,
+            String fnr,
+            LocalDate fpStartdato,
+            String orgNr) {
+        InntektsmeldingBuilder inntektsmelding = new InntektsmeldingBuilder()
+                .medBeregnetInntekt(BigDecimal.valueOf(beløp))
+                .medArbeidstakerFNR(fnr)
+                .medYtelse(YtelseKodeliste.FORELDREPENGER)
+                .medAarsakTilInnsending(ÅrsakInnsendingKodeliste.NY)
+                .medStartdatoForeldrepengerperiodenFOM(fpStartdato)
+                .medAvsendersystem("FS22", "1.0")
+                .medArbeidsgiver(orgNr, "41925090");
+        return inntektsmelding;
     }
-
-    protected InntektsmeldingBuilder lagInntektsmeldingBuilderPrivatArbeidsgiver(Integer beløp, String fnr, LocalDate fpStartdato, String fnrArbeidsgiver,
-                                                               Optional<String> arbeidsforholdId, Optional<BigDecimal> refusjon) {
-        String inntektsmeldingID = UUID.randomUUID().toString().substring(0, 7);
-        InntektsmeldingBuilder builder = new InntektsmeldingBuilder(inntektsmeldingID,
-                YtelseKodeliste.FORELDREPENGER,
-                ÅrsakInnsendingKodeliste.NY,
-                fnr,
-                fpStartdato);
-        builder.setAvsendersystem(InntektsmeldingBuilder.createAvsendersystem(
-                "FS22",
-                "1.0"));
-        builder.setArbeidsforhold(InntektsmeldingBuilder.createArbeidsforhold(
-                arbeidsforholdId.orElse(null),
-                null,
-                new BigDecimal(beløp),
-                new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>()));
-        builder.setArbeidsgiverPrivat(builder.createArbeidsgiverPrivat(
-                fnrArbeidsgiver,
-                "41925090"));
-        refusjon.ifPresent(_refusjon -> builder.setRefusjon(InntektsmeldingBuilder.createRefusjon(
-                _refusjon,
-                null,
-                Collections.emptyList())));
-        return builder;
+    protected InntektsmeldingBuilder lagInntektsmeldingBuilderMedGradering(
+            Integer beløp,
+            String fnr,
+            LocalDate fpStartdato,
+            String orgNr,
+            Integer arbeidsprosent,
+            LocalDate graderingFom,
+            LocalDate graderingTom) {
+        InntektsmeldingBuilder inntektsmelding = lagInntektsmeldingBuilder(beløp, fnr, fpStartdato, orgNr);
+        inntektsmelding.medGradering(BigDecimal.valueOf(arbeidsprosent), graderingFom, graderingTom);
+        return inntektsmelding;
     }
-
-    protected InntektsmeldingBuilder finnIM(List<InntektsmeldingBuilder> inntektsmeldinger, String orgnr) {
-        for (InntektsmeldingBuilder im : inntektsmeldinger) {
-            if (im.getArbeidsgiver().getVirksomhetsnummer().equals(orgnr)) {
-                return im;
-            }
-        }
-        throw new IllegalArgumentException("Finner ikke inntektsmelding for oppgitt orgnr.");
+    protected InntektsmeldingBuilder lagInntektsmeldingBuilderPrivatArbeidsgiver(Integer beløp,
+                                                                                 String fnr,
+                                                                                 LocalDate fpStartdato,
+                                                                                 String fnrArbeidsgiver) {
+        InntektsmeldingBuilder inntektsmelding = new InntektsmeldingBuilder()
+                .medBeregnetInntekt(BigDecimal.valueOf(beløp))
+                .medArbeidstakerFNR(fnr)
+                .medYtelse(YtelseKodeliste.FORELDREPENGER)
+                .medAarsakTilInnsending(ÅrsakInnsendingKodeliste.NY)
+                .medStartdatoForeldrepengerperiodenFOM(fpStartdato)
+                .medAvsendersystem("FS22", "1.0")
+                .medArbeidsgiverPrivat(fnrArbeidsgiver, "41925090");
+        return inntektsmelding;
     }
-
-    protected InntektsmeldingBuilder lagInntektsmeldingBuilderMedEndringIRefusjonPrivatArbeidsgiver(Integer beløp, String fnr,
-                                                                                                    LocalDate fpStartdato, String fnrArbeidsgiver,
-                                                                           Optional<String> arbeidsforholdId, Optional<BigDecimal> refusjon, Map<LocalDate, BigDecimal> endringRefusjonMap) {
-        InntektsmeldingBuilder builder = lagInntektsmeldingBuilderPrivatArbeidsgiver(beløp, fnr, fpStartdato, fnrArbeidsgiver, arbeidsforholdId, refusjon);
-        refusjon.ifPresent(_refusjon -> builder.setRefusjon(InntektsmeldingBuilder.createRefusjon(
-                _refusjon,
-                null,
-                mapToEndringIRefusjon(endringRefusjonMap))));
-        return builder;
-    }
-
-    private List<EndringIRefusjon> mapToEndringIRefusjon(Map<LocalDate,BigDecimal> endringRefusjonMap) {
-        return endringRefusjonMap.entrySet().stream().map(entry ->
-                InntektsmeldingBuilder.createEndringIRefusjon(entry.getKey(), entry.getValue())
-        ).collect(Collectors.toList());
+    protected InntektsmeldingBuilder lagInntektsmeldingBuilderMedEndringIRefusjonPrivatArbeidsgiver(Integer beløp,
+                                                                                                    String fnr,
+                                                                                                    LocalDate fpStartdato,
+                                                                                                    String fnrArbeidsgiver,
+                                                                                                    BigDecimal refusjon,
+                                                                                                    Map<LocalDate, BigDecimal> endringRefusjonMap) {
+        InntektsmeldingBuilder inntektsmelding = lagInntektsmeldingBuilderPrivatArbeidsgiver(beløp, fnr, fpStartdato, fnrArbeidsgiver);
+        inntektsmelding.medRefusjon(refusjon, null, endringRefusjonMap);
+        return inntektsmelding;
     }
 
 }

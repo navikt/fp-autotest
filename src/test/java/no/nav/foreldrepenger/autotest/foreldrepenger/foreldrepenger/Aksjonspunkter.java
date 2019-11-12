@@ -4,7 +4,7 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
@@ -49,17 +49,13 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
 
         InntektsmeldingBuilder inntektsmeldingBuilder_1 = lagInntektsmeldingBuilder(inntekter.get(0), fnr,
-                fpStartdato, arbeidsgiverOrgnr_1, Optional.of(arbeidsforhold_1.getArbeidsforholdId()), Optional.empty(), Optional.empty());
+                fpStartdato, arbeidsgiverOrgnr_1);
+        inntektsmeldingBuilder_1
+                .medArbeidsforholdId(arbeidsforhold_1.getArbeidsforholdId())
+                .medBeregnetInntekt(BigDecimal.valueOf(101230));
         InntektsmeldingBuilder inntektsmeldingBuilder_2 = lagInntektsmeldingBuilder(inntekter.get(1), fnr,
-                fpStartdato, arbeidsgiverOrgnr_2, Optional.of(arbeidsforhold_2.getArbeidsforholdId()), Optional.empty(), Optional.empty());
-
-        inntektsmeldingBuilder_1.setArbeidsforhold(InntektsmeldingBuilder.createArbeidsforhold(
-                inntektsmeldingBuilder_1.getArbeidsforhold().getArbeidsforholdId().getValue(),
-                null,
-                new BigDecimal(101230),
-                new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>()));
+                fpStartdato, arbeidsgiverOrgnr_2);
+        inntektsmeldingBuilder_2.medArbeidsforholdId(arbeidsforhold_2.getArbeidsforholdId());
 
         fordel.sendInnInntektsmeldinger(Arrays.asList(inntektsmeldingBuilder_1, inntektsmeldingBuilder_2), testscenario, saksnummer);
 
