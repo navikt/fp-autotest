@@ -50,6 +50,10 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         }
         return this;
     }
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(KontrollerFaktaPeriode faktaPeriode, Kode godkjenningskode, boolean dokumenterPeriode) {
+        godkjennPeriode(faktaPeriode.getFom(), faktaPeriode.getTom(), godkjenningskode, true);
+        return this;
+    }
 
     public void delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra, LocalDate godkjentTil, Kode godkjenningskode) {
         delvisGodkjennPeriode(fra, til, godkjentFra, godkjentTil, godkjenningskode, false);
