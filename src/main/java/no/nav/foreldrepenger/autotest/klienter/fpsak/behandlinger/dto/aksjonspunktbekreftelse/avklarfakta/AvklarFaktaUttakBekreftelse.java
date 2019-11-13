@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerFaktaPeriode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.DokumentasjonType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakDokumentasjon;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
@@ -37,26 +36,26 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
     }
 
     public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode godkjenningskode) {
-        return godkjennPeriode(fra, til, godkjenningskode, null);
+        return godkjennPeriode(fra, til, godkjenningskode, false);
     }
 
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode godkjenningskode, DokumentasjonType dokumentasjonType) {
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode godkjenningskode, boolean dokumenterPeriode) {
         BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
 
         periode.bekreftetPeriode.setBekreftet(true);
         periode.bekreftetPeriode.setResultat(godkjenningskode);
         periode.bekreftetPeriode.setBegrunnelse("Godkjent av autotest");
-        if (dokumentasjonType != null) {
-            periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(fra, til, dokumentasjonType));
+        if (dokumenterPeriode) {
+            periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(fra, til));
         }
         return this;
     }
 
     public void delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra, LocalDate godkjentTil, Kode godkjenningskode) {
-        delvisGodkjennPeriode(fra, til, godkjentFra, godkjentTil, godkjenningskode, null);
+        delvisGodkjennPeriode(fra, til, godkjentFra, godkjentTil, godkjenningskode, false);
     }
 
-    public void delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra, LocalDate godkjentTil, Kode godkjenningskode, DokumentasjonType dokumentasjonType) {
+    public void delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra, LocalDate godkjentTil, Kode godkjenningskode, boolean dokumenterPeriode) {
         BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
 
         periode.bekreftetPeriode.setBekreftet(true);
@@ -65,8 +64,8 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
 
         periode.bekreftetPeriode.setFom(godkjentFra);
         periode.bekreftetPeriode.setTom(godkjentTil);
-        if (dokumentasjonType != null) {
-            periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(godkjentFra, godkjentTil, dokumentasjonType));
+        if (dokumenterPeriode) {
+            periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(godkjentFra, godkjentTil));
         }
     }
 
