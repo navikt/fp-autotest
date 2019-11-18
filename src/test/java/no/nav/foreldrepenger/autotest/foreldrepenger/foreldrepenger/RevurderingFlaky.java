@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import org.junit.jupiter.api.DisplayName;
@@ -66,12 +66,10 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
         debugFritekst("Ferdig med andre behandling (revurdering nr 1)");
 
         // Inntektsmelding - endring i inntekt
-        InntektsmeldingBuilder builder = lagInntektsmeldingBuilder(50000, søkerIdent, fpStartdato, orgNr, Optional.of(arbeidsforholdId), Optional.empty(), Optional.empty());
-        builder.createInntektsmelding();
-        List<InntektsmeldingBuilder> inntektsmeldingerEndret = new ArrayList<>();
-        inntektsmeldingerEndret.add(builder);
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(50000, søkerIdent, fpStartdato, orgNr)
+                .medArbeidsforholdId(arbeidsforholdId);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        fordel.sendInnInntektsmeldinger(inntektsmeldingerEndret, søkerAktørIdent, søkerIdent, saksnummer);
+        fordel.sendInnInntektsmelding(inntektsmeldingBuilder, søkerAktørIdent, søkerIdent, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.UttaksperiodeBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.ytelse.ForeldrepengerYtelseBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.*;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenariodataDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -76,10 +76,16 @@ public class Uttak extends ForeldrepengerTestBase {
                 fnrMor,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
-
-
-        lagOgSendIm(testscenario.getScenariodata(), saksnummerMor, aktørIdMor, fnrMor,
+        List<InntektsmeldingBuilder> inntektsmeldinger =  makeInntektsmeldingFromtestscenariodata(
+                testscenario.getScenariodata(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
                 fødselsdato);
+        fordel.sendInnInntektsmelding(
+                inntektsmeldinger.get(0),
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                saksnummerMor);
+
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.velgSisteBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -276,14 +282,12 @@ public class Uttak extends ForeldrepengerTestBase {
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrMor,
                 fpStartMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(),
-                Optional.empty(), Optional.empty(), Optional.empty());
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
         InntektsmeldingBuilder inntektsmeldingMorTo = lagInntektsmeldingBuilder(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp(),
                 fnrMor,
                 fpStartMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr(),
-                Optional.empty(), Optional.empty(), Optional.empty());
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr());
         List<InntektsmeldingBuilder> inntektsmeldingBuilderListMor = new ArrayList<>();
         inntektsmeldingBuilderListMor.add(inntektsmeldingMorEn);
         inntektsmeldingBuilderListMor.add(inntektsmeldingMorTo);
@@ -308,14 +312,12 @@ public class Uttak extends ForeldrepengerTestBase {
                 testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrFar,
                 fpStartFar,
-                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(),
-                Optional.empty(), Optional.empty(), Optional.empty());
+                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
         InntektsmeldingBuilder inntektsmeldingFarTo = lagInntektsmeldingBuilder(
                 testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp(),
                 fnrFar,
                 fpStartFar,
-                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr(),
-                Optional.empty(), Optional.empty(), Optional.empty());
+                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr());
         List<InntektsmeldingBuilder> inntektsmeldingBuilderListFar = new ArrayList<>();
         inntektsmeldingBuilderListFar.add(inntektsmeldingFarEn);
         inntektsmeldingBuilderListFar.add(inntektsmeldingFarTo);
@@ -353,8 +355,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 5_000,
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 fpStart,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(),
-                Optional.empty(), Optional.empty(), Optional.empty());
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummerMor);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

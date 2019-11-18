@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SoekersRelasjonErketyper;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
@@ -118,7 +118,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr, Optional.empty(), Optional.empty(), Optional.empty());
+                orgNr);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -165,9 +165,9 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr, Optional.empty(), Optional.empty(), Optional.empty());
+                orgNr);
         InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr2, Optional.empty(), Optional.empty(), Optional.empty());
+                orgNr2);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -208,9 +208,14 @@ public class Beregning extends ForeldrepengerTestBase {
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
 
-        List<InntektsmeldingBuilder> inntektsmeldinger = List.of(
-                lagInntektsmeldingBuilder(20000, fnr, fpStartdato, "910909088", Optional.of("ARB001-001"), Optional.empty(), Optional.empty()),
-                lagInntektsmeldingBuilderMedGradering(10000, fnr, fpStartdato, "973861778", Optional.of("ARB001-002"), Optional.of(BigDecimal.valueOf(1000)), 50, fpStartdato, fpStartdato.plusWeeks(3)));
+        InntektsmeldingBuilder im1 = lagInntektsmeldingBuilder(20000, fnr, fpStartdato, "910909088")
+                .medArbeidsforholdId("ARB001-001");
+        InntektsmeldingBuilder im2 =   lagInntektsmeldingBuilder(10000, fnr, fpStartdato, "973861778")
+                .medRefusjon(BigDecimal.valueOf(1000))
+                .medArbeidsforholdId("ARB001-002")
+                .medGradering(BigDecimal.valueOf(50), fpStartdato, fpStartdato.plusWeeks(3));
+
+        List<InntektsmeldingBuilder> inntektsmeldinger = List.of(im1, im2);
 
         fordel.sendInnInntektsmeldinger(inntektsmeldinger, testscenario, saksnummer);
 
@@ -240,7 +245,8 @@ public class Beregning extends ForeldrepengerTestBase {
         List<Integer> inntekter = sorterteInntektsbeløp(testscenario);
         String orgnr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
         InntektsmeldingBuilder inntektsmelding = lagInntektsmeldingBuilder(inntekter.get(0), fnr,
-                fpStartdato, orgnr, Optional.of("ARB001-001"), Optional.empty(), Optional.empty());
+                fpStartdato, orgnr)
+                .medArbeidsforholdId("ARB001-001");
 
         fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
 
@@ -280,9 +286,9 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr, Optional.empty(), Optional.of(refusjon), Optional.empty());
+                orgNr);
         InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmeldingBuilderMedGradering(inntektPerMåned, fnr, fpStartdato,
-                orgNr2, Optional.empty(), Optional.empty(), 50, fpStartdato, fpStartdato.plusMonths(2));
+                orgNr2,50, fpStartdato, fpStartdato.plusMonths(2));
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -344,7 +350,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr, Optional.empty(), Optional.empty(), Optional.empty());
+                orgNr);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -533,7 +539,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr, Optional.empty(), Optional.empty(), Optional.empty());
+                orgNr);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -613,15 +619,15 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTO_MANUELT_SATT_PÅ_VENT);
 
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, startDatoForeldrepenger,
-                orgNr, Optional.empty(), Optional.empty(), Optional.empty());
-        inntektsmeldingBuilder.addUtsettelseperiode(FordelingErketyper.UTSETTELSETYPE_ARBEID, startDatoForeldrepenger, startDatoForeldrepenger.plusMonths(1));
+                orgNr)
+                .medUtsettelse(FordelingErketyper.UTSETTELSETYPE_ARBEID, startDatoForeldrepenger, startDatoForeldrepenger.plusMonths(1));
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
 
         // Når testen skrives er det riktig at behandling fortsatt skal stå på vent
         assertThat(saksbehandler.valgtBehandling.erSattPåVent()).isTrue();
 
         InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmeldingBuilder(inntektPerMåned, fnr, startDatoForeldrepenger,
-                orgNr, Optional.empty(), Optional.empty(), Optional.empty());
+                orgNr);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
 
         saksbehandler.gjenopptaBehandling();
@@ -664,7 +670,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr, Optional.empty(), Optional.of(refusjon), Optional.empty());
+                orgNr);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -710,7 +716,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr, Optional.empty(), Optional.of(refusjon), Optional.empty());
+                orgNr).medRefusjon(refusjon);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -755,7 +761,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr, Optional.empty(), Optional.of(refusjon), Optional.empty());
+                orgNr).medRefusjon(refusjon);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -786,9 +792,9 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr, Optional.empty(), Optional.of(refusjon), Optional.empty());
+                orgNr);
         InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr2, Optional.empty(), Optional.empty(), Optional.empty());
+                orgNr2);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
