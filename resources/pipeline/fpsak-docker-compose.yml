@@ -8,6 +8,8 @@ services:
     ports:
       - "5432:5432"
     container_name: postgres
+    networks:
+      - autotestverk
   vtp:
     image: $VTP_IMAGE
     environment:
@@ -29,6 +31,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8060/rest/isReady"]
       interval: 30s
       timeout: 5s
+    networks:
+      - autotestverk
   abakus:
     image: $ABAKUS_IMAGE
     container_name: abakus
@@ -74,6 +78,7 @@ services:
     depends_on:
       - postgres
       - vtp
+    networks:
+      - autotestverk
 networks:
-  default:
-
+  autotestverk:
