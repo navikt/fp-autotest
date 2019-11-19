@@ -71,6 +71,8 @@ services:
       - "SYSTEMBRUKER_USERNAME=vtp"
       - "SYSTEMBRUKER_PASSWORD=vtp"
       - "NAIS_APP_NAME=FPABAKUS"
+      - "LOADBALANCER_URL=http://vtp:8060"
+      - "LOADBALANCER_FQDN=vtp:8080"
     volumes:
       - "${WORKSPACE}/.modig:/var/run/secrets/naisd.io"
     ports:
