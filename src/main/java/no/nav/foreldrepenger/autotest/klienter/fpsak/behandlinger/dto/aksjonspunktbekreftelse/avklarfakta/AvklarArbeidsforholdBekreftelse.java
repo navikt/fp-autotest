@@ -81,6 +81,7 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
 
     public Arbeidsforhold leggTilArbeidsforhold(String navn, LocalDate startDato, LocalDate sluttDato, int stillingsprosent) {
         Arbeidsforhold arbeid = new Arbeidsforhold(navn, startDato, sluttDato, BigDecimal.valueOf(stillingsprosent), true);
+        arbeid.setBrukArbeidsforholdet(true);
         arbeidsforhold.add(arbeid);
         return null;
     }
