@@ -6,6 +6,9 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
@@ -15,6 +18,8 @@ import no.nav.foreldrepenger.autotest.util.IndexClasses;
 
 
 public abstract class AksjonspunktBekreftelse {
+
+    private static final Logger logger = LoggerFactory.getLogger(AksjonspunktBekreftelse.class);
 
     @JsonProperty("@type")
     protected String kode;
@@ -55,7 +60,7 @@ public abstract class AksjonspunktBekreftelse {
                 continue; //trenger trenger ikke skjekke klasser som er abstrakte
             }
             else if(annotation == null) {
-                System.out.println("Aksjonspunkt mangler annotasjon" + klasse.getName());
+                logger.warn("Aksjonspunkt mangler annotasjon='{}'", klasse.getName());
             }
             else if(annotation.kode().equals(kode)) {
                 return klasse.getDeclaredConstructor(Fagsak.class, Behandling.class).newInstance(fagsak, behandling);
