@@ -17,13 +17,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -60,8 +61,11 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.expect.dto.ExpectTokenDto;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.ytelse.ForeldrepengerYtelseBuilder;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.*;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.ArbeidsforholdBuilder;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.OpptjeningErketyper;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.RettigheterErketyper;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SoekersRelasjonErketyper;
+import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.felles.ExpectPredicate;
 import no.nav.foreldrepenger.vtp.felles.ExpectRepository.Mock;
@@ -79,6 +83,8 @@ import no.nav.vedtak.felles.xml.soeknad.uttak.v3.ObjectFactory;
 @Tag("fpsak")
 @Tag("foreldrepenger")
 public class Fodsel extends ForeldrepengerTestBase {
+
+    private static final Logger logger = LoggerFactory.getLogger(Fodsel.class);
 
     @Test
     @DisplayName("Mor fødsel med arbeidsforhold og frilans. Vurderer opptjening og beregning. Finner avvik")
@@ -463,7 +469,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
-        System.out.println("Ident: " + søkerIdent);
+        logger.info("Ident: " + søkerIdent);
 
         ExpectTokenDto token = expectKlient.createExpectation(new ExpectRequestDto(Mock.GSAK.toString(), "opprettSak", new ExpectPredicate("aktør", søkerIdent)));
 
@@ -1118,8 +1124,8 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er ikke satt på vent selv om behandlingen ikke har ventet til 2. uke");
-        System.out.println(saksbehandler.valgtBehandling.fristBehandlingPaaVent);
-        System.out.println(fødselsdato.plusWeeks(2));
+        logger.debug("{}", saksbehandler.valgtBehandling.fristBehandlingPaaVent);
+        logger.debug("{}", fødselsdato.plusWeeks(2));
         verifiser(saksbehandler.valgtBehandling.fristBehandlingPaaVent.equals(fødselsdato.plusWeeks(2)), "Behandlingen er satt på vent for lenge");
     }
 

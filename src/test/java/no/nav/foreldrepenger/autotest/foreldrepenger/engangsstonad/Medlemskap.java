@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
@@ -16,17 +25,13 @@ import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
 public class Medlemskap extends EngangsstonadTestBase {
+
+    private static final Logger logger = LoggerFactory.getLogger(Medlemskap.class);
 
     @Test
     @DisplayName("Mor søker fødsel er utvandret")
@@ -43,7 +48,7 @@ public class Medlemskap extends EngangsstonadTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
-        System.out.println("Saksnummer: " + saksnummer);
+        logger.info("Opprettet sak med saksnummer: {}", saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -92,7 +97,7 @@ public class Medlemskap extends EngangsstonadTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaPersonstatusBekreftelse.class)
-            .bekreftHenleggBehandling();
+                .bekreftHenleggBehandling();
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaPersonstatusBekreftelse.class);
 
         verifiser(saksbehandler.valgtBehandling.erHenlagt(), "Behandlingen ble ikke henlagt etter bekreftet ugyldig status");
@@ -119,7 +124,7 @@ public class Medlemskap extends EngangsstonadTestBase {
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
 
         saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerBosattBekreftelse.class)
-            .bekreftBrukerErBosatt();
+                .bekreftBrukerErBosatt();
         saksbehandler.bekreftAksjonspunktBekreftelse(AvklarBrukerBosattBekreftelse.class);
 
         saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);

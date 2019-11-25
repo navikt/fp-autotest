@@ -1,12 +1,30 @@
 package no.nav.foreldrepenger.autotest.aktoerer.fordel;
 
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.*;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostId;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostKnyttning;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostMottak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.OpprettSak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.Saksnummer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
@@ -28,18 +46,9 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkatego
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.v3.Soeknad;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
-
 public class Fordel extends Aktoer {
+
+    private static final Logger logger = LoggerFactory.getLogger(Fordel.class);
 
     /*
      * Klienter
@@ -86,7 +95,7 @@ public class Fordel extends Aktoer {
         debugSenderInnDokument("Foreldrepengesøknad", xml);
         long sakId = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
         journalpostModell.setSakId(String.valueOf(sakId));
-        System.out.println("Opprettet søknad: " + sakId);
+        logger.info("Sendt inn søknad på sak med saksnummer: {}", sakId);
 
         //TODO: feiler, men sak og behandling er OK.
         Vent.til(() -> {
@@ -124,14 +133,14 @@ public class Fordel extends Aktoer {
         String fnr = scenario.getPersonopplysninger().getSøkerIdent();
         return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
     }
+
     public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId, Long saksnummer, boolean annenPart) throws Exception {
         String aktørId;
         String fnr;
-        if(annenPart) {
+        if (annenPart) {
             aktørId = scenario.getPersonopplysninger().getAnnenPartAktørIdent();
             fnr = scenario.getPersonopplysninger().getAnnenpartIdent();
-        }
-        else {
+        } else {
             aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
             fnr = scenario.getPersonopplysninger().getSøkerIdent();
         }
@@ -262,6 +271,7 @@ public class Fordel extends Aktoer {
         }
         return id;
     }
+
     @Deprecated
     public String journalførInnektsmelding(no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder inntektsmelding, TestscenarioDto scenario, Long saksnummer) throws IOException {
         String xml = inntektsmelding.createInntektesmeldingXML();

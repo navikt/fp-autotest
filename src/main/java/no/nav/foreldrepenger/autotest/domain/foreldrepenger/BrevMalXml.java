@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.io.StringWriter;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -13,11 +14,15 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 public abstract class BrevMalXml {
+
+    private static final Logger logger = LoggerFactory.getLogger(BrevMalXml.class);
 
     Document doc;
     
@@ -34,7 +39,7 @@ public abstract class BrevMalXml {
     
     protected static <T extends BrevMalXml> T fromFile(String path, Class<T> type) throws Exception {
         File file = new File(path);
-        System.out.println(file.getAbsolutePath());
+        logger.debug("Brevmal filpath" + file.getAbsolutePath());
         String data = "";
         
         BufferedReader reader = new BufferedReader(new FileReader(file));

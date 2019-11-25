@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.spberegning.beregning.BeregningKlient;
@@ -20,23 +23,23 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 public class Saksbehandler extends Aktoer {
 
-    /*
-     * Klienter
-     */
-    protected KodeverkKlient kodeverkKlient;
-    protected BeregningKlient beregningKlient;
+    private static final Logger logger = LoggerFactory.getLogger(Saksbehandler.class);
 
     /*
      * Kodeverk
      */
     public Kodeverk kodeverk;
-
     /*
      * Beregning
      */
     public ForslagDto forslag;
     public BeregningDto beregning;
     public LagreNotatDto lagreNotat;
+    /*
+     * Klienter
+     */
+    protected KodeverkKlient kodeverkKlient;
+    protected BeregningKlient beregningKlient;
 
     public Saksbehandler() {
         kodeverkKlient = new KodeverkKlient(session);
@@ -59,8 +62,8 @@ public class Saksbehandler extends Aktoer {
         forslag = beregningKlient.foreslaBeregningPost(foreslå);
         beregning = beregningKlient.hentBeregning(forslag.getBeregningId());
         beregning.getBeregningsgrunnlag().getId();
-        System.out.println("Opprettet beregning: " + beregning.getId());
-        System.out.println(String.format("http://localhost:9999/#/foresla-beregning/%s/%s/%s/", testscenario.getPersonopplysninger().getSøkerAktørIdent(), gosysSakId, tema));
+        logger.debug("Opprettet beregning for sak='{}' med id: {}", beregning.getSaksnummer(), beregning.getId());
+        logger.debug(String.format("http://localhost:9999/#/foresla-beregning/%s/%s/%s/", testscenario.getPersonopplysninger().getSøkerAktørIdent(), gosysSakId, tema));
         return beregning;
     }
 
@@ -73,7 +76,9 @@ public class Saksbehandler extends Aktoer {
         beregning = beregningKlient.hentBeregning(forslag.getBeregningId());
     }
 
-    /** Ikke bruk navn som oppslag i kodeverk. */
+    /**
+     * Ikke bruk navn som oppslag i kodeverk.
+     */
     @Deprecated
     public void oppdaterBeregning(LocalDate skjæringstidspunkt, String status) throws IOException {
         try {
@@ -84,7 +89,7 @@ public class Saksbehandler extends Aktoer {
         }
 
     }
-    
+
     public void lagreNotat(BeregningDto beregning, String notat, Long beregningsgrunnlagId) throws IOException {
         LagreNotatDto request = new LagreNotatDto(beregning.getId(), notat, beregningsgrunnlagId);
         beregningKlient.lagrenotat(request);

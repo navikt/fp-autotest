@@ -3,11 +3,11 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.eksempler;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -17,6 +17,8 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 @Tag("eksempel")
 public class Inntektsmelding extends FpsakTestBase {
 
+    private static final Logger logger = LoggerFactory.getLogger(Inntektsmelding.class);
+
     @Test
     public void oppretteInntektsmeldingerBasertPåTestscenarioUtenFagsak() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
@@ -24,12 +26,12 @@ public class Inntektsmelding extends FpsakTestBase {
         InntektsmeldingBuilder inntektsmelding = inntektsmeldinger.get(0);
         inntektsmelding.medGradering(BigDecimal.TEN, LocalDate.now().plusWeeks(3), LocalDate.now().plusWeeks(5));
 
-        System.out.println(inntektsmelding.createInntektesmeldingXML());
+        logger.debug(inntektsmelding.createInntektesmeldingXML());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnInntektsmelding(inntektsmelding, testscenario, null);
 
-        System.out.println(saksnummer);
+        logger.info("Sendt inn inntektsmelding på saksnummer: {}", saksnummer);
     }
 
 
@@ -42,7 +44,7 @@ public class Inntektsmelding extends FpsakTestBase {
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(60000, fnr, fpStartdato, orgNr);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, null);
-        System.out.println(inntektsmeldingBuilder.createInntektesmeldingXML());
+        logger.debug(inntektsmeldingBuilder.createInntektesmeldingXML());
     }
 
 
