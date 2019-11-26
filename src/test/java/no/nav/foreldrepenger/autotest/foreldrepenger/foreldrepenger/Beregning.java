@@ -211,7 +211,7 @@ public class Beregning extends ForeldrepengerTestBase {
         InntektsmeldingBuilder im1 = lagInntektsmeldingBuilder(20000, fnr, fpStartdato, "910909088")
                 .medArbeidsforholdId("ARB001-001");
         InntektsmeldingBuilder im2 =   lagInntektsmeldingBuilder(10000, fnr, fpStartdato, "973861778")
-                .medRefusjon(BigDecimal.valueOf(1000))
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(1000))
                 .medArbeidsforholdId("ARB001-002")
                 .medGradering(BigDecimal.valueOf(50), fpStartdato, fpStartdato.plusWeeks(3));
 
@@ -716,7 +716,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr).medRefusjon(refusjon);
+                orgNr).medRefusjonsBelopPerMnd(refusjon);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -761,7 +761,7 @@ public class Beregning extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
-                orgNr).medRefusjon(refusjon);
+                orgNr).medRefusjonsBelopPerMnd(refusjon);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
