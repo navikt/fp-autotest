@@ -6,4 +6,5 @@ import java.util.List;
 public class FordelingDto {
 
     public List<PermisjonPeriodeDto> permisjonsPerioder = new ArrayList<>();
+    public List<GraderingPeriodeDto> graderingPeriode = new ArrayList<>();
 }

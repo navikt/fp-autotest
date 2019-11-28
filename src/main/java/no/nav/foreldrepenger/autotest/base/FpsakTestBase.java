@@ -187,7 +187,8 @@ public class FpsakTestBase extends TestScenarioTestBase {
                                                                                                     BigDecimal refusjon,
                                                                                                     Map<LocalDate, BigDecimal> endringRefusjonMap) {
         InntektsmeldingBuilder inntektsmelding = lagInntektsmeldingBuilderPrivatArbeidsgiver(beløp, fnr, fpStartdato, fnrArbeidsgiver);
-        inntektsmelding.medRefusjon(refusjon, null, endringRefusjonMap);
+        inntektsmelding.medRefusjonsBelopPerMnd(refusjon)
+                .medEndringIRefusjonslist(endringRefusjonMap);
         return inntektsmelding;
     }
 
