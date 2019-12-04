@@ -59,6 +59,11 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
     }
 
 
+    public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(String arbeidsgiverId, boolean skalUtvideGyldighet) {
+        fakta.leggTilRefusjonGyldighet(arbeidsgiverId, skalUtvideGyldighet);
+        return this;
+    }
+
 
     public VurderFaktaOmBeregningBekreftelse leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode, BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
         fakta.leggTilAndelerEndretBg(periode, andel, fastsatteVerdier);

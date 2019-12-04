@@ -23,4 +23,10 @@ public class FastsatteVerdierDto {
         this.inntektskategori = inntektskategori;
     }
 
+    public FastsatteVerdierDto(Integer fastsattÅrsbeløp, Integer refusjonPrÅr, Kode inntektskategori) {
+        this.fastsattÅrsbeløp = fastsattÅrsbeløp;
+        this.inntektskategori = inntektskategori;
+        this.refusjonPrÅr = refusjonPrÅr;
+    }
+
 }

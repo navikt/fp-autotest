@@ -23,6 +23,7 @@ public class FaktaOmBeregningLagreDto {
     protected FastsettEndretBeregningsgrunnlag fastsettEndringBeregningsgrunnlag;
     protected VurderTidsbegrensetArbeidsforholdDto vurderTidsbegrensetArbeidsforhold;
     protected YtelseForedeling kunYtelseFordeling;
+    protected List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet = new ArrayList<>();
 
     public FaktaOmBeregningLagreDto leggTilFaktaOmBeregningTilfeller(String kode) {
         this.faktaOmBeregningTilfeller.add(kode);
@@ -57,6 +58,11 @@ public class FaktaOmBeregningLagreDto {
     public FaktaOmBeregningLagreDto leggTilAndelerYtelse(double beløp, Kode inntektskategori) {
         kunYtelseFordeling = new YtelseForedeling();
         kunYtelseFordeling.leggTilYtelseAndeler(new YtelseAndeler(beløp, inntektskategori.kode));
+        return this;
+    }
+
+    public FaktaOmBeregningLagreDto leggTilRefusjonGyldighet(String arbeidsgiverId, boolean skalUtvideGyldighet) {
+        refusjonskravGyldighet.add(new RefusjonskravPrArbeidsgiverVurderingDto(arbeidsgiverId, skalUtvideGyldighet));
         return this;
     }
 

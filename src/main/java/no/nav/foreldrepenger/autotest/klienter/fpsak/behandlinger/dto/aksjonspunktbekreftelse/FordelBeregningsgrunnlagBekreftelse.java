@@ -43,5 +43,16 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
+    public FordelBeregningsgrunnlagBekreftelse settFastsattBeløpOgInntektskategoriMedRefusjon(LocalDate fom, int fastsattBeløp, int refusjonPrÅr, Kode inntektskategori, int andelsnr){
+        FastsettBeregningsgrunnlagPeriodeDto periode = endretBeregningsgrunnlagPerioder.stream()
+                .filter(p -> p.fom.isEqual(fom))
+                .findFirst().get();
+        FastsettBeregningsgrunnlagAndelDto andel = periode.andeler.stream()
+                .filter(a -> a.getAndelsnr() == andelsnr)
+                .findFirst().get();
+        andel.setFastsatteVerdier(new FastsatteVerdierDto(fastsattBeløp, refusjonPrÅr, inntektskategori));
+        return this;
+    }
+
 
 }
