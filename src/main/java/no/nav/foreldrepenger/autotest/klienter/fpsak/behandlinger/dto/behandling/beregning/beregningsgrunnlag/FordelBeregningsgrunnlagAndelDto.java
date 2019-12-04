@@ -21,4 +21,32 @@ public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
     public Kode getArbeidsforholdType() {
         return arbeidsforholdType;
     }
+
+    public BigDecimal getFordelingForrigeBehandlingPrAar() {
+        return fordelingForrigeBehandlingPrAar;
+    }
+
+    public BigDecimal getRefusjonskravPrAar() {
+        return refusjonskravPrAar;
+    }
+
+    public BigDecimal getFordeltPrAar() {
+        return fordeltPrAar;
+    }
+
+    public BigDecimal getBelopFraInntektsmeldingPrAar() {
+        return belopFraInntektsmeldingPrAar;
+    }
+
+    public BigDecimal getFastsattForrigePrAar() {
+        return fastsattForrigePrAar;
+    }
+
+    public BigDecimal getRefusjonskravFraInntektsmeldingPrAar() {
+        return refusjonskravFraInntektsmeldingPrAar;
+    }
+
+    public boolean isNyttArbeidsforhold() {
+        return nyttArbeidsforhold;
+    }
 }

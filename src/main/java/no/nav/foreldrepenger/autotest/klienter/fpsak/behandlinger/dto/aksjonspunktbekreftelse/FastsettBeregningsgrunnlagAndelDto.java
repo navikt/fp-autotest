@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -12,6 +13,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 public class FastsettBeregningsgrunnlagAndelDto extends RedigerbarAndel {
 
     protected FastsatteVerdierDto fastsatteVerdier;
+    protected Kode forrigeInntektskategori;
+    protected Integer forrigeRefusjonPrÅr;
+    protected Integer forrigeArbeidsinntektPrÅr;
+
 
     public FastsettBeregningsgrunnlagAndelDto(String andel, int andelsnr, String arbeidsforholdId, String arbeidsgiverId, Boolean nyAndel,
                                               Boolean lagtTilAvSaksbehandler, Kode aktivitetStatus, LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom, Kode arbeidsforholdType) {
@@ -26,6 +31,10 @@ public class FastsettBeregningsgrunnlagAndelDto extends RedigerbarAndel {
                 bgAndelDto.getBeregningsperiodeFom(),
                 bgAndelDto.getBeregningsperiodeTom(),
                 andelDto.getArbeidsforholdType());
+        forrigeArbeidsinntektPrÅr = andelDto.getFordeltPrAar() == null ? null : andelDto.getFordeltPrAar().intValue();
+        forrigeInntektskategori = andelDto.getInntektskategori();
+        forrigeRefusjonPrÅr = andelDto.getRefusjonskravPrAar() == null ? null : andelDto.getRefusjonskravPrAar().intValue();
+
     }
 
     public void setFastsatteVerdier(FastsatteVerdierDto fastsatteVerdier) {
