@@ -3,12 +3,11 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 public class FastsettMaanedsinntektUtenInntektsmeldingAndel {
 
     protected long andelsnr;
-
-    protected FastsatteVerdierDto fastsatteVerdier;
+    protected Integer fastsattBeløp;
 
     public FastsettMaanedsinntektUtenInntektsmeldingAndel(long andelsnr, int arbeidsinntekt) {
         this.andelsnr = andelsnr;
-        this.fastsatteVerdier = new FastsatteVerdierDto(arbeidsinntekt);
+        this.fastsattBeløp = arbeidsinntekt;
     }
 
     public long getAndelsnr() {
