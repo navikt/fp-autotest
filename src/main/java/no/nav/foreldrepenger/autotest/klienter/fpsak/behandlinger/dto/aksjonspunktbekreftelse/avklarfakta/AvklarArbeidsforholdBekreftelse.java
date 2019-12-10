@@ -1,15 +1,15 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @BekreftelseKode(kode="5080")
 public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
@@ -41,6 +41,16 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         }
         forhold.setFortsettBehandlingUtenInntektsmelding(true);
         forhold.setOverstyrtTom(overstyrtTom);
+    }
+
+    public void bekreftArbeidsforholdErBasertPåInntektsmelding(String navn, LocalDate startDato, LocalDate sluttDato, BigDecimal stillingsprosent) {
+        Arbeidsforhold arbeidsforhold = finnArbeidsforhold(navn);
+
+        arbeidsforhold.setBrukArbeidsforholdet(true);
+        arbeidsforhold.setBasertPaInntektsmelding(true);
+        arbeidsforhold.setTomDato(sluttDato);
+        arbeidsforhold.setFomDato(startDato);
+        arbeidsforhold.setStillingsprosent(stillingsprosent);
     }
 
     public void bekreftArbeidsforholdErRelevant(Arbeidsforhold forhold, boolean fortsettUtenInntekt) {

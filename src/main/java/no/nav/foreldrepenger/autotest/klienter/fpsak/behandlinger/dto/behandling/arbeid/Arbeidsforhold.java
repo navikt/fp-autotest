@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Arbeidsforhold {
@@ -30,6 +30,7 @@ public class Arbeidsforhold {
     protected Boolean vurderOmSkalErstattes = null;
     protected LocalDate overstyrtTom = null;
     protected Boolean lagtTilAvSaksbehandler;
+    protected Boolean basertPaInntektsmelding;
 
 
     public Arbeidsforhold() {
@@ -76,4 +77,31 @@ public class Arbeidsforhold {
         this.overstyrtTom = overstyrtTom;
     }
 
+    public void setFomDato(LocalDate fomDato) {
+        this.fomDato = fomDato;
+    }
+
+    public LocalDate getTomDato() {
+        return tomDato;
+    }
+
+    public void setTomDato(LocalDate tomDato) {
+        this.tomDato = tomDato;
+    }
+
+    public BigDecimal getStillingsprosent() {
+        return stillingsprosent;
+    }
+
+    public void setStillingsprosent(BigDecimal stillingsprosent) {
+        this.stillingsprosent = stillingsprosent;
+    }
+
+    public Boolean getBasertPaInntektsmelding() {
+        return basertPaInntektsmelding;
+    }
+
+    public void setBasertPaInntektsmelding(Boolean basertPaInntektsmelding) {
+        this.basertPaInntektsmelding = basertPaInntektsmelding;
+    }
 }
