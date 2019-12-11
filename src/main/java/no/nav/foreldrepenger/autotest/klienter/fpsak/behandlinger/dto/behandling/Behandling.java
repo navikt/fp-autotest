@@ -1,15 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
@@ -23,30 +14,40 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.deferred.Deffered;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Behandling {
-    
+
     public int id;
     public UUID uuid;
     public int versjon;
     public long fagsakId;
     public Kode type;
     public Kode status;
-    
+
     public LocalDate skjaringstidspunkt;
     public LocalDateTime avsluttet;
     public LocalDate fristBehandlingPaaVent;
-    
+
     public String ansvarligSaksbehandler;
     public String behandlendeEnhet;
     public String behandlendeEnhetNavn;
     public Boolean behandlingHenlagt;
     public Boolean behandlingPaaVent;
     public Behandlingsresultat behandlingsresultat;
-    
+
     private Deffered<List<Vilkar>> vilkar;
     private Deffered<List<Aksjonspunkt>> aksjonspunkter;
-    
+
     private Deffered<Personopplysning> personopplysning;
     private Deffered<Beregningsgrunnlag> beregningsgrunnlag;
     private Deffered<Beregningsresultat> beregningResultatEngangsstonad;
@@ -60,20 +61,20 @@ public class Behandling {
     private Deffered<KlageInfo> klagevurdering;
     private Deffered<Saldoer> saldoer;
     private Deffered<Tilrettelegging> tilrettelegging;
-    
+
     public List<UttakResultatPeriode> hentUttaksperioder() {
         return getUttakResultatPerioder().getPerioderForSøker().stream().sorted(Comparator.comparing(UttakResultatPeriode::getFom)).collect(Collectors.toList());
     }
-    
+
     public UttakResultatPeriode hentUttaksperiode(int index) {
         return hentUttaksperioder().get(index);
     }
-    
-    
+
+
     public boolean erSattPåVent() {
         return behandlingPaaVent;
     }
-    
+
     public boolean erHenlagt() {
         return behandlingHenlagt;
     }
@@ -81,7 +82,7 @@ public class Behandling {
     public String hentBehandlingsresultat() {
         return behandlingsresultat.type.kode;
     }
-    
+
     public String hentAvslagsarsak() {
         if(null != behandlingsresultat && null != behandlingsresultat.avslagsarsak) {
             return behandlingsresultat.avslagsarsak.kode;
@@ -193,6 +194,14 @@ public class Behandling {
     public KontrollerFaktaData getKontrollerFaktaData() {
         return get(kontrollerFaktaData);
     }
+    public List<KontrollerFaktaPeriode> getKontrollerFaktaPerioderManuell() {
+        return Objects.requireNonNull(get(kontrollerFaktaData)).getPerioder().stream()
+                .filter(perioder -> perioder.bekreftet.equals(false))
+                .collect(Collectors.toList());
+    }
+    public Stream<KontrollerFaktaPeriode> getKontrollerFaktaPerioder(){
+        return Objects.requireNonNull(get(kontrollerFaktaData)).getPerioder().stream();
+    }
 
     public void setKontrollerFaktaData(Deffered<KontrollerFaktaData> dKontrollerFaktaData) {
         this.kontrollerFaktaData = dKontrollerFaktaData;
@@ -236,7 +245,7 @@ public class Behandling {
         this.tilrettelegging = dTilrettelegging;
     }
 
-    
+
     private static <V> V get(Deffered<V> deferred) {
         try {
             return deferred==null?null: deferred.get();
