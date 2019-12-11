@@ -50,7 +50,7 @@ public class VerdikjedeTest extends SpberegningTestBase {
         String saksnummer = fordel.opprettSak(testscenario, Tema);
 
         //Oppretter inntektsmelding for ytelsen foreldrepenger
-        InntektsmeldingBuilder inntektsmeldingsBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "979191139", "ARB001-002", YtelseKodeliste.FORELDREPENGER, ÅrsakInnsendingKodeliste.NY)
+        InntektsmeldingBuilder inntektsmeldingsBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "342352362", "ARB001-002", YtelseKodeliste.FORELDREPENGER, ÅrsakInnsendingKodeliste.NY)
                 .setStartdatoForeldrepengeperiodenFOM(LocalDate.of(2018, 10, 5));
 
         //Inntektsmelding journalføres i Joark
@@ -87,7 +87,7 @@ public class VerdikjedeTest extends SpberegningTestBase {
         perioder.add(InntektsmeldingBuilder.createPeriode(LocalDate.of(2018, 10, 5), LocalDate.of(2018, 10, 9)));
 
         //Oppretter inntektsmelding for ytelsen sykepenger
-        InntektsmeldingBuilder inntektsmeldingsBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "979191139", "ARB001-002", YtelseKodeliste.SYKEPENGER, ÅrsakInnsendingKodeliste.NY)
+        InntektsmeldingBuilder inntektsmeldingsBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "342352362", "ARB001-002", YtelseKodeliste.SYKEPENGER, ÅrsakInnsendingKodeliste.NY)
                 .setSykepengerIArbeidsgiverperioden(InntektsmeldingBuilder.createSykepengerIArbeidsgiverperioden(
                         BigDecimal.valueOf(57000), perioder, BegrunnelseIngenEllerRedusertUtbetalingKodeliste.LOVLIG_FRAVAER));
 
@@ -121,7 +121,7 @@ public class VerdikjedeTest extends SpberegningTestBase {
         String saksnummer = fordel.opprettSak(testscenario, Tema);
 
         //Oppretter inntektsmelding for ytelsen sykepenger
-        InntektsmeldingBuilder inntektsmeldingBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "979191139", "ARB001-002", YtelseKodeliste.OMSORGSPENGER, ÅrsakInnsendingKodeliste.NY);
+        InntektsmeldingBuilder inntektsmeldingBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "342352362", "ARB001-002", YtelseKodeliste.OMSORGSPENGER, ÅrsakInnsendingKodeliste.NY);
 
         List<Periode> perioder = new ArrayList<Periode>();
         perioder.add(inntektsmeldingBuilder.createInntektsmeldingPeriode(LocalDate.of(2018, 10, 5), LocalDate.of(2018, 10, 12)));
@@ -162,7 +162,7 @@ public class VerdikjedeTest extends SpberegningTestBase {
         String saksnummer = fordel.opprettSak(testscenario, Tema);
 
         //Oppretter inntektsmelding for ytelsen pleiepenger
-        InntektsmeldingBuilder inntektsmeldingBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "979191139", "ARB001-002", YtelseKodeliste.PLEIEPENGER_BARN, ÅrsakInnsendingKodeliste.NY)
+        InntektsmeldingBuilder inntektsmeldingBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "342352362", "ARB001-002", YtelseKodeliste.PLEIEPENGER_BARN, ÅrsakInnsendingKodeliste.NY)
                 .setRefusjon(InntektsmeldingBuilder.createRefusjon(inntektsmeldingRefusjon, refusjonOpphørsdato, null));
         List<Periode> perioder = new ArrayList<Periode>();
         perioder.add(inntektsmeldingBuilder.createInntektsmeldingPeriode(LocalDate.of(2018, 10, 5), LocalDate.of(2018, 10, 12)));
@@ -280,7 +280,7 @@ public class VerdikjedeTest extends SpberegningTestBase {
                 ));
 
         //Oppretter inntektsmelding for ytelsen Sykepenger
-        InntektsmeldingBuilder inntektsmeldingsBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "979191139", "ARB001-002", YtelseKodeliste.SYKEPENGER, ÅrsakInnsendingKodeliste.NY)
+        InntektsmeldingBuilder inntektsmeldingsBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "342352362", "ARB001-002", YtelseKodeliste.SYKEPENGER, ÅrsakInnsendingKodeliste.NY)
                 .setRefusjon(InntektsmeldingBuilder.createRefusjon(inntektsmeldingRefusjon, refusjonOpphørsdato, null))
                 .setSykepengerIArbeidsgiverperioden(InntektsmeldingBuilder.createSykepengerIArbeidsgiverperioden(
                         BigDecimal.valueOf(0), perioder, BegrunnelseIngenEllerRedusertUtbetalingKodeliste.LOVLIG_FRAVAER));
@@ -335,7 +335,7 @@ public class VerdikjedeTest extends SpberegningTestBase {
 
 
         //Oppretter inntektsmelding for ytelsen Omsorgspenger
-        InntektsmeldingBuilder inntektsmeldingsBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "979191139", "ARB001-002", YtelseKodeliste.OMSORGSPENGER, ÅrsakInnsendingKodeliste.NY)
+        InntektsmeldingBuilder inntektsmeldingsBuilder = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), "342352362", "ARB001-002", YtelseKodeliste.OMSORGSPENGER, ÅrsakInnsendingKodeliste.NY)
                 .setRefusjon(InntektsmeldingBuilder.createRefusjon(inntektsmeldingRefusjon, refusjonOpphørsdato, null));
         inntektsmeldingsBuilder.getOpphoerAvNaturalytelsesList().getOpphoerAvNaturalytelse().add(InntektsmeldingBuilder.createNaturalytelseDetaljer(
                 BigDecimal.valueOf(450), LocalDate.of(2018, 10, 6), NaturalytelseKodeliste.ELEKTRONISK_KOMMUNIKASJON));
@@ -381,7 +381,7 @@ public class VerdikjedeTest extends SpberegningTestBase {
                 .setStartdatoForeldrepengeperiodenFOM(LocalDate.of(2018, 10, 6));
 
         //Oppretter inntektsmelding for arbeidsforhold 2
-        InntektsmeldingBuilder inntektsmeldingsBuilder2 = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløpNr2, testscenario.getPersonopplysninger().getSøkerIdent(), "979191139", "ARB001-001", YtelseKodeliste.FORELDREPENGER, ÅrsakInnsendingKodeliste.NY)
+        InntektsmeldingBuilder inntektsmeldingsBuilder2 = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløpNr2, testscenario.getPersonopplysninger().getSøkerIdent(), "342352362", "ARB001-001", YtelseKodeliste.FORELDREPENGER, ÅrsakInnsendingKodeliste.NY)
                 .setRefusjon(InntektsmeldingBuilder.createRefusjon(inntektsmeldingRefusjon, refusjonOpphørsdato, null))
                 .setStartdatoForeldrepengeperiodenFOM(LocalDate.of(2018, 10, 6));
 
@@ -445,7 +445,7 @@ public class VerdikjedeTest extends SpberegningTestBase {
                 InntektsmeldingBuilder.createNaturalytelseDetaljer(
                         BigDecimal.valueOf(800), LocalDate.of(2018, 10, 22), NaturalytelseKodeliste.KOST_DAGER));
 
-        //Innteksmelding nr 1 - Inneholder ikke arbeidsforholdID så dekker derfor samtlige arbeidsforhold i org. 979191139
+        //Innteksmelding nr 1 - Inneholder ikke arbeidsforholdID så dekker derfor samtlige arbeidsforhold i org. 342352362
         InntektsmeldingBuilder inntektsmeldingsBuilder1 = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløpNr1, testscenario.getPersonopplysninger().getSøkerIdent(), "910909088", null, YtelseKodeliste.SYKEPENGER, ÅrsakInnsendingKodeliste.NY)
                 .setRefusjon(InntektsmeldingBuilder.createRefusjon(inntektsmeldingRefusjon, refusjonOpphørsdato, null))
                 .setSykepengerIArbeidsgiverperioden(InntektsmeldingBuilder.createSykepengerIArbeidsgiverperioden(
@@ -460,8 +460,8 @@ public class VerdikjedeTest extends SpberegningTestBase {
         inntektsmeldingsBuilder1.getGjenopptakelseNaturalytelseListe().getNaturalytelseDetaljer().add(InntektsmeldingBuilder.createNaturalytelseDetaljer(
                 BigDecimal.valueOf(800), LocalDate.of(2018, 12, 31), NaturalytelseKodeliste.ELEKTRONISK_KOMMUNIKASJON));
 
-        //Innteksmelding nr 2 - Inneholder ikke arbeidsforholdID så dekker derfor samtlige arbeidsforhold i org. 979191139
-        InntektsmeldingBuilder inntektsmeldingsBuilder2 = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløpNr2, testscenario.getPersonopplysninger().getSøkerIdent(), "979191139", null, YtelseKodeliste.SYKEPENGER, ÅrsakInnsendingKodeliste.NY)
+        //Innteksmelding nr 2 - Inneholder ikke arbeidsforholdID så dekker derfor samtlige arbeidsforhold i org. 342352362
+        InntektsmeldingBuilder inntektsmeldingsBuilder2 = inntektsmeldingGrunnlag(inntektsmeldingMånedsbeløpNr2, testscenario.getPersonopplysninger().getSøkerIdent(), "342352362", null, YtelseKodeliste.SYKEPENGER, ÅrsakInnsendingKodeliste.NY)
                 .setRefusjon(InntektsmeldingBuilder.createRefusjon(inntektsmeldingRefusjon, refusjonOpphørsdato, null))
                 .setSykepengerIArbeidsgiverperioden(InntektsmeldingBuilder.createSykepengerIArbeidsgiverperioden(
                         BigDecimal.valueOf(0), perioderNr2, null));
