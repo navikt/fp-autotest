@@ -15,12 +15,9 @@
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
 
-	<vtp.versjon>1.0_20191128081716_7f2fca0</vtp.versjon>
-
-	<aspectj.version>1.9.4</aspectj.version>
-
-	<jackson.version>2.10.1</jackson.version>
-
+        <vtp.versjon>1.0_20191128081716_7f2fca0</vtp.versjon>
+        <aspectj.version>1.9.4</aspectj.version>
+        <jackson.version>2.10.1</jackson.version>
     </properties>
 
     <profiles>
@@ -32,7 +29,7 @@
                 <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
             </properties>
         </profile>
-    	<profile>
+        <profile>
             <id>spberegning</id>
             <properties>
                 <testsTags>spberegning</testsTags>
@@ -76,7 +73,7 @@
                 <testPackage>no.nav.foreldrepenger.autotest.internal.**</testPackage>
             </properties>
             <activation>
-            	<activeByDefault>true</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
     </profiles>
@@ -98,9 +95,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-                        -Dfile.encoding=UTF-8 -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                        -Dfile.encoding=UTF-8
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
-	                <includes>
+                    <includes>
                         <include>${testPackage}</include>
                     </includes>
                     <groups>${includeTestsTags}</groups>
@@ -121,7 +119,9 @@
                 <configuration>
                     <reportDirectory>target/allure-results</reportDirectory>
                     <reportVersion>2.7.0</reportVersion>
-                    <allureDownloadUrl>http://maven.adeo.no/nexus/service/local/repositories/m2internal/hendelseContent/no/testhub/allure/2.7.0/allure-2.7.0.zip</allureDownloadUrl>
+                    <allureDownloadUrl>
+                        http://maven.adeo.no/nexus/service/local/repositories/m2internal/hendelseContent/no/testhub/allure/2.7.0/allure-2.7.0.zip
+                    </allureDownloadUrl>
                 </configuration>
             </plugin>
             <plugin>
@@ -140,18 +140,18 @@
 
     <dependencies>
         <!-- External dependencies -->
-    	 <dependency>
-		    <groupId>org.junit.jupiter</groupId>
-		    <artifactId>junit-jupiter</artifactId>
-             <version>5.5.2</version>
-         </dependency>
-		<dependency>
-		    <groupId>org.junit.platform</groupId>
-		    <artifactId>junit-platform-launcher</artifactId>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
             <version>1.5.2</version>
         </dependency>
 
-		<dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.10</version>
@@ -203,19 +203,8 @@
             <artifactId>dokumentgenerator</artifactId>
             <version>${vtp.versjon}</version>
         </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.vtp</groupId>
-            <artifactId>core</artifactId>
-            <version>${vtp.versjon}</version>
-        </dependency>
 
         <!-- NAV biblioteker -->
-        <dependency>
-            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>okonomistotte-v1</artifactId>
-            <version>2.0_20180730135256_2912e61</version>
-            <classifier>jaxb</classifier>
-        </dependency>
 
         <dependency>
             <groupId>org.assertj</groupId>
