@@ -204,19 +204,7 @@
             <artifactId>dokumentgenerator</artifactId>
             <version>${vtp.versjon}</version>
         </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.vtp</groupId>
-            <artifactId>core</artifactId>
-            <version>${vtp.versjon}</version>
-        </dependency>
 
-        <!-- NAV biblioteker -->
-        <dependency>
-            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>okonomistotte-v1</artifactId>
-            <version>2.0_20180730135256_2912e61</version>
-            <classifier>jaxb</classifier>
-        </dependency>
 
         <dependency>
             <groupId>org.assertj</groupId>
