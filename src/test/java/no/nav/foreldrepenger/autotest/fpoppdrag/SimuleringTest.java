@@ -12,6 +12,7 @@ import java.util.Random;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -24,15 +25,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.Simuleri
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.util.DateUtil;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.util.JaxbHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Attestant180;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Avstemming115;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Grad170;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Oppdrag;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.Oppdrag110;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.OppdragSkjemaConstants;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.OppdragsEnhet120;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.OppdragsLinje150;
-import no.nav.foreldrepenger.integrasjon.økonomistøtte.oppdrag.TfradragTillegg;
+
 
 @Tag("fpoppdrag")
 public class SimuleringTest extends FpoppdragTestBase {
@@ -43,8 +36,11 @@ public class SimuleringTest extends FpoppdragTestBase {
 
     @Test
     public void starterSimuleringHenterResultatOgKansellererSimulering() throws IOException, JAXBException, SAXException {
+        //TODO (OL): Fjernes om ikke i bruk - endres om i bruk.
+        throw new NotImplementedException("Fjernes da trekker inn integrasjons økonomistøtte. Tester må endres eller fjernes");
         /*********** Steg 1: Start simulering **************/
         // Arrange
+        /*
         TestscenarioDto testscenarioDto = testscenarioKlient.opprettTestscenarioFraVTPTemplate("49");
         String søkerIdent = testscenarioDto.getPersonopplysninger().getSøkerIdent();
         long behandlingId = new Random().nextInt(999999990) + 1;
@@ -61,6 +57,7 @@ public class SimuleringTest extends FpoppdragTestBase {
 
         /********** Steg 2: Hent resultat ***********/
         // Act
+        /*
         SimuleringDto simuleringDto = saksbehandler.hentSimuleringResultat(behandlingIdDto);
 
         // Assert
@@ -73,13 +70,15 @@ public class SimuleringTest extends FpoppdragTestBase {
 
         /********* Steg 3: Kanseller simulering *********/
         // Act
+        /*
         saksbehandler.kansellerSimulering(behandlingIdDto);
         SimuleringDto simuleringDtoKansellert = saksbehandler.hentSimuleringResultat(behandlingIdDto);
 
         // Assert
         assertThat(simuleringDtoKansellert).isNull();
+        */
     }
-
+/*
     private Oppdrag110 opprettOppdrag110(String søkerIdent) {
         Oppdrag110 oppdrag110 = new Oppdrag110();
         oppdrag110.setKodeAksjon("1");
@@ -144,4 +143,5 @@ public class SimuleringTest extends FpoppdragTestBase {
         grad170.setTypeGrad("UFOR");
         return grad170;
     }
+    */
 }
