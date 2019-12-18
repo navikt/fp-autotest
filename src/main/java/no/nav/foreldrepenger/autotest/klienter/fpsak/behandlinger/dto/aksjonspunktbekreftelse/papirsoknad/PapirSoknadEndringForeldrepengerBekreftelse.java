@@ -24,11 +24,12 @@ public class PapirSoknadEndringForeldrepengerBekreftelse extends AksjonspunktBek
 
     protected FordelingDto tidsromPermisjon = new FordelingDto();
 
-    public PapirSoknadEndringForeldrepengerBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-    }
-
     public void setFordeling(FordelingDto tidsromPermisjon) {
         this.tidsromPermisjon = tidsromPermisjon;
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
     }
 }

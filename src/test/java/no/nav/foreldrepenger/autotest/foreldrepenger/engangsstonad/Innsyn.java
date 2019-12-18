@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvInnsynBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
@@ -43,19 +44,19 @@ public class Innsyn extends EngangsstonadTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaTillegsopplysningerBekreftelse.class);
 
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.velgDokumentInnsynBehandling();
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class)
+        AksjonspunktBekreftelse aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class)
                 .setMottattDato(LocalDate.now())
                 .setInnsynResultatType(saksbehandler.kodeverk.InnsynResultatType.getKode("INNV"))
                 .skalSetteSakPåVent(false)
                 .setBegrunnelse("Test");
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderingAvInnsynBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
@@ -81,18 +82,18 @@ public class Innsyn extends EngangsstonadTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaTillegsopplysningerBekreftelse.class);
 
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.velgDokumentInnsynBehandling();
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class)
-                .setMottattDato(LocalDate.now())
+        VurderingAvInnsynBekreftelse vurderingAvInnsynBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class);
+        vurderingAvInnsynBekreftelse.setMottattDato(LocalDate.now())
                 .setInnsynResultatType(saksbehandler.kodeverk.InnsynResultatType.getKode("AVVIST"))
                 .setBegrunnelse("Test");
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderingAvInnsynBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderingAvInnsynBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
@@ -117,7 +118,7 @@ public class Innsyn extends EngangsstonadTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaTillegsopplysningerBekreftelse.class);
 
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.velgDokumentInnsynBehandling();
@@ -126,9 +127,9 @@ public class Innsyn extends EngangsstonadTestBase {
                 .setMottattDato(LocalDate.now())
                 .setInnsynResultatType(saksbehandler.kodeverk.InnsynResultatType.getKode("AVVIST"))
                 .setBegrunnelse("Test");
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderingAvInnsynBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderingAvInnsynBekreftelse.class);
 
-        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_AVVIST", "Behandlingstatus");

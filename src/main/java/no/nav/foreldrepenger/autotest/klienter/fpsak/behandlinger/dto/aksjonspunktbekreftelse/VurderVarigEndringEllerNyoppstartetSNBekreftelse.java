@@ -8,8 +8,8 @@ public class VurderVarigEndringEllerNyoppstartetSNBekreftelse extends Aksjonspun
 
     protected boolean erVarigEndretNaering;
 
-    public VurderVarigEndringEllerNyoppstartetSNBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public VurderVarigEndringEllerNyoppstartetSNBekreftelse() {
+        super();
     }
 
     public VurderVarigEndringEllerNyoppstartetSNBekreftelse setErVarigEndretNaering(boolean erVarigEndretNaering) {

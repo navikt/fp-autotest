@@ -45,9 +45,6 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
 
     protected boolean annenForelderInformert = true;
 
-    public PapirSoknadForeldrepengerBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-    }
 
     public void morSøkerFødsel(FordelingDto fordeling, LocalDate fødselsdato, LocalDate mottattDato) {
         this.foedselsDato = Collections.singletonList(fødselsdato);

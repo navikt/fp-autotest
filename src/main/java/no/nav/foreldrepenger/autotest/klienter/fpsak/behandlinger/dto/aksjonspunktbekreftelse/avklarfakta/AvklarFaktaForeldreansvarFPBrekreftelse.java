@@ -15,24 +15,28 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreftelse {
 
     protected Integer antallBarn;
-    
+
     protected LocalDate omsorgsovertakelseDato;
     protected LocalDate foreldreansvarDato;
-    
+
     protected List<OmsorgovertakelseBarn> barn= new ArrayList<>();
     protected List<OmsorgovertakelseForelder> foreldre= new ArrayList<>();
-    
-    public AvklarFaktaForeldreansvarFPBrekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-        
+
+    public AvklarFaktaForeldreansvarFPBrekreftelse() {
+        super();
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
         antallBarn = behandling.getSoknad().getAntallBarn();
         omsorgsovertakelseDato = behandling.getSoknad().getOmsorgsovertakelseDato();
-        
+
         foreldre.add(new OmsorgovertakelseForelder(behandling.getPersonopplysning()));
-        
+
         if(behandling.getSoknad().getAdopsjonFodelsedatoer() != null){
             Map<Integer, LocalDate> fodselsdatoer = behandling.getSoknad().getAdopsjonFodelsedatoer();
-            
+
             for(int i = 0; i < fodselsdatoer.size(); i++){
                 barn.add(new OmsorgovertakelseBarn(fodselsdatoer.get(i+1), "SAKSBEH", (i+1)));
             }
@@ -43,8 +47,8 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
             }
         }
     }
-    
-    
+
+
     public class OmsorgovertakelseForelder
     {
         public int id;
@@ -53,12 +57,12 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
         public String navn;
         public String opplysningsKilde;
         public String aktorId;
-        
+
         public OmsorgovertakelseForelder(boolean erMor, String navn){
             this.erMor = erMor;
             this.navn = navn;
         }
-        
+
         public OmsorgovertakelseForelder(Personopplysning person){
             id = person.getId();
             aktorId = "" + person.getAktoerId();
@@ -68,7 +72,7 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
             opplysningsKilde = "TPS";
         }
     }
-    
+
     public class OmsorgovertakelseBarn
     {
         public LocalDate fodselsdato;
@@ -76,7 +80,7 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
         public int nummer;
         public String aktorId;
         public String navn = "";
-        
+
         public OmsorgovertakelseBarn(LocalDate fodselsdato, String opplysningsKilde, int nummer){
             this.fodselsdato = fodselsdato;
             this.opplysningsKilde = opplysningsKilde;

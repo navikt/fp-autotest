@@ -10,8 +10,8 @@ public class AvklarFaktaAleneomsorgBekreftelse extends AksjonspunktBekreftelse{
 
     protected Boolean aleneomsorg;
 
-    public AvklarFaktaAleneomsorgBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public AvklarFaktaAleneomsorgBekreftelse() {
+        super();
     }
 
     public void  bekreftBrukerHarAleneomsorg() {

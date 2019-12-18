@@ -2,9 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.AnnenForelderDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 
 import java.time.LocalDate;
@@ -28,11 +26,6 @@ public class PapirSoknadEngangstonadBekreftelse extends AksjonspunktBekreftelse 
     protected AnnenForelderDto annenForelder = new AnnenForelderDto();
 
 
-
-
-    public PapirSoknadEngangstonadBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-    }
     public PapirSoknadEngangstonadBekreftelse setSøker (SøkersRolle søker) {
         this.soker = søker.name();
         return this;

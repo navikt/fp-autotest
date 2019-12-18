@@ -15,12 +15,15 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
     protected LocalDate fødselsdato;
     protected List<Arbeidsforhold> bekreftetSvpArbeidsforholdList;
 
-    public AvklarFaktaFødselOgTilrettelegging(Fagsak fagsak, Behandling behandling){
-        super(fagsak, behandling);
+    public AvklarFaktaFødselOgTilrettelegging(){
+        super();
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
         this.termindato = behandling.getTilrettelegging().getTermindato();
         this.fødselsdato = behandling.getTilrettelegging().getFødselsdato();
         this.bekreftetSvpArbeidsforholdList = behandling.getTilrettelegging().getArbeidsforholdList();
     }
-
-
 }

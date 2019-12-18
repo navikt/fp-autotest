@@ -8,8 +8,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 @BekreftelseKode(kode="5009")
 public class AvklarFaktaTillegsopplysningerBekreftelse extends AksjonspunktBekreftelse{
 
-    public AvklarFaktaTillegsopplysningerBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public AvklarFaktaTillegsopplysningerBekreftelse() {
+        super();
     }
 
     @Override

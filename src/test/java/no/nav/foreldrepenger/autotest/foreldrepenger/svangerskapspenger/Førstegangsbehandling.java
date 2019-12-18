@@ -73,17 +73,17 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
         saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
                 .setBegrunnelse("Test");
-        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
 
         saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
                 .setBegrunnelse("Test");
-        saksbehandler.bekreftAksjonspunktBekreftelse(BekreftSvangerskapspengervilkår.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
 
         saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
                 .leggTilInntekt(beløpMor * 12,1L);
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderBeregnetInntektsAvvikBekreftelse.class);
 
-        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
@@ -135,12 +135,12 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
         saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
                 .setBegrunnelse("Begrunnelse");
-        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
 
 
         saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
                 .setBegrunnelse("Test");
-        saksbehandler.bekreftAksjonspunktBekreftelse(BekreftSvangerskapspengervilkår.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
 
     }
 

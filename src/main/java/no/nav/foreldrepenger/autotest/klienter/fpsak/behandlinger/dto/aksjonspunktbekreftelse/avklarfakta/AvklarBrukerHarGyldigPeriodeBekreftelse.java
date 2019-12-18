@@ -6,15 +6,15 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
-@BekreftelseKode(kode="5021")
-public class AvklarBrukerHarGyldigPeriodeBekreftelse extends BekreftedePerioderMalDto{
+@BekreftelseKode(kode = "5021")
+public class AvklarBrukerHarGyldigPeriodeBekreftelse extends BekreftedePerioderMalDto {
 
-    public AvklarBrukerHarGyldigPeriodeBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public AvklarBrukerHarGyldigPeriodeBekreftelse() {
+        super();
     }
 
     public void setVurdering(Kode medlem) {
-        for (BekreftedePerioderDto bekreftedePerioderDto :behandling.getMedlem().getMedlemskapPerioder()) {
+        for (BekreftedePerioderDto bekreftedePerioderDto : behandling.getMedlem().getMedlemskapPerioder()) {
             bekreftedePerioderDto.setMedlemskapManuellVurderingType(medlem);
             bekreftedePerioder.add(bekreftedePerioderDto);
         }

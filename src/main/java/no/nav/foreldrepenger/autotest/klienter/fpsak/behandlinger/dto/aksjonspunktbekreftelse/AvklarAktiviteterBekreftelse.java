@@ -13,16 +13,8 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<BeregningsaktivitetLagreDto> beregningsaktivitetLagreDtoList;
 
-
-    public AvklarAktiviteterBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-        beregningsaktivitetLagreDtoList = behandling.getBeregningsgrunnlag().getFaktaOmBeregning().getAvklarAktiviteter()
-                .getAktiviteterTomDatoMapping().get(0)
-                .getAktiviteter()
-                .stream()
-                .map(aktivitet -> new BeregningsaktivitetLagreDto(aktivitet.getArbeidsforholdType(), aktivitet.getFom(), aktivitet.getTom(),
-                        aktivitet.getArbeidsgiverId(), aktivitet.getAktørId() == null ? null : aktivitet.getAktørId().getAktørId(), aktivitet.getArbeidsforholdId(), true))
-                .collect(Collectors.toList());
+    public AvklarAktiviteterBekreftelse() {
+        super();
     }
 
     public AvklarAktiviteterBekreftelse setSkalBrukes(boolean skalBrukes, String orgnr){
@@ -45,5 +37,17 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
                 .findFirst().get();
         vurdering.skalBrukes = false;
         return this;
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
+        beregningsaktivitetLagreDtoList = behandling.getBeregningsgrunnlag().getFaktaOmBeregning().getAvklarAktiviteter()
+                .getAktiviteterTomDatoMapping().get(0)
+                .getAktiviteter()
+                .stream()
+                .map(aktivitet -> new BeregningsaktivitetLagreDto(aktivitet.getArbeidsforholdType(), aktivitet.getFom(), aktivitet.getTom(),
+                        aktivitet.getArbeidsgiverId(), aktivitet.getAktørId() == null ? null : aktivitet.getAktørId().getAktørId(), aktivitet.getArbeidsforholdId(), true))
+                .collect(Collectors.toList());
     }
 }

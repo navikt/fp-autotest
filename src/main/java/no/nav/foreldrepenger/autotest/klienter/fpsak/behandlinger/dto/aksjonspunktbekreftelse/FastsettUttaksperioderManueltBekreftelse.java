@@ -17,9 +17,13 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     protected List<UttakResultatPeriode> perioder = new ArrayList<>();
 
-    public FastsettUttaksperioderManueltBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public FastsettUttaksperioderManueltBekreftelse() {
+        super();
+    }
 
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
         for (UttakResultatPeriode uttakPeriode : behandling.hentUttaksperioder()) {
             if (uttakPeriode.getManuellBehandlingÅrsak() != null && !uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
                 uttakPeriode.setBegrunnelse("Begrunnelse");

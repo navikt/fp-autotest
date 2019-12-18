@@ -10,28 +10,28 @@ public class VurderSoknadsfristForeldrepengerBekreftelse extends AksjonspunktBek
 
     protected Boolean harGyldigGrunn;
     protected LocalDate ansesMottattDato;
-    
-    public VurderSoknadsfristForeldrepengerBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+
+    public VurderSoknadsfristForeldrepengerBekreftelse() {
+        super();
     }
-    
+
     public void bekreftHarGyldigGrunn(LocalDate ansesMottattDato) {
         this.harGyldigGrunn = true;
         this.ansesMottattDato = ansesMottattDato;
         this.begrunnelse = "Test";
     }
-    
+
     public void bekreftHarIkkeGyldigGrunn() {
         harGyldigGrunn = false;
     }
-    
+
     public void setAnsesMottattDato(LocalDate dato) {
         ansesMottattDato = dato;
     }
 
-    
-    
-    
 
-    
+
+
+
+
 }

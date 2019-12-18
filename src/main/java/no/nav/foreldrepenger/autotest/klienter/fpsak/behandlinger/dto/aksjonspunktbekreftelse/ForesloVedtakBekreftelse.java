@@ -17,9 +17,14 @@ public class ForesloVedtakBekreftelse extends AksjonspunktBekreftelse {
     protected String fritekstBrev;
     protected Boolean skalBrukeOverstyrendeFritekstBrev;
     protected Boolean isVedtakSubmission;
-    
-    public ForesloVedtakBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
+    }
+
+    public ForesloVedtakBekreftelse() {
+        super();
     }
 
 
@@ -33,6 +38,6 @@ public class ForesloVedtakBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    
-    
+
+
 }

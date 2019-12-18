@@ -7,8 +7,4 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 @BekreftelseKode(kode="6002")
 public class OverstyrOpplysningsplikt extends OverstyringsBekreftelse {
 
-    public OverstyrOpplysningsplikt(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-    }
-
 }

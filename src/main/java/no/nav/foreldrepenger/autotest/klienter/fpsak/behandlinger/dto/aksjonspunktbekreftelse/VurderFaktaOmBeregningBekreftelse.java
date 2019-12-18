@@ -14,8 +14,8 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
 
     protected FaktaOmBeregningLagreDto fakta = new FaktaOmBeregningLagreDto();
 
-    public VurderFaktaOmBeregningBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public VurderFaktaOmBeregningBekreftelse() {
+        super();
     }
 
     public VurderFaktaOmBeregningBekreftelse leggTilFaktaOmBeregningTilfeller(String kode) {

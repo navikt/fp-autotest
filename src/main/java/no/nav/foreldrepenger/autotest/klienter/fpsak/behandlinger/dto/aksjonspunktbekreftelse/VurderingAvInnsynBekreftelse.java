@@ -15,23 +15,23 @@ public class VurderingAvInnsynBekreftelse extends AksjonspunktBekreftelse {
     public LocalDate fristDato;
     public List<Object> innsynDokumenter = new ArrayList<>();
     public String innsynResultatType;
-    public Boolean sattPaVent; 
-    
-    public VurderingAvInnsynBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public Boolean sattPaVent;
+
+    public VurderingAvInnsynBekreftelse() {
+        super();
     }
-    
+
     public VurderingAvInnsynBekreftelse setMottattDato(LocalDate mottattDato) {
         this.mottattDato = mottattDato;
         this.fristDato = mottattDato.plusDays(4);
         return this;
     }
-    
+
     public VurderingAvInnsynBekreftelse setInnsynResultatType(Kode innsynResultatType) {
         this.innsynResultatType = innsynResultatType.kode;
         return this;
     }
-    
+
     public VurderingAvInnsynBekreftelse skalSetteSakPåVent(boolean settPåVent) {
         this.sattPaVent = settPåVent;
         return this;

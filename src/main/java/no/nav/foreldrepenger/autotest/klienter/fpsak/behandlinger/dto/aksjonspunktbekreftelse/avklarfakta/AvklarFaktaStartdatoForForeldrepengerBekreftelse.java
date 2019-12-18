@@ -13,7 +13,7 @@ public class AvklarFaktaStartdatoForForeldrepengerBekreftelse extends Aksjonspun
     protected LocalDate startdatoFraSoknad;
 
     public AvklarFaktaStartdatoForForeldrepengerBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+        super();
     }
 
     public AvklarFaktaStartdatoForForeldrepengerBekreftelse setStartdatoFraSoknad(LocalDate dato) {
