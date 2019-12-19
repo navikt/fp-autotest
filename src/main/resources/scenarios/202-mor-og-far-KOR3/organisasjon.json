@@ -23,6 +23,18 @@
         "registreringsDato": "now() - P10Y",
         "datoSistEndret": "now() - P1Y"
       }
+    },
+    {
+      "orgnummer": "342352362",
+      "navn": {
+        "navnelinje": [
+          "TestAStest"
+        ]
+      },
+      "organisasjonDetaljer": {
+        "registreringsDato": "now() - P10Y",
+        "datoSistEndret": "now() - P1Y"
+      }
     }
   ]
 }

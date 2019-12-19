@@ -11,10 +11,19 @@
 				"beskrivelse": "fastloenn"
 			},
 			{
-				"fom": "now() - P6D",
+				"fom": "now() - P2Y",
 				"tom": "now()",
 				"beløp": 60000,
 				"orgnr": "973861778",
+				"type": "Lønnsinntekt",
+				"fordel": "kontantytelse",
+				"beskrivelse": "fastloenn"
+			},
+			{
+				"fom": "now() - P6D",
+				"tom": "now()",
+				"beløp": 60000,
+				"orgnr": "342352362",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
 				"beskrivelse": "fastloenn"
@@ -45,9 +54,25 @@
 			},
 			{
 				"arbeidsforholdId": "ARB001-002",
-				"ansettelsesperiodeFom": "now() - P6D",
+				"ansettelsesperiodeFom": "now() - P2Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "973861778",
+				"arbeidsavtaler" : [
+					{
+						"fomGyldighetsperiode": "now() - P2Y",
+						"sisteLønnsendringsdato": "now() - P2Y",
+						"avlønningstype": "fastlønn",
+						"avtaltArbeidstimerPerUke": "40",
+						"stillingsprosent" : 100,
+						"beregnetAntallTimerPerUke": "30"
+					}
+				]
+			},
+			{
+				"arbeidsforholdId": "ARB001-003",
+				"ansettelsesperiodeFom": "now() - P6D",
+				"arbeidsforholdstype": "ordinaertArbeidsforhold",
+				"arbeidsgiverOrgnr": "342352362",
 				"arbeidsavtaler" : [
 					{
 						"fomGyldighetsperiode": "now() - P6D",
@@ -58,6 +83,7 @@
 						"beregnetAntallTimerPerUke": "30"
 					}
 				]
+
 			}
 		]
 	},
