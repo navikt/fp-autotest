@@ -93,11 +93,22 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Test
     public void testcase_mor_KOR_papirsøknad_gradering() throws Exception {
-        TestscenarioDto testscenario = opprettTestscenario("201");
+        TestscenarioDto testscenario = opprettTestscenario("202");
 
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+
+        var org1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var org2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr();
+        var org3 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(2).getArbeidsgiverOrgnr();
+        var arbeidsforholdID1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsforholdId();
+        var arbeidsforholdID2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsforholdId();
+        var arbeidsforholdID3 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(2).getArbeidsforholdId();
+        var beløp1 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var beløp2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp();
+        var beløp3 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(2).getBeløp();
+        var morStartDato = fødselsdato.minusWeeks(3);
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);
@@ -115,45 +126,42 @@ public class Uttak extends ForeldrepengerTestBase {
         PermisjonPeriodeDto mk6_mer = new PermisjonPeriodeDto(
                 STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato.plusDays(42), fødselsdato.plusDays(49));
         GraderingPeriodeDto gradering1 = new GraderingPeriodeDto(
-                STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato.plusDays(42), fødselsdato.plusDays(49),
+                STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusDays(42), fødselsdato.plusDays(120),
                 BigDecimal.valueOf(70),
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(),
                 true, false, false, "ARBEIDSTAKER"
         );
-        GraderingPeriodeDto gradering2 = new GraderingPeriodeDto(
-                STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato.plusDays(50), fødselsdato.plusDays(105),
-                BigDecimal.valueOf(70),
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr(),
-                true, false, false, "ARBEIDSTAKER"
-                );
+//        GraderingPeriodeDto gradering2 = new GraderingPeriodeDto(
+//                STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato.plusDays(50), fødselsdato.plusDays(105),
+//                BigDecimal.valueOf(70),
+//                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr(),
+//                true, false, false, "ARBEIDSTAKER"
+//                );
         fordeling.permisjonsPerioder.add(før);
         fordeling.permisjonsPerioder.add(mk6);
-        fordeling.permisjonsPerioder.add(mk6_mer);
-//        fordeling.graderingPeriode.add(gradering1);
-        fordeling.graderingPeriode.add(gradering2);
+        fordeling.graderingPeriode.add(gradering1);
         aksjonspunktBekreftelseMor.morSøkerFødsel(fordeling, fødselsdato, fødselsdato);
         saksbehandler.bekreftAksjonspunktBekreftelse(aksjonspunktBekreftelseMor);
 
         InntektsmeldingBuilder im = lagInntektsmeldingBuilder(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                fnrMor, fødselsdato.minusWeeks(3),
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr()
-        )
-
+                beløp1, fnrMor, morStartDato, org1)
                 .medArbeidsforholdId(testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsforholdId())
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp()))
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(beløp1))
                 .medRefusjonsOpphordato(LocalDate.now().minusDays(7))
                 ;
         fordel.sendInnInntektsmelding(im,aktørIdMor, fnrMor, saksnummer);
 
         InntektsmeldingBuilder im2 = lagInntektsmeldingBuilder(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                fnrMor, fødselsdato.minusWeeks(3),
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr())
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp()))
-                .medArbeidsforholdId(testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsforholdId())
+                beløp2, fnrMor, morStartDato, org2)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(beløp2))
+                .medArbeidsforholdId(arbeidsforholdID2)
                 ;
-
+        fordel.sendInnInntektsmelding(im2,aktørIdMor, fnrMor, saksnummer);
+        InntektsmeldingBuilder im3 = lagInntektsmeldingBuilder(
+                beløp3, fnrMor, morStartDato, org3)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(beløp3))
+                .medArbeidsforholdId(arbeidsforholdID3)
+                ;
         fordel.sendInnInntektsmelding(im2,aktørIdMor, fnrMor, saksnummer);
     }
     @Test
