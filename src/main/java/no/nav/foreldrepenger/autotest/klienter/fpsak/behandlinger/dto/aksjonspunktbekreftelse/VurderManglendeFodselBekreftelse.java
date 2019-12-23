@@ -17,11 +17,11 @@ public class VurderManglendeFodselBekreftelse extends AksjonspunktBekreftelse {
     protected boolean dokumentasjonForeligger;
     protected boolean brukAntallBarnITps;
     protected List<UidentifisertBarn> uidentifiserteBarn = new ArrayList<>();
-    
-    public VurderManglendeFodselBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+
+    public VurderManglendeFodselBekreftelse() {
+        super();
     }
-    
+
     public VurderManglendeFodselBekreftelse bekreftDokumentasjonForeligger(int antallBarn, LocalDate dato) {
         dokumentasjonForeligger = true;
         antallBarnFodt = antallBarn;
@@ -38,7 +38,7 @@ public class VurderManglendeFodselBekreftelse extends AksjonspunktBekreftelse {
         antallBarnFodt = null;
         return this;
     }
-    
+
     public void bekreftBrukAntallBarnITps() {
         brukAntallBarnITps = true;
     }

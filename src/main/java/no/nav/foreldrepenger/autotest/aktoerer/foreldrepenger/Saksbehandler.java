@@ -309,10 +309,6 @@ public class Saksbehandler extends Aktoer {
 //            }));
 
         }
-
-        for (Aksjonspunkt aksjonspunkt : valgtBehandling.getAksjonspunkter()) {
-            aksjonspunkt.setBekreftelse(AksjonspunktBekreftelse.fromAksjonspunkt(valgtFagsak, valgtBehandling, aksjonspunkt));
-        }
     }
 
     private void ventPåStatus(Behandling behandling) throws Exception {
@@ -406,7 +402,9 @@ public class Saksbehandler extends Aktoer {
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) {
         for (Aksjonspunkt aksjonspunkt : valgtBehandling.getAksjonspunkter()) {
             if (type.isInstance(aksjonspunkt.getBekreftelse())) {
-                return (T) aksjonspunkt.getBekreftelse();
+                AksjonspunktBekreftelse bekreftelse = aksjonspunkt.getBekreftelse();
+                bekreftelse.setFagsakOgBehandling(valgtFagsak, valgtBehandling);
+                return (T) bekreftelse;
             }
         }
         AllureHelper.debugLoggBehandling("Behandling mangler aksjonspunkt: ", valgtBehandling);
@@ -442,21 +440,14 @@ public class Saksbehandler extends Aktoer {
     }
 
     /*
-     * bekrefter aksjonspunkt
-     */
-    public void bekreftAksjonspunkt(Aksjonspunkt aksjonspunkt) throws Exception {
-        bekreftAksjonspunktBekreftelse(aksjonspunkt.getBekreftelse());
-    }
-
-    /*
      * Bekrefte aksjonspunkt bekreftelse
      */
-    public <T extends AksjonspunktBekreftelse> void bekreftAksjonspunktBekreftelse(Class<T> type) throws Exception {
-        bekreftAksjonspunktBekreftelse(hentAksjonspunktbekreftelse(type));
+    public <T extends AksjonspunktBekreftelse> void bekreftAksjonspunktMedDefaultVerdier(Class<T> type) throws Exception {
+        bekreftAksjonspunkt(hentAksjonspunktbekreftelse(type));
     }
 
     @Step("Bekrefter aksjonspunkt {bekreftelse}")
-    public void bekreftAksjonspunktBekreftelse(AksjonspunktBekreftelse bekreftelse) throws Exception {
+    public void bekreftAksjonspunkt(AksjonspunktBekreftelse bekreftelse) throws Exception {
         List<AksjonspunktBekreftelse> bekreftelser = new ArrayList<>();
         bekreftelser.add(bekreftelse);
         bekreftAksjonspunktbekreftelserer(bekreftelser);
@@ -626,7 +617,7 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             refreshBehandling();
             return harAksjonspunkt(kode);
-        }, 20, () -> "Saken  hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
+        }, 30, () -> "Saken  hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
     }
 
     private Vilkar hentVilkår(Kode vilkårKode) {
@@ -720,14 +711,14 @@ public class Saksbehandler extends Aktoer {
     }
 
     @Step("Fatter vedtak og venter til sak er avsluttet")
-    public void fattVedtakOgVentTilAvsluttetBehandling() throws Exception {
-        bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
+    public void fattVedtakOgVentTilAvsluttetBehandling(FatterVedtakBekreftelse bekreftelse) throws Exception {
+        bekreftAksjonspunkt(bekreftelse);
         ventTilAvsluttetBehandling();
     }
 
     @Step("Fatter vedtak uten totrinnsbehandling og venter til sak er avsluttet")
     public void fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling() throws Exception {
-        bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelseUtenTotrinn.class);
+        bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelseUtenTotrinn.class);
         ventTilAvsluttetBehandling();
     }
 

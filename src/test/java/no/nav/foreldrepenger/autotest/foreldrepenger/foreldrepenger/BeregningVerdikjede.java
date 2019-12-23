@@ -68,9 +68,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         int inntektPerMåned = 30_000;
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
-
         String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
-
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
                 orgNr);
 
@@ -134,10 +132,12 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .stream().filter(a -> a.getAndelsnr() == 1)
                 .findFirst().get();
         double totaltBg = aapAndel.getBeregnetPrAar();
-        saksbehandler.hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class)
-                .settFastsattBeløpOgInntektskategori(fpStartdato, 0, new Kode("ARBEIDSAVKLARINGSPENGER"), 1)
+
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORDEL_BEREGNINGSGRUNNLAG);
+        FordelBeregningsgrunnlagBekreftelse fordelBeregningsgrunnlagBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
+        fordelBeregningsgrunnlagBekreftelse.settFastsattBeløpOgInntektskategori(fpStartdato, 0, new Kode("ARBEIDSAVKLARINGSPENGER"), 1)
                 .settFastsattBeløpOgInntektskategori(fpStartdato, (int) totaltBg, new Kode("ARBEIDSAVKLARINGSPENGER"), 2);
-        saksbehandler.bekreftAksjonspunktBekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
@@ -169,9 +169,9 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         // AVKLAR AKTIVITETER //
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_AKTIVITETER);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class)
-                .setSkalBrukes(false, orgNr);
-        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarAktiviteterBekreftelse.class);
+        AvklarAktiviteterBekreftelse avklarAktiviteterBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class);
+        avklarAktiviteterBekreftelse.setSkalBrukes(false, orgNr);
+        saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse);
 
         // FORDEL BEREGNINGSGRUNNLAG //
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORDEL_BEREGNINGSGRUNNLAG);
@@ -181,10 +181,12 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .stream().filter(a -> a.getAndelsnr() == 1)
                 .findFirst().get();
         double totaltBg = aapAndel.getBeregnetPrAar();
-        saksbehandler.hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class)
-        .settFastsattBeløpOgInntektskategori(fpStartdato, 0, new Kode("ARBEIDSAVKLARINGSPENGER"), 1)
+
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORDEL_BEREGNINGSGRUNNLAG);
+        FordelBeregningsgrunnlagBekreftelse fordelBeregningsgrunnlagBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
+        fordelBeregningsgrunnlagBekreftelse.settFastsattBeløpOgInntektskategori(fpStartdato, 0, new Kode("ARBEIDSAVKLARINGSPENGER"), 1)
         .settFastsattBeløpOgInntektskategori(fpStartdato, (int) totaltBg, new Kode("ARBEIDSAVKLARINGSPENGER"), 2);
-        saksbehandler.bekreftAksjonspunktBekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
@@ -230,7 +232,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class)
                 .settFastsattBeløpOgInntektskategori(fpStartdato, 0, new Kode("ARBEIDSTAKER"), 1)
                 .settFastsattBeløpOgInntektskategori(fpStartdato, (int) totaltBg, new Kode("ARBEIDSTAKER"), 2);
-        saksbehandler.bekreftAksjonspunktBekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FordelBeregningsgrunnlagBekreftelse.class);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
@@ -286,37 +288,38 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         // FAKTA OM FØDSEL: Avklar om søker har mottatt støtte
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarLopendeVedtakBekreftelse.class).bekreftGodkjent();
-        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarLopendeVedtakBekreftelse.class);
+        AvklarLopendeVedtakBekreftelse avklarLopendeVedtakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarLopendeVedtakBekreftelse.class);
+        avklarLopendeVedtakBekreftelse.bekreftGodkjent();
+        saksbehandler.bekreftAksjonspunkt(avklarLopendeVedtakBekreftelse);
 
         // FAKTA OM MEDLEMSKAP
         saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
                 .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"));
-        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
 
         // FAKTA OM BEREGNING: Vurder besteberegning og fastsett månedsinntekt fra ytelse
-        saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        vurderFaktaOmBeregningBekreftelse
                 .leggTilFaktaOmBeregningTilfeller("FASTSETT_BG_KUN_YTELSE")
                 .leggTilFaktaOmBeregningTilfeller("VURDER_BESTEBEREGNING")
                 .leggTilAndelerYtelse(10000.0, new Kode("INNTEKTSKATEGORI", "ARBEIDSTAKER", ""))
                 .settSkalHaBesteberegningForKunYtelse(true);
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
 
         // FORESLÅ VEDTAK //
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
         saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
-        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         // FATTE VEDTAK //
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         Aksjonspunkt apLopendeVedtak = beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE);
-        Aksjonspunkt apMedlemskap = beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_GYLDIG_MEDLEMSKAPSPERIODE);
         Aksjonspunkt apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkter(List.of(apLopendeVedtak, apMedlemskap, apFaktaOmBeregning));
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling();
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(List.of(apLopendeVedtak, apFaktaOmBeregning));
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         saksbehandler.ventTilAvsluttetBehandling();
@@ -369,23 +372,23 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         // FORDEL BEREGNINGSGRUNNLAG //
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORDEL_BEREGNINGSGRUNNLAG);
-        saksbehandler.hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class)
-                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingFom, 500_000, 500_000, new Kode("ARBEIDSTAKER"), 1)
+        FordelBeregningsgrunnlagBekreftelse fordelBeregningsgrunnlagBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
+        fordelBeregningsgrunnlagBekreftelse.settFastsattBeløpOgInntektskategoriMedRefusjon(graderingFom, 500_000, 500_000, new Kode("ARBEIDSTAKER"), 1)
                 .settFastsattBeløpOgInntektskategori(graderingFom, 263_488, new Kode("SELVSTENDIG_NÆRINGSDRIVENDE"), 2);
-        saksbehandler.bekreftAksjonspunktBekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
 
         // FORESLÅ VEDTAK //
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
         saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
-        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         // FATTE VEDTAK //
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         Aksjonspunkt apFordelBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.FORDEL_BEREGNINGSGRUNNLAG);
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkter(List.of(apFordelBeregning));
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling();
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(List.of(apFordelBeregning));
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         saksbehandler.ventTilAvsluttetBehandling();
@@ -425,44 +428,44 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         // FAKTA OM FØDSEL
-        saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
-                .bekreftDokumentasjonForeligger(1, fødselsdato);
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderManglendeFodselBekreftelse.class);
+        VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
+        vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(1, fødselsdato);
+        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
         // FAKTA OM BEREGNING: Vurder gyldighet for refusjonskrav som har kommet for sent
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilFaktaOmBeregningTilfeller("VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT")
+        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        vurderFaktaOmBeregningBekreftelse.leggTilFaktaOmBeregningTilfeller("VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT")
                 .leggTilRefusjonGyldighetVurdering(orgNr, true);
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt(360_000, 1L);
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
+        VurderBeregnetInntektsAvvikBekreftelse vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
+        vurderBeregnetInntektsAvvikBekreftelse.leggTilInntekt(360_000, 1L);
+        saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
 
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRIST_FORELDREPENGER);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
-                .bekreftHarGyldigGrunn(LocalDate.now().minusMonths(4));
-        saksbehandler.bekreftAksjonspunktBekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
+        VurderSoknadsfristForeldrepengerBekreftelse vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
+        vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(LocalDate.now().minusMonths(4));
+        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
 
         // FORESLÅ VEDTAK //
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
-        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         // FATTE VEDTAK //
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkter(List.of(
+        beslutter.ventTilAksjonspunkt(AksjonspunktKoder.FATTER_VEDTAK);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(List.of(
                         beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN),
                         beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS),
                         beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRIST_FORELDREPENGER),
                         beslutter.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL)
                 ));
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling();
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         saksbehandler.ventTilAvsluttetBehandling();

@@ -41,7 +41,7 @@ public class Revurdering extends EngangsstonadTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktBekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaTillegsopplysningerBekreftelse.class);
 
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse bekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
         bekreftelse1.setBarnetsAnkomstTilNorgeDato(LocalDate.now());
@@ -49,15 +49,15 @@ public class Revurdering extends EngangsstonadTestBase {
         bekreftelse2.bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunktbekreftelserer(bekreftelse1, bekreftelse2);
 
-        saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
 
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling();
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingsresultat");
 
@@ -66,9 +66,9 @@ public class Revurdering extends EngangsstonadTestBase {
         saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
         saksbehandler.velgRevurderingBehandling();
 
-        saksbehandler.hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class)
-                .bekreftSendVarsel(saksbehandler.kodeverk.Venteårsak.getKode("UTV_FRIST"), "Send brev");
-        saksbehandler.bekreftAksjonspunktBekreftelse(VarselOmRevurderingBekreftelse.class);
+        VarselOmRevurderingBekreftelse varselOmRevurderingBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
+        varselOmRevurderingBekreftelse.bekreftSendVarsel(saksbehandler.kodeverk.Venteårsak.getKode("UTV_FRIST"), "Send brev");
+        saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 
         saksbehandler.harHistorikkinnslag(HistorikkInnslag.REVURD_OPPR);
         saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);

@@ -19,9 +19,13 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
     protected List<BekreftetUttakPeriode> bekreftedePerioder = new ArrayList<>();
     protected List<BekreftetUttakPeriode> slettedePerioder = new ArrayList<>();
 
-    public AvklarFaktaUttakBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public AvklarFaktaUttakBekreftelse() {
+        super();
+    }
 
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
         for (KontrollerFaktaPeriode periode : behandling.getKontrollerFaktaData().getPerioder()) {
             BekreftetUttakPeriode bekreftetUttakPeriode = new BekreftetUttakPeriode(periode.getFom(),
                     periode.getTom(),
@@ -123,16 +127,16 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
     @BekreftelseKode(kode="5070")
     public static class AvklarFaktaUttakPerioder extends AvklarFaktaUttakBekreftelse {
 
-        public AvklarFaktaUttakPerioder(Fagsak fagsak, Behandling behandling) {
-            super(fagsak, behandling);
+        public AvklarFaktaUttakPerioder() {
+            super();
         }
     }
 
     @BekreftelseKode(kode="5081")
     public static class AvklarFaktaUttakFørsteUttakDato extends AvklarFaktaUttakBekreftelse {
 
-        public AvklarFaktaUttakFørsteUttakDato(Fagsak fagsak, Behandling behandling) {
-            super(fagsak, behandling);
+        public AvklarFaktaUttakFørsteUttakDato() {
+            super();
         }
     }
 

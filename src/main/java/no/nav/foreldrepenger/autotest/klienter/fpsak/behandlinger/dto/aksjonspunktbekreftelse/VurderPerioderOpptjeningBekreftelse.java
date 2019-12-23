@@ -13,23 +13,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<OpptjeningAktivitet> opptjeningAktivitetList = new ArrayList<>();
-    
-    public VurderPerioderOpptjeningBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-        if(behandling.getOpptjening().getOpptjeningAktivitetList() == null) {
-            return;
-        }
-        
-        for (OpptjeningAktivitet opptjeningAktivitet : behandling.getOpptjening().getOpptjeningAktivitetList()) {
-            
-            opptjeningAktivitet.setOriginalFom(opptjeningAktivitet.getOpptjeningFom());
-            opptjeningAktivitet.setOriginalTom(opptjeningAktivitet.getOpptjeningTom());
-            opptjeningAktivitet.setOppdragsgiverOrg(opptjeningAktivitet.getOppdragsgiverOrg());
-            opptjeningAktivitet.setArbeidsforholdRef(opptjeningAktivitet.getArbeidsforholdRef());
-            opptjeningAktivitet.setAktivitetType(opptjeningAktivitet.getAktivitetType());
 
-            opptjeningAktivitetList.add(opptjeningAktivitet);
-        }
+    public VurderPerioderOpptjeningBekreftelse() {
+        super();
     }
     public List<OpptjeningAktivitet> hentOpptjeningAktiviteter(String aktivitetType) {
         return opptjeningAktivitetList.stream()
@@ -53,11 +39,11 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
     public void godkjennOpptjening(OpptjeningAktivitet aktivitet) {
         aktivitet.vurder(true, "Godkjent", false);
     }
-    
+
     public void avvisOpptjening(OpptjeningAktivitet aktivitet) {
         aktivitet.vurder(false, "Avvist", false);
     }
-    
+
     public void leggTilOpptjening(OpptjeningAktivitet aktivitet) {
         aktivitet.setErManueltOpprettet(true);
         opptjeningAktivitetList.add(aktivitet);
@@ -67,5 +53,22 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
         opptjeningAktivitetList.forEach(aktivitet -> aktivitet.vurder(true, "Godkjent", false));
     }
 
-    
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
+        if(behandling.getOpptjening().getOpptjeningAktivitetList() == null) {
+            return;
+        }
+
+        for (OpptjeningAktivitet opptjeningAktivitet : behandling.getOpptjening().getOpptjeningAktivitetList()) {
+
+            opptjeningAktivitet.setOriginalFom(opptjeningAktivitet.getOpptjeningFom());
+            opptjeningAktivitet.setOriginalTom(opptjeningAktivitet.getOpptjeningTom());
+            opptjeningAktivitet.setOppdragsgiverOrg(opptjeningAktivitet.getOppdragsgiverOrg());
+            opptjeningAktivitet.setArbeidsforholdRef(opptjeningAktivitet.getArbeidsforholdRef());
+            opptjeningAktivitet.setAktivitetType(opptjeningAktivitet.getAktivitetType());
+
+            opptjeningAktivitetList.add(opptjeningAktivitet);
+        }
+    }
 }

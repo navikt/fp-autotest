@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-
 public abstract class KlageFormkravBekreftelse extends AksjonspunktBekreftelse {
 
     protected boolean erKlagerPart;
@@ -11,8 +8,8 @@ public abstract class KlageFormkravBekreftelse extends AksjonspunktBekreftelse {
     protected boolean erSignert;
     protected String vedtak; // påklagdBehandlingsId;
 
-    public KlageFormkravBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public KlageFormkravBekreftelse() {
+        super();
     }
 
     public KlageFormkravBekreftelse erKlagerPart(boolean verdi) {
@@ -54,25 +51,6 @@ public abstract class KlageFormkravBekreftelse extends AksjonspunktBekreftelse {
         erKonkret(false);
         erSignert(true);
         return this;
-    }
-
-
-    @BekreftelseKode(kode="5082")
-    public static class KlageFormkravNfp extends KlageFormkravBekreftelse {
-
-        public KlageFormkravNfp(Fagsak fagsak, Behandling behandling) {
-            super(fagsak, behandling);
-            this.setPåklagdVedtak("" + behandling.id);
-        }
-    }
-
-    @BekreftelseKode(kode="5083")
-    public static class KlageFormkravKa extends KlageFormkravBekreftelse {
-
-        public KlageFormkravKa(Fagsak fagsak, Behandling behandling) {
-            super(fagsak, behandling);
-            this.setPåklagdVedtak("" + behandling.id);
-        }
     }
 
 

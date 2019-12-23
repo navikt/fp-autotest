@@ -38,7 +38,7 @@ public class BehandleAksjonspunkter extends FpsakTestBase {
         AvklarFaktaTerminBekreftelse bekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         bekreftelse.setTermindato(LocalDate.now().plusWeeks(1));
         bekreftelse.setAntallBarn(1);
-        saksbehandler.bekreftAksjonspunktBekreftelse(bekreftelse);
+        saksbehandler.bekreftAksjonspunkt(bekreftelse);
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET", "Behandlingsresultat");
     }

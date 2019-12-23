@@ -11,8 +11,8 @@ public class AvklarLovligOppholdBekreftelse extends BekreftedePerioderMalDto{
     protected boolean erEosBorger;
     protected boolean lovligOppholdVurdering;
 
-    public AvklarLovligOppholdBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public AvklarLovligOppholdBekreftelse() {
+        super();
     }
 
     public void bekreftErEosBorger() {

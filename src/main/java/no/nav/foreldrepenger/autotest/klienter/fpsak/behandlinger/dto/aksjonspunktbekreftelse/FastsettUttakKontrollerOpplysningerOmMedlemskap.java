@@ -12,9 +12,13 @@ public class FastsettUttakKontrollerOpplysningerOmMedlemskap extends Aksjonspunk
 
     protected List<UttakResultatPeriode> perioder = new ArrayList<>();
 
-    public FastsettUttakKontrollerOpplysningerOmMedlemskap(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public FastsettUttakKontrollerOpplysningerOmMedlemskap() {
+        super();
+    }
 
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
         for (UttakResultatPeriode uttakPeriode : behandling.hentUttaksperioder()) {
             uttakPeriode.setBegrunnelse("Begrunnelse");
             LeggTilUttakPeriode(uttakPeriode);

@@ -27,8 +27,6 @@ public abstract class AksjonspunktBekreftelse {
     protected Fagsak fagsak;
     protected Behandling behandling;
 
-
-
     private static final List<Class<? extends AksjonspunktBekreftelse>> aksjonspunktBekreftelseClasses;
     static {
         try {
@@ -41,16 +39,14 @@ public abstract class AksjonspunktBekreftelse {
 
 
     @SuppressWarnings("unused")
-    public AksjonspunktBekreftelse(Fagsak fagsak, Behandling behandling) {
+    public AksjonspunktBekreftelse() {
         if(null == this.getClass().getAnnotation(BekreftelseKode.class)) {
             throw new RuntimeException("Kode annotation er ikke satt for " + this.getClass().getTypeName());
         }
         kode = this.getClass().getAnnotation(BekreftelseKode.class).kode();
-        this.fagsak = fagsak;
-        this.behandling = behandling;
     }
 
-    public static AksjonspunktBekreftelse fromKode(Fagsak fagsak, Behandling behandling, String kode) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    public static AksjonspunktBekreftelse fromKode(String kode) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 
         for (Class<? extends AksjonspunktBekreftelse> klasse : aksjonspunktBekreftelseClasses) {
 
@@ -63,15 +59,20 @@ public abstract class AksjonspunktBekreftelse {
                 logger.warn("Aksjonspunkt mangler annotasjon='{}'", klasse.getName());
             }
             else if(annotation.kode().equals(kode)) {
-                return klasse.getDeclaredConstructor(Fagsak.class, Behandling.class).newInstance(fagsak, behandling);
+                return klasse.getConstructor().newInstance();
             }
         }
 
         return null;
     }
 
-    public static AksjonspunktBekreftelse fromAksjonspunkt(Fagsak fagsak, Behandling behandling, Aksjonspunkt aksjonspunkt) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        return fromKode(fagsak, behandling, aksjonspunkt.getDefinisjon().kode);
+    public static AksjonspunktBekreftelse fromAksjonspunkt(Aksjonspunkt aksjonspunkt) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return fromKode(aksjonspunkt.getDefinisjon().kode);
+    }
+
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        this.fagsak = fagsak;
+        this.behandling = behandling;
     }
 
     public AksjonspunktBekreftelse setBegrunnelse(String begrunnelse) {

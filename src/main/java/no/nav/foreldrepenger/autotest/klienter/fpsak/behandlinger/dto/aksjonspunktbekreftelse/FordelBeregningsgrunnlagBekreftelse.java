@@ -19,8 +19,13 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
 
     protected List<FastsettBeregningsgrunnlagPeriodeDto> endretBeregningsgrunnlagPerioder;
 
-    public FordelBeregningsgrunnlagBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public FordelBeregningsgrunnlagBekreftelse() {
+        super();
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
         Beregningsgrunnlag beregningsgrunnlag = behandling.getBeregningsgrunnlag();
         endretBeregningsgrunnlagPerioder = beregningsgrunnlag.getFaktaOmFordeling().getFordelBeregningsgrunnlag()
                 .getFordelBeregningsgrunnlagPerioder()

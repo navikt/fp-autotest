@@ -8,39 +8,43 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5004")
-public class AvklarFaktaAdopsjonsdokumentasjonBekreftelse extends AksjonspunktBekreftelse{
+@BekreftelseKode(kode = "5004")
+public class AvklarFaktaAdopsjonsdokumentasjonBekreftelse extends AksjonspunktBekreftelse {
 
     protected LocalDate omsorgsovertakelseDato;
     protected Map<Integer, LocalDate> fodselsdatoer;
     protected LocalDate barnetsAnkomstTilNorgeDato;
-    
-    public AvklarFaktaAdopsjonsdokumentasjonBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-        
-        if(behandling.getSoknad().getOmsorgsovertakelseDato() != null){
-            omsorgsovertakelseDato = behandling.getSoknad().getOmsorgsovertakelseDato();
-        }
-        
-        if(behandling.getSoknad().getAdopsjonFodelsedatoer() != null){
-            fodselsdatoer = behandling.getSoknad().getAdopsjonFodelsedatoer();
-        }
+
+    public AvklarFaktaAdopsjonsdokumentasjonBekreftelse() {
+        super();
     }
-    
+
     public void setOmsorgsovertakelseDato(LocalDate omsorgsovertakelseDato) {
         this.omsorgsovertakelseDato = omsorgsovertakelseDato;
     }
-    
+
     public void leggTilFødselsdato(LocalDate fødselsdato) {
         fodselsdatoer.put(fodselsdatoer.size(), fødselsdato);
     }
-    
+
     public void endreFødselsdato(Integer index, LocalDate fødselsdato) {
         fodselsdatoer.put(index, fødselsdato);
     }
-    
+
     public AvklarFaktaAdopsjonsdokumentasjonBekreftelse setBarnetsAnkomstTilNorgeDato(LocalDate dato) {
         barnetsAnkomstTilNorgeDato = dato;
         return this;
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
+        if (behandling.getSoknad().getOmsorgsovertakelseDato() != null) {
+            omsorgsovertakelseDato = behandling.getSoknad().getOmsorgsovertakelseDato();
+        }
+
+        if (behandling.getSoknad().getAdopsjonFodelsedatoer() != null) {
+            fodselsdatoer = behandling.getSoknad().getAdopsjonFodelsedatoer();
+        }
     }
 }

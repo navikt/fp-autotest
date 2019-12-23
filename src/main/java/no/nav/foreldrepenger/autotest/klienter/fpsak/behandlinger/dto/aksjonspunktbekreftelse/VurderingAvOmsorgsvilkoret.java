@@ -11,15 +11,15 @@ public class VurderingAvOmsorgsvilkoret extends AksjonspunktBekreftelse {
 
     protected String avslagskode;
     protected boolean erVilkarOk;
-    
-    public VurderingAvOmsorgsvilkoret(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+
+    public VurderingAvOmsorgsvilkoret() {
+        super();
     }
-    
+
     public void bekreftGodkjent() {
         erVilkarOk = true;
     }
-    
+
     public void bekreftAvvist(Kode kode) {
         erVilkarOk = false;
         avslagskode = kode.kode;

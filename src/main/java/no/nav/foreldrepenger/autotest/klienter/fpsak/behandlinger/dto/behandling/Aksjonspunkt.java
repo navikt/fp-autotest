@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
+import java.lang.reflect.InvocationTargetException;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Aksjonspunkt {
 
@@ -24,7 +26,7 @@ public class Aksjonspunkt {
         return definisjon;
     }
 
-    public boolean erUbekreftet(){
+    public boolean erUbekreftet() {
         return !status.kode.equals("UTFO");
     }
 
@@ -33,10 +35,16 @@ public class Aksjonspunkt {
     }
 
     public AksjonspunktBekreftelse getBekreftelse() {
-        return bekreftelse;
+        try {
+            return AksjonspunktBekreftelse.fromAksjonspunkt(this);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
-    public Kode getStatus() { return status;}
+    public Kode getStatus() {
+        return status;
+    }
 
     public void setBekreftelse(AksjonspunktBekreftelse bekreftelse) {
         this.bekreftelse = bekreftelse;

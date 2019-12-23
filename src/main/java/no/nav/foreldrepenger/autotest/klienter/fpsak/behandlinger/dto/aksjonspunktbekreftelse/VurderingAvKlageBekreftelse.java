@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+
+import java.time.LocalDate;
 
 public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftelse {
 
@@ -20,9 +20,8 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
     protected String fritekstTilBrev;
     protected LocalDate vedtaksdatoPaklagdBehandling;
 
-    public VurderingAvKlageBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-        this.vedtaksdatoPaklagdBehandling = LocalDate.now();
+    public VurderingAvKlageBekreftelse() {
+        super();
     }
 
     // Omgjør vedtaket
@@ -61,8 +60,8 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
     @BekreftelseKode(kode="5035")
     public static class VurderingAvKlageNfpBekreftelse extends VurderingAvKlageBekreftelse {
 
-        public VurderingAvKlageNfpBekreftelse(Fagsak fagsak, Behandling behandling) {
-            super(fagsak, behandling);
+        public VurderingAvKlageNfpBekreftelse() {
+            super();
         }
     }
 
@@ -72,8 +71,8 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
         private static final String VURDERING_OPPHEVE = "OPPHEVE_YTELSESVEDTAK";
         private static final String VURDERING_HJEMSENDE = "HJEMSENDE_UTEN_Å_OPPHEVE";
 
-        public VurderingAvKlageNkBekreftelse(Fagsak fagsak, Behandling behandling) {
-            super(fagsak, behandling);
+        public VurderingAvKlageNkBekreftelse() {
+            super();
         }
 
         public VurderingAvKlageNkBekreftelse bekreftOpphevet(String årsak) {
@@ -90,4 +89,9 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
 
     }
 
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
+        this.vedtaksdatoPaklagdBehandling = LocalDate.now();
+    }
 }

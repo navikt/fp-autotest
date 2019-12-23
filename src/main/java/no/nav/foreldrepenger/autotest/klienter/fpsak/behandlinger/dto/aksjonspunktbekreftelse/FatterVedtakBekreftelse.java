@@ -15,8 +15,8 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<AksjonspunktGodkjenningDto> aksjonspunktGodkjenningDtos = new ArrayList<>();
 
-    public FatterVedtakBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public FatterVedtakBekreftelse() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -65,6 +65,11 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
         public AksjonspunktGodkjenningDto(Aksjonspunkt aksjonspunkt) {
             aksjonspunktKode = aksjonspunkt.getDefinisjon().kode;
         }
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
     }
 
     @Override

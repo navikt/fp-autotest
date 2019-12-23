@@ -7,17 +7,17 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 public class VurderEktefellesBarnBekreftelse extends AksjonspunktBekreftelse{
 
     protected Boolean ektefellesBarn;
-    
-    public VurderEktefellesBarnBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+
+    public VurderEktefellesBarnBekreftelse() {
+        super();
         // TODO Auto-generated constructor stub
     }
-    
+
     public VurderEktefellesBarnBekreftelse bekreftBarnErEktefellesBarn() {
         ektefellesBarn = true;
         return this;
     }
-    
+
     public VurderEktefellesBarnBekreftelse bekreftBarnErIkkeEktefellesBarn() {
         ektefellesBarn = false;
         return this;

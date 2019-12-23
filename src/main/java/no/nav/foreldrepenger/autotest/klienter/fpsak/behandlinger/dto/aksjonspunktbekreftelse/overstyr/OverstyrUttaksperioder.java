@@ -12,31 +12,33 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 public class OverstyrUttaksperioder extends OverstyringsBekreftelse{
 
     protected List<UttakResultatPeriode> perioder;
-    
-    public OverstyrUttaksperioder(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-        
+
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
         perioder = behandling.hentUttaksperioder();
+
     }
-    
+
     public void bekreftPeriodeErOppfylt(UttakResultatPeriode periode, Kode årsak) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(årsak);
     }
-    
+
     public void bekreftPeriodeErIkkeOppfylt(UttakResultatPeriode periode, Kode årsak) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "AVSLÅTT", "Avslått"));
         periode.setPeriodeResultatÅrsak(årsak);
     }
-    
+
     public void bekreftPeriodeGraderingErOppfylt(UttakResultatPeriode periode) {
         periode.setGraderingAvslagÅrsak(Kode.lagBlankKode());
         periode.setGraderingInnvilget(true);
     }
-    
+
     public void bekreftPeriodeGraderingErIkkeOppfylt(UttakResultatPeriode periode, Kode årsak) {
         periode.setGraderingAvslagÅrsak(årsak);
         periode.setGraderingInnvilget(false);
     }
-    
+
 }

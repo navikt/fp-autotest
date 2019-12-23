@@ -15,13 +15,13 @@ import java.util.List;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
 public abstract class BekreftedePerioderMalDto extends AksjonspunktBekreftelse {
 
-    public BekreftedePerioderMalDto(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public BekreftedePerioderMalDto() {
+        super();
     }
 
     protected List<BekreftedePerioderDto> bekreftedePerioder = new ArrayList<>();
 
-    public void setBekreftedePerioder(List<BekreftedePerioderDto> bekreftedePerioder){
+    public void setBekreftedePerioder(List<BekreftedePerioderDto> bekreftedePerioder) {
         this.bekreftedePerioder = bekreftedePerioder;
     }
 

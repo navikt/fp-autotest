@@ -8,10 +8,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 @BekreftelseKode(kode="5053")
 public class AvklarFaktaMedlemskapBekreftelse extends BekreftedePerioderMalDto {
 
-
-    public AvklarFaktaMedlemskapBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public AvklarFaktaMedlemskapBekreftelse() {
+        super();
     }
 
-    //TODO Stub
 }

@@ -8,8 +8,8 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravBekreftelse.KlageFormkravKa;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravBekreftelse.KlageFormkravNfp;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravKa;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNkBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
@@ -57,17 +57,17 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
-        klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
-                .godkjennAlleFormkrav()
+        KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        klageFormkravNfp.godkjennAlleFormkrav()
                 .setBegrunnelse("blabla");
-        klagebehandler.bekreftAksjonspunktBekreftelse(KlageFormkravNfp.class);
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
         String fritekstBrev = "Fritektst til brev fra NFP.";
         String begrunnelse = "Begrunnelse NFP.";
-        klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
-                .bekreftMedholdUGunst("ULIK_VURDERING")
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        vurderingAvKlageNfpBekreftelse.bekreftMedholdUGunst("ULIK_VURDERING")
                 .fritekstBrev(fritekstBrev)
                 .setBegrunnelse(begrunnelse);
-        klagebehandler.bekreftAksjonspunktBekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         //Mellomlager og tilbakestiller
         verifiserLikhet(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode,
@@ -76,13 +76,14 @@ public class Klage extends ForeldrepengerTestBase {
         verifiserLikhet(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode,
                 "OPPR", "Vurdering av klage");
 
-        klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse1 = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        vurderingAvKlageNfpBekreftelse1
                 .bekreftMedholdUGunst("ULIK_VURDERING")
                 .fritekstBrev(fritekstBrev)
                 .setBegrunnelse(begrunnelse);
-        klagebehandler.bekreftAksjonspunktBekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse1);
 
-        klagebehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
@@ -92,7 +93,7 @@ public class Klage extends ForeldrepengerTestBase {
 
         beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));
-        beslutter.bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
         verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(), "UGUNST_MEDHOLD_I_KLAGE");
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
         verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(), begrunnelse);
@@ -120,28 +121,30 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
-        klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+        KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        klageFormkravNfp
                 .godkjennAlleFormkrav()
                 .setBegrunnelse("blabla");
         debugLoggBehandling(klagebehandler.valgtBehandling);
-        klagebehandler.bekreftAksjonspunktBekreftelse(KlageFormkravNfp.class);
-        klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        vurderingAvKlageNfpBekreftelse
                 .bekreftStadfestet()
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunktBekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_YTELSESVEDTAK_STADFESTET");
 
         // KA
-        klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class)
-                .godkjennAlleFormkrav()
+        KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
+        klageFormkravKa.godkjennAlleFormkrav()
                 .setBegrunnelse("blabla begrunnelse");
-        klagebehandler.bekreftAksjonspunktBekreftelse(KlageFormkravKa.class);
-        klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
-                .bekreftHjemsende()
+        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
+        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
+        vurderingAvKlageNkBekreftelse.bekreftHjemsende()
                 .fritekstBrev("Fritekst brev fra KA")
                 .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunktBekreftelse(VurderingAvKlageNkBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
 
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "HJEMSENDE_UTEN_OPPHEVE");
         verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(), "HJEMSENDE_UTEN_Å_OPPHEVE");
@@ -165,34 +168,37 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
-        klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+        KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        klageFormkravNfp
                 .godkjennAlleFormkrav()
                 .setBegrunnelse("Begrunnelse NFP.");
         debugLoggBehandling(klagebehandler.valgtBehandling);
-        klagebehandler.bekreftAksjonspunktBekreftelse(KlageFormkravNfp.class);
-        klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        vurderingAvKlageNfpBekreftelse
                 .bekreftStadfestet()
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunktBekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_YTELSESVEDTAK_STADFESTET");
 
         // KA
-        klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class)
+        KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
+        klageFormkravKa
                 .godkjennAlleFormkrav()
                 .setBegrunnelse("blabla begrunnelse");
-        klagebehandler.bekreftAksjonspunktBekreftelse(KlageFormkravKa.class);
-        klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
-                .bekreftStadfestet()
+        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
+        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
+        vurderingAvKlageNkBekreftelse.bekreftStadfestet()
                 .fritekstBrev("Fritekst brev fra KA")
                 .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunktBekreftelse(VurderingAvKlageNkBekreftelse.class);
-        klagebehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        beslutter.bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_YTELSESVEDTAK_STADFESTET");
         verifiserKlageVurdering(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(), "STADFESTE_YTELSESVEDTAK");
         verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
@@ -215,34 +221,35 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
-        klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
-                .godkjennAlleFormkrav()
+        KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        klageFormkravNfp.godkjennAlleFormkrav()
                 .setBegrunnelse("blabla");
-        klagebehandler.bekreftAksjonspunktBekreftelse(KlageFormkravNfp.class);
-        klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
-                .bekreftStadfestet()
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        vurderingAvKlageNfpBekreftelse.bekreftStadfestet()
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunktBekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_YTELSESVEDTAK_STADFESTET");
 
         // KA
-        klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class)
-                .godkjennAlleFormkrav()
+        KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
+        klageFormkravKa.godkjennAlleFormkrav()
                 .setBegrunnelse("blabla begrunnelse");
-        klagebehandler.bekreftAksjonspunktBekreftelse(KlageFormkravKa.class);
-        klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
+        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
+        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
+        vurderingAvKlageNkBekreftelse
                 .bekreftMedholdDelvisGunst("ULIK_VURDERING")
                 .fritekstBrev("Fritekst brev fra KA")
                 .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunktBekreftelse(VurderingAvKlageNkBekreftelse.class);
-        klagebehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventTilSakHarKlage();
         beslutter.velgKlageBehandling();
-        beslutter.bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
 
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
         verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer(), "DELVIS_MEDHOLD_I_KLAGE");
@@ -267,18 +274,18 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
-        klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
-                .klageErIkkeKonkret()
+        KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        klageFormkravNfp.klageErIkkeKonkret()
                 .setBegrunnelse("blabla");
-        klagebehandler.bekreftAksjonspunktBekreftelse(KlageFormkravNfp.class);
-        klagebehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .setBegrunnelse("Godkjent");
-        beslutter.bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.setBegrunnelse("Godkjent");
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_AVVIST");
         verifiserInneholder(beslutter.valgtBehandling.getKlagevurdering().getKlageFormkravResultatNFP().getAvvistArsaker(), new Kode("KLAGE_AVVIST_AARSAK", "IKKE_KONKRET"));
         verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");

@@ -8,8 +8,8 @@ public class FastsettBruttoBeregningsgrunnlagSNBekreftelse extends AksjonspunktB
 
     protected Integer bruttoBeregningsgrunnlag;
 
-    public FastsettBruttoBeregningsgrunnlagSNBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public FastsettBruttoBeregningsgrunnlagSNBekreftelse() {
+        super();
     }
 
     public Integer hentBruttoBeregningsgrunnlag() {

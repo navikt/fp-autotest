@@ -11,18 +11,23 @@ public class VurderSoknadsfristBekreftelse extends AksjonspunktBekreftelse{
     protected boolean erVilkarOk;
     protected LocalDate mottattDato;
     protected LocalDate omsorgsovertakelseDato;
-    
-    public VurderSoknadsfristBekreftelse(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-        omsorgsovertakelseDato = behandling.getSoknad().getOmsorgsovertakelseDato();
-        mottattDato = behandling.getSoknad().getMottattDato();
+
+    public VurderSoknadsfristBekreftelse() {
+        super();
     }
-    
+
     public void bekreftVilkårErOk() {
         erVilkarOk = true;
     }
-    
+
     public void bekreftVilkårErIkkeOk() {
         erVilkarOk = false;
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
+        omsorgsovertakelseDato = behandling.getSoknad().getOmsorgsovertakelseDato();
+        mottattDato = behandling.getSoknad().getMottattDato();
     }
 }

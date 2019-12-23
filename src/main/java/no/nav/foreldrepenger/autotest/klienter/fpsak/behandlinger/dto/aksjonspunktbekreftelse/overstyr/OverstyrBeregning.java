@@ -9,12 +9,13 @@ public class OverstyrBeregning extends OverstyringsBekreftelse {
 
     protected long beregnetTilkjentYtelse;
 
-    public OverstyrBeregning(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
-    }
-    
-    public OverstyrBeregning(Fagsak fagsak, Behandling behandling, long beregnetTilkjentYtelse) {
-        super(fagsak, behandling);
+    public OverstyrBeregning(long beregnetTilkjentYtelse) {
+        super();
         this.beregnetTilkjentYtelse = beregnetTilkjentYtelse;
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
     }
 }

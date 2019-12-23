@@ -12,8 +12,8 @@ public class BekreftSvangerskapspengervilkår extends AksjonspunktBekreftelse {
     protected String begrunnelse;
     protected Boolean erVilkarOk;
 
-    public BekreftSvangerskapspengervilkår(Fagsak fagsak, Behandling behandling) {
-        super(fagsak, behandling);
+    public BekreftSvangerskapspengervilkår() {
+        super();
     }
 
     public BekreftSvangerskapspengervilkår godkjenn(){
