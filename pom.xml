@@ -101,11 +101,24 @@
                     <argLine>
                         -Dfile.encoding=UTF-8 -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
-	                <includes>
+                    <properties>
+                        <configurationParameters>
+                            junit.jupiter.extensions.autodetection.enabled = true
+                            junit.jupiter.execution.parallel.enabled = true
+                            junit.jupiter.execution.parallel.mode.default = concurrent
+                            junit.jupiter.execution.parallel.mode.classes.default = same_thread
+                            junit.jupiter.execution.parallel.config.strategy = fixed
+                            junit.jupiter.execution.parallel.config.fixed.parallelism = 5
+                        </configurationParameters>
+                    </properties>
+                    <includes>
                         <include>${testPackage}</include>
                     </includes>
                     <groups>${includeTestsTags}</groups>
                     <excludedGroups>${excludeTestsTags}</excludedGroups>
+                    <systemPropertyVariables>
+                        <application.root>${maven.multiModuleProjectDirectory}</application.root>
+                    </systemPropertyVariables>
                 </configuration>
                 <dependencies>
                     <dependency>
