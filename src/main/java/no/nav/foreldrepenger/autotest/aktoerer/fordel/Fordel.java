@@ -211,11 +211,11 @@ public class Fordel extends Aktoer {
             Vent.til(() -> {
                 historikkRef.set(historikkKlient.hentHistorikk(saksnummerF));
                 return historikkRef.get().stream().anyMatch(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode()));
-            }, 30, () -> "Saken har ikke mottatt inntektsmeldingen.\nHar historikk: " + historikkRef.get());
+            }, 40, () -> "Saken har ikke mottatt inntektsmeldingen.\nHar historikk: " + historikkRef.get());
         } else {
             Vent.til(() -> {
                 return fagsakKlient.søk("" + nyttSaksnummer).size() > 0;
-            }, 30, "Opprettet ikke fagsak for inntektsmelding");
+            }, 40, "Opprettet ikke fagsak for inntektsmelding");
         }
 
         return nyttSaksnummer;
