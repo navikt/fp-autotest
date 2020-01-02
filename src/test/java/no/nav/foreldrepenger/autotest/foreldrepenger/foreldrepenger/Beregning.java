@@ -517,10 +517,10 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
 
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
+    verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
                 .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
-    }
+            ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+}
 
     @Test
     @DisplayName("Vurder besteberegning: Mor med arbeidsforhold og dagpenger på skjæringstidspunktet")
