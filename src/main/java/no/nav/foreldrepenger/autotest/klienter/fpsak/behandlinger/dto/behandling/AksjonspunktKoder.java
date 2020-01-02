@@ -11,6 +11,8 @@ public class AksjonspunktKoder {
     public static final String AUTO_VENT_PÅ_REGISTEROPPLYSNINGER = new String("7010"); //$NON-NLS-1$
     public static final String AUTO_KØET_BEHANDLING = new String("7011"); //$NON-NLS-1$
     public static final String AUTO_VENT_PÅ_INNTEKT_RAPPORTERINGSFRIST  = new String("7014"); //$NON-NLS-1$
+    public static final String AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE = new String("7030");
+
 
     public static final String AVKLAR_ADOPSJONSDOKUMENTAJON = new String("5004"); //$NON-NLS-1$
     public static final String AVKLAR_FAKTA_FOR_PERSONSTATUS = new String("5022"); //$NON-NLS-1$
