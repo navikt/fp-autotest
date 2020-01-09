@@ -35,8 +35,8 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.tpsFeed.TpsFeedKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.ControllerHelper;
@@ -261,19 +261,6 @@ public class Fordel extends Aktoer {
     }
 
     public String journalførInnektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto scenario, Long saksnummer) throws IOException {
-        String xml = inntektsmelding.createInntektesmeldingXML();
-        String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, aktørId, DokumenttypeId.INNTEKTSMELDING);
-        String id = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
-        if (saksnummer != null) {
-            journalpostModell.setSakId(saksnummer.toString());
-            journalpostKlient.knyttSakTilJournalpost(id, "" + saksnummer);
-        }
-        return id;
-    }
-
-    @Deprecated
-    public String journalførInnektsmelding(no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder inntektsmelding, TestscenarioDto scenario, Long saksnummer) throws IOException {
         String xml = inntektsmelding.createInntektesmeldingXML();
         String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
         JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, aktørId, DokumenttypeId.INNTEKTSMELDING);

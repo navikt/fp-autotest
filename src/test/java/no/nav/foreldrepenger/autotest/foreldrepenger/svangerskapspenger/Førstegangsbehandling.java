@@ -3,17 +3,17 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.svangerskapspenger;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.SvangerskapspengerTestBase;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ytelse.SvangerskapspengerYtelseBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.ArbeidsforholdErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.MedlemskapErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.TilretteleggingsErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.builders.ytelse.SvangerskapspengerYtelseBuilder;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.MedlemskapErketyper;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.TilretteleggingsErketyper;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
@@ -28,8 +28,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-
-import static no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingBuilder.createDefaultSvangerskapspenger;
 
 @Tag("fpsak")
 @Tag("svangerskapspenger")

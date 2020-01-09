@@ -2,23 +2,24 @@ package no.nav.foreldrepenger.autotest.base;
 
 import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger.Saksbehandler;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingErketype;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kodeverk;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.ArbeidsforholdBuilder;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingErketype;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenariodataDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
 import no.nav.inntektsmelding.xml.kodeliste._20180702.YtelseKodeliste;
 import no.nav.inntektsmelding.xml.kodeliste._20180702.ÅrsakInnsendingKodeliste;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.EndringIRefusjon;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FpsakTestBase extends TestScenarioTestBase {

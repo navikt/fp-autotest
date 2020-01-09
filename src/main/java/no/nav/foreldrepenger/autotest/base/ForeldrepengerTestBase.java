@@ -1,18 +1,16 @@
 package no.nav.foreldrepenger.autotest.base;
 
-import java.math.BigDecimal;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Oppholdsperiode;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Uttaksperiode;
+
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Gradering;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Oppholdsperiode;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Uttaksperiode;
 
 public class ForeldrepengerTestBase extends FpsakTestBase {
 

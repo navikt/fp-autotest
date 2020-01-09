@@ -214,8 +214,20 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>
-            <artifactId>dokumentgenerator</artifactId>
+            <artifactId>core</artifactId>
             <version>${vtp.versjon}</version>
+        </dependency>
+
+        <!-- Autotest dokumentgenerator avhengigheter -->
+        <dependency>
+            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
+            <artifactId>inntektsmelding</artifactId>
+            <version>1.0-20191219103223-630bd67</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
+            <artifactId>foreldrepengesoknad</artifactId>
+            <version>1.0-20191219103223-630bd67</version>
         </dependency>
 
 

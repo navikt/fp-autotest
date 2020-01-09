@@ -22,8 +22,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.Behandli
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.SimulerOppdragDto;
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.SimuleringDto;
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.SimuleringResultatDto;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.util.DateUtil;
-import no.nav.foreldrepenger.vtp.dokumentgenerator.foreldrepengesoknad.util.JaxbHelper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.util.DateUtil;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.util.JaxbHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 
