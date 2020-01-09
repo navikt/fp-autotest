@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.GraderingPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OverføringÅrsak;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
@@ -32,6 +33,8 @@ import no.nav.vedtak.felles.xml.soeknad.felles.v3.Rettigheter;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Foreldrepenger;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.ObjectFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -364,6 +367,237 @@ public class Uttak extends ForeldrepengerTestBase {
                 fpStartdatoMor
                 );
     }
+
+    @Test
+    public void testcase_mor_søker_ikke_om_uttak_7_uker_etter_fødsel() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("60");
+        var aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+
+        var aktørIdSøker = aktørIdMor;
+        var fnrSøker = fnrMor;
+        var orgNrSøker = orgNrMor;
+        var søkersRolle = SøkersRolle.MOR;
+
+        LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate startDato = fødselsDato.plusMonths(13);
+
+        Fordeling fordeling = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, startDato, startDato.plusMonths(4)));
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsDato), fordeling)
+                .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
+                .build();
+        SøknadBuilder søknad = new SøknadBuilder(
+                foreldrepenger,
+                aktørIdSøker,
+                søkersRolle
+        );
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(
+                søknad.build(), aktørIdSøker, fnrSøker,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+
+        InntektsmeldingBuilder im = lagInntektsmeldingBuilder(
+                inntekt, fnrSøker, startDato, orgNrSøker);
+        fordel.sendInnInntektsmelding(im, aktørIdSøker, fnrSøker, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
+        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
+        fastsettUttaksperioderManueltBekreftelse.avslåAlleManuellePerioder();
+        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+
+        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+
+        List<Aksjonspunkt> apSomSkalTilTotrinnskontroll = beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling();
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(apSomSkalTilTotrinnskontroll);
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+//        Fordeling endringsFordeling = generiskFordeling(
+//                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, startFar, startFar.plusWeeks(2).plusDays(1)));
+//        SøknadBuilder søknadEndring = SøknadErketyper.endringssøknadErketype(
+//                aktøIdFar,
+//                SøkersRolle.FAR,
+//                endringsFordeling,
+//                String.valueOf(saksnummer));
+//        fordel.sendInnSøknad(
+//                        søknadEndring.build(), aktøIdFar, fnrFar,
+//                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+
+        Fordeling fordelingEndring = new ObjectFactory().createFordeling();
+        fordeling.setAnnenForelderErInformert(true);
+        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
+        perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, startDato, startDato.plusWeeks(2).plusDays(1)));
+        SøknadBuilder søknadE = SøknadErketyper.endringssøknadErketype(aktørIdSøker, søkersRolle, fordelingEndring, String.valueOf(saksnummer));
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerE);
+        saksbehandler.ventTilSakHarRevurdering();
+        AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
+        verifiser(saksbehandler.harRevurderingBehandling(), "Det er ikke opprettet revurdering.");
+
+
+    }
+    @Test
+    public void testcase_far_søker_ikke_om_uttak_7_uker_etter_fødsel() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("60");
+        var aktørIdSøker = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
+        var fnrSøker = testscenario.getPersonopplysninger().getAnnenpartIdent();
+        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgNrSøker = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var søkersRolle = SøkersRolle.FAR;
+
+
+        LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate startDato = fødselsDato.plusMonths(10);
+
+        Fordeling fordeling = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, startDato, startDato.plusMonths(4)));
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsDato), fordeling)
+                .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
+                .build();
+        SøknadBuilder søknad = new SøknadBuilder(
+                foreldrepenger, aktørIdSøker, søkersRolle);
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        Long saksnummer =
+                fordel.sendInnSøknad(
+                søknad.build(), aktørIdSøker, fnrSøker, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+
+        InntektsmeldingBuilder im = lagInntektsmeldingBuilder(inntekt, fnrSøker, startDato, orgNrSøker);
+        fordel.sendInnInntektsmelding(im, aktørIdSøker, fnrSøker, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
+        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse =
+                saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
+        fastsettUttaksperioderManueltBekreftelse.avslåAlleManuellePerioder();
+        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+
+        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+        List<Aksjonspunkt> apSomSkalTilTotrinnskontroll = beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling();
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(apSomSkalTilTotrinnskontroll);
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        saksbehandler.opprettBehandlingRevurdering("RE-FRDLING");
+
+        Fordeling endringsFordeling = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, startDato, startDato.plusWeeks(2).plusDays(1)));
+        SøknadBuilder søknadEndring = SøknadErketyper.endringssøknadErketype(aktørIdSøker, søkersRolle, endringsFordeling,
+                saksnummer.toString());
+        fordel.sendInnSøknad(
+                        søknadEndring.build(), aktørIdSøker, fnrSøker,
+                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+
+        InntektsmeldingBuilder im2 = lagInntektsmeldingBuilder(inntekt, fnrSøker, startDato, orgNrSøker);
+        fordel.sendInnInntektsmelding(im2, aktørIdSøker, fnrSøker, saksnummer);
+    }
+
+    @Test
+    public void testcase_mor_søker_med_endringssøknad() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("140");
+        var aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
+        Fordeling fordelingMor = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
+
+        var aktørIdSøker = aktørIdMor;
+        var fnrSøker = fnrMor;
+        var orgNrSøker = orgNrMor;
+        var søkersRolle = SøkersRolle.MOR;
+        var fpStartdato = fpStartdatoMor;
+        var fordeling = fordelingMor;
+
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(SoekersRelasjonErketyper.fødsel(1, fødselsdato), fordeling).build();
+        SøknadBuilder søknad = new SøknadBuilder(foreldrepenger, aktørIdSøker, søkersRolle);
+
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder im = lagInntektsmeldingBuilder(
+                inntekt, fnrSøker, fpStartdato, orgNrSøker);
+        fordel.sendInnInntektsmelding(im, aktørIdSøker, fnrSøker, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+        debugFritekst("Ferdig med første behandling");
+
+        // Endringssøknad
+        Fordeling fordelingEndring = generiskFordeling(uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        SøknadBuilder søknadE = SøknadErketyper.endringssøknadErketype(aktørIdSøker, søkersRolle, fordelingEndring, saksnummer.toString());
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerE);
+        saksbehandler.ventTilSakHarRevurdering();
+    }
+    @Test
+    public void testcase_far_søker_med_endringssøknad() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("140");
+        var aktørIdSøker = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
+        var fnrSøker = testscenario.getPersonopplysninger().getAnnenpartIdent();
+        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgNrSøker = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdato = fødselsdato.plusWeeks(7);
+        Fordeling fordeling = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStartdato, fpStartdato.plusWeeks(6)));
+
+        var søkersRolle = SøkersRolle.FAR;
+
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(SoekersRelasjonErketyper.fødsel(1, fødselsdato), fordeling).build();
+        SøknadBuilder søknad = new SøknadBuilder(foreldrepenger, aktørIdSøker, søkersRolle);
+
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        Long saksnummer = fordel.sendInnSøknad(søknad.build(), aktørIdSøker, fnrSøker, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+        InntektsmeldingBuilder im = lagInntektsmeldingBuilder(
+                inntekt, fnrSøker, fpStartdato, orgNrSøker);
+        fordel.sendInnInntektsmelding(im, aktørIdSøker, fnrSøker, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+        debugFritekst("Ferdig med første behandling");
+
+        // Endringssøknad
+        Fordeling fordelingEndring = generiskFordeling(uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        SøknadBuilder søknadE = SøknadErketyper.endringssøknadErketype(aktørIdSøker, søkersRolle, fordelingEndring, saksnummer.toString());
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerE);
+        saksbehandler.ventTilSakHarRevurdering();
+    }
+
 
     @Test
     public void testcase_morOgfar_endringsøknad_overføringperioderFørstePeriodeTilFørstegangssøknad() throws Exception {

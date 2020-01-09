@@ -39,9 +39,19 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
     }
     public void godkjennAlleManuellePerioder(int utbetalingsgrad){
+        godkjennAlleManuellePerioder(utbetalingsgrad, 100);
+    }
+    public void godkjennAlleManuellePerioder(int utbetalingsgrad, int trekkdager){
         for(UttakResultatPeriode uttakPeriode : perioder) {
             if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
-                godkjennPeriode(uttakPeriode, 100, false, false);
+                godkjennPeriode(uttakPeriode, 100, false, false, trekkdager);
+            }
+        }
+    }
+    public void avslåAlleManuellePerioder(){
+        for(UttakResultatPeriode uttakPeriode : perioder) {
+            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
+                avvisPeriode(uttakPeriode, 0);
             }
         }
     }
@@ -132,6 +142,10 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
     }
     public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad, boolean flerbarnsdager, boolean samtidigUttak ) {
+        godkjennPeriode(periode, utbetalingsgrad, flerbarnsdager, samtidigUttak, 100);
+    }
+    public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad, boolean flerbarnsdager,
+                                boolean samtidigUttak, int trekkdager ) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2001", "§14-6: Uttak er oppfylt"));
         periode.setOppholdÅrsak(new Kode("OPPHOLD_AARSAK_TYPE", "-", "Ikke satt eller valgt kode"));
@@ -141,6 +155,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         //Utsettelses perioder trenger ikke trekkdager. set dem til 0
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
+            aktivitet.setTrekkdagerDesimaler(BigDecimal.valueOf(trekkdager));
             if(!periode.getUtsettelseType().kode.equals("-")) {
                 aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
             }
