@@ -5,7 +5,13 @@ import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OverføringÅrsak;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.GraderingBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.UttaksperiodeBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ytelse.ForeldrepengerYtelseBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.*;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.*;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaStartdatoForForeldrepengerBekreftelse;
@@ -18,23 +24,16 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.GraderingPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OverføringÅrsak;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.GraderingBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.UttaksperiodeBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ytelse.ForeldrepengerYtelseBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.*;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenariodataDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Rettigheter;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Foreldrepenger;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.ObjectFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -44,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -165,6 +165,49 @@ public class Uttak extends ForeldrepengerTestBase {
                 .medArbeidsforholdId(arbeidsforholdID3)
                 ;
         fordel.sendInnInntektsmelding(im2,aktørIdMor, fnrMor, saksnummer);
+    }
+    @Test
+    public void testcase_mor_flere_arbeidsforhold_endring_i_fordeling() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("165");
+        String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+        List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
+        Arbeidsforhold tilkommet = arbeidsforhold.get(0);
+        String orgNr = tilkommet.getArbeidsgiverOrgnr();
+        int inntektPerMåned = 60_000;
+        BigDecimal refusjon = BigDecimal.valueOf(60_000);
+        Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(
+                false, BigInteger.valueOf(30_000), false);
+        Fordeling fordeling = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
+        Foreldrepenger foreldrepenger = new ForeldrepengerYtelseBuilder(
+                SoekersRelasjonErketyper.fødsel(1, fødselsdato), fordeling)
+                .medSpesiellOpptjening(opptjening)
+                .build();
+        SøknadBuilder søknad = new SøknadBuilder(foreldrepenger, søkerAktørIdent, SøkersRolle.MOR);
+
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
+                orgNr);
+        fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+        InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmeldingBuilder(inntektPerMåned, fnr, fpStartdato,
+                orgNr).medRefusjonsBelopPerMnd(refusjon);
+        fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
+
+        Fordeling fordelingEndring = new Fordeling();
+        fordelingEndring.setAnnenForelderErInformert(true);
+        List<LukketPeriodeMedVedlegg> perioder = fordelingEndring.getPerioder();
+        ;
+        LocalDate graderingFom = fødselsdato.plusWeeks(6);
+        perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, graderingFom.minusDays(1)));
+        perioder.add(new GraderingBuilder(STØNADSKONTOTYPE_FELLESPERIODE, graderingFom, fødselsdato.plusWeeks(10))
+                .medGraderingSN(50)
+                .build());
     }
     @Test
     public void testcase_mor_annenForelderHarRett() throws Exception {
