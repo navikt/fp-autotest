@@ -466,9 +466,7 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        debugFritekst("Ferdig med første behandling");
 
-        // Endringssøknad
         Fordeling fordelingEndring = generiskFordeling(
                 uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE,
                         fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)),
@@ -509,9 +507,7 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        debugFritekst("Ferdig med første behandling");
 
-        // Endringssøknad
         Fordeling fordelingEndring = generiskFordeling(
                 uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)),
                 uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(12).minusDays(1)));
