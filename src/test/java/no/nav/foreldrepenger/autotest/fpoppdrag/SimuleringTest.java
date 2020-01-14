@@ -1,30 +1,13 @@
 package no.nav.foreldrepenger.autotest.fpoppdrag;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle.SAKSBEHANDLER;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Random;
-
-import javax.xml.bind.JAXBException;
-
+import no.nav.foreldrepenger.autotest.base.FpoppdragTestBase;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import no.nav.foreldrepenger.autotest.base.FpoppdragTestBase;
-import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.BehandlingIdDto;
-import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.SimulerOppdragDto;
-import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.SimuleringDto;
-import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.SimuleringResultatDto;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.util.DateUtil;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.util.JaxbHelper;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
 
 
 @Tag("fpoppdrag")
