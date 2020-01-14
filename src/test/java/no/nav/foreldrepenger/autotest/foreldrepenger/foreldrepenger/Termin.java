@@ -210,10 +210,8 @@ public class Termin extends ForeldrepengerTestBase {
         verifiser(resultatPerioder.get(0).getAktiviteter().get(0).getStønadskontoType().kode.equals("MØDREKVOTE"), "Feil stønadskontotype.");
         verifiser(resultatPerioder.get(1).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden søkt for skal være innvilget.");
         verifiser(resultatPerioder.get(1).getAktiviteter().get(0).getStønadskontoType().kode.equals("MØDREKVOTE"), "Feil stønadskontotype.");
-        String skjaeringstidspunkt = termindato.minusWeeks(3).toString();
-        verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getSkjaeringstidspunktForeldrepenger().equals(skjaeringstidspunkt), "Mismatch på skjæringstidspunkt.");
-
-
+        LocalDate skjaeringstidspunkt = termindato.minusWeeks(3);
+        verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato().equals(skjaeringstidspunkt), "Mismatch på skjæringstidspunkt.");
     }
 
 }

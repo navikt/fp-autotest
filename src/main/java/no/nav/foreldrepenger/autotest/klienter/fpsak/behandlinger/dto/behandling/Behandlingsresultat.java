@@ -17,7 +17,7 @@ public class Behandlingsresultat {
     protected String avslagsarsakFritekst;
     protected String overskrift;
     protected String fritekstbrev;
-    protected String skjaeringstidspunktForeldrepenger;
+    protected SkjæringstidspunktDto skjæringstidspunkt;
 
     @Override
     public String toString() {
@@ -28,6 +28,7 @@ public class Behandlingsresultat {
 
     public Kode getAvslagsarsak() { return avslagsarsak;}
 
-    public String getSkjaeringstidspunktForeldrepenger() {return skjaeringstidspunktForeldrepenger;}
-
+    public SkjæringstidspunktDto getSkjæringstidspunkt() {
+        return skjæringstidspunkt;
+    }
 }
