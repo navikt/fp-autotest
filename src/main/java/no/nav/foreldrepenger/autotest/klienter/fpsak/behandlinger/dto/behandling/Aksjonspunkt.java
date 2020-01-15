@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
@@ -21,6 +20,7 @@ public class Aksjonspunkt {
     protected Kode kategori;
     protected Boolean toTrinnsBehandling;
     protected Boolean toTrinnsBehandlingGodkjent;
+    protected Boolean kanLoses;
 
     public Kode getDefinisjon() {
         return definisjon;
@@ -33,6 +33,7 @@ public class Aksjonspunkt {
     public boolean skalTilToTrinnsBehandling() {
         return toTrinnsBehandling;
     }
+    public boolean getKanLoses() {return kanLoses;}
 
     public AksjonspunktBekreftelse getBekreftelse() {
         try {
