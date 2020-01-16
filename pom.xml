@@ -16,11 +16,11 @@
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
 
-	<vtp.versjon>1.0_20200116134813_659daf4</vtp.versjon>
+        <vtp.versjon>1.0_20200116134813_659daf4</vtp.versjon>
 
-	<aspectj.version>1.9.4</aspectj.version>
+        <aspectj.version>1.9.4</aspectj.version>
 
-	<jackson.version>2.10.1</jackson.version>
+        <jackson.version>2.10.1</jackson.version>
 
     </properties>
 
