@@ -16,7 +16,7 @@
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
 
-	<vtp.versjon>1.0_20200107094110_69bc8a1</vtp.versjon>
+	<vtp.versjon>1.0_20200116134813_659daf4</vtp.versjon>
 
 	<aspectj.version>1.9.4</aspectj.version>
 
