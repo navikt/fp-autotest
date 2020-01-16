@@ -4,12 +4,10 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.SvangerskapspengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ytelse.SvangerskapspengerYtelseBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.MedlemskapErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.TilretteleggingsErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SvangerskapspengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.erketyper.ArbeidsforholdErketyper;
+import no.nav.foreldrepenger.autotest.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
@@ -18,7 +16,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
-import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Svangerskapspenger;
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -50,19 +47,17 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
                 LocalDate.now().plusDays(2),
                 ArbeidsforholdErketyper.virksomhet(orgNrMor));
 
-        final Svangerskapspenger svangerskapspenger = new SvangerskapspengerYtelseBuilder(
+        final SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(
+                morAktoerId, SøkersRolle.MOR,
                 LocalDate.now().plusWeeks(4),
-                MedlemskapErketyper.medlemskapNorge(),
-                Collections.singletonList(tilrettelegging))
-                .build();
-
-        final SøknadBuilder soknad = new SøknadBuilder(svangerskapspenger, morAktoerId, SøkersRolle.MOR);
+                Collections.singletonList(tilrettelegging));
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
 
-        final long saksnummer = fordel.sendInnSøknad(soknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        final InntektsmeldingBuilder inntektsmelding = createDefaultSvangerskapspenger(beløpMor, fnrMor, orgNrMor);
+        final InntektsmeldingBuilder inntektsmelding = lagSvangerskapspengerInntektsmelding(fnrMor, beløpMor, orgNrMor);
         fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -112,21 +107,15 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
                 LocalDate.now().plusWeeks(3),
                 ArbeidsforholdErketyper.virksomhet(orgnr2));
 
-        final Svangerskapspenger svangerskapspenger = new SvangerskapspengerYtelseBuilder(
-                LocalDate.now().plusWeeks(4),
-                MedlemskapErketyper.medlemskapNorge(),
-                List.of(forsteTilrettelegging, andreTilrettelegging2))
-                .build();
-
-        final SøknadBuilder soknad = new SøknadBuilder(svangerskapspenger, morAktoerId, SøkersRolle.MOR);
+        SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR, LocalDate.now().plusWeeks(4),
+                List.of(forsteTilrettelegging, andreTilrettelegging2));
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-
-        final long saksnummer = fordel.sendInnSøknad(soknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
         // Inntektsmelding
-        InntektsmeldingBuilder inntektsmelding1 = createDefaultSvangerskapspenger(inntektsperioder.get(0).getBeløp(), fnrMor, orgnr1);
-        InntektsmeldingBuilder inntektsmelding2 = createDefaultSvangerskapspenger(inntektsperioder.get(1).getBeløp(), fnrMor, orgnr2);
+        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, inntektsperioder.get(0).getBeløp(), orgnr1);
+        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, inntektsperioder.get(1).getBeløp(), orgnr2);
         fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -160,7 +149,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
 
-        final InntektsmeldingBuilder inntektsmelding = createDefaultSvangerskapspenger(beløpMor, fnrMor, orgNrMor);
+        final InntektsmeldingBuilder inntektsmelding = lagSvangerskapspengerInntektsmelding(fnrMor, beløpMor, orgNrMor);
         final long saksnummer = fordel.sendInnInntektsmelding(inntektsmelding, testscenario, null);
 
         final Tilrettelegging tilrettelegging = TilretteleggingsErketyper.helTilrettelegging(
@@ -168,15 +157,12 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
                 LocalDate.now().plusWeeks(1),
                 ArbeidsforholdErketyper.virksomhet(orgNrMor));
 
-        final Svangerskapspenger svangerskapspenger = new SvangerskapspengerYtelseBuilder(
+        SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(
+                morAktoerId, SøkersRolle.MOR,
                 LocalDate.now().plusWeeks(4),
-                MedlemskapErketyper.medlemskapNorge(),
-                Collections.singletonList(tilrettelegging))
-                .build();
+                Collections.singletonList(tilrettelegging));
 
-        final SøknadBuilder soknad = new SøknadBuilder(svangerskapspenger, morAktoerId, SøkersRolle.MOR);
-
-        fordel.sendInnSøknad(soknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER, saksnummer);
+        fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
 

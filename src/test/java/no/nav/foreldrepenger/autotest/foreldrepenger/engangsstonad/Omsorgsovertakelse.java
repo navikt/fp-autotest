@@ -3,6 +3,10 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvForeldreansvarAndreLedd;
@@ -10,14 +14,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaOmsorgOgForeldreansvarBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ytelse.EngangstønadYtelseBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SoekersRelasjonErketyper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.vedtak.felles.xml.soeknad.engangsstoenad.v3.Engangsstønad;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.SoekersRelasjonTilBarnet;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -37,10 +35,9 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     public void MorSøkerOmsorgsovertakelseGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
-        Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
-        SøknadBuilder søknad = new SøknadBuilder(engangsstønadYtelse, søkerAktørID, SøkersRolle.MOR)
-                .withTilleggsopplysninger("Autogenerert erketypetest far søker på omsorgsovertakelse");
+
+        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
+                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
 
@@ -76,10 +73,9 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     public void morSøkerOmsorgsovertakelseAvvist() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
-        Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
-        SøknadBuilder søknad = new SøknadBuilder(engangsstønadYtelse, søkerAktørID, SøkersRolle.MOR)
-                .withTilleggsopplysninger("Autogenerert erketypetest far søker på omsorgsovertakelse");
+
+        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
+                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
 
@@ -113,10 +109,8 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     public void behenadleOmsorgsovertakelseMorOverstyrt() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
-        Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
-        SøknadBuilder søknad = new SøknadBuilder(engangsstønadYtelse, søkerAktørID, SøkersRolle.MOR)
-                .withTilleggsopplysninger("Autogenerert erketypetest far søker på omsorgsovertakelse");
+        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
+                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
 
@@ -142,10 +136,9 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     public void farSøkerOmsorgsovertakelseGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
-        Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
-        SøknadBuilder søknad = new SøknadBuilder(engangsstønadYtelse, søkerAktørID, SøkersRolle.MOR)
-                .withTilleggsopplysninger("Autogenerert erketypetest far søker på omsorgsovertakelse");
+        SoekersRelasjonTilBarnet relasjonTilBarnet = RelasjonTilBarnetErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
+        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
+                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
 
@@ -181,10 +174,8 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
     public void farSøkerForeldreansvarGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
-        Engangsstønad engangsstønadYtelse = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
-        SøknadBuilder søknad = new SøknadBuilder(engangsstønadYtelse, søkerAktørID, SøkersRolle.MOR)
-                .withTilleggsopplysninger("Autogenerert erketypetest far søker på omsorgsovertakelse");
+        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
+                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
 
@@ -192,11 +183,9 @@ public class Omsorgsovertakelse extends EngangsstonadTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaTillegsopplysningerBekreftelse.class);
 
-
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
         avklarFaktaOmsorgOgForeldreansvarBekreftelse.setVilkårType(saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_8"));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
-
 
         var vurderingAvForeldreansvarAndreLedd = saksbehandler.hentAksjonspunktbekreftelse(VurderingAvForeldreansvarAndreLedd.class);
         vurderingAvForeldreansvarAndreLedd.bekreftGodkjent();

@@ -3,6 +3,10 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VarselOmRevurderingBekreftelse;
@@ -13,15 +17,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrBeregning;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ytelse.EngangstønadYtelseBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SoekersRelasjonErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.vedtak.felles.xml.soeknad.engangsstoenad.v3.Engangsstønad;
-import no.nav.vedtak.felles.xml.soeknad.felles.v3.SoekersRelasjonTilBarnet;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -41,10 +38,9 @@ public class Fodsel extends EngangsstonadTestBase {
     @Description("Mor søker fødsel - godkjent happy case")
     public void morSøkerFødselGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 testscenario.getPersonopplysninger().getFødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -62,10 +58,9 @@ public class Fodsel extends EngangsstonadTestBase {
     @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i tps")
     public void morSøkerFødselAvvist() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 LocalDate.now().minusDays(30L));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -97,10 +92,9 @@ public class Fodsel extends EngangsstonadTestBase {
     @Description("Far søker registrert fødsel og blir avvist fordi far søker")
     public void farSøkerFødselRegistrert() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("60");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 testscenario.getPersonopplysninger().getFødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -119,10 +113,9 @@ public class Fodsel extends EngangsstonadTestBase {
     @Description("Mor søker fødsel overstyrt vilkår adopsjon fra godkjent til avslått")
     public void morSøkerFødselOverstyrt() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 LocalDate.now().minusDays(30L));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -165,10 +158,9 @@ public class Fodsel extends EngangsstonadTestBase {
     @Description("Mor søker fødsel - beregning overstyrt fra ett beløp til 10 kroner")
     public void morSøkerFødselBeregningOverstyrt() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 testscenario.getPersonopplysninger().getFødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -216,10 +208,9 @@ public class Fodsel extends EngangsstonadTestBase {
     public void morSøkerFødselFlereBarn() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("53");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
-                aktørID, SøkersRolle.MOR,
-                2,
-                LocalDate.now().minusDays(30L));
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
+                aktørID, SøkersRolle.MOR, LocalDate.now().minusDays(30L))
+                .medSoekersRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(2, LocalDate.now().minusDays(30L)));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -254,10 +245,9 @@ public class Fodsel extends EngangsstonadTestBase {
     @Description("Mor søker fødsel med verge - skal få aksjonspunkt om registrering av verge når man er under 18")
     public void morSøkerFødselMedVerge() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("54");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 LocalDate.now().minusDays(30L));
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -300,10 +290,8 @@ public class Fodsel extends EngangsstonadTestBase {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusWeeks(1);
-        SoekersRelasjonTilBarnet relasjonTilBarnet = SoekersRelasjonErketyper.fødsel(1, fødselsdato);
-        Engangsstønad engangsstønad = new EngangstønadYtelseBuilder(relasjonTilBarnet).build();
-        SøknadBuilder søknad = new SøknadBuilder(engangsstønad, aktørID, SøkersRolle.MOR);
 
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
@@ -318,10 +306,9 @@ public class Fodsel extends EngangsstonadTestBase {
     @Description("Medmor søker fødsel - søkand blir avslått fordi søker er medmor")
     public void medmorSøkerFødsel() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("90");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MEDMOR,
-                1,
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

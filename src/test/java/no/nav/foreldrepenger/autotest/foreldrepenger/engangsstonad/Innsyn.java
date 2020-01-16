@@ -3,15 +3,14 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvInnsynBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import org.junit.jupiter.api.Disabled;
@@ -33,10 +32,9 @@ public class Innsyn extends EngangsstonadTestBase {
     @Description("Behandle innsyn for mor - godkjent happy case")
     public void behandleInnsynMorGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -71,10 +69,9 @@ public class Innsyn extends EngangsstonadTestBase {
     @Description("Behandle innsyn for mor - avvist ved vurdering")
     public void behandleInnsynMorAvvist() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadFødselErketype(
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -107,10 +104,9 @@ public class Innsyn extends EngangsstonadTestBase {
     @Description("Behandle innsyn for far - avvist ved vurdering")
     public void behandleInnsynFarAvvist() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+        EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR,
-                1,
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

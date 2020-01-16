@@ -2,10 +2,10 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
@@ -14,9 +14,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.List;
-
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper.foreldrepengesøknadTerminErketype;
 
 public class TpsFeedTest extends ForeldrepengerTestBase {
 
@@ -36,12 +33,20 @@ public class TpsFeedTest extends ForeldrepengerTestBase {
         LocalDate termindato = LocalDate.now().plusWeeks(3);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(5);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        SøknadBuilder søknad = foreldrepengesøknadTerminErketype(aktørID, SøkersRolle.MOR, 1, termindato);
+        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario, startDatoForeldrepenger);
-        fordel.sendInnInntektsmeldinger(inntektsmeldinger, testscenario, saksnummer);
+        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                startDatoForeldrepenger,
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+        fordel.sendInnInntektsmelding(
+                inntektsmeldinger,
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                saksnummer);
 
 
         String fødselsnummerMor = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -67,12 +72,21 @@ public class TpsFeedTest extends ForeldrepengerTestBase {
         LocalDate termindato = LocalDate.now().plusWeeks(3);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(5);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        SøknadBuilder søknad = foreldrepengesøknadTerminErketype(aktørID, SøkersRolle.MOR, 1, termindato);
+        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario, startDatoForeldrepenger);
-        fordel.sendInnInntektsmeldinger(inntektsmeldinger, testscenario, saksnummer);
+        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                startDatoForeldrepenger,
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+        fordel.sendInnInntektsmelding(
+                inntektsmeldinger,
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                saksnummer);
+
 
 
         String fødselsnummerMor = testscenario.getPersonopplysninger().getSøkerIdent();

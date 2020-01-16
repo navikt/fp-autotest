@@ -222,12 +222,12 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
             <artifactId>inntektsmelding</artifactId>
-            <version>1.0-20200114142910-1f2b236</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
             <artifactId>foreldrepengesoknad</artifactId>
-            <version>1.0-20200114142910-1f2b236</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
 

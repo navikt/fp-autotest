@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.eksempler;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
+import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import org.junit.jupiter.api.Tag;
@@ -13,16 +12,15 @@ import org.junit.jupiter.api.Tag;
 import java.time.LocalDate;
 
 @Tag("eksempel")
-public class OppretteRevurdering extends FpsakTestBase {
+public class OppretteRevurdering extends ForeldrepengerTestBase {
 
     public void opretteRevurderingPåTerminsøknad() throws Exception {
         //Opprett scenario og søknad
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(
+                LocalDate.now().plusWeeks(3),
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                SøkersRolle.MOR,
-                1,
-                LocalDate.now().plusWeeks(3));
+                SøkersRolle.MOR);
 
         //Send inn søknad
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
