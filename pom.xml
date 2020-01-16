@@ -20,7 +20,7 @@
 
         <aspectj.version>1.9.4</aspectj.version>
 
-        <jackson.version>2.10.1</jackson.version>
+        <jackson.version>2.10.2</jackson.version>
 
     </properties>
 
