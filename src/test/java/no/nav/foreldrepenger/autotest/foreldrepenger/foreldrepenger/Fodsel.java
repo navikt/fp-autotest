@@ -1,44 +1,15 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.STØNADSKONTOTYPE_MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.UTSETTELSETYPE_ARBEID;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.UTSETTELSETYPE_INNLAGTBARN;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.UTSETTELSETYPE_INNLAGTSØKER;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.UTSETTELSETYPE_SYKDOMSKADE;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ytelse.ForeldrepengerYtelseBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.*;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.*;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadEndringForeldrepengerBekreftelse;
@@ -56,19 +27,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-import no.nav.foreldrepenger.autotest.klienter.vtp.expect.dto.ExpectRequestDto;
-import no.nav.foreldrepenger.autotest.klienter.vtp.expect.dto.ExpectTokenDto;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ytelse.ForeldrepengerYtelseBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.OpptjeningErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.RettigheterErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SoekersRelasjonErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.vtp.felles.ExpectPredicate;
-import no.nav.foreldrepenger.vtp.felles.ExpectRepository.Mock;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
@@ -78,6 +36,25 @@ import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.ObjectFactory;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.FordelingErketyper.*;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -479,8 +456,6 @@ public class Fodsel extends ForeldrepengerTestBase {
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         logger.info("Ident: " + søkerIdent);
-
-        ExpectTokenDto token = expectKlient.createExpectation(new ExpectRequestDto(Mock.GSAK.toString(), "opprettSak", new ExpectPredicate("aktør", søkerIdent)));
 
         SøknadBuilder søknad = SøknadErketyper.foreldrepengesøknadFødselErketype(søkerAktørIdent, SøkersRolle.FAR, 1, fødselsdato);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
