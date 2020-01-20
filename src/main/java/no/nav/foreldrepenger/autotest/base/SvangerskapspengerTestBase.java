@@ -15,9 +15,8 @@ import java.util.List;
 public class SvangerskapspengerTestBase extends FpsakTestBase {
 
     protected SvangerskapspengerBuilder lagSvangerskapspengerSøknad(String søkerAktørId, SøkersRolle søkersRolle, LocalDate termin, List<Tilrettelegging> tilretteleggingListe) {
-        return new SvangerskapspengerBuilder(søkerAktørId, søkersRolle)
+        return new SvangerskapspengerBuilder(søkerAktørId, søkersRolle, tilretteleggingListe)
                 .medTermindato(termin)
-                .medTilretteleggingListe(tilretteleggingListe)
                 .medMedlemskap(MedlemskapErketyper.medlemskapNorge());
     }
 

@@ -222,14 +222,13 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
             <artifactId>inntektsmelding</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0-20200120151506-1e86c2c</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
             <artifactId>foreldrepengesoknad</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0-20200120151506-1e86c2c</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.assertj</groupId>

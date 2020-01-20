@@ -52,7 +52,9 @@ public class TilretteleggingsErketyper{
         return tilrettelegging;
     }
 
-    public static Tilrettelegging ingenTilrettelegging(LocalDate behovForTilretteleggingFom, LocalDate tilrettelagtArbeidFom, Arbeidsforhold arbeidsforhold) {
+    public static Tilrettelegging ingenTilrettelegging(LocalDate behovForTilretteleggingFom,
+                                                       LocalDate tilrettelagtArbeidFom,
+                                                       Arbeidsforhold arbeidsforhold) {
         Tilrettelegging tilrettelegging = new Tilrettelegging();
         tilrettelegging.setBehovForTilretteleggingFom(behovForTilretteleggingFom);
         tilrettelegging.setArbeidsforhold(arbeidsforhold);
