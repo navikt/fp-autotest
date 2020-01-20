@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.MannAdoptererAleneBekreftelse;
@@ -11,9 +13,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrAdopsjonsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +33,7 @@ public class Adopsjon extends EngangsstonadTestBase {
     @Description("Mor søker adopsjon - godkjent happy case")
     public void morSøkerAdopsjonGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
+        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,false);
 
@@ -68,7 +67,7 @@ public class Adopsjon extends EngangsstonadTestBase {
     @Description("Mor søker adopsjon - avvist - barn er over 15 år og blir dermed avlått")
     public void morSøkerAdopsjonAvvist() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
+        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,false);
 
@@ -103,7 +102,7 @@ public class Adopsjon extends EngangsstonadTestBase {
     @Description("Mor søker adopsjon med overstyrt vilkår som tar behandlingen fra innvilget til avslått")
     public void morSøkerAdopsjonOverstyrt() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
+        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,false);
 
@@ -148,7 +147,7 @@ public class Adopsjon extends EngangsstonadTestBase {
     @Description("Far søker adopsjon - godkjent happy case")
     public void farSøkerAdopsjonGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
+        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR,false);
 
@@ -186,7 +185,7 @@ public class Adopsjon extends EngangsstonadTestBase {
     @Description("Far søker adopsjon av ektefelles barn fører til avvist behandling")
     public void farSøkerAdopsjonAvvist() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadAdopsjonErketype(
+        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR,true);
 

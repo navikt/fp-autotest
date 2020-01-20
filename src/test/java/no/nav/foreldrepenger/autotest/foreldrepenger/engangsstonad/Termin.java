@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
@@ -11,9 +13,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.erketyper.SøknadErketyper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import org.junit.jupiter.api.Disabled;
@@ -35,10 +34,9 @@ public class Termin extends EngangsstonadTestBase {
     @Description("Mor søker termin - godkjent happy case")
     public void morSøkerTerminGodkjent() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+        EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -74,10 +72,9 @@ public class Termin extends EngangsstonadTestBase {
     @Description("Mor søker termin men mangler dokumentasjon og sender melding om manglende brev")
     public void morSøkerTerminManglerDokumentasjon() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+        EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -101,10 +98,9 @@ public class Termin extends EngangsstonadTestBase {
     @Description("Mor søker termin overstyrt vilkår fødsel fra oppfylt til avvist")
     public void morSøkerTerminOvertyrt() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+        EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -152,10 +148,9 @@ public class Termin extends EngangsstonadTestBase {
     @Description("Far søker termin avslått pga søker er far")
     public void farSøkerTermin() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+        EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR,
-                1,
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -180,10 +175,9 @@ public class Termin extends EngangsstonadTestBase {
     public void settBehandlingPåVentOgGjenopptaOgHenlegg() throws Exception {
         //Opprett scenario og søknad
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+        EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 LocalDate.now().plusWeeks(3));
 
         //Send inn søknad
@@ -209,10 +203,9 @@ public class Termin extends EngangsstonadTestBase {
     @Description("Mor søker termin 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
     public void morSøkerTermin25DagerTilbakeITid() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        SøknadBuilder søknad = SøknadErketyper.engangstønadsøknadTerminErketype(
+        EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
-                1,
                 LocalDate.now().minusDays(26));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
