@@ -62,7 +62,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
         final long saksnummer = fordel.sendInnSøknad(soknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        final InntektsmeldingBuilder inntektsmelding = createDefaultSvangerskapspenger(beløpMor, fnrMor, orgNrMor);
+        final InntektsmeldingBuilder inntektsmelding = createDefaultSvangerskapspenger(beløpMor, fnrMor, orgNrMor, 0);
         fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -125,8 +125,8 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         final long saksnummer = fordel.sendInnSøknad(soknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
         // Inntektsmelding
-        InntektsmeldingBuilder inntektsmelding1 = createDefaultSvangerskapspenger(inntektsperioder.get(0).getBeløp(), fnrMor, orgnr1);
-        InntektsmeldingBuilder inntektsmelding2 = createDefaultSvangerskapspenger(inntektsperioder.get(1).getBeløp(), fnrMor, orgnr2);
+        InntektsmeldingBuilder inntektsmelding1 = createDefaultSvangerskapspenger(inntektsperioder.get(0).getBeløp(), fnrMor, orgnr1, 0);
+        InntektsmeldingBuilder inntektsmelding2 = createDefaultSvangerskapspenger(inntektsperioder.get(1).getBeløp(), fnrMor, orgnr2, 0);
         fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -160,7 +160,7 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
 
-        final InntektsmeldingBuilder inntektsmelding = createDefaultSvangerskapspenger(beløpMor, fnrMor, orgNrMor);
+        final InntektsmeldingBuilder inntektsmelding = createDefaultSvangerskapspenger(beløpMor, fnrMor, orgNrMor, 0);
         final long saksnummer = fordel.sendInnInntektsmelding(inntektsmelding, testscenario, null);
 
         final Tilrettelegging tilrettelegging = TilretteleggingsErketyper.helTilrettelegging(

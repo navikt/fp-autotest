@@ -130,10 +130,12 @@ public class FpsakTestBase extends TestScenarioTestBase {
     protected InntektsmeldingBuilder createDefaultSvangerskapspenger(
             Integer beløp,
             String fnr,
-            String orgnummer) {
+            String orgnummer,
+            Integer refusjonskrav) {
         InntektsmeldingBuilder inntektsmelding = new InntektsmeldingBuilder()
                 .medArbeidstakerFNR(fnr)
                 .medBeregnetInntekt(BigDecimal.valueOf(beløp))
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(refusjonskrav))
                 .medYtelse(YtelseKodeliste.SVANGERSKAPSPENGER)
                 .medAarsakTilInnsending(ÅrsakInnsendingKodeliste.NY)
                 .medArbeidsgiver(orgnummer, "41925090")
