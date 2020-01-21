@@ -31,4 +31,8 @@ public class BeregningsgrunnlagPeriodeDto {
     public LocalDate getBeregningsgrunnlagPeriodeTom() {
         return beregningsgrunnlagPeriodeTom;
     }
+
+    public int getDagsats() {
+        return dagsats;
+    }
 }
