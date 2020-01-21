@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -23,7 +24,12 @@ public interface HttpSession {
             if(entity == null){
                 return "";
             }
-            return EntityUtils.toString(entity, "UTF-8");
+            final var mapper = JsonKlient.getObjectMapper();
+            final var content = EntityUtils.toString(entity, "UTF-8");
+            if (content.isEmpty()) {
+                return "";
+            }
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(content, Object.class));
         }
         catch (Exception e) {
             throw new RuntimeException(e.getMessage());
