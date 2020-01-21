@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.qameta.allure.Attachment;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.ContentType;
@@ -68,7 +69,7 @@ public abstract class JsonRest extends Rest {
     }
 
     protected String postOgVerifiser(String url, Object requestData, Map<String, String> headers, StatusRange expectedStatusRange) throws IOException {
-        String request = requestData == null ? "{}" : hentObjectMapper().writeValueAsString(requestData);
+        String request = requestData == null ? "{}" : hentObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(requestData);
         HttpResponse response = postJson(url, request, headers);
         String json = hentResponseBody(response);
         if (expectedStatusRange != null) {
@@ -140,7 +141,7 @@ public abstract class JsonRest extends Rest {
 
     protected StringEntity hentJsonPostEntity(String json) {
         try {
-            return new StringEntity(json, ContentType.APPLICATION_JSON);
+            return new StringEntity(logJsonSomAttachment(json), ContentType.APPLICATION_JSON);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return null;
@@ -149,5 +150,10 @@ public abstract class JsonRest extends Rest {
 
     protected ObjectMapper hentObjectMapper() {
         return JsonKlient.getObjectMapper();
+    }
+
+    @Attachment(value = "HttpRequest", type = "application/json")
+    private String logJsonSomAttachment(String json) {
+        return json;
     }
 }

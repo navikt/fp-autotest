@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.fordel;
 
 import java.io.IOException;
 
+import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.BehandlendeFagsystem;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.FagsakInformasjon;
@@ -35,11 +36,12 @@ public class FordelKlient extends FpsakKlient{
         return postOgHentJson(url, vurderFagsystem, BehandlendeFagsystem.class, StatusRange.STATUS_SUCCESS);
     }
 
+    @Step("Sender journalpost")
     public void journalpost(JournalpostMottak journalpostMottak) throws IOException {
         String url = hentRestRotUrl() + JOURNALPOST_URL;
         postOgVerifiser(url, journalpostMottak, StatusRange.STATUS_SUCCESS);
     }
-
+    @Step("Oppretter fagsak")
     public Saksnummer fagsakOpprett(OpprettSak journalpost) throws IOException {
         String url = hentRestRotUrl() + FAGSAK_OPPRETT_URL;
         return postOgHentJson(url, journalpost, Saksnummer.class, StatusRange.STATUS_SUCCESS);
@@ -50,6 +52,7 @@ public class FordelKlient extends FpsakKlient{
         return postOgHentJson(url, id, FagsakInformasjon.class, StatusRange.STATUS_SUCCESS);
     }
 
+    @Step("Knytter fagsak til journalpost")
     public void fagsakKnyttJournalpost(JournalpostKnyttning knyttJournalpost) throws IOException {
         String url = hentRestRotUrl() + FAGSAK_KNYTT_JOURNALPOST_URL;
         postOgVerifiser(url, knyttJournalpost, StatusRange.STATUS_SUCCESS);

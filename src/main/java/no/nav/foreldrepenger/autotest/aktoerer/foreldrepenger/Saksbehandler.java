@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
@@ -41,6 +42,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 
 public class Saksbehandler extends Aktoer {
 
@@ -150,7 +154,7 @@ public class Saksbehandler extends Aktoer {
     /*
      * Velger fagsak
      */
-    @Step("Velger fagsak {fagsak}")
+    @Step("Velger fagsak")
     public void velgFagsak(Fagsak fagsak) throws Exception {
         if (fagsak == null) {
             throw new RuntimeException("Kan ikke velge fagsak. fagsak er null");
@@ -202,8 +206,9 @@ public class Saksbehandler extends Aktoer {
         velgBehandling(kodeverk.BehandlingType.getKode("BT-006"));
     }
 
-    @Step("Velger behandling {behandling}")
+    @Step("Velger behandling")
     public void velgBehandling(Behandling behandling) throws Exception {
+        debugLoggBehandling(behandling);
         ventPåStatus(behandling);
 
         Deffered<Behandling> dBehandling = Deffered.deffered(() -> {
@@ -227,6 +232,7 @@ public class Saksbehandler extends Aktoer {
         setAnnenPartBehandling(dAnnenPartBehandling);
     }
 
+    @Step("Populerer behandling")
     private void populateBehandling(Behandling behandling) throws Exception {
 
         valgtBehandling.setAksjonspunkter(Deffered.deffered(() -> {
@@ -390,7 +396,7 @@ public class Saksbehandler extends Aktoer {
         refreshBehandling();
     }
 
-    public <T extends AksjonspunktBekreftelse> T aksjonspunktBekreftelse(Class<T> type) {
+    public <T extends AksjonspunktBekreftelse> T aksjonspunktBekreftelse(Class<T> type) throws JsonProcessingException {
         return hentAksjonspunktbekreftelse(type);
     }
 
@@ -399,7 +405,7 @@ public class Saksbehandler extends Aktoer {
      */
     @SuppressWarnings("unchecked")
     @Step("Henter aksjonspunktbekreftelse for {type}")
-    public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) {
+    public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) throws JsonProcessingException {
         for (Aksjonspunkt aksjonspunkt : valgtBehandling.getAksjonspunkter()) {
             if (type.isInstance(aksjonspunkt.getBekreftelse())) {
                 AksjonspunktBekreftelse bekreftelse = aksjonspunkt.getBekreftelse();
@@ -407,7 +413,7 @@ public class Saksbehandler extends Aktoer {
                 return (T) bekreftelse;
             }
         }
-        AllureHelper.debugLoggBehandling("Behandling mangler aksjonspunkt: ", valgtBehandling);
+        debugLoggBehandling("Behandling mangler aksjonspunkt: ", valgtBehandling);
         throw new RuntimeException(
                 "Valgt behandling (" + valgtBehandling.id + " - " + valgtFagsak.saksnummer + ") har ikke aksjonspunktbekreftelse: " + type.getName());
     }
@@ -434,19 +440,21 @@ public class Saksbehandler extends Aktoer {
     /*
      * Sjekker om aksjonspunkt av gitt kode er på behandlingen
      */
-    public boolean harAksjonspunkt(String kode) {
-        AllureHelper.debugLoggBehandling(valgtBehandling);
+    @Step("Sjekker om aksjonspunkt av gitt kode er på behandling")
+    public boolean harAksjonspunkt(String kode) throws JsonProcessingException {
+        debugLoggBehandling(valgtBehandling);
         return null != hentAksjonspunkt(kode);
     }
 
     /*
      * Bekrefte aksjonspunkt bekreftelse
      */
+    @Step("Henter og bekrefter aksjonspunkt for {type}")
     public <T extends AksjonspunktBekreftelse> void bekreftAksjonspunktMedDefaultVerdier(Class<T> type) throws Exception {
         bekreftAksjonspunkt(hentAksjonspunktbekreftelse(type));
     }
 
-    @Step("Bekrefter aksjonspunkt {bekreftelse}")
+
     public void bekreftAksjonspunkt(AksjonspunktBekreftelse bekreftelse) throws Exception {
         List<AksjonspunktBekreftelse> bekreftelser = new ArrayList<>();
         bekreftelser.add(bekreftelse);
@@ -456,8 +464,9 @@ public class Saksbehandler extends Aktoer {
     public void bekreftAksjonspunktbekreftelserer(AksjonspunktBekreftelse... bekreftelser) throws Exception {
         bekreftAksjonspunktbekreftelserer(Arrays.asList(bekreftelser));
     }
-
+    @Step("Bekrefter aksjonspunktbekreftelser")
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) throws Exception {
+        debugAksjonspunktbekreftelser(bekreftelser);
         BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
@@ -472,7 +481,7 @@ public class Saksbehandler extends Aktoer {
         overstyr(bekreftelser);
     }
 
-    @Step("Overstyrer Aksonspunkt")
+    @Step("Overstyrer aksjonspunkt")
     public void overstyr(List<AksjonspunktBekreftelse> bekreftelser) throws Exception {
         OverstyrAksjonspunkter aksjonspunkter = new OverstyrAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
         behandlingerKlient.overstyr(aksjonspunkter);
@@ -734,11 +743,13 @@ public class Saksbehandler extends Aktoer {
     /*
      * Opretter behandling på gitt fagsak
      */
+    @Step("Oppretter behandling på gitt fagsak")
     private void opprettBehandling(Kode behandlingstype, Kode årsak, Fagsak fagsak) throws Exception {
         behandlingerKlient.putBehandlinger(new BehandlingNy(fagsak.saksnummer, behandlingstype.kode, årsak == null ? null : årsak.kode));
         velgFagsak(valgtFagsak); // Henter fagsaken på ny
     }
 
+    @Step("Henter prosesstasker for behandling")
     private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) throws IOException {
         SokeFilterDto filter = new SokeFilterDto();
         filter.setSisteKjoeretidspunktFraOgMed(LocalDateTime.now().minusMinutes(5));
@@ -807,6 +818,7 @@ public class Saksbehandler extends Aktoer {
         }
     }
 
+    @Step("Sender fødselshendelse")
     public void sendFødselsHendelse(String aktørIdForeldre, LocalDate fødselsdato) throws Exception{
         FødselHendelse fødselHendelse= new FødselHendelse(aktørIdForeldre, fødselsdato);
         hendelseKlient.sendHendelse(fødselHendelse);

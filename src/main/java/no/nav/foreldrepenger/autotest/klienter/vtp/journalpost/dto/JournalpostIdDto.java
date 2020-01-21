@@ -3,11 +3,11 @@ package no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JournalpostId {
+public class JournalpostIdDto {
     protected String journalpostId;
-    
-    public JournalpostId() {
-        
+
+    public JournalpostIdDto() {
+
     }
 
     public String getJournalpostId() {
@@ -17,6 +17,6 @@ public class JournalpostId {
     public void setJournalpostId(String journalpostId) {
         this.journalpostId = journalpostId;
     }
-    
-    
+
+
 }

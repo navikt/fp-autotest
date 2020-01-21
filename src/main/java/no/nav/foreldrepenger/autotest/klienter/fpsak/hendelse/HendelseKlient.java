@@ -1,10 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.hendelse;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdPost;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.hendelse.dto.FødselHendelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.hendelse.dto.Hendelse;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
@@ -20,6 +17,7 @@ public class HendelseKlient extends FpsakKlient {
 
     public HendelseKlient(HttpSession session) {super(session);}
 
+    @Step("Sender inn hendelse")
     public void sendHendelse(FødselHendelse hendelse) throws IOException {
         String url = hentRestRotUrl() + SEND_HENDELSE_URL;
         postOgVerifiser(url,new HendelseWrapper(hendelse), StatusRange.STATUS_200);
