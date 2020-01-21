@@ -394,7 +394,7 @@ public class Uttak extends ForeldrepengerTestBase {
         fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);
     }
     @Test
-    public void testcase_farOgMor_farSøkerEtterMorMedMottatdatoFørMor() throws Exception {
+    public void testcase_farOgMor_farSøkerEtterMor_medMottatdatoFørMor() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("140");
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -458,13 +458,13 @@ public class Uttak extends ForeldrepengerTestBase {
         InntektsmeldingBuilder inntektsmeldingerFar = lagInntektsmelding(
                 testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrFar,
-                fødselsdato,
+                fpStartFar,
                 testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldingerFar,
                 aktørIdFar,
                 fnrFar,
-                saksnummerMor);
+                saksnummerFar);
 
     }
 
@@ -680,7 +680,7 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         Fordeling endringFordeling = generiskFordeling(
-                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato.plusWeeks(7), fødselsDato.plusWeeks(8).minusDays(1)),
+//                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato.plusWeeks(7), fødselsDato.plusWeeks(8).minusDays(1)),
                 uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
                 uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
                 uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)));
@@ -761,6 +761,35 @@ public class Uttak extends ForeldrepengerTestBase {
         inntektsmeldingBuilderListFar.add(inntektsmeldingFarEn);
         inntektsmeldingBuilderListFar.add(inntektsmeldingFarTo);
         fordel.sendInnInntektsmeldinger(inntektsmeldingBuilderListFar, aktørIdFar, fnrFar, saknsummerFar);
+
+    }
+    @Test
+    public void testcase_mor_gradering() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("141");
+        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+
+        LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate foreldrepengerStartDato = fødselsDato.minusWeeks(3);
+
+        Fordeling fordelingMor = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, foreldrepengerStartDato, fødselsDato.minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato, fødselsDato.plusWeeks(10).minusDays(1)),
+                graderingsperiodeArbeidstaker(
+                        STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato.plusWeeks(10), fødselsDato.plusWeeks(17).minusDays(1),
+                        "342352362", 33),
+                utsettelsesperiode(UTSETTELSETYPE_INNLAGTBARN, fødselsDato.plusWeeks(17), fødselsDato.plusWeeks(20) )
+        );
+        ForeldrepengerBuilder søknadMor = lagSøknadForeldrepengerFødsel(fødselsDato, søkerAktørIdent, SøkersRolle.MOR)
+                .medFordeling(fordelingMor);
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        long saksnummerMor = fordel.sendInnSøknad(
+                søknadMor.build(),
+                søkerAktørIdent, søkerIdent,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
+                null);
+        List<InntektsmeldingBuilder> im = makeInntektsmeldingFromTestscenario(testscenario, foreldrepengerStartDato);
+        fordel.sendInnInntektsmeldinger(im, testscenario, saksnummerMor);
 
     }
 
@@ -1069,9 +1098,9 @@ public class Uttak extends ForeldrepengerTestBase {
         Kode godkjenningskode = saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_OK");
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FAKTA_UTTAK);
         List<KontrollerFaktaPeriode> faktaUttakPerioderList = saksbehandler.valgtBehandling.getKontrollerFaktaPerioderManuell();
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
+        AvklarFaktaUttakBekreftelse avklarFaktaUttakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
                 .godkjennPeriode(faktaUttakPerioderList.get(0), godkjenningskode, true);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
