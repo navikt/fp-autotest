@@ -29,7 +29,8 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     protected BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
     protected boolean fastsattAvSaksbehandler;
     protected double bortfaltNaturalytelse;
-    
+    protected double dagsats;
+
     public Kode getAktivitetStatus() {
         return aktivitetStatus;
     }
@@ -72,5 +73,9 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
 
     public LocalDate getBeregningsgrunnlagFom() {
         return beregningsgrunnlagFom;
+    }
+
+    public double getDagsats() {
+        return dagsats;
     }
 }
