@@ -149,7 +149,6 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
-        final List<Inntektsperiode> inntektsperioder = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder();
         final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
         final String orgnr1 = arbeidsforhold.get(0).getArbeidsgiverOrgnr();
         final String orgnr2 = arbeidsforhold.get(1).getArbeidsgiverOrgnr();
