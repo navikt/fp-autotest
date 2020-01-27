@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Sok;
@@ -26,11 +27,13 @@ public class FagsakKlient extends FpsakKlient{
         return getOgHentJson(url, Status.class, StatusRange.STATUS_SUCCESS);
     }
 
+    @Step("Henter fagsak {saksnummer}")
     public Fagsak getFagsak(String saksnummer) throws IOException {
         String url = hentRestRotUrl() + String.format(FAGSAK_URL_FORMAT, saksnummer);
         return getOgHentJson(url, Fagsak.class, StatusRange.STATUS_200);
     }
 
+    @Step("Søker etter fagsak {søk}")
     public ArrayList<Fagsak> søk(String søk) throws IOException {
         return søk(new Sok(søk));
     }

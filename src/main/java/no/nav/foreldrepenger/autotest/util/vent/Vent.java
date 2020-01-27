@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.util.vent;
 
+import io.qameta.allure.Step;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.Callable;
@@ -16,6 +18,7 @@ public class Vent {
         });
     }
 
+    @Step("Venter til callable er 'true'; poller i {timeoutInSeconds} sekunder.")
     public static void til(Callable<Boolean> callable, int timeoutInSeconds, Callable<String> errorMessageProducer) throws Exception {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusSeconds(timeoutInSeconds);

@@ -1,6 +1,32 @@
 package no.nav.foreldrepenger.autotest.aktoerer.fordel;
 
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
+import io.qameta.allure.Step;
+import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.*;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sak.SakKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sak.dto.OpprettSakRequestDTO;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sak.dto.OpprettSakResponseDTO;
+import no.nav.foreldrepenger.autotest.klienter.vtp.tpsFeed.TpsFeedKlient;
+import no.nav.foreldrepenger.autotest.util.vent.Vent;
+import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.ControllerHelper;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGenerator;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.vedtak.felles.xml.soeknad.v3.Soeknad;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -11,40 +37,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostId;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostKnyttning;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostMottak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.OpprettSak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.Saksnummer;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sak.SakKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sak.dto.OpprettSakRequestDTO;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sak.dto.OpprettSakResponseDTO;
-import no.nav.foreldrepenger.autotest.klienter.vtp.tpsFeed.TpsFeedKlient;
-import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
-import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.ControllerHelper;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGenerator;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.vedtak.felles.xml.soeknad.v3.Soeknad;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
 
 public class Fordel extends Aktoer {
 
@@ -67,7 +60,7 @@ public class Fordel extends Aktoer {
     public Fordel() {
         fordelKlient = new FordelKlient(session);
         behandlingerKlient = new BehandlingerKlient(session);
-        journalpostKlient = new JournalforingKlient(BasicHttpSession.session());
+        journalpostKlient = new JournalforingKlient(session);
         sakKlient = new SakKlient(session);
         fagsakKlient = new FagsakKlient(session);
         historikkKlient = new HistorikkKlient(session);
@@ -104,7 +97,6 @@ public class Fordel extends Aktoer {
             if (behandlinger.size() > 1) {
                 Thread.sleep(5000);
             }
-            AllureHelper.debugLoggBehandlingsliste(behandlinger);
             return !behandlinger.isEmpty() && behandlingerKlient.statusAsObject(behandlinger.get(0).uuid, null) == null;
         }, 60, "Saken hadde ingen behandlinger");
 
@@ -221,7 +213,6 @@ public class Fordel extends Aktoer {
         return nyttSaksnummer;
     }
 
-    @Step("Sender inn inntektsmelding")
     public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto testscenario, Long saksnummer) throws Exception {
         return sendInnInntektsmelding(inntektsmelding, testscenario.getPersonopplysninger().getSøkerAktørIdent(), testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
     }
@@ -231,6 +222,7 @@ public class Fordel extends Aktoer {
         return saksnummer;
     }
 
+    @Step("Sender inn innteksmeldinger")
     public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String aktørId, String fnr, Long saksnummer) throws Exception {
         int gammelAntallIM = 0;
         if (saksnummer != null) {
@@ -250,6 +242,7 @@ public class Fordel extends Aktoer {
         return saksnummer;
     }
 
+    @Step("Henter antall innteksmeldingerMottatt for saksnummer [{saksnummer}]")
     private int antallInntektsmeldingerMottatt(long saksnummer) throws IOException {
         List<HistorikkInnslag> historikk = historikkKlient.hentHistorikk(saksnummer);
         int antall = historikk.stream().filter(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode())).collect(Collectors.toList()).size();
@@ -292,6 +285,7 @@ public class Fordel extends Aktoer {
     /*
      * Sender inn journalpost og returnerer saksnummer
      */
+    @Step("Sender inn journalpost")
     private Long sendInnJournalpost(String xml, String journalpostId, String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode, String dokumentKategori, String aktørId, Long saksnummer) throws IOException {
 
         if (saksnummer == null || saksnummer.longValue() == 0L) {

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -1321,6 +1322,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
     //TODO må ta inn fordeling som blir laget i søknad for å kunne verifisere rikitg på hva som er i VL!
     //Denne verifisering kan bare brukes hvis fordeling = fordelingMorHappyCaseLong
+    @Step("Verifiserer utttaksperioder")
     private void verifiserUttak(int antallAktiviteter, List<UttakResultatPeriode> perioder) {
         assertThat(perioder).hasSize(4);
         verifiserUttaksperiode(perioder.get(0), STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, antallAktiviteter);
@@ -1340,6 +1342,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         }
     }
 
+    @Step("Verifiserer tilkjent ytelse")
     private void verifiserTilkjentYtelse(BeregningsresultatMedUttaksplan beregningResultatForeldrepenger, boolean medFullRefusjon) {
         BeregningsresultatPeriode[] perioder = beregningResultatForeldrepenger.getPerioder();
         assertThat(beregningResultatForeldrepenger.isSokerErMor()).isTrue();

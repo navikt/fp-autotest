@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 
+import io.qameta.allure.Attachment;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.cookie.Cookie;
@@ -18,12 +19,10 @@ import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 
 public abstract class Rest {
 
-    protected HttpSession session;
-
     protected static final String ACCEPT_TEXT_HEADER = "application/text";
-
     private static final String WRONG_STATUS_MESSAGE_FORMAT = "Request returned unexpected status code expected range %s got %s\n%s";
     private static final String AUTHORIZATION_FORMAT = "Basic %s";
+    protected HttpSession session;
 
     public Rest(HttpSession session) {
         this.session = session;
@@ -98,6 +97,7 @@ public abstract class Rest {
         return String.format(AUTHORIZATION_FORMAT, encodedAuth);
     }
 
+    @Attachment(value = "HttpResponse", type = "application/json")
     protected String hentResponseBody(HttpResponse response) {
         return HttpSession.readResponse(response);
     }
