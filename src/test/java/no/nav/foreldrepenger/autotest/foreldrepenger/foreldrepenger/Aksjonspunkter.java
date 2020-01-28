@@ -75,7 +75,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.AVKLAR_ADOPSJONSDOKUMENTAJON);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_ADOPSJONSDOKUMENTAJON);
     }
 
     @Test
@@ -118,11 +118,11 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
         saksbehandler.gjenopptaBehandling();
 
-        saksbehandler.harAksjonspunktSomKanLøses(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
+        saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
         saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
 
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.VURDER_OPPTJENINGSVILKÅRET);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_OPPTJENINGSVILKÅRET);
     }
     @Test
     @DisplayName("VURDER_FAKTA_FOR_ATFL_SN")
@@ -156,19 +156,19 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
         AvklarArbeidsforholdBekreftelse arbeidsforholdBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
         arbeidsforholdBekreftelse.bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunkt(arbeidsforholdBekreftelse);
 
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL);
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
         vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse.leggTilMottarYtelse(Collections.emptyList());
@@ -209,7 +209,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
 
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse.setTermindato(termindato);
@@ -217,7 +217,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         avklarFaktaTerminBekreftelse.setUtstedtdato(termindato.minusWeeks(3));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.VURDER_OM_VILKÅR_FOR_SYKDOM_OPPFYLT);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_OM_VILKÅR_FOR_SYKDOM_OPPFYLT);
         VurderVilkaarForSykdomBekreftelse vurderVilkaarForSykdomBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderVilkaarForSykdomBekreftelse.class);
         vurderVilkaarForSykdomBekreftelse.setErMorForSykVedFodsel(true);
