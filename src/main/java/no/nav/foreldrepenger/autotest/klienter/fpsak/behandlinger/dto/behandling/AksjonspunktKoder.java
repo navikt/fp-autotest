@@ -83,6 +83,8 @@ public class AksjonspunktKoder {
     public static final String MANUELL_VURDERING_AV_KLAGE_NK = new String("5036"); //$NON-NLS-1$
     public static final String VURDERING_AV_FORMKRAV_KLAGE_NFP = new String("5082"); //$NON-NLS-1$
     public static final String VURDERING_AV_FORMKRAV_KLAGE_KA = new String("5083"); //$NON-NLS-1$
+    public static final String VURDER_OPPTJENINGSVILKÅRET = "5089";
+
     public static final String VURDER_INNSYN = new String("5037"); //$NON-NLS-1$
     public static final String FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS = new String("5038"); //$NON-NLS-1$
     public static final String FASTSETT_BEREGNINGSGRUNNLAG_TIDSBEGRENSET_ARBEIDSFORHOLD = new String("5047"); //$NON-NLS-1$

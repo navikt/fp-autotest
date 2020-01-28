@@ -164,6 +164,7 @@ public class FordelingErketyper {
         return generiskFordeling(uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, familehendelseDato.plusWeeks(10).plusDays(1), familehendelseDato.plusWeeks(16)));
     }
 
+    //TODO Flytte til TestBase
     public static Fordeling generiskFordeling(LukketPeriodeMedVedlegg... perioder) {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);

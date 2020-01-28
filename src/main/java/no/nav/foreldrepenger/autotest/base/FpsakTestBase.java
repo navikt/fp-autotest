@@ -179,7 +179,8 @@ public class FpsakTestBase extends TestScenarioTestBase {
         return inntektsmelding;
     }
     @Deprecated
-    protected InntektsmeldingBuilder lagInntektsmeldingBuilderPrivatArbeidsgiver(Integer beløp, String fnr, LocalDate fpStartdato, String fnrArbeidsgiver) {
+    protected InntektsmeldingBuilder lagInntektsmeldingBuilderPrivatArbeidsgiver(Integer beløp, String fnr,
+                                                                                 LocalDate fpStartdato, String fnrArbeidsgiver) {
         InntektsmeldingBuilder inntektsmelding = new InntektsmeldingBuilder()
                 .medBeregnetInntekt(BigDecimal.valueOf(beløp))
                 .medArbeidstakerFNR(fnr)

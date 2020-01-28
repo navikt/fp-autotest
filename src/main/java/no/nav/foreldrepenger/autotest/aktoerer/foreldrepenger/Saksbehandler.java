@@ -430,6 +430,15 @@ public class Saksbehandler extends Aktoer {
         }
         return null;
     }
+    @Step("Henter aksjonspunkt {kode}")
+    public Aksjonspunkt hentAksjonspunktSomKanLøses(String kode) {
+        for (Aksjonspunkt aksjonspunkt : valgtBehandling.getAksjonspunkter()) {
+            if (aksjonspunkt.getDefinisjon().kode.equals(kode) && aksjonspunkt.getKanLoses()) {
+                return aksjonspunkt;
+            }
+        }
+        return null;
+    }
     @Step("Henter aksjonspunkt som skal til totrinns kontroll")
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
         return valgtBehandling.getAksjonspunkter().stream()
@@ -444,6 +453,13 @@ public class Saksbehandler extends Aktoer {
     public boolean harAksjonspunkt(String kode) throws JsonProcessingException {
         debugLoggBehandling(valgtBehandling);
         return null != hentAksjonspunkt(kode);
+    }
+    /*
+     * Sjekker om aksjonspunkt av gitt kode er på behandlingen
+     */
+    public boolean harAksjonspunktSomKanLøses(String kode) {
+        AllureHelper.debugLoggBehandling(valgtBehandling);
+        return null != hentAksjonspunktSomKanLøses(kode);
     }
 
     /*
@@ -626,6 +642,19 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             refreshBehandling();
             return harAksjonspunkt(kode);
+        }, 30, () -> "Saken  hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
+    }
+    /*
+     * Aksjonspunkt
+     */
+    @Step("Venter på aksjonspunkt {kode}")
+    public void ventTilAksjonspunktSomKanLøses(String kode) throws Exception {
+        if (harAksjonspunktSomKanLøses(kode)) {
+            return;
+        }
+        Vent.til(() -> {
+            refreshBehandling();
+            return harAksjonspunktSomKanLøses(kode);
         }, 30, () -> "Saken  hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
     }
 
