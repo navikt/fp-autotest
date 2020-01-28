@@ -454,13 +454,6 @@ public class Saksbehandler extends Aktoer {
         debugLoggBehandling(valgtBehandling);
         return null != hentAksjonspunkt(kode);
     }
-    /*
-     * Sjekker om aksjonspunkt av gitt kode er på behandlingen
-     */
-    public boolean harAksjonspunktSomKanLøses(String kode) {
-        AllureHelper.debugLoggBehandling(valgtBehandling);
-        return null != hentAksjonspunktSomKanLøses(kode);
-    }
 
     /*
      * Bekrefte aksjonspunkt bekreftelse
@@ -642,19 +635,6 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             refreshBehandling();
             return harAksjonspunkt(kode);
-        }, 30, () -> "Saken  hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
-    }
-    /*
-     * Aksjonspunkt
-     */
-    @Step("Venter på aksjonspunkt {kode}")
-    public void ventTilAksjonspunktSomKanLøses(String kode) throws Exception {
-        if (harAksjonspunktSomKanLøses(kode)) {
-            return;
-        }
-        Vent.til(() -> {
-            refreshBehandling();
-            return harAksjonspunktSomKanLøses(kode);
         }, 30, () -> "Saken  hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
     }
 
