@@ -73,6 +73,10 @@ services:
       - "NAIS_APP_NAME=FPABAKUS"
       - "LOADBALANCER_URL=http://vtp:8060"
       - "LOADBALANCER_FQDN=vtp:8080"
+      - "FPABAKUS_IT_FP_GRUNNLAG_URL=https://vtp:8063/rest/infotrygd/grunnlag/foreldrepenger"
+      - "FPABAKUS_IT_SVP_GRUNNLAG_URL=https://vtp:8063/rest/infotrygd/grunnlag/svangerskapspenger"
+      - "FPABAKUS_IT_SP_GRUNNLAG_URL=https://vtp:8063/rest/infotrygd/grunnlag/sykepenger"
+      - "FPABAKUS_IT_PS_GRUNNLAG_URL=https://vtp:8063/rest/infotrygd/grunnlag/paaroerende-sykdom"
     volumes:
       - "${WORKSPACE}/.modig:/var/run/secrets/naisd.io"
     ports:
