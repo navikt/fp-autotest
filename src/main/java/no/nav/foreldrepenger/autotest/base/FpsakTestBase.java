@@ -37,6 +37,7 @@ public class FpsakTestBase extends TestScenarioTestBase {
     protected Saksbehandler overstyrer;
     protected Saksbehandler beslutter;
     protected Saksbehandler klagebehandler;
+    protected no.nav.foreldrepenger.autotest.aktoerer.fptilbake.Saksbehandler tbksaksbehandler;
 
     /*
      * VTP
