@@ -167,6 +167,16 @@ public class Uttak extends ForeldrepengerTestBase {
                 søkerIdent,
                 saksnummer);
     }
+    @Test
+    public void testcase_mor_papirsøknad() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("75");
+
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        fordel.sendInnSøknad(null,
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+    }
     @Tag("KOR2020")
     @Test
     public void testcase_mor_KOR1_refusjon_arbeidsforholdID() throws Exception {
@@ -386,13 +396,6 @@ public class Uttak extends ForeldrepengerTestBase {
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr()
         );
         fordel.sendInnInntektsmelding(im, aktørIdMor, fnrMor, saksnummer);
-    }
-    @Test
-    public void testcase_mor_papirsøknad() throws Exception {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("140");
-
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);
     }
     @Test
     public void testcase_farOgMor_farSøkerEtterMor_medMottatdatoFørMor() throws Exception {
@@ -1307,49 +1310,6 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderManglendeFodselBekreftelse.class);
     }
 
-    @Test
-    public void testcase_mor_TFP_945() throws Exception {
-        TestscenarioDto testscenario = opprettTestscenario("140");
-        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
-        var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
-        var søkerInntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder()
-                .get(0).getBeløp();
-        var søkerOrgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold()
-                .get(0).getArbeidsgiverOrgnr();
-        Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, startDatoForeldrepenger, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1))
-        );
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørId, SøkersRolle.MOR)
-                .medFordeling(fordeling);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), søkerAktørId, søkerIdent, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
-
-        InntektsmeldingBuilder im = lagInntektsmelding(søkerInntekt, søkerIdent, startDatoForeldrepenger, søkerOrgNr);
-        fordel.sendInnInntektsmelding(im, søkerAktørId, søkerIdent, saksnummer);
-
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
-
-        Fordeling endringFordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, startDatoForeldrepenger, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(20).minusDays(1))
-        );
-        ForeldrepengerBuilder nySøknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørId, SøkersRolle.MOR)
-                .medFordeling(endringFordeling);
-        fordel.sendInnSøknad(nySøknad.build(), søkerAktørId, søkerIdent, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, saksnummer);
-//        fordel.sendInnInntektsmelding(im, søkerAktørId, søkerIdent, saksnummer);
-
-
-//        Fordeling endringFordeling = generiskFordeling(
-//                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, startDatoForeldrepenger, fødselsdato.minusDays(1)),
-//                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(20).minusDays(1))
-//        );
-//        EndringssøknadBuilder endringssøknad = lagEndringssøknad(søkerAktørId, SøkersRolle.MOR, endringFordeling, String.valueOf(saksnummer) );
-//        fordel.sendInnSøknad(endringssøknad.build(), søkerAktørId, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
-    }
 
 
 }
