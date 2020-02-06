@@ -19,7 +19,10 @@ public class ArbeidsforholdErketyper {
     }
 
     public static SelvstendigNæringsdrivende selvstendigNæringsdrivende(){
-        return new SelvstendigNæringsdrivende();
+        SelvstendigNæringsdrivende selvstendigNæringsdrivende = new SelvstendigNæringsdrivende();
+        selvstendigNæringsdrivende.setOpplysningerOmRisikofaktorer("");
+        selvstendigNæringsdrivende.setOpplysningerOmTilretteleggingstiltak("");
+        return selvstendigNæringsdrivende;
     }
 
     public static Frilanser frilanser() {

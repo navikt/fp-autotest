@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.erketyper;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Periode;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.*;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.AnnenOpptjeningTyper;
+import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Land;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Virksomhetstyper;
 
 import java.math.BigInteger;
@@ -72,6 +73,27 @@ public class OpptjeningErketyper {
         naering.setErNyIArbeidslivet(erNyIArbeidslivet);
 
         naeringer.add(naering);
+        return opptjening;
+
+    }
+    public static Opptjening medUtenlandskArbeidsforhold(String arbeidsgiverNavn, String landKode){
+
+        Opptjening opptjening = new Opptjening();
+
+        List<UtenlandskArbeidsforhold> utenlandskArbeidsforholdList = opptjening.getUtenlandskArbeidsforhold();
+        UtenlandskArbeidsforhold utenlandskArbeidsforhold = new UtenlandskArbeidsforhold();
+
+        Periode periode = new Periode();
+        periode.setFom((LocalDate.now().minusYears(4)));
+        periode.setTom((LocalDate.now()));
+        utenlandskArbeidsforhold.setPeriode(periode);
+
+        utenlandskArbeidsforhold.setArbeidsgiversnavn(arbeidsgiverNavn);
+        Land land = new Land();
+        land.setKode(landKode);
+        utenlandskArbeidsforhold.setArbeidsland(land);
+
+        utenlandskArbeidsforholdList.add(utenlandskArbeidsforhold);
         return opptjening;
 
     }

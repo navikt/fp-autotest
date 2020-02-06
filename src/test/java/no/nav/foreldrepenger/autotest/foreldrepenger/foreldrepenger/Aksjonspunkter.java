@@ -9,6 +9,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
+import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVilkaarForSykdomBekreftelse;
@@ -223,5 +224,26 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         vurderVilkaarForSykdomBekreftelse.setErMorForSykVedFodsel(true);
         saksbehandler.bekreftAksjonspunkt(vurderVilkaarForSykdomBekreftelse);
 
+    }
+    @DisplayName("AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE")
+    @Test
+    public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_() throws Exception{
+        TestscenarioDto testscenario = opprettTestscenario("75");
+
+        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(
+                LocalDate.now().plusWeeks(3),
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                SøkersRolle.MOR)
+                .medSpesiellOpptjening(
+                        OpptjeningErketyper.medUtenlandskArbeidsforhold("1222", "ATG")
+                );
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(), DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
+                null);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE);
     }
 }
