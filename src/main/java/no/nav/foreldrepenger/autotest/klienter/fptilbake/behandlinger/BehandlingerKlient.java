@@ -21,6 +21,6 @@ public class BehandlingerKlient extends FptilbakeKlient {
     @Step("Oppretter ny tilbakekreving")
     public void putTilbakekreving(BehandlingOpprett behandlingOpprett) throws IOException {
         String url = hentRestRotUrl() + BEHANDLINGER_OPPRETT;
-        putJson(url, behandlingOpprett, StatusRange.STATUS_SUCCESS);
+        postOgVerifiser(url, behandlingOpprett, StatusRange.STATUS_SUCCESS);
     }
 }

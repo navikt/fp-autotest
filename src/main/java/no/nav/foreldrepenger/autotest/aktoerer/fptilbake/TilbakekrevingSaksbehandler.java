@@ -7,16 +7,16 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behand
 import java.io.IOException;
 import java.util.UUID;
 
-public class Saksbehandler extends Aktoer {
+public class TilbakekrevingSaksbehandler extends Aktoer {
 
     private BehandlingerKlient behandlingerKlient;
 
-    public Saksbehandler() {
+    public TilbakekrevingSaksbehandler() {
         super();
         behandlingerKlient = new BehandlingerKlient(session);
     }
 
-    public Saksbehandler(Rolle rolle) throws IOException {
+    public TilbakekrevingSaksbehandler(Rolle rolle) throws IOException {
         this();
         erLoggetInnMedRolle(rolle);
     }
