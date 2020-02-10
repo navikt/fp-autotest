@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
 
 @Tag("tilbakekreving")
 public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
@@ -59,16 +60,10 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
         saksbehandler.ikkeVentPåStatus = true;
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgFørstegangsbehandling();
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.Type.VEDLEGG_MOTTATT);
-        AllureHelper.debugLoggBehandling(saksbehandler.valgtBehandling);
         saksbehandler.ventTilAvsluttetBehandling();
-        saksbehandler.ventTilBehandlingsstatus("AVSLU");
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
-        Fordeling fordeling = new ObjectFactory().createFordeling();
-        fordeling.setAnnenForelderErInformert(true);
-        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        Fordeling fordeling = generiskFordeling(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
         EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
