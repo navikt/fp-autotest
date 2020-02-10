@@ -166,7 +166,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode, "ENDRING_I_UTTAK", "konsekvensForYtelsen");
         saksbehandler.hentFagsak(saksnummerE);
         verifiser(saksbehandler.valgtFagsak.hentStatus().kode.equals("LOP"), "Status på fagsaken er ikke løpende.");
-        saksbehandler.velgSisteBehandling();
 
     }
 
