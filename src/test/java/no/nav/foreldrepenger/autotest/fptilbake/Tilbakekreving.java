@@ -29,6 +29,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generi
 public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
 
     private static final Logger logger = LoggerFactory.getLogger(Tilbakekreving.class);
+    private static final String ytelseType = "FP";
 
     @Test
     @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
@@ -43,18 +44,7 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                fpStartdato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr()
-                );
-        fordel.sendInnInntektsmelding(
-                inntektsmelding,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                saksnummer
-                );
+        lagOgSendInntekstsmelding(testscenario, fpStartdato, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.ikkeVentPåStatus = true;
@@ -77,7 +67,24 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
 
         tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid);
+        tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
 
+//        tbksaksbehandler.sendNyttKravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(), saksbehandler.valgtBehandling.id, "FP");
+
+    }
+
+    private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) throws Exception {
+        InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(
+                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                fpStartdato,
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr()
+                );
+        fordel.sendInnInntektsmelding(
+                inntektsmelding,
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                saksnummer
+                );
     }
 }
