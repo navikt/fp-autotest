@@ -53,8 +53,6 @@ services:
       - "MELDEKORTUTBETALINGSGRUNNLAG_V1_URL=https://vtp:8063/soap/ail_ws/MeldekortUtbetalingsgrunnlag_v1"
       - "SIGRUNRESTBEREGNETSKATT_URL=https://vtp:8063/rest"
       - "HENTINNTEKTLISTEBOLK_URL=https://vtp:8063/rest/inntektskomponenten-ws/rs/api/v1/hentinntektlistebolk"
-      - "INFOTRYGDSAK_V1_URL=https://vtp:8063/soap/infotrygd-ws/InfotrygdSak/v1"
-      - "INFOTRYGDBEREGNINGSGRUNNLAG_V1_URL=https://vtp:8063/soap/infotrygd-ws/InfotrygdBeregningsgrunnlag/v1"
       - "KAFKA_BOOTSTRAP_SERVERS=vtp:9092"
       - "KAFKA_SCHEMA_REGISTRY_URL=vtp:9092"
       - "ABAC_PDP_ENDPOINT_URL=https://vtp:8063/rest/asm-pdp/authorize"
