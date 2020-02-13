@@ -104,4 +104,8 @@ public class Arbeidsforhold {
     public void setBasertPaInntektsmelding(Boolean basertPaInntektsmelding) {
         this.basertPaInntektsmelding = basertPaInntektsmelding;
     }
+
+    public void setLagtTilAvSaksbehandler(Boolean lagtTilAvSaksbehandler) {
+        this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
+    }
 }

@@ -57,6 +57,17 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         arbeidsforhold.setStillingsprosent(stillingsprosent);
     }
 
+    public void bekreftArbeidsforholdLagtTilAvSaksbehandler(String navn, LocalDate startDato, LocalDate sluttDato, BigDecimal stillingsprosent) {
+        Arbeidsforhold arbeidsforhold = new Arbeidsforhold();
+        arbeidsforhold.setBrukArbeidsforholdet(true);
+        arbeidsforhold.setNavn(navn);
+        arbeidsforhold.setLagtTilAvSaksbehandler(true);
+        arbeidsforhold.setTomDato(sluttDato);
+        arbeidsforhold.setFomDato(startDato);
+        arbeidsforhold.setStillingsprosent(stillingsprosent);
+        this.arbeidsforhold.add(arbeidsforhold);
+    }
+
     public void bekreftArbeidsforholdErRelevant(Arbeidsforhold forhold, boolean fortsettUtenInntekt) {
         forhold.setBrukArbeidsforholdet(true);
         forhold.setFortsettBehandlingUtenInntektsmelding(fortsettUtenInntekt);
