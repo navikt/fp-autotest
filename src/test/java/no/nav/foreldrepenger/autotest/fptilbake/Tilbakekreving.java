@@ -68,8 +68,9 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
 
         tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
+        tbksaksbehandler.hentFagsak(saksnummer);
 
-//        tbksaksbehandler.sendNyttKravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(), saksbehandler.valgtBehandling.id, "FP");
+        tbksaksbehandler.sendNyttKravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(), saksbehandler.valgtBehandling.id, "FP", tbksaksbehandler.valgtBehandling.id);
 
     }
 
