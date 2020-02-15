@@ -71,10 +71,11 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
         tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
         tbksaksbehandler.hentSisteBehandling(saksnummer);
-        verifiser(tbksaksbehandler.valgtBehandling.behandlingPaaVent && tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"), "Behandling ikke på vent, eller feil vent årsak.");
+        tbksaksbehandler.ventTilBehandlingErPåVent();
+        verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"), "Behandling har feil vent årsak.");
 
         tbksaksbehandler.sendNyttKravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(), saksbehandler.valgtBehandling.id, "FP", tbksaksbehandler.valgtBehandling.id);
-
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt("7003");
     }
 
     private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) throws Exception {
