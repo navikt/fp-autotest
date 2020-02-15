@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fptilbake;
 
+import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.fptilbake.FptilbakeTestBaseForeldrepenger;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
@@ -33,6 +34,7 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
 
     @Test
     @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
+    @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() throws Exception{
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
@@ -68,7 +70,8 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
 
         tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
-        tbksaksbehandler.hentFagsak(saksnummer);
+        tbksaksbehandler.hentSisteBehandling(saksnummer);
+        verifiser(tbksaksbehandler.valgtBehandling.behandlingPaaVent && tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"), "Behandling ikke på vent, eller feil vent årsak.");
 
         tbksaksbehandler.sendNyttKravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(), saksbehandler.valgtBehandling.id, "FP", tbksaksbehandler.valgtBehandling.id);
 

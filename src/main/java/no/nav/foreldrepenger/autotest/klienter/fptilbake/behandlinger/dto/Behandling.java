@@ -10,4 +10,7 @@ public class Behandling {
     public int id;
     public UUID uuid;
     public int fagsakId;
+    public BehandlingType type;
+    public boolean behandlingPaaVent;
+    public String venteArsakKode;
 }
