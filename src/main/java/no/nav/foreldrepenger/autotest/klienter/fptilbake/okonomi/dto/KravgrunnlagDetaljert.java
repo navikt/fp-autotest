@@ -59,7 +59,7 @@ public class KravgrunnlagDetaljert {
 
     public void leggTilPeriode() {
         KravgrunnlagPeriode kravgrunnlagPeriode = new KravgrunnlagPeriode(
-                LocalDate.now().withDayOfMonth(1).minusMonths(6).toString(),
+                LocalDate.now().minusMonths(6).withDayOfMonth(1).toString(),
                 LocalDate.now().minusMonths(6).withDayOfMonth(LocalDate.now().minusMonths(6).lengthOfMonth()).toString(),
                 BigDecimal.valueOf(412));
         kravgrunnlagPeriode.leggTilPostering();
