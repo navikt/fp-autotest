@@ -1,0 +1,120 @@
+name: Tester saksbehandling
+
+on:
+  push:
+    branches:
+      - master         # Push events on master branch
+  repository_dispatch:
+    types: [fpsak-autotest]
+
+jobs:
+  build:
+    name: Utfør verdikjede-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - name: Hent maven version
+        run: |
+          echo "::set-env name=CACHE_KEY::$(date +%U)"
+      - uses: actions/cache@v1.1.2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
+
+      - name: Setup fpsak-autotest stack
+        shell: bash
+        run: |
+          echo ::set-env name=STACK_STARTED::false
+
+          echo "Oppretter dummy keystore for testing"
+          cd /resources/keystore
+          ./make-dummy-keystore.sh
+
+          echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
+          cd ../resources/pipeline
+          ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+
+          docker-compose -f docker-compose.yml up -d -pull
+
+      - name: Venter på stacken og sjekker status
+        shell: bash
+        run: |
+          echo ::set-env name=STACK_CREATED::true
+          docker ps -a
+          echo
+          echo "Tester om VTP er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om fp-abakus er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo "Tester om fp-formidling er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8010/fpformidling/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om fp-sak er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo ::set-env name=STACK_STARTED::true
+
+      - name: Utfører tester
+        shell: bash
+        run: |
+          mvn test --settings ~/.m2/settings.xml -P fpsak -DargLine="AUTOTEST_ENV=pipepipe"
+        env:
+          GITHUB_USERNAME: x-access-token
+          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Generer testrapport
+        if: always() && env.STACK_STARTED == 'true'
+        shell: bash
+        run: |
+          cd target/allure-results
+          cd ../..
+          mvn allure:report --batch-mode --file pom.xml
+
+      - name: Dumper logger for feilsøking
+        if: failure() && env.STACK_CREATED == 'true'
+        run: |
+          mkdir container-logs
+          cd container-logs
+          docker logs fpsak --tail all > fp-sak.log
+          docker logs abakus --tail all > abakus.log
+          docker logs fpformidling --tail all > fp-formidling.log
+          docker logs vtp --tail all > vtp.log
+
+      - name: Laste opp logger
+        if: failure()
+        uses: actions/upload-artifact@v1
+        with:
+          name: logs
+          path: container-logs
+
+      - name: Deploy testrapport
+        uses: crazy-max/ghaction-github-pages@v1
+        if: always() && env.STACK_STARTED == 'true'
+        with:
+          target_branch: gh-pages
+          keep_history: true
+          build_dir: target/allure-report/
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+#      - name: Notification til slack
+#        if: failure() || env.STACK_STARTED == 'false'
+#        shell: bash
+#        run: |
+#          curl -X POST --data-urlencode \
+#          'payload={"channel": "#fpsak-autotest-test",
+#          "username": "autotestern",
+#          "blocks": [ { "type": "section", "text": {
+#          "type": "mrkdwn",
+#          "text": "  :scream: De automatiske testene feilet: <https://navikt.github.io/k9-verdikjede/|Testrapport> \n
+#          repository: ${{ github.event.client_payload.trigger }} versjon: ${{ github.event.client_payload.version }} "
+#          } } ],
+#          "icon_emoji": ":snowman:"}' ${{ secrets.SLACK_WEBHOOK }}
