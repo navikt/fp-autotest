@@ -29,6 +29,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.STØNA
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
 
 @Tag("tilbakekreving")
+@Tag("fptilbake")
 public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
 
     private static final Logger logger = LoggerFactory.getLogger(Tilbakekreving.class);
@@ -78,7 +79,7 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
         Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(), saksbehandler.valgtBehandling.id, "FP", "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
-        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt("7003");
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 
         var vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);
         vurderFakta.addGeneriskVurdering();

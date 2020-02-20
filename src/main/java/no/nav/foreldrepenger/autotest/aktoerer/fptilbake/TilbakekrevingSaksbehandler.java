@@ -33,10 +33,11 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     // Behandlinger actions
+    //Oppretter ny tilbakekreving tilsvarende Manuell Opprettelse via behandlingsmenyen.
     public void opprettTilbakekreving(Long saksnummer, UUID uuid, String ytelseType) throws Exception {
         behandlingerKlient.putTilbakekreving(new BehandlingOpprett(saksnummer, uuid, "BT-007", ytelseType));
     }
-
+    //Henter siste behandlingen fra fptilbake på gitt saksnummer.
     public void hentSisteBehandling(Long saksnummer) throws Exception {
         behandlingList = behandlingerKlient.hentAlleTbkBehandlinger(saksnummer);
         valgtBehandling = null;
@@ -52,7 +53,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             valgtBehandling = behandlingList.get(behandlingList.size() -1);
         }
     }
-
+    //Generisk handling for å hente behandling på nytt
     private void refreshBehandling() throws Exception{
         valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.id);
     }
@@ -73,22 +74,24 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     // Aksjonspunkt actions
-    private AksjonspunktDto hentAksjonspunkt(String kode) throws Exception {
+    //Henter aksjonspunkt for en gitt kode, brukes ikke direkte i test men av metoder for å verifisere at aksjonspunktet finnes.
+    private AksjonspunktDto hentAksjonspunkt(int kode) throws Exception {
         for (AksjonspunktDto aksjonspunktDto : behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.id)) {
-            if (aksjonspunktDto.definisjon.kode.equals(kode)){
+            if (aksjonspunktDto.definisjon.kode.equals(String.valueOf(kode))){
                 return aksjonspunktDto;
             }
         }
         return null;
     }
-    public boolean harAktivtAksjonspunkt(String kode) throws Exception {
+    public boolean harAktivtAksjonspunkt(int kode) throws Exception {
         AksjonspunktDto aksjonspunktDto = hentAksjonspunkt(kode);
         if (aksjonspunktDto == null){ return false; }
         return aksjonspunktDto.erAktivt;
     }
 
     public AksjonspunktBehandling hentAksjonspunktbehandling(int aksjonspunktkode) throws Exception {
-        switch (aksjonspunktkode) {
+        if (!harAktivtAksjonspunkt(aksjonspunktkode)) {throw new IllegalStateException("Behandlingen har ikke nådd aksjonspunkt " + aksjonspunktkode);}
+        switch (aksjonspunktkode) { //IGNORE WARNING : Vet at det mangler flere cases her, men det kommer etterhvert som flere aksjonspunkter skal behandles!
             case 7003:
                 ApFaktaFeilutbetaling apFaktaFeilutbetaling = new ApFaktaFeilutbetaling();
                 for (FeilutbetalingPerioder perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.id).getPerioder()) {
@@ -99,7 +102,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
                 throw new IllegalArgumentException(aksjonspunktkode + " er ikke et gyldig aksjonspunkt");
         }
     }
-
+    //Metode for å sende inn og behandle et aksjonspunkt
     public void behandleAksjonspunkt(AksjonspunktBehandling aksjonspunktdata) throws Exception {
         List<AksjonspunktBehandling> aksjonspunktdataer = new ArrayList<>();
         aksjonspunktdataer.add(aksjonspunktdata);
@@ -118,7 +121,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             return valgtBehandling.behandlingPaaVent;
         }, 60, "Behandling kom aldri på vent");
     }
-    public void ventTilBehandlingHarAktivtAksjonspunkt(String aksjonspunktKode) throws Exception{
+    public void ventTilBehandlingHarAktivtAksjonspunkt(int aksjonspunktKode) throws Exception{
         if (harAktivtAksjonspunkt(aksjonspunktKode)){
             return;
         }
