@@ -229,21 +229,28 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
     @Test
     public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_() throws Exception{
         TestscenarioDto testscenario = opprettTestscenario("75");
+        var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(
                 LocalDate.now().plusWeeks(3),
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR)
                 .medSpesiellOpptjening(
-                        OpptjeningErketyper.medUtenlandskArbeidsforhold("1222", "ATG")
+                        OpptjeningErketyper.medUtenlandskArbeidsforhold("1222", "NOR")
                 );
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(), DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
-                null);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), søkerAktørIdent, søkerIdent,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE);
+
+        var inntektbeløp = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgnummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var im = lagInntektsmelding(inntektbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), LocalDate.now(),
+                orgnummer);
+        fordel.sendInnInntektsmelding(im, søkerAktørIdent, søkerIdent, saksnummer);
     }
 }
