@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter;
 
+import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.List;
 @AksjonspunktKode(kode="7003", fagsystem = Fagsystem.FPTILBAKE)
 public class ApFaktaFeilutbetaling extends AksjonspunktBehandling {
 
+    protected String begrunnelse;
     protected List<ApFaktaFeilutbetalingDetaljer> feilutbetalingFakta = new ArrayList<>();
 
     public ApFaktaFeilutbetaling () {
@@ -20,7 +23,7 @@ public class ApFaktaFeilutbetaling extends AksjonspunktBehandling {
 
     public void addGeneriskVurdering() {
         for (ApFaktaFeilutbetalingDetaljer apFaktaFeilutbetalingDetaljer : feilutbetalingFakta) {
-            apFaktaFeilutbetalingDetaljer.addGeneriskÅrsak();
+            apFaktaFeilutbetalingDetaljer.årsak.addGeneriskHendelser();
         }
     }
 }

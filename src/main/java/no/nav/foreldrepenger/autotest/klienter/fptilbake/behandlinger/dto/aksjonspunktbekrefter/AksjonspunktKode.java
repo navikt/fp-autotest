@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter;
 
+import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
