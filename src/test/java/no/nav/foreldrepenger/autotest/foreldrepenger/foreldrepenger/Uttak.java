@@ -68,8 +68,9 @@ public class Uttak extends ForeldrepengerTestBase {
 
         Fordeling fordeling = generiskFordeling(
                 uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(13).minusDays(1)));
+                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1))
+//                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(13).minusDays(1))
+                );
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(
                 fødselsdato,
@@ -166,6 +167,55 @@ public class Uttak extends ForeldrepengerTestBase {
                 søkerAktørId,
                 søkerIdent,
                 saksnummer);
+    }
+
+    @DisplayName("Søknadfrist med revurdering")
+    @Test
+    public void testcase_mor_søknadfrist_endringssøknad() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("500");
+        var søkterAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
+
+        var inntektBeløp = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgNummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+
+        var familiehendelseDato = LocalDate.now().minusMonths(9);
+        var fpStartdato = familiehendelseDato.minusWeeks(3);
+
+        var fordeling = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, familiehendelseDato.minusDays(1)),
+                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, familiehendelseDato, familiehendelseDato.plusWeeks(15).minusDays(1)));
+        var søknad = lagSøknadForeldrepengerTermin(familiehendelseDato, søkterAktørId, SøkersRolle.MOR);
+
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        var saksnummerSøker = fordel.sendInnSøknad(søknad.build(), søkterAktørId, søkerFnr, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+
+        var inntektsmelding = lagInntektsmelding(inntektBeløp, søkerFnr, fpStartdato, orgNummer);
+        fordel.sendInnInntektsmelding(inntektsmelding, søkterAktørId, søkerFnr, saksnummerSøker);
+    }
+    @DisplayName("Far søker om periode rett etter fødsel med en revurdering behandling")
+    @Test
+    public void testcase_far_tidligsøktePerioder() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("550");
+        var søkterAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
+
+        var inntektBeløp = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgNummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+
+        var familiehendelseDato = testscenario.getPersonopplysninger().getFødselsdato();
+        var fpStartdato = familiehendelseDato;
+
+        var fordeling = generiskFordeling(
+                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, familiehendelseDato, familiehendelseDato.plusWeeks(15).minusDays(1)));
+        var søknad = lagSøknadForeldrepengerTermin(familiehendelseDato, søkterAktørId, SøkersRolle.FAR)
+                .medFordeling(fordeling);
+
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        var saksnummerSøker = fordel.sendInnSøknad(søknad.build(), søkterAktørId, søkerFnr, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+
+        var inntektsmelding = lagInntektsmelding(inntektBeløp, søkerFnr, fpStartdato, orgNummer);
+        fordel.sendInnInntektsmelding(inntektsmelding, søkterAktørId, søkerFnr, saksnummerSøker);
     }
     @Test
     public void testcase_mor_papirsøknad() throws Exception {
