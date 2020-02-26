@@ -8,6 +8,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.AksjonspunktBehandling;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
@@ -91,13 +92,19 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     public AksjonspunktBehandling hentAksjonspunktbehandling(int aksjonspunktkode) throws Exception {
         if (!harAktivtAksjonspunkt(aksjonspunktkode)) {throw new IllegalStateException("Behandlingen har ikke nådd aksjonspunkt " + aksjonspunktkode);}
-        switch (aksjonspunktkode) { //IGNORE WARNING : Vet at det mangler flere cases her, men det kommer etterhvert som flere aksjonspunkter skal behandles!
+        switch (aksjonspunktkode) {
             case 7003:
                 ApFaktaFeilutbetaling apFaktaFeilutbetaling = new ApFaktaFeilutbetaling();
                 for (FeilutbetalingPerioder perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.id).getPerioder()) {
                     apFaktaFeilutbetaling.addFaktaPeriode(perioder.fom, perioder.tom);
                 }
                 return apFaktaFeilutbetaling;
+            case 5002:
+                ApVilkårsvurdering apVilkårsvurdering = new ApVilkårsvurdering();
+                for (FeilutbetalingPerioder perioder: behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.id).getPerioder()) {
+                    apVilkårsvurdering.addVilkårPeriode(perioder.fom, perioder.tom);
+                }
+                return apVilkårsvurdering;
             default:
                 throw new IllegalArgumentException(aksjonspunktkode + " er ikke et gyldig aksjonspunkt");
         }

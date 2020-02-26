@@ -13,8 +13,4 @@ public class ApFaktaFeilutbetalingDetaljer {
         this.fom = fom;
         this.tom = tom;
     }
-
-    public void addGeneriskÅrsak() {
-        this.årsak.addGeneriskHendelser();
-    }
 }

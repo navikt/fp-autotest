@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
@@ -84,6 +85,11 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
         var vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);
         vurderFakta.addGeneriskVurdering();
         tbksaksbehandler.behandleAksjonspunkt(vurderFakta);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5002);
+
+        var vurderVilkår = (ApVilkårsvurdering) tbksaksbehandler.hentAksjonspunktbehandling(5002);
+        vurderVilkår.addGeneriskVurdering();
+        tbksaksbehandler.behandleAksjonspunkt(vurderVilkår);
     }
 
     private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) throws Exception {

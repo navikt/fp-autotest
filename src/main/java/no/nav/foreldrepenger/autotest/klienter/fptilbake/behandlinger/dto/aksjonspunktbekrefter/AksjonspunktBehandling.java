@@ -6,6 +6,5 @@ public abstract class AksjonspunktBehandling {
 
     @JsonProperty("@type")
     protected String kode;
-    protected String begrunnelse;
 
 }
