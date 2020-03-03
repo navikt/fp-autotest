@@ -588,46 +588,9 @@ public class Uttak extends ForeldrepengerTestBase {
                 aktørIdFar,
                 fnrFar,
                 saksnummerFar);
-
-    }
-    @Test
-    @DisplayName("Mor automatisk førstegangssøknad fødsel")
-    @Description("Mor førstegangssøknad på fødsel")
-    public void testcase_mor_fødselfeil() throws Exception {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("75");
-//        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        LocalDate fødselsdato = LocalDate.now().plusWeeks(6);
-        LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
-        Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(13).minusDays(1)));
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(
-                fødselsdato,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)
-                .medFordeling(fordeling)
-                .medAnnenForelder(testscenario.getPersonopplysninger().getAnnenPartAktørIdent())
-                .medRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(3, fødselsdato));
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummerMor = fordel.sendInnSøknad(
-                søknad.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
-                null);
-        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                fpStartdatoMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                saksnummerMor);
     }
 
-    @Test
+      @Test
     public void testcase_far_søker_ikke_om_uttak_7_uker_etter_fødsel() throws Exception {
         TestscenarioDto testscenario = opprettTestscenario("60");
         var aktørIdSøker = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
