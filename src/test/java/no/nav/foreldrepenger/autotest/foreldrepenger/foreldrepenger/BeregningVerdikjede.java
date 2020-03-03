@@ -266,6 +266,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
         LocalDate graderingFom = fødselsdato.plusWeeks(6);
+        perioder.add(uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
         perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, graderingFom.minusDays(1)));
         perioder.add(new GraderingBuilder(STØNADSKONTOTYPE_FELLESPERIODE, graderingFom, fødselsdato.plusWeeks(10))
                 .medGraderingSN(50)

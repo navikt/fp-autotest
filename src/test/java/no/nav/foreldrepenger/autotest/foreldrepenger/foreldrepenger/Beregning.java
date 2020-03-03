@@ -38,6 +38,7 @@ import java.util.List;
 import static java.time.LocalDate.now;
 import static java.util.Collections.singletonList;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.STØNADSKONTOTYPE_MØDREKVOTE;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -684,7 +685,8 @@ public class Beregning extends ForeldrepengerTestBase {
                 false, BigInteger.valueOf(30_000), false);
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
-        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
+        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
+        perioder.add(uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
         perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
         perioder.add(new GraderingBuilder(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
                 .medGraderingSN(50)
