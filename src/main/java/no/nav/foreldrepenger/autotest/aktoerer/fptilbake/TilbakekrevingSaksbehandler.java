@@ -6,10 +6,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behand
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingPerioder;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.AksjonspunktBehandling;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.*;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
@@ -105,6 +102,10 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
                     apVilkårsvurdering.addVilkårPeriode(perioder.fom, perioder.tom);
                 }
                 return apVilkårsvurdering;
+            case 5004:
+                return new ForeslåVedtak();
+            case 5005:
+                return new FattVedtakTilbakekreving();
             default:
                 throw new IllegalArgumentException(aksjonspunktkode + " er ikke et gyldig aksjonspunkt");
         }

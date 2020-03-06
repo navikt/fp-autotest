@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,7 +36,12 @@ public class KravgrunnlagDetaljert {
         this.vedtakId = saksnummer-11111;
         this.kravgrunnlagId = saksnummer-11112;
         this.kravStatusKode = kravStatusKode;
-        this.fagOmrådeKode = ytelseType;
+        if (ytelseType.equals("ES")) {
+            this.fagOmrådeKode = "REFUTG";
+        }
+        else {
+            this.fagOmrådeKode = ytelseType;
+        }
         this.fagSystemId = saksnummer.toString()+"100";
         this.vedtakFagSystemDato = LocalDate.now().toString();
         this.omgjortVedtakId = 0;
@@ -63,6 +69,17 @@ public class KravgrunnlagDetaljert {
                 LocalDate.now().minusMonths(6).withDayOfMonth(LocalDate.now().minusMonths(6).lengthOfMonth()).toString(),
                 BigDecimal.valueOf(412));
         kravgrunnlagPeriode.leggTilPostering();
+        this.perioder.add(kravgrunnlagPeriode);
+    }
+    public void leggTilPeriodeForEngangsstonad() {
+        if (!this.fagOmrådeKode.equals("REFUTG")){
+            throw new IllegalStateException("Periode for Engangsstønad ikke tillatt for fagområde: "+this.fagOmrådeKode);
+        }
+        KravgrunnlagPeriode kravgrunnlagPeriode = new KravgrunnlagPeriode(
+                LocalDate.now().minusMonths(6).withDayOfMonth(15).toString(),
+                LocalDate.now().minusMonths(6).withDayOfMonth(15).toString(),
+                BigDecimal.ZERO);
+        kravgrunnlagPeriode.leggTilPosteringForEngangsstonad();
         this.perioder.add(kravgrunnlagPeriode);
     }
 }
