@@ -79,7 +79,7 @@ public class Tilbakekreving extends FptilbakeTestBaseSvangerskapspenger {
         saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
                 .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        saksbehandler.ventTilAvsluttetBehandling();
 
         // Her mangler hele SVP revurderingen!
 
@@ -113,5 +113,6 @@ public class Tilbakekreving extends FptilbakeTestBaseSvangerskapspenger {
         fattVedtak.godkjennAksjonspunkt(5002);
         fattVedtak.godkjennAksjonspunkt(7003);
         tbkbeslutter.behandleAksjonspunkt(fattVedtak);
+        tbkbeslutter.ventTilAvsluttetBehandling();
     }
 }

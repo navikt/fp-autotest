@@ -111,5 +111,6 @@ public class Tilbakekreving extends FptilbakeTestBaseEngangsstonad {
         fattVedtak.godkjennAksjonspunkt(5002);
         fattVedtak.godkjennAksjonspunkt(7003);
         tbkbeslutter.behandleAksjonspunkt(fattVedtak);
+        tbkbeslutter.ventTilAvsluttetBehandling();
     }
 }

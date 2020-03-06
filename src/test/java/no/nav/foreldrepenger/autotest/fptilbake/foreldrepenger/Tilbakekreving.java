@@ -99,6 +99,7 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
         fattVedtak.godkjennAksjonspunkt(5002);
         fattVedtak.godkjennAksjonspunkt(7003);
         tbkbeslutter.behandleAksjonspunkt(fattVedtak);
+        tbkbeslutter.ventTilAvsluttetBehandling();
     }
 
     private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) throws Exception {

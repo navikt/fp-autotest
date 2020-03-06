@@ -51,6 +51,10 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             valgtBehandling = behandlingList.get(behandlingList.size() -1);
         }
     }
+    public boolean harBehandlingsstatus (String status) {
+        return valgtBehandling.status.kode.equals(status);
+    }
+
     //Generisk handling for å hente behandling på nytt
     private void refreshBehandling() throws Exception{
         valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.id);
@@ -137,5 +141,17 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             refreshBehandling();
             return harAktivtAksjonspunkt(aksjonspunktKode);
         }, 60, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
+    }
+    public void ventTilBehandlingsstatus(String status) throws Exception {
+        if (harBehandlingsstatus(status)){
+            return;
+        }
+        Vent.til(() -> {
+            refreshBehandling();
+            return harBehandlingsstatus(status);
+        }, 30, "Saken har ikke fått behanldingsstatus " + status);
+    }
+    public void ventTilAvsluttetBehandling() throws Exception {
+        ventTilBehandlingsstatus("AVSLU");
     }
 }
