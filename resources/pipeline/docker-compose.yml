@@ -4,7 +4,7 @@ services:
     image: $ORACLE_IMAGE
     container_name: oracle
     restart: on-failure
-    mem_limit: 512M
+    mem_limit: 512mb
     shm_size: 2gb
     ports:
       - "1521:1521"
@@ -12,7 +12,7 @@ services:
     image: $POSTGRES_IMAGE
     container_name: postgres
     restart: on-failure
-    mem_limit: 128M
+    mem_limit: 128mb
     environment:
       - "TZ=Europe/Oslo"
       - POSTGRES_PASSWORD=admin
@@ -25,7 +25,8 @@ services:
     image: $VTP_IMAGE
     container_name: vtp
     restart: on-failure
-    mem_limit: 1024m
+    mem_limit: 2gb
+    mem_reservation: 1gb
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
@@ -48,7 +49,7 @@ services:
     image: $ABAKUS_IMAGE
     container_name: abakus
     restart: on-failure
-    mem_limit: 512M
+    mem_limit: 512mb
     environment:
       - "TZ=Europe/Oslo"
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
@@ -71,7 +72,7 @@ services:
     image: $FORMIDLING_IMAGE
     container_name: fpformidling
     restart: on-failure
-    mem_limit: 256M
+    mem_limit: 512mb
     environment:
       - "TZ=Europe/Oslo"
       - "FPSAK_REST_BASE_URL=http://fpsak:8080"
@@ -95,7 +96,7 @@ services:
     image: $FPSAK_IMAGE
     container_name: fpsak
     restart: on-failure
-    mem_limit: 512M
+    mem_limit: 1gb
     environment:
       - "NAV_TRUSTSTORE_KEYSTOREALIAS=na"
       - "NAV_TRUSTSTORE_PASSWORD=changeit"

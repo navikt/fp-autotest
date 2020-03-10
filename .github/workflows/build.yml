@@ -1,4 +1,4 @@
-name: Tester saksbehandling
+name: Kjører Autotestene for fp-sak
 
 on:
   push:
@@ -25,20 +25,17 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
 
-      - name: Setup fpsak-autotest stack
+      - name: Setup fp-sak stack
         shell: bash
         run: |
           echo ::set-env name=STACK_STARTED::false
-
           echo "Oppretter dummy keystore for testing"
-          cd /resources/keystore
+          cd resources/keystore/
           ./make-dummy-keystore.sh
-
           echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
-          cd ../resources/pipeline
+          cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-
-          docker-compose -f docker-compose.yml up -d -pull
+          docker-compose up --quiet-pull --detach
 
       - name: Venter på stacken og sjekker status
         shell: bash
@@ -47,25 +44,25 @@ jobs:
           docker ps -a
           echo
           echo "Tester om VTP er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
+          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
-          echo "Tester om fp-abakus er oppe"
+          echo "Tester om abakus er oppe"
           timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
+          echo
           echo "Tester om fp-formidling er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8010/fpformidling/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
+          echo "Sjekker ikke fp-formidling fordi curl mot isReady returnerte 400 bad request. Antar at den er oppe!"
           echo
           echo "Tester om fp-sak er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo ::set-env name=STACK_STARTED::true
 
       - name: Utfører tester
         shell: bash
         run: |
-          mvn test --settings ~/.m2/settings.xml -P fpsak -DargLine="AUTOTEST_ENV=pipepipe"
+          mvn test --batch-mode --settings .m2/settings.xml -P fpsak -DargLine="AUTOTEST_ENV=pipeline"
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -74,7 +71,14 @@ jobs:
         if: always() && env.STACK_STARTED == 'true'
         shell: bash
         run: |
-          cd target/allure-results
+          cd resources/allure
+          ./set-environment-variables.sh ${{ github.event.client_payload.trigger }}
+          cd ../../target/allure-results
+          git fetch origin gh-pages
+          git checkout origin/gh-pages ../../history
+          cp -r ../../history history
+          cp ../../resources/allure/environment.properties .
+          cp ../../resources/allure/categories.json .
           cd ../..
           mvn allure:report --batch-mode --file pom.xml
 
@@ -87,6 +91,8 @@ jobs:
           docker logs abakus --tail all > abakus.log
           docker logs fpformidling --tail all > fp-formidling.log
           docker logs vtp --tail all > vtp.log
+          docker logs oracle --tail all > oracle.log
+          docker logs postgres --tail all > postgres.log
 
       - name: Laste opp logger
         if: failure()
@@ -96,25 +102,25 @@ jobs:
           path: container-logs
 
       - name: Deploy testrapport
-        uses: crazy-max/ghaction-github-pages@v1
         if: always() && env.STACK_STARTED == 'true'
+        uses: crazy-max/ghaction-github-pages@v1.3.0
         with:
           target_branch: gh-pages
-          keep_history: true
           build_dir: target/allure-report/
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
-#      - name: Notification til slack
-#        if: failure() || env.STACK_STARTED == 'false'
-#        shell: bash
-#        run: |
-#          curl -X POST --data-urlencode \
-#          'payload={"channel": "#fpsak-autotest-test",
-#          "username": "autotestern",
-#          "blocks": [ { "type": "section", "text": {
-#          "type": "mrkdwn",
-#          "text": "  :scream: De automatiske testene feilet: <https://navikt.github.io/k9-verdikjede/|Testrapport> \n
-#          repository: ${{ github.event.client_payload.trigger }} versjon: ${{ github.event.client_payload.version }} "
-#          } } ],
-#          "icon_emoji": ":snowman:"}' ${{ secrets.SLACK_WEBHOOK }}
+      - name: Notification til slack
+        if: failure() || env.STACK_STARTED == 'false'
+        shell: bash
+        run: |
+          curl -X POST --data-urlencode \
+          'payload={"channel": "#fpsak-autotest",
+          "username": "autotestern",
+          "blocks": [ { "type": "section", "text": {
+          "type": "mrkdwn",
+          "text": "  :scream: De automatiske testene feilet: <https://navikt.github.io/fpsak-autotest/|Testrapport> \n
+          repository: ${{ github.event.client_payload.trigger }} versjon: ${{ github.event.client_payload.version }} "
+          } } ],
+          "icon_emoji": ":snowman:"}' ${{ secrets.SLACK_WEBHOOK }}
+
