@@ -4,7 +4,8 @@ services:
     image: $ORACLE_IMAGE
     container_name: oracle
     restart: on-failure
-    mem_limit: 512mb
+    mem_limit: 1gb
+    mem_reservation: 512mb
     shm_size: 2gb
     ports:
       - "1521:1521"
