@@ -30,7 +30,7 @@ jobs:
         run: |
           echo ::set-env name=STACK_STARTED::false
           echo "Oppretter dummy keystore for testing"
-          cd resources/keystore/
+          cd resources/keystore
           ./make-dummy-keystore.sh
           echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
