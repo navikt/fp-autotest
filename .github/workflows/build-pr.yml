@@ -1,0 +1,82 @@
+name: Kjører Autotestene for fp-sak pull request
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: Utfør verdikjede-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - name: Hent maven version
+        run: |
+          echo "::set-env name=CACHE_KEY::$(date +%U)"
+      - uses: actions/cache@v1.1.2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
+
+      - name: Setup fp-sak stack
+        shell: bash
+        run: |
+          echo ::set-env name=STACK_STARTED::false
+          echo "Oppretter dummy keystore for testing"
+          cd resources/keystore
+          ./make-dummy-keystore.sh
+          echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
+          cd ../pipeline
+          ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+          docker-compose up --quiet-pull --detach
+
+      - name: Venter på stacken og sjekker status
+        shell: bash
+        run: |
+          echo ::set-env name=STACK_CREATED::true
+          docker ps -a
+          echo
+          echo "Tester om VTP er oppe"
+          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om abakus er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om fp-formidling er oppe"
+          echo "Sjekker ikke fp-formidling fordi curl mot isReady returnerte 400 bad request. Antar at den er oppe!"
+          echo
+          echo "Tester om fp-sak er oppe"
+          timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo ::set-env name=STACK_STARTED::true
+
+      - name: Utfører tester
+        shell: bash
+        run: |
+          mvn test --batch-mode --settings .m2/settings.xml -P fpsak -DargLine="AUTOTEST_ENV=pipeline"
+        env:
+          GITHUB_USERNAME: x-access-token
+          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Dumper logger for feilsøking
+        if: failure() && env.STACK_CREATED == 'true'
+        run: |
+          mkdir container-logs
+          cd container-logs
+          docker logs fpsak --tail all > fp-sak.log
+          docker logs abakus --tail all > abakus.log
+          docker logs fpformidling --tail all > fp-formidling.log
+          docker logs vtp --tail all > vtp.log
+          docker logs oracle --tail all > oracle.log
+          docker logs postgres --tail all > postgres.log
+
+      - name: Laste opp logger
+        if: failure()
+        uses: actions/upload-artifact@v1
+        with:
+          name: logs
+          path: container-logs

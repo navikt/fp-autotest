@@ -16,7 +16,7 @@
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
 
-        <vtp.versjon>1.0_20200116154014_67a29f4</vtp.versjon>
+        <vtp.versjon>1.0-2020.03.10.132248-8c0cc87</vtp.versjon>
 
         <aspectj.version>1.9.4</aspectj.version>
 
@@ -88,7 +88,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M3</version>
+                    <version>3.0.0-M4</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -99,7 +99,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-                        -Dfile.encoding=UTF-8 -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                        -Dfile.encoding=UTF-8
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
                     <properties>
                         <configurationParameters>
@@ -133,9 +134,10 @@
                 <artifactId>allure-maven</artifactId>
                 <version>2.10.0</version>
                 <configuration>
-                    <reportDirectory>target/allure-results</reportDirectory>
-                    <reportVersion>2.7.0</reportVersion>
-                    <allureDownloadUrl>http://maven.adeo.no/nexus/service/local/repositories/m2internal/hendelseContent/no/testhub/allure/2.7.0/allure-2.7.0.zip</allureDownloadUrl>
+                    <reportDirectory>target/allure-report</reportDirectory>
+                    <reportingOutputDirectory>target/allure-report</reportingOutputDirectory>
+                    <reportVersion>2.13.1</reportVersion>
+                    <allureDownloadUrl>https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/2.13.1/allure-commandline-2.13.1.zip</allureDownloadUrl>
                 </configuration>
             </plugin>
             <plugin>
@@ -252,13 +254,9 @@
     </dependencies>
     <distributionManagement>
         <repository>
-            <id>repo.adeo.no-releases</id>
-            <url>https://repo.adeo.no/repository/maven-releases</url>
+            <id>github</id>
+            <name>Github navikt Maven Packages</name>
+            <url>https://maven.pkg.github.com/navikt/fpsak-autotest</url>
         </repository>
-        <snapshotRepository>
-            <id>repo.adeo.no-snapshots</id>
-            <url>https://repo.adeo.no/repository/maven-snapshots</url>
-            <uniqueVersion>false</uniqueVersion>
-        </snapshotRepository>
     </distributionManagement>
 </project>
