@@ -90,10 +90,10 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5004);
 
         tbksaksbehandler.behandleAksjonspunkt(tbksaksbehandler.hentAksjonspunktbehandling(5004));
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5005);
 
         tbkbeslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         tbkbeslutter.hentSisteBehandling(saksnummer);
-        tbkbeslutter.ventTilBehandlingHarAktivtAksjonspunkt(5005);
 
         var fattVedtak = (FattVedtakTilbakekreving) tbkbeslutter.hentAksjonspunktbehandling(5005);
         fattVedtak.godkjennAksjonspunkt(5002);
