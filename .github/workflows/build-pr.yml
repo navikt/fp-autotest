@@ -38,7 +38,7 @@ jobs:
           docker-compose up --quiet-pull --detach
 
       - name: Venter på stacken og sjekker status
-        if: github.event.action == "tester"
+        if: github.event.action == 'tester'
         shell: bash
         run: |
           echo ::set-env name=STACK_CREATED::true
