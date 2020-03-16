@@ -106,10 +106,12 @@ public class Tilbakekreving extends FptilbakeTestBaseEngangsstonad {
 
         tbkbeslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         tbkbeslutter.hentSisteBehandling(saksnummer);
+        tbkbeslutter.ventTilBehandlingHarAktivtAksjonspunkt(5005);
 
         var fattVedtak = (FattVedtakTilbakekreving) tbkbeslutter.hentAksjonspunktbehandling(5005);
         fattVedtak.godkjennAksjonspunkt(5002);
         fattVedtak.godkjennAksjonspunkt(7003);
+        fattVedtak.godkjennAksjonspunkt(5004);
         tbkbeslutter.behandleAksjonspunkt(fattVedtak);
         tbkbeslutter.ventTilAvsluttetBehandling();
     }
