@@ -41,4 +41,25 @@ public class KravgrunnlagPeriode {
         );
         this.posteringer.add(kravgrunnlagPeriodePostering);
     }
+
+    public void leggTilPosteringForEngangsstonad(){
+        KravgrunnlagPeriodePostering kravgrunnlagPeriodePostering = new KravgrunnlagPeriodePostering(
+                "FPENFOD-OP", "YTEL",
+                BigDecimal.valueOf(83140),
+                BigDecimal.ZERO,
+                BigDecimal.valueOf(83140),
+                BigDecimal.ZERO,
+                BigDecimal.ZERO
+        );
+        this.posteringer.add(kravgrunnlagPeriodePostering);
+        kravgrunnlagPeriodePostering = new KravgrunnlagPeriodePostering(
+                "KL_KODE_FEIL_REFUTG", "FEIL",
+                BigDecimal.ZERO,
+                BigDecimal.valueOf(83140),
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO
+        );
+        this.posteringer.add(kravgrunnlagPeriodePostering);
+    }
 }

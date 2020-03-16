@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto;
 
-import java.util.List;
-
 public class Kravgrunnlag {
 
     protected KravgrunnlagDetaljert kravGrunnlag;
@@ -12,5 +10,11 @@ public class Kravgrunnlag {
 
     public void leggTilGeneriskPeriode(){
         this.kravGrunnlag.leggTilPeriode();
+    }
+    public void leggTilGeneriskPeriode(String ytelseType){
+        if (ytelseType.equals("ES")){
+            this.kravGrunnlag.leggTilPeriodeForEngangsstonad();
+        }
+        else leggTilGeneriskPeriode();
     }
 }

@@ -630,6 +630,7 @@ public class Saksbehandler extends Aktoer {
     @Step("Venter på aksjonspunkt {kode}")
     public void ventTilAksjonspunkt(String kode) throws Exception {
         if (harAksjonspunkt(kode)) {
+            refreshBehandling();
             return;
         }
         Vent.til(() -> {

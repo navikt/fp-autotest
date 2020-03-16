@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.fptilbake;
+package no.nav.foreldrepenger.autotest.fptilbake.foreldrepenger;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -8,23 +8,20 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.ObjectFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
-import java.util.List;
 
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
@@ -77,19 +74,34 @@ public class Tilbakekreving extends FptilbakeTestBaseForeldrepenger {
         tbksaksbehandler.hentSisteBehandling(saksnummer);
         tbksaksbehandler.ventTilBehandlingErPåVent();
         verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"), "Behandling har feil vent årsak.");
-        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(), saksbehandler.valgtBehandling.id, "FP", "NY");
+        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(), saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 
         var vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);
-        vurderFakta.addGeneriskVurdering();
+        vurderFakta.addGeneriskVurdering(ytelseType);
         tbksaksbehandler.behandleAksjonspunkt(vurderFakta);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5002);
 
         var vurderVilkår = (ApVilkårsvurdering) tbksaksbehandler.hentAksjonspunktbehandling(5002);
         vurderVilkår.addGeneriskVurdering();
         tbksaksbehandler.behandleAksjonspunkt(vurderVilkår);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5004);
+
+        tbksaksbehandler.behandleAksjonspunkt(tbksaksbehandler.hentAksjonspunktbehandling(5004));
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5005);
+
+        tbkbeslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        tbkbeslutter.hentSisteBehandling(saksnummer);
+        tbkbeslutter.ventTilBehandlingHarAktivtAksjonspunkt(5005);
+
+        var fattVedtak = (FattVedtakTilbakekreving) tbkbeslutter.hentAksjonspunktbehandling(5005);
+        fattVedtak.godkjennAksjonspunkt(5002);
+        fattVedtak.godkjennAksjonspunkt(7003);
+        fattVedtak.godkjennAksjonspunkt(5004);
+        tbkbeslutter.behandleAksjonspunkt(fattVedtak);
+        tbkbeslutter.ventTilAvsluttetBehandling();
     }
 
     private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) throws Exception {

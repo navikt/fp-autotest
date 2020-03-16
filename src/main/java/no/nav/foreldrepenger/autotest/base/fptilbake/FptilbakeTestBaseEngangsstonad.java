@@ -7,9 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 public class FptilbakeTestBaseEngangsstonad extends EngangsstonadTestBase {
 
     protected TilbakekrevingSaksbehandler tbksaksbehandler;
+    protected TilbakekrevingSaksbehandler tbkbeslutter;
 
     @BeforeEach
     public void setUpTbkSaksbehandlerEN(){
+
         tbksaksbehandler = new TilbakekrevingSaksbehandler();
+        tbkbeslutter = new TilbakekrevingSaksbehandler();
     }
 }

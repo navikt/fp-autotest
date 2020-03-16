@@ -21,9 +21,9 @@ public class ApFaktaFeilutbetaling extends AksjonspunktBehandling {
         this.feilutbetalingFakta.add(new ApFaktaFeilutbetalingDetaljer(fom, tom));
     }
 
-    public void addGeneriskVurdering() {
+    public void addGeneriskVurdering(String ytelseType) {
         for (ApFaktaFeilutbetalingDetaljer apFaktaFeilutbetalingDetaljer : feilutbetalingFakta) {
-            apFaktaFeilutbetalingDetaljer.årsak.addGeneriskHendelser();
+            apFaktaFeilutbetalingDetaljer.årsak.addGeneriskHendelser(ytelseType);
         }
     }
 }

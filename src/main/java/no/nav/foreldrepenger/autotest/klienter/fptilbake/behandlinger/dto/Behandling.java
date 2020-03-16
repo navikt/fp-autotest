@@ -14,4 +14,5 @@ public class Behandling {
     public BehandlingType type;
     public boolean behandlingPaaVent;
     public String venteArsakKode;
+    public BehandlingType status;
 }

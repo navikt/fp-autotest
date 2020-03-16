@@ -6,10 +6,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behand
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingPerioder;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.AksjonspunktBehandling;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.*;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
@@ -54,6 +51,10 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             valgtBehandling = behandlingList.get(behandlingList.size() -1);
         }
     }
+    public boolean harBehandlingsstatus (String status) {
+        return valgtBehandling.status.kode.equals(status);
+    }
+
     //Generisk handling for å hente behandling på nytt
     private void refreshBehandling() throws Exception{
         valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.id);
@@ -105,6 +106,10 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
                     apVilkårsvurdering.addVilkårPeriode(perioder.fom, perioder.tom);
                 }
                 return apVilkårsvurdering;
+            case 5004:
+                return new ForeslåVedtak();
+            case 5005:
+                return new FattVedtakTilbakekreving();
             default:
                 throw new IllegalArgumentException(aksjonspunktkode + " er ikke et gyldig aksjonspunkt");
         }
@@ -136,5 +141,17 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             refreshBehandling();
             return harAktivtAksjonspunkt(aksjonspunktKode);
         }, 60, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
+    }
+    public void ventTilBehandlingsstatus(String status) throws Exception {
+        if (harBehandlingsstatus(status)){
+            return;
+        }
+        Vent.til(() -> {
+            refreshBehandling();
+            return harBehandlingsstatus(status);
+        }, 30, "Saken har ikke fått behanldingsstatus " + status);
+    }
+    public void ventTilAvsluttetBehandling() throws Exception {
+        ventTilBehandlingsstatus("AVSLU");
     }
 }
