@@ -67,6 +67,24 @@ jobs:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
+      - name: Trigger deploy av fpsak til T4
+        if: success() && ${{ github.event.event_type }} == "fpsak-autotest" && ${{ github.event.client_payload.issue-number }} != null
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          repository: navikt/fp-sak
+          event-type: update-issue-fpsak
+          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true"}'
+
+      - name: Trigger ikke deploy av fpsak til T4
+        if: failure() && ${{ github.event.event_type }} == "fpsak-autotest" && ${{ github.event.client_payload.issue-number }} != null
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          repository: navikt/fp-sak
+          event-type: update-issue-fpsak
+          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false"}'
+
       - name: Generer testrapport
         if: always() && env.STACK_STARTED == 'true'
         shell: bash
