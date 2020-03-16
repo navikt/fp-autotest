@@ -1,9 +1,6 @@
 name: Kjører Autotestene for fp-sak pull request
 
 on:
-  pull_request:
-    branches:
-      - master         # Push events on master branch
   repository_dispatch:
     types: [tester]
 
