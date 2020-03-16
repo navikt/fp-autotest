@@ -38,7 +38,7 @@ jobs:
           docker-compose up --quiet-pull --detach
 
       - name: Venter på stacken og sjekker status
-        if: success() && ${{ github.event.client_payload.github.payload.action }} == "fpsak-autotest"
+        if: success() && ${{ github.event.client_payload.github.payload.action }} == "tester"
         shell: bash
         run: |
           echo ::set-env name=STACK_CREATED::true
