@@ -1,6 +1,11 @@
 name: Kjører Autotestene for fp-sak pull request
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master         # Push events on master branch
+  repository_dispatch:
+    types: [tester]
 
 jobs:
   build:
@@ -33,6 +38,7 @@ jobs:
           docker-compose up --quiet-pull --detach
 
       - name: Venter på stacken og sjekker status
+        if: success() && ${{ github.event.event_type }} == "fpsak-autotest" && ${{ github.event.client_payload.issue-number }} != null
         shell: bash
         run: |
           echo ::set-env name=STACK_CREATED::true
