@@ -25,7 +25,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
 
-      - name: Setup fp-sak stack
+      - name: Setup fpsak-autotest stack
         shell: bash
         run: |
           echo ::set-env name=STACK_STARTED::false
@@ -67,22 +67,22 @@ jobs:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
-      - name: Trigger deploy av fpsak til T4
+      - name: Oppdaterer issue ved feilfrie tester
         if: success() && github.event.action == 'fpsak-autotest' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          repository: navikt/fp-sak
-          event-type: update-issue-fpsak
+          repository: ${{ github.event.client_payload.trigger }}
+          event-type: update-issue
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
 
-      - name: Trigger ikke deploy av fpsak til T4
+      - name: Oppdaterer issue ved testfeil
         if: failure() && github.event.action == 'fpsak-autotest' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          repository: navikt/fp-sak
-          event-type: update-issue-fpsak
+          repository: ${{ github.event.client_payload.trigger }}
+          event-type: update-issue
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
 
       - name: Generer testrapport
