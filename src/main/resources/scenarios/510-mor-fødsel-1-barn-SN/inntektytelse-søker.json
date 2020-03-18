@@ -1,0 +1,49 @@
+{
+	"inntektskomponent": {
+		"inntektsperioder": [
+			{
+				"fom": "now() - P2Y",
+				"beløp": 50000,
+				"orgnr": "910909088",
+				"type": "Lønnsinntekt",
+				"fordel": "kontantytelse",
+				"beskrivelse": "fastloenn"
+			}
+		]
+	},
+	"aareg": {
+		"arbeidsforhold": [
+		]
+	},
+	"sigrun": {
+		"inntektsår": [
+			{
+				"år": "2017",
+				"oppføring": [
+					{
+						"tekniskNavn": "personinntektNaering",
+						"beløp": "1000000"
+					}
+				]
+			},
+			{
+				"år": "2018",
+				"oppføring": [
+					{
+						"tekniskNavn": "personinntektNaering",
+						"beløp": "1000000"
+					}
+				]
+			},
+			{
+				"år": "2019",
+				"oppføring": [
+					{
+						"tekniskNavn": "personinntektNaering",
+						"beløp": "1000000"
+					}
+				]
+			}
+		]
+	}
+}

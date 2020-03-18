@@ -1,0 +1,82 @@
+{
+	"inntektskomponent": {
+		"inntektsperioder": [
+			{
+				"fom": "now() - P2Y",
+				"tom": "now()",
+				"beløp": 30000,
+				"orgnr": "910909088",
+				"type": "Lønnsinntekt",
+				"fordel": "kontantytelse",
+				"beskrivelse": "fastloenn"
+			},
+			{
+				"fom": "now() - P4Y",
+				"tom": "now()",
+				"beløp": 30000,
+				"orgnr": "910909088",
+				"type": "Lønnsinntekt",
+				"fordel": "kontantytelse",
+				"beskrivelse": "fastloenn"
+			}
+		]
+	},
+	"aareg": {
+		"arbeidsforhold": [
+			{
+				"arbeidsforholdId": "ARB001-001",
+
+				"ansettelsesperiodeFom": "now() - P2Y",
+				"arbeidsforholdstype": "ordinaertArbeidsforhold",
+				"arbeidsgiverOrgnr": "910909088",
+
+
+				"arbeidsavtaler" : [
+					{
+						"fomGyldighetsperiode": "now() - P2Y",
+						"sisteLønnsendringsdato": "now() - P1M",
+						"avlønningstype": "fastlønn",
+						"avtaltArbeidstimerPerUke": "20",
+						"stillingsprosent" : 50,
+						"beregnetAntallTimerPerUke": "20"
+					}
+				]
+
+			},
+			{
+				"arbeidsforholdId": "ARB001-002",
+
+				"ansettelsesperiodeFom": "now() - P4Y",
+				"arbeidsforholdstype": "ordinaertArbeidsforhold",
+				"arbeidsgiverOrgnr": "910909088",
+				"arbeidsavtaler" : [
+					{
+						"fomGyldighetsperiode": "now() - P4Y",
+						"sisteLønnsendringsdato": "now() - P1Y",
+						"avlønningstype": "fastlønn",
+						"avtaltArbeidstimerPerUke": "20",
+						"stillingsprosent" : 50,
+						"beregnetAntallTimerPerUke": "20"
+					}
+				]
+			}
+		]
+	},
+	"sigrun": {
+		"inntektsår": [
+			{
+				"år": "2016",
+				"oppføring": [
+					{
+						"tekniskNavn": "ettellerannet",
+						"beløp": 5000
+					},
+					{
+						"tekniskNavn": "noeannet",
+						"beløp": 6000
+					}
+				]
+			}
+		]
+	}
+ }

@@ -1,11 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+
+import java.time.LocalDate;
 
 @BekreftelseKode(kode="5001")
 public class AvklarFaktaTerminBekreftelse extends AksjonspunktBekreftelse{
@@ -26,8 +24,9 @@ public class AvklarFaktaTerminBekreftelse extends AksjonspunktBekreftelse{
         return this;
     }
 
-    public void setUtstedtdato(LocalDate utstedtdato) {
+    public AvklarFaktaTerminBekreftelse setUtstedtdato(LocalDate utstedtdato) {
         this.utstedtdato = utstedtdato;
+        return this;
     }
 
     public AvklarFaktaTerminBekreftelse utstedtdato(LocalDate utstedtdato) {
@@ -35,8 +34,9 @@ public class AvklarFaktaTerminBekreftelse extends AksjonspunktBekreftelse{
         return this;
     }
 
-    public void setTermindato(LocalDate termindato) {
+    public AvklarFaktaTerminBekreftelse setTermindato(LocalDate termindato) {
         this.termindato = termindato;
+        return this;
     }
 
     public AvklarFaktaTerminBekreftelse termindato(LocalDate termindato) {

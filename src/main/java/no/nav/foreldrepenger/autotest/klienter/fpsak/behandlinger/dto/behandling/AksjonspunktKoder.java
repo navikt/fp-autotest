@@ -113,6 +113,7 @@ public class AksjonspunktKoder {
     public static final String AVKLAR_FØRSTE_UTTAKSDATO = new String("5081"); //$NON-NLS-1$
     public static final String TILKNYTTET_STORTINGET = new String("5072"); //$NON-NLS-1$
     public static final String OVERSTYRING_AV_UTTAKPERIODER = new String("6008"); //$NON-NLS-1$
+    public static final String AVKLAR_FAKTA_ANNEN_FORELDER_HAR_RETT_KODE = "5086"; //$NON-NLS-1$
 
     public static final String KONTROLLER_REALITETSBEHANDLING_ELLER_KLAGE = new String("5073"); //$NON-NLS-1$
     public static final String KONTROLLER_OPPLYSNINGER_OM_MEDLEMSKAP = new String("5074"); //$NON-NLS-1$

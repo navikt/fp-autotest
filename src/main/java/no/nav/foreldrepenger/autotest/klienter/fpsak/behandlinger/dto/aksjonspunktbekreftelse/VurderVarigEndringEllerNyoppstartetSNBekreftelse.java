@@ -1,12 +1,10 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-
 @BekreftelseKode(kode="5039")
 public class VurderVarigEndringEllerNyoppstartetSNBekreftelse extends AksjonspunktBekreftelse {
 
     protected boolean erVarigEndretNaering;
+    protected int bruttoBeregningsgrunnlag;
 
     public VurderVarigEndringEllerNyoppstartetSNBekreftelse() {
         super();
@@ -14,6 +12,10 @@ public class VurderVarigEndringEllerNyoppstartetSNBekreftelse extends Aksjonspun
 
     public VurderVarigEndringEllerNyoppstartetSNBekreftelse setErVarigEndretNaering(boolean erVarigEndretNaering) {
         this.erVarigEndretNaering = erVarigEndretNaering;
+        return this;
+    }
+    public VurderVarigEndringEllerNyoppstartetSNBekreftelse setBruttoBeregningsgrunnlag(int bruttoBeregningsgrunnlag) {
+        this.bruttoBeregningsgrunnlag = bruttoBeregningsgrunnlag;
         return this;
     }
 

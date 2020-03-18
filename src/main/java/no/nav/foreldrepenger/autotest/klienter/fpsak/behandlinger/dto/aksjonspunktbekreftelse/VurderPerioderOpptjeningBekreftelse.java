@@ -1,13 +1,12 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.OpptjeningAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @BekreftelseKode(kode="5051")
 public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse {
@@ -49,8 +48,9 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
         opptjeningAktivitetList.add(aktivitet);
     }
 
-    public void godkjennAllOpptjening(){
+    public VurderPerioderOpptjeningBekreftelse godkjennAllOpptjening(){
         opptjeningAktivitetList.forEach(aktivitet -> aktivitet.vurder(true, "Godkjent", false));
+        return this;
     }
 
     @Override

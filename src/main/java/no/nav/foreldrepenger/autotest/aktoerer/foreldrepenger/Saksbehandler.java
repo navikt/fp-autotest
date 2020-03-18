@@ -4,8 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.*;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.*;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdPost;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.KlageVurderingResultatAksjonspunktMellomlagringDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelseUtenTotrinn;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.OverstyrAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -39,7 +48,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -352,6 +363,51 @@ public class Saksbehandler extends Aktoer {
             throw new RuntimeException("Status for behandling " + behandling.id + " feilet: " + status.getMessage());
         }
     }
+    /* VERIFISERINGER */
+    // TODO: Flytte dem en annen plass? Egen verifiserings-saksbehander?
+    public boolean sjekkOmDetErFrilansinntektDagenFørSkjæringstidspuktet() {
+        var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
+        for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
+            if ( opptjening.getAktivitetType().kode.equalsIgnoreCase("FRILANS") &&
+                    opptjening.getOpptjeningTom().isEqual(skjaeringstidspunkt.minusDays(1)) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean sjekkOmSykepengerLiggerTilGrunnForOpptjening() {
+        var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
+        for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
+            if ( opptjening.getAktivitetType().kode.equalsIgnoreCase("SYKEPENGER") &&
+                    opptjening.getOpptjeningTom().isBefore(skjaeringstidspunkt)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPart(double prosentAvDagsatsTilArbeidsgiver) {
+        var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
+        for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
+            var dagsats = periode.getDagsats();
+            var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
+            var forventetUtbetaltDagsatsTilSøker = Math.round(dagsats * (1 - prosentfaktor));
+            List<Integer> utbetaltTilSøkerForAndeler = new ArrayList<>();
+            List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
+            for (var andel : periode.getAndeler()) {
+                utbetaltTilSøkerForAndeler.add(andel.getTilSoker());
+                utbetaltRefusjonForAndeler.add(andel.getRefusjon());
+            }
+            if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
+                return false;
+            }
+            if ( utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker ) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /*
      * Henting av kodeverk
@@ -398,6 +454,17 @@ public class Saksbehandler extends Aktoer {
 
     public <T extends AksjonspunktBekreftelse> T aksjonspunktBekreftelse(Class<T> type) throws JsonProcessingException {
         return hentAksjonspunktbekreftelse(type);
+    }
+
+    @Step("Henter ut unike aktivitetstatuser i beregning")
+    public Set<Kode> hentUnikeBeregningAktivitetStatus() {
+        Set<Kode> aktivitetStatus = new HashSet<>();
+        for (var beregningsresultatPerioder : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
+            for (var andel : beregningsresultatPerioder.getAndeler()) {
+                aktivitetStatus.add(andel.getAktivitetStatus());
+            }
+        }
+        return aktivitetStatus;
     }
 
     /*
@@ -453,6 +520,11 @@ public class Saksbehandler extends Aktoer {
     public boolean harAksjonspunkt(String kode) throws JsonProcessingException {
         debugLoggBehandling(valgtBehandling);
         return null != hentAksjonspunkt(kode);
+    }
+
+    public boolean harAksjonspunktSomKanLøses(String kode) throws JsonProcessingException {
+        debugLoggBehandling(valgtBehandling);
+        return null != hentAksjonspunktSomKanLøses(kode);
     }
 
     /*
@@ -636,6 +708,18 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             refreshBehandling();
             return harAksjonspunkt(kode);
+        }, 30, () -> "Saken  hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
+    }
+
+    @Step("Venter på aksjonspunkt {kode} hvis det kan løses")
+    public void ventTilAksjonspunktSomKanLøses(String kode) throws Exception {
+        if (harAksjonspunktSomKanLøses(kode)) {
+            refreshBehandling();
+            return;
+        }
+        Vent.til(() -> {
+            refreshBehandling();
+            return harAksjonspunktSomKanLøses(kode);
         }, 30, () -> "Saken  hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
     }
 
