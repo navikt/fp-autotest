@@ -8,13 +8,10 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.TilretteleggingsErketyper;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -209,6 +206,48 @@ public class Førstegangsbehandling extends SvangerskapspengerTestBase {
 
         BeregningsgrunnlagPeriodeDto andrePeriode = bgPerioder.get(1);
         assertThat(andrePeriode.getDagsats()).isGreaterThan(0);
+    }
+    @Test
+    @DisplayName("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
+    @Description("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
+    public void mor_søker_svp_tre_arbeidsforhold_to_halv() throws Exception {
+
+        final TestscenarioDto testscenario = opprettTestscenario("79");
+        final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+
+        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
+        final String orgnr1 = arbeidsforhold.get(0).getArbeidsgiverOrgnr();
+        final String orgnr2 = arbeidsforhold.get(1).getArbeidsgiverOrgnr();
+        final String orgnr3 = arbeidsforhold.get(2).getArbeidsgiverOrgnr();
+
+        LocalDate termindato = LocalDate.now().plusMonths(3);
+
+        final Tilrettelegging delvisTilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
+                termindato.minusMonths(3),
+                termindato.minusMonths(3),
+                ArbeidsforholdErketyper.virksomhet(orgnr1),
+                BigDecimal.valueOf(70));
+        final Tilrettelegging delvisTilrettelegging2 = TilretteleggingsErketyper.delvisTilrettelegging(
+                termindato.minusMonths(2),
+                termindato.minusMonths(2),
+                ArbeidsforholdErketyper.virksomhet(orgnr2),
+                BigDecimal.valueOf(70));
+
+
+        SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR, termindato,
+                List.of(delvisTilrettelegging, delvisTilrettelegging2));
+
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+
+        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+
+        // Inntektsmelding
+        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, 20_833, orgnr1)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(20_833));
+        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, 62_500, orgnr2)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(27_778));
+        fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
     }
 
     @Test
