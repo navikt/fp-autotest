@@ -1,5 +1,31 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.addPeriode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.addStønadskontotype;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -7,7 +33,8 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EndringssøknadBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
@@ -23,25 +50,12 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Utsettelsesaarsaker;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Uttaksperiodetyper;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.*;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.*;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Gradering;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.ObjectFactory;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Utsettelsesperiode;
+import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Virksomhet;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -154,7 +168,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         Fordeling fordeling = new ObjectFactory().createFordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        perioder.add(uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        perioder.add(uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
         EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
@@ -316,7 +330,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         // Endringssøknad
         LocalDate utsettelseFom = fødselsdato.plusWeeks(16);
         LocalDate utsettelseTom = fødselsdato.plusWeeks(18);
-        Fordeling fordelingUtsettelse = fordelingEndringssøknadUtsettelse(fødselsdato, orgnr, utsettelseFom, utsettelseTom);
+        Fordeling fordelingUtsettelse = fordelingEndringssøknadUtsettelse(utsettelseFom, utsettelseTom);
         EndringssøknadBuilder endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
                 fordelingUtsettelse, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -340,7 +354,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         for (UttakResultatPeriode periode : saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderForSøker()) {
             verifiser(periode.getAktiviteter().size() == 1, "Periode har mer enn én aktivitet");
         }
-        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderForSøker().get(4).getUtsettelseType().kode.equals("ARBEID"), "Feil i utsettelsetype eller periode.");
+        var utsettelseType = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderForSøker().get(4).getUtsettelseType();
+        verifiser(utsettelseType.equals(UttakUtsettelseÅrsak.ARBEID), "Feil i utsettelsetype eller periode.");
 
     }
 
@@ -382,7 +397,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         // Endringssøknad
         LocalDate graderingFom = fødselsdato.plusWeeks(20);
         LocalDate graderingTom = fødselsdato.plusWeeks(23).minusDays(1);
-        Fordeling fordelingGradering = fordelingEndringssøknadGradering(fødselsdato, orgnr, graderingFom, graderingTom);
+        Fordeling fordelingGradering = fordelingEndringssøknadGradering(orgnr, graderingFom, graderingTom);
         EndringssøknadBuilder endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
                 fordelingGradering, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -424,8 +439,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         var søkersRolle = SøkersRolle.MOR;
 
         var fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
                 .medFordeling(fordeling);
 
@@ -441,7 +456,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         var fordelingEndring = generiskFordeling(
-                utsettelsesperiode(UTSETTELSETYPE_ARBEID, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1)));
+                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1)));
 
         var søknadE = lagEndringssøknad(aktørIdSøker, søkersRolle, fordelingEndring, String.valueOf(saksnummer));
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -473,30 +488,30 @@ public class Revurdering extends ForeldrepengerTestBase {
         Fordeling fordeling = new ObjectFactory().createFordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        perioder.add(uttaksperiode(FordelingErketyper.STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
-        perioder.add(uttaksperiode(FordelingErketyper.STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)));
-        perioder.add(uttaksperiode(FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(23).minusDays(1)));
+        perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
+        perioder.add(uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)));
+        perioder.add(uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(23).minusDays(1)));
         return fordeling;
     }
 
-    private Fordeling fordelingEndringssøknadUtsettelse(LocalDate fødselsdato, String orgnr, LocalDate utsettelseFom, LocalDate utsettelseTom) {
+    private Fordeling fordelingEndringssøknadUtsettelse(LocalDate utsettelseFom, LocalDate utsettelseTom) {
         Fordeling fordeling = new ObjectFactory().createFordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
         Utsettelsesperiode utsettelsesperiode = new Utsettelsesperiode();
         utsettelsesperiode.setErArbeidstaker(true);
         Uttaksperiodetyper typer = new Uttaksperiodetyper();
-        typer.setKode(FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE);
+        typer.setKode(FELLESPERIODE.getKode());
         utsettelsesperiode.setUtsettelseAv(typer);
         Utsettelsesaarsaker aarsak = new Utsettelsesaarsaker();
-        aarsak.setKode("ARBEID");
+        aarsak.setKode(SøknadUtsettelseÅrsak.ARBEID.getKode());
         utsettelsesperiode.setAarsak(aarsak);
         addPeriode(utsettelseFom, utsettelseTom, utsettelsesperiode);
         perioder.add(utsettelsesperiode);
         return fordeling;
     }
 
-    private Fordeling fordelingEndringssøknadGradering(LocalDate fødselsdato, String orgnr, LocalDate graderingFom, LocalDate graderingTom) {
+    private Fordeling fordelingEndringssøknadGradering(String orgnr, LocalDate graderingFom, LocalDate graderingTom) {
         Fordeling fordeling = new ObjectFactory().createFordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
@@ -507,7 +522,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         Virksomhet virksomhet = new Virksomhet();
         virksomhet.setIdentifikator(orgnr);
         gradering.setArbeidsgiver(virksomhet);
-        addStønadskontotype(STØNADSKONTOTYPE_FELLESPERIODE, gradering);
+        addStønadskontotype(FELLESPERIODE, gradering);
         addPeriode(graderingFom, graderingTom, gradering);
         perioder.add(gradering);
         return fordeling;

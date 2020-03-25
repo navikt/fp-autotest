@@ -1,5 +1,22 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+
+import java.time.LocalDate;
+import java.util.Collections;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak;
@@ -8,6 +25,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
@@ -22,17 +40,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Adopsjon;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.Collections;
-
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.*;
 
 
 @Tag("util")
@@ -71,7 +78,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         adopsjon.setOmsorgsovertakelsesdato(fødselsdato);
 
         Fordeling fordeling = FordelingErketyper.generiskFordeling(
-                uttaksperiode(FordelingErketyper.STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10)));
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepenger(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medFordeling(fordeling)
                 .medRelasjonTilBarnet(adopsjon);
@@ -139,13 +146,13 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         LocalDate fødselsdato = LocalDate.now().minusWeeks(3);
 
         Fordeling fordeling = FordelingErketyper.generiskFordeling(
-                uttaksperiode(FordelingErketyper.STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL,
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL,
                         fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                uttaksperiode(FordelingErketyper.STØNADSKONTOTYPE_MØDREKVOTE,
+                uttaksperiode(MØDREKVOTE,
                         fødselsdato, fødselsdato.plusWeeks(10)),
-                FordelingErketyper.utsettelsesperiode(FordelingErketyper.UTSETTELSETYPE_INNLAGTSØKER,
+                FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER,
                         fødselsdato.plusWeeks(10).plusDays(1), fødselsdato.plusWeeks(20).minusDays(1)),
-                uttaksperiode(FordelingErketyper.STØNADSKONTOTYPE_FEDREKVOTE,
+                uttaksperiode(FEDREKVOTE,
                         fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(30))
         ) ;
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
@@ -191,11 +198,11 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         LocalDate termindato = LocalDate.now().plusWeeks(2);
 
         Fordeling fordeling = FordelingErketyper.generiskFordeling(
-                FordelingErketyper.overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, FordelingErketyper.STØNADSKONTOTYPE_MØDREKVOTE,
+                FordelingErketyper.overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, MØDREKVOTE,
                         termindato, termindato.plusWeeks(10)),
-                FordelingErketyper.utsettelsesperiode(FordelingErketyper.UTSETTELSETYPE_INNLAGTSØKER,
+                FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER,
                         termindato.plusWeeks(10).plusDays(1), termindato.plusWeeks(20).minusDays(1)),
-                uttaksperiode(FordelingErketyper.STØNADSKONTOTYPE_FEDREKVOTE,
+                uttaksperiode(FEDREKVOTE,
                         termindato.plusWeeks(20), termindato.plusWeeks(30))
 
         ) ;

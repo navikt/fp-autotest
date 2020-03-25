@@ -22,6 +22,7 @@
 
         <jackson.version>2.10.3</jackson.version>
 
+        <dokumentgenerator.version>1.0-20200120151506-1e86c2c</dokumentgenerator.version>
     </properties>
 
     <profiles>
@@ -224,12 +225,12 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
             <artifactId>inntektsmelding</artifactId>
-            <version>1.0-20200120151506-1e86c2c</version>
+            <version>${dokumentgenerator.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
             <artifactId>foreldrepengesoknad</artifactId>
-            <version>1.0-20200120151506-1e86c2c</version>
+            <version>${dokumentgenerator.version}</version>
         </dependency>
 
         <dependency>

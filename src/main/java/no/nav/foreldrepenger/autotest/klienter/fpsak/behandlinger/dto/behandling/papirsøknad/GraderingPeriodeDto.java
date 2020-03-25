@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad;
 
-import org.opensaml.xmlsec.encryption.Public;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
+
 public class GraderingPeriodeDto {
 
-    public String periodeForGradering;
+    public Stønadskonto periodeForGradering;
     public LocalDate periodeFom;
     public LocalDate periodeTom;
 
@@ -19,7 +19,7 @@ public class GraderingPeriodeDto {
     public String arbeidskategoriType = "ARBEIDSTAKER";
     public boolean skalGraderes = true;
 
-    public GraderingPeriodeDto(String periodeType,
+    public GraderingPeriodeDto(Stønadskonto stønadskonto,
                                LocalDate fom, LocalDate tom,
                                BigDecimal prosentandelArbeid,
                                String arbeidsgiverIdentifikator,
@@ -27,7 +27,7 @@ public class GraderingPeriodeDto {
                                boolean erFrilanser,
                                boolean erSelvstNæringsdrivende,
                                String arbeidskategoriType) {
-        periodeForGradering = periodeType;
+        periodeForGradering = stønadskonto;
         periodeFom = fom;
         periodeTom = tom;
         this.prosentandelArbeid = prosentandelArbeid;

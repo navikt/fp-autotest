@@ -1,5 +1,36 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak.*;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.oppholdsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.overføringsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenario;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
@@ -12,11 +43,19 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.perioder.GraderingBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.perioder.UttaksperiodeBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.*;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaStartdatoForForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
@@ -35,34 +74,11 @@ import no.nav.vedtak.felles.xml.soeknad.felles.v3.Rettigheter;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.*;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenario;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("utvikling")
 @Tag("foreldrepenger")
 public class Uttak extends ForeldrepengerTestBase {
-
-    private static final Logger logger = LoggerFactory.getLogger(Uttak.class);
 
     @Test
     @DisplayName("Mor automatisk førstegangssøknad fødsel")
@@ -73,9 +89,8 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(13).minusDays(1))
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1))
                 );
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(
@@ -110,9 +125,9 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartdatoMor = termindato.minusWeeks(3);
 
         Fordeling fordelingMor = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, termindato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, termindato, termindato.plusWeeks(8).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, termindato.plusWeeks(8), termindato.plusWeeks(13).minusDays(1)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, termindato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(8).minusDays(1)),
+                uttaksperiode(FEDREKVOTE, termindato.plusWeeks(8), termindato.plusWeeks(13).minusDays(1)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR)
@@ -170,7 +185,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
         var startFar = LocalDate.now().plusWeeks(4);
         var fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, startFar, LocalDate.now().plusWeeks(10))
+                uttaksperiode(FEDREKVOTE, startFar, LocalDate.now().plusWeeks(10))
         );
         var søknadFar = lagSøknadForeldrepengerTermin(termindato, annenPartAktørId, SøkersRolle.FAR)
                 .medAnnenForelder(søkerAktørId)
@@ -194,9 +209,9 @@ public class Uttak extends ForeldrepengerTestBase {
                 .get(0).getArbeidsgiverOrgnr();
 
         var fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, startDatoForeldrepenger, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(20)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, startDatoForeldrepenger, fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(20)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørId, SøkersRolle.MOR)
                 .medFordeling(fordeling);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -219,8 +234,8 @@ public class Uttak extends ForeldrepengerTestBase {
                 .get(0).getArbeidsgiverOrgnr();
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, startDatoForeldrepenger, startDatoForeldrepenger.plusWeeks(10).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, startDatoForeldrepenger.plusWeeks(10), startDatoForeldrepenger.plusWeeks(20))
+                uttaksperiode(FEDREKVOTE, startDatoForeldrepenger, startDatoForeldrepenger.plusWeeks(10).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, startDatoForeldrepenger.plusWeeks(10), startDatoForeldrepenger.plusWeeks(20))
         );
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(
                 fødselsdato, søkerAktørId, SøkersRolle.FAR)
@@ -258,8 +273,8 @@ public class Uttak extends ForeldrepengerTestBase {
         var fpStartdato = familiehendelseDato.minusWeeks(3);
 
         var fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, familiehendelseDato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, familiehendelseDato, familiehendelseDato.plusWeeks(15).minusDays(1)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, familiehendelseDato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, familiehendelseDato, familiehendelseDato.plusWeeks(15).minusDays(1)));
         var søknad = lagSøknadForeldrepengerTermin(familiehendelseDato, søkterAktørId, SøkersRolle.MOR);
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -282,7 +297,7 @@ public class Uttak extends ForeldrepengerTestBase {
         var fpStartdato = familiehendelseDato;
 
         var fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, familiehendelseDato, familiehendelseDato.plusWeeks(15).minusDays(1)));
+                uttaksperiode(MØDREKVOTE, familiehendelseDato, familiehendelseDato.plusWeeks(15).minusDays(1)));
         var søknad = lagSøknadForeldrepengerTermin(familiehendelseDato, søkterAktørId, SøkersRolle.FAR)
                 .medFordeling(fordeling);
 
@@ -311,8 +326,8 @@ public class Uttak extends ForeldrepengerTestBase {
         String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
         Fordeling fordelingMor = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
                 .medFordeling(fordelingMor);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), aktørIdMor, fnrMor, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
@@ -364,19 +379,19 @@ public class Uttak extends ForeldrepengerTestBase {
                 saksbehandler.aksjonspunktBekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
         FordelingDto fordeling = new FordelingDto();
         PermisjonPeriodeDto før = new PermisjonPeriodeDto(
-                STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartMor, fpStartMor.plusWeeks(3).minusDays(1));
+                FORELDREPENGER_FØR_FØDSEL, fpStartMor, fpStartMor.plusWeeks(3).minusDays(1));
         PermisjonPeriodeDto mk6 = new PermisjonPeriodeDto(
-                STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusDays(41));
+                MØDREKVOTE, fødselsdato, fødselsdato.plusDays(41));
         PermisjonPeriodeDto mk6_mer = new PermisjonPeriodeDto(
-                STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato.plusDays(42), fødselsdato.plusDays(49));
+                MØDREKVOTE, fødselsdato.plusDays(42), fødselsdato.plusDays(49));
         GraderingPeriodeDto gradering1 = new GraderingPeriodeDto(
-                STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusDays(42), fødselsdato.plusDays(120),
+                FELLESPERIODE, fødselsdato.plusDays(42), fødselsdato.plusDays(120),
                 BigDecimal.valueOf(70),
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(),
                 true, false, false, "ARBEIDSTAKER"
         );
 //        GraderingPeriodeDto gradering2 = new GraderingPeriodeDto(
-//                STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato.plusDays(50), fødselsdato.plusDays(105),
+//                Stønadskonto.MØDREKVOTE, fødselsdato.plusDays(50), fødselsdato.plusDays(105),
 //                BigDecimal.valueOf(70),
 //                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr(),
 //                true, false, false, "ARBEIDSTAKER"
@@ -443,8 +458,8 @@ public class Uttak extends ForeldrepengerTestBase {
         List<LukketPeriodeMedVedlegg> perioder = fordelingEndring.getPerioder();
         ;
         LocalDate graderingFom = fødselsdato.plusWeeks(6);
-        perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, graderingFom.minusDays(1)));
-        perioder.add(new GraderingBuilder(STØNADSKONTOTYPE_FELLESPERIODE, graderingFom, fødselsdato.plusWeeks(10))
+        perioder.add(uttaksperiode(MØDREKVOTE, fødselsdato, graderingFom.minusDays(1)));
+        perioder.add(new GraderingBuilder(FELLESPERIODE.getKode(), graderingFom, fødselsdato.plusWeeks(10))
                 .medGraderingSN(50)
                 .build());
     }
@@ -458,8 +473,8 @@ public class Uttak extends ForeldrepengerTestBase {
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(15)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                uttaksperiode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(15)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
                 .medFordeling(fordeling);
 
@@ -481,7 +496,7 @@ public class Uttak extends ForeldrepengerTestBase {
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15))
+                uttaksperiode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15))
         );
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordeling)
@@ -506,9 +521,9 @@ public class Uttak extends ForeldrepengerTestBase {
         String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
-                overføringsperiode(OverføringÅrsak.IKKE_RETT_ANNEN_FORELDER, STØNADSKONTOTYPE_FEDREKVOTE,fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(20).minusDays(1)),
-                overføringsperiode(OverføringÅrsak.ALENEOMSORG, STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(22).minusDays(1))
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                overføringsperiode(OverføringÅrsak.IKKE_RETT_ANNEN_FORELDER, FEDREKVOTE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(20).minusDays(1)),
+                overføringsperiode(OverføringÅrsak.ALENEOMSORG, FEDREKVOTE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(22).minusDays(1))
         );
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
                 .medFordeling(fordeling);
@@ -535,10 +550,10 @@ public class Uttak extends ForeldrepengerTestBase {
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
 
         Fordeling fordelingMor = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)),
-                oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1)),
-                new UttaksperiodeBuilder(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(16).minusDays(1))
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)),
+                oppholdsperiode(FEDREKVOTE_ANNEN_FORELDER, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1)),
+                new UttaksperiodeBuilder(FELLESPERIODE.getKode(), fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(16).minusDays(1))
                         .medSamtidigUttak(BigDecimal.valueOf(50))
                         .build());
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
@@ -570,13 +585,13 @@ public class Uttak extends ForeldrepengerTestBase {
         PapirSoknadForeldrepengerBekreftelse aksjonspunktBekreftelseFar = saksbehandler.aksjonspunktBekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
         FordelingDto fordeling = new FordelingDto();
         PermisjonPeriodeDto fk = new PermisjonPeriodeDto(
-                FordelingErketyper.STØNADSKONTOTYPE_FEDREKVOTE, fpStartFar, fpStartFar.plusWeeks(2));
+                FEDREKVOTE, fpStartFar, fpStartFar.plusWeeks(2));
         PermisjonPeriodeDto fk2 = new PermisjonPeriodeDto(
-                STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1));
+                FEDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1));
         PermisjonPeriodeDto fk3 = new PermisjonPeriodeDto(
-                STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(16).minusDays(1));
+                FEDREKVOTE, fødselsdato.plusWeeks(14), fødselsdato.plusWeeks(16).minusDays(1));
         PermisjonPeriodeDto fk4 = new PermisjonPeriodeDto(
-                FordelingErketyper.STØNADSKONTOTYPE_FEDREKVOTE, fødselsdato.plusWeeks(17), fødselsdato.plusWeeks(18));
+                FEDREKVOTE, fødselsdato.plusWeeks(17), fødselsdato.plusWeeks(18));
         fordeling.permisjonsPerioder.add(fk);
         fordeling.permisjonsPerioder.add(fk2);
         fordeling.permisjonsPerioder.add(fk3);
@@ -610,7 +625,7 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate startDato = fødselsDato.plusMonths(10);
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, startDato, startDato.plusMonths(4)));
+                uttaksperiode(FORELDREPENGER, startDato, startDato.plusMonths(4)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsDato,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)
                 .medFordeling(fordeling);
@@ -646,7 +661,7 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.opprettBehandlingRevurdering("RE-FRDLING");
 
         Fordeling endringsFordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, startDato, startDato.plusWeeks(2).plusDays(1)));
+                uttaksperiode(FORELDREPENGER, startDato, startDato.plusWeeks(2).plusDays(1)));
 
         EndringssøknadBuilder søknadEndring = lagEndringssøknad(
                 aktørIdSøker, søkersRolle, endringsFordeling, saksnummer.toString());
@@ -670,8 +685,8 @@ public class Uttak extends ForeldrepengerTestBase {
 
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
                 .medFordeling(fordeling);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -685,9 +700,9 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         Fordeling fordelingEndring = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE,
+                uttaksperiode(FELLESPERIODE,
                         fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)),
-                overføringsperiode(OverføringÅrsak.IKKE_RETT_ANNEN_FORELDER, STØNADSKONTOTYPE_FEDREKVOTE,
+                overføringsperiode(OverføringÅrsak.IKKE_RETT_ANNEN_FORELDER, FEDREKVOTE,
                         fødselsdato.plusWeeks(10).plusDays(1), fødselsdato.plusWeeks(15)));
 
         EndringssøknadBuilder søknadE = lagEndringssøknad(aktørIdSøker, søkersRolle, fordelingEndring, saksnummer.toString());
@@ -710,7 +725,7 @@ public class Uttak extends ForeldrepengerTestBase {
         var søkersRolle = SøkersRolle.FAR;
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStartdato, fpStartdato.plusWeeks(6)));
+                uttaksperiode(FEDREKVOTE, fpStartdato, fpStartdato.plusWeeks(6)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, søkersRolle)
                 .medFordeling(fordeling);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -724,8 +739,8 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         Fordeling fordelingEndring = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(12).minusDays(1)));
+                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(12).minusDays(1)));
         EndringssøknadBuilder søknadE = lagEndringssøknad(aktørIdSøker, søkersRolle, fordelingEndring, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
@@ -748,14 +763,14 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartFar = fødselsDato.plusWeeks(8);
 
         Fordeling fordelingMor = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato, fødselsDato.plusWeeks(8).minusDays(1)),
-                oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato.plusWeeks(10), fødselsDato.plusWeeks(15).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsDato.plusWeeks(15), fødselsDato.plusWeeks(20).minusDays(1)),
-                oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsDato.plusWeeks(24), fødselsDato.plusWeeks(28).minusDays(1)),
-                oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsDato.plusWeeks(32), fødselsDato.plusWeeks(36)));
+                uttaksperiode(MØDREKVOTE, fødselsDato, fødselsDato.plusWeeks(8).minusDays(1)),
+                oppholdsperiode(FEDREKVOTE_ANNEN_FORELDER, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsDato.plusWeeks(10), fødselsDato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsDato.plusWeeks(15), fødselsDato.plusWeeks(20).minusDays(1)),
+                oppholdsperiode(FEDREKVOTE_ANNEN_FORELDER, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsDato.plusWeeks(24), fødselsDato.plusWeeks(28).minusDays(1)),
+                oppholdsperiode(FEDREKVOTE_ANNEN_FORELDER, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsDato.plusWeeks(32), fødselsDato.plusWeeks(36)));
 
         ForeldrepengerBuilder søknadMor = lagSøknadForeldrepengerFødsel(fødselsDato, aktørIdMor, SøkersRolle.MOR)
                 .medFordeling(fordelingMor);
@@ -783,9 +798,9 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         Fordeling fordelingFar = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)));
+                uttaksperiode(FEDREKVOTE, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
+                uttaksperiode(FEDREKVOTE, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
+                uttaksperiode(FEDREKVOTE, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)));
         ForeldrepengerBuilder søknadFar = lagSøknadForeldrepengerFødsel(fødselsDato, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordelingFar);
         long saksnummerFar = fordel.sendInnSøknad(søknadFar.build(),
@@ -808,10 +823,10 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         Fordeling endringFordeling = generiskFordeling(
-//                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato.plusWeeks(7), fødselsDato.plusWeeks(8).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)));
+//                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, Stønadskonto.MØDREKVOTE, fødselsDato.plusWeeks(7), fødselsDato.plusWeeks(8).minusDays(1)),
+                uttaksperiode(FEDREKVOTE, fødselsDato.plusWeeks(8), fødselsDato.plusWeeks(10).minusDays(1)),
+                uttaksperiode(FEDREKVOTE, fødselsDato.plusWeeks(20), fødselsDato.plusWeeks(24).minusDays(1)),
+                uttaksperiode(FEDREKVOTE, fødselsDato.plusWeeks(28), fødselsDato.plusWeeks(32).minusDays(1)));
         EndringssøknadBuilder søknadEndring = lagEndringssøknad(
                 aktørIdFar,
                 SøkersRolle.FAR,
@@ -836,10 +851,10 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartFar = fødselsDato.plusWeeks(12);
 
         Fordeling fordelingMor = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato, fpStartFar.minusDays(1)),
-                oppholdsperiode(OPPHOLDSTYPE_FEDREKVOTE_ANNEN_FORELDER, fpStartFar, fpStartFar.plusWeeks(7).minusDays(1)),
-                oppholdsperiode(OPPHOLDSTYPE_KVOTE_FELLESPERIODE_ANNEN_FORELDER, fpStartFar.plusWeeks(7), fpStartFar.plusWeeks(18).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fpStartFar.plusWeeks(18), fpStartFar.plusWeeks(23).minusDays(1)));
+                uttaksperiode(MØDREKVOTE, fødselsDato, fpStartFar.minusDays(1)),
+                oppholdsperiode(FEDREKVOTE_ANNEN_FORELDER, fpStartFar, fpStartFar.plusWeeks(7).minusDays(1)),
+                oppholdsperiode(FELLESPERIODE_ANNEN_FORELDER, fpStartFar.plusWeeks(7), fpStartFar.plusWeeks(18).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fpStartFar.plusWeeks(18), fpStartFar.plusWeeks(23).minusDays(1)));
         ForeldrepengerBuilder søknadMor = lagSøknadForeldrepengerFødsel(fødselsDato, aktørIdMor, SøkersRolle.MOR)
                 .medFordeling(fordelingMor);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -868,8 +883,8 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         Fordeling fordelingFar = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fpStartFar, fpStartFar.plusWeeks(6).minusDays(1)),
-                graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_FELLESPERIODE, fpStartFar.plusWeeks(6), fpStartFar.plusWeeks(18).minusDays(1),
+                uttaksperiode(FELLESPERIODE, fpStartFar, fpStartFar.plusWeeks(6).minusDays(1)),
+                graderingsperiodeArbeidstaker(FELLESPERIODE, fpStartFar.plusWeeks(6), fpStartFar.plusWeeks(18).minusDays(1),
                         testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(), 50));
         ForeldrepengerBuilder søknadFar = lagSøknadForeldrepengerFødsel(fødselsDato, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordelingFar);
@@ -901,12 +916,12 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate foreldrepengerStartDato = fødselsDato.minusWeeks(3);
 
         Fordeling fordelingMor = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, foreldrepengerStartDato, fødselsDato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato, fødselsDato.plusWeeks(10).minusDays(1)),
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, foreldrepengerStartDato, fødselsDato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsDato, fødselsDato.plusWeeks(10).minusDays(1)),
                 graderingsperiodeArbeidstaker(
-                        STØNADSKONTOTYPE_MØDREKVOTE, fødselsDato.plusWeeks(10), fødselsDato.plusWeeks(17).minusDays(1),
+                        MØDREKVOTE, fødselsDato.plusWeeks(10), fødselsDato.plusWeeks(17).minusDays(1),
                         "342352362", 33),
-                utsettelsesperiode(UTSETTELSETYPE_INNLAGTBARN, fødselsDato.plusWeeks(17), fødselsDato.plusWeeks(20) )
+                utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_BARN, fødselsDato.plusWeeks(17), fødselsDato.plusWeeks(20))
         );
         ForeldrepengerBuilder søknadMor = lagSøknadForeldrepengerFødsel(fødselsDato, søkerAktørIdent, SøkersRolle.MOR)
                 .medFordeling(fordelingMor);
@@ -930,9 +945,9 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStart = fødselsdato.minusWeeks(3);
         Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOgFrilansOpptjening();
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStart, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(35).minusDays(1)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStart, fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(35).minusDays(1)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(
                 fødselsdato,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -992,9 +1007,9 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         Fordeling fordelingEndring = generiskFordeling(
                 FordelingErketyper.graderingsperiodeFL(
-                        STØNADSKONTOTYPE_FELLESPERIODE,
+                        FELLESPERIODE,
                         fødselsdato.plusWeeks(24), fødselsdato.plusWeeks(28), 30),
-                FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE,
+                FordelingErketyper.uttaksperiode(FELLESPERIODE,
                         fødselsdato.plusWeeks(28).plusDays(1), fødselsdato.plusWeeks(32).plusDays(1)));
         EndringssøknadBuilder søknadEndring = lagEndringssøknad(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -1051,18 +1066,18 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartMor = fødsel.minusWeeks(4);
 
         Fordeling fordelingMor = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fpStartMor, fpStartMor.plusWeeks(1).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fødsel.minusWeeks(3), fødsel.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødsel, fødsel.plusWeeks(14).minusDays(1)),
-                utsettelsesperiode(UTSETTELSETYPE_LOVBESTEMT_FERIE, fødsel.plusWeeks(14), fødsel.plusWeeks(18)),
-                (new GraderingBuilder(STØNADSKONTOTYPE_FELLESPERIODE, fødsel.plusWeeks(18).plusDays(1), fødsel.plusWeeks(37))
+                uttaksperiode(FELLESPERIODE, fpStartMor, fpStartMor.plusWeeks(1).minusDays(1)),
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødsel.minusWeeks(3), fødsel.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødsel, fødsel.plusWeeks(14).minusDays(1)),
+                utsettelsesperiode(SøknadUtsettelseÅrsak.FERIE, fødsel.plusWeeks(14), fødsel.plusWeeks(18)),
+                (new GraderingBuilder(FELLESPERIODE.getKode(), fødsel.plusWeeks(18).plusDays(1), fødsel.plusWeeks(37))
                         .medGraderingArbeidstaker(orgNrMor, 40)
                         .medSamtidigUttak(true, BigDecimal.valueOf(60))
                         .build()),
-                (new UttaksperiodeBuilder(STØNADSKONTOTYPE_MØDREKVOTE, fødsel.plusDays(1).plusWeeks(37), fødsel.plusWeeks(38).plusDays(2)))
+                (new UttaksperiodeBuilder(MØDREKVOTE.getKode(), fødsel.plusDays(1).plusWeeks(37), fødsel.plusWeeks(38).plusDays(2)))
                         .medSamtidigUttak(BigDecimal.valueOf(60))
                         .build(),
-                (new UttaksperiodeBuilder(STØNADSKONTOTYPE_FELLESPERIODE, fødsel.plusWeeks(42).plusDays(2), fødsel.plusDays(2).plusWeeks(46))
+                (new UttaksperiodeBuilder(FELLESPERIODE.getKode(), fødsel.plusWeeks(42).plusDays(2), fødsel.plusDays(2).plusWeeks(46))
                         .medSamtidigUttak(BigDecimal.valueOf(60))
                         .build()));
         ForeldrepengerBuilder søknadMor = lagSøknadForeldrepengerFødsel(fødsel, aktørIdMor, SøkersRolle.MOR)
@@ -1097,8 +1112,8 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartFar = fødsel.plusWeeks(2);
 
         Fordeling fordelingFar = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStartFar, fpStartFar.plusWeeks(6).minusDays(1)),
-                utsettelsesperiode(UTSETTELSETYPE_SYKDOMSKADE, fpStartFar.plusWeeks(6), fpStartFar.plusWeeks(10).minusDays(1)));
+                uttaksperiode(FEDREKVOTE, fpStartFar, fpStartFar.plusWeeks(6).minusDays(1)),
+                utsettelsesperiode(SøknadUtsettelseÅrsak.SYKDOM, fpStartFar.plusWeeks(6), fpStartFar.plusWeeks(10).minusDays(1)));
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødsel, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordelingFar)
@@ -1123,8 +1138,8 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartFar = fødsel.plusWeeks(7);
 
         Fordeling fordelingFar = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStartFar, fpStartFar.plusWeeks(6)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStartFar.plusWeeks(6), fpStartFar.plusWeeks(10).minusDays(1)));
+                uttaksperiode(FEDREKVOTE, fpStartFar, fpStartFar.plusWeeks(6)),
+                uttaksperiode(FEDREKVOTE, fpStartFar.plusWeeks(6), fpStartFar.plusWeeks(10).minusDays(1)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødsel, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordelingFar);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -1146,7 +1161,7 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartFar = fødsel.plusWeeks(7);
 
         Fordeling fordelingFar = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStartFar, fpStartFar.plusWeeks(6)));
+                uttaksperiode(FEDREKVOTE, fpStartFar, fpStartFar.plusWeeks(6)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødsel, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordelingFar);
 
@@ -1177,10 +1192,10 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartFar = fødsel.plusWeeks(7);
 
         Fordeling fordeling = generiskFordeling(
-                overføringsperiode(OverføringÅrsak.ALENEOMSORG, STØNADSKONTOTYPE_MØDREKVOTE, fpStartFar, fpStartFar.plusWeeks(10).minusDays(1)),
-                overføringsperiode(OverføringÅrsak.IKKE_RETT_ANNEN_FORELDER, STØNADSKONTOTYPE_MØDREKVOTE, fpStartFar.plusWeeks(10), fpStartFar.plusWeeks(20).minusDays(1)),
-                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, STØNADSKONTOTYPE_MØDREKVOTE, fpStartFar.plusWeeks(20), fpStartFar.plusWeeks(30).minusDays(1)),
-                overføringsperiode(OverføringÅrsak.INSTITUSJONSOPPHOLD_ANNEN_FORELDER, STØNADSKONTOTYPE_MØDREKVOTE, fpStartFar.plusWeeks(30), fpStartFar.plusWeeks(40).minusDays(1))
+                overføringsperiode(OverføringÅrsak.ALENEOMSORG, MØDREKVOTE, fpStartFar, fpStartFar.plusWeeks(10).minusDays(1)),
+                overføringsperiode(OverføringÅrsak.IKKE_RETT_ANNEN_FORELDER, MØDREKVOTE, fpStartFar.plusWeeks(10), fpStartFar.plusWeeks(20).minusDays(1)),
+                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, MØDREKVOTE, fpStartFar.plusWeeks(20), fpStartFar.plusWeeks(30).minusDays(1)),
+                overføringsperiode(OverføringÅrsak.INSTITUSJONSOPPHOLD_ANNEN_FORELDER, MØDREKVOTE, fpStartFar.plusWeeks(30), fpStartFar.plusWeeks(40).minusDays(1))
         );
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødsel, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordeling)
@@ -1208,10 +1223,10 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fødsel = testscenario.getPersonopplysninger().getFødselsdato();
 
         Fordeling fordelingMor = generiskFordeling(
-                utsettelsesperiode(UTSETTELSETYPE_SYKDOMSKADE, fødsel, fødsel.plusWeeks(14).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødsel.plusWeeks(14), fødsel.plusWeeks(20).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødsel.plusWeeks(20), fødsel.plusWeeks(24).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødsel.plusWeeks(24), fødsel.plusWeeks(28).minusDays(1)));
+                utsettelsesperiode(SøknadUtsettelseÅrsak.SYKDOM, fødsel, fødsel.plusWeeks(14).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødsel.plusWeeks(14), fødsel.plusWeeks(20).minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødsel.plusWeeks(20), fødsel.plusWeeks(24).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødsel.plusWeeks(24), fødsel.plusWeeks(28).minusDays(1)));
         ForeldrepengerBuilder søknadMor = lagSøknadForeldrepengerFødsel(fødsel, aktørIdMor, SøkersRolle.MOR)
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(aktørIdFar);
@@ -1241,9 +1256,9 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         Fordeling fordelingFar = generiskFordeling(
-                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, STØNADSKONTOTYPE_MØDREKVOTE, fødsel, fødsel.plusWeeks(14).minusDays(1)),
-                utsettelsesperiode(UTSETTELSETYPE_ARBEID, fødsel.plusWeeks(28), fødsel.plusWeeks(35).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fødsel.plusWeeks(35), fødsel.plusWeeks(45)));
+                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, MØDREKVOTE, fødsel, fødsel.plusWeeks(14).minusDays(1)),
+                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødsel.plusWeeks(28), fødsel.plusWeeks(35).minusDays(1)),
+                uttaksperiode(FEDREKVOTE, fødsel.plusWeeks(35), fødsel.plusWeeks(45)));
         ForeldrepengerBuilder søknadFar = lagSøknadForeldrepengerFødsel(fødsel, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordelingFar)
                 .medAnnenForelder(aktørIdMor);
@@ -1292,7 +1307,7 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartFar = fødselsdato.plusWeeks(12);
         Fordeling fordelingFar = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, fpStartFar, fpStartFar.plusWeeks(15)));
+                uttaksperiode(FORELDREPENGER, fpStartFar, fpStartFar.plusWeeks(15)));
         ForeldrepengerBuilder søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.FAR);
         long saksnummerFar = fordel.sendInnSøknad(søknadFar.build(),
@@ -1322,9 +1337,9 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(13).minusDays(1)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(13).minusDays(1)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)
                 .medFordeling(fordeling)
@@ -1359,8 +1374,8 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusDays(36)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusDays(36)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)
                 .medFordeling(fordeling);
@@ -1401,8 +1416,8 @@ public class Uttak extends ForeldrepengerTestBase {
         LocalDate fpStartdato = termindato;
 
         Fordeling fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, termindato, termindato.plusDays(95)),
-                uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, termindato.plusDays(96), termindato.plusDays(96+90)));
+                uttaksperiode(MØDREKVOTE, termindato, termindato.plusDays(95)),
+                uttaksperiode(FELLESPERIODE, termindato.plusDays(96), termindato.plusDays(96+90)));
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(fødselsdato,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)

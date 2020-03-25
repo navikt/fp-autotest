@@ -67,8 +67,8 @@ public class CasesRestService extends FpsakTestBase {
             Fordeling fordeling = new ObjectFactory().createFordeling();
             fordeling.setAnnenForelderErInformert(true);
             List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-            perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FEDREKVOTE, fpStartDatoFar, fpStartDatoFar.plusWeeks(6).minusDays(1)));
-            perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fpStartDatoFar.plusWeeks(6), fpStartDatoFar.plusWeeks(10)));
+            perioder.add(FordelingErketyper.uttaksperiode(Stønadskonto.FEDREKVOTE, fpStartDatoFar, fpStartDatoFar.plusWeeks(6).minusDays(1)));
+            perioder.add(FordelingErketyper.uttaksperiode(Stønadskonto.FELLESPERIODE, fpStartDatoFar.plusWeeks(6), fpStartDatoFar.plusWeeks(10)));
 
             ForeldrepengesoknadBuilder søknadFar = foreldrepengeSøknadErketyper.fodselfunnetstedFarMedMor(farAktørId, morAktørId, fødselsdato, LocalDate.now(), fordeling);
             fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -100,11 +100,11 @@ public class CasesRestService extends FpsakTestBase {
             Fordeling fordeling = new ObjectFactory().createFordeling();
             fordeling.setAnnenForelderErInformert(true);
             List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-            perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)));
-            perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
-            perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(23).minusDays(1)));
-            perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato.plusWeeks(23), fødselsdato.plusWeeks(33).minusDays(1)));
-            perioder.add(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(33), fødselsdato.plusWeeks(34).minusDays(1)));
+            perioder.add(FordelingErketyper.uttaksperiode(Stønadskonto.FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)));
+            perioder.add(FordelingErketyper.uttaksperiode(Stønadskonto.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
+            perioder.add(FordelingErketyper.uttaksperiode(Stønadskonto.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(23).minusDays(1)));
+            perioder.add(FordelingErketyper.uttaksperiode(Stønadskonto.MØDREKVOTE, fødselsdato.plusWeeks(23), fødselsdato.plusWeeks(33).minusDays(1)));
+            perioder.add(FordelingErketyper.uttaksperiode(Stønadskonto.FELLESPERIODE, fødselsdato.plusWeeks(33), fødselsdato.plusWeeks(34).minusDays(1)));
 
             ForeldrepengesoknadBuilder søknadMor = foreldrepengeSøknadErketyper.fodselfunnetstedUttakKunMor(morAktørId, fordeling, fødselsdato);
             fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
