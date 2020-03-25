@@ -1,5 +1,29 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static java.time.LocalDate.now;
+import static java.util.Collections.singletonList;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingBuilderMedGradering;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -7,9 +31,16 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.perioder.GraderingBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.*;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsatteVerdier;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettMaanedsinntektUtenInntektsmeldingAndel;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderteArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
@@ -24,26 +55,6 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeids
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.List;
-
-import static java.time.LocalDate.now;
-import static java.util.Collections.singletonList;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.*;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingBuilderMedGradering;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /**
  * Tester i denne klassen vil ikkje kjøres i felles pipeline med mindre dei har Tag "fpsak"
@@ -608,9 +619,8 @@ public class Beregning extends ForeldrepengerTestBase {
 
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTO_MANUELT_SATT_PÅ_VENT);
 
-        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, startDatoForeldrepenger,
-                orgNr)
-                .medUtsettelse(FordelingErketyper.UTSETTELSETYPE_ARBEID, startDatoForeldrepenger, startDatoForeldrepenger.plusMonths(1));
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, startDatoForeldrepenger, orgNr)
+                .medUtsettelse(SøknadUtsettelseÅrsak.ARBEID.getKode(), startDatoForeldrepenger, startDatoForeldrepenger.plusMonths(1));
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
 
         // Når testen skrives er det riktig at behandling fortsatt skal stå på vent
@@ -688,9 +698,9 @@ public class Beregning extends ForeldrepengerTestBase {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        perioder.add(uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
-        perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
-        perioder.add(new GraderingBuilder(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
+        perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
+        perioder.add(uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
+        perioder.add(new GraderingBuilder(FELLESPERIODE.getKode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
                 .medGraderingSN(50)
                 .build());
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
@@ -731,8 +741,8 @@ public class Beregning extends ForeldrepengerTestBase {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
-        perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
-        perioder.add(new GraderingBuilder(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
+        perioder.add(uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
+        perioder.add(new GraderingBuilder(FELLESPERIODE.getKode(), fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10))
                 .medGraderingSN(50)
                 .build());
 

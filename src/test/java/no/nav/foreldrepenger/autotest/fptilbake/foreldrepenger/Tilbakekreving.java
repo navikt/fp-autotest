@@ -1,5 +1,19 @@
 package no.nav.foreldrepenger.autotest.fptilbake.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
@@ -16,19 +30,6 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.STØNADSKONTOTYPE_FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -60,7 +61,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
-        Fordeling fordeling = generiskFordeling(FordelingErketyper.uttaksperiode(STØNADSKONTOTYPE_FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        Fordeling fordeling = generiskFordeling(FordelingErketyper.uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
         EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer.toString());
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);

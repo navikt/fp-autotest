@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
@@ -90,7 +92,6 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         UttakResultatPeriode periode = finnPeriode(fra, til);
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setOppholdÅrsak(new Kode("OPPHOLD_AARSAK_TYPE", "-", "Ikke satt eller valgt kode"));
         periode.setBegrunnelse("Vurdering");
         godkjennPeriode(periode, utbetalingsgrad);
         return this;
@@ -101,7 +102,6 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         UttakResultatPeriode periode = finnPeriode(fra, til);
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setOppholdÅrsak(new Kode("OPPHOLD_AARSAK_TYPE", "-", "Ikke satt eller valgt kode"));
         periode.setSamtidigUttak(samtidigUttak);
         periode.setFlerbarnsdager(flerbarnsdager);
         periode.setBegrunnelse("Vurdering");
@@ -114,7 +114,6 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         UttakResultatPeriode periode = finnPeriode(fra, til);
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setOppholdÅrsak(new Kode("OPPHOLD_AARSAK_TYPE", "-", "Ikke satt eller valgt kode"));
         periode.setSamtidigUttak(samtidigUttak);
         periode.setSamtidigUttaksprosent(BigDecimal.valueOf(samtidigUttakProsent));
         periode.setBegrunnelse("Vurdering");
@@ -122,7 +121,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         return this;
     }
 
-    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, int utbetalingsgrad, Kode stønadskonto) {
+    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, int utbetalingsgrad, Stønadskonto stønadskonto) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         godkjennPeriode(periode, utbetalingsgrad, stønadskonto);
         return this;
@@ -131,12 +130,11 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2001", "§14-6: Uttak er oppfylt"));
-        periode.setOppholdÅrsak(new Kode("OPPHOLD_AARSAK_TYPE", "-", "Ikke satt eller valgt kode"));
 
         //Utsettelses perioder trenger ikke trekkdager. set dem til 0
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
-            if(!periode.getUtsettelseType().kode.equals("-")) {
+            if(!UttakUtsettelseÅrsak.UDEFINERT.equals(periode.getUtsettelseType())) {
                 aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
             }
         }
@@ -148,7 +146,6 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
                                 boolean samtidigUttak, int trekkdager ) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2001", "§14-6: Uttak er oppfylt"));
-        periode.setOppholdÅrsak(new Kode("OPPHOLD_AARSAK_TYPE", "-", "Ikke satt eller valgt kode"));
         periode.setSamtidigUttak(samtidigUttak);
         periode.setFlerbarnsdager(flerbarnsdager);
 
@@ -156,7 +153,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
             aktivitet.setTrekkdagerDesimaler(BigDecimal.valueOf(trekkdager));
-            if(!periode.getUtsettelseType().kode.equals("-")) {
+            if(!UttakUtsettelseÅrsak.UDEFINERT.equals(periode.getUtsettelseType())) {
                 aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
             }
         }
@@ -165,7 +162,6 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     public FastsettUttaksperioderManueltBekreftelse godkjennPeriodeMedGradering(UttakResultatPeriode periode, Kode periodeResultatÅrsak) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setOppholdÅrsak(new Kode("OPPHOLD_AARSAK_TYPE", "-", "Ikke satt eller valgt kode"));
 
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             BigDecimal andelArbeid = aktivitet.getProsentArbeid();
@@ -174,16 +170,15 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         return this;
     }
 
-    public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad, Kode stønadskonto) {
+    public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad, Stønadskonto stønadskonto) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2001", "§14-6: Uttak er oppfylt"));
-        periode.setOppholdÅrsak(new Kode("OPPHOLD_AARSAK_TYPE", "-", "Ikke satt eller valgt kode"));
         periode.setStønadskonto(stønadskonto);
 
         //Utsettelses perioder trenger ikke trekkdager. set dem til 0
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
-            if(!periode.getUtsettelseType().kode.equals("-")) {
+            if(!UttakUtsettelseÅrsak.UDEFINERT.equals(periode.getUtsettelseType())) {
                 aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
             }
         }
@@ -203,8 +198,8 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
             aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
-            if(aktivitet.getStønadskontoType() == null || aktivitet.getStønadskontoType().kode.equals("-")) {
-                aktivitet.setStønadskontoType(new Kode("STOENADSKONTOTYPE", "MØDREKVOTE", "Mødrekvote"));
+            if(aktivitet.getStønadskontoType() == null || aktivitet.getStønadskontoType().equals(Stønadskonto.INGEN_STØNADSKONTO)) {
+                aktivitet.setStønadskontoType(Stønadskonto.MØDREKVOTE);
             }
         }
     }

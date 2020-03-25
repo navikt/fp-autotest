@@ -6,6 +6,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -24,8 +27,8 @@ public class UttakResultatPeriode {
     protected BigDecimal samtidigUttaksprosent;
     protected Boolean graderingInnvilget;
     protected Kode periodeType;
-    protected Kode utsettelseType;
-    protected Kode oppholdÅrsak;
+    protected UttakUtsettelseÅrsak utsettelseType;
+    protected OppholdÅrsak oppholdÅrsak;
     protected UttakResultatPeriodeAktivitet gradertAktivitet = null;
 
     public void setBegrunnelse(String begrunnelse) {
@@ -48,11 +51,11 @@ public class UttakResultatPeriode {
         this.periodeResultatÅrsak = periodeResultatÅrsak;
     }
 
-    public Kode getUtsettelseType() {
+    public UttakUtsettelseÅrsak getUtsettelseType() {
         return utsettelseType;
     }
 
-    public void setUtsettelseType(Kode utsettelseType) {
+    public void setUtsettelseType(UttakUtsettelseÅrsak utsettelseType) {
         this.utsettelseType = utsettelseType;
     }
 
@@ -99,19 +102,19 @@ public class UttakResultatPeriode {
     public BigDecimal getGradertArbeidsprosent() {
         return gradertAktivitet.prosentArbeid;
     }
-    
-    public void setOppholdÅrsak(Kode oppholdÅrsak) {
+
+    public void setOppholdÅrsak(OppholdÅrsak oppholdÅrsak) {
         this.oppholdÅrsak = oppholdÅrsak;
     }
-    public Kode getOppholdÅrsak() {
+    public OppholdÅrsak getOppholdÅrsak() {
         return oppholdÅrsak;
     }
-    
+
     public void setPeriodeType(Kode periodeType) {
         this.periodeType = periodeType;
     }
 
-    public void setStønadskonto(Kode stønadskonto) {
+    public void setStønadskonto(Stønadskonto stønadskonto) {
         for (UttakResultatPeriodeAktivitet aktivitet : aktiviteter) {
             aktivitet.stønadskontoType = stønadskonto;
         }

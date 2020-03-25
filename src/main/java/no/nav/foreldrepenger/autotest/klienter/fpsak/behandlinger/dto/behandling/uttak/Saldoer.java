@@ -5,14 +5,16 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Saldoer {
 
     protected LocalDate maksDatoUttak;
 
-    protected Map<String, Stonadskontoer> stonadskontoer;
+    protected Map<Stønadskonto, Stonadskontoer> stonadskontoer;
 
     public LocalDate getMaksDatoUttak() {return this.maksDatoUttak;}
 
-    public Map<String, Stonadskontoer> getStonadskontoer() {return this.stonadskontoer;}
+    public Map<Stønadskonto, Stonadskontoer> getStonadskontoer() {return this.stonadskontoer;}
 }

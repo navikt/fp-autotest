@@ -4,12 +4,13 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UttakResultatPeriodeAktivitet {
 
-    protected Kode stønadskontoType = null;
+    protected Stønadskonto stønadskontoType = null;
     protected BigDecimal trekkdagerDesimaler = null;
     protected BigDecimal prosentArbeid = null;
     protected BigDecimal utbetalingsgrad = null;
@@ -19,7 +20,7 @@ public class UttakResultatPeriodeAktivitet {
     protected BigDecimal trekkdager;
     protected String arbeidsforholdId;
     protected boolean gradering;
-    
+
     public BigDecimal getUtbetalingsgrad() {
         return utbetalingsgrad;
     }
@@ -32,10 +33,10 @@ public class UttakResultatPeriodeAktivitet {
     public void setTrekkdagerDesimaler(BigDecimal trekkdagerDesimaler) {
         this.trekkdagerDesimaler = trekkdagerDesimaler;
     }
-    public Kode getStønadskontoType() {
+    public Stønadskonto getStønadskontoType() {
         return stønadskontoType;
     }
-    public void setStønadskontoType(Kode stønadskontoType) {
+    public void setStønadskontoType(Stønadskonto stønadskontoType) {
         this.stønadskontoType = stønadskontoType;
     }
     public Arbeidsgiver getArbeidsgiver() {

@@ -1,5 +1,25 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenario;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -15,21 +35,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.*;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenario;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -135,13 +140,13 @@ public class Termin extends ForeldrepengerTestBase {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
-        perioder.add(uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)));
-        perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)));
-        perioder.add(graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_MØDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1), orgnr2, 40));
-        perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, termindato.plusWeeks(9), termindato.plusWeeks(12).minusDays(1)));
-        perioder.add(graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_MØDREKVOTE, termindato.plusWeeks(12), termindato.plusWeeks(15).minusDays(1), orgnr1, 10));
-        perioder.add(graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_FELLESPERIODE, termindato.plusWeeks(15), termindato.plusWeeks(18).minusDays(1), orgnr2, 20));
-        perioder.add(graderingsperiodeArbeidstaker(STØNADSKONTOTYPE_FELLESPERIODE, termindato.plusWeeks(18), termindato.plusWeeks(21).minusDays(1), orgnr1, 30));
+        perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)));
+        perioder.add(uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)));
+        perioder.add(graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1), orgnr2, 40));
+        perioder.add(uttaksperiode(MØDREKVOTE, termindato.plusWeeks(9), termindato.plusWeeks(12).minusDays(1)));
+        perioder.add(graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(12), termindato.plusWeeks(15).minusDays(1), orgnr1, 10));
+        perioder.add(graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(15), termindato.plusWeeks(18).minusDays(1), orgnr2, 20));
+        perioder.add(graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(18), termindato.plusWeeks(21).minusDays(1), orgnr1, 30));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -185,7 +190,7 @@ public class Termin extends ForeldrepengerTestBase {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        perioder.add(uttaksperiode(STØNADSKONTOTYPE_MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1)));
+        perioder.add(uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1)));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -211,9 +216,9 @@ public class Termin extends ForeldrepengerTestBase {
         List<UttakResultatPeriode> resultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         verifiser(resultatPerioder.size() == 2, "Det er ikke blitt opprettet riktig antall perioder.");
         verifiser(resultatPerioder.get(0).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden søkt for skal være innvilget.");
-        verifiser(resultatPerioder.get(0).getAktiviteter().get(0).getStønadskontoType().kode.equals("MØDREKVOTE"), "Feil stønadskontotype.");
+        verifiser(resultatPerioder.get(0).getAktiviteter().get(0).getStønadskontoType().equals(MØDREKVOTE), "Feil stønadskontotype.");
         verifiser(resultatPerioder.get(1).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden søkt for skal være innvilget.");
-        verifiser(resultatPerioder.get(1).getAktiviteter().get(0).getStønadskontoType().kode.equals("MØDREKVOTE"), "Feil stønadskontotype.");
+        verifiser(resultatPerioder.get(1).getAktiviteter().get(0).getStønadskontoType().equals(MØDREKVOTE), "Feil stønadskontotype.");
         LocalDate skjaeringstidspunkt = termindato.minusWeeks(3);
         verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato().equals(skjaeringstidspunkt), "Mismatch på skjæringstidspunkt.");
     }

@@ -1,22 +1,28 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+
+import java.math.BigDecimal;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.*;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 
 public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
@@ -30,10 +36,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
 
         var fordeling = generiskFordeling(
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
-                utsettelsesperiode(UTSETTELSETYPE_ARBEID, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(20).minusDays(1)),
-                uttaksperiode(STØNADSKONTOTYPE_FORELDREPENGER, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(36).minusDays(1)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
+                uttaksperiode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(20).minusDays(1)),
+                uttaksperiode(FORELDREPENGER, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(36).minusDays(1)));
 
         var søknad = lagSøknadForeldrepengerFødsel(
                 fødselsdato, søkerAktørId, SøkersRolle.MOR)
