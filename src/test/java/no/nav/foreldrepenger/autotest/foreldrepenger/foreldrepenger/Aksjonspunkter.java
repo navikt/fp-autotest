@@ -258,4 +258,27 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
                 orgnummer);
         fordel.sendInnInntektsmelding(im, søkerAktørIdent, søkerIdent, saksnummer);
     }
+    @DisplayName("SJEKK_MANGLENDE_FØDSEL")
+    @Test
+    public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_5027() throws Exception{
+        var testscenario = opprettTestscenario("501");
+
+        var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var fødselsdato = LocalDate.now().minusWeeks(3);
+        var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+
+        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgnummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var im = lagInntektsmelding(inntekt, søkerIdent, fødselsdato.minusWeeks(3), orgnummer);
+        fordel.sendInnInntektsmelding(im, søkerAktørIdent, søkerIdent, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL);
+    }
+
+
 }
