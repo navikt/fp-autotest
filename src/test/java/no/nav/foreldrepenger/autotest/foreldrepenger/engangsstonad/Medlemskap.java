@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
-import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -24,10 +24,12 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
-public class Medlemskap extends EngangsstonadTestBase {
+public class Medlemskap extends FpsakTestBase {
 
     private static final Logger logger = LoggerFactory.getLogger(Medlemskap.class);
 

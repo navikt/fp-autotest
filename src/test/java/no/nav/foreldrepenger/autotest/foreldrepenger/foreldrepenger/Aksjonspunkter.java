@@ -29,6 +29,11 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Collections;
 
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.*;
+
 
 @Tag("util")
 public class Aksjonspunkter  extends ForeldrepengerTestBase {

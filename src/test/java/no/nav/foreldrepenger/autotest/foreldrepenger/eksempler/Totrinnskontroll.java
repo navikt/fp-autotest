@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Tag;
 
 import java.time.LocalDate;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
+
 @Tag("eksempel")
 public class Totrinnskontroll extends FpsakTestBase {
 

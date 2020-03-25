@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
+
 @Tag("eksempel")
 public class BehandleAksjonspunkter extends FpsakTestBase {
 

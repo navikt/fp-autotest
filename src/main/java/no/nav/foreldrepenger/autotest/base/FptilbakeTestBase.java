@@ -1,16 +1,15 @@
-package no.nav.foreldrepenger.autotest.base.fptilbake;
+package no.nav.foreldrepenger.autotest.base;
 
 import no.nav.foreldrepenger.autotest.aktoerer.fptilbake.TilbakekrevingSaksbehandler;
-import no.nav.foreldrepenger.autotest.base.EngangsstonadTestBase;
 import org.junit.jupiter.api.BeforeEach;
 
-public class FptilbakeTestBaseEngangsstonad extends EngangsstonadTestBase {
+public class FptilbakeTestBase extends FpsakTestBase {
 
     protected TilbakekrevingSaksbehandler tbksaksbehandler;
     protected TilbakekrevingSaksbehandler tbkbeslutter;
 
     @BeforeEach
-    public void setUpTbkSaksbehandlerEN(){
+    public void setUpTbkSaksbehandlerSVP(){
 
         tbksaksbehandler = new TilbakekrevingSaksbehandler();
         tbkbeslutter = new TilbakekrevingSaksbehandler();

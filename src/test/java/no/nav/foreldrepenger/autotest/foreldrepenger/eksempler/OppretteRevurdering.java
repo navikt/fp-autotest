@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Tag;
 
 import java.time.LocalDate;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+
 @Tag("eksempel")
 public class OppretteRevurdering extends ForeldrepengerTestBase {
 

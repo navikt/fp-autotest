@@ -27,6 +27,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.*;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenario;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")

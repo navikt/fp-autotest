@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.svangerskapspenger;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.base.SvangerskapspengerTestBase;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SvangerskapspengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
@@ -30,11 +30,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("fpsak")
 @Tag("svangerskapspenger")
-public class Førstegangsbehandling extends SvangerskapspengerTestBase {
+public class Førstegangsbehandling extends FpsakTestBase {
 
     @Test
     @DisplayName("Mor søker SVP - ingen tilrettelegging")

@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+
 @Tag("eksempel")
 public class Inntektsmelding extends FpsakTestBase {
 
