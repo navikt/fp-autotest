@@ -10,6 +10,8 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 import java.time.LocalDate;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
+
 public class OverstyringAvGradering extends FpsakTestBase {
 
     public void skalKunneOverstyreGradering() throws Exception {

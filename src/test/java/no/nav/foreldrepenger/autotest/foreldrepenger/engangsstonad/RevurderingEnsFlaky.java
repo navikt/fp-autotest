@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
+
 @Tag("flaky")
 @Tag("engangsstonad")
 public class RevurderingEnsFlaky extends ForeldrepengerTestBase {

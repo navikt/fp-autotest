@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.*;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 
 public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 

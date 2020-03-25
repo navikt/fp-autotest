@@ -54,6 +54,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.*;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.*;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.*;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.Assertions.assertThat;
 
