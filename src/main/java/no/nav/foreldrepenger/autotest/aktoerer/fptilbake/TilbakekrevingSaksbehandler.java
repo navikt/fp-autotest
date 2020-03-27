@@ -4,6 +4,8 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprettRevurdering;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.*;
@@ -11,6 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +37,9 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     //Oppretter ny tilbakekreving tilsvarende Manuell Opprettelse via behandlingsmenyen.
     public void opprettTilbakekreving(Long saksnummer, UUID uuid, String ytelseType) throws Exception {
         behandlingerKlient.putTilbakekreving(new BehandlingOpprett(saksnummer, uuid, "BT-007", ytelseType));
+    }
+    public void opprettTilbakekrevingRevurdering(Long saksnummer, UUID uuid, int behandlingId, String ytelseType, RevurderingArsak behandlingArsakType) throws Exception {
+        behandlingerKlient.putTilbakekreving(new BehandlingOpprettRevurdering(saksnummer, valgtBehandling.id, uuid, "BT-009", ytelseType, behandlingArsakType));
     }
     //Henter siste behandlingen fra fptilbake på gitt saksnummer.
     public void hentSisteBehandling(Long saksnummer) throws Exception {
@@ -106,6 +112,8 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
                     apVilkårsvurdering.addVilkårPeriode(perioder.fom, perioder.tom);
                 }
                 return apVilkårsvurdering;
+            case 5003:
+//                ApForeldelse apForeldelse = new ApForeldelse();
             case 5004:
                 return new ForeslåVedtak();
             case 5005:
@@ -139,6 +147,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         }
         Vent.til(() -> {
             refreshBehandling();
+            Thread.sleep(1000);
             return harAktivtAksjonspunkt(aksjonspunktKode);
         }, 60, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
     }

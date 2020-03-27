@@ -6,4 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class BehandlingType {
 
     public String kode;
+    protected String kodeverk;
+
+    public BehandlingType() {
+        this.kodeverk = "FAGSAK_YTELSE";
+    }
 }

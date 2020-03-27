@@ -5,6 +5,7 @@ import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.FptilbakeKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprettRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
@@ -36,6 +37,10 @@ public class BehandlingerKlient extends FptilbakeKlient {
     public void putTilbakekreving(BehandlingOpprett behandlingOpprett) throws IOException {
         String url = hentRestRotUrl() + BEHANDLINGER_OPPRETT;
         postOgVerifiser(url, behandlingOpprett, StatusRange.STATUS_SUCCESS);
+    }
+    public void putTilbakekreving(BehandlingOpprettRevurdering behandlingOpprettRevurdering) throws IOException {
+        String url = hentRestRotUrl() + BEHANDLINGER_OPPRETT;
+        postOgVerifiser(url, behandlingOpprettRevurdering, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Henter ut alle behandlinger fra fptilbake på gitt saksnummer")
