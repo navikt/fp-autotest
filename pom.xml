@@ -22,7 +22,7 @@
 
         <jackson.version>2.10.3</jackson.version>
 
-        <dokumentgenerator.version>1.0-20200120151506-1e86c2c</dokumentgenerator.version>
+        <dokumentgenerator.version>1.0-20200327105749-73dec14</dokumentgenerator.version>
     </properties>
 
     <profiles>
