@@ -40,22 +40,27 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErket
 @Tag("util")
 public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
+
     @Test
-    public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_papir() throws Exception{
-        var testscenario = opprettTestscenario("500");
+    @DisplayName("REGISTRER_PAPIRSØKNAD_FORELDREPENGER")
+    public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5040() throws Exception{
+        var testscenario = opprettTestscenario("500");        // Fødselsdato er for 2 uker siden, ved bruk av "500"
         var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
-        // Fødselsdato er for 2 uker siden, ved bruk av "500"
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummer = fordel.sendInnSøknad(null, søkerAktørIdent, søkerIdent, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+        var saksnummer = fordel.sendInnSøknad(null, søkerAktørIdent, søkerIdent,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
 
-        //Mor Starter uttak ved fødsel
         var inntektsmelding = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 søkerIdent,
-                testscenario.getPersonopplysninger().getFødselsdato(),
+                testscenario.getPersonopplysninger().getFødselsdato(),         //Mor Starter uttak ved fødsel
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(inntektsmelding, søkerAktørIdent, søkerIdent, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.REGISTRER_PAPIRSØKNAD_FORELDREPENGER);
     }
 
     @Test
