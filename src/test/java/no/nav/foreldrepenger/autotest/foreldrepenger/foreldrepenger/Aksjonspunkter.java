@@ -1,22 +1,5 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
-
-import java.time.LocalDate;
-import java.util.Collections;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak;
@@ -40,11 +23,40 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Adopsjon;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.util.Collections;
+
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.*;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.*;
 
 
 @Tag("util")
 public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
+    @Test
+    public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_papir() throws Exception{
+        var testscenario = opprettTestscenario("500");
+        var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+        // Fødselsdato er for 2 uker siden, ved bruk av "500"
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        var saksnummer = fordel.sendInnSøknad(null, søkerAktørIdent, søkerIdent, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+
+        //Mor Starter uttak ved fødsel
+        var inntektsmelding = lagInntektsmelding(
+                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                søkerIdent,
+                testscenario.getPersonopplysninger().getFødselsdato(),
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+        fordel.sendInnInntektsmelding(inntektsmelding, søkerAktørIdent, søkerIdent, saksnummer);
+    }
 
     @Test
     @DisplayName("AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE")
