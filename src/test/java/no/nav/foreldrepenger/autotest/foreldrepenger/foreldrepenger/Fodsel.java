@@ -39,7 +39,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
@@ -520,7 +519,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FAKTA_UTTAK);
         AvklarFaktaUttakBekreftelse avklarFaktaUttakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.class);
         avklarFaktaUttakBekreftelse.godkjennPeriode(startDatoForeldrepenger, startDatoForeldrepenger.plusWeeks(2),
-                        saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
+                saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
 
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
@@ -628,7 +627,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgRevurderingBehandling();
 
-        PapirSoknadEndringForeldrepengerBekreftelse aksjonspunktBekreftelseEndringssøknad = saksbehandler.aksjonspunktBekreftelse(PapirSoknadEndringForeldrepengerBekreftelse.class);
+        var aksjonspunktBekreftelseEndringssøknad = saksbehandler.aksjonspunktBekreftelse(PapirSoknadEndringForeldrepengerBekreftelse.class);
         FordelingDto fordelingEndringssøknad = new FordelingDto();
         //Legger til fellesperiode på slutten
         PermisjonPeriodeDto fellesperiode = new PermisjonPeriodeDto(FELLESPERIODE,
@@ -894,7 +893,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder avklarFaktaUttakPerioder = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         //20 uker fra erketype
         avklarFaktaUttakPerioder.delvisGodkjennPeriode(fødselsdato, fødselsdato.plusWeeks(20), fødselsdato, fødselsdato.plusWeeks(20),
-                        hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
+                hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
@@ -1275,7 +1274,6 @@ public class Fodsel extends ForeldrepengerTestBase {
     public void utsettelse_med_avvik() throws Exception {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
-        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødsel = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødsel.minusWeeks(3);
@@ -1288,7 +1286,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_BARN, fødsel.plusWeeks(6), fødsel.plusWeeks(9).minusDays(1)));
         perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER, fødsel.plusWeeks(9), fødsel.plusWeeks(12).minusDays(1)));
         perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.SYKDOM, fødsel.plusWeeks(12), fødsel.plusWeeks(15).minusDays(1)));
-        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødsel.plusWeeks(15), fødsel.plusWeeks(18).minusDays(1)));
+        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødsel.plusWeeks(15), fødsel.plusWeeks(16).minusDays(1)));
+        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.HV_OVELSE, fødsel.plusWeeks(16), fødsel.plusWeeks(17).minusDays(1)));
+        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.NAV_TILTAK, fødsel.plusWeeks(17), fødsel.plusWeeks(18).minusDays(1)));
         perioder.add(FordelingErketyper.uttaksperiode(FELLESPERIODE, fødsel.plusWeeks(18), fødsel.plusWeeks(21).minusDays(1)));
 
         // sender inn søknad
@@ -1310,11 +1310,13 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        Kode godkjenningskode = saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_OK");
+        var godkjenningskode = saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_OK");
         var avklarFaktaUttakPerioder = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         avklarFaktaUttakPerioder.godkjennPeriode(fødsel.plusWeeks(6), fødsel.plusWeeks(9).minusDays(1), godkjenningskode, true)
                 .godkjennPeriode(fødsel.plusWeeks(9), fødsel.plusWeeks(12).minusDays(1), godkjenningskode, true)
-                .godkjennPeriode(fødsel.plusWeeks(12), fødsel.plusWeeks(15).minusDays(1), godkjenningskode, true);
+                .godkjennPeriode(fødsel.plusWeeks(12), fødsel.plusWeeks(15).minusDays(1), godkjenningskode, true)
+                .godkjennPeriode(fødsel.plusWeeks(16), fødsel.plusWeeks(17).minusDays(1), godkjenningskode, true)
+                .godkjennPeriode(fødsel.plusWeeks(17), fødsel.plusWeeks(18).minusDays(1), godkjenningskode, true);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
@@ -1325,11 +1327,13 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .godkjennAksjonspunkt(ap);
         beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
 
-        verifiser(beslutter.valgtBehandling.hentUttaksperioder().size() == 7, "Feil antall uttaksperioder, skal være 7");
+        verifiser(beslutter.valgtBehandling.hentUttaksperioder().size() == 9, "Feil antall uttaksperioder, skal være 9");
         verifiser(beslutter.valgtBehandling.hentUttaksperiode(2).getAktiviteter().get(0).getTrekkdagerDesimaler().compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
         verifiser(beslutter.valgtBehandling.hentUttaksperiode(3).getAktiviteter().get(0).getTrekkdagerDesimaler().compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
         verifiser(beslutter.valgtBehandling.hentUttaksperiode(4).getAktiviteter().get(0).getTrekkdagerDesimaler().compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
         verifiser(beslutter.valgtBehandling.hentUttaksperiode(5).getAktiviteter().get(0).getTrekkdagerDesimaler().compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
+        verifiser(beslutter.valgtBehandling.hentUttaksperiode(6).getAktiviteter().get(0).getTrekkdagerDesimaler().compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
+        verifiser(beslutter.valgtBehandling.hentUttaksperiode(7).getAktiviteter().get(0).getTrekkdagerDesimaler().compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
 
     }
 

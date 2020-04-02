@@ -21,7 +21,7 @@ public enum UttakUtsettelseÅrsak {
     SØKER_INNLAGT("SØKER_INNLAGT"),
     BARN_INNLAGT("BARN_INNLAGT"),
     HV_OVELSE("HV_OVELSE"),
-    TILTAK_NAV("TILTAK_NAV"),
+    NAV_TILTAK("NAV_TILTAK"),
     UDEFINERT("-"),
     ;
 
