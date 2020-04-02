@@ -1,7 +1,14 @@
 package no.nav.foreldrepenger.autotest.erketyper;
 
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Periode;
-import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.*;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.AnnenOpptjening;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.EgenNaering;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Frilans;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Frilansoppdrag;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.NorskOrganisasjon;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Regnskapsfoerer;
+import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.UtenlandskArbeidsforhold;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.AnnenOpptjeningTyper;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Land;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Virksomhetstyper;
@@ -20,6 +27,29 @@ public class OpptjeningErketyper {
         Periode periode = new Periode();
         periode.setFom((LocalDate.now().minusYears(2)));
         periode.setTom((LocalDate.now()));
+
+        Frilansoppdrag frilansoppdrag = new Frilansoppdrag();
+        frilansoppdrag.setOppdragsgiver("Tims BBQ og fotmassasje");
+        frilansoppdrag.setPeriode(periode);
+
+        Frilans frilans = new Frilans();
+        frilans.setHarInntektFraFosterhjem(false);
+        frilans.setErNyoppstartet(false);
+        frilans.setNaerRelasjon(false);
+        frilans.getPeriode().add(periode);
+        frilans.getFrilansoppdrag().add(frilansoppdrag);
+
+        Opptjening opptjening = new Opptjening();
+        opptjening.setFrilans(frilans);
+        return opptjening;
+
+    }
+
+    public static Opptjening medFrilansOpptjening(LocalDate Fom, LocalDate Tom){
+
+        Periode periode = new Periode();
+        periode.setFom(Fom);
+        periode.setTom(Tom);
 
         Frilansoppdrag frilansoppdrag = new Frilansoppdrag();
         frilansoppdrag.setOppdragsgiver("Tims BBQ og fotmassasje");

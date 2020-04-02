@@ -1,0 +1,78 @@
+{
+	"trex": {
+		"foreldrepenger": [],
+		"svangerskapspenger": [],
+		"sykepenger": [
+			{
+				"status": {
+					"kode": "L",
+					"termnavn": "status"
+				},
+				"tema": {
+					"kode": "SP",
+					"termnavn": "tema"
+				},
+				"dekningsgrad": 80,
+				"foedselsdatoBarn": "now()-P2D",
+				"arbeidskategori": {
+					"kode": "01",
+					"termnavn": "ketegori"
+				},
+				"arbeidsforhold":  [],
+				"periode": {
+					"fom": "now() - P9M",
+					"tom": "now()"
+				},
+				"behandlingstema": {
+					"kode": "SP",
+					"termnavn": "behandlingstema"
+				},
+				"identdato": "now() - P9M",
+				"iverksatt": "now() - P9M",
+				"opphørFom": "now() + P1D",
+				"gradering": 100,
+				"opprinneligIdentdato": null,
+				"registrert": null,
+				"saksbehandlerId": "ABC",
+				"vedtak": [
+					{
+						"periode": {
+							"fom": "now() - P9M",
+							"tom": "now()"
+						},
+						"utbetalingsgrad": 100
+					}
+				]
+			}
+		],
+		"barnsykdom": []
+	},
+	"inntektskomponent": {
+		"inntektsperioder": []
+	},
+	"aareg": {
+		"arbeidsforhold": [
+			{
+				"arbeidsforholdId": "ARB001-001",
+				"ansettelsesperiodeFom": "now() - P4Y",
+				"ansettelsesperiodeTom": "now() - P12M",
+				"arbeidsforholdstype": "ordinaertArbeidsforhold",
+				"arbeidsgiverOrgnr": "910909088",
+				"arbeidsavtaler" : [
+					{
+						"fomGyldighetsperiode": "now() - P4Y",
+						"tomGyldighetsperiode": "now() - P12M",
+						"sisteLønnsendringsdato": "now() - P6M",
+						"avlønningstype": "fastlønn",
+						"avtaltArbeidstimerPerUke": "40",
+						"stillingsprosent" : 100,
+						"beregnetAntallTimerPerUke": "40"
+					}
+				]
+			}
+		]
+	},
+	"sigrun": {
+		"inntektsår": []
+	}
+}

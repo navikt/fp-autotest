@@ -1,13 +1,12 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.util.List;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
+import java.util.List;
 
 @BekreftelseKode(kode="5058")
 public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
@@ -69,6 +68,11 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         fakta.leggTilAndelerEndretBg(periode, andel, fastsatteVerdier);
         return this;
     }
+    public void behandleFrilansMottarIkke() {
+        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode);
+        fakta.leggTilMottarYtelse(false, List.of());
+    }
+
     public void behandleFrilansMottar(int maanedsinntekt) {
         fakta.leggTilMaanedsinntektFL(maanedsinntekt);
         fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode);

@@ -1,0 +1,12 @@
+{
+	"inntektskomponent": {
+		"frilansarbeidsforholdperioder": [
+			{
+				"frilansFom":"now() - P2Y",
+				"frilansTom":"now()",
+				"orgnr":"973861778",
+				"stillingsprosent":"100"
+			}
+		]
+	}
+ }

@@ -1,11 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -13,6 +7,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @BekreftelseKode(kode="5071")
 public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekreftelse {
@@ -46,14 +46,36 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     public void godkjennAlleManuellePerioder(int utbetalingsgrad, int trekkdager){
         for(UttakResultatPeriode uttakPeriode : perioder) {
             if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
-                godkjennPeriode(uttakPeriode, 100, false, false, trekkdager);
+                godkjennPeriode(uttakPeriode, utbetalingsgrad, false, false, trekkdager);
             }
         }
     }
+    public void godkjennAlleManuellePerioder(Kode periodeResultatÅrsak) {
+        for(UttakResultatPeriode uttaksperiode : perioder) {
+            if (!uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+                godkjennPeriode(uttaksperiode, periodeResultatÅrsak);
+            }
+        }
+    }
+    public void godkjennAlleManuellePerioderMedHverSinÅrsak(List<Kode> periodeResultatÅrsak) {
+        for (int i=0; i < perioder.size(); i++) {
+            if (!perioder.get(i).getManuellBehandlingÅrsak().kode.equals("-")) {
+                godkjennPeriode(perioder.get(i), periodeResultatÅrsak.get(i));
+            }
+        }
+    }
+
     public void avslåAlleManuellePerioder(){
         for(UttakResultatPeriode uttakPeriode : perioder) {
             if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
                 avvisPeriode(uttakPeriode, 0);
+            }
+        }
+    }
+    public void avslåAlleManuellePerioderMedPeriodeResultatÅrsak(Kode periodeResultatÅrsak){
+        for(UttakResultatPeriode uttakPeriode : perioder) {
+            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
+                avvisPeriode(uttakPeriode, periodeResultatÅrsak,0);
             }
         }
     }
@@ -142,6 +164,18 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad, boolean flerbarnsdager, boolean samtidigUttak ) {
         godkjennPeriode(periode, utbetalingsgrad, flerbarnsdager, samtidigUttak, 100);
     }
+    public void godkjennPeriode(UttakResultatPeriode uttaksperiode, Kode periodeResultatÅrsak) {
+        uttaksperiode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
+        uttaksperiode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
+        uttaksperiode.setSamtidigUttak(false);
+        uttaksperiode.setFlerbarnsdager(false);
+
+        //Trekkdager endres ikke på
+        for (UttakResultatPeriodeAktivitet aktivitet : uttaksperiode.getAktiviteter()) {
+            aktivitet.setUtbetalingsgrad(BigDecimal.valueOf((100 - aktivitet.getProsentArbeid().doubleValue())));
+        }
+    }
+
     public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad, boolean flerbarnsdager,
                                 boolean samtidigUttak, int trekkdager ) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
@@ -201,6 +235,17 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
             if(aktivitet.getStønadskontoType() == null || aktivitet.getStønadskontoType().equals(Stønadskonto.INGEN_STØNADSKONTO)) {
                 aktivitet.setStønadskontoType(Stønadskonto.MØDREKVOTE);
             }
+        }
+    }
+
+    public void avvisPeriode(UttakResultatPeriode periode, Kode periodeResultatÅrsak, int utbetalingsgrad) {
+        periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "AVSLÅTT", "Avslått"));
+        periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
+
+        //HACK for manglende aktivitet i periode (set aktivitet til å trekke fra mødrekvoten)
+        for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
+            aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
+            aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
         }
     }
 
