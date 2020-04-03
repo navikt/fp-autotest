@@ -194,7 +194,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         double utbetalingProsentFaktor = Double.valueOf(100 - tilrettelegginsprosent)/100;
         double beregnetDagsats = Math.round((6*helG) * utbetalingProsentFaktor / 260);
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == (int)beregnetDagsats,
-                "Forventer at 60% av 6G utbetales til søker!");
+                "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPart(0),
                 "Foventer at hele utbetalte dagsatsen går til søker!");
 
@@ -292,7 +292,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
 
         var internArbeidforholdId = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId1);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilBareEttAvArbeidsforholdene(internArbeidforholdId, 0),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidforholdId, 0),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
     }
 
@@ -372,9 +372,9 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         double utbetalingProsentFaktor = Double.valueOf(100 - tilrettelegginsprosent)/100;
         double beregnetDagsats = Math.round((6*helG) * utbetalingProsentFaktor / 260);
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == (int)beregnetDagsats,
-                "Forventer at 60% av 6G utbetales til søker!");
+                "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!");
         var internArbeidforholdId = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilBareEttAvArbeidsforholdene(internArbeidforholdId, 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidforholdId, 100),
                 "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver siden de ønsker full refusjon!");
 
 
@@ -434,8 +434,116 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         saksbehandler.ventTilAvsluttetBehandling();
 
-        // TODO LEGG TIL VERIFISERINGER!
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidforholdId, 100),
+                "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver siden de ønsker full refusjon!");
     }
+
+    @Test
+    @DisplayName("5: ")
+    public void svangeskapTestNummerFem() throws Exception {
+        var testscenario = opprettTestscenario("504");
+        var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
+
+        var orgNr1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var orgNr2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr();
+        LocalDate termindato = LocalDate.now().plusMonths(3);
+        var tilrettelegginsprosent = 0;
+        var tilrettelegging1 = TilretteleggingsErketyper.ingenTilrettelegging(
+                termindato.minusMonths(3),
+                termindato.minusMonths(3),
+                ArbeidsforholdErketyper.virksomhet(orgNr1));
+        var tilrettelegging2 = TilretteleggingsErketyper.ingenTilrettelegging(
+                termindato.minusMonths(3),
+                termindato.minusMonths(3),
+                ArbeidsforholdErketyper.virksomhet(orgNr2));
+
+        var søknad = lagSvangerskapspengerSøknad(
+                søkerAktørId,
+                SøkersRolle.MOR,
+                termindato,
+                List.of(tilrettelegging1, tilrettelegging2));
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        var saksnummer = fordel.sendInnSøknad(
+                søknad.build(),
+                søkerAktørId,
+                søkerFnr,
+                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+
+        var inntektPerMånedForAF1 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgNummer1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var arbeidsforholdId1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsforholdId();
+        var inntektsmedling1 = lagSvangerskapspengerInntektsmelding(
+                søkerFnr,
+                inntektPerMånedForAF1,
+                orgNummer1)
+                .medArbeidsforholdId(arbeidsforholdId1)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMånedForAF1));
+        var inntektPerMånedForAF2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp();
+        var orgNummer2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr();
+        var arbeidsforholdId2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsforholdId();
+        var inntektsmedling2 = lagSvangerskapspengerInntektsmelding(
+                søkerFnr,
+                inntektPerMånedForAF2,
+                orgNummer2)
+                .medArbeidsforholdId(arbeidsforholdId2)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMånedForAF1));;
+        fordel.sendInnInntektsmeldinger(
+                List.of(inntektsmedling1, inntektsmedling2),
+                søkerAktørId,
+                søkerFnr,
+                saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FØDSEL_OG_TILRETTELEGGING);
+        AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging =
+                saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+        avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
+
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.BEKREFT_SVANGERSKAPSPENGER_VILKÅR);
+        BekreftSvangerskapspengervilkår bekreftSvangerskapspengervilkår =
+                saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+        bekreftSvangerskapspengervilkår
+                .godkjenn()
+                .setBegrunnelse("Godkjenner vilkår");
+        saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
+
+
+        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FORESLÅ_VEDTAK);
+        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+        beslutter.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FATTER_VEDTAK);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        double helG = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getHalvG() * 2;
+        double utbetalingProsentFaktor = Double.valueOf(100 - tilrettelegginsprosent)/100;
+        double beregnetDagsats = Math.round((6*helG) * utbetalingProsentFaktor / 260);
+        BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0);
+        verifiser(beregningsgrunnlagPeriode.getDagsats() == (int)beregnetDagsats,
+                "Forventer at dagsatsen beregnes ut i fra årsinntekten og 100% utbetalingsgrad!");
+
+        double månedsinntekt = Double.valueOf(inntektPerMånedForAF1 + inntektPerMånedForAF2);
+        double prosentTilArbeidsgiver1 = (Double.valueOf(inntektPerMånedForAF1) / månedsinntekt) * 100;
+        var internArbeidforholdId1 = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId1);
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidforholdId1, prosentTilArbeidsgiver1),
+                "Foventer at hele den utbetalte dagsatsen går til søker!");
+
+        double prosentTilArbeidforhold2 = 100 - prosentTilArbeidsgiver1;
+        var internArbeidsgiver2 = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId2);
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidsgiver2, prosentTilArbeidforhold2),
+                "Foventer at hele den utbetalte dagsatsen går til søker!");
+    }
+
 
 
     private String hentInternArbeidsforholdIdVedHjelpAvEkstern(AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging, String arbeidsforholdId) {

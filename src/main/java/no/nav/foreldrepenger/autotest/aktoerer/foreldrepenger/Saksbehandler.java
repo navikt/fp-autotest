@@ -410,7 +410,7 @@ public class Saksbehandler extends Aktoer {
     }
 
 
-    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilBareEttAvArbeidsforholdene(String internArbeidsforholdID, double prosentAvDagsatsTilArbeidsgiver) {
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(String internArbeidsforholdID, double prosentAvDagsatsTilArbeidsgiver) {
         var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
         for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
             var dagsats = periode.getDagsats();
@@ -419,7 +419,7 @@ public class Saksbehandler extends Aktoer {
             List<Integer> utbetaltTilSøkerForAndeler = new ArrayList<>();
             List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
             for (var andel : periode.getAndeler()) {
-                if ( andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID) ) {
+                if ( andel.getArbeidsforholdId() != null && andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID) ) {
                     utbetaltRefusjonForAndeler.add(andel.getRefusjon());
                     utbetaltTilSøkerForAndeler.add(andel.getTilSoker());
                 }
@@ -428,9 +428,10 @@ public class Saksbehandler extends Aktoer {
             if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
                 return false;
             }
-            if ( utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker ) {
-                return false;
-            }
+            // TODO: Lage egen metode?
+            //if ( utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker ) {
+            //    return false;
+            //}
         }
         return true;
     }
