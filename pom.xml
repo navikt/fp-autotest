@@ -64,6 +64,13 @@
             </properties>
         </profile>
         <profile>
+            <id>verdikjedetester</id>
+            <properties>
+                <includeTestsTags>verdikjede</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
             <id>utvikling</id>
             <properties>
                 <includeTestsTags>utvikling</includeTestsTags>

@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
 import java.time.LocalDate;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningsgrunnlagPeriodeDto {
@@ -19,7 +18,7 @@ public class BeregningsgrunnlagPeriodeDto {
     protected List<Kode> periodeAarsaker;
     protected int dagsats;
     protected List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndel;
-    
+
     public List<BeregningsgrunnlagPrStatusOgAndelDto> getBeregningsgrunnlagPrStatusOgAndel(){
         return beregningsgrunnlagPrStatusOgAndel;
     }
@@ -35,4 +34,9 @@ public class BeregningsgrunnlagPeriodeDto {
     public int getDagsats() {
         return dagsats;
     }
+
+    public double getRedusertPrAar() {
+        return redusertPrAar;
+    }
+
 }

@@ -409,6 +409,32 @@ public class Saksbehandler extends Aktoer {
         return true;
     }
 
+
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilBareEttAvArbeidsforholdene(String internArbeidsforholdID, double prosentAvDagsatsTilArbeidsgiver) {
+        var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
+        for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
+            var dagsats = periode.getDagsats();
+            var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
+            var forventetUtbetaltDagsatsTilSøker = Math.round(dagsats * (1 - prosentfaktor));
+            List<Integer> utbetaltTilSøkerForAndeler = new ArrayList<>();
+            List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
+            for (var andel : periode.getAndeler()) {
+                if ( andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID) ) {
+                    utbetaltRefusjonForAndeler.add(andel.getRefusjon());
+                    utbetaltTilSøkerForAndeler.add(andel.getTilSoker());
+                }
+
+            }
+            if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
+                return false;
+            }
+            if ( utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /*
      * Henting av kodeverk
      */

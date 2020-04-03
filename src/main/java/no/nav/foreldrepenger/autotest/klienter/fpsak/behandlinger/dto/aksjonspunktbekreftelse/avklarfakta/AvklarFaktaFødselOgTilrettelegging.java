@@ -11,6 +11,7 @@ import java.util.List;
 
 @BekreftelseKode(kode="5091")
 public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse {
+
     protected LocalDate termindato;
     protected LocalDate fødselsdato;
     protected List<Arbeidsforhold> bekreftetSvpArbeidsforholdList;
@@ -25,5 +26,19 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
         this.termindato = behandling.getTilrettelegging().getTermindato();
         this.fødselsdato = behandling.getTilrettelegging().getFødselsdato();
         this.bekreftetSvpArbeidsforholdList = behandling.getTilrettelegging().getArbeidsforholdList();
+    }
+
+    public List<Arbeidsforhold> getBekreftetSvpArbeidsforholdList() {
+        return bekreftetSvpArbeidsforholdList;
+    }
+
+    public void setSkalBrukesTilFalsePåArbeidsfoholdResteTrue(String arbeidsforholdId) {
+        for ( var arbeidsforhold : getBekreftetSvpArbeidsforholdList() ) {
+            if ( arbeidsforhold.getEksternArbeidsforholdReferanse().equalsIgnoreCase(arbeidsforholdId) ) {
+                arbeidsforhold.setSkalBrukes(false);
+            } else {
+                arbeidsforhold.setSkalBrukes(true);
+            }
+        }
     }
 }

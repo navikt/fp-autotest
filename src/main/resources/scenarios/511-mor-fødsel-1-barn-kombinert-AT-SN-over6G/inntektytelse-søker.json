@@ -2,12 +2,13 @@
 	"inntektskomponent": {
 		"inntektsperioder": [
 			{
-				"fom": "now() - P2Y",
-				"beløp": 40000,
+				"fom": "now() - P12M",
+				"tom": "now() - P1M",
+				"beløp": 60000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
-				"beskrivelse": "fastloenn"
+				"beskrivelse": "testbeskrivelsesomfungererennsålenge"
 			}
 		]
 	},
@@ -16,37 +17,47 @@
 			{
 				"arbeidsforholdId": "ARB001-001",
 
-				"ansettelsesperiodeFom": "now() - P4Y",
+				"ansettelsesperiodeFom": "now() - P12M",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "910909088",
-
-
 				"arbeidsavtaler" : [
 					{
-						"fomGyldighetsperiode": "now() - P2Y",
-						"sisteLønnsendringsdato": "now() - P1M",
+						"fomGyldighetsperiode": "now() - P12M",
 						"avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "40",
 						"stillingsprosent" : 100,
 						"beregnetAntallTimerPerUke": "40"
 					}
 				]
-
 			}
 		]
 	},
 	"sigrun": {
 		"inntektsår": [
 			{
-				"år": "2016",
+				"år": "2017",
 				"oppføring": [
 					{
-						"tekniskNavn": "ettellerannet",
-						"beløp": 5000
-					},
+						"tekniskNavn": "personinntektNaering",
+						"beløp": "1000000"
+					}
+				]
+			},
+			{
+				"år": "2018",
+				"oppføring": [
 					{
-						"tekniskNavn": "noeannet",
-						"beløp": 6000
+						"tekniskNavn": "personinntektNaering",
+						"beløp": "1000000"
+					}
+				]
+			},
+			{
+				"år": "2019",
+				"oppføring": [
+					{
+						"tekniskNavn": "personinntektNaering",
+						"beløp": "1000000"
 					}
 				]
 			}
