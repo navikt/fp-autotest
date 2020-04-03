@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.*;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
@@ -365,8 +366,13 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        final InntektsmeldingBuilder inntektsmelding = lagSvangerskapspengerInntektsmelding(søkerIdent, beløpMor, søkerOrgnummer);
-        fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
+        final InntektsmeldingBuilder inntektsmelding_arbeidsforhold_1 = lagSvangerskapspengerInntektsmelding(søkerIdent, beløpMor, søkerOrgnummer);
+        inntektsmelding_arbeidsforhold_1.medArbeidsforholdId(testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsforholdId());
+
+        final InntektsmeldingBuilder inntektsmelding_arbeidsforohld_2 = lagSvangerskapspengerInntektsmelding(søkerIdent, beløpMor, søkerOrgnummer);
+        inntektsmelding_arbeidsforohld_2.medArbeidsforholdId(testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsforholdId());
+
+        fordel.sendInnInntektsmeldinger(List.of(inntektsmelding_arbeidsforhold_1, inntektsmelding_arbeidsforohld_2), testscenario, saksnummer);
 
     }
 

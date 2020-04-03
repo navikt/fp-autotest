@@ -9,15 +9,6 @@
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
 				"beskrivelse": "fastloenn"
-			},
-			{
-				"fom": "now() - P12M",
-				"tom": "now()",
-				"beløp": 60000,
-				"orgnr": "973861778",
-				"type": "Lønnsinntekt",
-				"fordel": "kontantytelse",
-				"beskrivelse": "fastloenn"
 			}
 		]
 	},
@@ -46,7 +37,7 @@
 				"arbeidsforholdId": "ARB001-002",
 				"ansettelsesperiodeFom": "now() - P4Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
-				"arbeidsgiverOrgnr": "973861778",
+				"arbeidsgiverOrgnr": "910909088",
 				"arbeidsavtaler" : [
 					{
 						"fomGyldighetsperiode": "now() - P4Y",
