@@ -51,6 +51,14 @@
 		"etternavn": "Duck",
 		"fødselsdato": "now()-P50Y",
 		"kjønn": "M",
+		"adresser": [
+			{
+				"@type": "ref",
+				"fom": "now() - P1Y",
+				"adresseType": "BOSTEDSADRESSE",
+				"land": "NOR"
+			}
+		],
 		"personstatus": [
 			{
 				"kode": "BOSA",
