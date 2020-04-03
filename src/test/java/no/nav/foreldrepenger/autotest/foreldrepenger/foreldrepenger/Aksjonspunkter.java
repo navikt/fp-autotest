@@ -7,10 +7,13 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Over
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SvangerskapspengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
+import no.nav.foreldrepenger.autotest.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVilkaarForSykdomBekreftelse;
@@ -22,19 +25,23 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Adopsjon;
+import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.*;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.*;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;
 
 
 @Tag("util")
@@ -304,5 +311,63 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL);
     }
 
+    @Test
+    public void aksjonspunkt_SVP_et_arbeidsforhold() throws Exception {
+        final TestscenarioDto testscenario = opprettTestscenario("500");
+        final String søkerAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        final String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+
+        final String søkerOrgnummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        final int beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+
+        final Tilrettelegging tilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
+                LocalDate.now(),
+                LocalDate.now().plusDays(2),
+                ArbeidsforholdErketyper.virksomhet(søkerOrgnummer),
+                BigDecimal.valueOf(70));
+
+        final SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(
+                søkerAktoerId, SøkersRolle.MOR,
+                LocalDate.now().plusWeeks(4),
+                Collections.singletonList(tilrettelegging));
+
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+
+        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+
+        final InntektsmeldingBuilder inntektsmelding = lagSvangerskapspengerInntektsmelding(søkerIdent, beløpMor, søkerOrgnummer);
+        fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
+
+    }
+    @Test
+    public void aksjonspunkt_SVP_to_arbeidsforhold() throws Exception {
+        final TestscenarioDto testscenario = opprettTestscenario("76");
+        final String søkerAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        final String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+
+        final String søkerOrgnummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        final int beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+
+        final Tilrettelegging tilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
+                LocalDate.now(),
+                LocalDate.now().plusDays(2),
+                ArbeidsforholdErketyper.virksomhet(søkerOrgnummer),
+                BigDecimal.valueOf(70));
+
+        final SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(
+                søkerAktoerId, SøkersRolle.MOR,
+                LocalDate.now().plusWeeks(4),
+                Collections.singletonList(tilrettelegging));
+
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+
+        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+
+        final InntektsmeldingBuilder inntektsmelding = lagSvangerskapspengerInntektsmelding(søkerIdent, beløpMor, søkerOrgnummer);
+        fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
+
+    }
 
 }
