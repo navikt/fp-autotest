@@ -101,7 +101,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         int inntektPerMåned = 20_000;
         int overstyrtInntekt = 500_000;
         int overstyrtFrilanserInntekt = 500_000;
-        BigDecimal refusjon = BigDecimal.valueOf(overstyrtInntekt + overstyrtFrilanserInntekt);
+        BigDecimal refusjon = BigDecimal.valueOf(overstyrtInntekt/12);
 
         Opptjening opptjening = OpptjeningErketyper.medFrilansOpptjening();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
