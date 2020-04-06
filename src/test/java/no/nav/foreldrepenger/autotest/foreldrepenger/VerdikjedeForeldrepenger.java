@@ -59,7 +59,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErket
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Execution(ExecutionMode.CONCURRENT)
-@Tag("verdikjede")
+@Tag("verdikjedeFP")
 public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
