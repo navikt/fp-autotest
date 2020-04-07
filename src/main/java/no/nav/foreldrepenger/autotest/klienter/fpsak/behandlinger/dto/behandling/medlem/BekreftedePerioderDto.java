@@ -27,4 +27,25 @@ public class BekreftedePerioderDto {
     public void setBosattVurdering(Boolean bosattVurdering) {
         this.bosattVurdering = bosattVurdering;
     }
+
+
+    public void setErEosBorger(Boolean erEosBorger) {
+        this.erEosBorger = erEosBorger;
+    }
+
+    public void setLovligOppholdVurdering(Boolean lovligOppholdVurdering) {
+        this.lovligOppholdVurdering = lovligOppholdVurdering;
+    }
+
+    public void setBegrunnelse(String begrunnelse) {
+        this.begrunnelse = begrunnelse;
+    }
+
+    public void setVurderingsdato(LocalDate vurderingsdato) {
+        this.vurderingsdato = vurderingsdato;
+    }
+
+    public void setAksjonspunkter(List<String> aksjonspunkter) {
+        this.aksjonspunkter = aksjonspunkter;
+    }
 }

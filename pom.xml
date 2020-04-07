@@ -66,7 +66,7 @@
         <profile>
             <id>verdikjede</id>
             <properties>
-                <includeTestsTags>verdikjedeFP, verdikjedeSVP</includeTestsTags>
+                <includeTestsTags>verdikjedeFP, verdikjedeSVP, verdikjedeES</includeTestsTags>
                 <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
             </properties>
         </profile>

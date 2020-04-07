@@ -9,13 +9,25 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.*;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.*;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -31,9 +43,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.*;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak.ARBEID;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.*;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.overføringsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
@@ -572,7 +592,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medFordeling(fordelingFar)
                 .medAnnenForelder(testscenario.getPersonopplysninger().getAnnenPartAktørIdent())
                 .medMottattDato(fødselsdato.plusWeeks(6));
-        //TODO: Er mottatDato rett når "Vedtak på mor, allerede utbetalt for første 6 uker"?
         var saksnummerFar = fordel.sendInnSøknad(
                 søknadFar.build(),
                 aktørIdFar,
@@ -616,22 +635,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         verifiser(saksbehandler.valgtBehandling.hentBehandlingsresultat().equalsIgnoreCase("FORELDREPENGER_ENDRET"),
                 "Foreldrepenger skal være endret pga annenpart har overlappende uttak!");
-        // TODO: Mor sine avslåtte peridoer går fra 2 periode til 3 perioder.
-        //  Det er korrekt intervall som blir avslått, men den andre perioden etter 6 uker mødrekvote blir delt i to
-        //  Palfi holder på å fikse.
-        //  Legge inn sjekk at det bare er to perioder og ikke tre?
 
-
-        // TODO: Hvilken skal jeg velge? begge?
-        //  Alternativ 1: Sjekke at periode er avslått eller
-        //  Alternativ 2: sjekke at periode har kode 4084 som er avslagskode til DEN_ANDRE_PART_OVERLAPPENDE_UTTAK_IKKE_SØKT_INNVILGET_SAMTIDIG_UTTAK
-
-        // ALTERNATIV 1:
-        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatType().kode.equalsIgnoreCase("AVSLÅTT"),
-                "Perioden burde være avslått fordi annenpart har overlappende uttak!");
-        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatType().kode.equalsIgnoreCase("AVSLÅTT"),
-                "Perioden burde være avslått fordi annenpart har overlappende uttak!");
-        // ALTERNATIV 2:
+        List<UttakResultatPeriode> avslåttePerioder = saksbehandler.hentAvslåtteUttaksperioder();
+        verifiser(avslåttePerioder.size() == 2, "Forventer at det er 2 avslåtte uttaksperioder");
         verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak().kode.equalsIgnoreCase("4084"),
                 "Perioden burde være avslått fordi annenpart har overlappende uttak!");
         verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak().kode.equalsIgnoreCase("4084"),
