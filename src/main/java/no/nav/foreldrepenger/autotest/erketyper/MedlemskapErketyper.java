@@ -34,16 +34,21 @@ public class MedlemskapErketyper {
         medlemskap.setINorgeVedFoedselstidspunkt(true);
         medlemskap.setBorINorgeNeste12Mnd(true);
         medlemskap.setBoddINorgeSiste12Mnd(false);
-        medlemskap.getOppholdUtlandet().add(oppholdUtlandet());
+        medlemskap.getOppholdUtlandet().add(oppholdUtlandet(LocalDate.now().minusYears(2), LocalDate.now()));
         return medlemskap;
     }
 
-    public static OppholdUtlandet oppholdUtlandet(){
+    public static OppholdUtlandet oppholdUtlandet(LocalDate fom, LocalDate tom){
         OppholdUtlandet oppholdUtlandet = new OppholdUtlandet();
         Land land = new Land();
-        land.setKode("AFG");
+        land.setKode("USA");
         land.setKodeverk("LANDKODER");
         oppholdUtlandet.setLand(land);
+
+        Periode periode = new Periode();
+        periode.setFom(fom);
+        periode.setTom(tom);
+        oppholdUtlandet.setPeriode(periode);
         return oppholdUtlandet;
     }
 

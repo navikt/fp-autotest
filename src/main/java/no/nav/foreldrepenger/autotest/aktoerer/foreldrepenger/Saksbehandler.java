@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.brev.BrevKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.brev.dto.BestillBrev;
@@ -363,6 +364,13 @@ public class Saksbehandler extends Aktoer {
             throw new RuntimeException("Status for behandling " + behandling.id + " feilet: " + status.getMessage());
         }
     }
+
+    public List<UttakResultatPeriode> hentAvslåtteUttaksperioder() {
+        return valgtBehandling.hentUttaksperioder().stream()
+                .filter(uttakResultatPeriode -> uttakResultatPeriode.getPeriodeResultatType().kode.equalsIgnoreCase("AVSLÅTT"))
+                .collect(Collectors.toList());
+    }
+
     /* VERIFISERINGER */
     // TODO: Flytte dem en annen plass? Egen verifiserings-saksbehander?
     public boolean sjekkOmDetErFrilansinntektDagenFørSkjæringstidspuktet() {
