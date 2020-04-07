@@ -31,6 +31,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -65,21 +66,21 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("1: Mor automatisk førstegangssøknad fødsel")
-    @Description("Mor førstegangssøknad på fødsel")
+    @Description("Mor førstegangssøknad før fdødsel på termin.")
     public void testcase_mor_fødsel() throws Exception {
-        var testscenario = opprettTestscenario("500");
-        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var testscenario = opprettTestscenario("501");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var fpStartdatoMor = fødselsdato.minusWeeks(3);
+        var termindato = LocalDate.now().plusMonths(1);
+        var fpStartdatoMor = termindato.minusWeeks(3);
 
         var fordeling = generiskFordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
-                uttaksperiode(FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
-                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(20).minusDays(1)),
-                uttaksperiode(FORELDREPENGER, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(36).minusDays(1)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, termindato.minusDays(1)),
+                uttaksperiode(FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
+                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, termindato.plusWeeks(15), termindato.plusWeeks(20).minusDays(1)),
+                uttaksperiode(FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
 
-        var søknad = lagSøknadForeldrepengerFødsel(
-                fødselsdato, søkerAktørId, SøkersRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTermin(
+                termindato, søkerAktørId, SøkersRolle.MOR)
                 .medFordeling(fordeling)
                 .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett());
 
@@ -124,8 +125,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         avklarFaktaAleneomsorgBekreftelse.bekreftBrukerHarAleneomsorg();
         saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse);
 
-        //TODO: Uttak sjekke at kontoen for Foreldrepenger = 46 uker
-
         saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FORESLÅ_VEDTAK);
         saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
@@ -137,6 +136,15 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
 
+        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp (dvs = 0)!");
+        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER).getSaldo() == (46 - 31) * 5,
+                "Forventer at saldoen for stønadskonton FORELDREPENGER er 75 dager!");
+        int beregnetDagsats = regnUtForventetDagsats(inntektBeløp, 100);
+        verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == beregnetDagsats,
+                "Forventer at dagsatsen blir justert ut i fra årsinntekten og utbeatlinsggrad, og IKKE 6G fordi inntekten er under 6G!");
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPart(50),
+                "Forventer at halve summen utbetales til søker og halve summen til arbeisdgiver pga 50% refusjon!");
     }
 
     @Test
@@ -150,9 +158,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var gjennomsnittFraTreSisteÅreneISigrun = (1_000_000 * 3) / 3; // TODO: HARDCODET! Bør hentes fra sigrun i scenario (gjennomsnittet at de tre siste årene)
         BigInteger næringsnntekt = BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun * 1.30).toBigInteger(); // > 25% avvik
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, næringsnntekt, true);
-        var søknad = lagSøknadForeldrepengerTermin(
+        var søknad = lagSøknadForeldrepengerFødsel(
                 fødselsdato, søkerAktørId, SøkersRolle.MOR)
-                .medSpesiellOpptjening(opptjening);
+                .medSpesiellOpptjening(opptjening)
+                .medMottattDato(fødselsdato.plusWeeks(2));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(
                 søknad.build(),
@@ -188,8 +197,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-
-        saksbehandler.ventTilAvsluttetBehandling();
 
         Set<Kode> beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
         assertThat(beregningAktivitetStatus.contains(new Kode("AKTIVITET_STATUS", "SN")));
@@ -278,8 +285,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
-
-        saksbehandler.ventTilAvsluttetBehandling();
 
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPart(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
@@ -375,8 +380,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         bekreftelseFar.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFar);
 
-        saksbehandler.ventTilAvsluttetBehandling();
-
         // Feiler frem til fiks for TFP-2726 er implementert og i master!
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPart(100),
                 "Forventer at hele summen utbetales til arbeidsgiver, og derfor ingenting til søker!");
@@ -428,7 +431,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING);
         VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
-        vurderPerioderOpptjeningBekreftelse.godkjennAllOpptjening()
+        vurderPerioderOpptjeningBekreftelse.godkjennOpptjening("FRILANS")
                 .setBegrunnelse("Godkjenner Aktivitet");
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
@@ -460,8 +463,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
             FatterVedtakBekreftelse bekreftelseFar = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
             bekreftelseFar.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
             beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFar);
-
-            saksbehandler.ventTilAvsluttetBehandling();
 
             verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPart(0),
                     "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
@@ -565,6 +566,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
 
     @Test
+    @Disabled
     @DisplayName("7: Far ")
     public void FarTestMorSyk() throws Exception {
         TestscenarioDto testscenario = opprettTestscenario("562");
@@ -626,8 +628,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         FatterVedtakBekreftelse bekreftelseFar = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelseFar.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFar);
-
-        saksbehandler.ventTilAvsluttetBehandling();
 
         /* Mor: berørt sak */
         saksbehandler.hentFagsak(saksnummerMor);
@@ -703,8 +703,29 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         bekreftelseMor.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseMor);
 
-        saksbehandler.ventTilAvsluttetBehandling();
-
         return saksnummerMor;
+    }
+
+    private void foreslårFatterVedtakMedDefaultGodkjenningOgVenterTilAvsluttetBehandling(long saksnummer) throws Exception {
+        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FORESLÅ_VEDTAK);
+        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+        beslutter.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FATTER_VEDTAK);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+    }
+
+    private Integer regnUtForventetDagsats(Integer samletMånedsbeløp, Integer utbetalingsgrad) {
+        double årsinntekt = Double.valueOf(samletMånedsbeløp) * 12;
+        double seksG = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getHalvG() * 2 * 6;
+        double utbetalingProsentFaktor = (double) utbetalingsgrad /100;
+        if ( årsinntekt > seksG ) {
+            årsinntekt = seksG;
+        }
+        return ((int) Math.round(årsinntekt * utbetalingProsentFaktor / 260));
     }
 }

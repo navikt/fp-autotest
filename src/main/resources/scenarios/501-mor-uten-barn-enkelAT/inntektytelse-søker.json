@@ -3,7 +3,7 @@
 		"inntektsperioder": [
 			{
 				"fom": "now() - P2Y",
-				"beløp": 50000,
+				"beløp": 40000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",

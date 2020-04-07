@@ -497,13 +497,11 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-
-        saksbehandler.ventTilAvsluttetBehandling();
     }
 
 
-    private Integer regnUtForventetDagsats(Integer inntektBeløp, Integer tilrettelegginsprosent) {
-        double årsinntekt = Double.valueOf(inntektBeløp) * 12;
+    private Integer regnUtForventetDagsats(Integer samletMånedsbeløp, Integer tilrettelegginsprosent) {
+        double årsinntekt = Double.valueOf(samletMånedsbeløp) * 12;
         double seksG = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getHalvG() * 2 * 6;
         double utbetalingProsentFaktor = (double) (100 - tilrettelegginsprosent) /100;
         if ( årsinntekt > seksG ) {
