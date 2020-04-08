@@ -146,8 +146,8 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             return;
         }
         Vent.til(() -> {
+            Thread.sleep(1500);
             refreshBehandling();
-            Thread.sleep(1000);
             return harAktivtAksjonspunkt(aksjonspunktKode);
         }, 60, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
     }
