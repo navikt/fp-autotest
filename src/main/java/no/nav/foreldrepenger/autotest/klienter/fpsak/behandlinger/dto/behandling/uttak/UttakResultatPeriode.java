@@ -1,18 +1,18 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UttakResultatPeriode {
+public class UttakResultatPeriode implements Serializable {
 
     protected LocalDate fom;
     protected LocalDate tom;

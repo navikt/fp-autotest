@@ -92,7 +92,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        foreslårFatterVedtakMedDefaultGodkjenningOgVenterTilAvsluttetBehandling(saksnummer);
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer, false);
 
         int beregnetDagsats = regnUtForventetDagsats(inntektBeløp, tilrettelegginsprosent);
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == beregnetDagsats,
@@ -164,7 +164,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        foreslårFatterVedtakMedDefaultGodkjenningOgVenterTilAvsluttetBehandling(saksnummer);
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer, false);
 
         int beregnetDagsats = regnUtForventetDagsats(inntektBeløp, tilrettelegginsprosent);
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == beregnetDagsats,
@@ -243,7 +243,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        foreslårFatterVedtakMedDefaultGodkjenningOgVenterTilAvsluttetBehandling(saksnummer);
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer, false);
 
         double årsinntekt = Double.valueOf(inntektBeløp1) * 12;
         double utbetalingProsentFaktor = (double) (100 - tilrettelegginsprosent) /100;
@@ -319,7 +319,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        foreslårFatterVedtakMedDefaultGodkjenningOgVenterTilAvsluttetBehandling(saksnummer1);
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer1, false);
 
         saksbehandler.ventTilAvsluttetBehandling();
 
@@ -373,17 +373,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår2);
 
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FORESLÅ_VEDTAK);
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
-
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
-        beslutter.hentFagsak(saksnummer2);
-        beslutter.velgRevurderingBehandling(); // UNIKT FOR DENNE!
-        beslutter.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FATTER_VEDTAK);
-        FatterVedtakBekreftelse bekreftelse2 = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse2.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse2);
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer2, true);
 
         saksbehandler.ventTilAvsluttetBehandling();
 
@@ -466,7 +456,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        foreslårFatterVedtakMedDefaultGodkjenningOgVenterTilAvsluttetBehandling(saksnummer);
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer, false);
 
         int beregnetDagsats = regnUtForventetDagsats(inntektPerMånedForAF1 + inntektPerMånedForAF2, tilrettelegginsprosent);
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0);
@@ -486,13 +476,16 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     }
 
 
-    private void foreslårFatterVedtakMedDefaultGodkjenningOgVenterTilAvsluttetBehandling(long saksnummer) throws Exception {
+    private void foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(long saksnummer, boolean revurdering) throws Exception {
         saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FORESLÅ_VEDTAK);
         saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
+        if ( beslutter.harRevurderingBehandling() && revurdering ) {
+            beslutter.velgRevurderingBehandling();
+        }
         beslutter.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FATTER_VEDTAK);
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());

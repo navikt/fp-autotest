@@ -2,8 +2,10 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Arbeidsgiver {
+public class Arbeidsgiver implements Serializable {
 
     protected String identifikator;
     protected String navn;

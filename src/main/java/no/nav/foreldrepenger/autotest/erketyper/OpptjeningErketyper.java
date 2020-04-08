@@ -68,7 +68,11 @@ public class OpptjeningErketyper {
 
     }
 
-    public static Opptjening medEgenNaeringOpptjening(boolean erNyIArbeidslivet, BigInteger næringsInntekt, boolean varigEndretNæring){
+    public static Opptjening medEgenNaeringOpptjening(boolean erNyIArbeidslivet, BigInteger næringsInntekt, boolean varigEndretNæring) {
+        return  medEgenNaeringOpptjening(LocalDate.now().minusYears(4), LocalDate.now(), erNyIArbeidslivet, næringsInntekt, varigEndretNæring);
+    }
+    public static Opptjening medEgenNaeringOpptjening(LocalDate Fom, LocalDate Tom, boolean erNyIArbeidslivet,
+                                                      BigInteger næringsInntekt, boolean varigEndretNæring){
 
         Opptjening opptjening = new Opptjening();
         List<EgenNaering> naeringer = opptjening.getEgenNaering();
@@ -80,8 +84,8 @@ public class OpptjeningErketyper {
         naering.setRegnskapsfoerer(regnskapsfoerer);
 
         Periode periode = new Periode();
-        periode.setFom((LocalDate.now().minusYears(4)));
-        periode.setTom((LocalDate.now()));
+        periode.setFom(Fom);
+        periode.setTom(Tom);
         naering.setPeriode(periode);
 
         List<Virksomhetstyper> typer = naering.getVirksomhetstype();
