@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak;
 
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UttakResultatPeriodeAktivitet {
+public class UttakResultatPeriodeAktivitet implements Serializable {
 
     protected Stønadskonto stønadskontoType = null;
     protected BigDecimal trekkdagerDesimaler = null;

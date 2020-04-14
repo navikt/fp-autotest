@@ -1,16 +1,17 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Kode {
+public class Kode implements Serializable {
 
     public String kodeverk;
     public String kode;
-    
-    /** 
+
+    /**
      * @deprecated Ikke bruk for i logikk, bruk heller {@link #kode}
      */
     @Deprecated
@@ -38,7 +39,7 @@ public class Kode {
     public String getNavn() {
         return navn;
     }
-    
+
     public static Kode lagBlankKode() {
         return new Kode(null, "-", null);
     }

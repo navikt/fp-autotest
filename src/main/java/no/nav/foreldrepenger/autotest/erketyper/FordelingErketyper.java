@@ -1,9 +1,5 @@
 package no.nav.foreldrepenger.autotest.erketyper;
 
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.*;
-
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OverføringÅrsak;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.perioder.GraderingBuilder;
@@ -22,6 +18,15 @@ import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Oppholdsperiode;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Overfoeringsperiode;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Utsettelsesperiode;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Uttaksperiode;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
 
 public class FordelingErketyper {
 
@@ -96,6 +101,18 @@ public class FordelingErketyper {
     public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom) {
         return new UttaksperiodeBuilder(stønadskonto.getKode(), fom, tom).build();
     }
+    public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, Boolean flerbarnsdager,
+                                              Boolean samtidigUttak) {
+        UttaksperiodeBuilder uttaksperiodeBuilder = new UttaksperiodeBuilder(stønadskonto.getKode(), fom, tom);
+        if ( flerbarnsdager ) {
+            uttaksperiodeBuilder.medFlerbarnsdager();
+        }
+        if ( samtidigUttak ) {
+            uttaksperiodeBuilder.medSamtidigUttak(BigDecimal.valueOf(100));
+        }
+        return  uttaksperiodeBuilder.build();
+    }
+
     public static Overfoeringsperiode overføringsperiode(OverføringÅrsak overføringÅrsak, Stønadskonto stønadskonto, LocalDate fom, LocalDate tom) {
         Overfoeringsaarsaker overfoeringsaarsaker = new Overfoeringsaarsaker();
         overfoeringsaarsaker.setKode(overføringÅrsak.name());

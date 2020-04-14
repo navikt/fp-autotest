@@ -8,8 +8,13 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -120,7 +125,8 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, int utbetalingsgrad,
-                                                                    Kode periodeResultatÅrsak, boolean flerbarnsdager, boolean samtidigUttak) {
+                                                                    Kode periodeResultatÅrsak, boolean flerbarnsdager,
+                                                                    boolean samtidigUttak) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
@@ -132,12 +138,14 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, int utbetalingsgrad,
-                                                                    Kode periodeResultatÅrsak, boolean samtidigUttak, int samtidigUttakProsent) {
+                                                                    Kode periodeResultatÅrsak, boolean flerbarnsdager,
+                                                                    boolean samtidigUttak, int samtidigUttakProsent) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
         periode.setSamtidigUttak(samtidigUttak);
         periode.setSamtidigUttaksprosent(BigDecimal.valueOf(samtidigUttakProsent));
+        periode.setFlerbarnsdager(flerbarnsdager);
         periode.setBegrunnelse("Vurdering");
         godkjennPeriode(periode, utbetalingsgrad);
         return this;
@@ -262,4 +270,41 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         return null;
     }
 
+    public void splitPeriode(LocalDate fom, LocalDate tom, LocalDate sluttenAvFørstePeriode) {
+        UttakResultatPeriode periode1 = finnPeriode(fom, tom);
+        BigDecimal arbeidsdagerIUken = BigDecimal.valueOf(5);
+        BigDecimal diffTrekkdager = BigDecimal.valueOf(ChronoUnit.WEEKS.between(sluttenAvFørstePeriode, tom)).multiply(arbeidsdagerIUken);
+
+        periode1.setTom(sluttenAvFørstePeriode);
+        for (UttakResultatPeriodeAktivitet aktivitet : periode1.getAktiviteter()) {
+            BigDecimal trekkdagerDesimalerOrdinær = aktivitet.getTrekkdagerDesimaler();
+            aktivitet.setTrekkdagerDesimaler(trekkdagerDesimalerOrdinær.subtract(diffTrekkdager));
+        }
+
+        UttakResultatPeriode periode2 = deepCopy(periode1);
+        periode2.setFom(sluttenAvFørstePeriode.plusDays(1));
+        periode2.setTom(tom);
+        for (UttakResultatPeriodeAktivitet aktivitet : periode2.getAktiviteter()) {
+            aktivitet.setTrekkdagerDesimaler(diffTrekkdager);
+        }
+
+        int indeksAvPeriode = perioder.indexOf(periode1);
+        perioder.add(indeksAvPeriode + 1, periode2);
+    }
+
+    private UttakResultatPeriode deepCopy(Object object) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            try (ObjectOutputStream outputStrm = new ObjectOutputStream(outputStream)) {
+                outputStrm.writeObject(object);
+            }
+            try (ObjectInputStream objInputStream = new ObjectInputStream(
+                    new ByteArrayInputStream(outputStream.toByteArray()))) {
+                return (UttakResultatPeriode) objInputStream.readObject();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

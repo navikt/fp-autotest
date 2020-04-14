@@ -1,16 +1,17 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public enum Stønadskonto {
+public enum Stønadskonto implements Serializable {
 
     FORELDREPENGER_FØR_FØDSEL("FORELDREPENGER_FØR_FØDSEL"),
     MØDREKVOTE("MØDREKVOTE"),

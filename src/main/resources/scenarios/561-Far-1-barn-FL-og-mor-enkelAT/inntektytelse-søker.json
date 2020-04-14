@@ -1,5 +1,16 @@
 {
 	"inntektskomponent": {
+		"inntektsperioder": [
+			{
+				"fom": "now() - P2Y",
+				"tom": "now()",
+				"beløp": 45000,
+				"orgnr": "973861778",
+				"type": "Lønnsinntekt",
+				"fordel": "kontantytelse",
+				"beskrivelse": "fastloenn"
+			}
+		],
 		"frilansarbeidsforholdperioder": [
 			{
 				"frilansFom":"now() - P2Y",

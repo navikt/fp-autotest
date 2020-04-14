@@ -436,10 +436,6 @@ public class Saksbehandler extends Aktoer {
             if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
                 return false;
             }
-            // TODO: Lage egen metode?
-            //if ( utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker ) {
-            //    return false;
-            //}
         }
         return true;
     }
