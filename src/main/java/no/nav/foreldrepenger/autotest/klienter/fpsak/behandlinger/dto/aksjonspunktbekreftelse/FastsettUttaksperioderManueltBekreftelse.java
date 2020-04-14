@@ -7,14 +7,15 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,19 +40,20 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
     }
 
+    public List<UttakResultatPeriode> getPerioder() {
+        return perioder;
+    }
+
     public void godkjennAllePerioder() {
         for (UttakResultatPeriode uttakResultatPeriode : perioder) {
-            godkjennPeriode(uttakResultatPeriode, 100);
+            godkjennPeriode(uttakResultatPeriode);
             uttakResultatPeriode.setBegrunnelse("Begrunnelse autotest");
         }
     }
-    public void godkjennAlleManuellePerioder(int utbetalingsgrad){
-        godkjennAlleManuellePerioder(utbetalingsgrad, 100);
-    }
-    public void godkjennAlleManuellePerioder(int utbetalingsgrad, int trekkdager){
+    public void godkjennAlleManuellePerioder(){
         for(UttakResultatPeriode uttakPeriode : perioder) {
             if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
-                godkjennPeriode(uttakPeriode, utbetalingsgrad, false, false, trekkdager);
+                godkjennPeriode(uttakPeriode);
             }
         }
     }
@@ -69,25 +71,19 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
             }
         }
     }
-
     public void avslåAlleManuellePerioder(){
         for(UttakResultatPeriode uttakPeriode : perioder) {
             if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
-                avvisPeriode(uttakPeriode, 0);
+                avvisPeriode(uttakPeriode);
             }
         }
     }
     public void avslåAlleManuellePerioderMedPeriodeResultatÅrsak(Kode periodeResultatÅrsak){
         for(UttakResultatPeriode uttakPeriode : perioder) {
             if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
-                avvisPeriode(uttakPeriode, periodeResultatÅrsak,0);
+                avvisPeriode(uttakPeriode, periodeResultatÅrsak);
             }
         }
-    }
-    public List<UttakResultatPeriode> getManuellePerioder() {
-        return perioder.stream().
-                filter(uttakResultatPeriode -> !uttakResultatPeriode.getManuellBehandlingÅrsak().kode.equals("-"))
-                .collect(Collectors.toList());
     }
     public void delvisGodkjennAvslåAktivitetManuellePerioder(String aktivitetNavn) {
         delvisGodkjennAvslåForAktivitet(getManuellePerioder(), aktivitetNavn);
@@ -109,37 +105,22 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
     }
 
-    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, int utbetalingsgrad) {
+    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
-        godkjennPeriode(periode, utbetalingsgrad);
+        godkjennPeriode(periode);
         return this;
     }
-
-    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode periodeResultatÅrsak, int utbetalingsgrad) {
+    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode periodeResultatÅrsak) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
         periode.setBegrunnelse("Vurdering");
-        godkjennPeriode(periode, utbetalingsgrad);
+        godkjennPeriode(periode);
         return this;
     }
-
-    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, int utbetalingsgrad,
-                                                                    Kode periodeResultatÅrsak, boolean flerbarnsdager,
-                                                                    boolean samtidigUttak) {
-        UttakResultatPeriode periode = finnPeriode(fra, til);
-        periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
-        periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setSamtidigUttak(samtidigUttak);
-        periode.setFlerbarnsdager(flerbarnsdager);
-        periode.setBegrunnelse("Vurdering");
-        godkjennPeriode(periode, utbetalingsgrad);
-        return this;
-    }
-
-    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, int utbetalingsgrad,
-                                                                    Kode periodeResultatÅrsak, boolean flerbarnsdager,
-                                                                    boolean samtidigUttak, int samtidigUttakProsent) {
+    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode periodeResultatÅrsak,
+                                                                    boolean flerbarnsdager, boolean samtidigUttak,
+                                                                    int samtidigUttakProsent) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
@@ -147,98 +128,85 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         periode.setSamtidigUttaksprosent(BigDecimal.valueOf(samtidigUttakProsent));
         periode.setFlerbarnsdager(flerbarnsdager);
         periode.setBegrunnelse("Vurdering");
-        godkjennPeriode(periode, utbetalingsgrad);
+        godkjennPeriode(periode);
         return this;
     }
-
-    public FastsettUttaksperioderManueltBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, int utbetalingsgrad, Stønadskonto stønadskonto) {
+    public FastsettUttaksperioderManueltBekreftelse avvisPeriode(LocalDate fra, LocalDate til) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
-        godkjennPeriode(periode, utbetalingsgrad, stønadskonto);
+        avvisPeriode(periode);
+        return this;
+    }
+    public FastsettUttaksperioderManueltBekreftelse avvisPeriode(LocalDate fra, LocalDate til, Kode periodeResultatÅrsak) {
+        UttakResultatPeriode periode = finnPeriode(fra, til);
+        avvisPeriode(periode, periodeResultatÅrsak);
         return this;
     }
 
-    public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad) {
-        periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
-        periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2001", "§14-6: Uttak er oppfylt"));
+    public void splitPeriode(LocalDate fom, LocalDate tom, LocalDate sluttenAvFørstePeriode) {
+        UttakResultatPeriode periode1 = finnPeriode(fom, tom);
 
-        //Utsettelses perioder trenger ikke trekkdager. set dem til 0
-        for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
-            if(!UttakUtsettelseÅrsak.UDEFINERT.equals(periode.getUtsettelseType())) {
-                aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
-            }
-        }
-    }
-    public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad, boolean flerbarnsdager, boolean samtidigUttak ) {
-        godkjennPeriode(periode, utbetalingsgrad, flerbarnsdager, samtidigUttak, 100);
-    }
-    public void godkjennPeriode(UttakResultatPeriode uttaksperiode, Kode periodeResultatÅrsak) {
-        uttaksperiode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
-        uttaksperiode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        uttaksperiode.setSamtidigUttak(false);
-        uttaksperiode.setFlerbarnsdager(false);
-
-        //Trekkdager endres ikke på
-        for (UttakResultatPeriodeAktivitet aktivitet : uttaksperiode.getAktiviteter()) {
-            aktivitet.setUtbetalingsgrad(BigDecimal.valueOf((100 - aktivitet.getProsentArbeid().doubleValue())));
-        }
-    }
-
-    public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad, boolean flerbarnsdager,
-                                boolean samtidigUttak, int trekkdager ) {
-        periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
-        periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2001", "§14-6: Uttak er oppfylt"));
-        periode.setSamtidigUttak(samtidigUttak);
-        periode.setFlerbarnsdager(flerbarnsdager);
-
-        //Utsettelses perioder trenger ikke trekkdager. set dem til 0
-        for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
+        periode1.setTom(sluttenAvFørstePeriode);
+        for (UttakResultatPeriodeAktivitet aktivitet : periode1.getAktiviteter()) {
+            int trekkdager = Virkedager.beregnAntallVirkedager(fom, sluttenAvFørstePeriode);
             aktivitet.setTrekkdagerDesimaler(BigDecimal.valueOf(trekkdager));
-            if(!UttakUtsettelseÅrsak.UDEFINERT.equals(periode.getUtsettelseType())) {
-                aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
-            }
         }
+
+        UttakResultatPeriode periode2 = deepCopy(periode1);
+        periode2.setFom(sluttenAvFørstePeriode.plusDays(1));
+        periode2.setTom(tom);
+        for (UttakResultatPeriodeAktivitet aktivitet : periode2.getAktiviteter()) {
+            int trekkdager = Virkedager.beregnAntallVirkedager(sluttenAvFørstePeriode.plusDays(1), tom);
+            aktivitet.setTrekkdagerDesimaler(BigDecimal.valueOf(trekkdager));
+        }
+
+        int indeksAvPeriode = perioder.indexOf(periode1);
+        perioder.add(indeksAvPeriode + 1, periode2);
     }
 
-    public FastsettUttaksperioderManueltBekreftelse godkjennPeriodeMedGradering(UttakResultatPeriode periode, Kode periodeResultatÅrsak) {
+    private void godkjennPeriode(UttakResultatPeriode periode) {
+        godkjennPeriode(periode, new Kode("INNVILGET_AARSAK", "2001", "§14-6: Uttak er oppfylt"));
+    }
+    private void godkjennPeriode(UttakResultatPeriode periode, Kode periodeResultatÅrsak) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
+        BigDecimal ordinæreTrekkdagerVedFulltUttak = BigDecimal.valueOf(
+                Virkedager.beregnAntallVirkedager(periode.getFom(), periode.getTom()));
 
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            BigDecimal andelArbeid = aktivitet.getProsentArbeid();
-            aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(100).subtract(andelArbeid));
-        }
-        return this;
-    }
-
-    public void godkjennPeriode(UttakResultatPeriode periode, int utbetalingsgrad, Stønadskonto stønadskonto) {
-        periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
-        periode.setPeriodeResultatÅrsak(new Kode("INNVILGET_AARSAK", "2001", "§14-6: Uttak er oppfylt"));
-        periode.setStønadskonto(stønadskonto);
-
-        //Utsettelses perioder trenger ikke trekkdager. set dem til 0
-        for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
-            if(!UttakUtsettelseÅrsak.UDEFINERT.equals(periode.getUtsettelseType())) {
+            if ( periode.getSamtidigUttak() ) {
+                if ( periode.getSamtidigUttaksprosent() == null ){
+                    throw new NullPointerException("Samtidig uttaksprosent er ikke satt!");
+                }
+                if ( aktivitet.getProsentArbeid().doubleValue() > periode.getSamtidigUttaksprosent().doubleValue()) {
+                    BigDecimal andelArbeid = aktivitet.getProsentArbeid();
+                    aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(100).subtract(andelArbeid));
+                    setTrekkdager(aktivitet, ordinæreTrekkdagerVedFulltUttak, aktivitet.getUtbetalingsgrad());
+                } else {
+                    BigDecimal samtidigUttaksprosent = periode.getSamtidigUttaksprosent();
+                    aktivitet.setUtbetalingsgrad(samtidigUttaksprosent);
+                    setTrekkdager(aktivitet, ordinæreTrekkdagerVedFulltUttak, aktivitet.getUtbetalingsgrad());
+                }
+            } else {
+                BigDecimal andelArbeid = aktivitet.getProsentArbeid();
+                aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(100).subtract(andelArbeid));
+                setTrekkdager(aktivitet, ordinæreTrekkdagerVedFulltUttak, aktivitet.getUtbetalingsgrad());
+            }
+            // Utsettelses perioder trenger ikke trekkdager. set dem til 0
+            if ( !UttakUtsettelseÅrsak.UDEFINERT.equals(periode.getUtsettelseType()) ) {
                 aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
             }
         }
     }
-
-
-    public void avvisPeriode(LocalDate fra, LocalDate til, int utbetalingsgrad) {
-        UttakResultatPeriode periode = finnPeriode(fra, til);
-        avvisPeriode(periode, utbetalingsgrad);
+    private void avvisPeriode(UttakResultatPeriode periode) {
+        avvisPeriode(periode, Kode.lagBlankKode());
     }
-
-    public void avvisPeriode(UttakResultatPeriode periode, int utbetalingsgrad) {
+    private void avvisPeriode(UttakResultatPeriode periode, Kode periodeResultatÅrsak) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "AVSLÅTT", "Avslått"));
-        periode.setPeriodeResultatÅrsak(Kode.lagBlankKode());
+        periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
 
         //HACK for manglende aktivitet i periode (set aktivitet til å trekke fra mødrekvoten)
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
+            aktivitet.setUtbetalingsgrad(BigDecimal.ZERO);
             aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
             if(aktivitet.getStønadskontoType() == null || aktivitet.getStønadskontoType().equals(Stønadskonto.INGEN_STØNADSKONTO)) {
                 aktivitet.setStønadskontoType(Stønadskonto.MØDREKVOTE);
@@ -246,22 +214,10 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
     }
 
-    public void avvisPeriode(UttakResultatPeriode periode, Kode periodeResultatÅrsak, int utbetalingsgrad) {
-        periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "AVSLÅTT", "Avslått"));
-        periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-
-        //HACK for manglende aktivitet i periode (set aktivitet til å trekke fra mødrekvoten)
-        for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            aktivitet.setUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad));
-            aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
-        }
-    }
-
-    public void LeggTilUttakPeriode(UttakResultatPeriode uttakPeriode){
+    private void LeggTilUttakPeriode(UttakResultatPeriode uttakPeriode){
         perioder.add(uttakPeriode);
     }
-
-    public UttakResultatPeriode finnPeriode(LocalDate fra, LocalDate til) {
+    private UttakResultatPeriode finnPeriode(LocalDate fra, LocalDate til) {
         for (UttakResultatPeriode uttakPeriode : perioder) {
             if(uttakPeriode.getFom().equals(fra) && uttakPeriode.getTom().equals(til)) {
                 return uttakPeriode;
@@ -269,29 +225,18 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
         return null;
     }
-
-    public void splitPeriode(LocalDate fom, LocalDate tom, LocalDate sluttenAvFørstePeriode) {
-        UttakResultatPeriode periode1 = finnPeriode(fom, tom);
-        BigDecimal arbeidsdagerIUken = BigDecimal.valueOf(5);
-        BigDecimal diffTrekkdager = BigDecimal.valueOf(ChronoUnit.WEEKS.between(sluttenAvFørstePeriode, tom)).multiply(arbeidsdagerIUken);
-
-        periode1.setTom(sluttenAvFørstePeriode);
-        for (UttakResultatPeriodeAktivitet aktivitet : periode1.getAktiviteter()) {
-            BigDecimal trekkdagerDesimalerOrdinær = aktivitet.getTrekkdagerDesimaler();
-            aktivitet.setTrekkdagerDesimaler(trekkdagerDesimalerOrdinær.subtract(diffTrekkdager));
-        }
-
-        UttakResultatPeriode periode2 = deepCopy(periode1);
-        periode2.setFom(sluttenAvFørstePeriode.plusDays(1));
-        periode2.setTom(tom);
-        for (UttakResultatPeriodeAktivitet aktivitet : periode2.getAktiviteter()) {
-            aktivitet.setTrekkdagerDesimaler(diffTrekkdager);
-        }
-
-        int indeksAvPeriode = perioder.indexOf(periode1);
-        perioder.add(indeksAvPeriode + 1, periode2);
+    private List<UttakResultatPeriode> getManuellePerioder() {
+        return perioder.stream().
+                filter(uttakResultatPeriode -> !uttakResultatPeriode.getManuellBehandlingÅrsak().kode.equals("-"))
+                .collect(Collectors.toList());
     }
+    private void setTrekkdager(UttakResultatPeriodeAktivitet aktivitet, BigDecimal ordinæreTrekkdagerVedFulltUttak, BigDecimal utbetalignsgrad) {
+        BigDecimal utbetalingsprosentfaktor = utbetalignsgrad.divide(BigDecimal.valueOf(100));
+        aktivitet.setTrekkdagerDesimaler(ordinæreTrekkdagerVedFulltUttak
+                .multiply(utbetalingsprosentfaktor)
+                .setScale(1, RoundingMode.HALF_UP));
 
+    }
     private UttakResultatPeriode deepCopy(Object object) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             try (ObjectOutputStream outputStrm = new ObjectOutputStream(outputStream)) {

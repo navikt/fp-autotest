@@ -103,15 +103,20 @@ public class FordelingErketyper {
     }
     public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, Boolean flerbarnsdager,
                                               Boolean samtidigUttak) {
+        return uttaksperiode(stønadskonto, fom, tom, flerbarnsdager, samtidigUttak, 100);
+    }
+    public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, Boolean flerbarnsdager,
+                                              Boolean samtidigUttak,  int uttaksprosent) {
         UttaksperiodeBuilder uttaksperiodeBuilder = new UttaksperiodeBuilder(stønadskonto.getKode(), fom, tom);
         if ( flerbarnsdager ) {
             uttaksperiodeBuilder.medFlerbarnsdager();
         }
         if ( samtidigUttak ) {
-            uttaksperiodeBuilder.medSamtidigUttak(BigDecimal.valueOf(100));
+            uttaksperiodeBuilder.medSamtidigUttak(BigDecimal.valueOf(uttaksprosent));
         }
         return  uttaksperiodeBuilder.build();
     }
+
 
     public static Overfoeringsperiode overføringsperiode(OverføringÅrsak overføringÅrsak, Stønadskonto stønadskonto, LocalDate fom, LocalDate tom) {
         Overfoeringsaarsaker overfoeringsaarsaker = new Overfoeringsaarsaker();
