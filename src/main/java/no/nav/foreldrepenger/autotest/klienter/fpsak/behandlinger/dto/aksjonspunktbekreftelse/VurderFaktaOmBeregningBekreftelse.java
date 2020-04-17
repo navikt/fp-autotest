@@ -58,8 +58,8 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
     }
 
 
-    public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(String arbeidsgiverId, boolean skalUtvideGyldighet) {
-        fakta.leggTilRefusjonGyldighet(arbeidsgiverId, skalUtvideGyldighet);
+    public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(String orgnummer, boolean skalUtvideGyldighet) {
+        fakta.leggTilRefusjonGyldighet(orgnummer, skalUtvideGyldighet);
         return this;
     }
 

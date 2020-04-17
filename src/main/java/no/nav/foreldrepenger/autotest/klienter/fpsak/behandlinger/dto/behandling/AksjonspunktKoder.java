@@ -43,6 +43,7 @@ public class AksjonspunktKoder {
     public static final String MANUELL_VURDERING_AV_OMSORGSVILKÅRET = new String("5011"); //$NON-NLS-1$
     public static final String MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET = new String("5007"); //$NON-NLS-1$
 
+    public static final String AVKLAR_TILBAKREVING_AV_FEILUTBETALING = new String ("5090");
     public static final String AVKLAR_FØDSEL_OG_TILRETTELEGGING = new String ("5091");
     public static final String BEKREFT_SVANGERSKAPSPENGER_VILKÅR = new String("5092");
 
