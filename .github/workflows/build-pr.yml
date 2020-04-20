@@ -33,6 +33,9 @@ jobs:
           echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+          docker system df
+          docker system prune -a -f && docker image prune -a -f
+          docker system df
           docker-compose up --quiet-pull --detach
 
       - name: Venter på stacken og sjekker status
@@ -83,3 +86,11 @@ jobs:
         with:
           name: logs
           path: container-logs
+
+      - name: Sjekker storage
+        if: always()
+        shell: bash
+        run: |
+          docker system df -v
+          docker system df
+          df -h
