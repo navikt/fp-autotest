@@ -11,3 +11,5 @@ jobs:
       - name: Rensk docker images
         run: |
           docker system df
+          docker system prune
+          docker system df
