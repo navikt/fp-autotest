@@ -1,0 +1,13 @@
+name: Cleanup docker containers
+
+on: [pull_request]
+
+jobs:
+  build:
+    name: Utfør verdikjede-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Rensk docker images
+        run: |
+          docker system df
