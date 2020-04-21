@@ -83,3 +83,11 @@ jobs:
         with:
           name: logs
           path: container-logs
+
+      - name: Sjekker storage
+        if: failure()
+        shell: bash
+        run: |
+          docker system df -v
+          docker system df
+          df -h

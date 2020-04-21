@@ -15,7 +15,7 @@ echo ABAKUS_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-abakus/fpabak
 echo VTP_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/vtp/vtp")" >> .env
 echo FORMIDLING_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-formidling/fpformidling")" >> .env
 echo FPSAK_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-sak/fpsak-test")" >> .env
-echo ORACLE_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/vtp/foreldrepenger-oracle")" >> .env
+echo ORACLE_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpsak-autotest/oracle-flattened")" >> .env
 echo POSTGRES_IMAGE=postgres:12 >> .env
 
 echo ".env fil opprettet - Klart for docker-compose up"
