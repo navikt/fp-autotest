@@ -122,6 +122,14 @@ jobs:
           name: logs
           path: container-logs
 
+      - name: Sjekker storage
+        if: failure()
+        shell: bash
+        run: |
+          docker system df -v
+          docker system df
+          df -h
+
       - name: Deploy testrapport
         if: always() && env.STACK_STARTED == 'true'
         uses: crazy-max/ghaction-github-pages@v1.3.0
