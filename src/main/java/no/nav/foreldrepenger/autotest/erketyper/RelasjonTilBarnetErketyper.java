@@ -44,12 +44,16 @@ public class RelasjonTilBarnetErketyper {
     }
 
     public static Adopsjon adopsjon(boolean ektefellesBarn){
+        return adopsjon(LocalDate.now().plusMonths(1), ektefellesBarn);
+    }
+
+    public static Adopsjon adopsjon(LocalDate omsorgsovertakelsedatoe, Boolean ektefellesBarn) {
         Adopsjon adopsjon = new Adopsjon();
         adopsjon.setAntallBarn(1);
         adopsjon.setAdopsjonAvEktefellesBarn(ektefellesBarn);
         adopsjon.getFoedselsdato().add((LocalDate.now().minusYears(10)));
-        adopsjon.setAnkomstdato((LocalDate.now().plusMonths(1)));
-        adopsjon.setOmsorgsovertakelsesdato((LocalDate.now().plusMonths(1)));
+        adopsjon.setAnkomstdato((omsorgsovertakelsedatoe));
+        adopsjon.setOmsorgsovertakelsesdato((omsorgsovertakelsedatoe));
 
         return adopsjon;
     }
@@ -78,4 +82,6 @@ public class RelasjonTilBarnetErketyper {
 
         return omsorgsovertakelse;
     }
+
+
 }

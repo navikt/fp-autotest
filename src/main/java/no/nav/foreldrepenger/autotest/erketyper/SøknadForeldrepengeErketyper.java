@@ -27,4 +27,10 @@ public class SøknadForeldrepengeErketyper {
 
     }
 
+    public static ForeldrepengerBuilder lagSøknadForeldrepengerAdopsjon(LocalDate omsorgsovertakelsedatoen, String søkerAktørId, SøkersRolle søkersRolle, Boolean ektefellesBarn) {
+        return lagSøknadForeldrepenger(omsorgsovertakelsedatoen, søkerAktørId, søkersRolle)
+                .medTilleggsopplysninger("Autogenerert erketypetest" + søkersRolle.toString() + "søker på adopsjon")
+                .medRelasjonTilBarnet(RelasjonTilBarnetErketyper.adopsjon(omsorgsovertakelsedatoen, ektefellesBarn));
+
+    }
 }

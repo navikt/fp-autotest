@@ -97,7 +97,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         int beregnetDagsats = regnUtForventetDagsats(inntektBeløp, tilrettelegginsprosent);
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen beregnes ut i fra årsinntekten og 100% utbetalingsgrad!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPart(0),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Foventer at hele utbetalte dagsatsen går til søker!");
 
     }
@@ -169,7 +169,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         int beregnetDagsats = regnUtForventetDagsats(inntektBeløp, tilrettelegginsprosent);
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPart(0),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Foventer at hele utbetalte dagsatsen går til søker!");
 
     }
@@ -463,7 +463,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         verifiser(beregningsgrunnlagPeriode.getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!");
 
-        double månedsinntekt = Double.valueOf(inntektPerMånedForAF1 + inntektPerMånedForAF2);
+        double månedsinntekt = inntektPerMånedForAF1 + inntektPerMånedForAF2;
         double prosentTilArbeidsgiver1 = (Double.valueOf(inntektPerMånedForAF1) / månedsinntekt) * 100;
         var internArbeidforholdId1 = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId1);
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidforholdId1, prosentTilArbeidsgiver1),

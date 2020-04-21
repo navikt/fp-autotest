@@ -6,6 +6,7 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdPost;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
@@ -19,6 +20,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.BehandlingMedUttaksperioderDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
@@ -371,6 +374,16 @@ public class Saksbehandler extends Aktoer {
                 .collect(Collectors.toList());
     }
 
+    public Saldoer hentSaldoerGittUttaksperioder(List<UttakResultatPeriode> uttakResultatPerioder) throws IOException {
+        BehandlingMedUttaksperioderDto behandlingMedUttaksperioderDto = new BehandlingMedUttaksperioderDto();
+        behandlingMedUttaksperioderDto.setPerioder(uttakResultatPerioder);
+        BehandlingIdDto behandlingIdDto = new BehandlingIdDto((long)valgtBehandling.id);
+        behandlingMedUttaksperioderDto.setBehandlingId(behandlingIdDto);
+
+        return behandlingerKlient.behandlingUttakStonadskontoerGittUttaksperioder(behandlingMedUttaksperioderDto);
+    }
+
+
     /* VERIFISERINGER */
     // TODO: Flytte dem en annen plass? Egen verifiserings-saksbehander?
     public boolean sjekkOmDetErFrilansinntektDagenFørSkjæringstidspuktet() {
@@ -395,24 +408,32 @@ public class Saksbehandler extends Aktoer {
         return false;
     }
 
-    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPart(double prosentAvDagsatsTilArbeidsgiver) {
-        var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(double prosentAvDagsatsTilArbeidsgiver) {
+
         for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
-            var dagsats = periode.getDagsats();
-            var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
-            var forventetUtbetaltDagsatsTilSøker = Math.round(dagsats * (1 - prosentfaktor));
-            List<Integer> utbetaltTilSøkerForAndeler = new ArrayList<>();
-            List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
-            for (var andel : periode.getAndeler()) {
-                utbetaltTilSøkerForAndeler.add(andel.getTilSoker());
-                utbetaltRefusjonForAndeler.add(andel.getRefusjon());
-            }
-            if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
+            if ( !verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(periode, prosentAvDagsatsTilArbeidsgiver) ) {
                 return false;
             }
-            if ( utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker ) {
-                return false;
-            }
+        }
+        return true;
+    }
+
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(BeregningsresultatPeriode periode, double prosentAvDagsatsTilArbeidsgiver) {
+        var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
+        var dagsats = periode.getDagsats();
+        var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
+        var forventetUtbetaltDagsatsTilSøker = Math.round(dagsats * (1 - prosentfaktor));
+        List<Integer> utbetaltTilSøkerForAndeler = new ArrayList<>();
+        List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
+        for (var andel : periode.getAndeler()) {
+            utbetaltTilSøkerForAndeler.add(andel.getTilSoker());
+            utbetaltRefusjonForAndeler.add(andel.getRefusjon());
+        }
+        if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
+            return false;
+        }
+        if ( utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker ) {
+            return false;
         }
         return true;
     }
