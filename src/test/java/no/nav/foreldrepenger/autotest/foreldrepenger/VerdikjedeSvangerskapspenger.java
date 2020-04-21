@@ -29,7 +29,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerska
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;
 
 @Execution(ExecutionMode.CONCURRENT)
-@Tag("verdikjedeSVP")
+@Tag("verdikjede")
 public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
     @Test

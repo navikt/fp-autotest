@@ -108,12 +108,7 @@ jobs:
         run: |
           mkdir container-logs
           cd container-logs
-          docker logs fpsak --tail all > fp-sak.log
-          docker logs abakus --tail all > abakus.log
-          docker logs fpformidling --tail all > fp-formidling.log
-          docker logs vtp --tail all > vtp.log
-          docker logs oracle --tail all > oracle.log
-          docker logs postgres --tail all > postgres.log
+          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
         if: failure()
