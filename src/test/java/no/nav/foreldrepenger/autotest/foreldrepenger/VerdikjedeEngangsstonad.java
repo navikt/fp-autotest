@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
 
 @Execution(ExecutionMode.CONCURRENT)
-@Tag("verdikjedeES")
+@Tag("verdikjede")
 public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
 
     @Test
