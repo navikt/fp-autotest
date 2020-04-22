@@ -1,5 +1,11 @@
 version: '2.4'
 services:
+  audit.nais:
+    image: $AUDIT_NAIS_IMAGE
+    container_name: audit.nais
+    ports:
+      - "6514:6514"
+    mem_limit: 32m
   oracle:
     image: $ORACLE_IMAGE
     container_name: oracle
@@ -66,6 +72,8 @@ services:
     ports:
       - "8015:8080"
     depends_on:
+      audit.nais:
+        condition: service_started
       postgres:
         condition: service_started
       vtp:
@@ -111,7 +119,22 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - audit.nais
       - oracle
       - vtp
       - abakus
       - fpformidling
+  fpsak-frontend:
+    image: $FPSAK_FRONTEND_IMAGE
+    container_name: fpsak-frontend
+    restart: on-failure
+    environment:
+      - "TZ=Europe/Oslo"
+      - "APP_PORT=9000"
+      - "APP_HOSTNAME=localhost"
+      - "APP_URL_FPSAK=http://fpsak:8080"
+      - "OIDC_HOST_URL=http://vtp:8060/rest/isso/oauth2"
+    ports:
+      - "9000:9000"
+    depends_on:
+      - fpsak
