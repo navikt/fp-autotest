@@ -128,10 +128,14 @@ services:
     image: $FPSAK_FRONTEND_IMAGE
     container_name: fpsak-frontend
     restart: on-failure
+    mem_limit: 128mb
     environment:
       - "TZ=Europe/Oslo"
       - "APP_PORT=9000"
       - "APP_HOSTNAME=localhost"
+      - "APP_URL_FPOPPDRAG=http://vtp:8060/rest/dummy/fpoppdrag"
+      - "APP_URL_FPTILBAKE=http://vtp:8060/rest/dummy/boolean/false"
+      - "APP_URL_FPFORMIDLING=http://fpformidling:8010"
       - "APP_URL_FPSAK=http://fpsak:8080"
       - "OIDC_HOST_URL=http://vtp:8060/rest/isso/oauth2"
     ports:
