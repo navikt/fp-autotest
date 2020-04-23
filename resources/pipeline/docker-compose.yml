@@ -129,7 +129,16 @@ services:
       - "APP_URL_FPFORMIDLING=http://fpformidling:8010"
       - "APP_URL_FPSAK=http://fpsak:8080"
       - "OIDC_HOST_URL=http://vtp:8060/rest/isso/oauth2"
+      - "OIDC_AGENTNAME=foo"
+      - "OIDC_PASSWORD=bar"
+      - "REDIS_HOST=redis"
     ports:
       - "9000:9000"
     depends_on:
       - fpsak
+      - redis
+  redis:
+    image: redis
+    container_name: redis
+    restart: on-failure
+    mem_limit: 64mb
