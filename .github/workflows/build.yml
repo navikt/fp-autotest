@@ -38,7 +38,7 @@ jobs:
           echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          docker-compose up --quiet-pull --detach
+          docker-compose up --quiet-pull --detach fpsak
 
       - name: Venter på stacken og sjekker status
         shell: bash
