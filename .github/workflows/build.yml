@@ -1,4 +1,4 @@
-name: Autotestene ble trigget av ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+name: Kjører Autotestene for verdikjeden
 
 on:
   push:
