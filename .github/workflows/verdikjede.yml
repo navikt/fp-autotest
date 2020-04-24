@@ -1,6 +1,8 @@
-name: Kjører Autotestene for fp-sak pull request
+name: Kjører Autotestene for verdikjeden
 
-on: [pull_request]
+on:
+  repository_dispatch:
+    types: [fpsak-verdikjede, fpformidling-verdikjede, abakus-verdikjede]
 
 jobs:
   build:
@@ -24,7 +26,6 @@ jobs:
           java-version: 1.11
 
       - name: Setup verdikjeden
-        if: github.event_name == 'push'
         shell: bash
         run: |
           echo ::set-env name=STACK_STARTED::false
@@ -59,12 +60,54 @@ jobs:
           echo ::set-env name=STACK_STARTED::true
 
       - name: Utfører tester
+
         shell: bash
         run: |
           mvn test --batch-mode --settings .m2/settings.xml -P fpsak -DargLine="AUTOTEST_ENV=pipeline"
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Utfører tester
+        shell: bash
+        run: |
+          mvn test --batch-mode --settings .m2/settings.xml -P fpsak -DargLine="AUTOTEST_ENV=pipeline"
+        env:
+          GITHUB_USERNAME: x-access-token
+          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Oppdaterer issue ved feilfrie tester
+        if: success() && github.event.action == 'fpsak-autotest' && github.event.client_payload.issue-number != null
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          repository: ${{ github.event.client_payload.trigger }}
+          event-type: update-issue
+          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
+
+      - name: Oppdaterer issue ved testfeil
+        if: failure() && github.event.action == 'fpsak-autotest' && github.event.client_payload.issue-number != null
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          repository: ${{ github.event.client_payload.trigger }}
+          event-type: update-issue
+          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
+
+      - name: Generer testrapport
+        if: always() && env.STACK_STARTED == 'true'
+        shell: bash
+        run: |
+          cd resources/allure
+          ./set-environment-variables.sh ${{ github.event.client_payload.trigger }}
+          cd ../../target/allure-results
+          git fetch origin gh-pages
+          git checkout origin/gh-pages ../../history
+          cp -r ../../history history
+          cp ../../resources/allure/environment.properties .
+          cp ../../resources/allure/categories.json .
+          cd ../..
+          mvn allure:report --batch-mode --file pom.xml
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'
@@ -87,3 +130,27 @@ jobs:
           docker system df -v
           docker system df
           df -h
+
+      - name: Deploy testrapport
+        if: always() && env.STACK_STARTED == 'true'
+        uses: crazy-max/ghaction-github-pages@v1.3.0
+        with:
+          target_branch: gh-pages
+          build_dir: target/allure-report/
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Notification til slack
+        if: failure() || env.STACK_STARTED == 'false'
+        shell: bash
+        run: |
+          curl -X POST --data-urlencode \
+          'payload={"channel": "#fpsak-autotest",
+          "username": "autotestern",
+          "blocks": [ { "type": "section", "text": {
+          "type": "mrkdwn",
+          "text": "  :scream: De automatiske testene feilet: <https://navikt.github.io/fpsak-autotest/|Testrapport> \n
+          repository: ${{ github.event.client_payload.trigger }} versjon: ${{ github.event.client_payload.version }} "
+          } } ],
+          "icon_emoji": ":snowman:"}' ${{ secrets.SLACK_WEBHOOK }}
+
