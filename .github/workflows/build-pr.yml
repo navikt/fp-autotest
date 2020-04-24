@@ -1,4 +1,4 @@
-name: Kjører Autotestene for fp-sak pull request
+name: Kjører Autotestene for verdikjeden PR
 
 on: [pull_request]
 
@@ -23,7 +23,7 @@ jobs:
         with:
           java-version: 1.11
 
-      - name: Setup fpsak-autotest stack
+      - name: Setup verdikjeden
         shell: bash
         run: |
           echo ::set-env name=STACK_STARTED::false
