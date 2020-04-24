@@ -5,7 +5,7 @@ on:
     branches:
       - master         # Push events on master branch
   repository_dispatch:
-    types: [fpsak-autotest]
+    types: [fpsak-autotest, fpsak-verdikjede, fpformidling-verdikjede, abakus-verdikjede]
 
 jobs:
   build:
@@ -62,7 +62,9 @@ jobs:
           echo Oppe!
           echo ::set-env name=STACK_STARTED::true
 
-      - name: Utfører tester
+      - name: Utfører foreldrepengetestene
+        if: github.event_name == 'push' || github.event.action == 'fpsak-autotest'
+        id: foreldrepengetestser
         shell: bash
         run: |
           mvn test --batch-mode --settings .m2/settings.xml -P fpsak -DargLine="AUTOTEST_ENV=pipeline"
@@ -70,8 +72,18 @@ jobs:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
+      - name: Utfører verdikjedetestene
+        if: steps.foreldrepengetestser.outcome == 'skipped'
+        id: verdiekjedetester
+        shell: bash
+        run: |
+          mvn test --batch-mode --settings .m2/settings.xml -P verdikjede -DargLine="AUTOTEST_ENV=pipeline"
+        env:
+          GITHUB_USERNAME: x-access-token
+          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
       - name: Oppdaterer issue ved feilfrie tester
-        if: success() && github.event.action == 'fpsak-autotest' && github.event.client_payload.issue-number != null
+        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -80,7 +92,7 @@ jobs:
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
 
       - name: Oppdaterer issue ved testfeil
-        if: failure() && github.event.action == 'fpsak-autotest' && github.event.client_payload.issue-number != null
+        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}

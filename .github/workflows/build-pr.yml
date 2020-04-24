@@ -1,4 +1,4 @@
-name: Kjører Autotestene for fp-sak pull request
+name: Kjører Autotestene for verdikjeden PR
 
 on: [pull_request]
 
@@ -24,7 +24,6 @@ jobs:
           java-version: 1.11
 
       - name: Setup verdikjeden
-        if: github.event_name == 'pull_request'
         shell: bash
         run: |
           echo ::set-env name=STACK_STARTED::false
