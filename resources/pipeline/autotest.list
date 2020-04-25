@@ -74,8 +74,7 @@ VIRKSOMHET_ARBEIDSFORDELING_V1_SECURITYTOKEN=SAML
 ARBEIDSFORDELING_RS_URL=https://vtp:8063/rest/norg2/api/v1/arbeidsfordeling/enheter
 SAK_V1_URL=https://vtp:8063/soap/nav-gsak-ws/SakV1
 VIRKSOMHET_SAK_V1_SECURITYTOKEN=SAML
-VIRKSOMHET_BEHANDLEOPPGAVE_V1_SECURITYTOKEN=SAML
-BEHANDLEOPPGAVE_V1_URL=https://vtp:8063/soap/nav-gsak-ws/BehandleOppgaveV1
+OPPGAVE_RS_URI=https://vtp:8063//api/v1/oppgaver
 VIRKSOMHET_PERSON_V3_SECURITYTOKEN=SAML
 PERSON_V3_URL=https://vtp:8063/soap/tpsws/ws/Person/v3
 VIRKSOMHET_ARBEIDSFORHOLD_V3_SECURITYTOKEN=SAML
@@ -97,8 +96,6 @@ VIRKSOMHET_INNTEKT_V3_SECURITYTOKEN=SAML
 INNTEKT_V3_URL=https://vtp:8063/soap/inntektskomponenten-ws/inntekt/v3/Inntekt
 VIRKSOMHET_MEDLEMSKAP_V2_SECURITYTOKEN=SAML
 MEDLEM_V2_URL=https://vtp:8063/soap/medl2/ws/Medlemskap/v2
-VIRKSOMHET_OPPGAVE_V3_SECURITYTOKEN=LTPA
-OPPGAVE_V3_URL=https://vtp:8063/soap/nav-gsak-ws/OppgaveV3
 KODEVERK_V2_URL=https://vtp:8063/soap/kodeverk/ws/Kodeverk/v2
 VIRKSOMHET_KODEVERK_V2_SECURITYTOKEN=NONE
 BEHANDLEJOURNAL_V3_URL=https://vtp:8063/soap/services/behandlejournal/v3
@@ -111,25 +108,17 @@ AUTOTEST_OAUTH2_ISSUER_PATH=/rest/isso/oauth2
 LOGBACK_CONFIG=/app/vtp-lib/logback-test.xml
 
 KAFKA_AKSJONSPUNKTHENDELSE_TOPIC=privat-foreldrepenger-aksjonspunkthendelse-fpsak
-KAFKA_AKSJONSPUNKTHENDELSE_CLIENT_ID=KP-privat-foreldrepenger-aksjonspunkthendelse
-KAFKA_AKSJONSPUNKTHENDELSE_SCHEMA_REGISTRY.URL=https://kafka-test-schema-registry.nais.preprod.local
-KAFKA_AKSJONSPUNKTHENDELSE_GROUP_ID=KC-privat-foreldrepenger-aksjonspunkthendelse
 DATO_FOR_NYE_BEREGNINGSREGLER=2010-01-01
 ABAKUS_VEDTATT_YTELSE_URL=https://localhost:8063/dev/null
 KAFKA_TOPIC=privat-foreldrepenger-mottatBehandling-fpsak
 BOOTSTRAP_SERVERS=vtp:9093
-KAFKA_AKSJONSPUNKTHENDELSE_SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
 SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
 FP_TILKJENTYTELSE_V1_TOPIC_URL=privat-foreldrepenger-tilkjentytelse-v1
 
 CLIENT_ID=KP-privat-foreldrepenger-mottatBehandling-fpsak
 
 KAFKA_RISIKOKLASSIFISERING_TOPIC=privat-foreldrepenger-fprisk
-KAFKA_RISIKOKLASSIFISERING_CLIENT_ID=KP-privat-foreldrepenger-fprisk
-KAFKA_RISIKOKLASSIFISERING_SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
 KAFKA_KONTROLL_RESULTAT_TOPIC=privat-foreldrepenger-kontroll-resultat
-KAFKA_KONTROLL_RESULTAT_SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
-KAFKA_KONTROLL_RESULTAT_CLIENT_ID=KC-privat-foreldrepenger-kontroll-resultat
 
 KAFKA_DOKUMENTBESTILLING_TOPIC=privat-foreldrepenger-dokumenthendelse
 KAFKA_HISTORIKKINNSLAG_TOPIC=privat-foreldrepenger-historikkinnslag
