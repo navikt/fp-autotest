@@ -72,15 +72,11 @@ INNGAAENDEJOURNAL_V1_URL=https://vtp:8063/soap/joark/InngaaendeJournal/v1
 INNGAAENDEJOURNAL_V1_DESCRIPTION=Virksomhetstjeneste for henting av metadata om inngående journalposter.
 VIRKSOMHET_ARBEIDSFORDELING_V1_SECURITYTOKEN=SAML
 ARBEIDSFORDELING_RS_URL=https://vtp:8063/rest/norg2/api/v1/arbeidsfordeling/enheter
-VIRKSOMHET_BEHANDLEOPPGAVE_V1_SECURITYTOKEN=SAML
-BEHANDLEOPPGAVE_V1_URL=https://vtp:8063/soap/nav-gsak-ws/BehandleOppgaveV1
 SAK_V1_URL=https://vtp:8063/soap/nav-gsak-ws/SakV1
 VIRKSOMHET_SAK_V1_SECURITYTOKEN=SAML
 OPPGAVE_RS_URI=https://vtp:8063/rest/oppgave/api/v1/oppgaver
 VIRKSOMHET_PERSON_V3_SECURITYTOKEN=SAML
 PERSON_V3_URL=https://vtp:8063/soap/tpsws/ws/Person/v3
-VIRKSOMHET_OPPGAVE_V3_SECURITYTOKEN=LTPA
-OPPGAVE_V3_URL=https://vtp:8063/soap/nav-gsak-ws/OppgaveV3
 VIRKSOMHET_ARBEIDSFORHOLD_V3_SECURITYTOKEN=SAML
 ARBEIDSFORHOLD_V3_URL=https://vtp:8063/soap/aareg-core/ArbeidsforholdService/v3
 VIRKSOMHET_ORGANISASJON_V4_SECURITYTOKEN=SAML
@@ -139,11 +135,3 @@ FPFORMIDLING_HENTSAKSBEHANDLERTEKST_URL=https://vtp:8063/rest/fpformidling/saksb
 FPTILBAKE_OVERRIDE_DIREKTE_URL=https://vtp:8063/rest/dummy/boolean/false
 
 FPABAKUS_URL=http://abakus:8080/fpabakus
-
-KAFKA_AKSJONSPUNKTHENDELSE_CLIENT_ID=KP-privat-foreldrepenger-aksjonspunkthendelse
-KAFKA_AKSJONSPUNKTHENDELSE_SCHEMA_REGISTRY.URL=https://kafka-test-schema-registry.nais.preprod.local
-KAFKA_AKSJONSPUNKTHENDELSE_GROUP_ID=KC-privat-foreldrepenger-aksjonspunkthendelse
-KAFKA_RISIKOKLASSIFISERING_CLIENT_ID=KP-privat-foreldrepenger-fprisk
-KAFKA_RISIKOKLASSIFISERING_SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
-KAFKA_KONTROLL_RESULTAT_SCHEMA_REGISTRY_URL=https://kafka-test-schema-registry.nais.preprod.local
-KAFKA_KONTROLL_RESULTAT_CLIENT_ID=KC-privat-foreldrepenger-kontroll-resultat
