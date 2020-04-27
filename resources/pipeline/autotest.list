@@ -119,7 +119,7 @@ CLIENT_ID=KP-privat-foreldrepenger-mottatBehandling-fpsak
 
 KAFKA_RISIKOKLASSIFISERING_TOPIC=privat-foreldrepenger-fprisk
 KAFKA_KONTROLL_RESULTAT_TOPIC=privat-foreldrepenger-kontroll-resultat
-
+KAFKA_FATTEVEDTAK_TOPIC=privat-familie-vedtakFattet-v1
 KAFKA_DOKUMENTBESTILLING_TOPIC=privat-foreldrepenger-dokumenthendelse
 KAFKA_HISTORIKKINNSLAG_TOPIC=privat-foreldrepenger-historikkinnslag
 
