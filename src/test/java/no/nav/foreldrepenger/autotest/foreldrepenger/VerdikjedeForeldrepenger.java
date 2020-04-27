@@ -326,7 +326,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar1)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektBeløpFar1/2));
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektBeløpFar1));
         var inntektBeløpFar2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp();
         var arbeidsforholdIdFar2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsforholdId();
         InntektsmeldingBuilder inntektsmeldingFar2= lagInntektsmelding(
@@ -335,7 +335,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar2)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektBeløpFar2/2));
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektBeløpFar2));
         fordel.sendInnInntektsmeldinger(
                 List.of(inntektsmeldingFar1, inntektsmeldingFar2),
                 aktørIdFar,
@@ -352,10 +352,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
 
-        // Feiler frem til fiks for TFP-2726 er implementert og i master!
-        //TODO Kommenter inn sjekk når det er fikset, eller bekreftet at det er forventet en annen oppførsel.
-//        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(100),
-//                "Forventer at hele summen utbetales til arbeidsgiver, og derfor ingenting til søker!");
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(100),
+                "Forventer at hele summen utbetales til arbeidsgiver, og derfor ingenting til søker!");
     }
 
 
