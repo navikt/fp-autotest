@@ -71,9 +71,9 @@ public class FordelingErketyper {
         return fordeling;
     }
 
-    public static Gradering graderingsperiodeArbeidstaker(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, String arbeidsgiverIdentifikator, Integer arbeidstidsprosent) {
+    public static Gradering graderingsperiodeArbeidstaker(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, String arbeidsgiverIdentifikator, Integer arbeidstidsprosentIOrgnr) {
         return new GraderingBuilder(stønadskonto.getKode(), fom, tom)
-                .medGraderingArbeidstaker(arbeidsgiverIdentifikator, arbeidstidsprosent)
+                .medGraderingArbeidstaker(arbeidsgiverIdentifikator, arbeidstidsprosentIOrgnr)
                 .build();
     }
     public static Gradering graderingsperiodeFL(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, Integer arbeidstidsprosent) {
