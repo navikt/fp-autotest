@@ -8,7 +8,11 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKl
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.*;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostId;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostKnyttning;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostMottak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.OpprettSak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.Saksnummer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
@@ -291,10 +295,9 @@ public class Fordel extends Aktoer {
         if (saksnummer == null || saksnummer.longValue() == 0L) {
             OpprettSak journalpost = new OpprettSak(journalpostId, behandlingstemaOffisiellKode, aktørId);
             saksnummer = fordelKlient.fagsakOpprett(journalpost).saksnummer;
-            journalpostKlient.knyttSakTilJournalpost(journalpostId, saksnummer.toString());
         }
 
-
+        journalpostKlient.knyttSakTilJournalpost(journalpostId, saksnummer.toString());
         JournalpostId idDto = new JournalpostId(journalpostId);
         JournalpostKnyttning journalpostKnyttning = new JournalpostKnyttning(new Saksnummer(saksnummer), idDto);
         fordelKlient.fagsakKnyttJournalpost(journalpostKnyttning);
