@@ -17,6 +17,7 @@ services:
       - "JAVAX_NET_SSL_TRUSTSTORE=/root/.modig/truststore.jks"
       - "ISSO_OAUTH2_ISSUER=https://vtp:8063/rest/isso/oauth2"
       - "VTP_KAFKA_HOST=localhost:9093"
+      - "CREATE_TOPICS=privat-familie-vedtakFattet-v1-vtp"
     volumes:
       - "${WORKSPACE}/.modig:/root/.modig"
     ports:
@@ -55,7 +56,7 @@ services:
       - "HENTINNTEKTLISTEBOLK_URL=https://vtp:8063/rest/inntektskomponenten-ws/rs/api/v1/hentinntektlistebolk"
       - "KAFKA_BOOTSTRAP_SERVERS=vtp:9092"
       - "KAFKA_SCHEMA_REGISTRY_URL=vtp:9092"
-      - "KAFKA_FATTEVEDTAK_TOPIC=privat-familie-vedtakFattet-v1"
+      - "KAFKA_FATTEVEDTAK_TOPIC=privat-familie-vedtakFattet-v1-vtp"
       - "ABAC_PDP_ENDPOINT_URL=https://vtp:8063/rest/asm-pdp/authorize"
       - "OIDC_STS_ISSUER_URL=https://vtp:8063/rest/sts/issuer"
       - "OIDC_STS_JWKS_URL=https://vtp:8063/rest/sts/jwks"
