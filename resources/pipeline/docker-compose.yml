@@ -37,7 +37,7 @@ services:
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
-      - "CREATE_TOPICS=privat-foreldrepenger-kontroll-resultat-lokal,privat-k9-tilkjentytelse-v1"
+      - "CREATE_TOPICS=privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
