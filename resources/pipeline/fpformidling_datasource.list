@@ -1,3 +1,5 @@
+APP_NAME=FPFORMIDLING
+NAIS_APP_NAME=FPFORMIDLING
 DEFAULTDS_USERNAME=fpformidling
 DEFAULTDS_PASSWORD=fpformidling
 DEFAULTDS_URL=jdbc:postgresql://postgres:5432/fpformidling

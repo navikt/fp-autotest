@@ -37,8 +37,7 @@ services:
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
-    env_file:
-      - "vtp-kafka-topics.env"
+      - "CREATE_TOPICS=privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -61,12 +60,11 @@ services:
     environment:
       - "TZ=Europe/Oslo"
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
-      - "NAV_TRUSTSTORE_KEYSTOREALIAS=na"
-      - "NAV_TRUSTSTORE_PASSWORD=changeit"
-      - "NAV_TRUSTSTORE_PATH=/var/run/secrets/naisd.io/truststore.jks"
+      - "LOADBALANCER_URL=http://localhost:8015"
+      - "LOADBALANCER_FQDN=localhost:8015"
     env_file:
       - "fpabakus_datasource.list"
-      - "fp-abakus.env"
+      - "common.env"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -87,12 +85,11 @@ services:
       - "TZ=Europe/Oslo"
       - "FPSAK_REST_BASE_URL=http://fpsak:8080"
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
-      - "NAV_TRUSTSTORE_KEYSTOREALIAS=na"
-      - "NAV_TRUSTSTORE_PASSWORD=changeit"
-      - "NAV_TRUSTSTORE_PATH=/var/run/secrets/naisd.io/truststore.jks"
+      - "LOADBALANCER_URL=http://localhost:8010"
+      - "LOADBALANCER_FQDN=localhost:8010"
     env_file:
       - "fpformidling_datasource.list"
-      - "fp-formidling.env"
+      - "common.env"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -108,12 +105,18 @@ services:
     restart: on-failure
     mem_limit: 1gb
     environment:
-      - "NAV_TRUSTSTORE_KEYSTOREALIAS=na"
-      - "NAV_TRUSTSTORE_PASSWORD=changeit"
-      - "NAV_TRUSTSTORE_PATH=/var/run/secrets/naisd.io/truststore.jks"
+      - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
+      - "FPABAKUS_URL=http://abakus:8080/fpabakus"
+      - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://vtp:8060/rest/dummy/fpoppdrag"
+      - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/fpoppdrag"
+      - "FPTILBAKE_OVERRIDE_URL=http://vtp:8060/rest/dummy/boolean/false"
+      - "LOADBALANCER_URL=http://localhost:8080"
+      - "LOADBALANCER_FQDN=localhost:8080"
+      - "EXTRA_CLASS_PATH=:vtp-lib/*"
     env_file:
       - "fpsak_datasource.list"
-      - "fp-sak.env"
+      - "fpsak_mq.list"
+      - "common.env"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
