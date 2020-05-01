@@ -25,7 +25,6 @@ AUTOTEST_OAUTH2_ISSUER_PATH=/rest/isso/oauth2
 LOGBACK_CONFIG=/app/vtp-lib/logback-test.xml
 
 FPABAKUS_URL=http://abakus:8080/fpabakus
-FPOPPDRAG_OVERRIDE_PROXY_URL=http://vtp:8060/rest/dummy/fpoppdrag
-FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/fpoppdrag
+FPOPPDRAG_URL=http://vtp:8060/rest/dummy/fpoppdrag
 FPTILBAKE_OVERRIDE_DIREKTE_URL=https://vtp:8063/rest/dummy/boolean/false
 
