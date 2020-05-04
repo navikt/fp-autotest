@@ -283,9 +283,19 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fpStartdatoFar = fødselsdato.plusWeeks(23);
-        var saksnummerMor =
-                ferdigbehandleMorAnnenpartSøknadOmMødrekvotenOgDelerAvFellesperiodeHappyCase(testscenario, fødselsdato, fpStartdatoFar);
+        var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(testscenario,
+                fødselsdato, fpStartdatoMor, fpStartdatoFar);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRIST_FORELDREPENGER);
+        VurderSoknadsfristForeldrepengerBekreftelse vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
+        vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(fpStartdatoMor);
+        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
+
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
 
         /*
          * FAR: Søker med to arbeidsforhold i samme virksomhet, orgn.nr, men med ulik arbeidsforholdID.
@@ -366,10 +376,19 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fpStartdatoFar = fødselsdato.plusWeeks(23);
-        var saksnummerMor =
-                ferdigbehandleMorAnnenpartSøknadOmMødrekvotenOgDelerAvFellesperiodeHappyCase(testscenario, fødselsdato, fpStartdatoFar);
+        var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(testscenario,
+                fødselsdato, fpStartdatoMor, fpStartdatoFar);
 
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRIST_FORELDREPENGER);
+        VurderSoknadsfristForeldrepengerBekreftelse vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
+        vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(fpStartdatoMor);
+        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
+
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
         /*
          * FAR: Søker som FL og mor har løpende sak. Har frilansinntekt frem til, men ikke inklusiv, skjæringstidspunktet.
          *      Søker noe av fellesperioden og deretter hele fedrekvoten
@@ -536,9 +555,13 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fpStartdatoFarOrdinær = fødselsdato.plusWeeks(23);
-        var saksnummerMor =
-                ferdigbehandleMorAnnenpartSøknadOmMødrekvotenOgDelerAvFellesperiodeHappyCase(testscenario, fødselsdato, fpStartdatoFarOrdinær);
+        var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(testscenario,
+                fødselsdato, fpStartdatoMor, fpStartdatoFarOrdinær);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerMor);
 
         /*
          * FAR: Søker overføring av mødrekvoten og fellesperiode fordi mor er syk innenfor 6 første uker av mødrekvoten.
@@ -565,11 +588,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
-//        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRIST_FORELDREPENGER);
-//        VurderSoknadsfristForeldrepengerBekreftelse vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
-//        vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(fpStartdatoFarEndret);
-//        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FAKTA_UTTAK);
         AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder avklarFaktaUttakPerioder =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
@@ -1073,13 +1091,13 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
 
 
-    private Long ferdigbehandleMorAnnenpartSøknadOmMødrekvotenOgDelerAvFellesperiodeHappyCase(TestscenarioDto testscenario,
-                                                                                              LocalDate fødselsdato,
-                                                                                              LocalDate fpStartdatoFar) throws Exception {
+    private Long sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(TestscenarioDto testscenario,
+                                                                                        LocalDate fødselsdato,
+                                                                                        LocalDate fpStartdatoMor,
+                                                                                        LocalDate fpStartdatoFar) throws Exception {
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var identMor = testscenario.getPersonopplysninger().getAnnenpartIdent();
         var aktørIdMor = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fordelingMor = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
@@ -1107,15 +1125,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 aktørIdMor,
                 identMor,
                 saksnummerMor);
-
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRIST_FORELDREPENGER);
-        VurderSoknadsfristForeldrepengerBekreftelse vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
-        vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(fpStartdatoMor);
-        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
 
         return saksnummerMor;
     }
