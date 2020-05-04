@@ -367,17 +367,18 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     }
 
 
-    //TODO: Fiks testen
     @Test
-    @Disabled
-    @DisplayName("5: Far søker mor annenpart")
+    @DisplayName("5: Far søker fellesperiode og fedrekvote som frilanser.")
+    @Description("Mor søker hele mødrekvoten og deler av fellesperiode, happy case. Far søker etter føsdsel og søker noe" +
+            "av fellesperioden og hele fedrekvoten. Opplyser at han er frilanser og har frilanserinntekt frem til skærings-" +
+            "tidspunktet.")
     public void farSøkerSomFrilanser() throws Exception {
         TestscenarioDto testscenario = opprettTestscenario("561");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
-        var fpStartdatoFar = fødselsdato.plusWeeks(23);
+        var fpStartdatoFar = fødselsdato.plusWeeks(18);
         var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(testscenario,
                 fødselsdato, fpStartdatoMor, fpStartdatoFar);
 
@@ -387,10 +388,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         VurderSoknadsfristForeldrepengerBekreftelse vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
         vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(fpStartdatoMor);
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
+
         /*
-         * FAR: Søker som FL og mor har løpende sak. Har frilansinntekt frem til, men ikke inklusiv, skjæringstidspunktet.
+         * FAR: Søker som FL. Har frilansinntekt frem til, men ikke inklusiv, skjæringstidspunktet.
          *      Søker noe av fellesperioden og deretter hele fedrekvoten
          */
         var identFar = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -425,35 +426,24 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Godkjenner Aktivitet");
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
-        // TODO: Stopper på autopunkt 7014: Inntekt rapporteringsfrist.
-        //  Feiler frem til og med 5. i hver måned.
-        //  Finn ut en bedre metode for å håndtere dette. Går det ann og løse det hvis det oppstår?
-        //  Stopper også ved andre tidpunkt.. Må fikses!
-        if ( LocalDate.now().getDayOfMonth() <= 5 ) {
-            saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTO_VENT_PÅ_INNTEKT_RAPPORTERINGSFRIST);
+        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        vurderFaktaOmBeregningBekreftelse.behandleFrilansMottarIkke();
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
-        } else {
+        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
+        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
+        fastsettUttaksperioderManueltBekreftelse.godkjennAlleManuellePerioder(new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
+        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-            saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-            VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-            vurderFaktaOmBeregningBekreftelse.behandleFrilansMottarIkke();
-            saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
 
-            saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
-            FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-            fastsettUttaksperioderManueltBekreftelse.godkjennAlleManuellePerioder(new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
-            saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
-
-            foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
-
-            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
-                    "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
-        }
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
+                "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
     }
 
 
     @Test
-    @Disabled
     @DisplayName("6: Far ")
     public void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() throws Exception {
         var testscenario = opprettTestscenario("570");
@@ -462,16 +452,14 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var aktørIdMor = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         var orgNummerFar1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
-        var fpStartdatoFar = fødselsdato.plusWeeks(6);
-        double arbeidstidsprosent = (double) testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsavtaler().get(0).getStillingsprosent();
-        double ukerForeldrepenger = 40/(1 - arbeidstidsprosent/100);
+        var stillingsprosent = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsavtaler().get(0).getStillingsprosent();
+        var fpStartdatoFar = fødselsdato.plusWeeks(7);
         var fordelingFar = generiskFordeling(
-                graderingsperiodeArbeidstaker(
-                        FORELDREPENGER,
+                graderingsperiodeArbeidstaker(FORELDREPENGER,
                         fpStartdatoFar,
-                        fpStartdatoFar.plusWeeks((int) ukerForeldrepenger).minusDays(1),
+                        fpStartdatoFar.plusWeeks(40).minusDays(1),
                         orgNummerFar1,
-                        (int) arbeidstidsprosent)
+                        stillingsprosent)
         );
         var søknadFar = lagSøknadForeldrepengerFødsel(
                 fødselsdato, aktørIdFar, SøkersRolle.FAR)
@@ -522,15 +510,14 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
         AvklarArbeidsforholdBekreftelse avklarArbeidsforholdBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        // TODO: Assert på behandling at det er riktig uavklart arbeidsforhold
         var ansettelsesperiodeFom = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(2)
                 .getAnsettelsesperiodeFom();
-        var tomGyldighetsperiode = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(2)
-                .getArbeidsavtaler().get(0).getTomGyldighetsperiode();
+        var tomGyldighetsperiode = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
+                .getAnsettelsesperiodeFom();
         avklarArbeidsforholdBekreftelse.bekreftArbeidsforholdErOverstyrt(
                 "TEST TRANSPORT AS",
                 ansettelsesperiodeFom,
-                tomGyldighetsperiode);
+                tomGyldighetsperiode.minusDays(1));
         avklarArbeidsforholdBekreftelse.setBegrunnelse("Arbeidsforholdet skulle vært avsluttet");
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
@@ -541,6 +528,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         avklarFaktaAnnenForeldreHarRett.setAnnenforelderHarRett(false);
         avklarFaktaAnnenForeldreHarRett.setBegrunnelse("Bare far har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
+
+
+
 
         saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
         // TODO: Skal dette aksjonspunktet forekomme? Endre på testen?
@@ -562,6 +552,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAvsluttetBehandling();
 
         /*
          * FAR: Søker overføring av mødrekvoten og fellesperiode fordi mor er syk innenfor 6 første uker av mødrekvoten.

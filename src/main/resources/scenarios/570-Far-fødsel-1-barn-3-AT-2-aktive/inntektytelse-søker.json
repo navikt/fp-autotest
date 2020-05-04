@@ -56,13 +56,12 @@
 			},
 			{
 				"arbeidsforholdId": "ARB001-003",
-				"ansettelsesperiodeFom": "now() - P4Y",
+				"ansettelsesperiodeFom": "now() - P8Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "991779493",
 				"arbeidsavtaler" : [
 					{
 						"fomGyldighetsperiode": "now() - P4Y",
-						"tomGyldighetsperiode": "now() - P7M",
 						"sisteLønnsendringsdato": "now() - P1Y",
 						"avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "40",
