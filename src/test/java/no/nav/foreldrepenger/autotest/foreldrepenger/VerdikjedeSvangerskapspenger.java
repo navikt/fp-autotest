@@ -255,7 +255,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 "Forventer at dagsatsen bare beregnes ut i fra årsinntekten til det ene arbeidsforholdet og dens utbetalingsgrad!");
 
         var internArbeidforholdId = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId1);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidforholdId, 0),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidforholdId, 0),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
     }
 
@@ -327,7 +327,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!");
         var internArbeidforholdId = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidforholdId, 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidforholdId, 100),
                 "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver siden de ønsker full refusjon!");
 
 
@@ -377,7 +377,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         saksbehandler.ventTilAvsluttetBehandling();
 
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidforholdId, 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidforholdId, 100),
                 "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver siden de ønsker full refusjon!");
     }
 
@@ -466,12 +466,12 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         double månedsinntekt = inntektPerMånedForAF1 + inntektPerMånedForAF2;
         double prosentTilArbeidsgiver1 = (Double.valueOf(inntektPerMånedForAF1) / månedsinntekt) * 100;
         var internArbeidforholdId1 = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId1);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidforholdId1, prosentTilArbeidsgiver1),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidforholdId1, prosentTilArbeidsgiver1),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
 
         double prosentTilArbeidforhold2 = 100 - prosentTilArbeidsgiver1;
         var internArbeidsgiver2 = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId2);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(internArbeidsgiver2, prosentTilArbeidforhold2),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidsgiver2, prosentTilArbeidforhold2),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
     }
 

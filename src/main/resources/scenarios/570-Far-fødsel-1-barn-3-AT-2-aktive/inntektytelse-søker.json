@@ -32,9 +32,9 @@
 						"fomGyldighetsperiode": "now() - P12M",
 						"sisteLønnsendringsdato": "now() - P1M",
 						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "40",
+						"avtaltArbeidstimerPerUke": "25",
 						"stillingsprosent" : 60,
-						"beregnetAntallTimerPerUke": "40"
+						"beregnetAntallTimerPerUke": "25"
 					}
 				]
 			},
@@ -48,21 +48,20 @@
 						"fomGyldighetsperiode": "now() - P4Y",
 						"sisteLønnsendringsdato": "now() - P1Y",
 						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "40",
+						"avtaltArbeidstimerPerUke": "15",
 						"stillingsprosent" : 40,
-						"beregnetAntallTimerPerUke": "40"
+						"beregnetAntallTimerPerUke": "15"
 					}
 				]
 			},
 			{
 				"arbeidsforholdId": "ARB001-003",
-				"ansettelsesperiodeFom": "now() - P4Y",
+				"ansettelsesperiodeFom": "now() - P8Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "991779493",
 				"arbeidsavtaler" : [
 					{
 						"fomGyldighetsperiode": "now() - P4Y",
-						"tomGyldighetsperiode": "now() - P7M",
 						"sisteLønnsendringsdato": "now() - P1Y",
 						"avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "40",

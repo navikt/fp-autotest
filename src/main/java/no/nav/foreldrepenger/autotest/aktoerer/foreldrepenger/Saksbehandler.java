@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.BehandlingMedUttaksperioderDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
@@ -52,6 +53,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -384,6 +386,17 @@ public class Saksbehandler extends Aktoer {
     }
 
 
+    public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPeriodeAndelerForArbeidsforhold(String organisasjonsnummer) {
+        return Arrays.stream(valgtBehandling.getBeregningResultatForeldrepenger().getPerioder())
+                .flatMap(beregningsresultatPeriode -> Arrays.stream(beregningsresultatPeriode.getAndeler()))
+                .filter(andeler -> andeler.getArbeidsgiverOrgnr().equalsIgnoreCase(organisasjonsnummer))
+                .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
+                .collect(Collectors.toList());
+
+
+    }
+
+
     /* VERIFISERINGER */
     // TODO: Flytte dem en annen plass? Egen verifiserings-saksbehander?
     public boolean sjekkOmDetErFrilansinntektDagenFørSkjæringstidspuktet() {
@@ -409,7 +422,6 @@ public class Saksbehandler extends Aktoer {
     }
 
     public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(double prosentAvDagsatsTilArbeidsgiver) {
-
         for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
             if ( !verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(periode, prosentAvDagsatsTilArbeidsgiver) ) {
                 return false;
@@ -439,26 +451,31 @@ public class Saksbehandler extends Aktoer {
     }
 
 
-    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiver(String internArbeidsforholdID, double prosentAvDagsatsTilArbeidsgiver) {
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(String internArbeidsforholdID,
+                                                                                       double prosentAvDagsatsTilArbeidsgiver) {
         var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
         for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
-            var dagsats = periode.getDagsats();
-            var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
-            var forventetUtbetaltDagsatsTilSøker = Math.round(dagsats * (1 - prosentfaktor));
-            List<Integer> utbetaltTilSøkerForAndeler = new ArrayList<>();
-            List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
-            for (var andel : periode.getAndeler()) {
-                if ( andel.getArbeidsforholdId() != null && andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID) ) {
-                    utbetaltRefusjonForAndeler.add(andel.getRefusjon());
-                    utbetaltTilSøkerForAndeler.add(andel.getTilSoker());
-                }
-
-            }
-            if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
+            if (verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForPeriode(periode, internArbeidsforholdID, prosentfaktor))
                 return false;
-            }
         }
         return true;
+    }
+
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForPeriode( BeregningsresultatPeriode periode,
+                                                                                    String internArbeidsforholdID,
+                                                                                    double prosentfaktor) {
+        var dagsats = periode.getDagsats();
+        var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
+        List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
+        for (var andel : periode.getAndeler()) {
+            if ( andel.getArbeidsforholdId() != null && andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID) ) {
+                utbetaltRefusjonForAndeler.add(andel.getRefusjon());
+            }
+        }
+        if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
+            return true;
+        }
+        return false;
     }
 
     /*

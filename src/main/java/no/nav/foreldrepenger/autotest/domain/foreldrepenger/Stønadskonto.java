@@ -18,6 +18,7 @@ public enum Stønadskonto implements Serializable {
     FEDREKVOTE("FEDREKVOTE"),
     FELLESPERIODE("FELLESPERIODE"),
     FORELDREPENGER("FORELDREPENGER"),
+    FLERBARNSDAGER("FLERBARNSDAGER"),
     INGEN_STØNADSKONTO("-")
     ;
 
