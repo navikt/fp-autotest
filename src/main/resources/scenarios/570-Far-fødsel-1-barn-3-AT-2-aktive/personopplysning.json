@@ -53,7 +53,7 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P7W"
+				"fødselsdato": "now()-P2W"
 			}
 		},
 		{
