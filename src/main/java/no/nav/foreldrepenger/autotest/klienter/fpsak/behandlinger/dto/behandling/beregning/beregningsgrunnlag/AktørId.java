@@ -1,22 +1,53 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag;
 
+import java.util.Objects;
+
+import javax.validation.constraints.Pattern;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AktørId {
+@JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.NONE, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
+public class AktørId  {
 
-    public AktørId(String aktørId) {
+    @JsonProperty(value = "aktørId")
+    private String aktørId;  // NOSONAR
+
+    @JsonCreator
+    public AktørId(@JsonProperty(value = "aktørId", required=true, index=1) String aktørId) {
         this.aktørId = aktørId;
     }
-
-    protected String aktørId;
-    protected String indexKey;
 
     public String getAktørId() {
         return aktørId;
     }
 
-    public String getIndexKey() {
-        return indexKey;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (obj == null || !getClass().equals(obj.getClass())) {
+            return false;
+        }
+        AktørId other = (AktørId) obj;
+        return Objects.equals(aktørId, other.aktørId);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(aktørId);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "<" + aktørId + ">";
+    }
+
 }
