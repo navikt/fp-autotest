@@ -1,17 +1,15 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.MottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FaktaOmBeregningLagreDto {
@@ -21,6 +19,7 @@ public class FaktaOmBeregningLagreDto {
     protected List<String> faktaOmBeregningTilfeller = new ArrayList<>();
     protected MottarYtelse mottarYtelse;
     protected FastsettEndretBeregningsgrunnlag fastsettEndringBeregningsgrunnlag;
+    protected BesteberegningFødendeKvinneDto besteberegningAndeler;
     protected VurderTidsbegrensetArbeidsforholdDto vurderTidsbegrensetArbeidsforhold;
     protected YtelseForedeling kunYtelseFordeling;
     protected List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet = new ArrayList<>();
@@ -44,6 +43,21 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
+    public FaktaOmBeregningLagreDto leggTilTomBesteBeregningAndeler() {
+        if ( besteberegningAndeler == null ) {
+            besteberegningAndeler = new BesteberegningFødendeKvinneDto();
+        }
+        return this;
+    }
+
+    public FaktaOmBeregningLagreDto leggTilBesteBeregningAndeler(double beløp, Kode inntektskategori) {
+        if ( besteberegningAndeler == null ) {
+            besteberegningAndeler = new BesteberegningFødendeKvinneDto();
+        }
+        besteberegningAndeler.leggTilBesteberegningAndel(new BesteberegningFødendeKvinneAndelDto(beløp, inntektskategori.kode));
+        leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE.kode);
+        return this;
+    }
 
     public FaktaOmBeregningLagreDto leggTilMaanedsinntektUtenInntektsmelding(List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe){
         this.fastsattUtenInntektsmelding = new FastsettMaanedsinntektUtenInntektsmelding(andelListe);
@@ -56,7 +70,9 @@ public class FaktaOmBeregningLagreDto {
     }
 
     public FaktaOmBeregningLagreDto leggTilAndelerYtelse(double beløp, Kode inntektskategori) {
-        kunYtelseFordeling = new YtelseForedeling();
+        if (kunYtelseFordeling == null) {
+            kunYtelseFordeling = new YtelseForedeling();
+        }
         kunYtelseFordeling.leggTilYtelseAndeler(new YtelseAndeler(beløp, inntektskategori.kode));
         return this;
     }

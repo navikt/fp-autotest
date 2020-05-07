@@ -13,12 +13,15 @@ import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedFeilutbetalingBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
@@ -30,10 +33,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
@@ -121,7 +126,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
         var vurderBeregnetInntektsAvvikBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
@@ -813,9 +817,149 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     }
 
     @Test
-    @Disabled
-    @DisplayName("9: ")
+    @DisplayName("9: Mor søker med dagpenger som grunnlag, klager, får medhold og revurderes.")
+    @Description("Mor søker med dagpenger som grunnlag. Bruker ikke besteberegning. Søker klager på dette. Mor får" +
+            "medhold og revurderes. I revurderingen brukes besteberegning og sbh oppgir en verdi høyere månedsinntekt.")
     public void MorSøkerMedDagpengerTest() throws Exception {
+        TestscenarioDto testscenario = opprettTestscenario("521");
+        var identMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        var aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var fpStartdatoMor = fødselsdato.minusWeeks(3);
+        var fordelingMor = generiskFordeling(
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(31).minusDays(1)));
+
+        var søknadMor = lagSøknadForeldrepengerFødsel(
+                fødselsdato, aktørIdMor, SøkersRolle.MOR)
+                .medFordeling(fordelingMor);
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        var saksnummerMor = fordel.sendInnSøknad(
+                søknadMor.build(),
+                aktørIdMor,
+                identMor,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+
+        var inntektBeløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgNummerMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var inntektsmeldingMor = lagInntektsmelding(
+                inntektBeløpMor,
+                identMor,
+                fpStartdatoMor,
+                orgNummerMor);
+        fordel.sendInnInntektsmelding(
+                inntektsmeldingMor,
+                aktørIdMor,
+                identMor,
+                saksnummerMor);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse =
+                saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        vurderFaktaOmBeregningBekreftelse
+                .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING.kode)
+                .leggTilTomBesteBeregningAndeler()
+                .setBegrunnelse("Dette ");
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
+
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
+
+        saksbehandler.refreshBehandling();
+        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_BESTILT), "Brev er bestillt i førstegangsbehandling");
+        BeregningsresultatPeriode[] beregningsresultatPeriodeFørstegangsbehandling = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling.length == 4,
+                "Forventer 3 forskjelige beregningsresultatsperioder!");
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling[0].getDagsats() == 1_000,
+                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling[1].getDagsats() == 1_000,
+                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling[2].getDagsats() == 1_000,
+                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling[3].getDagsats() == 1_000,
+                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+
+        //* KLAGE *//
+        fordel.sendInnKlage(null, testscenario, saksnummerMor);
+
+        klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
+        klagebehandler.hentFagsak(saksnummerMor);
+        klagebehandler.ventTilSakHarKlage();
+        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDERING_AV_FORMKRAV_KLAGE_NFP);
+        KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        klageFormkravNfp
+                .godkjennAlleFormkrav()
+                .setBegrunnelse("Godkjenner alle formkrav");
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
+
+        klagebehandler.ventTilAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse =
+                klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        vurderingAvKlageNfpBekreftelse
+                .bekreftMedholdGunst("PROSESSUELL_FEIL")
+                .fritekstBrev("Fritekst brev fra nfp")
+                .setBegrunnelse("Slik er det bare!");
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
+
+        klagebehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FORESLÅ_VEDTAK);
+        klagebehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummerMor);
+        beslutter.velgKlageBehandling();
+        beslutter.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FATTER_VEDTAK);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+
+        //* REVURDERING *//
+        saksbehandler.opprettBehandlingRevurdering("ETTER_KLAGE");
+        saksbehandler.ventTilSakHarRevurdering();
+        saksbehandler.velgRevurderingBehandling();
+
+        verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode.equalsIgnoreCase("ETTER_KLAGE"),
+                "Foventer at revurderingen har årsakskode ETTER_KLAGE.");
+
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse2 =
+                saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        vurderFaktaOmBeregningBekreftelse2
+                .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING.kode)
+                .leggTilBesteBeregningAndeler(30_000.0, new Kode("","DAGPENGER", "Dagpenger"))
+                .setBegrunnelse("Legger til en beste beregning andel periode som gjør at vi bruker besteberegning!");
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
+
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.KONTROLL_AV_MANUELT_OPPRETTET_REVURDERINGSBEHANDLING);
+        KontrollerManueltOpprettetRevurdering kontrollerManueltOpprettetRevurdering =
+                saksbehandler.hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class);
+        saksbehandler.bekreftAksjonspunkt(kontrollerManueltOpprettetRevurdering);
+
+        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, true);
+
+        saksbehandler.refreshBehandling();
+        BeregningsresultatPeriode[] beregningsresultatPeriodeRevurdering = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
+        List<Integer> forventetDagsats = regnUtForventetDagsatsForPeriode(List.of(30_000), List.of(100), List.of(false));
+        verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == forventetDagsats.get(0),
+                "Forventer at dagsatsen er kalkulert etter beløpet gitt i besteberegning!");
+        verifiser(beregningsresultatPeriodeRevurdering.length == 4,
+                "Forventer 3 forskjelige beregningsresultatsperioder!");
+        verifiser(beregningsresultatPeriodeRevurdering[0].getDagsats() == forventetDagsats.get(0),
+                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+        verifiser(beregningsresultatPeriodeRevurdering[1].getDagsats() == forventetDagsats.get(0),
+                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+        verifiser(beregningsresultatPeriodeRevurdering[2].getDagsats() == forventetDagsats.get(0),
+                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+        verifiser(beregningsresultatPeriodeRevurdering[3].getDagsats() == forventetDagsats.get(0),
+                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+        verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode.equalsIgnoreCase("ENDRING_I_BEREGNING"),
+                "Foventer at konsekvens for ytelse er satt til ENDRING_I_BEREGNING.");
+        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT, saksbehandler.valgtBehandling.id) == false,
+                "Forventer at det ikke sendes et nytt vedtaksbrev i revurderingen");
+
 
     }
 

@@ -44,6 +44,7 @@ public class Behandling {
     public Boolean behandlingHenlagt;
     public Boolean behandlingPaaVent;
     public Behandlingsresultat behandlingsresultat;
+    public List<BehandlingÅrsak> behandlingArsaker;
 
     private Deffered<List<Vilkar>> vilkar;
     private Deffered<List<Aksjonspunkt>> aksjonspunkter;
@@ -112,6 +113,9 @@ public class Behandling {
             }
         }
         return sb.toString();
+    }
+    public List<BehandlingÅrsak> getBehandlingArsaker() {
+        return behandlingArsaker;
     }
 
     public List<Vilkar> getVilkar() {

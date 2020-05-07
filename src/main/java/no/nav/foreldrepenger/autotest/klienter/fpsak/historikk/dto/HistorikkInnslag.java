@@ -1,10 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HistorikkInnslag {
@@ -35,20 +34,25 @@ public class HistorikkInnslag {
     public static final Type NYE_REGOPPLYSNINGER = Type.NYE_REGOPPLYSNINGER;
     public static final Type UENDRET_UTFALL = Type.UENDRET_UTFALL;
     public static final Type BEH_OPPDATERT_NYE_OPPL = Type.BEH_OPPDATERT_NYE_OPPL;
-    
-    
+
+
     protected HistorikkTekst tekst;
     protected List<HistorikkinnslagDel> historikkinnslagDeler;
-    
+
     protected int behandlingsid;
     protected Kode type;
     protected Kode aktoer;
     protected Kode kjoenn;
-    
+
     public String getTypeKode() {
         return type.kode;
     }
-    
+
+    public int getBehandlingsid() {
+        return behandlingsid;
+    }
+
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + String.format("<behandlingsid=%s, type=%s, tekst=%s, innslag=%s>", behandlingsid, type.kode, tekst, historikkinnslagDeler);
