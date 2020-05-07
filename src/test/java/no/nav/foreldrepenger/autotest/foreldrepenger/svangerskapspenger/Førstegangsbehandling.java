@@ -201,13 +201,16 @@ public class Førstegangsbehandling extends FpsakTestBase {
                 .stream()
                 .sorted(Comparator.comparing(BeregningsgrunnlagPeriodeDto::getBeregningsgrunnlagPeriodeFom))
                 .collect(Collectors.toList());
-        assertThat(bgPerioder).hasSize(2);
+        assertThat(bgPerioder).hasSize(3);
 
         BeregningsgrunnlagPeriodeDto førstePeriode = bgPerioder.get(0);
         assertThat(førstePeriode.getDagsats()).isEqualTo(0);
 
         BeregningsgrunnlagPeriodeDto andrePeriode = bgPerioder.get(1);
         assertThat(andrePeriode.getDagsats()).isGreaterThan(0);
+
+        BeregningsgrunnlagPeriodeDto tredjePeriode = bgPerioder.get(2);
+        assertThat(tredjePeriode.getDagsats()).isEqualTo(0);
     }
     @Test
     @DisplayName("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
