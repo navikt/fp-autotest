@@ -1,10 +1,8 @@
-# Verdikjede
+# Verdikjede [![](https://github.com/navikt/fpsak-autotest/workflows/Kjører%20Autotestene%20for%20verdikjeden/badge.svg)](https://github.com/navikt/fpsak-autotest/actions?query=workflow%3A%22Kjører+Autotestene+for+verdikjeden%22)
 Verdikjedetestene for ytelsene engangsstønad, foreldrepenger og svangeskapspenger befinner seg under "fpsak-autotest/test/foreldrepenger". 
 Verdikjeden som disse testene kjøres på er listet opp i tabellen nedunder med status om bygg og promotering i GA. 
 ## Status
 | Prosjekt        | Status                                                                 |
-|:----------------|:-----------------------------------------------------------------------|
-| fpsak-autotest  | [![](https://github.com/navikt/fpsak-autotest/workflows/Kjører%20Autotestene%20for%20verdikjeden/badge.svg)](https://github.com/navikt/fpsak-autotest/actions?query=workflow%3A%22Kjører+Autotestene+for+verdikjeden%22) |
 |:----------------|:-----------------------------------------------------------------------|
 | fp-sak          | [![](https://github.com/navikt/fp-sak/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-sak/actions?query=workflow%3A%22Bygg+og+deploy%22) [![Promote](https://github.com/navikt/fp-sak/workflows/Promote/badge.svg)](https://github.com/navikt/fp-sak/actions?query=workflow%3APromote) |
 | fp-formidling   | [![](https://github.com/navikt/fp-formidling/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-formidling/actions?query=workflow%3A%22Bygg+og+deploy%22) [![Promote](https://github.com/navikt/fp-formidling/workflows/Promote/badge.svg)](https://github.com/navikt/fp-formidling/actions?query=workflow%3APromote) |
