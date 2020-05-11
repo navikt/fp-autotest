@@ -4,7 +4,7 @@
 		"ident": "${for1}",
 		"fornavn": "Dolly",
 		"etternavn": "Duck",
-		"fødselsdato": "now()-P50Y",
+		"fødselsdato": "now()-P29Y",
 		"kjønn": "M",
 		"geografiskTilknytning": {
 			"type": "Land",
@@ -21,7 +21,7 @@
 		"personstatus": [
 			{
 				"kode": "BOSA",
-                "fom": "now()-P50Y"
+                "fom": "now()-P29Y"
 			}
 		],
 		"sivilstand": [
@@ -29,32 +29,19 @@
 				"kode": "GIFT"
 			}
 		],
-		"medlemskap": {
-			"perioder": [
-				{
-					"fom": "now() - P1Y",
-					"tom": "now() + P3Y",
-					"besluttetDato": "now() - P1Y",
-					"land": "DEU",
-					"trygdedekning": "Full",
-					"kilde": "ANNEN",
-					"lovvalgType": "ENDL",
-					"status": "GYLD"
-				}
-			]
-		}
+		"medlemskap": {}
 	},
 	"annenPart": {
 		"@type": "annenPart",
 		"ident": "${for2}",
 		"fornavn": "Donaldo",
 		"etternavn": "Duck",
-		"fødselsdato": "now()-P50Y",
+		"fødselsdato": "now()-P30Y",
 		"kjønn": "K",
 		"personstatus": [
 			{
 				"kode": "BOSA",
-				"fom": "now()-P50Y"
+				"fom": "now()-P30Y"
 			}
 		],
 		"adresser": [

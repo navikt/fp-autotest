@@ -29,20 +29,7 @@
 				"kode": "GIFT"
 			}
 		],
-		"medlemskap": {
-			"perioder": [
-				{
-					"fom": "now() - P1Y",
-					"tom": "now() + P3Y",
-					"besluttetDato": "now() - P1Y",
-					"land": "DEU",
-					"trygdedekning": "Full",
-					"kilde": "ANNEN",
-					"lovvalgType": "ENDL",
-					"status": "GYLD"
-				}
-			]
-		}
+		"medlemskap": {}
 	},
 	"annenPart": {
 		"@type": "annenPart",

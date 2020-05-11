@@ -31,7 +31,7 @@
 		"inntektsperioder": [
 			{
 				"fom": "now() - P10M",
-				"tom": "now() - P5M - P1D",
+				"tom": "now() - P5M1D",
 				"beløp": 40000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
@@ -53,7 +53,7 @@
 			{
 				"arbeidsforholdId": "ARB001-001",
 				"ansettelsesperiodeFom": "now() - P10M",
-				"ansettelsesperiodeTom": "now() - P5M - P1D",
+				"ansettelsesperiodeTom": "now() - P5M1D",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "910909088",
 
