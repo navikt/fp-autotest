@@ -63,11 +63,21 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-
     public VurderFaktaOmBeregningBekreftelse leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode, BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
         fakta.leggTilAndelerEndretBg(periode, andel, fastsatteVerdier);
         return this;
     }
+
+    public VurderFaktaOmBeregningBekreftelse leggTilTomBesteBeregningAndeler() {
+        fakta.leggTilTomBesteBeregningAndeler();
+        return this;
+    }
+
+    public VurderFaktaOmBeregningBekreftelse leggTilBesteBeregningAndeler(double beløp, Kode inntektskategori) {
+        fakta.leggTilBesteBeregningAndeler(beløp, inntektskategori);
+        return this;
+    }
+
     public void behandleFrilansMottarIkke() {
         fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode);
         fakta.leggTilMottarYtelse(false, List.of());

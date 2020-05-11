@@ -2,7 +2,7 @@
 	"inntektskomponent": {
 		"inntektsperioder": [
 			{
-				"fom": "now() - P2Y",
+				"fom": "now() - P3Y",
 				"beløp": 50000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",

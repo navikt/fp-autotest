@@ -646,12 +646,8 @@ public class Saksbehandler extends Aktoer {
         hentFagsak(valgtFagsak.saksnummer);
     }
 
-    protected void opprettBehandlingRevurdering(Kode årsak) throws Exception {
-        opprettBehandling(kodeverk.BehandlingType.getKode("BT-004"), årsak);
-    }
-
     public void opprettBehandlingRevurdering(String årsak) throws Exception {
-        opprettBehandlingRevurdering(kodeverk.BehandlingÅrsakType.getKode(årsak));
+        opprettBehandling(kodeverk.BehandlingType.getKode("BT-004"), kodeverk.BehandlingÅrsakType.getKode(årsak));
     }
 
     public void oprettBehandlingInnsyn(Kode årsak) throws Exception {
@@ -719,6 +715,16 @@ public class Saksbehandler extends Aktoer {
     public boolean harHistorikkinnslag(HistorikkInnslag.Type type) {
         return getHistorikkInnslag(type) != null;
     }
+
+    public boolean harHistorikkinnslagForBehandling(HistorikkInnslag.Type type, int behandlingsId) {
+        for (HistorikkInnslag innslag : getHistorikkInnslag()) {
+            if (innslag.getTypeKode().contains(type.getKode()) && innslag.getBehandlingsid() == behandlingsId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private HistorikkInnslag getHistorikkInnslag(HistorikkInnslag.Type type) {
         for (HistorikkInnslag innslag : getHistorikkInnslag()) {

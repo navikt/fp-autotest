@@ -21,7 +21,7 @@
 		"personstatus": [
 			{
 				"kode": "BOSA",
-                "fom": "now()-P50Y"
+				"fom": "now()-P50Y"
 			}
 		],
 		"sivilstand": [
@@ -38,6 +38,14 @@
 		"etternavn": "Duck",
 		"fødselsdato": "now()-P50Y",
 		"kjønn": "M",
+		"adresser": [
+			{
+				"@type": "ref",
+				"fom": "now() - P1Y",
+				"adresseType": "BOSTEDSADRESSE",
+				"land": "NOR"
+			}
+		],
 		"personstatus": [
 			{
 				"kode": "BOSA",
