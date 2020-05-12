@@ -3,7 +3,7 @@
 		"inntektsperioder": [
 			{
 				"fom": "now() - P2Y",
-				"beløp": 40000,
+				"beløp": 2000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
@@ -15,11 +15,9 @@
 		"arbeidsforhold": [
 			{
 				"arbeidsforholdId": "ARB001-001",
-
 				"ansettelsesperiodeFom": "now() - P4Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "910909088",
-
 
 				"arbeidsavtaler" : [
 					{

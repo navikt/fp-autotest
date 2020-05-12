@@ -1,22 +1,6 @@
 package no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
@@ -59,6 +43,22 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterD
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.deferred.Deffered;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 
 public class Saksbehandler extends Aktoer {
 
@@ -366,13 +366,24 @@ public class Saksbehandler extends Aktoer {
                 .filter(andeler -> andeler.getArbeidsgiverOrgnr().equalsIgnoreCase(organisasjonsnummer))
                 .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
                 .collect(Collectors.toList());
-
-
     }
 
+    public Optional<BeregningsresultatPeriodeAndel> hentBeregningsresultatPeriodeAndelerForSN() {
+        return Arrays.stream(valgtBehandling.getBeregningResultatForeldrepenger().getPerioder())
+                .flatMap(beregningsresultatPeriode -> Arrays.stream(beregningsresultatPeriode.getAndeler()))
+                .filter(andeler -> andeler.getAktivitetStatus().kode.equalsIgnoreCase("SN"))
+                .findAny();
+    }
 
     /* VERIFISERINGER */
     // TODO: Flytte dem en annen plass? Egen verifiserings-saksbehander?
+    public boolean sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(BeregningsresultatPeriode beregningsresultatPeriode,
+                                                                    String aktivitetskode) {
+        return Arrays.stream(beregningsresultatPeriode.getAndeler())
+                .anyMatch(beregningsresultatPeriodeAndel ->
+                        beregningsresultatPeriodeAndel.getAktivitetStatus().kode.equalsIgnoreCase(aktivitetskode));
+    }
+
     public boolean sjekkOmDetErFrilansinntektDagenFørSkjæringstidspuktet() {
         var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {

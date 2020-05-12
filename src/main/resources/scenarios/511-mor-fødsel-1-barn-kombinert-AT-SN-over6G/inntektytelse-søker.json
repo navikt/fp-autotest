@@ -35,6 +35,15 @@
 	"sigrun": {
 		"inntektsår": [
 			{
+				"år": "2016",
+				"oppføring": [
+					{
+						"tekniskNavn": "personinntektNaering",
+						"beløp": "1000000"
+					}
+				]
+			},
+			{
 				"år": "2017",
 				"oppføring": [
 					{
@@ -45,15 +54,6 @@
 			},
 			{
 				"år": "2018",
-				"oppføring": [
-					{
-						"tekniskNavn": "personinntektNaering",
-						"beløp": "1000000"
-					}
-				]
-			},
-			{
-				"år": "2019",
 				"oppføring": [
 					{
 						"tekniskNavn": "personinntektNaering",
