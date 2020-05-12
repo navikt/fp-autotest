@@ -60,7 +60,8 @@ jobs:
       - name: Utfører tester
         shell: bash
         run: |
-          mvn help:evaluate -Dexpression=settings.localRepository
+          pwd
+          ls ~/.m2/repository
           mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
         env:
           GITHUB_USERNAME: x-access-token

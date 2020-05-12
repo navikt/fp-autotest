@@ -1,23 +1,6 @@
 package no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
@@ -60,7 +43,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterD
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.deferred.Deffered;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import org.apache.http.HttpResponse;
 
 import java.io.IOException;
 import java.time.LocalDate;
