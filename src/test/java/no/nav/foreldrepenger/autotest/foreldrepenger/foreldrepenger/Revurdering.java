@@ -13,6 +13,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.l
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,6 +36,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
@@ -42,7 +44,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaStartdatoForForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
@@ -481,6 +486,54 @@ public class Revurdering extends ForeldrepengerTestBase {
         var fatterVedtak = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtak.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtak);
+    }
+
+    @Test
+    @DisplayName("Ikke tape innvilget perioder pga søknadsfrist")
+    @Description("Ikke tape innvilget perioder pga søknadsfrist. Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
+    public void ikke_tape_innvilget_perioder_pga_søknadsfrist_i_revurdering() throws Exception {
+        var testscenario = opprettTestscenario("76");
+
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        var saksnummer = fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);
+        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
+
+        var im = InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenario(testscenario, startDatoForeldrepenger).get(0);
+        fordel.sendInnInntektsmelding(im, testscenario, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+
+        var aksjonspunktBekreftelse = saksbehandler.aksjonspunktBekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
+        var fordeling = new FordelingDto();
+        var fpff = new PermisjonPeriodeDto(FORELDREPENGER_FØR_FØDSEL, startDatoForeldrepenger, fødselsdato.minusDays(1));
+        var mødrekvote = new PermisjonPeriodeDto(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(12));
+        fordeling.permisjonsPerioder.add(fpff);
+        fordeling.permisjonsPerioder.add(mødrekvote);
+        aksjonspunktBekreftelse.morSøkerFødsel(fordeling, fødselsdato, fødselsdato.plusWeeks(12));
+
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        //Sender endringssøknad for å gi fagsaken en ny søknad mottatt dato
+        var fordelingEndringssøknad = new ObjectFactory().createFordeling();
+        fordelingEndringssøknad.setAnnenForelderErInformert(true);
+        var perioder = fordelingEndringssøknad.getPerioder();
+        perioder.add(uttaksperiode(FELLESPERIODE, mødrekvote.periodeTom.plusDays(1), mødrekvote.periodeTom.plusWeeks(2)));
+        var søknadE = lagEndringssøknad(testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR, fordelingEndringssøknad, String.valueOf(saksnummer));
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+
+        saksbehandler.velgSisteBehandling();
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        saksbehandler.opprettBehandlingRevurdering("RE-FRDLING");
+        saksbehandler.velgSisteBehandling();
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.KONTROLL_AV_MANUELT_OPPRETTET_REVURDERINGSBEHANDLING);
+
+        var allePerioderInnvilget = saksbehandler.valgtBehandling.hentUttaksperioder().stream().allMatch(p -> p.getPeriodeResultatType().kode.equals("INNVILGET"));
+        assertThat(allePerioderInnvilget).isTrue();
     }
 
     @Deprecated

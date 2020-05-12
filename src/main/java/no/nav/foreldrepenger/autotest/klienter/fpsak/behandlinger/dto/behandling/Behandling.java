@@ -1,6 +1,17 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
@@ -14,16 +25,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.deferred.Deffered;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Behandling {
 
@@ -36,6 +37,7 @@ public class Behandling {
 
     public LocalDate skjaringstidspunkt;
     public LocalDateTime avsluttet;
+    public LocalDateTime opprettet;
     public LocalDate fristBehandlingPaaVent;
 
     public String ansvarligSaksbehandler;
@@ -160,11 +162,6 @@ public class Behandling {
 
     public UttakResultatPerioder getUttakResultatPerioder() {
         return get(uttakResultatPerioder);
-    }
-    public List<UttakResultatPeriode> getUttakResultatPerioderMedManuellBehandlingÅrsak () {
-        return get(uttakResultatPerioder).getPerioderForSøker().stream()
-                .filter(uttakResultatPeriode -> !uttakResultatPeriode.getManuellBehandlingÅrsak().kode.equals("-"))
-                .collect(Collectors.toList());
     }
 
     public void setUttakResultatPerioder(Deffered<UttakResultatPerioder> dUttakResultatPerioder) {

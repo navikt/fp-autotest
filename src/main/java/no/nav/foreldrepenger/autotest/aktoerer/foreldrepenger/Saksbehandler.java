@@ -1,6 +1,22 @@
 package no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
@@ -32,8 +48,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.dokument.DokumentKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.dokument.dto.DokumentListeEnhet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.hendelse.HendelseKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.hendelse.dto.FødselHendelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.KodeverkKlient;
@@ -44,28 +58,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTask
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.deferred.Deffered;
-import no.nav.foreldrepenger.autotest.util.konfigurasjon.MiljoKonfigurasjon;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import org.apache.http.HttpResponse;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 
 public class Saksbehandler extends Aktoer {
 
-    public List<Fagsak> fagsaker;
     public Fagsak valgtFagsak;
 
     private Deffered<List<DokumentListeEnhet>> dokumenter;
@@ -82,8 +78,6 @@ public class Saksbehandler extends Aktoer {
     private BrevKlient brevKlient;
     private HistorikkKlient historikkKlient;
     private ProsesstaskKlient prosesstaskKlient;
-    private HendelseKlient hendelseKlient;
-
     public Kodeverk kodeverk;
 
     public boolean ikkeVentPåStatus = false; // TODO hack for økonomioppdrag
@@ -97,7 +91,6 @@ public class Saksbehandler extends Aktoer {
         brevKlient = new BrevKlient(session);
         historikkKlient = new HistorikkKlient(session);
         prosesstaskKlient = new ProsesstaskKlient(session);
-        hendelseKlient = new HendelseKlient(session);
     }
 
     public Saksbehandler(Rolle rolle) throws IOException {
@@ -130,17 +123,6 @@ public class Saksbehandler extends Aktoer {
     @Step("Hent fagsak {saksnummer}")
     public void hentFagsak(long saksnummer) throws Exception {
         hentFagsak("" + saksnummer);
-    }
-
-    /*
-     * Søker etter fagsaker
-     */
-    @Step("Søker etter fagsak {søk}")
-    public void søkEtterFagsak(String søk) throws Exception {
-        fagsaker = fagsakKlient.søk(søk);
-        if (fagsaker.size() == 1) {
-            velgFagsak(fagsaker.get(0));
-        }
     }
 
     /*
@@ -178,7 +160,7 @@ public class Saksbehandler extends Aktoer {
         }
         valgtFagsak = fagsak;
 
-        behandlinger = behandlingerKlient.alle(fagsak.saksnummer);
+        behandlinger = hentAlleBehandlingerForFagsak(fagsak.saksnummer);
         valgtBehandling = null;
 
         if (behandlinger.size() == 1) { // ellers må en velge explisit
@@ -210,13 +192,10 @@ public class Saksbehandler extends Aktoer {
         velgBehandling(kodeverk.BehandlingType.getKode("BT-004"));
     }
     public void velgSisteBehandling() throws Exception {
-        Behandling behandling = behandlinger.get(behandlinger.size()-1);
-        this.valgtBehandling = behandling;
-        if (null != behandling) {
-            velgBehandling(behandling);
-        } else {
-            throw new RuntimeException("Valgt fagsak har ikke behandling");
-        }
+        var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer).stream()
+                .max(Comparator.comparing(b -> b.opprettet))
+                .orElseThrow();
+        velgBehandling(behandling);
     }
 
     public void velgDokumentInnsynBehandling() throws Exception {
@@ -250,7 +229,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     @Step("Populerer behandling")
-    private void populateBehandling(Behandling behandling) throws Exception {
+    private void populateBehandling(Behandling behandling) {
 
         valgtBehandling.setAksjonspunkter(Deffered.deffered(() -> {
             return behandlingerKlient.getBehandlingAksjonspunkt(behandling.uuid);
@@ -325,11 +304,6 @@ public class Saksbehandler extends Aktoer {
             valgtBehandling.setTilrettelegging(Deffered.defferedLazy(() -> {
                 return behandlingerKlient.behandlingTilrettelegging(valgtBehandling.id);
             }));
-
-
-//            valgtBehandling.setTilrettelegging(Deffered.defferedLazy(() -> {
-////               return behandlingerKlient.behandlingT
-//            }));
 
         }
     }
@@ -486,13 +460,6 @@ public class Saksbehandler extends Aktoer {
             kodeverk = kodeverkKlient.getKodeverk();
         } catch (Exception e) {
             throw new RuntimeException("Kunne ikke hente kodeverk: " + e.getMessage());
-        }
-    }
-
-    public void hentSelftest() throws IOException {
-        HttpResponse response = session.get(MiljoKonfigurasjon.getRouteMetrics());
-        if (200 != response.getStatusLine().getStatusCode()) {
-            throw new RuntimeException("Kunne ikke hente selftest. fikk httpstatus: " + response.getStatusLine().getStatusCode());
         }
     }
 
@@ -665,20 +632,6 @@ public class Saksbehandler extends Aktoer {
                 fritekst));
     }
 
-    /*
-     * Dokumenter
-     */
-    @Step("Venter på dokument {dokument}")
-    public void ventTilDokument(String dokument) throws Exception {
-        if (harDokument(dokument)) {
-            return;
-        }
-        Vent.til(() -> {
-            refreshBehandling();
-            return harDokument(dokument);
-        }, 30, () -> "Behandling har ikke dokument: " + dokument + "\n\tDokumenter:" + getDokumenter());
-    }
-
     public boolean harDokument(String dokument) {
         return getDokument(dokument) != null;
     }
@@ -733,14 +686,6 @@ public class Saksbehandler extends Aktoer {
             }
         }
         return null;
-    }
-
-    /*
-     * Fagsakstatus
-     */
-
-    public String getFagsakstatus() {
-        return valgtFagsak.hentStatus().kode;
     }
 
     public boolean harFagsakstatus(Kode status) {
@@ -837,10 +782,6 @@ public class Saksbehandler extends Aktoer {
         return valgtBehandling.status.kode;
     }
 
-    public void ventTilSakHarFørstegangsbehandling() throws Exception {
-        ventTilSakHarBehandling(kodeverk.BehandlingType.getKode("BT-002"));
-    }
-
     public void ventTilSakHarRevurdering() throws Exception {
         ventTilSakHarBehandling(kodeverk.BehandlingType.getKode("BT-004"));
     }
@@ -860,16 +801,6 @@ public class Saksbehandler extends Aktoer {
         }, 30, "Saken har ikke fått behandling av type: " + behandlingType);
     }
 
-    @Step("Venter på at fagsak får x antall behandlinger")
-    public void ventTilSakHarXAntallBehandlinger(int antallBehandlinger) throws Exception {
-        if (behandlinger.size() >= antallBehandlinger) {
-            return;
-        }
-        Vent.til(() -> {
-            refreshFagsak();
-            return behandlinger.size() >= antallBehandlinger;
-        }, 30, "Saken har ikke riktig anntal behandlinger" );
-    }
     protected boolean harBehandling(Kode behandlingType) {
         for (Behandling behandling : behandlinger) {
             if (behandling.type.kode.equals(behandlingType.kode)) {
@@ -931,12 +862,6 @@ public class Saksbehandler extends Aktoer {
         return getAnnenPartBehandling() != null;
     }
 
-    public void mellomlagreKlage() throws Exception {
-        behandlingerKlient.mellomlagre(
-                new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling, hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
-        refreshBehandling();
-    }
-
     public void mellomlagreOgGjennåpneKlage() throws Exception {
         behandlingerKlient.mellomlagreGjennapne(
                 new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling, hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
@@ -953,10 +878,6 @@ public class Saksbehandler extends Aktoer {
 
     public void ventTilFagsakLøpende() throws Exception {
         ventTilFagsakstatus("LOP");
-    }
-
-    public List<DokumentListeEnhet> getDokumenter() {
-        return get(dokumenter);
     }
 
     private void setDokumenter(Deffered<List<DokumentListeEnhet>> dDokumentListeEnhet) {
@@ -985,11 +906,5 @@ public class Saksbehandler extends Aktoer {
         } catch (ExecutionException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    @Step("Sender fødselshendelse")
-    public void sendFødselsHendelse(String aktørIdForeldre, LocalDate fødselsdato) throws Exception{
-        FødselHendelse fødselHendelse= new FødselHendelse(aktørIdForeldre, fødselsdato);
-        hendelseKlient.sendHendelse(fødselHendelse);
     }
 }
