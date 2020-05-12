@@ -396,10 +396,8 @@ public class Saksbehandler extends Aktoer {
     }
 
     public boolean sjekkOmSykepengerLiggerTilGrunnForOpptjening() {
-        var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
-            if ( opptjening.getAktivitetType().kode.equalsIgnoreCase("SYKEPENGER") &&
-                    opptjening.getOpptjeningTom().isBefore(skjaeringstidspunkt)){
+            if ( opptjening.getAktivitetType().kode.equalsIgnoreCase("SYKEPENGER") ){
                 return true;
             }
         }

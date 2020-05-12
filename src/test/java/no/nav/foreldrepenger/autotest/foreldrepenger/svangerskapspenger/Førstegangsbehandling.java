@@ -81,7 +81,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
 
         saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt(beløpMor * 12,1L);
+                .leggTilInntekt(beløpMor * 12,1);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderBeregnetInntektsAvvikBekreftelse.class);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);

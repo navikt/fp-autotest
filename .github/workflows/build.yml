@@ -155,7 +155,7 @@ jobs:
           target_branch: gh-pages
           build_dir: target/allure-report/
         env:
-          GITHUB_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Notification til slack
         if: failure() || env.STACK_STARTED == 'false'

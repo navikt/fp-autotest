@@ -186,7 +186,7 @@ public class Ytelser extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 
         VurderBeregnetInntektsAvvikBekreftelse vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
-        vurderBeregnetInntektsAvvikBekreftelse.leggTilInntekt((12*5000), 1L);
+        vurderBeregnetInntektsAvvikBekreftelse.leggTilInntekt((12*5000), 1);
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
