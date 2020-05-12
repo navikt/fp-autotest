@@ -29,9 +29,7 @@ public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBe
     }
 
     @Override
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        super.setFagsakOgBehandling(fagsak, behandling);
-
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         //Set antall barn fra søknad
         antallBarn = behandling.getSoknad().getAntallBarn();
 

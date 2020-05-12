@@ -1,5 +1,38 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FLERBARNSDAGER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak.ARBEID;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.overføringsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerAdopsjon;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -43,38 +76,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FLERBARNSDAGER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak.ARBEID;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.overføringsperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerAdopsjon;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("verdikjede")
@@ -83,7 +84,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Test
     @DisplayName("1: Mor automatisk førstegangssøknad fødsel")
     @Description("Mor førstegangssøknad før fødsel på termin. Sender inn IM med over 25% avvik med delvis refusjon.")
-    public void testcase_mor_fødsel() throws Exception {
+    public void testcase_mor_fødsel() {
         var testscenario = opprettTestscenario("501");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var termindato = LocalDate.now().plusMonths(1);
@@ -153,7 +154,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @DisplayName("2: Mor selvstendig næringsdrivende, varig endring")
     @Description("Mor er selvstendig næringsdrivende og har ferdiglignet inntekt i mange år. Oppgir en næringsinntekt" +
             "som avviker med mer enn 25% fra de tre siste ferdiglignede årene.")
-    public void morSelvstendigNæringsdrivendeTest() throws Exception {
+    public void morSelvstendigNæringsdrivendeTest() {
         var testscenario = opprettTestscenario("510");
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -205,7 +206,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Test
     @DisplayName("3: Mor, sykepenger, kun ytelse, papirsøknad")
     @Description("Mor søker fullt uttak, men søker mer en det hun har rett til.")
-    public void morSykepengerKunYtelseTest() throws Exception {
+    public void morSykepengerKunYtelseTest() {
         var testscenario = opprettTestscenario("520");
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummerMor = fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);
@@ -284,7 +285,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor har løpende fagsak med hele mødrekvoten og deler av fellesperioden. Far søker resten av fellesperioden" +
                  "og hele fedrekvoten med gradert uttak. Far har to arbeidsforhold i samme virksomhet, samme org.nr, men ulik" +
                  "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge.")
-    public void fraSøkerForeldrepengerTest() throws Exception {
+    public void fraSøkerForeldrepengerTest() {
         TestscenarioDto testscenario = opprettTestscenario("560");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -382,7 +383,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor søker hele mødrekvoten og deler av fellesperiode, happy case. Far søker etter føsdsel og søker noe" +
             "av fellesperioden og hele fedrekvoten. Opplyser at han er frilanser og har frilanserinntekt frem til" +
             "skjæringstidspunktet.")
-    public void farSøkerSomFrilanser() throws Exception {
+    public void farSøkerSomFrilanser() {
         TestscenarioDto testscenario = opprettTestscenario("561");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -458,7 +459,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Far søker foreldrepenger med to aktive arbeidsforhold og ett gammelt arbeidsforhold som skulle vært " +
             "avsluttet. Søker en graderingsperiode i en av virksomheten og gjennopptar full deltidsstilling: I dette " +
             "arbeidsforholdet vil AG ha full refusjon i hele perioden. I det andre vil bare ha refusjon i to måneder.")
-    public void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() throws Exception {
+    public void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var testscenario = opprettTestscenario("570");
         var identFar = testscenario.getPersonopplysninger().getSøkerIdent();
         var aktørIdFar = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -607,7 +608,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor har løpende sak hvor hun har søkt om hele mødrekvoten og deler av fellesperioden. Mor blir syk 4" +
             "uker inn i mødrekvoten og far søker om overføring av resten. Far søker ikke overføring av fellesperioden." +
             "Far får innvilget mødrevkoten og mor sin sak blir berørt og automatisk revurdert.")
-    public void FarTestMorSyk() throws Exception {
+    public void FarTestMorSyk() {
         TestscenarioDto testscenario = opprettTestscenario("562");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -681,7 +682,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor føder tvillinger og søker om hele mødrekvoten og fellesperioden, inkludert utvidelse. Far søker " +
             "samtidig uttak av fellesperioden fra da mor starter utvidelsen av fellesperioden. Søker deretter samtidig " +
             "av fedrekvoten, frem til mor er ferdig med fellesperioden, og deretter søker resten av fedrekvoten.")
-    public void MorSøkerFor2BarnHvorHunFårBerørtSakPgaFar() throws Exception {
+    public void MorSøkerFor2BarnHvorHunFårBerørtSakPgaFar() {
         TestscenarioDto testscenario = opprettTestscenario("512");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -828,7 +829,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @DisplayName("9: Mor søker med dagpenger som grunnlag, klager, får medhold og revurderes.")
     @Description("Mor søker med dagpenger som grunnlag. Bruker ikke besteberegning. Søker klager på dette. Mor får" +
             "medhold og revurderes. I revurderingen brukes besteberegning og sbh oppgir en verdi høyere månedsinntekt.")
-    public void MorSøkerMedDagpengerTest() throws Exception {
+    public void MorSøkerMedDagpengerTest() {
         TestscenarioDto testscenario = opprettTestscenario("521");
         var identMor = testscenario.getPersonopplysninger().getSøkerIdent();
         var aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -978,7 +979,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Far søker adopsjon og får revurdert sak 4 måneder senere på grunn av IM med endring i refusjon. " +
             "AG ber om full refusjon, men kommer for sent til å få alt. AG får refusjon for den inneværende måneden " +
             "og tre måneder tilbake i tid; tiden før dette skal gå til søker.")
-    public void FarSøkerAdopsjon() throws Exception {
+    public void FarSøkerAdopsjon() {
         TestscenarioDto testscenario = opprettTestscenario("563");
 
         /* FAR */
@@ -1113,7 +1114,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Far søker adopsjon hvor han søker hele fedrekvoten og fellesperioden. Mor søker noe av mødrekvoten midt " +
             "midt i fars periode med fullt uttak. Deretter søker more 9 uker av fellesperiode med samtidig uttak. Far får " +
             "berørt sak hvor hanf år avkortet fellesperidoen på slutten og redusert perioder hvor mor søker samtidig uttak")
-    public void FarSøkerAdopsjonOgMorMødrekvoteMidtIFarsOgDeretterSamtidigUttakAvFellesperidoe() throws Exception {
+    public void FarSøkerAdopsjonOgMorMødrekvoteMidtIFarsOgDeretterSamtidigUttakAvFellesperidoe() {
         TestscenarioDto testscenario = opprettTestscenario("563");
 
         /* FAR */
@@ -1288,7 +1289,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     private Long sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(TestscenarioDto testscenario,
                                                                                         LocalDate fødselsdato,
                                                                                         LocalDate fpStartdatoMor,
-                                                                                        LocalDate fpStartdatoFar) throws Exception {
+                                                                                        LocalDate fpStartdatoFar) {
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var identMor = testscenario.getPersonopplysninger().getAnnenpartIdent();
         var aktørIdMor = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
@@ -1322,7 +1323,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         return saksnummerMor;
     }
-    private void foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(long saksnummer, boolean revurdering) throws Exception {
+    private void foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(long saksnummer, boolean revurdering) {
         saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FORESLÅ_VEDTAK);
         saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);

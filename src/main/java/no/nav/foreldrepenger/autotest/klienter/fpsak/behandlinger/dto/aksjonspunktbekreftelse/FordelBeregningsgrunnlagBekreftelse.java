@@ -24,8 +24,7 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
     }
 
     @Override
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        super.setFagsakOgBehandling(fagsak, behandling);
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         Beregningsgrunnlag beregningsgrunnlag = behandling.getBeregningsgrunnlag();
         endretBeregningsgrunnlagPerioder = beregningsgrunnlag.getFaktaOmFordeling().getFordelBeregningsgrunnlag()
                 .getFordelBeregningsgrunnlagPerioder()

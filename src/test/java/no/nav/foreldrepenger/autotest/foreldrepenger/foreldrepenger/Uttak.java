@@ -1,5 +1,37 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.oppholdsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.overføringsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenario;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
@@ -42,37 +74,6 @@ import no.nav.vedtak.felles.xml.soeknad.felles.v3.Rettigheter;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.oppholdsperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.overføringsperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenario;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("utvikling")
@@ -82,7 +83,7 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor automatisk førstegangssøknad fødsel")
     @Description("Mor førstegangssøknad på fødsel")
-    public void testcase_mor_fødsel() throws Exception {
+    public void testcase_mor_fødsel() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("75");
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
@@ -118,7 +119,7 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor automatisk førstegangssøknad termin")
     @Description("Mor førstegangssøknad på termin")
-    public void testcase_mor_termin() throws Exception {
+    public void testcase_mor_termin() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("74");
         LocalDate termindato = LocalDate.now().plusWeeks(4);
         LocalDate fpStartdatoMor = termindato.minusWeeks(3);
@@ -152,7 +153,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 saksnummerMor);
     }
     @Test
-    public void testcase_morOgFar_utenRelasjon() throws Exception {
+    public void testcase_morOgFar_utenRelasjon() {
         TestscenarioDto testscenario = opprettTestscenario("500");
         TestscenarioDto testscenario2 = opprettTestscenario("550");
 
@@ -196,7 +197,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
     }
     @Test
-    public void testcase_mor_stortinget() throws Exception {
+    public void testcase_mor_stortinget() {
         TestscenarioDto testscenario = opprettTestscenario("418");
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
@@ -221,7 +222,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
 
     @Test
-    public void testcase_far_fødsel() throws Exception {
+    public void testcase_far_fødsel() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("140");
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         var søkerAktørId = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
@@ -260,7 +261,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
     @DisplayName("Søknadfrist med revurdering")
     @Test
-    public void testcase_mor_søknadfrist_endringssøknad() throws Exception {
+    public void testcase_mor_søknadfrist_endringssøknad() {
         TestscenarioDto testscenario = opprettTestscenario("500");
         var søkterAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -284,7 +285,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @DisplayName("Far søker om periode rett etter fødsel med en revurdering behandling")
     @Test
-    public void testcase_far_tidligsøktePerioder() throws Exception {
+    public void testcase_far_tidligsøktePerioder() {
         TestscenarioDto testscenario = opprettTestscenario("550");
         var søkterAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -307,7 +308,7 @@ public class Uttak extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmelding(inntektsmelding, søkterAktørId, søkerFnr, saksnummerSøker);
     }
     @Test
-    public void testcase_mor_papirsøknad() throws Exception {
+    public void testcase_mor_papirsøknad() {
         TestscenarioDto testscenario = opprettTestscenario("75");
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -318,7 +319,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Tag("KOR2020")
     @Test
-    public void testcase_mor_KOR1_refusjon_arbeidsforholdID() throws Exception {
+    public void testcase_mor_KOR1_refusjon_arbeidsforholdID() {
         TestscenarioDto testscenario = opprettTestscenario("202");
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -350,7 +351,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
     }
     @Test
-    public void testcase_mor_KOR_papirsøknad_gradering() throws Exception {
+    public void testcase_mor_KOR_papirsøknad_gradering() {
         TestscenarioDto testscenario = opprettTestscenario("202");
 
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -423,7 +424,7 @@ public class Uttak extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmelding(im2,aktørIdMor, fnrMor, saksnummer);
     }
     @Test
-    public void testcase_mor_flere_arbeidsforhold_endring_i_fordeling() throws Exception {
+    public void testcase_mor_flere_arbeidsforhold_endring_i_fordeling() {
         TestscenarioDto testscenario = opprettTestscenario("165");
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -463,7 +464,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 .build());
     }
     @Test
-    public void testcase_mor_annenForelderHarRett() throws Exception {
+    public void testcase_mor_annenForelderHarRett() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("140");
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -488,7 +489,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
     }
     @Test
-    public void testcase_far_annenForelderHarRett() throws Exception {
+    public void testcase_far_annenForelderHarRett() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("140");
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
@@ -513,7 +514,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
     }
     @Test
-    public void testcase_mor_overføring() throws Exception {
+    public void testcase_mor_overføring() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("140");
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -537,7 +538,7 @@ public class Uttak extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmelding(im, aktørIdMor, fnrMor, saksnummer);
     }
     @Test
-    public void testcase_farOgMor_farSøkerEtterMor_medMottatdatoFørMor() throws Exception {
+    public void testcase_farOgMor_farSøkerEtterMor_medMottatdatoFørMor() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("140");
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -611,7 +612,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
 
       @Test
-    public void testcase_far_søker_ikke_om_uttak_7_uker_etter_fødsel() throws Exception {
+    public void testcase_far_søker_ikke_om_uttak_7_uker_etter_fødsel() {
         TestscenarioDto testscenario = opprettTestscenario("60");
         var aktørIdSøker = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
         var fnrSøker = testscenario.getPersonopplysninger().getAnnenpartIdent();
@@ -672,7 +673,7 @@ public class Uttak extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmelding(im2, aktørIdSøker, fnrSøker, saksnummer);
     }
     @Test
-    public void testcase_mor_søker_med_endringssøknad() throws Exception {
+    public void testcase_mor_søker_med_endringssøknad() {
         TestscenarioDto testscenario = opprettTestscenario("140");
         var aktørIdSøker = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var fnrSøker = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -713,7 +714,7 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilSakHarRevurdering();
     }
     @Test
-    public void testcase_far_søker_med_endringssøknad() throws Exception {
+    public void testcase_far_søker_med_endringssøknad() {
         TestscenarioDto testscenario = opprettTestscenario("140");
         var aktørIdSøker = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
         var fnrSøker = testscenario.getPersonopplysninger().getAnnenpartIdent();
@@ -749,7 +750,7 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilSakHarRevurdering();
     }
     @Test
-    public void testcase_morOgfar_endringsøknad_overføringperioderFørstePeriodeTilFørstegangssøknad() throws Exception {
+    public void testcase_morOgfar_endringsøknad_overføringperioderFørstePeriodeTilFørstegangssøknad() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("140");
 
         String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -838,7 +839,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
 
     @Test
-    public void testcase_morOgFar_toArbeidsforhold() throws Exception {
+    public void testcase_morOgFar_toArbeidsforhold() {
         TestscenarioDto testscenario = opprettTestscenario("141");
         String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
@@ -906,7 +907,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
     }
     @Test
-    public void testcase_mor_gradering() throws Exception {
+    public void testcase_mor_gradering() {
         TestscenarioDto testscenario = opprettTestscenario("141");
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -936,7 +937,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
 
     @Test
-    public void testcase_mor_endringsSøknad_medGradering_FL_AAP() throws Exception {
+    public void testcase_mor_endringsSøknad_medGradering_FL_AAP() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("30");
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
 
@@ -1052,7 +1053,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
 
     @Test
-    public void testcase_morOgFar_samtidiguttak() throws Exception {
+    public void testcase_morOgFar_samtidiguttak() {
         TestscenarioDto testscenario = opprettTestscenario("140");
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -1101,7 +1102,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Tag("faktaOmUttak")
     @Test
-    public void testcase_far_faktaOmUttak_søktForTidelig() throws Exception{
+    public void testcase_far_faktaOmUttak_søktForTidelig(){
         TestscenarioDto testscenario = opprettTestscenario("140");
         String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
@@ -1128,7 +1129,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Tag("faktaOmUttak")
     @Test
-    public void testcase_far_faktaOmUttak_overLappendePerioder() throws Exception{
+    public void testcase_far_faktaOmUttak_overLappendePerioder(){
         TestscenarioDto testscenario = opprettTestscenario("140");
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
         String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
@@ -1151,7 +1152,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Tag("faktaOmUttak")
     @Test
-    public void testcase_far_faktaOmUttak_uttakFørSTF() throws Exception{
+    public void testcase_far_faktaOmUttak_uttakFørSTF(){
         TestscenarioDto testscenario = opprettTestscenario("140");
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
         String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
@@ -1181,7 +1182,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Tag("faktaOmUttak")
     @Test
-    public void testcase_far_faktaOmUttak_overføringAvPerioder() throws Exception {
+    public void testcase_far_faktaOmUttak_overføringAvPerioder() {
         TestscenarioDto testscenario = opprettTestscenario("140");
         String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
@@ -1209,7 +1210,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Tag("faktaOmUttak")
     @Test
-    public void testcase_morOgFar_faktaOmUttak_farLagerHullPåMor() throws Exception {
+    public void testcase_morOgFar_faktaOmUttak_farLagerHullPåMor() {
         TestscenarioDto testscenario = opprettTestscenario("140");
         String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
         String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -1278,7 +1279,7 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor får ES og far søker om FP med MS")
     @Description("Mor får innvilget ES og far søker om foreldrepenger, men far søker ikke tidlig nok")
-    public void testcase_morES_farFP() throws Exception {
+    public void testcase_morES_farFP() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("140");
 
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
@@ -1328,7 +1329,7 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor prematuruker")
     @Description("Mor prematuruker")
-    public void testcase_mor_prematuruker_fødsel_8_uker_før_termin() throws Exception {
+    public void testcase_mor_prematuruker_fødsel_8_uker_før_termin() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("75");
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
 
@@ -1364,7 +1365,7 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Flytting pga fødsel")
     @Description("Testcase hvor mor søker på termin men fødsel har skjedd. Ikke barn i TPS")
-    public void testcase_mor_fødsel_flyttingAvPerioderGrunnetFødsel() throws Exception {
+    public void testcase_mor_fødsel_flyttingAvPerioderGrunnetFødsel() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("74");
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
 
@@ -1406,7 +1407,7 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Flytting pga fødsel")
     @Description("Testcase hvor mor søker på termin men fødsel har skjedd. Ikke barn i TPS")
-    public void testcase_mor_flyttingAvPerioder_fødsel_TFP_2070() throws Exception {
+    public void testcase_mor_flyttingAvPerioder_fødsel_TFP_2070() {
         TestscenarioDto testscenario = opprettTestscenario("140");
 
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();

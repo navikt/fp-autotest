@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,18 +15,18 @@ public class ProsesstaskKlient  extends FpsakKlient{
 
     private static String PROSESSTASK_URL = "/prosesstask";
     private static String PROSESSTASK_LIST_URL = PROSESSTASK_URL + "/list";
-    private static String PROSESSTASK_LAUNCH_URL = PROSESSTASK_URL + "/launch"; 
-    
+    private static String PROSESSTASK_LAUNCH_URL = PROSESSTASK_URL + "/launch";
+
     public ProsesstaskKlient(HttpSession session) {
         super(session);
     }
-    
-    public List<ProsessTaskListItemDto> list(SokeFilterDto sokeFilter) throws IOException {
+
+    public List<ProsessTaskListItemDto> list(SokeFilterDto sokeFilter) {
         String url = hentRestRotUrl() + PROSESSTASK_LIST_URL;
         return postOgHentJson(url, sokeFilter, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, ProsessTaskListItemDto.class), StatusRange.STATUS_SUCCESS);
     }
-    
-    public ProsesstaskResultatDto launch(ProsesstaskDto prosessTask) throws IOException {
+
+    public ProsesstaskResultatDto launch(ProsesstaskDto prosessTask) {
         String url = hentRestRotUrl() + PROSESSTASK_LAUNCH_URL;
         return postOgHentJson(url, prosessTask, ProsesstaskResultatDto.class, StatusRange.STATUS_SUCCESS);
     }

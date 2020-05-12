@@ -25,8 +25,7 @@ public class VurderSoknadsfristBekreftelse extends AksjonspunktBekreftelse{
     }
 
     @Override
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        super.setFagsakOgBehandling(fagsak, behandling);
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         omsorgsovertakelseDato = behandling.getSoknad().getOmsorgsovertakelseDato();
         mottattDato = behandling.getSoknad().getMottattDato();
     }

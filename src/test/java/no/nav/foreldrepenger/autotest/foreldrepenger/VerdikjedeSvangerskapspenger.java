@@ -1,5 +1,18 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -17,18 +30,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Arbeidsforhold;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("verdikjede")
@@ -37,7 +38,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     @Test
     @DisplayName("1: Mor søker fullt uttak med inntekt under 6G")
     @Description("Mor søker ingen tilrettelegging for en 100% stilling med inntekt over 6G.")
-    public void morSøkerIngenTilretteleggingInntektOver6GTest() throws Exception {
+    public void morSøkerIngenTilretteleggingInntektOver6GTest() {
         var testscenario = opprettTestscenario("500");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -103,7 +104,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     @Test
     @DisplayName("2: Mor søker gradert uttak med inntekt over 6G")
     @Description("Mor søker delvis tilrettelegging for en 100% stilling hvor hun har inntekt over 6G.")
-    public void morSøkerDelvisTilretteleggingMedInntektOver6GTest() throws Exception {
+    public void morSøkerDelvisTilretteleggingMedInntektOver6GTest() {
         var testscenario = opprettTestscenario("502");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -170,7 +171,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     @DisplayName("3: Mor søk fullt uttak for ett av to arbeidsforhold i samme virksomhet")
     @Description("Mor søker ingen tilrettelegging for ett av to arbeidsforhold i samme virksomhet. Arbeidsgiver leverer to" +
                 "inntektsmeldinger med forskjellig arbeidsforholdID, med ulik lønn.")
-    public void morSøkerFulltUttakForEttAvToArbeidsforholdTest() throws Exception {
+    public void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
         var testscenario = opprettTestscenario("503");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -254,7 +255,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     @DisplayName("4: Mor kombinert AT/SN søker i to omganger")
     @Description("Mor søker i første omgang bare for AT, hvor AG ønsker full refusjon av innekt over 6G." +
                 "To måneder senere sender mor inn ny søknad for SN")
-    public void morSøkerFørstForATOgSenereForSNTest() throws Exception {
+    public void morSøkerFørstForATOgSenereForSNTest() {
         var testscenario = opprettTestscenario("511");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -388,7 +389,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     @DisplayName("5: Mor har flere AG og søker fullt uttak for begge AFene")
     @Description("Mor søker inten tilrettelegging for begge arbeidsforholdene. Begge arbeidsgiverene ønsker 100% reufsjon." +
                 "Inntekten i disse to arbeidsforholdne er samlet over 6G hvor fordelingen er 2/3 og 1/3 av inntekten.")
-    public void morSøkerIngenTilretteleggingForToArbeidsforholdFullRefusjonTest() throws Exception {
+    public void morSøkerIngenTilretteleggingForToArbeidsforholdFullRefusjonTest() {
         var testscenario = opprettTestscenario("504");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -476,7 +477,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     }
 
 
-    private void foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(long saksnummer, boolean revurdering) throws Exception {
+    private void foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(long saksnummer, boolean revurdering) {
         saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FORESLÅ_VEDTAK);
         saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);

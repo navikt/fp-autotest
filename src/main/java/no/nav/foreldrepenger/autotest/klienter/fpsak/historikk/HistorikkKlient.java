@@ -19,7 +19,7 @@ public class HistorikkKlient extends FpsakKlient{
     }
 
     @Step("Henter liste av historiske innslag")
-    public List<HistorikkInnslag> hentHistorikk(long saksnummer) throws IOException {
+    public List<HistorikkInnslag> hentHistorikk(long saksnummer) {
         String url = hentRestRotUrl() + String.format(HISTORIKK_URL_FORMAT, saksnummer);
         return getOgHentJson(url, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, HistorikkInnslag.class), StatusRange.STATUS_SUCCESS);
     }

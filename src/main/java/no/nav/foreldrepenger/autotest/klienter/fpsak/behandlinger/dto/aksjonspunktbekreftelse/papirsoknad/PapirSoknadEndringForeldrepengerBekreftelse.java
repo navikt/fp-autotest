@@ -4,9 +4,7 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode="5057")
 public class PapirSoknadEndringForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
@@ -26,10 +24,5 @@ public class PapirSoknadEndringForeldrepengerBekreftelse extends AksjonspunktBek
 
     public void setFordeling(FordelingDto tidsromPermisjon) {
         this.tidsromPermisjon = tidsromPermisjon;
-    }
-
-    @Override
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        super.setFagsakOgBehandling(fagsak, behandling);
     }
 }

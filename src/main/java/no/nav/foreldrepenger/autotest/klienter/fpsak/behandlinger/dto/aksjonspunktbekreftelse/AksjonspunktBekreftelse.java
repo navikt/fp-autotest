@@ -24,8 +24,6 @@ public abstract class AksjonspunktBekreftelse {
     @JsonProperty("@type")
     protected String kode;
     protected String begrunnelse;
-    protected Fagsak fagsak;
-    protected Behandling behandling;
 
     private static final List<Class<? extends AksjonspunktBekreftelse>> aksjonspunktBekreftelseClasses;
     static {
@@ -70,9 +68,8 @@ public abstract class AksjonspunktBekreftelse {
         return fromKode(aksjonspunkt.getDefinisjon().kode);
     }
 
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        this.fagsak = fagsak;
-        this.behandling = behandling;
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
+
     }
 
     public AksjonspunktBekreftelse setBegrunnelse(String begrunnelse) {

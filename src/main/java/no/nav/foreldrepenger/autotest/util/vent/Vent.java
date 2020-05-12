@@ -1,37 +1,33 @@
 package no.nav.foreldrepenger.autotest.util.vent;
 
-import io.qameta.allure.Step;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.Callable;
+import java.util.function.Supplier;
+
+import io.qameta.allure.Step;
 
 public class Vent {
 
-    public static void til(Callable<Boolean> callable, int timeoutInSeconds, String failReason) throws Exception {
-        til(callable, timeoutInSeconds, new Callable<String>() {
-
-            @Override
-            public String call() throws Exception {
-                return failReason;
-            }
-        });
+    public static void til(Supplier<Boolean> supplier, int timeoutInSeconds, String failReason) {
+        til(supplier, timeoutInSeconds, () -> failReason);
     }
 
-    @Step("Venter til callable er 'true'; poller i {timeoutInSeconds} sekunder.")
-    public static void til(Callable<Boolean> callable, int timeoutInSeconds, Callable<String> errorMessageProducer) throws Exception {
+    @Step("Venter til supplier er 'true'; poller i {timeoutInSeconds} sekunder.")
+    public static void til(Supplier<Boolean> supplier, int timeoutInSeconds, Supplier<String> errorMessageProducer) {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusSeconds(timeoutInSeconds);
+        var sleepMillis = 200;
 
-        while (!callable.call()) {
+        while (!supplier.get()) {
             if (LocalDateTime.now().isAfter(end)) {
-                throw new RuntimeException(String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds, errorMessageProducer.call()));
+                throw new RuntimeException(String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds, errorMessageProducer.get()));
             }
             try {
-                Thread.sleep(1500);
+                Thread.sleep(sleepMillis);
+                sleepMillis += 500;
             } catch (InterruptedException e) {
                 throw new RuntimeException(
-                    String.format("Async venting interrupted ut etter %s sekunder fordi: %s", ChronoUnit.SECONDS.between(start, LocalDateTime.now()), errorMessageProducer.call()), e);
+                    String.format("Async venting interrupted ut etter %s sekunder fordi: %s", ChronoUnit.SECONDS.between(start, LocalDateTime.now()), errorMessageProducer.get()), e);
             }
         }
     }

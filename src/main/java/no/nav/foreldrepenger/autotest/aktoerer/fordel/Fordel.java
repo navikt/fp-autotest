@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.autotest.aktoerer.fordel;
 
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
+
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
@@ -16,9 +27,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.Saksnummer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sak.SakKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sak.dto.OpprettSakRequestDTO;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sak.dto.OpprettSakResponseDTO;
 import no.nav.foreldrepenger.autotest.klienter.vtp.tpsFeed.TpsFeedKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -29,19 +37,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.v3.Soeknad;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
 
 public class Fordel extends Aktoer {
 
@@ -52,7 +47,6 @@ public class Fordel extends Aktoer {
      */
     FordelKlient fordelKlient;
     BehandlingerKlient behandlingerKlient;
-    SakKlient sakKlient;
     FagsakKlient fagsakKlient;
     HistorikkKlient historikkKlient;
     TpsFeedKlient tpsFeedKlient;
@@ -65,7 +59,6 @@ public class Fordel extends Aktoer {
         fordelKlient = new FordelKlient(session);
         behandlingerKlient = new BehandlingerKlient(session);
         journalpostKlient = new JournalforingKlient(session);
-        sakKlient = new SakKlient(session);
         fagsakKlient = new FagsakKlient(session);
         historikkKlient = new HistorikkKlient(session);
         tpsFeedKlient = new TpsFeedKlient(session);
@@ -75,7 +68,7 @@ public class Fordel extends Aktoer {
      * Sender inn søkand og returnerer saksinformasjon
      */
     @Step("Sender inn søknad")
-    public long sendInnSøknad(Soeknad søknad, String aktørId, String fnr, DokumenttypeId dokumenttypeId, Long saksnummer) throws Exception {
+    public long sendInnSøknad(Soeknad søknad, String aktørId, String fnr, DokumenttypeId dokumenttypeId, Long saksnummer) {
         String xml = null;
         if (null != søknad) {
             xml = SøknadBuilder.tilXML(søknad);
@@ -87,7 +80,7 @@ public class Fordel extends Aktoer {
         }
         String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
 
-        String behandlingstemaOffisiellKode = ControllerHelper.translateSøknadDokumenttypeToBehandlingstema(dokumenttypeId).getKode();
+        String behandlingstemaOffisiellKode = finnBehandlingstemaKode(dokumenttypeId);
         String dokumentTypeIdOffisiellKode = dokumenttypeId.getKode();
         debugSenderInnDokument("Foreldrepengesøknad", xml);
         long sakId = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
@@ -99,38 +92,54 @@ public class Fordel extends Aktoer {
             List<Behandling> behandlinger = behandlingerKlient.alle(sakId);
             //TODO: Gjøre denne asynkron
             if (behandlinger.size() > 1) {
-                Thread.sleep(5000);
+                sleep(5000);
             }
             return !behandlinger.isEmpty() && behandlingerKlient.statusAsObject(behandlinger.get(0).uuid, null) == null;
         }, 60, "Saken hadde ingen behandlinger");
 
         if (DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD.equals(dokumenttypeId)) {
             //TODO: Vent.til fungerer ikke med endringssøknad. Venter ikke til behandlingen er opprettet
-            Thread.sleep(5000);
+            sleep(5000);
         }
 
         return sakId;
+    }
+
+    private String finnBehandlingstemaKode(DokumenttypeId dokumenttypeId) {
+        try {
+            return ControllerHelper.translateSøknadDokumenttypeToBehandlingstema(dokumenttypeId).getKode();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void sleep(int i) {
+        try {
+            Thread.sleep(i);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /*
      * Sender inn søknad og opretter ny sak
      */
 
-    public long sendInnSøknad(Soeknad søknad, String aktørId, String fnr, DokumenttypeId dokumenttypeId) throws Exception {
+    public long sendInnSøknad(Soeknad søknad, String aktørId, String fnr, DokumenttypeId dokumenttypeId) {
         return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, null);
     }
 
-    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId) throws Exception {
+    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId) {
         return sendInnSøknad(søknad, scenario, dokumenttypeId, null);
     }
 
-    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId, Long saksnummer) throws Exception {
+    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId, Long saksnummer) {
         String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
         String fnr = scenario.getPersonopplysninger().getSøkerIdent();
         return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
     }
 
-    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId, Long saksnummer, boolean annenPart) throws Exception {
+    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId, Long saksnummer, boolean annenPart) {
         String aktørId;
         String fnr;
         if (annenPart) {
@@ -148,46 +157,25 @@ public class Fordel extends Aktoer {
      * Sender inn søknad og returnerer saksinformasjon
      */
     @Step("Sender inn papirsøknad foreldrepenger")
-    public long sendInnPapirsøknadForeldrepenger(TestscenarioDto testscenario, boolean erAnnenPart) throws Exception {
+    public long sendInnPapirsøknadForeldrepenger(TestscenarioDto testscenario, boolean erAnnenPart) {
         return sendInnSøknad(null, testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null, erAnnenPart);
     }
 
     @Step("Sender inn endringssøknad på papir")
-    public long sendInnPapirsøknadEndringForeldrepenger(TestscenarioDto testscenario, Long saksnummer) throws Exception {
+    public long sendInnPapirsøknadEndringForeldrepenger(TestscenarioDto testscenario, Long saksnummer) {
         return sendInnSøknad(null, testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
     }
 
     @Step("Sender inn papirsøknad svangersskapspenger")
-    public long sendInnPapirsøknadSvangerskapspenger(TestscenarioDto testscenario) throws Exception {
+    public long sendInnPapirsøknadSvangerskapspenger(TestscenarioDto testscenario) {
         return sendInnSøknad(null, testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
     }
-
-    /*
-     * Opprett sak
-     */
-
-    public String opprettSak(TestscenarioDto testscenarioDto, String fagområde) throws IOException {
-
-        List<String> aktører = new ArrayList<>();
-        aktører.add(testscenarioDto.getPersonopplysninger().getSøkerIdent());
-        if (testscenarioDto.getPersonopplysninger().getAnnenpartIdent() != null) {
-            aktører.add(testscenarioDto.getPersonopplysninger().getAnnenpartIdent());
-        }
-
-        OpprettSakRequestDTO request = new OpprettSakRequestDTO(aktører, fagområde, "FS22", "MFS");
-
-
-        OpprettSakResponseDTO responseDTO = sakKlient.opprettSak(request);
-        return responseDTO.getSaksnummer();
-
-    }
-
 
     /*
      * Sender inn inntektsmelding og returnerer saksnummer
      */
     @Step("Sender inn inntektsmelding")
-    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, String aktørId, String fnr, Long gammeltSaksnummer) throws Exception {
+    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, String aktørId, String fnr, Long gammeltSaksnummer) {
         String xml = inntektsmelding.createInntektesmeldingXML();
         debugSenderInnDokument("Inntektsmelding", xml);
         String behandlingstemaOffisiellKode = "ab0047";
@@ -217,17 +205,17 @@ public class Fordel extends Aktoer {
         return nyttSaksnummer;
     }
 
-    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto testscenario, Long saksnummer) throws Exception {
+    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto testscenario, Long saksnummer) {
         return sendInnInntektsmelding(inntektsmelding, testscenario.getPersonopplysninger().getSøkerAktørIdent(), testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
     }
 
-    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto scenario) throws Exception {
+    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto scenario) {
         Long saksnummer = sendInnInntektsmeldinger(inntektsmeldinger, scenario, null);
         return saksnummer;
     }
 
     @Step("Sender inn innteksmeldinger")
-    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String aktørId, String fnr, Long saksnummer) throws Exception {
+    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String aktørId, String fnr, Long saksnummer) {
         int gammelAntallIM = 0;
         if (saksnummer != null) {
             gammelAntallIM = antallInntektsmeldingerMottatt(saksnummer);
@@ -235,7 +223,7 @@ public class Fordel extends Aktoer {
         for (InntektsmeldingBuilder builder : inntektsmeldinger) {
             saksnummer = sendInnInntektsmelding(builder, aktørId, fnr, saksnummer);
             if (inntektsmeldinger.size() > 1) {
-                Thread.sleep(4000); //TODO finn ut hva man må vente på her...
+                sleep(4000); //TODO finn ut hva man må vente på her...
             }
         }
         final int gammelAntallIMF = gammelAntallIM;
@@ -247,17 +235,16 @@ public class Fordel extends Aktoer {
     }
 
     @Step("Henter antall innteksmeldingerMottatt for saksnummer [{saksnummer}]")
-    private int antallInntektsmeldingerMottatt(long saksnummer) throws IOException {
+    private int antallInntektsmeldingerMottatt(long saksnummer) {
         List<HistorikkInnslag> historikk = historikkKlient.hentHistorikk(saksnummer);
-        int antall = historikk.stream().filter(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode())).collect(Collectors.toList()).size();
-        return antall;
+        return (int) historikk.stream().filter(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode())).count();
     }
 
-    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto testscenario, Long saksnummer) throws Exception {
+    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto testscenario, Long saksnummer) {
         return sendInnInntektsmeldinger(inntektsmeldinger, testscenario.getPersonopplysninger().getSøkerAktørIdent(), testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
     }
 
-    public String journalførInnektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto scenario, Long saksnummer) throws IOException {
+    public String journalførInnektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto scenario, Long saksnummer) {
         String xml = inntektsmelding.createInntektesmeldingXML();
         String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
         JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, aktørId, DokumenttypeId.INNTEKTSMELDING);
@@ -270,7 +257,7 @@ public class Fordel extends Aktoer {
     }
 
     @Step("Sender inn klage for bruker")
-    public long sendInnKlage(String xmlstring, TestscenarioDto scenario, Long saksnummer) throws IOException {
+    public long sendInnKlage(String xmlstring, TestscenarioDto scenario, Long saksnummer) {
         String xml = xmlstring;
         String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
         String behandlingstemaOffisiellKode = "ab0047";
@@ -290,7 +277,7 @@ public class Fordel extends Aktoer {
      * Sender inn journalpost og returnerer saksnummer
      */
     @Step("Sender inn journalpost")
-    private Long sendInnJournalpost(String xml, String journalpostId, String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode, String dokumentKategori, String aktørId, Long saksnummer) throws IOException {
+    private Long sendInnJournalpost(String xml, String journalpostId, String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode, String dokumentKategori, String aktørId, Long saksnummer) {
 
         if (saksnummer == null || saksnummer.longValue() == 0L) {
             OpprettSak journalpost = new OpprettSak(journalpostId, behandlingstemaOffisiellKode, aktørId);
@@ -324,7 +311,7 @@ public class Fordel extends Aktoer {
      * Opretter en personhendelse
      */
     @Step("Oppretter tps-hendelse")
-    public void opprettTpsHendelse(PersonhendelseDto personhendelseDto) throws Exception {
+    public void opprettTpsHendelse(PersonhendelseDto personhendelseDto) {
         tpsFeedKlient.leggTilHendelse(personhendelseDto);
     }
 }

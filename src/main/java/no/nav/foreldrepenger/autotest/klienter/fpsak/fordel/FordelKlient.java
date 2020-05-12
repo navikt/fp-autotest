@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fordel;
 
-import java.io.IOException;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.BehandlendeFagsystem;
@@ -31,29 +29,29 @@ public class FordelKlient extends FpsakKlient{
     }
 
 
-    public BehandlendeFagsystem vurderFagsystem(VurderFagsystem vurderFagsystem) throws IOException {
+    public BehandlendeFagsystem vurderFagsystem(VurderFagsystem vurderFagsystem) {
         String url = hentRestRotUrl() + VURDER_FAGSYSTEM_URL;
         return postOgHentJson(url, vurderFagsystem, BehandlendeFagsystem.class, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Sender journalpost")
-    public void journalpost(JournalpostMottak journalpostMottak) throws IOException {
+    public void journalpost(JournalpostMottak journalpostMottak) {
         String url = hentRestRotUrl() + JOURNALPOST_URL;
         postOgVerifiser(url, journalpostMottak, StatusRange.STATUS_SUCCESS);
     }
     @Step("Oppretter fagsak")
-    public Saksnummer fagsakOpprett(OpprettSak journalpost) throws IOException {
+    public Saksnummer fagsakOpprett(OpprettSak journalpost) {
         String url = hentRestRotUrl() + FAGSAK_OPPRETT_URL;
         return postOgHentJson(url, journalpost, Saksnummer.class, StatusRange.STATUS_SUCCESS);
     }
 
-    public FagsakInformasjon fagsakInformasjon(Saksnummer id) throws IOException {
+    public FagsakInformasjon fagsakInformasjon(Saksnummer id) {
         String url = hentRestRotUrl() + FAGSAK_INFORMASJON_URL;
         return postOgHentJson(url, id, FagsakInformasjon.class, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Knytter fagsak til journalpost")
-    public void fagsakKnyttJournalpost(JournalpostKnyttning knyttJournalpost) throws IOException {
+    public void fagsakKnyttJournalpost(JournalpostKnyttning knyttJournalpost) {
         String url = hentRestRotUrl() + FAGSAK_KNYTT_JOURNALPOST_URL;
         postOgVerifiser(url, knyttJournalpost, StatusRange.STATUS_SUCCESS);
     }

@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering;
 
-import java.io.IOException;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.FPOppdragKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.BehandlingIdDto;
@@ -23,19 +21,19 @@ public class SimuleringKlient extends FPOppdragKlient {
     }
 
     @Step("Henter simuleringsresultat")
-    public SimuleringDto hentSimuleringResultat(BehandlingIdDto behandlingIdDto) throws IOException {
+    public SimuleringDto hentSimuleringResultat(BehandlingIdDto behandlingIdDto) {
         String url = hentRestRotUrl() + HENT_SIMULERING_RESULTAT_URL;
         return postOgHentJson(url, behandlingIdDto, SimuleringDto.class, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Starter simulering.")
-    public void startSimulering(SimulerOppdragDto simulerOppdragDto) throws IOException {
+    public void startSimulering(SimulerOppdragDto simulerOppdragDto) {
         String url = hentRestRotUrl() + START_SIMULERING_URL;
         postOgVerifiser(url, simulerOppdragDto, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Kansellerer simulering.")
-    public void kansellerSimulering(BehandlingIdDto behandlingIdDto) throws IOException {
+    public void kansellerSimulering(BehandlingIdDto behandlingIdDto) {
         String url = hentRestRotUrl() + KANSELLER_SIMULERING_URL;
         postOgVerifiser(url, behandlingIdDto, StatusRange.STATUS_SUCCESS);
     }

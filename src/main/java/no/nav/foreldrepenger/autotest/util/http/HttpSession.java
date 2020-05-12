@@ -36,17 +36,17 @@ public interface HttpSession {
         }
     }
 
-    HttpResponse execute(HttpUriRequest request, Map<String, String> headers) throws IOException;
+    HttpResponse execute(HttpUriRequest request, Map<String, String> headers);
 
-    HttpResponse get(String url) throws IOException;
+    HttpResponse get(String url);
 
-    HttpResponse get(String url, Map<String, String> headers) throws IOException;
+    HttpResponse get(String url, Map<String, String> headers);
 
-    HttpResponse post(String url, HttpEntity entity, Map<String, String> headers) throws IOException;
+    HttpResponse post(String url, HttpEntity entity, Map<String, String> headers);
 
-    HttpResponse put(String url, HttpEntity entity, Map<String, String> headers) throws IOException;
+    HttpResponse put(String url, HttpEntity entity, Map<String, String> headers);
 
-    HttpResponse delete(String url, Map<String, String> headers) throws IOException;
+    HttpResponse delete(String url, Map<String, String> headers);
 
     void setRedirect(boolean doRedirect);
 

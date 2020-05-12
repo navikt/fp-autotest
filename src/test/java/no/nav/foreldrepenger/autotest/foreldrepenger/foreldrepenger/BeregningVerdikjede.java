@@ -1,5 +1,28 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeSN;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -32,28 +55,6 @@ import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeSN;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -61,7 +62,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold og tre bortfalte naturalytelser på forskjellige tidspunkt")
-    public void morSøkerFødselMedEttArbeidsforhold() throws Exception {
+    public void morSøkerFødselMedEttArbeidsforhold() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("49");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -112,7 +113,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som tilkommer etter skjæringstidspunktet")
-    public void morSøkerFødselMedFullAAPOgArbeidsforhold() throws Exception {
+    public void morSøkerFødselMedFullAAPOgArbeidsforhold() {
         // LAG SØKNAD OG SEND INN INNTEKTSMELDING //
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("166");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -154,7 +155,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som ikke skal benyttes.")
-    public void morSøkerFødselMedFullAAPOgArbeidsforholdSomErAktivtPåStp() throws Exception {
+    public void morSøkerFødselMedFullAAPOgArbeidsforholdSomErAktivtPåStp() {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("167");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -203,7 +204,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor med kun ytelse på skjæringstidspunktet og dagpenger i opptjeningsperioden")
     @Description("Mor med kun ytelse på skjæringstidspunktet og dagpenger i opptjeningsperioden")
-    public void kun_ytelse_med_vurdering_av_besteberegning() throws Exception {
+    public void kun_ytelse_med_vurdering_av_besteberegning() {
         TestscenarioDto testscenario = opprettTestscenario("172");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -221,7 +222,8 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         // FAKTA OM MEDLEMSKAP
         saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
-                .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"));
+                .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                        saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
 
         // FAKTA OM BEREGNING: Vurder besteberegning og fastsett månedsinntekt fra ytelse
@@ -259,7 +261,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("SN med gradering og Arbeidsforhold med refusjon over 6G")
     @Description("Mor er SN som søker gradering og har arbeidsgiver som søker refusjon over 6G")
     @Tag("beregning")
-    public void SN_med_gradering_og_arbeidsforhold_som_søker_refusjon_over_6G() throws Exception {
+    public void SN_med_gradering_og_arbeidsforhold_som_søker_refusjon_over_6G() {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
         TestscenarioDto testscenario = opprettTestscenario("165");
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -330,7 +332,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor med for sent refusjonskrav.")
-    public void morFødselForSentRefusjonskrav() throws Exception {
+    public void morFødselForSentRefusjonskrav() {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("84");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -402,7 +404,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @Test
     @DisplayName("ATFL i samme org med lønnsendring")
     @Description("ATFL i samme org med lønnsendring")
-    public void ATFL_samme_org_med_lønnendring_uten_inntektsmelding() throws Exception {
+    public void ATFL_samme_org_med_lønnendring_uten_inntektsmelding() {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("163");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -439,7 +441,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Uten inntektsmelding, med lønnsendring")
     @Description("Uten inntektsmelding, med lønnsendring")
-    public void vurder_mottar_ytelse_vurder_lonnsendring() throws Exception {
+    public void vurder_mottar_ytelse_vurder_lonnsendring() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("161");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -469,7 +471,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("To arbeidsforhold samme org.")
-    public void toArbeidsforholdSammeOrgEttStarterEtterStp() throws Exception {
+    public void toArbeidsforholdSammeOrgEttStarterEtterStp() {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
         TestscenarioDto testscenario = opprettTestscenario("190");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();

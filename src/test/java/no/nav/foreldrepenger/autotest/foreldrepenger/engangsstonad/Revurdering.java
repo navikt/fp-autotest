@@ -30,7 +30,7 @@ public class Revurdering extends FpsakTestBase {
     @Test
     @DisplayName("Manuelt opprettet revurdering")
     @Description("Manuelt opprettet revurdering etter avsluttet behandling med utsendt varsel")
-    public void manueltOpprettetRevurderingSendVarsel() throws Exception {
+    public void manueltOpprettetRevurderingSendVarsel() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),

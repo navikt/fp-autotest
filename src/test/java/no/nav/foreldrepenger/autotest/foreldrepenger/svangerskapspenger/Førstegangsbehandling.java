@@ -41,7 +41,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker SVP - ingen tilrettelegging")
     @Description("Mor søker SVP med ett arbeidsforhold fire uke før termin. ingen tilrettelegging")
-    public void morSøkerSvp_IngenTilrettelegging_FireUkerFørTermin_EttArbeidsforhold() throws Exception {
+    public void morSøkerSvp_IngenTilrettelegging_FireUkerFørTermin_EttArbeidsforhold() {
 
         final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -95,7 +95,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker SVP med to arbeidsforhold - hel tilrettelegging")
     @Description("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
-    public void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() throws Exception {
+    public void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() {
 
         final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("56");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -142,7 +142,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
-    public void mor_søker_svp_tre_arbeidsforhold_hel_halv_og_ingen_tilrettelegging() throws Exception {
+    public void mor_søker_svp_tre_arbeidsforhold_hel_halv_og_ingen_tilrettelegging() {
 
         final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("79");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -215,7 +215,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
-    public void mor_søker_svp_tre_arbeidsforhold_to_halv() throws Exception {
+    public void mor_søker_svp_tre_arbeidsforhold_to_halv() {
 
         final TestscenarioDto testscenario = opprettTestscenario("79");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -259,7 +259,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Disabled
     @DisplayName("mor_SVP_imFørSøknad")
     @Description("mor_SVP_imFørSøknad")
-    public void mor_SVP_imFørSøknad() throws Exception {
+    public void mor_SVP_imFørSøknad() {
 
         // TODO: Gjør ferdig, feiler på tilkjentytelse.
         // TODO (OL) Utvide med videre funksjonalitet
@@ -296,7 +296,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Test
     @Disabled
     @DisplayName("Papirsøknad for Svangerskapspenger")
-    public void morSøkerSvangersskapspengerMedPapirsøknad() throws Exception {
+    public void morSøkerSvangersskapspengerMedPapirsøknad() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);

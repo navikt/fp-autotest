@@ -1,15 +1,15 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @BekreftelseKode(kode = "5080")
 public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
@@ -20,9 +20,7 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        super.setFagsakOgBehandling(fagsak, behandling);
-
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         arbeidsforhold = behandling.getInntektArbeidYtelse().arbeidsforhold;
 
         for (Arbeidsforhold arbeidsforholdBehandling : arbeidsforhold) {
@@ -30,12 +28,13 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         }
     }
 
-    public void bekreftArbeidsforholdErRelevant(String navn, boolean fortsettUtenInntekt) {
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErRelevant(String navn, boolean fortsettUtenInntekt) {
         Arbeidsforhold forhold = finnArbeidsforhold(navn);
         if (forhold == null) {
             throw new RuntimeException("fant ikke arbeidsforhold: " + navn);
         }
         bekreftArbeidsforholdErRelevant(forhold, fortsettUtenInntekt);
+        return this;
     }
 
     public void bekreftArbeidsforholdErOverstyrt(String navn, LocalDate startDato, LocalDate overstyrtTom) {
@@ -47,7 +46,7 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         forhold.setOverstyrtTom(overstyrtTom);
     }
 
-    public void bekreftArbeidsforholdErBasertPåInntektsmelding(String navn, LocalDate startDato, LocalDate sluttDato, BigDecimal stillingsprosent) {
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErBasertPåInntektsmelding(String navn, LocalDate startDato, LocalDate sluttDato, BigDecimal stillingsprosent) {
         Arbeidsforhold arbeidsforhold = finnArbeidsforhold(navn);
 
         arbeidsforhold.setBrukArbeidsforholdet(true);
@@ -55,6 +54,7 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         arbeidsforhold.setTomDato(sluttDato);
         arbeidsforhold.setFomDato(startDato);
         arbeidsforhold.setStillingsprosent(stillingsprosent);
+        return this;
     }
 
     public void bekreftArbeidsforholdErRelevant(Arbeidsforhold forhold, boolean fortsettUtenInntekt) {
@@ -93,11 +93,11 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         return null;
     }
 
-    public Arbeidsforhold leggTilArbeidsforhold(String navn, LocalDate startDato, LocalDate sluttDato, int stillingsprosent) {
+    public AvklarArbeidsforholdBekreftelse leggTilArbeidsforhold(String navn, LocalDate startDato, LocalDate sluttDato, int stillingsprosent) {
         Arbeidsforhold arbeid = new Arbeidsforhold(navn, startDato, sluttDato, BigDecimal.valueOf(stillingsprosent), true);
         arbeid.setBrukArbeidsforholdet(true);
         arbeidsforhold.add(arbeid);
-        return null;
+        return this;
     }
 
 }

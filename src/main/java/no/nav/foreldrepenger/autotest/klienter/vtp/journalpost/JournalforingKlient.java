@@ -7,8 +7,6 @@ import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
 
-import java.io.IOException;
-
 public class JournalforingKlient extends VTPKlient{
 
 
@@ -21,13 +19,13 @@ public class JournalforingKlient extends VTPKlient{
     }
 
     @Step("Journalfører sak i VTP")
-    public JournalpostIdDto journalfør(JournalpostModell journalpostModell) throws IOException {
+    public JournalpostIdDto journalfør(JournalpostModell journalpostModell) {
         String url = hentRestRotUrl() + String.format(JOURNALFØR_FORELDREPENGER_SØKNAD_URL_FORMAT, journalpostModell.getAvsenderFnr(), journalpostModell.getDokumentModellList().get(0).getDokumentType().getKode());
         return postOgHentJson(url, journalpostModell.getDokumentModellList().get(0).getInnhold(), JournalpostIdDto.class, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Knytter journalpost id {journalpostId} til sak {saksnummer} i VTP")
-    public JournalpostIdDto knyttSakTilJournalpost(String journalpostId, String saksnummer) throws IOException{
+    public JournalpostIdDto knyttSakTilJournalpost(String journalpostId, String saksnummer){
         String url = hentRestRotUrl() + String.format(KNYTT_SAK_TIL_JOURNALPOST, journalpostId, saksnummer);
         return postOgHentJson(url, null, JournalpostIdDto.class, StatusRange.STATUS_SUCCESS);
     }

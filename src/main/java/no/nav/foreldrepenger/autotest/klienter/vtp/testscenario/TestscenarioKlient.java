@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.testscenario;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +20,7 @@ public class TestscenarioKlient extends VTPKlient {
     }
 
     @Deprecated
-    public TestscenarioDto opprettTestscenarioFraVTPTemplate(String key) throws IOException {
+    public TestscenarioDto opprettTestscenarioFraVTPTemplate(String key) {
         String url = hentRestRotUrl() + String.format(TESTSCENARIO_I_VTP_POST_URL, key);
         TestscenarioDto testscenarioDto = postOgHentJson(url, null, TestscenarioDto.class, StatusRange.STATUS_SUCCESS);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key, testscenarioDto.getPersonopplysninger().getSøkerIdent());
@@ -30,14 +28,14 @@ public class TestscenarioKlient extends VTPKlient {
     }
 
     @Deprecated
-    public TestscenarioDto opprettTestscenarioMedAktorIdFraVTPTemplate(String key, String aktorId) throws IOException {
+    public TestscenarioDto opprettTestscenarioMedAktorIdFraVTPTemplate(String key, String aktorId) {
         String url = hentRestRotUrl() + String.format(TESTSCENARIO_I_VTP_POST_URL, key) + "?aktor1=" + aktorId;
         TestscenarioDto testscenarioDto = postOgHentJson(url, null, TestscenarioDto.class, StatusRange.STATUS_SUCCESS);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key, testscenarioDto.getPersonopplysninger().getSøkerIdent());
         return testscenarioDto;
     }
 
-    public TestscenarioDto opprettTestscenario(String key, Object testscenarioObject) throws IOException {
+    public TestscenarioDto opprettTestscenario(String key, Object testscenarioObject) {
         String url = hentRestRotUrl() + TESTSCENARIO_I_AUTOTEST_POST_URL;
         TestscenarioDto testscenarioDto = postOgHentJson(url, testscenarioObject, TestscenarioDto.class, StatusRange.STATUS_SUCCESS);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key, testscenarioDto.getPersonopplysninger().getSøkerIdent());

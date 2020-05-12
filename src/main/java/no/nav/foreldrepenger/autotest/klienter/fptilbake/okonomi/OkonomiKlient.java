@@ -6,8 +6,6 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnla
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 
-import java.io.IOException;
-
 public class OkonomiKlient extends FptilbakeKlient {
 
     private static final String GRUNNLAG_URL = "/grunnlag?behandlingId=";
@@ -17,7 +15,7 @@ public class OkonomiKlient extends FptilbakeKlient {
     }
 
     @Step
-    public void putGrunnlag(Kravgrunnlag kravgrunnlag, int behandlingId) throws IOException {
+    public void putGrunnlag(Kravgrunnlag kravgrunnlag, int behandlingId) {
         String url = hentRestRotUrl() + GRUNNLAG_URL + behandlingId;
         postOgVerifiser(url, kravgrunnlag, StatusRange.STATUS_SUCCESS);
     }

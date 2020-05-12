@@ -68,7 +68,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE")
-    public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5031() throws Exception {
+    public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5031() {
         TestscenarioDto testscenario = opprettTestscenario("172");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -85,7 +85,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("AVKLAR_ADOPSJONSDOKUMENTAJON")
-    public void aksjonspunkt_ADOPSJONSSOKNAD_FORELDREPENGER_5004() throws Exception {
+    public void aksjonspunkt_ADOPSJONSSOKNAD_FORELDREPENGER_5004() {
         TestscenarioDto testscenario = opprettTestscenario("172");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato().minusWeeks(3);
@@ -113,7 +113,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("MANUELL_VURDERING_AV_OMSORGSVILKÅRET")
-    public void aksjonspunkt_ADOPSJONSSOKNAD_ENGANGSSTONAD_5011() throws Exception {
+    public void aksjonspunkt_ADOPSJONSSOKNAD_ENGANGSSTONAD_5011() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID,
@@ -135,7 +135,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
     }
     @Test
     @DisplayName("VURDER_OPPTJENINGSVILKÅRET")
-    public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5089() throws Exception {
+    public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5089() {
         TestscenarioDto testscenario = opprettTestscenario("01");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -156,7 +156,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
     }
     @Test
     @DisplayName("VURDER_FAKTA_FOR_ATFL_SN")
-    public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER() throws Exception {
+    public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("74");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -208,7 +208,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
     }
     @Test
     @DisplayName("VURDER_OM_VILKÅR_FOR_SYKDOM_OPPFYLT")
-    public void aksjonspunkt_FAR_FOEDSELSSOKNAD_FORELDREPENGER_5044() throws Exception {
+    public void aksjonspunkt_FAR_FOEDSELSSOKNAD_FORELDREPENGER_5044() {
         TestscenarioDto testscenario = opprettTestscenario("60");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
         String søkerFnr = testscenario.getPersonopplysninger().getAnnenpartIdent();
