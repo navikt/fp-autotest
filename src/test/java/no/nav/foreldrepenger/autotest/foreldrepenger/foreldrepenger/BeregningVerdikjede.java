@@ -276,7 +276,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
-        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
+        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
         LocalDate graderingFom = fødselsdato.plusWeeks(6);
         perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
         perioder.add(uttaksperiode(MØDREKVOTE, fødselsdato, graderingFom.minusDays(1)));
@@ -366,7 +366,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
         VurderBeregnetInntektsAvvikBekreftelse vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
-        vurderBeregnetInntektsAvvikBekreftelse.leggTilInntekt(360_000, 1L);
+        vurderBeregnetInntektsAvvikBekreftelse.leggTilInntekt(360_000, 1);
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
 

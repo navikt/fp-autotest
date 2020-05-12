@@ -15,8 +15,8 @@ public class VurderBeregnetInntektsAvvikBekreftelse extends AksjonspunktBekrefte
         super();
     }
 
-    public VurderBeregnetInntektsAvvikBekreftelse leggTilInntekt(Integer inntekt, Long andelsnr) {
-        inntektPrAndelList.add(new InntektPrAndel(inntekt, andelsnr));
+    public VurderBeregnetInntektsAvvikBekreftelse leggTilInntekt(Integer inntekt, Integer andelsnr) {
+        inntektPrAndelList.add(new InntektPrAndel(inntekt, andelsnr.longValue()));
         return this;
     }
 

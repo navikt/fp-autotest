@@ -153,7 +153,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
         vurderBeregnetInntektsAvvikBekreftelse
                 .leggTilInntektFrilans(overstyrtFrilanserInntekt)
-                .leggTilInntekt(overstyrtInntekt, 2L)
+                .leggTilInntekt(overstyrtInntekt, 2)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
@@ -278,8 +278,8 @@ public class Fodsel extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
         vurderBeregnetInntektsAvvikBekreftelse
-                .leggTilInntekt(overstyrtInntekt, 1L)
-                .leggTilInntekt(overstyrtInntekt, 2L)
+                .leggTilInntekt(overstyrtInntekt, 1)
+                .leggTilInntekt(overstyrtInntekt, 2)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
@@ -332,7 +332,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
         vurderBeregnetInntektsAvvikBekreftelse
-                .leggTilInntekt(overstyrtInntekt, 1L)
+                .leggTilInntekt(overstyrtInntekt, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
@@ -731,7 +731,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         // Bekreft inntekt i beregning
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
-        vurderBeregnetInntektsAvvikBekreftelse.leggTilInntekt(overstyrtInntekt, 1L)
+        vurderBeregnetInntektsAvvikBekreftelse.leggTilInntekt(overstyrtInntekt, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
@@ -810,7 +810,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         // Bekreft inntekt i beregning
         VurderBeregnetInntektsAvvikBekreftelse vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
         vurderBeregnetInntektsAvvikBekreftelse
-                .leggTilInntekt(overstyrtInntekt, 1L)
+                .leggTilInntekt(overstyrtInntekt, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
