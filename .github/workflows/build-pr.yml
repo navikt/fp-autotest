@@ -15,7 +15,7 @@ jobs:
           echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
       - uses: actions/cache@v1.1.2
         with:
-          path: ~/.m2/repository
+          path: ~/.m2
           key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
           restore-keys: |
             ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
@@ -61,6 +61,7 @@ jobs:
         shell: bash
         run: |
           pwd
+          ls ~/.m2
           ls ~/.m2/repository
           mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
         env:
