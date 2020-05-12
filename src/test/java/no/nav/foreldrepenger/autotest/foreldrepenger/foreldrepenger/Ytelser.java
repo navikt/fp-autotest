@@ -1,5 +1,17 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -16,17 +28,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -40,7 +41,7 @@ public class Ytelser extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel og mottar sykepenger")
     @Description("Mor søker fødsel og mottar sykepenger - opptjening automatisk oppfylt")
     @Disabled // TODO peek fix denne
-    public void morSøkerFødselMottarSykepenger() throws Exception {
+    public void morSøkerFødselMottarSykepenger() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("70"); //TODO bruker ytelse foreldrepenger og ikke sykepenger
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -71,7 +72,8 @@ public class Ytelser extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarLopendeVedtakBekreftelse);
 
         AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
-        avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"));
+        avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
@@ -96,7 +98,7 @@ public class Ytelser extends ForeldrepengerTestBase {
     @Disabled //TODO (OL): Feiler i pipe og lokalt. Mangler vilkår Beregning (siste assertion). Vilkåret er ikke vurdert.
     @DisplayName("Mor søker fødsel og mottar sykepenger for lite inntekter")
     @Description("Mor søker fødsel og mottar sykepenger for lite inntekter - beregning avvist")
-    public void morSøkerFødselMottarForLite() throws Exception {
+    public void morSøkerFødselMottarForLite() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("70"); //TODO bruker ytelse foreldrepenger og ikke sykepenger
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -126,7 +128,8 @@ public class Ytelser extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarLopendeVedtakBekreftelse.class);
 
         saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
-            .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"));
+            .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                    saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
 
         saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
@@ -140,7 +143,7 @@ public class Ytelser extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor søker fødsel og mottar sykepenger og inntekter")
     @Description("Mor søker fødsel og mottar sykepenger og inntekter - opptjening automatisk godkjent")
-    public void morSøkerFødselMottarSykepengerOgInntekter() throws Exception {
+    public void morSøkerFødselMottarSykepengerOgInntekter() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("72"); //TODO bruker ytelse foreldrepenger og ikke sykepenger
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -182,7 +185,8 @@ public class Ytelser extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarLopendeVedtakBekreftelse);
 
         AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
-        avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"));
+        avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 
         VurderBeregnetInntektsAvvikBekreftelse vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);

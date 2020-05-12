@@ -15,8 +15,7 @@ public class OverstyrUttaksperioder extends OverstyringsBekreftelse{
 
 
     @Override
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        super.setFagsakOgBehandling(fagsak, behandling);
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         perioder = behandling.hentUttaksperioder();
 
     }

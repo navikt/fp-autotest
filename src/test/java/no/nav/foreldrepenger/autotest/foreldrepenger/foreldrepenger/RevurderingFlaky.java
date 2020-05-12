@@ -27,7 +27,7 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Revurdering via Inntektsmelding")
     @Description("Førstegangsbehandling til positivt vedtak. Sender inn IM uten endring. Så ny IM med endring i inntekt. Vedtak fortsatt løpende.")
-    public void revurderingViaInntektsmelding() throws Exception {
+    public void revurderingViaInntektsmelding() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,23 +21,23 @@ public class FagsakKlient extends FpsakKlient{
         super(session);
     }
 
-    public Status status(int saksnummer, int gruppe) throws IOException {
+    public Status status(int saksnummer, int gruppe) {
         String url = hentRestRotUrl() + String.format(STATUS_URL_FORMAT, saksnummer, gruppe);
         return getOgHentJson(url, Status.class, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Henter fagsak {saksnummer}")
-    public Fagsak getFagsak(String saksnummer) throws IOException {
+    public Fagsak getFagsak(String saksnummer) {
         String url = hentRestRotUrl() + String.format(FAGSAK_URL_FORMAT, saksnummer);
         return getOgHentJson(url, Fagsak.class, StatusRange.STATUS_200);
     }
 
     @Step("Søker etter fagsak {søk}")
-    public ArrayList<Fagsak> søk(String søk) throws IOException {
+    public ArrayList<Fagsak> søk(String søk) {
         return søk(new Sok(søk));
     }
 
-    public ArrayList<Fagsak> søk(Sok søk) throws IOException {
+    public ArrayList<Fagsak> søk(Sok søk) {
         String url = hentRestRotUrl() + FAGSAK_SØK_URL_FORMAT;
         return postOgHentJson(url, søk, hentObjectMapper().getTypeFactory().constructCollectionType(List.class, Fagsak.class), StatusRange.STATUS_200);
     }

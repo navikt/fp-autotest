@@ -16,16 +16,16 @@ public class Saksbehandler extends Aktoer {
         simuleringKlient = new SimuleringKlient(session);
     }
 
-    public SimuleringDto hentSimuleringResultat(BehandlingIdDto behandlingIdDto) throws IOException {
+    public SimuleringDto hentSimuleringResultat(BehandlingIdDto behandlingIdDto) {
         return simuleringKlient.hentSimuleringResultat(behandlingIdDto);
     }
 
 
-    public void startSimulering(SimulerOppdragDto simulerOppdragDto) throws IOException {
+    public void startSimulering(SimulerOppdragDto simulerOppdragDto) {
         simuleringKlient.startSimulering(simulerOppdragDto);
     }
 
-    public void kansellerSimulering(BehandlingIdDto behandlingIdDto) throws IOException {
+    public void kansellerSimulering(BehandlingIdDto behandlingIdDto) {
         simuleringKlient.kansellerSimulering(behandlingIdDto);
     }
 }

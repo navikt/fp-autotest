@@ -6,8 +6,6 @@ import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.Risiko
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 
-import java.io.IOException;
-
 public class RisikovurderingKlient extends FpRiskKlient {
 
     private static final String RISIKOVURDERING_URL = "/risikovurdering";
@@ -17,7 +15,7 @@ public class RisikovurderingKlient extends FpRiskKlient {
         super(session);
     }
 
-    public RisikovurderingResponse getRisikovurdering(String konsumentId) throws IOException {
+    public RisikovurderingResponse getRisikovurdering(String konsumentId) {
         HentRisikovurderingDto request = new HentRisikovurderingDto(konsumentId);
         String url = hentRestRotUrl() + RISIKOVURDERING_HENT_URL;
         return postOgHentJson(url,request, RisikovurderingResponse.class,StatusRange.STATUS_SUCCESS);

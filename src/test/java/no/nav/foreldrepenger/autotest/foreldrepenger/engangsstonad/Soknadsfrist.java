@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -13,16 +24,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("foreldrepenger")
@@ -33,7 +34,7 @@ public class Soknadsfrist extends FpsakTestBase {
     @Disabled
     @DisplayName("Mor søker for sent men får godkjent")
     @Description("Mor søker for sent men får godkjent alikevel")
-    public void behandleFødselEngangstønadSøknadsfristGodkjent() throws Exception {
+    public void behandleFødselEngangstønadSøknadsfristGodkjent() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("52");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
@@ -60,7 +61,7 @@ public class Soknadsfrist extends FpsakTestBase {
     @Test
     @DisplayName("Behandle søknadsfrist og sent tilbake")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist")
-    public void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() throws Exception {
+    public void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
@@ -101,7 +102,7 @@ public class Soknadsfrist extends FpsakTestBase {
     @Test
     @DisplayName("Behandle søknadsfrist og sent tilbake på grunn av fødsel")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av fødsel - tester tilbakesending")
-    public void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() throws Exception {
+    public void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);

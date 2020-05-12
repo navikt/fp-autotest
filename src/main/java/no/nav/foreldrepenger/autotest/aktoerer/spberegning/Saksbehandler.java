@@ -47,7 +47,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     @Override
-    public void erLoggetInnMedRolle(Rolle rolle) throws IOException {
+    public void erLoggetInnMedRolle(Rolle rolle) {
         super.erLoggetInnMedRolle(rolle);
         kodeverk = kodeverkKlient.kodeverk();
         //throw new RuntimeException("erLoggetInnMedRolle ikke ferdig implementert");
@@ -57,7 +57,7 @@ public class Saksbehandler extends Aktoer {
      * Foreslår og henter forslag fra beregning
      */
     @Step("Foreslår beregning for Gosyssak {gosysSakId}")
-    public BeregningDto foreslåBeregning(String tema, TestscenarioDto testscenario, String gosysSakId) throws IOException {
+    public BeregningDto foreslåBeregning(String tema, TestscenarioDto testscenario, String gosysSakId) {
         ForeslaaDto foreslå = new ForeslaaDto(tema, Long.parseLong(testscenario.getPersonopplysninger().getSøkerAktørIdent()), gosysSakId);
         forslag = beregningKlient.foreslaBeregningPost(foreslå);
         beregning = beregningKlient.hentBeregning(forslag.getBeregningId());
@@ -68,7 +68,7 @@ public class Saksbehandler extends Aktoer {
     }
 
 
-    protected void oppdaterBeregning(LocalDate skjæringstidspunkt, Kode status) throws IOException {
+    protected void oppdaterBeregning(LocalDate skjæringstidspunkt, Kode status) {
         OppdaterBeregningDto request = new OppdaterBeregningDto(beregning.getId());
         request.setSkjæringstidspunkt(skjæringstidspunkt);
         request.setAktivitetStatusKode(status.kode);
@@ -80,7 +80,7 @@ public class Saksbehandler extends Aktoer {
      * Ikke bruk navn som oppslag i kodeverk.
      */
     @Deprecated
-    public void oppdaterBeregning(LocalDate skjæringstidspunkt, String status) throws IOException {
+    public void oppdaterBeregning(LocalDate skjæringstidspunkt, String status) {
         try {
             Thread.sleep(5000);
             oppdaterBeregning(skjæringstidspunkt, kodeverk.AktivitetStatus.getKode(status));
@@ -90,7 +90,7 @@ public class Saksbehandler extends Aktoer {
 
     }
 
-    public void lagreNotat(BeregningDto beregning, String notat, Long beregningsgrunnlagId) throws IOException {
+    public void lagreNotat(BeregningDto beregning, String notat, Long beregningsgrunnlagId) {
         LagreNotatDto request = new LagreNotatDto(beregning.getId(), notat, beregningsgrunnlagId);
         beregningKlient.lagrenotat(request);
     }

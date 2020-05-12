@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -14,16 +25,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -35,7 +36,7 @@ public class Medlemskap extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel er utvandret")
     @Description("Mor søker fødsel og er utvandret. Skal føre til aksjonspunkt angående medlemskap - avslått")
-    public void morSøkerFødselErUtvandret() throws Exception {
+    public void morSøkerFødselErUtvandret() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("51");
 
 
@@ -50,15 +51,15 @@ public class Medlemskap extends FpsakTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
-                .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
+        var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
+                .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                        saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
+        saksbehandler.bekreftAksjonspunkt(ab);
 
         overstyrer.erLoggetInnMedRolle(Rolle.OVERSTYRER);
         overstyrer.hentFagsak(saksnummer);
 
         OverstyrMedlemskapsvilkaaret overstyr = new OverstyrMedlemskapsvilkaaret();
-        overstyr.setFagsakOgBehandling(overstyrer.valgtFagsak, overstyrer.valgtBehandling);
         overstyr.avvis(overstyrer.kodeverk.Avslagsårsak.get("FP_VK_2").getKode("1020" /* Søker er ikke medlem" */));
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
@@ -71,7 +72,6 @@ public class Medlemskap extends FpsakTestBase {
 
         beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_MEDLEMSKAPSVILKÅRET));
-        beslutter.ikkeVentPåStatus = true;
         beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
@@ -80,7 +80,7 @@ public class Medlemskap extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker med personstatus uregistrert")
     @Description("Mor søker med personstatus uregistrert, får askjonspunkt så hennlegges")
-    public void morSøkerFødselUregistrert() throws Exception {
+    public void morSøkerFødselUregistrert() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("120");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -103,7 +103,7 @@ public class Medlemskap extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker med utenlandsk adresse")
     @Description("Mor søker med utelandsk adresse")
-    public void morSøkerFødselUtenlandsadresse() throws Exception {
+    public void morSøkerFødselUtenlandsadresse() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("121");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),

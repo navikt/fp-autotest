@@ -45,7 +45,7 @@ public class Termin extends ForeldrepengerTestBase {
     @DisplayName("Mor søker med ett arbeidsforhold. Inntektmelding innsendt før søknad")
     @Description("Mor med ett arbeidsforhold sender inn inntektsmelding før søknad. " +
             "Forventer at vedtak bli fattet og det blir bare opprettet en behandling")
-    public void MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad() throws Exception {
+    public void MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         LocalDate termindato = LocalDate.now().plusWeeks(3);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
@@ -72,7 +72,7 @@ public class Termin extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor søker sak behandlet før inntektsmelding mottatt")
     @Description("Mor søker og saken  blir behandlet før inntektsmelding er mottat basert på data fra inntektskomponenten, så mottas inntektsmeldingen ")
-    public void MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad() throws Exception {
+    public void MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         LocalDate termindato = LocalDate.now().minusWeeks(1);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
@@ -91,12 +91,12 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.gjenopptaBehandling();
 
         verifiser(saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD), "Mangler aksonspunkt for vurdering av arbeidsforhold (8050)");
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+        var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(ab);
 
 
-        verifiser(saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN), "Mangler aksonspunkt for vurdering av fakta arbeid frilans (5058)");
+        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
@@ -110,7 +110,6 @@ public class Termin extends ForeldrepengerTestBase {
                 saksnummer);
 
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
-        verifiser(!saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN), "Har uventet aksonspunkt - vurdering av fakta arbeid frilans (5058)");
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
     }
@@ -118,7 +117,7 @@ public class Termin extends ForeldrepengerTestBase {
     @Tag("pending")
     @Test
     @Disabled
-    public void MorSøkerMedEttArbeidsforholdOvergangFraYtelse() throws Exception {
+    public void MorSøkerMedEttArbeidsforholdOvergangFraYtelse() {
         //TODO
     }
 
@@ -127,7 +126,7 @@ public class Termin extends ForeldrepengerTestBase {
     @Description("Mor med to arbeidsforhold søker termin. Søknad inneholder gradering. En periode som er forflyttet i fht IM, " +
             "en periode som har feil graderingsprosent i fht IM, en periode som har feil orgnr i fht IM og en periode som " +
             "er ok.")
-    public void morSøkerTerminEttArbeidsforhold_avvikIGradering() throws Exception {
+    public void morSøkerTerminEttArbeidsforhold_avvikIGradering() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("77");
 
         LocalDate termindato = LocalDate.now().plusWeeks(6);
@@ -182,7 +181,7 @@ public class Termin extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor søker termin uten FPFF")
     @Description("Mor søker termin uten periode for foreldrepenger før fødsel. Skjæringstidspunkt skal være 3 uker før termindato.")
-    public void morSokerTerminUtenFPFFperiode() throws Exception {
+    public void morSokerTerminUtenFPFFperiode() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate termindato = LocalDate.now().plusWeeks(3);

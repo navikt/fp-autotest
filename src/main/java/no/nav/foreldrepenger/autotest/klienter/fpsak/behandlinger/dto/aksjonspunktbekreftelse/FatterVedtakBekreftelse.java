@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 
@@ -56,7 +54,7 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
         aksjonspunktGodkjenningDtos.add(godkjenning);
     }
 
-    public static class AksjonspunktGodkjenningDto{
+    public static class AksjonspunktGodkjenningDto {
         protected String aksjonspunktKode;
         protected List<String> arsaker = new ArrayList<>();
         protected String begrunnelse = null;
@@ -65,11 +63,6 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
         public AksjonspunktGodkjenningDto(Aksjonspunkt aksjonspunkt) {
             aksjonspunktKode = aksjonspunkt.getDefinisjon().kode;
         }
-    }
-
-    @Override
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        super.setFagsakOgBehandling(fagsak, behandling);
     }
 
     @Override

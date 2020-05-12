@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -18,16 +29,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -37,7 +38,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel - godkjent")
     @Description("Mor søker fødsel - godkjent happy case")
-    public void morSøkerFødselGodkjent() throws Exception {
+    public void morSøkerFødselGodkjent() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -56,7 +57,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel - avvist")
     @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i tps")
-    public void morSøkerFødselAvvist() throws Exception {
+    public void morSøkerFødselAvvist() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -88,7 +89,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Far søker registrert fødsel")
     @Description("Far søker registrert fødsel og blir avvist fordi far søker")
-    public void farSøkerFødselRegistrert() throws Exception {
+    public void farSøkerFødselRegistrert() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("60");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -107,7 +108,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel overstyrt vilkår")
     @Description("Mor søker fødsel overstyrt vilkår adopsjon fra godkjent til avslått")
-    public void morSøkerFødselOverstyrt() throws Exception {
+    public void morSøkerFødselOverstyrt() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -129,7 +130,6 @@ public class Fodsel extends FpsakTestBase {
         overstyrer.hentFagsak(saksnummer);
 
         OverstyrFodselsvilkaaret overstyr = new OverstyrFodselsvilkaaret();
-        overstyr.setFagsakOgBehandling(overstyrer.valgtFagsak, overstyrer.valgtBehandling);
         overstyr.avvis(overstyrer.kodeverk.Avslagsårsak.get("FP_VK_1").getKode("1003" /*Søker er far */));
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
@@ -150,7 +150,7 @@ public class Fodsel extends FpsakTestBase {
     @Disabled
     @DisplayName("Mor søker fødsel - beregning overstyrt")
     @Description("Mor søker fødsel - beregning overstyrt fra ett beløp til 10 kroner")
-    public void morSøkerFødselBeregningOverstyrt() throws Exception {
+    public void morSøkerFødselBeregningOverstyrt() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -175,7 +175,6 @@ public class Fodsel extends FpsakTestBase {
 
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaTillegsopplysningerBekreftelse.class);
         OverstyrBeregning overstyrBeregning = new OverstyrBeregning(10);
-        overstyrBeregning.setFagsakOgBehandling(overstyrer.valgtFagsak,overstyrer.valgtBehandling);
         overstyrer.overstyr(overstyrBeregning);
         verifiserLikhet(10, overstyrer.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse());
 
@@ -197,7 +196,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med flere barn")
     @Description("Mor søker fødsel med flere barn - happy case flere barn")
-    public void morSøkerFødselFlereBarn() throws Exception {
+    public void morSøkerFødselFlereBarn() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("53");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
@@ -214,7 +213,8 @@ public class Fodsel extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
         AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
-        avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"));
+        avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
@@ -233,7 +233,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med verge")
     @Description("Mor søker fødsel med verge - skal få aksjonspunkt om registrering av verge når man er under 18")
-    public void morSøkerFødselMedVerge() throws Exception {
+    public void morSøkerFødselMedVerge() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("54");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -256,7 +256,8 @@ public class Fodsel extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
         AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
-        avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"));
+        avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
@@ -274,7 +275,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel")
     @Description("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel. Behandlingen skal bli satt på vent")
-    public void morSøkerUregistrertFødselMindreEnn14DagerEtter() throws Exception {
+    public void morSøkerUregistrertFødselMindreEnn14DagerEtter() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusWeeks(1);
@@ -292,7 +293,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Medmor søker fødsel")
     @Description("Medmor søker fødsel - søkand blir avslått fordi søker er medmor")
-    public void medmorSøkerFødsel() throws Exception {
+    public void medmorSøkerFødsel() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("90");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),

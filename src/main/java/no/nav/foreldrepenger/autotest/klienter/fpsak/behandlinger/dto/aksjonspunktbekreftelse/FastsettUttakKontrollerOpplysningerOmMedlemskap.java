@@ -17,8 +17,7 @@ public class FastsettUttakKontrollerOpplysningerOmMedlemskap extends Aksjonspunk
     }
 
     @Override
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        super.setFagsakOgBehandling(fagsak, behandling);
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         for (UttakResultatPeriode uttakPeriode : behandling.hentUttaksperioder()) {
             uttakPeriode.setBegrunnelse("Begrunnelse");
             LeggTilUttakPeriode(uttakPeriode);

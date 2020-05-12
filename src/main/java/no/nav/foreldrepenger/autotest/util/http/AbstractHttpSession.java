@@ -43,7 +43,7 @@ public abstract class AbstractHttpSession implements HttpSession {
     protected CloseableHttpClient client;
     protected HttpClientContext context;
     protected CookieStore cookies;
-    
+
     private final Logger log = LoggerFactory.getLogger("autotest.log");
 
     public AbstractHttpSession() {
@@ -55,51 +55,58 @@ public abstract class AbstractHttpSession implements HttpSession {
     }
 
     @Override
-    public HttpResponse execute(HttpUriRequest request, Map<String, String> headers) throws IOException {
+    public HttpResponse execute(HttpUriRequest request, Map<String, String> headers) {
         applyHeaders(request, headers);
-        return client.execute(request, context);
+        try {
+            return client.execute(request, context);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-
     @Override
-    public HttpResponse get(String url) throws IOException {
+    public HttpResponse get(String url) {
         return get(url, new HashMap<>());
     }
 
     @Override
-    public HttpResponse get(String url, Map<String, String> headers) throws IOException {
+    public HttpResponse get(String url, Map<String, String> headers) {
         HttpGet request = new HttpGet(url);
 
         HttpResponse response =  execute(request, headers);
-        
+
         log.info("GET[{}]: [{}]", url, response.getStatusLine().getStatusCode());
         return response;
     }
 
     @Override
-    public HttpResponse post(String url, HttpEntity entity, Map<String, String> headers) throws IOException {
+    public HttpResponse post(String url, HttpEntity entity, Map<String, String> headers) {
         HttpPost request = new HttpPost(url);
         request.setEntity(entity);
 
         HttpResponse response = execute(request, headers);
-        log.info("POST[{}]: [{}] med content\n\t[{}]\n\tHeaders: {}",
-                url,
-                response.getStatusLine().getStatusCode(),
-                new BufferedReader(new InputStreamReader(entity.getContent())).lines().parallel().collect(Collectors.joining("\n")),
-                new ObjectMapper().writeValueAsString(headers)
-        );
+        try {
+            log.info("POST[{}]: [{}] med content\n\t[{}]\n\tHeaders: {}",
+                    url,
+                    response.getStatusLine().getStatusCode(),
+                    new BufferedReader(new InputStreamReader(entity.getContent())).lines().parallel().collect(Collectors.joining("\n")),
+                    new ObjectMapper().writeValueAsString(headers)
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return response;
     }
 
     @Override
-    public HttpResponse put(String url, HttpEntity entity, Map<String, String> headers) throws IOException {
+    public HttpResponse put(String url, HttpEntity entity, Map<String, String> headers) {
         HttpPut request = new HttpPut(url);
         request.setEntity(entity);
         return execute(request, headers);
     }
 
     @Override
-    public HttpResponse delete(String url, Map<String, String> headers) throws IOException {
+    public HttpResponse delete(String url, Map<String, String> headers) {
         HttpDelete request = new HttpDelete(url);
         return execute(request, headers);
     }

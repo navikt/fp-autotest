@@ -74,7 +74,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Revurdering opprettet manuelt av saksbehandler.")
     @Description("Førstegangsbehandling til positivt vedtak. Saksbehandler oppretter revurdering manuelt. " +
             "Overstyrer medlemskap. Vedtaket opphører.")
-    public void opprettRevurderingManuelt() throws Exception {
+    public void opprettRevurderingManuelt() {
 
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
@@ -98,7 +98,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        saksbehandler.ikkeVentPåStatus = true;
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         saksbehandler.velgFørstegangsbehandling();
@@ -110,7 +109,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiser(saksbehandler.harRevurderingBehandling(), "Saken har ikke fått revurdering.");
         overstyrer.velgRevurderingBehandling();
         OverstyrMedlemskapsvilkaaret overstyrMedlemskapsvilkaaret = new OverstyrMedlemskapsvilkaaret();
-        overstyrMedlemskapsvilkaaret.setFagsakOgBehandling(overstyrer.valgtFagsak, overstyrer.valgtBehandling);
         overstyrMedlemskapsvilkaaret.avvis(hentKodeverk().Avslagsårsak.get("FP_VK_2").getKode("1020" /*Søker er ikke medlem*/));
         overstyrMedlemskapsvilkaaret.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyrMedlemskapsvilkaaret);
@@ -134,7 +132,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Endringssøknad med ekstra uttaksperiode.")
     @Description("Førstegangsbehandling til positivt vedtak. Søker sender inn endringsøknad. Endring i uttak. Vedtak fortsatt løpende.")
-    public void endringssøknad() throws Exception {
+    public void endringssøknad() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         // Førstegangssøknad
@@ -158,7 +156,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        saksbehandler.ikkeVentPåStatus = true;
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgFørstegangsbehandling();
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
@@ -196,7 +193,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Revurdering og ny IM når behandling er hos beslutter.")
     @Description("Førstegangsbehandling til positivt vedtak. Revurdering, og ny IM kommer når behandling er hos beslutter. Vedtak fortsatt løpende.")
-    public void nyInntektsmeldingUnderÅpenRevurdering() throws Exception {
+    public void nyInntektsmeldingUnderÅpenRevurdering() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -299,7 +296,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Endringssøknad med utsettelse")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med utsettelse fra bruker. Vedtak fortsatt løpende.")
-    public void endringssøknadMedUtsettelse() throws Exception {
+    public void endringssøknadMedUtsettelse() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -367,7 +364,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Endringssøknad med gradering")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med gradering fra bruker. Vedtak fortsatt løpende.")
-    public void endringssøknadMedGradering() throws Exception {
+    public void endringssøknadMedGradering() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -433,7 +430,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Mor endringssøknad med aksjonspunkt i uttak")
     @Description("Mor endringssøknad med aksjonspunkt i uttak. Søker utsettelse tilbake i tid for å få aksjonspunkt." +
             "Saksbehandler avslår utsettelsen. Mor har også arbeid med arbeidsforholdId i inntektsmelding")
-    public void endringssøknad_med_aksjonspunkt_i_uttak() throws Exception {
+    public void endringssøknad_med_aksjonspunkt_i_uttak() {
         var testscenario = opprettTestscenario("140");
         var aktørIdSøker = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var fnrSøker = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -491,7 +488,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Ikke tape innvilget perioder pga søknadsfrist")
     @Description("Ikke tape innvilget perioder pga søknadsfrist. Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
-    public void ikke_tape_innvilget_perioder_pga_søknadsfrist_i_revurdering() throws Exception {
+    public void ikke_tape_innvilget_perioder_pga_søknadsfrist_i_revurdering() {
         var testscenario = opprettTestscenario("76");
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

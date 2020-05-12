@@ -37,8 +37,7 @@ public class AvklarFaktaAdopsjonsdokumentasjonBekreftelse extends AksjonspunktBe
     }
 
     @Override
-    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
-        super.setFagsakOgBehandling(fagsak, behandling);
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         if (behandling.getSoknad().getOmsorgsovertakelseDato() != null) {
             omsorgsovertakelseDato = behandling.getSoknad().getOmsorgsovertakelseDato();
         }

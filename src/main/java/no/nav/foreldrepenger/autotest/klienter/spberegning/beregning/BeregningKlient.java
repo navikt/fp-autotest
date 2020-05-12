@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.spberegning.beregning;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,32 +25,32 @@ public class BeregningKlient extends SpBeregningKlient{
     public static final String BEREGNING_OPPDATER_BEREGNING_URL = BEREGNING_URL + "/oppdater-beregning";
     public static final String BEREGNING_PING_URL = BEREGNING_URL + "/ping";
     public static final String BEREGNING_LAGRE_NOTAT_URL = BEREGNING_URL + "/lagrenotat";
-    
+
     public BeregningKlient(HttpSession session) {
         super(session);
     }
-    
-    public BeregningDto hentBeregning(int beregningId) throws IOException {
+
+    public BeregningDto hentBeregning(int beregningId) {
         String url = hentRestRotUrl() + BEREGNING_HENT_BEREGNING_URL + "?beregningId="+beregningId;
         return getOgHentJson(url, BeregningDto.class, StatusRange.STATUS_SUCCESS);
     }
-    
-    public PersonDto hentPersonInfo(int beregningId) throws IOException {
+
+    public PersonDto hentPersonInfo(int beregningId) {
         String url = hentRestRotUrl() + BEREGNING_HENT_PERSON_INFO_URL + "?beregningId=" + beregningId;
         return getOgHentJson(url, PersonDto.class, StatusRange.STATUS_SUCCESS);
     }
-    
-    public InntektsmeldingerDto hentInntektsmeldinger(int beregningId) throws IOException {
+
+    public InntektsmeldingerDto hentInntektsmeldinger(int beregningId) {
         String url = hentRestRotUrl() + BEREGNING_HENT_INNTEKTSMELDING_URL + "?beregningId=" + beregningId;
         return getOgHentJson(url, InntektsmeldingerDto.class, StatusRange.STATUS_SUCCESS);
     }
-    
-    public InntektsmeldingerDto hentAlleInntektsmeldinger(int beregningId) throws IOException {
+
+    public InntektsmeldingerDto hentAlleInntektsmeldinger(int beregningId) {
         String url = hentRestRotUrl() + BEREGNING_HENT_ALLE_INNTEKTSMELDINGER_URL + "?beregningId=" + beregningId;
         return getOgHentJson(url, InntektsmeldingerDto.class, StatusRange.STATUS_SUCCESS);
     }
-    
-    public void foreslaBeregningGet(String tema, String aktorId, String gosysSakId, String oppgaveId) throws IOException {
+
+    public void foreslaBeregningGet(String tema, String aktorId, String gosysSakId, String oppgaveId) {
         Map<String, String> data = new HashMap<>();
         data.put("tema", tema);
         data.put("aktorId", aktorId);
@@ -60,25 +59,25 @@ public class BeregningKlient extends SpBeregningKlient{
         String url = UrlCompose(hentRestRotUrl() + BEREGNING_FORESLA_BEREGNING_URL, data);
         ValidateResponse(get(url), StatusRange.STATUS_SUCCESS);
     }
-    
-    public ForslagDto foreslaBeregningPost(ForeslaaDto foreslaa) throws IOException {
+
+    public ForslagDto foreslaBeregningPost(ForeslaaDto foreslaa) {
         String url = hentRestRotUrl() + BEREGNING_FORESLA_BEREGNING_URL;
         return postOgHentJson(url, foreslaa, ForslagDto.class, StatusRange.STATUS_SUCCESS);
     }
-    
-    public void oppdaterBeregning(OppdaterBeregningDto oppdaterBeregning) throws IOException {
+
+    public void oppdaterBeregning(OppdaterBeregningDto oppdaterBeregning) {
         String url = hentRestRotUrl() + BEREGNING_OPPDATER_BEREGNING_URL;
         postOgVerifiser(url, oppdaterBeregning, StatusRange.STATUS_SUCCESS);
     }
-    
-    public void ping() throws IOException {
+
+    public void ping() {
         String url = hentRestRotUrl() + BEREGNING_PING_URL;
         ValidateResponse(get(url), StatusRange.STATUS_SUCCESS);
     }
-    
-    public void lagrenotat(LagreNotatDto notat) throws IOException {
+
+    public void lagrenotat(LagreNotatDto notat) {
         String url = hentRestRotUrl() + BEREGNING_LAGRE_NOTAT_URL;
-        
+
     }
 
 }

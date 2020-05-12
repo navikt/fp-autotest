@@ -23,7 +23,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErket
 @Tag("engangsstonad")
 public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
     @Test
-    public void manueltOpprettetRevurderingIkkeSendVarsel() throws Exception {
+    public void manueltOpprettetRevurderingIkkeSendVarsel() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),

@@ -1,5 +1,15 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -11,15 +21,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLovligOppholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("verdikjede")
@@ -28,7 +29,7 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
     @Test
     @DisplayName("1: Mor er tredjelandsborger og søker engangsstønad")
     @Description("Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
-    public void MorTredjelandsborgerSøkerEngangsStønadTest() throws Exception {
+    public void MorTredjelandsborgerSøkerEngangsStønadTest() {
         var testscenario = opprettTestscenario("505");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var termindato = LocalDate.now().plusWeeks(3);

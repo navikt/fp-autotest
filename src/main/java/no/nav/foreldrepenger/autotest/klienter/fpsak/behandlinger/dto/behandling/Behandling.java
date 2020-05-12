@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -23,7 +23,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-import no.nav.foreldrepenger.autotest.util.deferred.Deffered;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Behandling {
@@ -48,22 +47,21 @@ public class Behandling {
     public Behandlingsresultat behandlingsresultat;
     public List<BehandlingÅrsak> behandlingArsaker;
 
-    private Deffered<List<Vilkar>> vilkar;
-    private Deffered<List<Aksjonspunkt>> aksjonspunkter;
-
-    private Deffered<Personopplysning> personopplysning;
-    private Deffered<Beregningsgrunnlag> beregningsgrunnlag;
-    private Deffered<Beregningsresultat> beregningResultatEngangsstonad;
-    private Deffered<BeregningsresultatMedUttaksplan> beregningResultatForeldrepenger;
-    private Deffered<UttakResultatPerioder> uttakResultatPerioder;
-    private Deffered<Soknad> soknad;
-    private Deffered<Opptjening> opptjening;
-    private Deffered<InntektArbeidYtelse> inntektArbeidYtelse;
-    private Deffered<KontrollerFaktaData> kontrollerFaktaData;
-    private Deffered<Medlem> medlem;
-    private Deffered<KlageInfo> klagevurdering;
-    private Deffered<Saldoer> saldoer;
-    private Deffered<Tilrettelegging> tilrettelegging;
+    private Supplier<List<Vilkar>> vilkar;
+    private Supplier<List<Aksjonspunkt>> aksjonspunkter;
+    private Supplier<Personopplysning> personopplysning;
+    private Supplier<Beregningsgrunnlag> beregningsgrunnlag;
+    private Supplier<Beregningsresultat> beregningResultatEngangsstonad;
+    private Supplier<BeregningsresultatMedUttaksplan> beregningResultatForeldrepenger;
+    private Supplier<UttakResultatPerioder> uttakResultatPerioder;
+    private Supplier<Soknad> soknad;
+    private Supplier<Opptjening> opptjening;
+    private Supplier<InntektArbeidYtelse> inntektArbeidYtelse;
+    private Supplier<KontrollerFaktaData> kontrollerFaktaData;
+    private Supplier<Medlem> medlem;
+    private Supplier<KlageInfo> klagevurdering;
+    private Supplier<Saldoer> saldoer;
+    private Supplier<Tilrettelegging> tilrettelegging;
 
     public List<UttakResultatPeriode> hentUttaksperioder() {
         return getUttakResultatPerioder().getPerioderForSøker().stream().sorted(Comparator.comparing(UttakResultatPeriode::getFom)).collect(Collectors.toList());
@@ -95,24 +93,13 @@ public class Behandling {
 
     @Override
     public String toString(){
+        //Ikke bruk fields som er deferred i tostring, skaper mange kall
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("{Behandlingsid: %s}\n",this.id));
         sb.append(String.format("{Behandlingsstatus: %s}\n", this.status.kode));
         sb.append(String.format("{Behandlingstype: %s}",  this.type.kode));
         if(this.behandlingsresultat != null && this.behandlingsresultat.avslagsarsak != null) {
             sb.append(String.format("{Årsak avslag: %s}\n", this.behandlingsresultat.avslagsarsak.kode));
-        }
-        sb.append("Aksjonspunkter:\n");
-        if(getAksjonspunkter() != null) {
-            for (Aksjonspunkt aksjonspunkt : getAksjonspunkter()) {
-                sb.append(String.format("\t{%s}\n", aksjonspunkt.definisjon.kode));
-            }
-        }
-        sb.append("Vilkår:\n");
-        if(getVilkar() != null) {
-            for (Vilkar vilkar : getVilkar()) {
-                sb.append(String.format("\t{%s}\n", vilkar.vilkarType.kode));
-            }
         }
         return sb.toString();
     }
@@ -124,7 +111,7 @@ public class Behandling {
         return get(vilkar);
     }
 
-    public void setVilkar(Deffered<List<Vilkar>> dVilkår) {
+    public void setVilkar(Supplier<List<Vilkar>> dVilkår) {
         this.vilkar = dVilkår;
     }
 
@@ -132,7 +119,7 @@ public class Behandling {
         return get(personopplysning);
     }
 
-    public void setPersonopplysning(Deffered<Personopplysning> dPersonopplysninger) {
+    public void setPersonopplysning(Supplier<Personopplysning> dPersonopplysninger) {
         this.personopplysning = dPersonopplysninger;
     }
 
@@ -140,7 +127,7 @@ public class Behandling {
         return get(beregningsgrunnlag);
     }
 
-    public void setBeregningsgrunnlag(Deffered<Beregningsgrunnlag> dBeregningsgrunnlag) {
+    public void setBeregningsgrunnlag(Supplier<Beregningsgrunnlag> dBeregningsgrunnlag) {
         this.beregningsgrunnlag = dBeregningsgrunnlag;
     }
 
@@ -148,7 +135,7 @@ public class Behandling {
         return get(beregningResultatEngangsstonad);
     }
 
-    public void setBeregningResultatEngangsstonad(Deffered<Beregningsresultat> dBeregningsresultat) {
+    public void setBeregningResultatEngangsstonad(Supplier<Beregningsresultat> dBeregningsresultat) {
         this.beregningResultatEngangsstonad = dBeregningsresultat;
     }
 
@@ -156,7 +143,7 @@ public class Behandling {
         return get(beregningResultatForeldrepenger);
     }
 
-    public void setBeregningResultatForeldrepenger(Deffered<BeregningsresultatMedUttaksplan> dBeregningsresultatMedUttaksplan) {
+    public void setBeregningResultatForeldrepenger(Supplier<BeregningsresultatMedUttaksplan> dBeregningsresultatMedUttaksplan) {
         this.beregningResultatForeldrepenger = dBeregningsresultatMedUttaksplan;
     }
 
@@ -164,7 +151,7 @@ public class Behandling {
         return get(uttakResultatPerioder);
     }
 
-    public void setUttakResultatPerioder(Deffered<UttakResultatPerioder> dUttakResultatPerioder) {
+    public void setUttakResultatPerioder(Supplier<UttakResultatPerioder> dUttakResultatPerioder) {
         this.uttakResultatPerioder = dUttakResultatPerioder;
     }
 
@@ -172,7 +159,7 @@ public class Behandling {
         return get(soknad);
     }
 
-    public void setSoknad(Deffered<Soknad> dSoknad) {
+    public void setSoknad(Supplier<Soknad> dSoknad) {
         this.soknad = dSoknad;
     }
 
@@ -180,7 +167,7 @@ public class Behandling {
         return get(opptjening);
     }
 
-    public void setOpptjening(Deffered<Opptjening> dOpptjening) {
+    public void setOpptjening(Supplier<Opptjening> dOpptjening) {
         this.opptjening = dOpptjening;
     }
 
@@ -188,7 +175,7 @@ public class Behandling {
         return get(inntektArbeidYtelse);
     }
 
-    public void setInntektArbeidYtelse(Deffered<InntektArbeidYtelse> dInntektArbeidYtelse) {
+    public void setInntektArbeidYtelse(Supplier<InntektArbeidYtelse> dInntektArbeidYtelse) {
         this.inntektArbeidYtelse = dInntektArbeidYtelse;
     }
 
@@ -200,11 +187,8 @@ public class Behandling {
                 .filter(perioder -> perioder.bekreftet.equals(false))
                 .collect(Collectors.toList());
     }
-    public Stream<KontrollerFaktaPeriode> getKontrollerFaktaPerioder(){
-        return Objects.requireNonNull(get(kontrollerFaktaData)).getPerioder().stream();
-    }
 
-    public void setKontrollerFaktaData(Deffered<KontrollerFaktaData> dKontrollerFaktaData) {
+    public void setKontrollerFaktaData(Supplier<KontrollerFaktaData> dKontrollerFaktaData) {
         this.kontrollerFaktaData = dKontrollerFaktaData;
     }
 
@@ -212,7 +196,7 @@ public class Behandling {
         return get(medlem);
     }
 
-    public void setMedlem(Deffered<Medlem> dMedlem) {
+    public void setMedlem(Supplier<Medlem> dMedlem) {
         this.medlem = dMedlem;
     }
 
@@ -220,7 +204,7 @@ public class Behandling {
         return get(klagevurdering);
     }
 
-    public void setKlagevurdering(Deffered<KlageInfo> klagevurdering) {
+    public void setKlagevurdering(Supplier<KlageInfo> klagevurdering) {
         this.klagevurdering = klagevurdering;
     }
 
@@ -228,7 +212,7 @@ public class Behandling {
         return get(saldoer);
     }
 
-    public void setSaldoer(Deffered<Saldoer> dStonadskontoer) {
+    public void setSaldoer(Supplier<Saldoer> dStonadskontoer) {
         this.saldoer = dStonadskontoer;
     }
 
@@ -236,22 +220,19 @@ public class Behandling {
         return get(aksjonspunkter);
     }
 
-    public void setAksjonspunkter(Deffered<List<Aksjonspunkt>> dAksjonspunkter) {
+    public void setAksjonspunkter(Supplier<List<Aksjonspunkt>> dAksjonspunkter) {
         this.aksjonspunkter = dAksjonspunkter;
     }
 
-    public Tilrettelegging getTilrettelegging() { return get(tilrettelegging);}
+    public Tilrettelegging getTilrettelegging() {
+        return get(tilrettelegging);
+    }
 
-    public void setTilrettelegging(Deffered<Tilrettelegging> dTilrettelegging) {
+    public void setTilrettelegging(Supplier<Tilrettelegging> dTilrettelegging) {
         this.tilrettelegging = dTilrettelegging;
     }
 
-
-    private static <V> V get(Deffered<V> deferred) {
-        try {
-            return deferred==null?null: deferred.get();
-        } catch (ExecutionException | InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
+    public static <V> V get(Supplier<V> supplier) {
+        return supplier == null ? null : supplier.get();
     }
 }

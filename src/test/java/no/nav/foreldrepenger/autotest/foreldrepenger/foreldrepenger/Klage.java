@@ -38,7 +38,7 @@ public class Klage extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Klage med Medhold Ugunst NFP")
     @Description("Sender inn klage på førstegangsbehandling. Bekrefter medhold i Ugunst hos NFP. Beslutter og avslutter.")
-    public void klageMedholUgunstNFP() throws Exception {
+    public void klageMedholUgunstNFP() {
         // opprette førstegangsbehandling til vedtak
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         long saksnummer = opprettForstegangsbehandling(testscenario);
@@ -101,7 +101,7 @@ public class Klage extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Klage med hjemsende av KA")
     @Description("Sender inn klage på førstegangsbehandling. NFP sender videre til KA. KA bekrefter hjemsende. Beslutter og avslutter.")
-    public void hjemsendeKA() throws Exception {
+    public void hjemsendeKA() {
         // opprette førstegangsbehandling til vedtak
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         long saksnummer = opprettForstegangsbehandling(testscenario);
@@ -148,7 +148,7 @@ public class Klage extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Klage med stadfestet av KA")
     @Description("Sender inn klage på førstegangsbehandling. NFP sender videre til KA. KA bekrefter stadfestet. Beslutter og avslutter.")
-    public void stadfesteKA() throws Exception {
+    public void stadfesteKA() {
         // opprette førstegangsbehandling til vedtak
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         long saksnummer = opprettForstegangsbehandling(testscenario);
@@ -201,7 +201,7 @@ public class Klage extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Klage med Medhold Delvis Gunst KA")
     @Description("Sender inn klage på førstegangsbehandling. NFP sender videre til KA. KA bekrefter medhold med delvis gunst. Beslutter og avslutter.")
-    public void medholdDelvisGunstKA() throws Exception {
+    public void medholdDelvisGunstKA() {
         // opprette førstegangsbehandling til vedtak
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         long saksnummer = opprettForstegangsbehandling(testscenario);
@@ -254,7 +254,7 @@ public class Klage extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Klage avvist i formkrav av NFP")
     @Description("Sender inn klage på førstegangsbehandling. NFP avslår formkrav (ikke konkret). Beslutter og avslutter.")
-    public void avvisFormkravNFP() throws Exception {
+    public void avvisFormkravNFP() {
         // opprette førstegangsbehandling til vedtak
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         long saksnummer = opprettForstegangsbehandling(testscenario);
@@ -286,7 +286,7 @@ public class Klage extends ForeldrepengerTestBase {
     }
 
     @Step("Klage: oppretter førstegangsbehandling")
-    private long opprettForstegangsbehandling(TestscenarioDto testscenario) throws Exception {
+    private long opprettForstegangsbehandling(TestscenarioDto testscenario) {
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);

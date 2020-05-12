@@ -55,7 +55,6 @@ public class Tilbakekreving extends FptilbakeTestBase {
         lagOgSendInntekstsmelding(testscenario, fpStartdato, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        saksbehandler.ikkeVentPåStatus = true;
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -109,7 +108,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
         tbkbeslutter.ventTilAvsluttetBehandling();
     }
 
-    private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) throws Exception {
+    private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) {
         InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),

@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
+import java.util.List;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.medlem.BekreftedePerioderDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @BekreftelseKode(kode = "5021")
@@ -13,11 +13,11 @@ public class AvklarBrukerHarGyldigPeriodeBekreftelse extends BekreftedePerioderM
         super();
     }
 
-    public void setVurdering(Kode medlem) {
-        for (BekreftedePerioderDto bekreftedePerioderDto : behandling.getMedlem().getMedlemskapPerioder()) {
+    public AvklarBrukerHarGyldigPeriodeBekreftelse setVurdering(Kode medlem, List<BekreftedePerioderDto> medlemskapPerioder) {
+        for (BekreftedePerioderDto bekreftedePerioderDto : medlemskapPerioder) {
             bekreftedePerioderDto.setMedlemskapManuellVurderingType(medlem);
             bekreftedePerioder.add(bekreftedePerioderDto);
         }
-
+        return this;
     }
 }

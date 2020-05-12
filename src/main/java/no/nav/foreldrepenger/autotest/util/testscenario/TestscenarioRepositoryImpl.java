@@ -1,17 +1,16 @@
 package no.nav.foreldrepenger.autotest.util.testscenario;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TestscenarioRepositoryImpl {
 
@@ -32,7 +31,7 @@ public class TestscenarioRepositoryImpl {
         return scenarioObjects.values();
     }
 
-    public Object hentScenario(String scenarioId) throws FileNotFoundException {
+    public Object hentScenario(String scenarioId) {
         if (scenarioObjects.containsKey(scenarioId)) {
             return scenarioObjects.get(scenarioId);
         }
@@ -40,10 +39,10 @@ public class TestscenarioRepositoryImpl {
     }
 
 
-    private Object LesOgReturnerScenarioFraJsonfil(String scenarioId) throws FileNotFoundException {
+    private Object LesOgReturnerScenarioFraJsonfil(String scenarioId) {
         File scenarioFiles = hentScenarioFileneSomStarterMed(scenarioId);
         if (scenarioFiles == null) {
-            throw new FileNotFoundException("Fant ikke scenario med scenario nummer [" + scenarioId + "]");
+            throw new RuntimeException("Fant ikke scenario med scenario nummer [" + scenarioId + "]");
         }
 
         final ObjectNode root = mapper.createObjectNode();

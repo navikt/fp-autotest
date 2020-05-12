@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -14,16 +25,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -33,7 +34,7 @@ public class Termin extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker termin - godkjent")
     @Description("Mor søker termin - godkjent happy case")
-    public void morSøkerTerminGodkjent() throws Exception {
+    public void morSøkerTerminGodkjent() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -69,7 +70,7 @@ public class Termin extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker termin men mangler dokumentasjon")
     @Description("Mor søker termin men mangler dokumentasjon og sender melding om manglende brev")
-    public void morSøkerTerminManglerDokumentasjon() throws Exception {
+    public void morSøkerTerminManglerDokumentasjon() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -93,7 +94,7 @@ public class Termin extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker termin overstyrt vilkår")
     @Description("Mor søker termin overstyrt vilkår fødsel fra oppfylt til avvist")
-    public void morSøkerTerminOvertyrt() throws Exception {
+    public void morSøkerTerminOvertyrt() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -116,7 +117,6 @@ public class Termin extends FpsakTestBase {
         overstyrer.hentFagsak(saksnummer);
 
         OverstyrFodselsvilkaaret overstyr = new OverstyrFodselsvilkaaret();
-        overstyr.setFagsakOgBehandling(overstyrer.valgtFagsak, overstyrer.valgtBehandling);
         overstyr.avvis(overstyrer.kodeverk.Avslagsårsak.get("FP_VK_1").getKode("1003" /* Søker er far */));
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
@@ -134,14 +134,14 @@ public class Termin extends FpsakTestBase {
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
     }
 
-    public void behandleTerminMorUtenTerminbekreftelse() throws Exception {
+    public void behandleTerminMorUtenTerminbekreftelse() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
     }
 
     @Test
     @DisplayName("Far søker termin")
     @Description("Far søker termin avslått pga søker er far")
-    public void farSøkerTermin() throws Exception {
+    public void farSøkerTermin() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -165,7 +165,7 @@ public class Termin extends FpsakTestBase {
     @Test
     @DisplayName("Setter behandling på vent og gjennoptar og henlegger")
     @Description("Setter behandling på vent og gjennoptar og henlegger")
-    public void settBehandlingPåVentOgGjenopptaOgHenlegg() throws Exception {
+    public void settBehandlingPåVentOgGjenopptaOgHenlegg() {
         //Opprett scenario og søknad
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
@@ -194,7 +194,7 @@ public class Termin extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker termin 25 dager etter fødsel")
     @Description("Mor søker termin 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
-    public void morSøkerTermin25DagerTilbakeITid() throws Exception {
+    public void morSøkerTermin25DagerTilbakeITid() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),

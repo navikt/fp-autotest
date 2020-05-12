@@ -1,9 +1,8 @@
 package no.nav.foreldrepenger.autotest.fprisk;
 
-import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.base.FpriskTestBase;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import java.time.LocalDate;
+import java.util.UUID;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -12,9 +11,10 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import java.time.LocalDate;
-import java.util.UUID;
+import io.qameta.allure.Description;
+import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
+import no.nav.foreldrepenger.autotest.base.FpriskTestBase;
+import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fprisk")
@@ -28,7 +28,7 @@ public class FpriskTest extends FpriskTestBase {
     @Test
     @DisplayName("Sender Kafkamelding med risikovurderingsforespørsel, venter på at vurderingen blir gjort.")
     @Description("Sender inn forespørel om risikovurderinger til FPRISK for scenario 50 over Kafka (gjennom VTP). Venter på at saken er ferdig behandlet via polling over REST.")
-    public void sendRisikovurderingsforespørselOgVentPåResultat() throws Exception {
+    public void sendRisikovurderingsforespørselOgVentPåResultat() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String soekerAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();

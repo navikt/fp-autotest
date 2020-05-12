@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
@@ -18,29 +19,23 @@ public class AllureHelper {
     public static void debugListUtAksjonspunkter(String aksjonspunkter){ }
 
     @Step("Informasjon om behandling:")
-    public static void debugLoggBehandling(Behandling behandling) throws JsonProcessingException {
-        String json = hentObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(behandling);
+    public static void debugLoggBehandling(Behandling behandling) {
+        String json = toJson(behandling);
         skriverUtJson(json);
     }
 
     @Step("Informasjon om behandlinger: ")
-    public static void debugLoggBehandlingsliste(List<Behandling> behandlinger) throws JsonProcessingException {
+    public static void debugLoggBehandlingsliste(List<Behandling> behandlinger) {
         for(Behandling behandling : behandlinger){
             debugLoggBehandling(behandling);
         }
     }
 
     @Step("Informasjon om behandlinger: {tekst} ")
-    public static void debugLoggBehandlingsliste(String tekst, List<Behandling> behandlinger) throws JsonProcessingException {
+    public static void debugLoggBehandlingsliste(String tekst, List<Behandling> behandlinger) {
         for(Behandling behandling : behandlinger){
             debugLoggBehandling(behandling);
         }
-    }
-
-    @Step("Informasjon om behandling ({tekst}):")
-    public static void debugLoggBehandling(String tekst, Behandling behandling) throws JsonProcessingException {
-        String json = hentObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(behandling);
-        skriverUtJson(json);
     }
 
     @Step("Sender inn dokument {type} med innhold:")
@@ -69,13 +64,13 @@ public class AllureHelper {
     }
 
     @Step("{aksjonspunkt}")
-    public static void debugAksjonspunktbekreftelse(AksjonspunktBekreftelse aksjonspunkt) throws JsonProcessingException {
-        String json = hentObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(aksjonspunkt);
+    public static void debugAksjonspunktbekreftelse(AksjonspunktBekreftelse aksjonspunkt) {
+        String json = toJson(aksjonspunkt);
         skriverUtJson(json);
     }
 
     @Step("Informasjon om aksjonspunktbekreftelser:")
-    public static void debugAksjonspunktbekreftelser(List<AksjonspunktBekreftelse> aksjonspunkter) throws JsonProcessingException {
+    public static void debugAksjonspunktbekreftelser(List<AksjonspunktBekreftelse> aksjonspunkter) {
         for(AksjonspunktBekreftelse aksjonspunkt : aksjonspunkter){
             debugAksjonspunktbekreftelse(aksjonspunkt);
         }
@@ -93,5 +88,13 @@ public class AllureHelper {
 
     private static ObjectMapper hentObjectMapper() {
         return JsonKlient.getObjectMapper();
+    }
+
+    private static String toJson(Object object) {
+        try {
+            return hentObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

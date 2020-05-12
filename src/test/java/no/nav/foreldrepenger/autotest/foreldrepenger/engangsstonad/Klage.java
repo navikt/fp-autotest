@@ -1,5 +1,11 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
@@ -16,11 +22,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -29,7 +30,7 @@ public class Klage extends FpsakTestBase {
     @Test
     @DisplayName("Behandle klage via NFP - medhold")
     @Description("Behandle klage via NFP - vurdert til medhold")
-    public void klageMedholdNFP() throws Exception {
+    public void klageMedholdNFP() {
         // Opprette førstegangssøknad engangsstønad
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
@@ -78,7 +79,7 @@ public class Klage extends FpsakTestBase {
     @Test
     @DisplayName("Behandle klage via NFP - påklaget vedtak opphevet")
     @Description("Behandle klage via NFP - stadfestet af NFP og opphevet av KA")
-    public void klageOppheveAvKA() throws Exception {
+    public void klageOppheveAvKA() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -148,7 +149,7 @@ public class Klage extends FpsakTestBase {
     @Test
     @DisplayName("Behandle klage via KA - påklaget vedtak omgjort/medhold")
     @Description("Behandle klage via KA - stadfestet af NFP og medhold av KA")
-    public void klageOmgjortAvKA() throws Exception {
+    public void klageOmgjortAvKA() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -221,7 +222,7 @@ public class Klage extends FpsakTestBase {
     @Test
     @DisplayName("Behandle klage via KA - avslag")
     @Description("Behandle klage via KA - stadfestet af NFP og medhold av KA")
-    public void klageAvslaattAvKA() throws Exception {
+    public void klageAvslaattAvKA() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -273,7 +274,7 @@ public class Klage extends FpsakTestBase {
     @Test
     @DisplayName("Behandle klage via NFP - avvist av beslutter")
     @Description("Behandle klage via NFP - medhold av NFP avvist av beslutter send tilbake til NFP vurdert til delvist gunst")
-    public void avvistAvBelutterNFP() throws Exception {
+    public void avvistAvBelutterNFP() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -355,7 +356,7 @@ public class Klage extends FpsakTestBase {
     }
 
     @Step("Oppretter førstegangsvedtak")
-    private void opprettForstegangssoknadVedtak(long saksnummer) throws Exception {
+    private void opprettForstegangssoknadVedtak(long saksnummer) {
         // Opprette førstegangssøknad engangsstønad
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

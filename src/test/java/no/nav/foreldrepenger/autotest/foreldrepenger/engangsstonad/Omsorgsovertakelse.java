@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -16,14 +25,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.SoekersRelasjonTilBarnet;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -33,7 +34,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker Omsorgsovertakelse - godkjent")
     @Description("Mor søker Omsorgsovertakelse - godkjent happy case")
-    public void MorSøkerOmsorgsovertakelseGodkjent() throws Exception {
+    public void MorSøkerOmsorgsovertakelseGodkjent() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
 
@@ -68,7 +69,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker Omsorgsovertakelse - avvist")
     @Description("Mor søker Omsorgsovertakelse - avvist fordi mor ikke er død")
-    public void morSøkerOmsorgsovertakelseAvvist() throws Exception {
+    public void morSøkerOmsorgsovertakelseAvvist() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
 
@@ -101,7 +102,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
 
     @Test
     @Disabled("TODO hvorfor")
-    public void behenadleOmsorgsovertakelseMorOverstyrt() throws Exception {
+    public void behenadleOmsorgsovertakelseMorOverstyrt() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
@@ -125,7 +126,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     @Test
     @DisplayName("Far søker Omsorgsovertakelse - godkjent")
     @Description("Far søker Omsorgsovertakelse - får godkjent aksjonspunkt og blir invilget")
-    public void farSøkerOmsorgsovertakelseGodkjent() throws Exception {
+    public void farSøkerOmsorgsovertakelseGodkjent() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         SoekersRelasjonTilBarnet relasjonTilBarnet = RelasjonTilBarnetErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
@@ -160,7 +161,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     @Test
     @DisplayName("Far søker Foreldreansvar 2. ledd - godkjent")
     @Description("Far søker Foreldreansvar 2. ledd - får godkjent aksjonspunkt og blir invilget")
-    public void farSøkerForeldreansvarGodkjent() throws Exception {
+    public void farSøkerForeldreansvarGodkjent() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
