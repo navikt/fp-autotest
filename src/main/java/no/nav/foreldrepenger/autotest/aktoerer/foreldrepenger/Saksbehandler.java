@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -366,13 +367,24 @@ public class Saksbehandler extends Aktoer {
                 .filter(andeler -> andeler.getArbeidsgiverOrgnr().equalsIgnoreCase(organisasjonsnummer))
                 .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
                 .collect(Collectors.toList());
-
-
     }
 
+    public Optional<BeregningsresultatPeriodeAndel> hentBeregningsresultatPeriodeAndelerForSN() {
+        return Arrays.stream(valgtBehandling.getBeregningResultatForeldrepenger().getPerioder())
+                .flatMap(beregningsresultatPeriode -> Arrays.stream(beregningsresultatPeriode.getAndeler()))
+                .filter(andeler -> andeler.getAktivitetStatus().kode.equalsIgnoreCase("SN"))
+                .findAny();
+    }
 
     /* VERIFISERINGER */
     // TODO: Flytte dem en annen plass? Egen verifiserings-saksbehander?
+    public boolean sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(BeregningsresultatPeriode beregningsresultatPeriode,
+                                                                    String aktivitetskode) {
+        return Arrays.stream(beregningsresultatPeriode.getAndeler())
+                .anyMatch(beregningsresultatPeriodeAndel ->
+                        beregningsresultatPeriodeAndel.getAktivitetStatus().kode.equalsIgnoreCase(aktivitetskode));
+    }
+
     public boolean sjekkOmDetErFrilansinntektDagenFørSkjæringstidspuktet() {
         var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {

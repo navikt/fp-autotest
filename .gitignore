@@ -32,7 +32,6 @@ _*.sh
 *.local
 *.localz
 es.properties
-*.zip
 *.versionsBackup
 bin
 mock*.log
@@ -40,7 +39,6 @@ mock.log.*
 .mvn/maven.config
 .flattened
 logs
-*.log
 APP_LOG_HOME_IS_UNDEFINED
 application-local.properties
 .allure
@@ -50,3 +48,5 @@ allure-results/*
 server/src/main/resources/webapps
 resources/ssl-terminator/localhost.*
 resources/pipeline/.env
+.DS_Store
+resources/.DS_Store

@@ -32,12 +32,14 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
         return bekreftetSvpArbeidsforholdList;
     }
 
-    public void setSkalBrukesTilFalsePåArbeidsfoholdResteTrue(String arbeidsforholdId) {
+
+    public void setSkalBrukesTilFalseForArbeidsforhold(String arbeidsforholdId) {
+        setSkalBrukesTilFalseForAngitteArbeidsforhold(List.of(arbeidsforholdId));
+    }
+    public void setSkalBrukesTilFalseForAngitteArbeidsforhold(List<String> arbeidsforholdId) {
         for ( var arbeidsforhold : getBekreftetSvpArbeidsforholdList() ) {
-            if ( arbeidsforhold.getEksternArbeidsforholdReferanse().equalsIgnoreCase(arbeidsforholdId) ) {
+            if (arbeidsforholdId.contains(arbeidsforhold.getEksternArbeidsforholdReferanse())) {
                 arbeidsforhold.setSkalBrukes(false);
-            } else {
-                arbeidsforhold.setSkalBrukes(true);
             }
         }
     }
