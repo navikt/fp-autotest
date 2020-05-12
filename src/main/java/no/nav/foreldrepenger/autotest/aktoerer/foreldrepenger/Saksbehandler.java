@@ -60,6 +60,23 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterD
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.deferred.Deffered;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
+import org.apache.http.HttpResponse;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 
 public class Saksbehandler extends Aktoer {
 
