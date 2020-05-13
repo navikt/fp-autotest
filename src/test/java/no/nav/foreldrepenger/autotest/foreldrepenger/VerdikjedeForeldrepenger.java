@@ -854,7 +854,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
 
-        saksbehandler.refreshBehandling();
         verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_BESTILT),
                 "Brev er bestillt i førstegangsbehandling");
         BeregningsresultatPeriode[] beregningsresultatPeriodeFørstegangsbehandling =
@@ -875,7 +874,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(saksnummerMor);
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp
@@ -902,7 +900,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         //* REVURDERING *//
         saksbehandler.opprettBehandlingRevurdering("ETTER_KLAGE");
-        saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
 
         verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode.equalsIgnoreCase("ETTER_KLAGE"),
@@ -922,7 +919,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, true);
 
-        saksbehandler.refreshBehandling();
         BeregningsresultatPeriode[] beregningsresultatPeriodeRevurdering = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
         List<Integer> forventetDagsats = regnUtForventetDagsatsForPeriode(List.of(30_000), List.of(100), List.of(false));
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == forventetDagsats.get(0),
@@ -1036,7 +1032,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 saksnummerFar);
 
         // Revurdering / Berørt sak til far
-        saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);

@@ -709,7 +709,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
-        saksbehandler.ventTilSakHarRevurdering();
+        saksbehandler.velgRevurderingBehandling();
     }
     @Test
     public void testcase_far_søker_med_endringssøknad() {
@@ -745,7 +745,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
-        saksbehandler.ventTilSakHarRevurdering();
+        saksbehandler.velgRevurderingBehandling();
     }
     @Test
     public void testcase_morOgfar_endringsøknad_overføringperioderFørstePeriodeTilFørstegangssøknad() {
@@ -1014,7 +1014,6 @@ public class Uttak extends ForeldrepengerTestBase {
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummerMor);
 
-        saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
 
         var avklarAktiviteterBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class)
@@ -1033,7 +1032,6 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
-        beslutter.refreshFagsak();
         beslutter.velgRevurderingBehandling();
         List<Aksjonspunkt> apSomSkalTilTotrinnskontrollRevurdering = beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling();
         beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)

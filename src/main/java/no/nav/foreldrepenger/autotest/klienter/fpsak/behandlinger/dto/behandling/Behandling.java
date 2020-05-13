@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,6 +22,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Behandling {
@@ -47,21 +47,21 @@ public class Behandling {
     public Behandlingsresultat behandlingsresultat;
     public List<BehandlingÅrsak> behandlingArsaker;
 
-    private Supplier<List<Vilkar>> vilkar;
-    private Supplier<List<Aksjonspunkt>> aksjonspunkter;
-    private Supplier<Personopplysning> personopplysning;
-    private Supplier<Beregningsgrunnlag> beregningsgrunnlag;
-    private Supplier<Beregningsresultat> beregningResultatEngangsstonad;
-    private Supplier<BeregningsresultatMedUttaksplan> beregningResultatForeldrepenger;
-    private Supplier<UttakResultatPerioder> uttakResultatPerioder;
-    private Supplier<Soknad> soknad;
-    private Supplier<Opptjening> opptjening;
-    private Supplier<InntektArbeidYtelse> inntektArbeidYtelse;
-    private Supplier<KontrollerFaktaData> kontrollerFaktaData;
-    private Supplier<Medlem> medlem;
-    private Supplier<KlageInfo> klagevurdering;
-    private Supplier<Saldoer> saldoer;
-    private Supplier<Tilrettelegging> tilrettelegging;
+    private Lazy<List<Vilkar>> vilkar;
+    private Lazy<List<Aksjonspunkt>> aksjonspunkter;
+    private Lazy<Personopplysning> personopplysning;
+    private Lazy<Beregningsgrunnlag> beregningsgrunnlag;
+    private Lazy<Beregningsresultat> beregningResultatEngangsstonad;
+    private Lazy<BeregningsresultatMedUttaksplan> beregningResultatForeldrepenger;
+    private Lazy<UttakResultatPerioder> uttakResultatPerioder;
+    private Lazy<Soknad> soknad;
+    private Lazy<Opptjening> opptjening;
+    private Lazy<InntektArbeidYtelse> inntektArbeidYtelse;
+    private Lazy<KontrollerFaktaData> kontrollerFaktaData;
+    private Lazy<Medlem> medlem;
+    private Lazy<KlageInfo> klagevurdering;
+    private Lazy<Saldoer> saldoer;
+    private Lazy<Tilrettelegging> tilrettelegging;
 
     public List<UttakResultatPeriode> hentUttaksperioder() {
         return getUttakResultatPerioder().getPerioderForSøker().stream().sorted(Comparator.comparing(UttakResultatPeriode::getFom)).collect(Collectors.toList());
@@ -111,7 +111,7 @@ public class Behandling {
         return get(vilkar);
     }
 
-    public void setVilkar(Supplier<List<Vilkar>> dVilkår) {
+    public void setVilkar(Lazy<List<Vilkar>> dVilkår) {
         this.vilkar = dVilkår;
     }
 
@@ -119,7 +119,7 @@ public class Behandling {
         return get(personopplysning);
     }
 
-    public void setPersonopplysning(Supplier<Personopplysning> dPersonopplysninger) {
+    public void setPersonopplysning(Lazy<Personopplysning> dPersonopplysninger) {
         this.personopplysning = dPersonopplysninger;
     }
 
@@ -127,7 +127,7 @@ public class Behandling {
         return get(beregningsgrunnlag);
     }
 
-    public void setBeregningsgrunnlag(Supplier<Beregningsgrunnlag> dBeregningsgrunnlag) {
+    public void setBeregningsgrunnlag(Lazy<Beregningsgrunnlag> dBeregningsgrunnlag) {
         this.beregningsgrunnlag = dBeregningsgrunnlag;
     }
 
@@ -135,7 +135,7 @@ public class Behandling {
         return get(beregningResultatEngangsstonad);
     }
 
-    public void setBeregningResultatEngangsstonad(Supplier<Beregningsresultat> dBeregningsresultat) {
+    public void setBeregningResultatEngangsstonad(Lazy<Beregningsresultat> dBeregningsresultat) {
         this.beregningResultatEngangsstonad = dBeregningsresultat;
     }
 
@@ -143,7 +143,7 @@ public class Behandling {
         return get(beregningResultatForeldrepenger);
     }
 
-    public void setBeregningResultatForeldrepenger(Supplier<BeregningsresultatMedUttaksplan> dBeregningsresultatMedUttaksplan) {
+    public void setBeregningResultatForeldrepenger(Lazy<BeregningsresultatMedUttaksplan> dBeregningsresultatMedUttaksplan) {
         this.beregningResultatForeldrepenger = dBeregningsresultatMedUttaksplan;
     }
 
@@ -151,7 +151,7 @@ public class Behandling {
         return get(uttakResultatPerioder);
     }
 
-    public void setUttakResultatPerioder(Supplier<UttakResultatPerioder> dUttakResultatPerioder) {
+    public void setUttakResultatPerioder(Lazy<UttakResultatPerioder> dUttakResultatPerioder) {
         this.uttakResultatPerioder = dUttakResultatPerioder;
     }
 
@@ -159,7 +159,7 @@ public class Behandling {
         return get(soknad);
     }
 
-    public void setSoknad(Supplier<Soknad> dSoknad) {
+    public void setSoknad(Lazy<Soknad> dSoknad) {
         this.soknad = dSoknad;
     }
 
@@ -167,7 +167,7 @@ public class Behandling {
         return get(opptjening);
     }
 
-    public void setOpptjening(Supplier<Opptjening> dOpptjening) {
+    public void setOpptjening(Lazy<Opptjening> dOpptjening) {
         this.opptjening = dOpptjening;
     }
 
@@ -175,7 +175,7 @@ public class Behandling {
         return get(inntektArbeidYtelse);
     }
 
-    public void setInntektArbeidYtelse(Supplier<InntektArbeidYtelse> dInntektArbeidYtelse) {
+    public void setInntektArbeidYtelse(Lazy<InntektArbeidYtelse> dInntektArbeidYtelse) {
         this.inntektArbeidYtelse = dInntektArbeidYtelse;
     }
 
@@ -188,7 +188,7 @@ public class Behandling {
                 .collect(Collectors.toList());
     }
 
-    public void setKontrollerFaktaData(Supplier<KontrollerFaktaData> dKontrollerFaktaData) {
+    public void setKontrollerFaktaData(Lazy<KontrollerFaktaData> dKontrollerFaktaData) {
         this.kontrollerFaktaData = dKontrollerFaktaData;
     }
 
@@ -196,7 +196,7 @@ public class Behandling {
         return get(medlem);
     }
 
-    public void setMedlem(Supplier<Medlem> dMedlem) {
+    public void setMedlem(Lazy<Medlem> dMedlem) {
         this.medlem = dMedlem;
     }
 
@@ -204,7 +204,7 @@ public class Behandling {
         return get(klagevurdering);
     }
 
-    public void setKlagevurdering(Supplier<KlageInfo> klagevurdering) {
+    public void setKlagevurdering(Lazy<KlageInfo> klagevurdering) {
         this.klagevurdering = klagevurdering;
     }
 
@@ -212,7 +212,7 @@ public class Behandling {
         return get(saldoer);
     }
 
-    public void setSaldoer(Supplier<Saldoer> dStonadskontoer) {
+    public void setSaldoer(Lazy<Saldoer> dStonadskontoer) {
         this.saldoer = dStonadskontoer;
     }
 
@@ -220,7 +220,7 @@ public class Behandling {
         return get(aksjonspunkter);
     }
 
-    public void setAksjonspunkter(Supplier<List<Aksjonspunkt>> dAksjonspunkter) {
+    public void setAksjonspunkter(Lazy<List<Aksjonspunkt>> dAksjonspunkter) {
         this.aksjonspunkter = dAksjonspunkter;
     }
 
@@ -228,11 +228,11 @@ public class Behandling {
         return get(tilrettelegging);
     }
 
-    public void setTilrettelegging(Supplier<Tilrettelegging> dTilrettelegging) {
+    public void setTilrettelegging(Lazy<Tilrettelegging> dTilrettelegging) {
         this.tilrettelegging = dTilrettelegging;
     }
 
-    public static <V> V get(Supplier<V> supplier) {
-        return supplier == null ? null : supplier.get();
+    public static <V> V get(Lazy<V> o) {
+        return o == null ? null : o.get();
     }
 }

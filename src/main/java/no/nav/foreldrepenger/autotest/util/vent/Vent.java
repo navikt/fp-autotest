@@ -17,15 +17,13 @@ public class Vent {
     public static void til(Supplier<Boolean> supplier, int timeoutInSeconds, Supplier<String> errorMessageProducer) {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusSeconds(timeoutInSeconds);
-        var sleepMillis = 200;
 
         while (!supplier.get()) {
             if (LocalDateTime.now().isAfter(end)) {
                 throw new RuntimeException(String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds, errorMessageProducer.get()));
             }
             try {
-                Thread.sleep(sleepMillis);
-                sleepMillis += 500;
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(
                     String.format("Async venting interrupted ut etter %s sekunder fordi: %s", ChronoUnit.SECONDS.between(start, LocalDateTime.now()), errorMessageProducer.get()), e);
@@ -37,7 +35,6 @@ public class Vent {
     public static <T> T tilRetur(Supplier<Optional<T>> supplier, int timeoutInSeconds, String failReason) {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusSeconds(timeoutInSeconds);
-        var sleepMillis = 200;
 
         Optional<T> supplied;
         do {
@@ -46,8 +43,7 @@ public class Vent {
                 throw new RuntimeException(String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds, failReason));
             }
             try {
-                Thread.sleep(sleepMillis);
-                sleepMillis += 500;
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(
                         String.format("Async venting interrupted ut etter %s sekunder fordi: %s", ChronoUnit.SECONDS.between(start, LocalDateTime.now()), failReason), e);

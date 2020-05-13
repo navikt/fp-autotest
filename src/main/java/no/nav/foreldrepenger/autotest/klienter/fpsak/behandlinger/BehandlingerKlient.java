@@ -12,7 +12,6 @@ import org.apache.http.HttpResponse;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingByttEnhet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdPost;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
@@ -56,7 +55,6 @@ public class BehandlingerKlient extends FpsakKlient {
     private static final String BEHANDLINGER_GJENOPPTA_URL = BEHANDLINGER_URL + "/gjenoppta";
     private static final String BEHANDLINGER_BYTT_ENHET_URL = BEHANDLINGER_URL + "/bytt-enhet";
     private static final String BEHANDLINGER_ALLE_URL = BEHANDLINGER_URL + "/alle?saksnummer=%s";
-    private static final String BEHANDLINGER_OPNE_FOR_ENDRINGER_URL = BEHANDLINGER_URL + "/opne-for-endringer";
     private static final String BEHANDLINGER_ANNEN_PART_BEHANDLING_URL = BEHANDLINGER_URL + "/annen-part-behandling?saksnummer=%s";
 
     private static final String BEHANDLING_URL = "/behandling";
@@ -118,11 +116,6 @@ public class BehandlingerKlient extends FpsakKlient {
     public Behandling getBehandling(UUID behandlingUuid) {
         String url = createBehandlingGetUrl(BEHANDLING_URL, behandlingUuid);
         return getOgHentJson(url, Behandling.class, StatusRange.STATUS_SUCCESS);
-    }
-
-    public <T extends Behandling> T getBehandling(UUID behandlingUuid, Class<T> returnType) {
-        String url = createBehandlingGetUrl(BEHANDLING_URL, behandlingUuid);
-        return getOgHentJson(url, returnType, StatusRange.STATUS_SUCCESS);
     }
 
     /*
@@ -189,15 +182,6 @@ public class BehandlingerKlient extends FpsakKlient {
     @Step("Gjenopptar behandling")
     public void gjenoppta(BehandlingIdPost behandling) {
         String url = hentRestRotUrl() + BEHANDLINGER_GJENOPPTA_URL;
-        postOgVerifiser(url, behandling, StatusRange.STATUS_SUCCESS);
-    }
-
-    /*
-     * Byt behandlende enhet
-     */
-    @Step("Bytter behandlede enhet")
-    public void byttEnhet(BehandlingByttEnhet behandling) {
-        String url = hentRestRotUrl() + BEHANDLINGER_BYTT_ENHET_URL;
         postOgVerifiser(url, behandling, StatusRange.STATUS_SUCCESS);
     }
 

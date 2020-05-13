@@ -68,9 +68,6 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
-        saksbehandler.ventTilSakHarRevurdering();
-        AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
-        verifiser(saksbehandler.harRevurderingBehandling(), "Det er ikke opprettet revurdering.");
         saksbehandler.velgRevurderingBehandling();
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
 
