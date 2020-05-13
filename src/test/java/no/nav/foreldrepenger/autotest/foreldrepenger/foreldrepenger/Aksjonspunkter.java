@@ -1,5 +1,22 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+
+import java.time.LocalDate;
+import java.util.Collections;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak;
@@ -22,22 +39,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Adopsjon;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.Collections;
-
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
 
 
 @Tag("util")
@@ -46,7 +47,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("REGISTRER_PAPIRSØKNAD_FORELDREPENGER")
-    public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5040() throws Exception{
+    public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5040() {
         var testscenario = opprettTestscenario("500");        // Fødselsdato er for 2 uker siden, ved bruk av "500"
         var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -63,7 +64,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.REGISTRER_PAPIRSØKNAD_FORELDREPENGER);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.REGISTRER_PAPIRSØKNAD_FORELDREPENGER);
     }
 
     @Test
@@ -80,7 +81,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE);
     }
 
     @Test
@@ -108,7 +109,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_ADOPSJONSDOKUMENTAJON);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_ADOPSJONSDOKUMENTAJON);
     }
 
     @Test
@@ -124,14 +125,13 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_VILKÅR_FOR_OMSORGSOVERTAKELSE);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
         avklarFaktaOmsorgOgForeldreansvarBekreftelse.setVilkårType(
                 saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_5"));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET);
     }
     @Test
     @DisplayName("VURDER_OPPTJENINGSVILKÅRET")
@@ -148,11 +148,9 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
         saksbehandler.gjenopptaBehandling();
 
-        saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_OPPTJENINGSVILKÅRET);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_OPPTJENINGSVILKÅRET);
     }
     @Test
     @DisplayName("VURDER_FAKTA_FOR_ATFL_SN")
@@ -181,24 +179,21 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD);
         saksbehandler.gjenopptaBehandling();
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
         AvklarArbeidsforholdBekreftelse arbeidsforholdBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
         arbeidsforholdBekreftelse.bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunkt(arbeidsforholdBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL);
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
         vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse.leggTilMottarYtelse(Collections.emptyList());
@@ -238,14 +233,11 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse.setUtstedtdato(termindato.minusWeeks(3));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_OM_VILKÅR_FOR_SYKDOM_OPPFYLT);
         VurderVilkaarForSykdomBekreftelse vurderVilkaarForSykdomBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderVilkaarForSykdomBekreftelse.class);
         vurderVilkaarForSykdomBekreftelse.setErMorForSykVedFodsel(true);
@@ -254,7 +246,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
     }
     @DisplayName("AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE")
     @Test
-    public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_() throws Exception{
+    public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_() {
         TestscenarioDto testscenario = opprettTestscenario("75");
         var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -272,7 +264,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE);
 
         var inntektbeløp = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
         var orgnummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
@@ -282,7 +274,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
     }
     @DisplayName("SJEKK_MANGLENDE_FØDSEL")
     @Test
-    public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_5027() throws Exception{
+    public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_5027() {
         var testscenario = opprettTestscenario("501");
 
         var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -299,7 +291,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL);
     }
 
 

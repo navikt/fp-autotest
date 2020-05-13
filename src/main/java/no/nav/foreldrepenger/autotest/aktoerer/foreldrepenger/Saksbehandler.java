@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.Behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.KlageVurderingResultatAksjonspunktMellomlagringDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelseUtenTotrinn;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.OverstyrAksjonspunkter;
@@ -321,7 +322,7 @@ public class Saksbehandler extends Aktoer {
         var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
             if ( opptjening.getAktivitetType().kode.equalsIgnoreCase("FRILANS") &&
-                    opptjening.getOpptjeningTom().isEqual(skjaeringstidspunkt.minusDays(1)) ){
+                    opptjening.getOpptjeningTom().isEqual(skjaeringstidspunkt.minusDays(1)) ) {
                 return true;
             }
         }
@@ -330,7 +331,7 @@ public class Saksbehandler extends Aktoer {
 
     public boolean sjekkOmSykepengerLiggerTilGrunnForOpptjening() {
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
-            if ( opptjening.getAktivitetType().kode.equalsIgnoreCase("SYKEPENGER") ){
+            if ( opptjening.getAktivitetType().kode.equalsIgnoreCase("SYKEPENGER") ) {
                 return true;
             }
         }
@@ -451,16 +452,11 @@ public class Saksbehandler extends Aktoer {
     @SuppressWarnings("unchecked")
     @Step("Henter aksjonspunktbekreftelse for {type}")
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) {
-        for (Aksjonspunkt aksjonspunkt : valgtBehandling.getAksjonspunkter()) {
-            if (type.isInstance(aksjonspunkt.getBekreftelse())) {
-                AksjonspunktBekreftelse bekreftelse = aksjonspunkt.getBekreftelse();
-                bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
-                return (T) bekreftelse;
-            }
-        }
-        debugLoggBehandling(valgtBehandling);
-        throw new RuntimeException(
-                "Valgt behandling (" + valgtBehandling.id + " - " + valgtFagsak.saksnummer + ") har ikke aksjonspunktbekreftelse: " + type.getName());
+        var aksjonspunktKode = type.getDeclaredAnnotation(BekreftelseKode.class).kode();
+        var aksjonspunkt = hentAksjonspunkt(aksjonspunktKode);
+        var bekreftelse = aksjonspunkt.getBekreftelse();
+        bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
+        return (T) bekreftelse;
     }
 
     /*
@@ -468,26 +464,31 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Henter aksjonspunkt {kode}")
     public Aksjonspunkt hentAksjonspunkt(String kode) {
+        return Vent.tilRetur(() -> hentAksjonspunktDirekte(kode), 30, "Finner ikke aksjonspunkt " + kode);
+    }
+
+    private Optional<Aksjonspunkt> hentAksjonspunktDirekte(String kode) {
         for (Aksjonspunkt aksjonspunkt : valgtBehandling.getAksjonspunkter()) {
             if (aksjonspunkt.getDefinisjon().kode.equals(kode)) {
-                return aksjonspunkt;
+                return Optional.of(aksjonspunkt);
             }
         }
-        return null;
+        return Optional.empty();
     }
+
     @Step("Henter aksjonspunkt {kode}")
     public Aksjonspunkt hentAksjonspunktSomKanLøses(String kode) {
-        for (Aksjonspunkt aksjonspunkt : valgtBehandling.getAksjonspunkter()) {
-            if (aksjonspunkt.getDefinisjon().kode.equals(kode) && aksjonspunkt.getKanLoses()) {
-                return aksjonspunkt;
-            }
+        var aksjonspunkt = hentAksjonspunkt(kode);
+        if (aksjonspunkt.getKanLoses()) {
+            return aksjonspunkt;
         }
         return null;
     }
+
     @Step("Henter aksjonspunkt som skal til totrinns kontroll")
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
         return valgtBehandling.getAksjonspunkter().stream()
-                .filter(aksjonspunkt -> aksjonspunkt.skalTilToTrinnsBehandling())
+                .filter(Aksjonspunkt::skalTilToTrinnsBehandling)
                 .collect(Collectors.toList());
     }
 
@@ -497,12 +498,7 @@ public class Saksbehandler extends Aktoer {
     @Step("Sjekker om aksjonspunkt av gitt kode er på behandling")
     public boolean harAksjonspunkt(String kode) {
         debugLoggBehandling(valgtBehandling);
-        return null != hentAksjonspunkt(kode);
-    }
-
-    public boolean harAksjonspunktSomKanLøses(String kode) {
-        debugLoggBehandling(valgtBehandling);
-        return null != hentAksjonspunktSomKanLøses(kode);
+        return hentAksjonspunkt(kode) != null;
     }
 
     /*
@@ -512,7 +508,6 @@ public class Saksbehandler extends Aktoer {
     public <T extends AksjonspunktBekreftelse> void bekreftAksjonspunktMedDefaultVerdier(Class<T> type) {
         bekreftAksjonspunkt(hentAksjonspunktbekreftelse(type));
     }
-
 
     public void bekreftAksjonspunkt(AksjonspunktBekreftelse bekreftelse) {
         List<AksjonspunktBekreftelse> bekreftelser = new ArrayList<>();
@@ -642,22 +637,6 @@ public class Saksbehandler extends Aktoer {
             }
         }
         return antall;
-    }
-
-    /*
-     * Aksjonspunkt
-     */
-    @Step("Venter på aksjonspunkt {kode}")
-    public void ventTilAksjonspunkt(String kode) {
-        Vent.til(() -> harAksjonspunkt(kode), 30,
-                () -> "Saken hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
-    }
-
-    @Step("Venter på aksjonspunkt {kode} hvis det kan løses")
-    public void ventTilAksjonspunktSomKanLøses(String kode) {
-
-        Vent.til(() -> harAksjonspunktSomKanLøses(kode), 30,
-                () -> "Saken hadde ikke aksjonspunkt " + kode + (valgtBehandling == null ? "" : "\n\tAksjonspunkter:" + valgtBehandling.getAksjonspunkter()));
     }
 
     private Vilkar hentVilkår(Kode vilkårKode) {

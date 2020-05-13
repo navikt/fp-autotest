@@ -4,7 +4,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode="5018")
-public class ForesloVedtakBekreftelseUtenTotrinn extends AksjonspunktBekreftelse{
+public class ForesloVedtakBekreftelseUtenTotrinn extends AksjonspunktBekreftelse {
 
     public ForesloVedtakBekreftelseUtenTotrinn() {
         super();

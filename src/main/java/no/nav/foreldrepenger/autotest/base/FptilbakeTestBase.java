@@ -9,7 +9,7 @@ public class FptilbakeTestBase extends FpsakTestBase {
     protected TilbakekrevingSaksbehandler tbkbeslutter;
 
     @BeforeEach
-    public void setUpTbkSaksbehandlerSVP(){
+    public void setUpTbkSaksbehandlerSVP() {
 
         tbksaksbehandler = new TilbakekrevingSaksbehandler();
         tbkbeslutter = new TilbakekrevingSaksbehandler();

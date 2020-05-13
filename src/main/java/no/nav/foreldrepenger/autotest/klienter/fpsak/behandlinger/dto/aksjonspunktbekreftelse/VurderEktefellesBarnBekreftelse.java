@@ -4,7 +4,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode="5005")
-public class VurderEktefellesBarnBekreftelse extends AksjonspunktBekreftelse{
+public class VurderEktefellesBarnBekreftelse extends AksjonspunktBekreftelse {
 
     protected Boolean ektefellesBarn;
 

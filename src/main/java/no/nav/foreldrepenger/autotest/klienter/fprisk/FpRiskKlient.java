@@ -17,7 +17,7 @@ public class FpRiskKlient extends JsonRest {
     }
 
     @Override
-    public String hentRestRotUrl(){
+    public String hentRestRotUrl() {
         return System.getProperty("autotest.fprisk.http.routing.api");
     }
 }

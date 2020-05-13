@@ -10,7 +10,7 @@ public class MottarYtelse {
     protected Boolean frilansMottarYtelse;
     protected List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerUtenIMMottarYtelse;
 
-    public MottarYtelse(Boolean frilansMottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses){
+    public MottarYtelse(Boolean frilansMottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses) {
         this.frilansMottarYtelse = frilansMottarYtelse;
         this.arbeidstakerUtenIMMottarYtelse = arbeidstakerandelUtenIMMottarYtelses;
     }
@@ -19,7 +19,7 @@ public class MottarYtelse {
         this.frilansMottarYtelse = frilansMottarYtelse;
     }
 
-    public void leggTilArbeidstakerandelUtenIMMottarYtelse(ArbeidstakerandelUtenIMMottarYtelse arbeidstakerandelUtenIMMottarYtelse){
+    public void leggTilArbeidstakerandelUtenIMMottarYtelse(ArbeidstakerandelUtenIMMottarYtelse arbeidstakerandelUtenIMMottarYtelse) {
         this.arbeidstakerUtenIMMottarYtelse.add(arbeidstakerandelUtenIMMottarYtelse);
     }
 

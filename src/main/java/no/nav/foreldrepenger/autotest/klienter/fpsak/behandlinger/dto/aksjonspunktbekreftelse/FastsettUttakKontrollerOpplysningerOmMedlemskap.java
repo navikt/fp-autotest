@@ -24,7 +24,7 @@ public class FastsettUttakKontrollerOpplysningerOmMedlemskap extends Aksjonspunk
         }
     }
 
-    public void LeggTilUttakPeriode(UttakResultatPeriode uttakPeriode){
+    public void LeggTilUttakPeriode(UttakResultatPeriode uttakPeriode) {
         perioder.add(uttakPeriode);
     }
 }

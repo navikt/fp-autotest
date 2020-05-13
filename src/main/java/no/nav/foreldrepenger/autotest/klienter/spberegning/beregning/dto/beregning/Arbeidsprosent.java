@@ -8,7 +8,7 @@ public class Arbeidsprosent {
 
     public Arbeidsprosent() { }
 
-    public Arbeidsprosent(Double verdi){
+    public Arbeidsprosent(Double verdi) {
         this.verdi = verdi;
     }
 

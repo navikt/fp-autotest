@@ -129,9 +129,9 @@ public class Adopsjon extends FpsakTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_ADOPSJONSVILKÅRET));
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
     }

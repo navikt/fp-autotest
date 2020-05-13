@@ -18,10 +18,10 @@ public interface HttpSession {
         return new HashMap<>();
     }
 
-    static String readResponse(HttpResponse response){
+    static String readResponse(HttpResponse response) {
         try{
             HttpEntity entity = response.getEntity();
-            if(entity == null){
+            if(entity == null) {
                 return "";
             }
             final var mapper = JsonKlient.getObjectMapper();

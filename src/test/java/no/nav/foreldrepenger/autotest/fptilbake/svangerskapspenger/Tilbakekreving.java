@@ -9,8 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -36,13 +34,12 @@ import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
 @Tag("fptilbake")
 public class Tilbakekreving extends FptilbakeTestBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(Tilbakekreving.class);
     private static final String ytelseType = "SVP";
 
     @Test
     @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
-    public void opprettTilbakekrevingManuelt() throws Exception{
+    public void opprettTilbakekrevingManuelt() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("56");
 
         String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -75,12 +72,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
-                .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-        saksbehandler.ventTilAksjonspunkt("5092");
-        saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
-                .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
 
         //TODO: legg inn de to manglende aksjonspunktene; Foreslå vedtak (saksbehandler) og fatte vedtak (beslutter)

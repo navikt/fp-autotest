@@ -4,7 +4,7 @@ import no.nav.vedtak.felles.xml.soeknad.felles.v3.Rettigheter;
 
 
 public class RettigheterErketyper {
-    public static Rettigheter beggeForeldreRettIkkeAleneomsorg(){
+    public static Rettigheter beggeForeldreRettIkkeAleneomsorg() {
         Rettigheter rettigheter = new Rettigheter();
         rettigheter.setHarAleneomsorgForBarnet(false);
         rettigheter.setHarAnnenForelderRett(true);
@@ -13,7 +13,7 @@ public class RettigheterErketyper {
         return rettigheter;
     }
 
-    public static Rettigheter harAleneOmsorgOgEnerett(){
+    public static Rettigheter harAleneOmsorgOgEnerett() {
         Rettigheter rettigheter = new Rettigheter();
         rettigheter.setHarOmsorgForBarnetIPeriodene(true);
         rettigheter.setHarAnnenForelderRett(false);

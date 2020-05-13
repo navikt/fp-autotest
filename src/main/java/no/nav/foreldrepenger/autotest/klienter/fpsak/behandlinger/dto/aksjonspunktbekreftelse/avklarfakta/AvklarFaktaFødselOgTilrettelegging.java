@@ -16,7 +16,7 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
     protected LocalDate fødselsdato;
     protected List<Arbeidsforhold> bekreftetSvpArbeidsforholdList;
 
-    public AvklarFaktaFødselOgTilrettelegging(){
+    public AvklarFaktaFødselOgTilrettelegging() {
         super();
     }
 

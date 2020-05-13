@@ -10,11 +10,11 @@ public class ApVilkårsvurderingAktsomhetInfo {
     protected String sarligGrunnerBegrunnelse;
     protected boolean tilbakekrevSelvOmBeloepErUnder4Rettsgebyr;
 
-    public ApVilkårsvurderingAktsomhetInfo(){
+    public ApVilkårsvurderingAktsomhetInfo() {
         this.sarligGrunnerBegrunnelse = "Dette er en særlige grunner vurdering skrevet av Autotest!";
     }
 
-    public void addGeneriskAktsomhet(){
+    public void addGeneriskAktsomhet() {
         this.harGrunnerTilReduksjon = false;
         this.tilbakekrevSelvOmBeloepErUnder4Rettsgebyr = true;
         this.sarligGrunner.add(SærligeGrunner.HELT_ELLER_DELVIS_NAVS_FEIL);

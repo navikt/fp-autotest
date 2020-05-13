@@ -37,13 +37,14 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public void bekreftArbeidsforholdErOverstyrt(String navn, LocalDate startDato, LocalDate overstyrtTom) {
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErOverstyrt(String navn, LocalDate startDato, LocalDate overstyrtTom) {
         Arbeidsforhold forhold = finnArbeidsforhold(navn, startDato);
         if (forhold == null) {
             throw new RuntimeException("fant ikke arbeidsforhold: " + navn);
         }
         forhold.setFortsettBehandlingUtenInntektsmelding(true);
         forhold.setOverstyrtTom(overstyrtTom);
+        return this;
     }
 
     public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErBasertPåInntektsmelding(String navn, LocalDate startDato, LocalDate sluttDato, BigDecimal stillingsprosent) {

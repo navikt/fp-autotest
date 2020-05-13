@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @BekreftelseKode(kode="5031")
@@ -17,13 +15,15 @@ public class AvklarLopendeVedtakBekreftelse extends AksjonspunktBekreftelse {
         // TODO Auto-generated constructor stub
     }
 
-    public void bekreftGodkjent() {
+    public AvklarLopendeVedtakBekreftelse bekreftGodkjent() {
         erVilkarOk = true;
+        return this;
     }
 
-    public void bekreftAvvist(Kode avslagskode) {
+    public AvklarLopendeVedtakBekreftelse bekreftAvvist(Kode avslagskode) {
         erVilkarOk = false;
         this.avslagskode = avslagskode.kode;
+        return this;
     }
 
 

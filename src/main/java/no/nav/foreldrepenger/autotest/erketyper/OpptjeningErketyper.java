@@ -1,5 +1,9 @@
 package no.nav.foreldrepenger.autotest.erketyper;
 
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.List;
+
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Periode;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.AnnenOpptjening;
 import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.EgenNaering;
@@ -13,16 +17,12 @@ import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.AnnenOpptjeningTyper;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Land;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Virksomhetstyper;
 
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.List;
-
 
 public class OpptjeningErketyper {
 
-    private OpptjeningErketyper(){}
+    private OpptjeningErketyper() {}
 
-    public static Opptjening medFrilansOpptjening(){
+    public static Opptjening medFrilansOpptjening() {
 
         Periode periode = new Periode();
         periode.setFom((LocalDate.now().minusYears(2)));
@@ -45,7 +45,7 @@ public class OpptjeningErketyper {
 
     }
 
-    public static Opptjening medFrilansOpptjening(LocalDate Fom, LocalDate Tom){
+    public static Opptjening medFrilansOpptjening(LocalDate Fom, LocalDate Tom) {
 
         Periode periode = new Periode();
         periode.setFom(Fom);
@@ -72,7 +72,7 @@ public class OpptjeningErketyper {
         return  medEgenNaeringOpptjening(LocalDate.now().minusYears(4), LocalDate.now(), erNyIArbeidslivet, næringsInntekt, varigEndretNæring);
     }
     public static Opptjening medEgenNaeringOpptjening(LocalDate Fom, LocalDate Tom, boolean erNyIArbeidslivet,
-                                                      BigInteger næringsInntekt, boolean varigEndretNæring){
+                                                      BigInteger næringsInntekt, boolean varigEndretNæring) {
 
         Opptjening opptjening = new Opptjening();
         List<EgenNaering> naeringer = opptjening.getEgenNaering();
@@ -110,7 +110,7 @@ public class OpptjeningErketyper {
         return opptjening;
 
     }
-    public static Opptjening medUtenlandskArbeidsforhold(String arbeidsgiverNavn, String landKode){
+    public static Opptjening medUtenlandskArbeidsforhold(String arbeidsgiverNavn, String landKode) {
 
         Opptjening opptjening = new Opptjening();
 
@@ -132,11 +132,11 @@ public class OpptjeningErketyper {
 
     }
 
-    public static Opptjening medEgenNaeringOpptjening(){
+    public static Opptjening medEgenNaeringOpptjening() {
         return medEgenNaeringOpptjening(false, BigInteger.valueOf(1_500_000), true);
     }
 
-    public static Opptjening medEgenNaeringOgFrilansOpptjening(){
+    public static Opptjening medEgenNaeringOgFrilansOpptjening() {
 
         Periode periode = new Periode();
         periode.setFom((LocalDate.now().minusYears(2)));
@@ -190,7 +190,7 @@ public class OpptjeningErketyper {
 
     }
 
-    public static Opptjening medVentelonnVartpengerOpptjening(){
+    public static Opptjening medVentelonnVartpengerOpptjening() {
         Opptjening opptjening = new Opptjening();
         List<AnnenOpptjening> annenOpptjening = opptjening.getAnnenOpptjening();
         AnnenOpptjening ventelonn = new AnnenOpptjening();
@@ -206,7 +206,7 @@ public class OpptjeningErketyper {
 
     }
 
-    public static Opptjening medMilitærOpptjening(){
+    public static Opptjening medMilitærOpptjening() {
         Opptjening opptjening = new Opptjening();
         List<AnnenOpptjening> annenOpptjening = opptjening.getAnnenOpptjening();
         AnnenOpptjening militær = new AnnenOpptjening();

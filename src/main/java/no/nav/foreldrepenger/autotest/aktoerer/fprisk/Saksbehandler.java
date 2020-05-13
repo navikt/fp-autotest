@@ -16,7 +16,7 @@ public class Saksbehandler extends Aktoer {
     private KafkaKlient kafkaKlient;
     private RisikovurderingKlient risikovurderingKlient;
 
-    public Saksbehandler(){
+    public Saksbehandler() {
         kafkaKlient = new KafkaKlient(session);
         risikovurderingKlient = new RisikovurderingKlient(session);
     }

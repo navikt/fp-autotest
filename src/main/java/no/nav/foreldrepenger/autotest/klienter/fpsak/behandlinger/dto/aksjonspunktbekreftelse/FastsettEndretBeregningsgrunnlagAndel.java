@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-class FastsettEndretBeregningsgrunnlagAndel extends RedigerbarAndel  {
+class FastsettEndretBeregningsgrunnlagAndel extends RedigerbarAndel {
 
     protected FastsatteVerdier fastsatteVerdier;
 

@@ -22,7 +22,7 @@ public class KafkaKlient extends VTPKlient {
         String url = hentRestRotUrl() + KAFKA_GET_TOPICS_URL;
         List<Topic> topics = getOgHentJson(url, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Topic.class), StatusRange.STATUS_SUCCESS);
         String result = "";
-        for (Topic topic : topics){
+        for (Topic topic : topics) {
             result += String.format("%s : %s\n", topic.getName(), topic.getInternal());
         }
         return result;

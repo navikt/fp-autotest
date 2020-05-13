@@ -6,14 +6,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode="5009")
-public class AvklarFaktaTillegsopplysningerBekreftelse extends AksjonspunktBekreftelse{
+public class AvklarFaktaTillegsopplysningerBekreftelse extends AksjonspunktBekreftelse {
 
     public AvklarFaktaTillegsopplysningerBekreftelse() {
         super();
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("FatterVedtakBekreftelse: {kode:%s, begrunnelse%s}",kode,begrunnelse);
     }
 

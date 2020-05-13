@@ -10,7 +10,7 @@ import java.util.UUID;
  * Enten {@link #behandlingId} eller {@link #behandlingUuid} vil være satt.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BehandlingIdDto  {
+public class BehandlingIdDto {
     protected Long saksnummer;
     protected Long behandlingId;
     protected UUID behandlingUuid;

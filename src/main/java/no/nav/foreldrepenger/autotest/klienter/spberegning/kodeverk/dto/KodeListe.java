@@ -10,15 +10,15 @@ public class KodeListe extends ArrayList<Kode>{
     private String kode;
     private String kodeverk;
 
-    public KodeListe (){
+    public KodeListe () {
     }
-    public KodeListe(String kode, String kodeverk){
+    public KodeListe(String kode, String kodeverk) {
         Objects.requireNonNull(kode, "kode"); //$NON-NLS-1$
         Objects.requireNonNull(kodeverk, "kodeverk"); //$NON-NLS-1$
         this.kode = kode;
         this.kodeverk = kodeverk;
     }
-    
+
     /** @deprecated - IKKE bruk navn for kodeverdi ved oppslag, bruk kode. */
     @Deprecated
     public Kode getKode(String kodeverdi) {

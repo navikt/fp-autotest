@@ -16,7 +16,7 @@ public class FpriskTestBase extends TestScenarioTestBase {
     protected Saksbehandler saksbehandler;
     protected TestscenarioKlient testscenarioKlient;
 
-    public FpriskTestBase (){
+    public FpriskTestBase () {
         saksbehandler = new Saksbehandler();
         testscenarioKlient = new TestscenarioKlient(BasicHttpSession.session());
     }
@@ -25,7 +25,7 @@ public class FpriskTestBase extends TestScenarioTestBase {
         protected String callId;
         protected Object request;
 
-        public RequestWrapper(String callId, Object request){
+        public RequestWrapper(String callId, Object request) {
             this.callId = callId;
             this.request = request;
         }
@@ -106,12 +106,12 @@ public class FpriskTestBase extends TestScenarioTestBase {
         protected AktoerIdDto annenPartAktoerId;
         protected String utenlandskFnr;
 
-        public AnnenPart(AktoerIdDto annenPartAktoerId){
+        public AnnenPart(AktoerIdDto annenPartAktoerId) {
             this.annenPartAktoerId = annenPartAktoerId;
             this.utenlandskFnr = null;
         }
 
-        public AnnenPart(String utenlandskFnr){
+        public AnnenPart(String utenlandskFnr) {
             this.annenPartAktoerId = null;
             this.utenlandskFnr = utenlandskFnr;
         }

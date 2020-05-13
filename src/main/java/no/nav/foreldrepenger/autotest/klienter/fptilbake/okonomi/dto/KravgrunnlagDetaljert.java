@@ -32,7 +32,7 @@ public class KravgrunnlagDetaljert {
 
     protected List<KravgrunnlagPeriode> perioder;
 
-    public KravgrunnlagDetaljert(Long saksnummer, String ident, String behandlingId, String ytelseType, String kravStatusKode){
+    public KravgrunnlagDetaljert(Long saksnummer, String ident, String behandlingId, String ytelseType, String kravStatusKode) {
         this.vedtakId = saksnummer-11111;
         this.kravgrunnlagId = saksnummer-11112;
         this.kravStatusKode = kravStatusKode;
@@ -72,7 +72,7 @@ public class KravgrunnlagDetaljert {
         this.perioder.add(kravgrunnlagPeriode);
     }
     public void leggTilPeriodeForEngangsstonad() {
-        if (!this.fagOmrådeKode.equals("REFUTG")){
+        if (!this.fagOmrådeKode.equals("REFUTG")) {
             throw new IllegalStateException("Periode for Engangsstønad ikke tillatt for fagområde: "+this.fagOmrådeKode);
         }
         KravgrunnlagPeriode kravgrunnlagPeriode = new KravgrunnlagPeriode(

@@ -53,13 +53,13 @@ public class TestscenarioRepositoryImpl {
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, ORGANISASJON_JSON_FIL_NAVN, "organisasjon");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, VARS_JSON_FIL_NAVN, "vars");
 
-        Object obj = mapper.convertValue(root, new TypeReference<>(){});
+        Object obj = mapper.convertValue(root, new TypeReference<>() {});
         scenarioObjects.put(scenarioId, obj);
         return obj;
     }
 
 
-    private void lesFilOgLeggTilIObjectNode(File scenarioFiles, ObjectNode root, String jsonFilNavn, String navnPåNøkkel){
+    private void lesFilOgLeggTilIObjectNode(File scenarioFiles, ObjectNode root, String jsonFilNavn, String navnPåNøkkel) {
         try {
             File fil = hentFilSomMatcherStreng(scenarioFiles, jsonFilNavn);
             if (fil != null) {

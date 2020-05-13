@@ -41,7 +41,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @Test
     @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
-    public void opprettTilbakekrevingManuelt() throws Exception{
+    public void opprettTilbakekrevingManuelt() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();

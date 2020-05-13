@@ -58,11 +58,12 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         return this;
     }
 
-    public void delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra, LocalDate godkjentTil, Kode godkjenningskode) {
+    public AvklarFaktaUttakBekreftelse delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra, LocalDate godkjentTil, Kode godkjenningskode) {
         delvisGodkjennPeriode(fra, til, godkjentFra, godkjentTil, godkjenningskode, false);
+        return this;
     }
 
-    public void delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra, LocalDate godkjentTil, Kode godkjenningskode, boolean dokumenterPeriode) {
+    public AvklarFaktaUttakBekreftelse delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra, LocalDate godkjentTil, Kode godkjenningskode, boolean dokumenterPeriode) {
         BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
 
         periode.bekreftetPeriode.setBekreftet(true);
@@ -74,24 +75,7 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         if (dokumenterPeriode) {
             periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(godkjentFra, godkjentTil));
         }
-    }
-
-    public AvklarFaktaUttakBekreftelse slettPeriode(LocalDate fra, LocalDate til) {
-        BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
-
-        slettedePerioder.add(periode);
-        bekreftedePerioder.remove(periode);
-        periode.bekreftetPeriode.setBegrunnelse("Slettet av autotest");
         return this;
-    }
-
-    public void avvisPeriode(LocalDate fra, LocalDate til, Kode avvisKode) {
-        BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
-
-        periode.bekreftetPeriode.setBekreftet(false);
-        periode.bekreftetPeriode.setResultat(avvisKode);
-        periode.bekreftetPeriode.setBegrunnelse("Avvist av autotest");
-        periode.bekreftetPeriode.getDokumentertePerioder().clear();
     }
 
     private BekreftetUttakPeriode finnUttaksperiode(LocalDate fra, LocalDate til) {

@@ -70,9 +70,9 @@ public class Medlemskap extends FpsakTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_MEDLEMSKAPSVILKÅRET));
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
     }
@@ -92,9 +92,9 @@ public class Medlemskap extends FpsakTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaPersonstatusBekreftelse.class)
+        var avklarFaktaPersonstatusBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaPersonstatusBekreftelse.class)
                 .bekreftHenleggBehandling();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaPersonstatusBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaPersonstatusBekreftelse);
 
         verifiser(saksbehandler.valgtBehandling.erHenlagt(), "Behandlingen ble ikke henlagt etter bekreftet ugyldig status");
     }
@@ -116,8 +116,6 @@ public class Medlemskap extends FpsakTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerBosattBekreftelse.class)
-                .bekreftBrukerErBosatt();
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarBrukerBosattBekreftelse.class);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);

@@ -235,15 +235,15 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventTilSakHarRevurdering();
         verifiser(saksbehandler.harRevurderingBehandling(), "Revurdering er ikke opprettet.");
         saksbehandler.velgRevurderingBehandling();
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class)
+        var aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class)
                 .setStartdatoFraSoknad(fpStartdato.plusWeeks(1))
                 .setBegrunnelse("Endret startdato for fp.");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
         verifiser(saksbehandler.harAksjonspunkt("5081"), "Har ikke AP 5081");
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakFørsteUttakDato.class)
+        var avklarFaktaUttakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakFørsteUttakDato.class)
                 .delvisGodkjennPeriode(fpStartdato, fpStartdato.plusWeeks(3).minusDays(1), fpStartdato.plusWeeks(1), fpStartdato.plusWeeks(3).minusDays(1),
                         hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_OK"));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakFørsteUttakDato.class);
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         // Sender inn ny IM når revurdering ligger hos beslutter
@@ -264,23 +264,23 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET);
         verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET), "Mangler historikkinnslag om at behandlingen er flyttet.");
         verifiser(saksbehandler.harAksjonspunkt("5045"), "Behandling hopper ikke tilbake til 'Avklar startdato for foreldrepengeperioden'.");
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class)
+        var avklarFaktaStartdatoForForeldrepengerBekreftelse2 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class)
                 .setStartdatoFraSoknad(fpStartdato.plusDays(2))
                 .setBegrunnelse("Endret startdato for fp.");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaStartdatoForForeldrepengerBekreftelse2);
         verifiser(saksbehandler.harAksjonspunkt("5081"), "Har ikke AP 5081");
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakFørsteUttakDato.class)
+        var avklarFaktaUttakBekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakFørsteUttakDato.class)
                 .delvisGodkjennPeriode(fpStartdato, fpStartdato.plusWeeks(3).minusDays(1), fpStartdato.plusDays(2), fpStartdato.plusWeeks(3).minusDays(1),
                         hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_OK"));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakFørsteUttakDato.class);
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse1);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         beslutter.velgRevurderingBehandling();
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_FØRSTE_UTTAKSDATO));
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "FORELDREPENGER_ENDRET", "Behandlingsresultat");
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode, "ENDRING_I_UTTAK", "konsekvensForYtelsen");
 
@@ -468,12 +468,10 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.velgRevurderingBehandling();
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelse.avslåAlleManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         //Behandle totrinnskontroll
@@ -527,7 +525,7 @@ public class Revurdering extends ForeldrepengerTestBase {
 
         saksbehandler.opprettBehandlingRevurdering("RE-FRDLING");
         saksbehandler.velgSisteBehandling();
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.KONTROLL_AV_MANUELT_OPPRETTET_REVURDERINGSBEHANDLING);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.KONTROLL_AV_MANUELT_OPPRETTET_REVURDERINGSBEHANDLING);
 
         var allePerioderInnvilget = saksbehandler.valgtBehandling.hentUttaksperioder().stream().allMatch(p -> p.getPeriodeResultatType().kode.equals("INNVILGET"));
         assertThat(allePerioderInnvilget).isTrue();

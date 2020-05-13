@@ -2,12 +2,10 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @BekreftelseKode(kode="5026")
-public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse{
+public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
 
     protected String begrunnelseForVarsel;
     protected String fritekst;
@@ -19,18 +17,21 @@ public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse{
         super();
     }
 
-    public void setFrist(LocalDate frist) {
+    public VarselOmRevurderingBekreftelse setFrist(LocalDate frist) {
         this.frist = frist;
+        return this;
     }
 
-    public void bekreftSendVarsel(Kode årsak, String fritekst) {
+    public VarselOmRevurderingBekreftelse bekreftSendVarsel(Kode årsak, String fritekst) {
         sendVarsel = "" + true;
         this.fritekst = fritekst;
         ventearsak = årsak.kode;
+        return this;
     }
 
-    public void bekreftIkkeSendVarsel() {
+    public VarselOmRevurderingBekreftelse bekreftIkkeSendVarsel() {
         sendVarsel = "" + false;
+        return this;
     }
 
 }

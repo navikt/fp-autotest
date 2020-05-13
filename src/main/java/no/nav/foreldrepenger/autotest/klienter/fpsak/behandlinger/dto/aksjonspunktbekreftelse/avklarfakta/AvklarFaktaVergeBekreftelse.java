@@ -8,7 +8,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode="5030")
-public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse{
+public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
 
     protected String fnr;
     protected LocalDate gyldigFom;

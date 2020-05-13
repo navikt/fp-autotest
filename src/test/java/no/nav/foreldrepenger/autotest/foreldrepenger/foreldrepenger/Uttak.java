@@ -639,13 +639,11 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelse.avslåAlleManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -970,30 +968,25 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
+        var vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
                 .godkjennOpptjening("FRILANS")
                 .avvisOpptjening("NÆRING");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderPerioderOpptjeningBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_AKTIVITETER);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class)
+        var avklarAktiviteterBekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class)
                 .godkjennOpptjeningsAktivitet("FRILANS")
                 .avvisOpptjeningsAktivitet("NÆRING");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarAktiviteterBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse1);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+        var vurderFaktaOmBeregningBekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .behandleFrilansMottar(20_000);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderFaktaOmBeregningBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse1);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+        var vurderBeregnetInntektsAvvikBekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
                 .leggTilInntektFrilans(300_000)
                 .setBegrunnelse("Begrunnelse");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderBeregnetInntektsAvvikBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse1);
 
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -1024,24 +1017,20 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_AKTIVITETER);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class)
+        var avklarAktiviteterBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class)
                 .godkjennOpptjeningsAktivitet("FRILANS")
                 .avvisOpptjeningsAktivitet("NÆRING");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarAktiviteterBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+        var vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .behandleFrilansMottar(20_000);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderFaktaOmBeregningBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+        var aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
                 .leggTilInntektFrilans(300_000)
                 .setBegrunnelse("Begrunnelse");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderBeregnetInntektsAvvikBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.refreshFagsak();
@@ -1102,7 +1091,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Tag("faktaOmUttak")
     @Test
-    public void testcase_far_faktaOmUttak_søktForTidelig(){
+    public void testcase_far_faktaOmUttak_søktForTidelig() {
         TestscenarioDto testscenario = opprettTestscenario("140");
         String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
@@ -1129,7 +1118,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Tag("faktaOmUttak")
     @Test
-    public void testcase_far_faktaOmUttak_overLappendePerioder(){
+    public void testcase_far_faktaOmUttak_overLappendePerioder() {
         TestscenarioDto testscenario = opprettTestscenario("140");
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
         String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
@@ -1152,7 +1141,7 @@ public class Uttak extends ForeldrepengerTestBase {
     }
     @Tag("faktaOmUttak")
     @Test
-    public void testcase_far_faktaOmUttak_uttakFørSTF(){
+    public void testcase_far_faktaOmUttak_uttakFørSTF() {
         TestscenarioDto testscenario = opprettTestscenario("140");
         String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
         String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
@@ -1175,10 +1164,10 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class)
+        var aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class)
                 .setStartdatoFraSoknad(fpStartFar.minusWeeks(1))
                 .setBegrunnelse("Endret startdato for fp.");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
     }
     @Tag("faktaOmUttak")
     @Test
@@ -1239,10 +1228,10 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerMor);
 
         Kode godkjenningskode = saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_OK");
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FAKTA_UTTAK);
+
+        var aksjonspunktbekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         List<KontrollerFaktaPeriode> faktaUttakPerioderList = saksbehandler.valgtBehandling.getKontrollerFaktaPerioderManuell();
-        AvklarFaktaUttakBekreftelse avklarFaktaUttakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
-                .godkjennPeriode(faktaUttakPerioderList.get(0), godkjenningskode, true);
+        var avklarFaktaUttakBekreftelse = aksjonspunktbekreftelse.godkjennPeriode(faktaUttakPerioderList.get(0), godkjenningskode, true);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
@@ -1269,11 +1258,10 @@ public class Uttak extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmelding(imFar, aktørIdFar, fnrFar, saksnummerFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FAKTA_UTTAK);
+        var aksjonspunktbekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         List<KontrollerFaktaPeriode> faktaUttakPerioderListFar = saksbehandler.valgtBehandling.getKontrollerFaktaPerioderManuell();
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
-                .godkjennPeriode(faktaUttakPerioderListFar.get(0), godkjenningskode, true);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
+        aksjonspunktbekreftelse1.godkjennPeriode(faktaUttakPerioderListFar.get(0), godkjenningskode, true);
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktbekreftelse1);
 
     }
     @Test
@@ -1399,10 +1387,10 @@ public class Uttak extends ForeldrepengerTestBase {
         //Automatisk behandling av Fakta om fødsel siden det ikke er registert barn i TPS
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
+        var aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
                 .bekreftDokumentasjonForeligger(1, fødselsdato.minusMonths(1))
                 .setBegrunnelse("omg lol haha ja bacon");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderManglendeFodselBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
     }
     @Test
     @DisplayName("Flytting pga fødsel")
@@ -1442,10 +1430,10 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
+        var aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
                 .bekreftDokumentasjonForeligger(1, fødselsdato)
                 .setBegrunnelse("omg lol haha ja bacon");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderManglendeFodselBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
     }
 
 

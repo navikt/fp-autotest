@@ -26,7 +26,7 @@ public class ForesloVedtakBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public ForesloVedtakBekreftelse setIsVedtakSubmission(Boolean verdi){
+    public ForesloVedtakBekreftelse setIsVedtakSubmission(Boolean verdi) {
         this.isVedtakSubmission = verdi;
         return this;
     }

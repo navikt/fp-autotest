@@ -1,6 +1,16 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
 
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -20,15 +30,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -85,9 +86,9 @@ public class Klage extends ForeldrepengerTestBase {
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
 
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
         verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(), "UGUNST_MEDHOLD_I_KLAGE");
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
         verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(), begrunnelse);

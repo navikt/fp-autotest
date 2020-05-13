@@ -16,7 +16,7 @@ public class BekreftSvangerskapspengervilkår extends AksjonspunktBekreftelse {
         super();
     }
 
-    public BekreftSvangerskapspengervilkår godkjenn(){
+    public BekreftSvangerskapspengervilkår godkjenn() {
         this.erVilkarOk = true;
         return this;
     }

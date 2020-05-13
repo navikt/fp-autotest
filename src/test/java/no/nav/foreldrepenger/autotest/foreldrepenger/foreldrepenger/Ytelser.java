@@ -124,18 +124,18 @@ public class Ytelser extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarLopendeVedtakBekreftelse.class).bekreftGodkjent();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarLopendeVedtakBekreftelse.class);
+        var avklarLopendeVedtakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarLopendeVedtakBekreftelse.class).bekreftGodkjent();
+        saksbehandler.bekreftAksjonspunkt(avklarLopendeVedtakBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
-            .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
-                    saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
+        var avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
+                .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                        saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
+        saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-            .leggTilFaktaOmBeregningTilfeller("FASTSETT_BG_KUN_YTELSE")
-            .leggTilAndelerYtelse(4000.0, new Kode("", "ARBEIDSTAKER", ""));//TODO hent kode
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderFaktaOmBeregningBekreftelse.class);
+        var vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .leggTilFaktaOmBeregningTilfeller("FASTSETT_BG_KUN_YTELSE")
+                .leggTilAndelerYtelse(4000.0, new Kode("", "ARBEIDSTAKER", ""));//TODO hent kode
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         verifiserLikhet(saksbehandler.vilkårStatus("FP_VK_41").kode, "IKKE_OPPFYLT"); //Beregning
     }

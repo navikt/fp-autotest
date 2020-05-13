@@ -178,7 +178,6 @@ public class Fodsel extends FpsakTestBase {
         overstyrer.overstyr(overstyrBeregning);
         verifiserLikhet(10, overstyrer.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse());
 
-        overstyrer.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
         ForesloVedtakBekreftelse foresloVedtakBekreftelse = overstyrer.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         overstyrer.bekreftAksjonspunkt(foresloVedtakBekreftelse);
 
@@ -186,7 +185,6 @@ public class Fodsel extends FpsakTestBase {
         beslutter.hentFagsak(saksnummer);
         beslutter.velgRevurderingBehandling();
 
-        beslutter.ventTilAksjonspunkt(AksjonspunktKoder.FATTER_VEDTAK);
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_BEREGNING));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);

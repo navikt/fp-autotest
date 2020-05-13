@@ -66,7 +66,7 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("FatterVedtakBekreftelse: {kode:%s, begrunnelse%s}",kode,begrunnelse);
     }
 }

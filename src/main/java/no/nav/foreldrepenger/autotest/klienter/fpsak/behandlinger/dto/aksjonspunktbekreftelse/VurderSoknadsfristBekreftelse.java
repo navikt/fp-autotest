@@ -6,7 +6,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode="5007")
-public class VurderSoknadsfristBekreftelse extends AksjonspunktBekreftelse{
+public class VurderSoknadsfristBekreftelse extends AksjonspunktBekreftelse {
 
     protected boolean erVilkarOk;
     protected LocalDate mottattDato;
@@ -16,12 +16,14 @@ public class VurderSoknadsfristBekreftelse extends AksjonspunktBekreftelse{
         super();
     }
 
-    public void bekreftVilkårErOk() {
+    public VurderSoknadsfristBekreftelse bekreftVilkårErOk() {
         erVilkarOk = true;
+        return this;
     }
 
-    public void bekreftVilkårErIkkeOk() {
+    public VurderSoknadsfristBekreftelse bekreftVilkårErIkkeOk() {
         erVilkarOk = false;
+        return this;
     }
 
     @Override

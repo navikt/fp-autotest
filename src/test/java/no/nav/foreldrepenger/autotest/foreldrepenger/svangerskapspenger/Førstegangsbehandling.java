@@ -1,5 +1,21 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.svangerskapspenger;
 
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -18,21 +34,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("fpsak")
 @Tag("svangerskapspenger")
@@ -72,17 +73,13 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
-                .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
 
-        saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
-                .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt(beløpMor * 12,1);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderBeregnetInntektsAvvikBekreftelse.class);
+        var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .leggTilInntekt(beløpMor * 12, 1);
+        saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
@@ -128,15 +125,8 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
-                .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-
-
-        saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
-                .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-
     }
 
     @Test
@@ -186,15 +176,8 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
-                .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-
-
-        saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
-                .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         List<BeregningsgrunnlagPeriodeDto> bgPerioder = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder()

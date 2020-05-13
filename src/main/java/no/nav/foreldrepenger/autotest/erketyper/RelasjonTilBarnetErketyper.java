@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.erketyper;
 
+import java.time.LocalDate;
+
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Adopsjon;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Foedsel;
@@ -7,15 +9,13 @@ import no.nav.vedtak.felles.xml.soeknad.felles.v3.Omsorgsovertakelse;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Termin;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Omsorgsovertakelseaarsaker;
 
-import java.time.LocalDate;
-
 
 public class RelasjonTilBarnetErketyper {
     public static Foedsel fødsel(LocalDate fødselsdato) {
         return fødsel(1, fødselsdato);
     }
 
-    public static Foedsel fødsel(int antall, LocalDate fødselsdato){
+    public static Foedsel fødsel(int antall, LocalDate fødselsdato) {
         Foedsel soekersRelasjonTilBarnet = new Foedsel();
         soekersRelasjonTilBarnet.setAntallBarn(antall);
         soekersRelasjonTilBarnet.setFoedselsdato((fødselsdato));
@@ -26,7 +26,7 @@ public class RelasjonTilBarnetErketyper {
     public static Termin termin(LocalDate termindato) {
         return termin(1, termindato);
     }
-    public static Termin termin(int antall, LocalDate termindato){
+    public static Termin termin(int antall, LocalDate termindato) {
         Termin termin = new Termin();
         termin.setAntallBarn(antall);
         termin.setTermindato((termindato));
@@ -34,7 +34,7 @@ public class RelasjonTilBarnetErketyper {
         return termin;
     }
 
-    public static Foedsel fødselMedTermin(int antall, LocalDate fødselsdato, LocalDate termindato){
+    public static Foedsel fødselMedTermin(int antall, LocalDate fødselsdato, LocalDate termindato) {
         Foedsel soekersRelasjonTilBarnet = new Foedsel();
         soekersRelasjonTilBarnet.setAntallBarn(antall);
         soekersRelasjonTilBarnet.setFoedselsdato((fødselsdato));
@@ -43,7 +43,7 @@ public class RelasjonTilBarnetErketyper {
         return soekersRelasjonTilBarnet;
     }
 
-    public static Adopsjon adopsjon(boolean ektefellesBarn){
+    public static Adopsjon adopsjon(boolean ektefellesBarn) {
         return adopsjon(LocalDate.now().plusMonths(1), ektefellesBarn);
     }
 
@@ -59,7 +59,7 @@ public class RelasjonTilBarnetErketyper {
     }
 
         //Mulige aarsaker ANDRE_FORELDER_DØD, OVERTATT_OMSORG, OVERTATT_OMSORG_F, ADOPTERER_ALENE
-    public static Omsorgsovertakelse omsorgsovertakelse(OmsorgsovertakelseÅrsak årsak){
+    public static Omsorgsovertakelse omsorgsovertakelse(OmsorgsovertakelseÅrsak årsak) {
         Omsorgsovertakelse omsorgsovertakelse = new Omsorgsovertakelse();
         omsorgsovertakelse.setAntallBarn(1);
         Omsorgsovertakelseaarsaker omsorgsovertakelseaarsaker = new Omsorgsovertakelseaarsaker();
