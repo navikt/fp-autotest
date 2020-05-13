@@ -242,8 +242,6 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
-        avklarFaktaTerminBekreftelse.setTermindato(termindato);
-        avklarFaktaTerminBekreftelse.setAntallBarn(1);
         avklarFaktaTerminBekreftelse.setUtstedtdato(termindato.minusWeeks(3));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 

@@ -241,15 +241,14 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE);
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse =
-                saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         // TODO: Dette får en fra søknadden. Trenger bare utstedt dato og kommentar.
-        avklarFaktaTerminBekreftelse
-                .setTermindato(termindato)
-                .setUtstedtdato(termindato.minusWeeks(10))
-                .setAntallBarn(1);
+        //  Spør Marte om hvorfor dette er tilfelle. Hvorfor må jeg angi utstedtdato her og ikke i ES?
+        avklarFaktaTerminBekreftelse.setUtstedtdato(termindato.minusWeeks(10));
         avklarFaktaTerminBekreftelse.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
+        LocalDate localDate = termindato.minusWeeks(10);
+
 
         verifiser(saksbehandler.sjekkOmSykepengerLiggerTilGrunnForOpptjening(),
                 "Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +

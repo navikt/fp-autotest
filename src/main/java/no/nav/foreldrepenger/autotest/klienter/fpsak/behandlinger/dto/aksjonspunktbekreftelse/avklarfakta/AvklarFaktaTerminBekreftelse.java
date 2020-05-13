@@ -2,11 +2,14 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 import java.time.LocalDate;
 
 @BekreftelseKode(kode="5001")
-public class AvklarFaktaTerminBekreftelse extends AksjonspunktBekreftelse{
+public class AvklarFaktaTerminBekreftelse extends AksjonspunktBekreftelse {
 
     protected int antallBarn;
     protected LocalDate utstedtdato;
@@ -14,6 +17,15 @@ public class AvklarFaktaTerminBekreftelse extends AksjonspunktBekreftelse{
 
     public AvklarFaktaTerminBekreftelse() {
         super();
+    }
+
+    @Override
+    public void setFagsakOgBehandling(Fagsak fagsak, Behandling behandling) {
+        super.setFagsakOgBehandling(fagsak, behandling);
+        Soknad soknad = behandling.getSoknad();
+        this.antallBarn = soknad.getAntallBarn();
+        this.utstedtdato = soknad.getUtstedtdato();
+        this.termindato = soknad.getTermindato();
     }
 
     public void setAntallBarn(int antallBarn) {
