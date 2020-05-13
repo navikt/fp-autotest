@@ -110,10 +110,9 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-
-        verifiserLikhet(beslutter.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
-        beslutter.refreshFagsak();
+        beslutter.ventTilFagsakLøpende();
         verifiserLikhet(beslutter.valgtFagsak.hentStatus().kode, "LOP", "Fagsakstatus");
+
         debugFritekst("Ferdig med behandling mor");
         //Behandle ferdig far sin sak
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -206,7 +205,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Mors behandling er ikke ferdigbehandlet.");
         debugFritekst("Ferdig med første behandling mor");
-        saksbehandler.refreshBehandling();
         verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderForSøker().size() == 3, "Antall perioder for mor er ikke 3.");
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().size() == 4, "Feil antall stønadskontoer.");
         // FAR
@@ -226,14 +224,11 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Fars behandling er ikke ferdigbehandlet.");
         debugFritekst("Ferdig med første behandling til far");
-        saksbehandler.refreshBehandling();
         verifiser(saksbehandler.sakErKobletTilAnnenpart(), "Saken er ikke koblet til mor sin behandling");
         verifiser(saksbehandler.valgtBehandling.hentUttaksperioder().size() == 2, "Antall perioder er ikke 2.");
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().size() == 4, "Feil antall stønadskontoer.");
         // Revurdering berørt sak mor
         saksbehandler.hentFagsak(saksnummerMor);
-        verifiser(saksbehandler.harRevurderingBehandling() == true, "Mangler berørt behandling på mor");
-        saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
         debugFritekst("Revurdering berørt sak opprettet på mor.");
         verifiser(saksbehandler.sakErKobletTilAnnenpart(), "Saken er ikke koblet til en far sin behandling");
@@ -332,7 +327,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
         verifiser(saksbehandler.sakErKobletTilAnnenpart(), "Mor sin sak ikke koblet til far sin sak.");
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.UENDRET_UTFALL);
-        saksbehandler.refreshFagsak();
         verifiser(saksbehandler.behandlinger.size() == 3, "Feil antall behandlinger hos mor");
         Behandling sistebehandling = saksbehandler.behandlinger.get(2);
         saksbehandler.velgBehandling(sistebehandling);
@@ -375,7 +369,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
 
-        saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
 
         VurderSoknadsfristForeldrepengerBekreftelse vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
@@ -409,7 +402,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         overstyrer.erLoggetInnMedRolle(Rolle.OVERSTYRER);
         overstyrer.hentFagsak(saksnummerMor);
-        overstyrer.ventTilSakHarRevurdering();
         overstyrer.velgRevurderingBehandling();
 
         OverstyrFodselsvilkaaret overstyr = new OverstyrFodselsvilkaaret();
@@ -448,9 +440,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
 
-        saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
-
 
         var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
         vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(LocalDate.now().minusMonths(4));

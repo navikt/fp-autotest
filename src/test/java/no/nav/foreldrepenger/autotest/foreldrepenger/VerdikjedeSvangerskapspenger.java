@@ -339,7 +339,6 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 saksnummer1);
 
         saksbehandler.hentFagsak(saksnummer2);
-        saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging2 =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);

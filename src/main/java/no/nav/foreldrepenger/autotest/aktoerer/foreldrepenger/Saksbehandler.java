@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import io.qameta.allure.Step;
@@ -54,14 +53,15 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskKlie
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
+import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
 public class Saksbehandler extends Aktoer {
 
     public Fagsak valgtFagsak;
 
-    private Supplier<List<HistorikkInnslag>> historikkInnslag;
-    private Supplier<Behandling> annenPartBehandling;
+    private Lazy<List<HistorikkInnslag>> historikkInnslag;
+    private Lazy<Behandling> annenPartBehandling;
 
     public List<Behandling> behandlinger;
     public Behandling valgtBehandling;
@@ -120,12 +120,12 @@ public class Saksbehandler extends Aktoer {
      * Refresh
      */
     @Step("Refresh behandling")
-    public void refreshBehandling() {
+    private void refreshBehandling() {
         velgBehandling(valgtBehandling);
     }
 
     @Step("Refresh fagsak")
-    public void refreshFagsak() {
+    private void refreshFagsak() {
         Behandling behandling = valgtBehandling;
         hentFagsak(valgtFagsak.saksnummer);
         if (valgtBehandling == null && behandling != null) {
@@ -155,16 +155,9 @@ public class Saksbehandler extends Aktoer {
         velgSisteBehandling();
     }
 
-    /*
-     * velger behandling som valgt behandling
-     */
-    protected void velgBehandling(Kode behandlingstype) {
-        Behandling behandling = getBehandling(behandlingstype);
-        if (null != behandling) {
-            velgBehandling(behandling);
-        } else {
-            throw new RuntimeException("Valgt fagsak har ikke behandling av type: " + behandlingstype.kode);
-        }
+    private void velgBehandling(Kode behandlingstype) {
+        ventTilSakHarBehandling(behandlingstype);
+        velgBehandling(getBehandling(behandlingstype));
     }
 
     public void velgFørstegangsbehandling() {
@@ -192,20 +185,23 @@ public class Saksbehandler extends Aktoer {
     @Step("Velger behandling")
     public void velgBehandling(Behandling behandling) {
         debugLoggBehandling(behandling);
-        ventPåStatus(behandling);
+
+        //Sjekker om behandlingen prosesserer. Siden vi vil vente på at den er ferdig for å få den siste behandling.versjon. Og å hindre at tester henter
+        //data fra behandlingen som kan endre seg ettersom behandlingen ikke har stoppet opp
+        ventPåProsessering(behandling);
 
         valgtBehandling = behandlingerKlient.getBehandling(behandling.uuid);
         populateBehandling(valgtBehandling);
 
-        this.historikkInnslag = () -> historikkKlient.hentHistorikk(valgtFagsak.saksnummer);
-        this.annenPartBehandling = () -> behandlingerKlient.annenPartBehandling(valgtFagsak.saksnummer);
+        this.historikkInnslag = new Lazy<>(() -> historikkKlient.hentHistorikk(valgtFagsak.saksnummer));
+        this.annenPartBehandling = new Lazy<>(() -> behandlingerKlient.annenPartBehandling(valgtFagsak.saksnummer));
     }
 
     @Step("Populerer behandling")
     private void populateBehandling(Behandling behandling) {
 
-        behandling.setAksjonspunkter(() -> behandlingerKlient.getBehandlingAksjonspunkt(behandling.uuid));
-        behandling.setVilkar(() -> behandlingerKlient.behandlingVilkår(behandling.uuid));
+        behandling.setAksjonspunkter(new Lazy<>(() -> behandlingerKlient.getBehandlingAksjonspunkt(behandling.uuid)));
+        behandling.setVilkar(new Lazy<>(() -> behandlingerKlient.behandlingVilkår(behandling.uuid)));
 
         /*
          * KODE OFFISIELL_KODE BESKRIVELSE
@@ -219,34 +215,34 @@ public class Saksbehandler extends Aktoer {
         if (behandling.type.kode.equalsIgnoreCase("BT-006") /* Dokumentinnsyn */) {
 
         } else if (behandling.type.kode.equalsIgnoreCase("BT-003" /* Klage */)) {
-            behandling.setKlagevurdering(() -> behandlingerKlient.klage(behandling.uuid));
+            behandling.setKlagevurdering(new Lazy<>(() -> behandlingerKlient.klage(behandling.uuid)));
         } else {
             // FIXME: Forespørslene her burde konsultere resultat for valgtbehandling for å sjekke om URLene er tilgjengelig før de kjører.
             // URLene kan endre seg, men koden i behandlingerKlient tar ikke hensyn til det p.t. I tillegg er det unødvendig å spørre på noe som ikke
             // finnes slik det skjer nå.
 
-            behandling.setUttakResultatPerioder(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid));
-            behandling.setSaldoer(() -> behandlingerKlient.behandlingUttakStonadskontoer(behandling.uuid));
+            behandling.setUttakResultatPerioder(new Lazy<>(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid)));
+            behandling.setSaldoer(new Lazy<>(() -> behandlingerKlient.behandlingUttakStonadskontoer(behandling.uuid)));
 
-            behandling.setBeregningsgrunnlag(() -> behandlingerKlient.behandlingBeregningsgrunnlag(behandling.uuid));
-            behandling.setInntektArbeidYtelse(() -> behandlingerKlient.behandlingInntektArbeidYtelse(behandling.uuid));
+            behandling.setBeregningsgrunnlag(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsgrunnlag(behandling.uuid)));
+            behandling.setInntektArbeidYtelse(new Lazy<>(() -> behandlingerKlient.behandlingInntektArbeidYtelse(behandling.uuid)));
 
-            behandling.setBeregningResultatEngangsstonad(() -> behandlingerKlient.behandlingBeregningsresultatEngangsstønad(behandling.uuid));
-            behandling.setBeregningResultatForeldrepenger(() -> behandlingerKlient.behandlingBeregningsresultatForeldrepenger(behandling.uuid));
-            behandling.setPersonopplysning(() -> behandlingerKlient.behandlingPersonopplysninger(behandling.uuid));
-            behandling.setSoknad(() -> behandlingerKlient.behandlingSøknad(behandling.uuid));
-            behandling.setOpptjening(() -> behandlingerKlient.behandlingOpptjening(behandling.uuid));
+            behandling.setBeregningResultatEngangsstonad(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatEngangsstønad(behandling.uuid)));
+            behandling.setBeregningResultatForeldrepenger(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatForeldrepenger(behandling.uuid)));
+            behandling.setPersonopplysning(new Lazy<>(() -> behandlingerKlient.behandlingPersonopplysninger(behandling.uuid)));
+            behandling.setSoknad(new Lazy<>(() -> behandlingerKlient.behandlingSøknad(behandling.uuid)));
+            behandling.setOpptjening(new Lazy<>(() -> behandlingerKlient.behandlingOpptjening(behandling.uuid)));
 
-            behandling.setKontrollerFaktaData(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid));
-            behandling.setMedlem(() -> behandlingerKlient.behandlingMedlemskap(behandling.uuid));
+            behandling.setKontrollerFaktaData(new Lazy<>(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid)));
+            behandling.setMedlem(new Lazy<>(() -> behandlingerKlient.behandlingMedlemskap(behandling.uuid)));
 
-            behandling.setTilrettelegging(() -> behandlingerKlient.behandlingTilrettelegging(behandling.id));
+            behandling.setTilrettelegging(new Lazy<>(() -> behandlingerKlient.behandlingTilrettelegging(behandling.id)));
         }
     }
 
-    private void ventPåStatus(Behandling behandling) {
+    private void ventPåProsessering(Behandling behandling) {
         Vent.til(() -> {
-            return verifiserStatusForBehandling(behandling);
+            return verifiserProsesseringFerdig(behandling);
         }, 90, () -> {
             List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
             String prosessTaskList = "";
@@ -257,7 +253,7 @@ public class Saksbehandler extends Aktoer {
         });
     }
 
-    private boolean verifiserStatusForBehandling(Behandling behandling) {
+    private boolean verifiserProsesseringFerdig(Behandling behandling) {
         AsyncPollingStatus status = behandlingerKlient.statusAsObject(behandling.uuid, null);
 
         if (status == null || status.getStatusCode() == null) {
@@ -464,7 +460,7 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Henter aksjonspunkt {kode}")
     public Aksjonspunkt hentAksjonspunkt(String kode) {
-        return Vent.tilRetur(() -> hentAksjonspunktDirekte(kode), 30, "Finner ikke aksjonspunkt " + kode);
+        return Vent.tilRetur(() -> hentAksjonspunktDirekte(kode), 60, "Finner ikke aksjonspunkt " + kode);
     }
 
     private Optional<Aksjonspunkt> hentAksjonspunktDirekte(String kode) {
@@ -474,15 +470,6 @@ public class Saksbehandler extends Aktoer {
             }
         }
         return Optional.empty();
-    }
-
-    @Step("Henter aksjonspunkt {kode}")
-    public Aksjonspunkt hentAksjonspunktSomKanLøses(String kode) {
-        var aksjonspunkt = hentAksjonspunkt(kode);
-        if (aksjonspunkt.getKanLoses()) {
-            return aksjonspunkt;
-        }
-        return null;
     }
 
     @Step("Henter aksjonspunkt som skal til totrinns kontroll")
@@ -520,7 +507,6 @@ public class Saksbehandler extends Aktoer {
     }
     @Step("Bekrefter aksjonspunktbekreftelser")
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
-        refreshBehandling();
         debugAksjonspunktbekreftelser(bekreftelser);
         BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
@@ -678,26 +664,16 @@ public class Saksbehandler extends Aktoer {
         return valgtBehandling.status.kode;
     }
 
-    public void ventTilSakHarRevurdering() {
-        ventTilSakHarBehandling(kodeverk.BehandlingType.getKode("BT-004"));
-    }
-
-    public void ventTilSakHarKlage() {
-        ventTilSakHarBehandling(kodeverk.BehandlingType.getKode("BT-003"));
-    }
-
     @Step("Venter på at fagsak får behandlingstype: {behandlingType}")
-    protected void ventTilSakHarBehandling(Kode behandlingType) {
+    private void ventTilSakHarBehandling(Kode behandlingType) {
         if (harBehandling(behandlingType)) {
             return;
         }
-        Vent.til(() -> {
-            refreshFagsak();
-            return harBehandling(behandlingType);
-        }, 30, "Saken har ikke fått behandling av type: " + behandlingType);
+        Vent.til(() -> harBehandling(behandlingType), 30, "Saken har ikke fått behandling av type: " + behandlingType);
     }
 
     protected boolean harBehandling(Kode behandlingType) {
+        refreshFagsak();
         for (Behandling behandling : behandlinger) {
             if (behandling.type.kode.equals(behandlingType.kode)) {
                 return true;

@@ -90,7 +90,6 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.gjenopptaBehandling();
         saksbehandler.gjenopptaBehandling();
 
-        verifiser(saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD), "Mangler aksonspunkt for vurdering av arbeidsforhold (8050)");
         var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunkt(ab);
@@ -109,6 +108,7 @@ public class Termin extends ForeldrepengerTestBase {
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 saksnummer);
 
+        saksbehandler.hentFagsak(saksnummer);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
     }
 

@@ -48,7 +48,6 @@ public class Klage extends FpsakTestBase {
         klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -96,7 +95,6 @@ public class Klage extends FpsakTestBase {
         klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -166,7 +164,6 @@ public class Klage extends FpsakTestBase {
         klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -239,7 +236,6 @@ public class Klage extends FpsakTestBase {
         klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -291,7 +287,6 @@ public class Klage extends FpsakTestBase {
         klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -316,7 +311,6 @@ public class Klage extends FpsakTestBase {
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
-        beslutter.ventTilSakHarKlage();
         beslutter.velgKlageBehandling();
 
         FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -343,7 +337,6 @@ public class Klage extends FpsakTestBase {
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
-        beslutter.ventTilSakHarKlage();
         beslutter.velgKlageBehandling();
         var fatterVedtakBekreftelse1 = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));

@@ -51,7 +51,6 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.hentFagsak(sakId);
 
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -113,7 +112,6 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -160,7 +158,6 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -213,7 +210,6 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -242,7 +238,6 @@ public class Klage extends ForeldrepengerTestBase {
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
-        beslutter.ventTilSakHarKlage();
         beslutter.velgKlageBehandling();
         beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
 
@@ -266,7 +261,6 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.ventTilSakHarKlage();
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
