@@ -21,7 +21,7 @@ public class FaktaOmBeregningTilfelle extends Kode {
 
     }
 
-    private FaktaOmBeregningTilfelle(String kode, String navn){
+    private FaktaOmBeregningTilfelle(String kode, String navn) {
         super(DISCRIMINATOR, kode, navn);
     }
 

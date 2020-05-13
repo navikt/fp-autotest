@@ -1,5 +1,12 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
@@ -12,12 +19,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
 
 @Tag("flaky")
 @Tag("engangsstonad")
@@ -56,9 +57,9 @@ public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
         saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
         saksbehandler.velgRevurderingBehandling();
 
-        saksbehandler.hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class)
+        var varselOmRevurderingBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class)
                 .bekreftIkkeSendVarsel();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VarselOmRevurderingBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
         bekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
         bekreftelse1.setBarnetsAnkomstTilNorgeDato(LocalDate.now());
         bekreftelse2 = saksbehandler.hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class);

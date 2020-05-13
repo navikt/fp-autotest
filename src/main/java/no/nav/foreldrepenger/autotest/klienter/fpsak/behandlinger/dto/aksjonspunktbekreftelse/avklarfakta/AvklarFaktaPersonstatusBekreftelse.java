@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode="5022")
 public class AvklarFaktaPersonstatusBekreftelse extends AksjonspunktBekreftelse {
@@ -16,23 +14,28 @@ public class AvklarFaktaPersonstatusBekreftelse extends AksjonspunktBekreftelse 
         super();
     }
 
-    public void bekreftErEøsBorger() {
-        erEosBorger = "" + true;
+    public AvklarFaktaPersonstatusBekreftelse bekreftErEøsBorger() {
+        erEosBorger =  "true";
+        return this;
     }
 
-    public void bekreftErIkkeEøsBorger() {
-        erEosBorger = "" + false;
+    public AvklarFaktaPersonstatusBekreftelse bekreftErIkkeEøsBorger() {
+        erEosBorger =  "false";
+        return this;
     }
 
-    public void bekreftHarOppholdsrett() {
-        erEosBorger = "" + true;
+    public AvklarFaktaPersonstatusBekreftelse bekreftHarOppholdsrett() {
+        erEosBorger =  "true";
+        return this;
     }
 
-    public void bekreftHarIkkeOppholdsrett() {
-        erEosBorger = "" + false;
+    public AvklarFaktaPersonstatusBekreftelse bekreftHarIkkeOppholdsrett() {
+        erEosBorger =  "false";
+        return this;
     }
 
-    public void bekreftHenleggBehandling() {
+    public AvklarFaktaPersonstatusBekreftelse bekreftHenleggBehandling() {
         fortsettBehandling = false;
+        return this;
     }
 }

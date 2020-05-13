@@ -36,7 +36,7 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
                 }).collect(Collectors.toList());
     }
 
-    public FordelBeregningsgrunnlagBekreftelse settFastsattBeløpOgInntektskategori(LocalDate fom, int fastsattBeløp, Kode inntektskategori, int andelsnr){
+    public FordelBeregningsgrunnlagBekreftelse settFastsattBeløpOgInntektskategori(LocalDate fom, int fastsattBeløp, Kode inntektskategori, int andelsnr) {
         FastsettBeregningsgrunnlagPeriodeDto periode = endretBeregningsgrunnlagPerioder.stream()
                 .filter(p -> p.fom.isEqual(fom))
                 .findFirst().get();
@@ -47,7 +47,7 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
-    public FordelBeregningsgrunnlagBekreftelse settFastsattBeløpOgInntektskategoriMedRefusjon(LocalDate fom, int fastsattBeløp, int refusjonPrÅr, Kode inntektskategori, int andelsnr){
+    public FordelBeregningsgrunnlagBekreftelse settFastsattBeløpOgInntektskategoriMedRefusjon(LocalDate fom, int fastsattBeløp, int refusjonPrÅr, Kode inntektskategori, int andelsnr) {
         FastsettBeregningsgrunnlagPeriodeDto periode = endretBeregningsgrunnlagPerioder.stream()
                 .filter(p -> p.fom.isEqual(fom))
                 .findFirst().get();

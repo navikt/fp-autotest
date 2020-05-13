@@ -7,9 +7,9 @@ public class Saksnummer {
 
     public long saksnummer;
 
-    public Saksnummer(){}
+    public Saksnummer() {}
 
-    public Saksnummer(Long saksnummer){
+    public Saksnummer(Long saksnummer) {
         this.saksnummer = saksnummer;
     }
 

@@ -56,7 +56,7 @@ public abstract class TestBase {
     }
 
     @Step("Verifiserer at {listeGjeldende} inneholder {verdiForventet}")
-    protected void verifiserInneholder(List<?> listeGjeldende, Object verdiForventet){
+    protected void verifiserInneholder(List<?> listeGjeldende, Object verdiForventet) {
         verifiser(listeGjeldende.stream().anyMatch(it -> it.equals(verdiForventet)), String.format("%s inneholder ikke forventet verdi. forventet å finne %s", listeGjeldende, verdiForventet));
     }
 

@@ -15,10 +15,6 @@ public class AvklarBrukerBosattBekreftelse extends BekreftedePerioderMalDto {
         super();
     }
 
-    public void bekreftBrukerErBosatt() {
-
-    }
-
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         List<MedlemPeriodeDto> perioder = behandling.getMedlem().getPerioder();
         List<BekreftedePerioderDto> bekreftedePerioderDtos = new ArrayList<>();

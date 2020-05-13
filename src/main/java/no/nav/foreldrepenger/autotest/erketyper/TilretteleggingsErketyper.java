@@ -1,17 +1,22 @@
 package no.nav.foreldrepenger.autotest.erketyper;
 
-import no.nav.vedtak.felles.xml.soeknad.felles.v3.Vedlegg;
-import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Innsendingstype;
-import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import no.nav.vedtak.felles.xml.soeknad.felles.v3.Vedlegg;
+import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Innsendingstype;
+import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Arbeidsforhold;
+import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.DelvisTilrettelegging;
+import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.HelTilrettelegging;
+import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.IngenTilrettelegging;
+import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.ObjectFactory;
+import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
+
 
 public class TilretteleggingsErketyper{
 
-    public static Tilrettelegging helTilrettelegging(LocalDate behovForTilretteleggingFom, LocalDate tilrettelagtArbeidFom, Arbeidsforhold arbeidsforhold){
+    public static Tilrettelegging helTilrettelegging(LocalDate behovForTilretteleggingFom, LocalDate tilrettelagtArbeidFom, Arbeidsforhold arbeidsforhold) {
         Tilrettelegging tilrettelegging = new Tilrettelegging();
         tilrettelegging.setBehovForTilretteleggingFom(behovForTilretteleggingFom);
         tilrettelegging.setArbeidsforhold(arbeidsforhold);
@@ -31,7 +36,7 @@ public class TilretteleggingsErketyper{
         return tilrettelegging;
     }
 
-    public static Tilrettelegging delvisTilrettelegging(LocalDate behovForTilretteleggingFom, LocalDate tilrettelagtArbeidFom, Arbeidsforhold arbeidsforhold, BigDecimal stillingsprosent){
+    public static Tilrettelegging delvisTilrettelegging(LocalDate behovForTilretteleggingFom, LocalDate tilrettelagtArbeidFom, Arbeidsforhold arbeidsforhold, BigDecimal stillingsprosent) {
         Tilrettelegging tilrettelegging = new Tilrettelegging();
         tilrettelegging.setBehovForTilretteleggingFom(behovForTilretteleggingFom);
         tilrettelegging.setArbeidsforhold(arbeidsforhold);

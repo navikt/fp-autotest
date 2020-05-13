@@ -10,7 +10,7 @@ public class FptilbakeKlient extends JsonRest {
 
     protected Logger log;
 
-    public FptilbakeKlient(HttpSession session){
+    public FptilbakeKlient(HttpSession session) {
         super(session);
         log = LoggerFactory.getLogger(this.getClass());
     }

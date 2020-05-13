@@ -13,7 +13,7 @@ public class AsyncPollingStatus {
     protected String cancelUri;
     protected Boolean readOnly;
     protected Boolean pending;
-    
+
     public boolean isPending() {
         return pending != null ? pending : false;
     }
@@ -38,7 +38,7 @@ public class AsyncPollingStatus {
 
         private Integer httpStatus;
 
-        Status(Integer httpStatus){
+        Status(Integer httpStatus) {
             this.httpStatus = httpStatus;
         }
 

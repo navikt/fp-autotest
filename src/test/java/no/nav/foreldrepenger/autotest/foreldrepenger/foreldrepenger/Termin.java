@@ -57,7 +57,7 @@ public class Termin extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VENT_PÅ_SØKNAD);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VENT_PÅ_SØKNAD);
         List<Behandling> behandlinger = saksbehandler.hentAlleBehandlingerForFagsak(saksnummer);
         verifiser(behandlinger.size() == 1, "Antall behandlinger er ikke 1");
 
@@ -96,7 +96,7 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(ab);
 
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
@@ -108,8 +108,6 @@ public class Termin extends ForeldrepengerTestBase {
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 saksnummer);
-
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
     }

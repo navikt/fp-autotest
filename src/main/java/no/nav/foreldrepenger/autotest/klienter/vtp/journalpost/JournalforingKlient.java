@@ -25,7 +25,7 @@ public class JournalforingKlient extends VTPKlient{
     }
 
     @Step("Knytter journalpost id {journalpostId} til sak {saksnummer} i VTP")
-    public JournalpostIdDto knyttSakTilJournalpost(String journalpostId, String saksnummer){
+    public JournalpostIdDto knyttSakTilJournalpost(String journalpostId, String saksnummer) {
         String url = hentRestRotUrl() + String.format(KNYTT_SAK_TIL_JOURNALPOST, journalpostId, saksnummer);
         return postOgHentJson(url, null, JournalpostIdDto.class, StatusRange.STATUS_SUCCESS);
     }

@@ -69,9 +69,9 @@ public class Klage extends FpsakTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
         verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
 
     }
@@ -345,9 +345,9 @@ public class Klage extends FpsakTestBase {
         beslutter.hentFagsak(sakId);
         beslutter.ventTilSakHarKlage();
         beslutter.velgKlageBehandling();
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var fatterVedtakBekreftelse1 = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse1);
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
         verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(), fritekstbrev2);
         verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(), begrunnelse2);

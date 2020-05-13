@@ -51,7 +51,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         valgtBehandling = null;
         this.saksnummer = String.valueOf(saksnummer);
 
-        if (behandlingList.isEmpty()){
+        if (behandlingList.isEmpty()) {
             throw new RuntimeException("Finnes ingen behandlinger på saksnummer");
         }
         else if (behandlingList.size() == 1) {
@@ -66,7 +66,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     //Generisk handling for å hente behandling på nytt
-    private void refreshBehandling(){
+    private void refreshBehandling() {
         valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.id);
     }
 
@@ -89,7 +89,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     //Henter aksjonspunkt for en gitt kode, brukes ikke direkte i test men av metoder for å verifisere at aksjonspunktet finnes.
     private AksjonspunktDto hentAksjonspunkt(int kode) {
         for (AksjonspunktDto aksjonspunktDto : behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.id)) {
-            if (aksjonspunktDto.definisjon.kode.equals(String.valueOf(kode))){
+            if (aksjonspunktDto.definisjon.kode.equals(String.valueOf(kode))) {
                 return aksjonspunktDto;
             }
         }
@@ -97,7 +97,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
     public boolean harAktivtAksjonspunkt(int kode) {
         AksjonspunktDto aksjonspunktDto = hentAksjonspunkt(kode);
-        if (aksjonspunktDto == null){ return false; }
+        if (aksjonspunktDto == null) { return false; }
         return aksjonspunktDto.erAktivt;
     }
 
@@ -136,7 +136,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     // Vent actions
-    public void ventTilBehandlingErPåVent(){
+    public void ventTilBehandlingErPåVent() {
         if (valgtBehandling.behandlingPaaVent) {
             return;
         }
@@ -145,8 +145,8 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             return valgtBehandling.behandlingPaaVent;
         }, 60, "Behandling kom aldri på vent");
     }
-    public void ventTilBehandlingHarAktivtAksjonspunkt(int aksjonspunktKode){
-        if (harAktivtAksjonspunkt(aksjonspunktKode)){
+    public void ventTilBehandlingHarAktivtAksjonspunkt(int aksjonspunktKode) {
+        if (harAktivtAksjonspunkt(aksjonspunktKode)) {
             return;
         }
         Vent.til(() -> {
@@ -155,7 +155,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         }, 60, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
     }
     public void ventTilBehandlingsstatus(String status) {
-        if (harBehandlingsstatus(status)){
+        if (harBehandlingsstatus(status)) {
             return;
         }
         Vent.til(() -> {

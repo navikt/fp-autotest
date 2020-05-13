@@ -33,23 +33,22 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
 
         foreldre.add(new OmsorgovertakelseForelder(behandling.getPersonopplysning()));
 
-        if(behandling.getSoknad().getAdopsjonFodelsedatoer() != null){
+        if(behandling.getSoknad().getAdopsjonFodelsedatoer() != null) {
             Map<Integer, LocalDate> fodselsdatoer = behandling.getSoknad().getAdopsjonFodelsedatoer();
 
-            for(int i = 0; i < fodselsdatoer.size(); i++){
+            for(int i = 0; i < fodselsdatoer.size(); i++) {
                 barn.add(new OmsorgovertakelseBarn(fodselsdatoer.get(i+1), "SAKSBEH", (i+1)));
             }
         }
         else{
-            for(int i = 0; i < behandling.getSoknad().getAntallBarn(); i++){
+            for(int i = 0; i < behandling.getSoknad().getAntallBarn(); i++) {
                 barn.add(new OmsorgovertakelseBarn(behandling.getSoknad().getFodselsdatoer().get(i+1), "SAKSBEH", (i+1)));
             }
         }
     }
 
 
-    public class OmsorgovertakelseForelder
-    {
+    public class OmsorgovertakelseForelder {
         public int id;
         public LocalDate dodsdato;
         public boolean erMor;
@@ -57,12 +56,12 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
         public String opplysningsKilde;
         public String aktorId;
 
-        public OmsorgovertakelseForelder(boolean erMor, String navn){
+        public OmsorgovertakelseForelder(boolean erMor, String navn) {
             this.erMor = erMor;
             this.navn = navn;
         }
 
-        public OmsorgovertakelseForelder(Personopplysning person){
+        public OmsorgovertakelseForelder(Personopplysning person) {
             id = person.getId();
             aktorId = "" + person.getAktoerId();
             dodsdato = person.getDoedsdato();
@@ -72,15 +71,14 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
         }
     }
 
-    public class OmsorgovertakelseBarn
-    {
+    public class OmsorgovertakelseBarn {
         public LocalDate fodselsdato;
         public String opplysningsKilde;
         public int nummer;
         public String aktorId;
         public String navn = "";
 
-        public OmsorgovertakelseBarn(LocalDate fodselsdato, String opplysningsKilde, int nummer){
+        public OmsorgovertakelseBarn(LocalDate fodselsdato, String opplysningsKilde, int nummer) {
             this.fodselsdato = fodselsdato;
             this.opplysningsKilde = opplysningsKilde;
             this.nummer = nummer;

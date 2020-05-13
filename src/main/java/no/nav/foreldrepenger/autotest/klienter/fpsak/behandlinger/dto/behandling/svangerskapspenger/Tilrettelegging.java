@@ -13,7 +13,7 @@ public class Tilrettelegging {
     protected LocalDate fødselsdato;
     protected List<Arbeidsforhold> arbeidsforholdListe;
 
-    public LocalDate getTermindato(){
+    public LocalDate getTermindato() {
         return this.termindato;
     }
 

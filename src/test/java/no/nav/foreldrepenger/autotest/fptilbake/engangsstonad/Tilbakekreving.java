@@ -1,5 +1,15 @@
 package no.nav.foreldrepenger.autotest.fptilbake.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
@@ -16,15 +26,6 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -36,7 +37,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @Test
     @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
-    public void opprettTilbakekrevingManuelt() throws Exception{
+    public void opprettTilbakekrevingManuelt() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),

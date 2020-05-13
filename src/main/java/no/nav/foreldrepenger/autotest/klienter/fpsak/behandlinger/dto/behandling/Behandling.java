@@ -92,7 +92,7 @@ public class Behandling {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         //Ikke bruk fields som er deferred i tostring, skaper mange kall
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("{Behandlingsid: %s}\n",this.id));

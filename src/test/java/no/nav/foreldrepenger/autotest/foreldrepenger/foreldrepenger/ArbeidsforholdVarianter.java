@@ -71,8 +71,6 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(ab);
 
         // FORESLÅ VEDTAK //
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         // FATTE VEDTAK //
@@ -107,37 +105,31 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         saksbehandler.gjenopptaBehandling();
 
         // VURDER ARBEIDSFORHOLD: Legg til fikivt arbeidsforhold //
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
         var apBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .leggTilArbeidsforhold("Ambassade", LocalDate.now().minusYears(2), LocalDate.now().plusYears(1), 100);
         saksbehandler.bekreftAksjonspunkt(apBekreftelse);
 
         // VURDER OPPTJENING: Godkjenn fiktivt arbeidsforhold i opptjening //
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING);
         VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
         vurderPerioderOpptjeningBekreftelse.godkjennAllOpptjening();
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
         // FAKTA OM BERGNING: Fastsett inntekt for fiktivt arbeidsforhold og vurder om mottatt ytelse
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
         FastsettMaanedsinntektUtenInntektsmeldingAndel fastsattInntekt = new FastsettMaanedsinntektUtenInntektsmeldingAndel(1l, 25_000);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+        var ab = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSLONN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING.kode)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode)
                 .leggTilMaanedsinntektUtenInntektsmelding(List.of(fastsattInntekt))
                 .leggTilMottarYtelse(List.of(new ArbeidstakerandelUtenIMMottarYtelse(1L, false)));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderFaktaOmBeregningBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(ab);
 
         // AVVIK I BEREGNING //
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+        var aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
                 .leggTilInntekt(300_000, 1)
                 .setBegrunnelse("Begrunnelse");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderBeregnetInntektsAvvikBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
 
         // FORESLÅ VEDTAK //
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         // FATTE VEDTAK //

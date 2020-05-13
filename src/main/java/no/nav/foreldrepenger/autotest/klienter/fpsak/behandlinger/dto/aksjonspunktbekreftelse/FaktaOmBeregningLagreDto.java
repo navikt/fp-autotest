@@ -29,12 +29,12 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilVurderTidsbegrenset(List<VurderteArbeidsforholdDto> tidsbegrensetAndeler){
+    public FaktaOmBeregningLagreDto leggTilVurderTidsbegrenset(List<VurderteArbeidsforholdDto> tidsbegrensetAndeler) {
         this.vurderTidsbegrensetArbeidsforhold = new VurderTidsbegrensetArbeidsforholdDto(tidsbegrensetAndeler);
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilMottarYtelse(Boolean frilansMottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses){
+    public FaktaOmBeregningLagreDto leggTilMottarYtelse(Boolean frilansMottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses) {
         if (this.mottarYtelse != null) {
             arbeidstakerandelUtenIMMottarYtelses.forEach(this.mottarYtelse::leggTilArbeidstakerandelUtenIMMottarYtelse);
         } else {
@@ -59,7 +59,7 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilMaanedsinntektUtenInntektsmelding(List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe){
+    public FaktaOmBeregningLagreDto leggTilMaanedsinntektUtenInntektsmelding(List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe) {
         this.fastsattUtenInntektsmelding = new FastsettMaanedsinntektUtenInntektsmelding(andelListe);
         return this;
     }

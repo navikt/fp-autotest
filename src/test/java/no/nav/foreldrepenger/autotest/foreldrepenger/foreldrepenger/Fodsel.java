@@ -1,5 +1,38 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.INGEN_STØNADSKONTO;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingBuilderMedEndringIRefusjonPrivatArbeidsgiver;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingBuilderPrivatArbeidsgiver;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -46,38 +79,6 @@ import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.ObjectFactory;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.INGEN_STØNADSKONTO;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingBuilderMedEndringIRefusjonPrivatArbeidsgiver;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingBuilderPrivatArbeidsgiver;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -142,7 +143,6 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .leggTilMottarYtelse(Collections.emptyList())
                 .leggTilMaanedsinntektFL(25800);
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
-        verifiser(!saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS), "Fått AP hvor det ikke skal være det");
 
         var vurderFaktaOmBeregningBekreftelse2 = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse2
@@ -157,7 +157,6 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -207,7 +206,6 @@ public class Fodsel extends ForeldrepengerTestBase {
         vurderVarigEndringEllerNyoppstartetSNBekreftelse.setErVarigEndretNaering(false)
                 .setBegrunnelse("Ingen endring");
         saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse);
-        verifiser(!saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_SELVSTENDIG_NÆRINGSDRIVENDE), "Har uventet aksjonspunkt: 5042");
 
         VurderVarigEndringEllerNyoppstartetSNBekreftelse vurderVarigEndringEllerNyoppstartetSNBekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class);
         vurderVarigEndringEllerNyoppstartetSNBekreftelse1.setErVarigEndretNaering(true)
@@ -217,8 +215,6 @@ public class Fodsel extends ForeldrepengerTestBase {
         //verifiser skjæringstidspunkt i følge søknad
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getSkjaeringstidspunktBeregning(), fpStartdato);
 
-
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -231,7 +227,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), false);
 
@@ -283,7 +279,6 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -296,7 +291,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+
         verifiserUttak(2, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
@@ -336,7 +331,6 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -349,7 +343,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
@@ -396,7 +390,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+
         verifiserUttak(2, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
 
@@ -433,7 +427,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+
         verifiserUttak(1, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -480,7 +474,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+
         verifiserUttak(2, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -516,13 +510,11 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FAKTA_UTTAK);
-        AvklarFaktaUttakBekreftelse avklarFaktaUttakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.class);
+        AvklarFaktaUttakBekreftelse avklarFaktaUttakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         avklarFaktaUttakBekreftelse.godkjennPeriode(startDatoForeldrepenger, startDatoForeldrepenger.plusWeeks(2),
                 saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelse.godkjennPeriode(startDatoForeldrepenger, startDatoForeldrepenger.plusWeeks(2));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
@@ -574,7 +566,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+
         verifiserUttak(1, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
 
@@ -676,7 +668,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        verifiser(saksbehandler.valgtBehandling.erSattPåVent() == true, "Behandling ikke satt på vent");
+        verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandling ikke satt på vent");
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
     }
@@ -814,8 +806,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
-
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
 
         //Verifiser Beregningsgrunnlag
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);
@@ -838,7 +829,6 @@ public class Fodsel extends ForeldrepengerTestBase {
         assertThat(resultatPerioder[3].getAndeler()[0].getRefusjon()).isEqualTo(forventetRefusjon.intValue());
 
         // Foreslå vedtak
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         // Totrinnskontroll
@@ -852,7 +842,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
     }
 
@@ -896,7 +886,8 @@ public class Fodsel extends ForeldrepengerTestBase {
                 hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_UTTAKPERIODER);
+
         //verifiserer uttak
         List<UttakResultatPeriode> uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         assertThat(uttaksperioder).hasSize(2);
@@ -1323,9 +1314,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         Aksjonspunkt ap = beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_FAKTA_UTTAK);
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(ap);
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
         verifiser(beslutter.valgtBehandling.hentUttaksperioder().size() == 9, "Feil antall uttaksperioder, skal være 9");
         verifiser(beslutter.valgtBehandling.hentUttaksperiode(2).getAktiviteter().get(0).getTrekkdagerDesimaler().compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");

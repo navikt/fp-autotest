@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.autotest.erketyper;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OverføringÅrsak;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.perioder.GraderingBuilder;
@@ -19,19 +28,10 @@ import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Overfoeringsperiode;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Utsettelsesperiode;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Uttaksperiode;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-
 public class FordelingErketyper {
 
-    public static Fordeling fordelingHappyCase(LocalDate familehendelseDato, SøkersRolle søkerRolle){
-        if(søkerRolle == SøkersRolle.MOR){
+    public static Fordeling fordelingHappyCase(LocalDate familehendelseDato, SøkersRolle søkerRolle) {
+        if(søkerRolle == SøkersRolle.MOR) {
             return fordelingMorHappyCaseLong(familehendelseDato);
         }
         else {

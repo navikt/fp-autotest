@@ -48,7 +48,7 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
         opptjeningAktivitetList.add(aktivitet);
     }
 
-    public VurderPerioderOpptjeningBekreftelse godkjennAllOpptjening(){
+    public VurderPerioderOpptjeningBekreftelse godkjennAllOpptjening() {
         opptjeningAktivitetList.forEach(aktivitet -> aktivitet.vurder(true, "Godkjent", false));
         return this;
     }

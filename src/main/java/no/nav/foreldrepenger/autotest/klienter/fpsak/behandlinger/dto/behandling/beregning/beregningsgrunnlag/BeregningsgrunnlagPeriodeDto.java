@@ -19,7 +19,7 @@ public class BeregningsgrunnlagPeriodeDto {
     protected int dagsats;
     protected List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndel;
 
-    public List<BeregningsgrunnlagPrStatusOgAndelDto> getBeregningsgrunnlagPrStatusOgAndel(){
+    public List<BeregningsgrunnlagPrStatusOgAndelDto> getBeregningsgrunnlagPrStatusOgAndel() {
         return beregningsgrunnlagPrStatusOgAndel;
     }
 

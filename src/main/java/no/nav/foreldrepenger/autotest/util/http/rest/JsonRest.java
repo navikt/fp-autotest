@@ -48,14 +48,12 @@ public abstract class JsonRest extends Rest {
         return postOgHentJson(url, requestData, new HashMap<>(), returnType, expectedStatusRange);
     }
 
-    protected <T> T postOgHentJson(String url, Object requestData, Map<String, String> headers, Class<T> returnType, StatusRange expectedStatusRange)
-    {
+    protected <T> T postOgHentJson(String url, Object requestData, Map<String, String> headers, Class<T> returnType, StatusRange expectedStatusRange) {
         String json = postOgVerifiser(url, requestData, headers, expectedStatusRange);
         return json.equals("") ? null : fromJson(json, returnType);
     }
 
-    protected <T> T postOgHentJson(String url, Object requestData, Map<String, String> headers, JavaType returnType, StatusRange expectedStatusRange)
-    {
+    protected <T> T postOgHentJson(String url, Object requestData, Map<String, String> headers, JavaType returnType, StatusRange expectedStatusRange) {
         String json = postOgVerifiser(url, requestData, headers, expectedStatusRange);
         return json.equals("") ? null : fromJson(returnType, json);
     }

@@ -24,7 +24,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
@@ -76,13 +75,11 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FØDSEL_OG_TILRETTELEGGING);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.BEKREFT_SVANGERSKAPSPENGER_VILKÅR);
         BekreftSvangerskapspengervilkår bekreftSvangerskapspengervilkår =
                 saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
         bekreftSvangerskapspengervilkår
@@ -143,13 +140,11 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FØDSEL_OG_TILRETTELEGGING);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("En begrunnelse fra autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.BEKREFT_SVANGERSKAPSPENGER_VILKÅR);
         BekreftSvangerskapspengervilkår bekreftSvangerskapspengervilkår =
                 saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
         bekreftSvangerskapspengervilkår
@@ -220,14 +215,12 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FØDSEL_OG_TILRETTELEGGING);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
         avklarFaktaFødselOgTilrettelegging.setSkalBrukesTilFalseForArbeidsforhold(arbeidsforholdId2);
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.BEKREFT_SVANGERSKAPSPENGER_VILKÅR);
         BekreftSvangerskapspengervilkår bekreftSvangerskapspengervilkår =
                 saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
         bekreftSvangerskapspengervilkår.godkjenn()
@@ -302,13 +295,11 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer1);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FØDSEL_OG_TILRETTELEGGING);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.BEKREFT_SVANGERSKAPSPENGER_VILKÅR);
         BekreftSvangerskapspengervilkår bekreftSvangerskapspengervilkår =
                 saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
         bekreftSvangerskapspengervilkår.godkjenn()
@@ -350,13 +341,11 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer2);
         saksbehandler.ventTilSakHarRevurdering();
         saksbehandler.velgRevurderingBehandling();
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FØDSEL_OG_TILRETTELEGGING);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging2 =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
         avklarFaktaFødselOgTilrettelegging2.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging2);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.BEKREFT_SVANGERSKAPSPENGER_VILKÅR);
         BekreftSvangerskapspengervilkår bekreftSvangerskapspengervilkår2 =
                 saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
         bekreftSvangerskapspengervilkår2.godkjenn()
@@ -443,13 +432,11 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_FØDSEL_OG_TILRETTELEGGING);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.BEKREFT_SVANGERSKAPSPENGER_VILKÅR);
         BekreftSvangerskapspengervilkår bekreftSvangerskapspengervilkår =
                 saksbehandler.hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
         bekreftSvangerskapspengervilkår
@@ -478,8 +465,6 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
 
     private void foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(long saksnummer, boolean revurdering) {
-        saksbehandler.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FORESLÅ_VEDTAK);
-        saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -487,7 +472,6 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         if ( beslutter.harRevurderingBehandling() && revurdering ) {
             beslutter.velgRevurderingBehandling();
         }
-        beslutter.ventTilAksjonspunktSomKanLøses(AksjonspunktKoder.FATTER_VEDTAK);
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);

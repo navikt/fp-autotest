@@ -6,7 +6,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode="5060")
-public class AvklarFaktaAleneomsorgBekreftelse extends AksjonspunktBekreftelse{
+public class AvklarFaktaAleneomsorgBekreftelse extends AksjonspunktBekreftelse {
 
     protected Boolean aleneomsorg;
 

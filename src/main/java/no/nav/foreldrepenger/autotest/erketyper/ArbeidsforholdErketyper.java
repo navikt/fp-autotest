@@ -8,17 +8,17 @@ import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Virksomhet;
 
 public class ArbeidsforholdErketyper {
 
-    public static Virksomhet virksomhet(String identifikator){
+    public static Virksomhet virksomhet(String identifikator) {
         Virksomhet virksomhet = new Virksomhet();
         virksomhet.setIdentifikator(identifikator);
         return virksomhet;
     }
 
-    public static PrivatArbeidsgiver privatArbeidsgiver(){
+    public static PrivatArbeidsgiver privatArbeidsgiver() {
         return new PrivatArbeidsgiver();
     }
 
-    public static SelvstendigNæringsdrivende selvstendigNæringsdrivende(){
+    public static SelvstendigNæringsdrivende selvstendigNæringsdrivende() {
         SelvstendigNæringsdrivende selvstendigNæringsdrivende = new SelvstendigNæringsdrivende();
         selvstendigNæringsdrivende.setOpplysningerOmRisikofaktorer("");
         selvstendigNæringsdrivende.setOpplysningerOmTilretteleggingstiltak("");

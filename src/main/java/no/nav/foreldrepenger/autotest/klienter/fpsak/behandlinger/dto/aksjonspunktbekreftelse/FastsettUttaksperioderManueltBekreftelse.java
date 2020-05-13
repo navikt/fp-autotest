@@ -48,9 +48,9 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
             godkjennPeriode(uttakResultatPeriode);
         }
     }
-    public void godkjennAlleManuellePerioder(){
+    public void godkjennAlleManuellePerioder() {
         for(UttakResultatPeriode uttakPeriode : perioder) {
-            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
+            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
                 godkjennPeriode(uttakPeriode);
             }
         }
@@ -76,16 +76,16 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
             }
         }
     }
-    public void avslåAlleManuellePerioder(){
+    public void avslåAlleManuellePerioder() {
         for(UttakResultatPeriode uttakPeriode : perioder) {
-            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
+            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
                 avslåPeriode(uttakPeriode);
             }
         }
     }
-    public void avslåAlleManuellePerioderMedPeriodeResultatÅrsak(Kode periodeResultatÅrsak){
+    public void avslåAlleManuellePerioderMedPeriodeResultatÅrsak(Kode periodeResultatÅrsak) {
         for(UttakResultatPeriode uttakPeriode : perioder) {
-            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")){
+            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
                 avslåPeriode(uttakPeriode, periodeResultatÅrsak);
             }
         }
@@ -171,7 +171,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         BigDecimal ordinæreTrekkdagerVedFulltUttak = BigDecimal.valueOf(
                 Virkedager.beregnAntallVirkedager(periode.getFom(), periode.getTom()));
         if ( samtidigUttak ) {
-            if ( periode.getSamtidigUttaksprosent() == null ){
+            if ( periode.getSamtidigUttaksprosent() == null ) {
                 throw new NullPointerException("Samtidig uttaksprosent er ikke satt!");
             }
             if ( aktivitet.getProsentArbeid().doubleValue() > periode.getSamtidigUttaksprosent().doubleValue()) {
@@ -231,7 +231,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
         }
     }
-    private void LeggTilUttakPeriode(UttakResultatPeriode uttakPeriode){
+    private void LeggTilUttakPeriode(UttakResultatPeriode uttakPeriode) {
         perioder.add(uttakPeriode);
     }
     private UttakResultatPeriode finnPeriode(LocalDate fra, LocalDate til) {

@@ -84,13 +84,11 @@ public class Beregning extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
+        var vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
                 .godkjennAllOpptjening();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderPerioderOpptjeningBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_AKTIVITETER);
         verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
                 .anyMatch(ap -> ap.erUbekreftet() && ap.getDefinisjon().kode.equals(AksjonspunktKoder.AVKLAR_AKTIVITETER)), true);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning()
@@ -131,11 +129,9 @@ public class Beregning extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
         saksbehandler.gjenopptaBehandling();
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+        var avklarArbeidsforholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErRelevant("STATOIL", true);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
         verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
                 .anyMatch(ap -> ap.erUbekreftet() &&
                         ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
@@ -179,10 +175,8 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning().getFaktaOmBeregningTilfeller()
                 .contains(FaktaOmBeregningTilfelle.VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD), true);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning()
@@ -226,7 +220,7 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
     }
 
     @Test
@@ -259,14 +253,14 @@ public class Beregning extends ForeldrepengerTestBase {
 
         saksbehandler.gjenopptaBehandling();
 
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErOverstyrt("BEDRIFT AS", LocalDate.now().minusYears(3), fpStartdato.minusDays(10));
+        var avklarArbeidsforholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+                .bekreftArbeidsforholdErOverstyrt("BEDRIFT AS", now().minusYears(3), fpStartdato.minusDays(10));
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
     }
 
     @Test
@@ -300,10 +294,8 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning().getFaktaOmBeregningTilfeller()
                 .contains(FaktaOmBeregningTilfelle.VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD), true);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning()
@@ -314,12 +306,12 @@ public class Beregning extends ForeldrepengerTestBase {
                 .getKortvarigeArbeidsforhold().get(0).getArbeidsforhold(), "STATOIL", "892850372");
 
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+        var vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD.kode)
                 .leggTilVurderTidsbegrenset(singletonList(new VurderteArbeidsforholdDto(2L, true, false)));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderFaktaOmBeregningBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORDEL_BEREGNINGSGRUNNLAG);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FORDEL_BEREGNINGSGRUNNLAG);
 
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning()
                 .getEndringBeregningsgrunnlag().getEndredeArbeidsforhold().size()).isEqualTo(1);
@@ -361,10 +353,8 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning().getFaktaOmBeregningTilfeller()
                 .contains(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING), true);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning()
@@ -400,14 +390,11 @@ public class Beregning extends ForeldrepengerTestBase {
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         saksbehandler.gjenopptaBehandling();
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+        var avklarArbeidsforholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning().getFaktaOmBeregningTilfeller()
                 .contains(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING), true);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning()
@@ -442,14 +429,11 @@ public class Beregning extends ForeldrepengerTestBase {
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         saksbehandler.gjenopptaBehandling();
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+        var avklarArbeidsforholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt, true);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning().getFaktaOmBeregningTilfeller()
                 .contains(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING), true);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning()
@@ -484,14 +468,11 @@ public class Beregning extends ForeldrepengerTestBase {
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         saksbehandler.gjenopptaBehandling();
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+        var avklarArbeidsforholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
     }
 
     @Test
@@ -513,15 +494,12 @@ public class Beregning extends ForeldrepengerTestBase {
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         saksbehandler.gjenopptaBehandling();
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+        var avklarArbeidsforholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-    verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-            ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
 }
 
     @Test
@@ -547,10 +525,8 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning().getFaktaOmBeregningTilfeller()
                 .contains(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING), true);
     }
@@ -579,22 +555,19 @@ public class Beregning extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
         saksbehandler.gjenopptaBehandling();
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+        var avklarArbeidsforholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarArbeidsforholdBekreftelse.class);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
         assertMottarYtelse(1L, "BEDRIFT AS", "910909088");
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+        var vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode)
                 .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSLONN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING.kode)
                 .leggTilMottarYtelse(singletonList(new ArbeidstakerandelUtenIMMottarYtelse(1, true)))
                 .leggTilMaanedsinntektUtenInntektsmelding(singletonList(new FastsettMaanedsinntektUtenInntektsmeldingAndel(1, 30000)));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderFaktaOmBeregningBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
@@ -611,13 +584,13 @@ public class Beregning extends ForeldrepengerTestBase {
 
         saksbehandler.velgRevurderingBehandling();
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
 
         assertMottarYtelse(1L, "BEDRIFT AS", "910909088");
 
         saksbehandler.settBehandlingPåVent(now().plusWeeks(1), "VENT_OPDT_INNTEKTSMELDING");
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AUTO_MANUELT_SATT_PÅ_VENT);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_MANUELT_SATT_PÅ_VENT);
 
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, startDatoForeldrepenger, orgNr)
                 .medUtsettelse(SøknadUtsettelseÅrsak.ARBEID.getKode(), startDatoForeldrepenger, startDatoForeldrepenger.plusMonths(1));
@@ -636,7 +609,7 @@ public class Beregning extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
 
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK_MANUELT);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK_MANUELT);
 
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getFaktaOmBeregning()).isNull();
     }
@@ -672,7 +645,7 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_FOR_SN_NY_I_ARBEIDSLIVET);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_FOR_SN_NY_I_ARBEIDSLIVET);
 
     }
 
@@ -794,10 +767,8 @@ public class Beregning extends ForeldrepengerTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.erUbekreftet() &&
-                        ap.getDefinisjon().kode.equals(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN)), true);
+        var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
 
 
         assertEndretArbeidsforhold(tilkommetDato);

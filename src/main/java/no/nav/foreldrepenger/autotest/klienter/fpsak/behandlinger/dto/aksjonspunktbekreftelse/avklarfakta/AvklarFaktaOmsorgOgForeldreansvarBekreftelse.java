@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @BekreftelseKode(kode="5008")
-public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBekreftelse{
+public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBekreftelse {
 
     protected int antallBarn;
     protected int originalAntallBarn;
@@ -46,44 +46,44 @@ public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBe
         farSokerType = "Far har overtatt omsorgen for barnet mindre enn 56 uker etter adopsjon, med sikte på å overta foreldreansvaret alene";
 
         //Legg til bern fra søknad
-        if(behandling.getSoknad().getAdopsjonFodelsedatoer() != null){
+        if(behandling.getSoknad().getAdopsjonFodelsedatoer() != null) {
             Map<Integer, LocalDate> fodselsdatoer = behandling.getSoknad().getAdopsjonFodelsedatoer();
 
-            for(int i = 0; i < fodselsdatoer.size(); i++){
+            for(int i = 0; i < fodselsdatoer.size(); i++) {
                 barn.add(new OmsorgovertakelseBarn(fodselsdatoer.get(i+1), "SAKSBEH", (i+1)));
             }
         }
         else{
-            for(int i = 0; i < behandling.getSoknad().getAntallBarn(); i++){
+            for(int i = 0; i < behandling.getSoknad().getAntallBarn(); i++) {
                 barn.add(new OmsorgovertakelseBarn(behandling.getSoknad().getFodselsdatoer().get(i+1), "SAKSBEH", (i+1)));
             }
         }
 
     }
 
-    public void setDødsdato(LocalDate dato){
+    public AvklarFaktaOmsorgOgForeldreansvarBekreftelse setDødsdato(LocalDate dato) {
         foreldre.get(0).dodsdato = dato;
+        return this;
     }
 
-    public void setVilkårType(Kode vilkarType) {
+    public AvklarFaktaOmsorgOgForeldreansvarBekreftelse setVilkårType(Kode vilkarType) {
         this.vilkarType = vilkarType.kode;
+        return this;
     }
 
-    protected class OmsorgovertakelseBarn
-    {
+    protected class OmsorgovertakelseBarn {
         protected LocalDate fodselsdato;
         protected String opplysningsKilde;
         protected int nummer;
 
-        public OmsorgovertakelseBarn(LocalDate fodselsdato, String opplysningsKilde, int nummer){
+        public OmsorgovertakelseBarn(LocalDate fodselsdato, String opplysningsKilde, int nummer) {
             this.fodselsdato = fodselsdato;
             this.opplysningsKilde = opplysningsKilde;
             this.nummer = nummer;
         }
     }
 
-    protected class OmsorgovertakelseForelder
-    {
+    protected class OmsorgovertakelseForelder {
         protected int id;
         protected LocalDate dodsdato;
         protected boolean erMor;
@@ -91,7 +91,7 @@ public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBe
         protected String opplysningsKilde;
         protected String aktorId;
 
-        public OmsorgovertakelseForelder(Personopplysning person){
+        public OmsorgovertakelseForelder(Personopplysning person) {
             id = person.getId();
             dodsdato = person.getDoedsdato();
             erMor = person.getNavBrukerKjonn().kode.equals("K");

@@ -10,9 +10,9 @@ public class TilretteleggingType extends Kode {
     public static final TilretteleggingType DELVIS_TILRETTELEGGING = new TilretteleggingType("DELVIS_TILRETTELEGGING", "delvis_tilrettelegging");
     public static final TilretteleggingType INGEN_TILRETTELEGGING = new TilretteleggingType("INGEN_TILRETTELEGGING", "ingen_tilrettelegging");
 
-    public TilretteleggingType(){}
+    public TilretteleggingType() {}
 
-    private TilretteleggingType(String kode, String navn){
+    private TilretteleggingType(String kode, String navn) {
         super(DISCRIMINATOR,kode,navn);
     }
 }

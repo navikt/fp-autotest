@@ -5,8 +5,8 @@ public class ApFaktaFeilutbetalingAarsak {
     protected ApFaktaFeilutbetalingAarsakHendelseTyper hendelseType = new ApFaktaFeilutbetalingAarsakHendelseTyper();
     protected ApFaktaFeilutbetalingAarsakHendelseTyper hendelseUndertype = new ApFaktaFeilutbetalingAarsakHendelseTyper();
 
-    public void addGeneriskHendelser(String ytelseType){
-        switch (ytelseType){
+    public void addGeneriskHendelser(String ytelseType) {
+        switch (ytelseType) {
             case "FP":
                 addGeneriskHendelserForeldrepenger();
                 break;

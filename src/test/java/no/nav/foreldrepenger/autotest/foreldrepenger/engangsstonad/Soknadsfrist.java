@@ -45,9 +45,9 @@ public class Soknadsfrist extends FpsakTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
+        var vurderManglendeFodselBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
                 .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderManglendeFodselBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
         //Får rtesultat utvandret?
 
@@ -74,14 +74,13 @@ public class Soknadsfrist extends FpsakTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
-            .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderManglendeFodselBekreftelse.class);
+        var vurderManglendeFodselBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
+                .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
+        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristBekreftelse.class)
-            .bekreftVilkårErOk();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderSoknadsfristBekreftelse.class);
-
+        var vurderSoknadsfristBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristBekreftelse.class)
+                .bekreftVilkårErOk();
+        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
@@ -89,10 +88,10 @@ public class Soknadsfrist extends FpsakTestBase {
         beslutter.hentFagsak(saksnummer);
 
 
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL))
                 .avvisAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET), new Kode("FEIL_FAKTA"));
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
         saksbehandler.hentFagsak(saksnummer);
         verifiserLikhet(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode, "UTFO");
@@ -114,29 +113,26 @@ public class Soknadsfrist extends FpsakTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
-            .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderManglendeFodselBekreftelse.class);
+        var vurderManglendeFodselBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
+                .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
+        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristBekreftelse.class)
-            .bekreftVilkårErOk();
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderSoknadsfristBekreftelse.class);
-
-
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
-
-
-        beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var vedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET))
                 .avvisAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL), new Kode("FEIL_FAKTA"));
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.bekreftAksjonspunkt(vedtakBekreftelse);
 
         saksbehandler.hentFagsak(saksnummer);
         verifiserLikhet(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode, "OPPR");
-        verifiser(!saksbehandler.harAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET), "Behandling hadde aksjonspunkt " + AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET + " selv om det ikke var forventet");
+
+        var harSøknadsfristAP = saksbehandler.valgtBehandling.getAksjonspunkter().stream()
+                .anyMatch(ap -> ap.getDefinisjon().kode.equals(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET));
+        verifiser(!harSøknadsfristAP, "Behandling hadde aksjonspunkt " + AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET + " selv om det ikke var forventet");
     }
 
 }

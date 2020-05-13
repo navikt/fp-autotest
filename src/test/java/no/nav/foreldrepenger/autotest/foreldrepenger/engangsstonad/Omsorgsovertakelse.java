@@ -112,13 +112,13 @@ public class Omsorgsovertakelse extends FpsakTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class)
+        var avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class)
                 .setVilkårType(saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_5"));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderingAvOmsorgsvilkoret.class)
+        var bekreftAvvist = saksbehandler.hentAksjonspunktbekreftelse(VurderingAvOmsorgsvilkoret.class)
                 .bekreftAvvist(saksbehandler.kodeverk.Avslagsårsak.get("FP_VK_33").getKode("1018"));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderingAvOmsorgsvilkoret.class);
+        saksbehandler.bekreftAksjonspunkt(bekreftAvvist);
 
         //TODO bør gå til beslutter
     }

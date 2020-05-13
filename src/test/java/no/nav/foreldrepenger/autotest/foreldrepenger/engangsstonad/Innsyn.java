@@ -119,11 +119,11 @@ public class Innsyn extends FpsakTestBase {
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.velgDokumentInnsynBehandling();
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class)
+        var aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class)
                 .setMottattDato(LocalDate.now())
                 .setInnsynResultatType(saksbehandler.kodeverk.InnsynResultatType.getKode("AVVIST"))
                 .setBegrunnelse("Test");
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderingAvInnsynBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
 

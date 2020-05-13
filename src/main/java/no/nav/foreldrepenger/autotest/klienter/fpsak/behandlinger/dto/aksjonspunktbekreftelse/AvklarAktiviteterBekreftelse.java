@@ -18,21 +18,21 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    public AvklarAktiviteterBekreftelse setSkalBrukes(boolean skalBrukes, String orgnr){
+    public AvklarAktiviteterBekreftelse setSkalBrukes(boolean skalBrukes, String orgnr) {
         BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
                 .filter(a -> a.oppdragsgiverOrg.equals(orgnr))
                 .findFirst().get();
         vurdering.skalBrukes = skalBrukes;
         return this;
     }
-        public AvklarAktiviteterBekreftelse godkjennOpptjeningsAktivitet(String opptjeningsAktivitetType){
+        public AvklarAktiviteterBekreftelse godkjennOpptjeningsAktivitet(String opptjeningsAktivitetType) {
         BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
                 .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
                 .findFirst().get();
         vurdering.skalBrukes = true;
         return this;
     }
-    public AvklarAktiviteterBekreftelse avvisOpptjeningsAktivitet(String opptjeningsAktivitetType){
+    public AvklarAktiviteterBekreftelse avvisOpptjeningsAktivitet(String opptjeningsAktivitetType) {
         BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
                 .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
                 .findFirst().get();

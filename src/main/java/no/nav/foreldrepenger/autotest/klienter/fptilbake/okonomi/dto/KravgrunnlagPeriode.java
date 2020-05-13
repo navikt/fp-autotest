@@ -12,7 +12,7 @@ public class KravgrunnlagPeriode {
 
     protected List<KravgrunnlagPeriodePostering> posteringer;
 
-    public KravgrunnlagPeriode(String fom, String tom, BigDecimal beløpSkattMnd){
+    public KravgrunnlagPeriode(String fom, String tom, BigDecimal beløpSkattMnd) {
 
         this.fom = fom;
         this.tom = tom;
@@ -21,7 +21,7 @@ public class KravgrunnlagPeriode {
         this.posteringer = new ArrayList<>();
     }
 
-    public void leggTilPostering(){
+    public void leggTilPostering() {
         KravgrunnlagPeriodePostering kravgrunnlagPeriodePostering = new KravgrunnlagPeriodePostering(
                 "FPATORD", "YTEL",
                 BigDecimal.valueOf(3253),
@@ -42,7 +42,7 @@ public class KravgrunnlagPeriode {
         this.posteringer.add(kravgrunnlagPeriodePostering);
     }
 
-    public void leggTilPosteringForEngangsstonad(){
+    public void leggTilPosteringForEngangsstonad() {
         KravgrunnlagPeriodePostering kravgrunnlagPeriodePostering = new KravgrunnlagPeriodePostering(
                 "FPENFOD-OP", "YTEL",
                 BigDecimal.valueOf(83140),
