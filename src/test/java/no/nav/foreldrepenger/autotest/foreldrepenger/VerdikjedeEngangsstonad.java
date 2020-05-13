@@ -32,7 +32,6 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
         var testscenario = opprettTestscenario("505");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var termindato = LocalDate.now().plusWeeks(3);
-
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 søkerAktørId,
                 SøkersRolle.MOR,
@@ -47,12 +46,7 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
-        // TODO: Fjern dette. Skal kunne automatisk godkjennes. Henter disse fra søknadden. Så disse skal være oppgitt fra før!
-        //  Begrunnesle inkluder!
-        avklarFaktaTerminBekreftelse
-                .antallBarn(1)
-                .utstedtdato(termindato.minusMonths(1))
-                .setTermindato(termindato);
+        avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
         saksbehandler.ventTilAksjonspunkt(AksjonspunktKoder.AVKLAR_LOVLIG_OPPHOLD);
