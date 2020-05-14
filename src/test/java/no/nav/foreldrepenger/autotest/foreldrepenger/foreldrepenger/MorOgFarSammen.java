@@ -47,8 +47,8 @@ import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakManueltBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
@@ -100,10 +100,10 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         //Behandle ferdig mor sin sak
         saksbehandler.hentFagsak(saksnummerMor);
         debugLoggBehandlingsliste("mors behandlinger", saksbehandler.behandlinger);
-        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.godkjennAllePerioder();
+        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+                .innvilgManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerMor);
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -375,7 +375,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(LocalDate.now().minusMonths(4));
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
 
@@ -413,7 +413,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(LocalDate.now().minusMonths(4));
         overstyrer.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
 
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerMor);
@@ -450,7 +450,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         logger.debug("Date start: " + LocalDate.now().minusMonths(4).plusWeeks(6).plusDays(1));
         logger.debug("Date start: " + LocalDate.now().minusMonths(4).plusWeeks(10).minusDays(2));
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
 
@@ -481,7 +481,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktbekreftelserer(
                 saksbehandler.hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class),
-                saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakManueltBekreftelse.class));
+                saksbehandler.hentAksjonspunktbekreftelse(ForeslåVedtakManueltBekreftelse.class));
         saksbehandler.ventTilAvsluttetBehandling();
     }
 
@@ -542,9 +542,9 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 saksnummerFar);
         saksbehandler.hentFagsak(saksnummerFar);
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.godkjennAlleManuellePerioder();
+        fastsettUttaksperioderManueltBekreftelse.innvilgManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerFar);
@@ -557,9 +557,9 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.velgRevurderingBehandling();
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse1.godkjennAlleManuellePerioder();
+        fastsettUttaksperioderManueltBekreftelse1.innvilgManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse1);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         beslutter.hentFagsak(saksnummerMor);
@@ -656,7 +656,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(1, fødselsdato);
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
 
@@ -684,7 +684,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(LocalDate.now().minusMonths(4));
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
 
@@ -713,7 +713,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarBrukerBosattBekreftelse.class);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);

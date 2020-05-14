@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelseUtenTotrinn;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelseUtenTotrinn;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.OverstyrAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
@@ -460,7 +460,12 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Henter aksjonspunkt {kode}")
     public Aksjonspunkt hentAksjonspunkt(String kode) {
-        return Vent.tilRetur(() -> hentAksjonspunktDirekte(kode), 60, "Finner ikke aksjonspunkt " + kode);
+        return Vent.tilRetur(() -> hentAksjonspunktDirekte(kode), 40, "Finner ikke aksjonspunkt " + kode);
+    }
+
+    public <T extends AksjonspunktBekreftelse> Aksjonspunkt hentAksjonspunkt(Class<T> type) {
+        var aksjonspunktKode = type.getDeclaredAnnotation(BekreftelseKode.class).kode();
+        return hentAksjonspunkt(aksjonspunktKode);
     }
 
     private Optional<Aksjonspunkt> hentAksjonspunktDirekte(String kode) {
@@ -699,7 +704,7 @@ public class Saksbehandler extends Aktoer {
 
     @Step("Fatter vedtak uten totrinnsbehandling og venter til sak er avsluttet")
     public void fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling() {
-        bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelseUtenTotrinn.class);
+        bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
         ventTilAvsluttetBehandling();
     }
 

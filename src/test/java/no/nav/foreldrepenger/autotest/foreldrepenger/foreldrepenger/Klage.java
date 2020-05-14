@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravKa;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
@@ -79,7 +79,7 @@ public class Klage extends ForeldrepengerTestBase {
                 .setBegrunnelse(begrunnelse);
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse1);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
@@ -185,7 +185,7 @@ public class Klage extends ForeldrepengerTestBase {
                 .fritekstBrev("Fritekst brev fra KA")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
@@ -234,7 +234,7 @@ public class Klage extends ForeldrepengerTestBase {
                 .fritekstBrev("Fritekst brev fra KA")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
@@ -267,7 +267,7 @@ public class Klage extends ForeldrepengerTestBase {
         klageFormkravNfp.klageErIkkeKonkret()
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);

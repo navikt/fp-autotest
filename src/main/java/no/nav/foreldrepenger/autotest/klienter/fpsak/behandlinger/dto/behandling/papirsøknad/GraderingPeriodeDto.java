@@ -16,8 +16,6 @@ public class GraderingPeriodeDto {
     public boolean erArbeidstaker;
     public boolean erFrilanser;
     public boolean erSelvstNæringsdrivende;
-    public String arbeidskategoriType = "ARBEIDSTAKER";
-    public boolean skalGraderes = true;
 
     public GraderingPeriodeDto(Stønadskonto stønadskonto,
                                LocalDate fom, LocalDate tom,
@@ -25,8 +23,7 @@ public class GraderingPeriodeDto {
                                String arbeidsgiverIdentifikator,
                                boolean erArbeidstaker,
                                boolean erFrilanser,
-                               boolean erSelvstNæringsdrivende,
-                               String arbeidskategoriType) {
+                               boolean erSelvstNæringsdrivende) {
         periodeForGradering = stønadskonto;
         periodeFom = fom;
         periodeTom = tom;
@@ -35,7 +32,5 @@ public class GraderingPeriodeDto {
         this.erArbeidstaker = erArbeidstaker;
         this.erFrilanser = erFrilanser;
         this.erSelvstNæringsdrivende = erSelvstNæringsdrivende;
-        this.arbeidskategoriType= arbeidskategoriType;
     }
-
 }

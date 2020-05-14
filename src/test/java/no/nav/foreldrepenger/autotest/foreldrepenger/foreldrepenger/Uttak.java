@@ -52,7 +52,7 @@ import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
@@ -388,7 +388,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 FELLESPERIODE, fødselsdato.plusDays(42), fødselsdato.plusDays(120),
                 BigDecimal.valueOf(70),
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr(),
-                true, false, false, "ARBEIDSTAKER"
+                true, false, false
         );
 //        GraderingPeriodeDto gradering2 = new GraderingPeriodeDto(
 //                Stønadskonto.MØDREKVOTE, fødselsdato.plusDays(50), fødselsdato.plusDays(105),
@@ -641,10 +641,10 @@ public class Uttak extends ForeldrepengerTestBase {
 
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.avslåAlleManuellePerioder();
+        fastsettUttaksperioderManueltBekreftelse.avslåManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
@@ -987,7 +987,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse1);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerMor);
@@ -1030,7 +1030,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.velgRevurderingBehandling();
         List<Aksjonspunkt> apSomSkalTilTotrinnskontrollRevurdering = beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling();
@@ -1232,7 +1232,7 @@ public class Uttak extends ForeldrepengerTestBase {
         var avklarFaktaUttakBekreftelse = aksjonspunktbekreftelse.godkjennPeriode(faktaUttakPerioderList.get(0), godkjenningskode, true);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerMor);

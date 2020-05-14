@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @BekreftelseKode(kode="5015")
-public class ForesloVedtakBekreftelse extends AksjonspunktBekreftelse {
+public class ForeslåVedtakBekreftelse extends AksjonspunktBekreftelse {
 
 
 
@@ -16,17 +16,17 @@ public class ForesloVedtakBekreftelse extends AksjonspunktBekreftelse {
     protected Boolean skalBrukeOverstyrendeFritekstBrev;
     protected Boolean isVedtakSubmission;
 
-    public ForesloVedtakBekreftelse() {
+    public ForeslåVedtakBekreftelse() {
         super();
     }
 
 
-    public ForesloVedtakBekreftelse setAvslagCode(Kode avslagCode) {
+    public ForeslåVedtakBekreftelse setAvslagCode(Kode avslagCode) {
         this.avslagCode = avslagCode;
         return this;
     }
 
-    public ForesloVedtakBekreftelse setIsVedtakSubmission(Boolean verdi) {
+    public ForeslåVedtakBekreftelse setIsVedtakSubmission(Boolean verdi) {
         this.isVedtakSubmission = verdi;
         return this;
     }

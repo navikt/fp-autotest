@@ -50,7 +50,7 @@ import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
@@ -157,7 +157,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
@@ -215,7 +215,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         //verifiser skjæringstidspunkt i følge søknad
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getSkjaeringstidspunktBeregning(), fpStartdato);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
@@ -279,7 +279,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
@@ -331,7 +331,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
@@ -516,13 +516,13 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
 
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.godkjennPeriode(startDatoForeldrepenger, startDatoForeldrepenger.plusWeeks(2));
+        fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(startDatoForeldrepenger, startDatoForeldrepenger.plusWeeks(2));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         List<UttakResultatPeriode> perioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         verifiserLikhet(perioder.size(), 1);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
@@ -728,7 +728,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         // Foreslå vedtak
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         // Totrinnskontroll
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -829,7 +829,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         assertThat(resultatPerioder[3].getAndeler()[0].getRefusjon()).isEqualTo(forventetRefusjon.intValue());
 
         // Foreslå vedtak
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         // Totrinnskontroll
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -935,7 +935,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         vurderPerioderOpptjeningBekreftelse.godkjennAllOpptjening();
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
@@ -1169,7 +1169,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .bekreftDokumentasjonForeligger(2, fødselsdato);
         saksbehandler.bekreftAksjonspunkt(fodselBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
@@ -1309,7 +1309,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .godkjennPeriode(fødsel.plusWeeks(16), fødsel.plusWeeks(17).minusDays(1), godkjenningskode, true)
                 .godkjennPeriode(fødsel.plusWeeks(17), fødsel.plusWeeks(18).minusDays(1), godkjenningskode, true);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
