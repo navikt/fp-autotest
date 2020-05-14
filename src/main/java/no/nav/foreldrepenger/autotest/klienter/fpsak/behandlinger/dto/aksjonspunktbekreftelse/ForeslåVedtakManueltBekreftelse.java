@@ -2,9 +2,9 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 
 @BekreftelseKode(kode="5028")
-public class ForesloVedtakManueltBekreftelse extends AksjonspunktBekreftelse {
+public class ForeslåVedtakManueltBekreftelse extends AksjonspunktBekreftelse {
 
-    public ForesloVedtakManueltBekreftelse() {
+    public ForeslåVedtakManueltBekreftelse() {
         super();
     }
 }

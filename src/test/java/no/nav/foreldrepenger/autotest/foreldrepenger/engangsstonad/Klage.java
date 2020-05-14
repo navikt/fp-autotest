@@ -14,7 +14,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravKa;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
@@ -63,7 +63,7 @@ public class Klage extends FpsakTestBase {
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
@@ -123,7 +123,7 @@ public class Klage extends FpsakTestBase {
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_YTELSESVEDTAK_OPPHEVET");
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
@@ -193,7 +193,7 @@ public class Klage extends FpsakTestBase {
             .fritekstBrev("Brev");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
@@ -256,7 +256,7 @@ public class Klage extends FpsakTestBase {
                 .klageErIkkeKonkret()
                 .setBegrunnelse("Begrunnelse formkrav");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
@@ -305,7 +305,7 @@ public class Klage extends FpsakTestBase {
                 .setBegrunnelse(begrunnelse1);
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD", "Behandlingsresultat");
         verifiserKlageVurderingOmgjoer(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(), "GUNST_MEDHOLD_I_KLAGE");
 
@@ -333,7 +333,7 @@ public class Klage extends FpsakTestBase {
                 .setBegrunnelse(begrunnelse2);
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse1);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);

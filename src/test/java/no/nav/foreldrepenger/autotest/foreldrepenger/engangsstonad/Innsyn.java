@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForesloVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvInnsynBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
@@ -56,7 +56,7 @@ public class Innsyn extends FpsakTestBase {
                 .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
@@ -91,7 +91,7 @@ public class Innsyn extends FpsakTestBase {
                 .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunkt(vurderingAvInnsynBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
@@ -125,7 +125,7 @@ public class Innsyn extends FpsakTestBase {
                 .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForesloVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_AVVIST", "Behandlingstatus");
