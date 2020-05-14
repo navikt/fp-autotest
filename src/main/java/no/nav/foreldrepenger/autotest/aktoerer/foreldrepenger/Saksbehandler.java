@@ -171,6 +171,7 @@ public class Saksbehandler extends Aktoer {
     public void velgRevurderingBehandling() {
         velgBehandling(kodeverk.BehandlingType.getKode("BT-004"));
     }
+
     public void velgSisteBehandling() {
         var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer).stream()
                 .max(Comparator.comparing(b -> b.opprettet))
@@ -283,7 +284,7 @@ public class Saksbehandler extends Aktoer {
     public Saldoer hentSaldoerGittUttaksperioder(List<UttakResultatPeriode> uttakResultatPerioder) {
         BehandlingMedUttaksperioderDto behandlingMedUttaksperioderDto = new BehandlingMedUttaksperioderDto();
         behandlingMedUttaksperioderDto.setPerioder(uttakResultatPerioder);
-        BehandlingIdDto behandlingIdDto = new BehandlingIdDto((long)valgtBehandling.id);
+        BehandlingIdDto behandlingIdDto = new BehandlingIdDto((long) valgtBehandling.id);
         behandlingMedUttaksperioderDto.setBehandlingId(behandlingIdDto);
 
         return behandlingerKlient.behandlingUttakStonadskontoerGittUttaksperioder(behandlingMedUttaksperioderDto);
@@ -317,8 +318,8 @@ public class Saksbehandler extends Aktoer {
     public boolean sjekkOmDetErFrilansinntektDagenFørSkjæringstidspuktet() {
         var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
-            if ( opptjening.getAktivitetType().kode.equalsIgnoreCase("FRILANS") &&
-                    opptjening.getOpptjeningTom().isEqual(skjaeringstidspunkt.minusDays(1)) ) {
+            if (opptjening.getAktivitetType().kode.equalsIgnoreCase("FRILANS") &&
+                    opptjening.getOpptjeningTom().isEqual(skjaeringstidspunkt.minusDays(1))) {
                 return true;
             }
         }
@@ -327,7 +328,7 @@ public class Saksbehandler extends Aktoer {
 
     public boolean sjekkOmSykepengerLiggerTilGrunnForOpptjening() {
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
-            if ( opptjening.getAktivitetType().kode.equalsIgnoreCase("SYKEPENGER") ) {
+            if (opptjening.getAktivitetType().kode.equalsIgnoreCase("SYKEPENGER")) {
                 return true;
             }
         }
@@ -336,7 +337,7 @@ public class Saksbehandler extends Aktoer {
 
     public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(double prosentAvDagsatsTilArbeidsgiver) {
         for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
-            if ( !verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(periode, prosentAvDagsatsTilArbeidsgiver) ) {
+            if (!verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(periode, prosentAvDagsatsTilArbeidsgiver)) {
                 return false;
             }
         }
@@ -354,10 +355,10 @@ public class Saksbehandler extends Aktoer {
             utbetaltTilSøkerForAndeler.add(andel.getTilSoker());
             utbetaltRefusjonForAndeler.add(andel.getRefusjon());
         }
-        if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
+        if (utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver) {
             return false;
         }
-        if ( utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker ) {
+        if (utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker) {
             return false;
         }
         return true;
@@ -374,18 +375,18 @@ public class Saksbehandler extends Aktoer {
         return true;
     }
 
-    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForPeriode( BeregningsresultatPeriode periode,
-                                                                                    String internArbeidsforholdID,
-                                                                                    double prosentfaktor) {
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForPeriode(BeregningsresultatPeriode periode,
+                                                                                   String internArbeidsforholdID,
+                                                                                   double prosentfaktor) {
         var dagsats = periode.getDagsats();
         var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
         List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
         for (var andel : periode.getAndeler()) {
-            if ( andel.getArbeidsforholdId() != null && andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID) ) {
+            if (andel.getArbeidsforholdId() != null && andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID)) {
                 utbetaltRefusjonForAndeler.add(andel.getRefusjon());
             }
         }
-        if ( utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver ) {
+        if (utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver) {
             return true;
         }
         return false;
@@ -460,21 +461,15 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Henter aksjonspunkt {kode}")
     public Aksjonspunkt hentAksjonspunkt(String kode) {
-        return Vent.tilRetur(() -> hentAksjonspunktDirekte(kode), 40, "Finner ikke aksjonspunkt " + kode);
+        return valgtBehandling.getAksjonspunkter().stream()
+                .filter(ap -> ap.getDefinisjon().kode.equals(kode))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode));
     }
 
     public <T extends AksjonspunktBekreftelse> Aksjonspunkt hentAksjonspunkt(Class<T> type) {
         var aksjonspunktKode = type.getDeclaredAnnotation(BekreftelseKode.class).kode();
         return hentAksjonspunkt(aksjonspunktKode);
-    }
-
-    private Optional<Aksjonspunkt> hentAksjonspunktDirekte(String kode) {
-        for (Aksjonspunkt aksjonspunkt : valgtBehandling.getAksjonspunkter()) {
-            if (aksjonspunkt.getDefinisjon().kode.equals(kode)) {
-                return Optional.of(aksjonspunkt);
-            }
-        }
-        return Optional.empty();
     }
 
     @Step("Henter aksjonspunkt som skal til totrinns kontroll")
@@ -510,6 +505,7 @@ public class Saksbehandler extends Aktoer {
     public void bekreftAksjonspunktbekreftelserer(AksjonspunktBekreftelse... bekreftelser) {
         bekreftAksjonspunktbekreftelserer(Arrays.asList(bekreftelser));
     }
+
     @Step("Bekrefter aksjonspunktbekreftelser")
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
         debugAksjonspunktbekreftelser(bekreftelser);
