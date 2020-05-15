@@ -78,4 +78,8 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     public double getDagsats() {
         return dagsats;
     }
+
+    public double getRedusertPrAar() {
+        return redusertPrAar;
+    }
 }

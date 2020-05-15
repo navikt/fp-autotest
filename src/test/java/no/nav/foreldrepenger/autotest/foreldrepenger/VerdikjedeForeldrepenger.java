@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -64,12 +63,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
@@ -137,9 +138,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer, false);
 
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+        Saldoer saldoer = saksbehandler.valgtBehandling.getSaldoer();
+        verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp (dvs = 0)!");
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER).getSaldo() == 75,
+        verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER).getSaldo() == 75,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER er 75 dager!");
         List<Integer> beregnetDagsats = regnUtForventetDagsatsForPeriode(List.of(månedsinntekt), List.of(100), List.of(false));
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == beregnetDagsats.get(0),
@@ -157,8 +159,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
-        var gjennomsnittFraTreSisteÅreneISigrun = (1_000_000 * 3) / 3; // TODO: HARDCODET! Bør hentes fra sigrun i scenario (gjennomsnittet at de tre siste årene)
-        BigInteger næringsnntekt = BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun * 1.30).toBigInteger(); // > 25% avvik
+        var gjennomsnittFraTreSisteÅreneISigrun = 300_000; // TODO: HARDCODET! Bør hentes fra sigrun i scenario (gjennomsnittet at de tre siste årene)
+        BigInteger næringsnntekt = BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun * 1.80).toBigInteger(); // > 25% avvik
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, næringsnntekt, true);
         var søknad = lagSøknadForeldrepengerFødsel(
                 fødselsdato, søkerAktørId, SøkersRolle.MOR)
@@ -174,15 +176,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
-        vurderPerioderOpptjeningBekreftelse
-                .godkjennAllOpptjening()
-                .setBegrunnelse("Vurder periode med opptjening begrunnelse");
-        // TODO: Hvorfor legges ikke begrunnelse med her?
+        vurderPerioderOpptjeningBekreftelse.godkjennAllOpptjening();
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
-        // TODO: Beregning SN har feil Pensjonsgivende inntekt 3 siste ferdigliknede år fra skattetaten.
-        //  Her viser det for 2016 når jeg ikke har oppgitt det. FInn ut. Petter is tha man.
-        var vurderVarigEndringEllerNyoppstartetSNBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class);
+        VurderVarigEndringEllerNyoppstartetSNBekreftelse vurderVarigEndringEllerNyoppstartetSNBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class);
         vurderVarigEndringEllerNyoppstartetSNBekreftelse
                 .setErVarigEndretNaering(true)
                 .setBruttoBeregningsgrunnlag(næringsnntekt.intValue())
@@ -236,30 +233,24 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
-        // TODO: Dette får en fra søknadden. Trenger bare utstedt dato og kommentar.
-        //  Spør Marte om hvorfor dette er tilfelle. Hvorfor må jeg angi utstedtdato her og ikke i ES?
         avklarFaktaTerminBekreftelse.setUtstedtdato(termindato.minusWeeks(10));
-        avklarFaktaTerminBekreftelse.setBegrunnelse("Begrunnelse");
+        avklarFaktaTerminBekreftelse.setBegrunnelse("Begrunnelse fra autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
-        LocalDate localDate = termindato.minusWeeks(10);
 
-
-        verifiser(saksbehandler.sjekkOmSykepengerLiggerTilGrunnForOpptjening(),
+        verifiser(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"),
                 "Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +
                          "er forut for permisjonen på skjæringstidspunktet!");
 
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
-                .leggTilFaktaOmBeregningTilfeller("FASTSETT_BG_KUN_YTELSE") // TODO: Fjerne denne?
-                .leggTilAndelerYtelse(10000.0, new Kode("", "ARBEIDSTAKER", ""))
+                .leggTilAndelerYtelse(10000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"))
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelse.avslåManuellePerioderMedPeriodeResultatÅrsak(
-                // TODO: Denne er kanskje preutfylt fordi det er tomt for mødrekvote.
                 new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
@@ -313,8 +304,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                         fpStartdatoFar.plusWeeks(19),
                         fpStartdatoFar.plusWeeks(49).minusDays(1),
                         orgNummerFar,
-                        50)
-        );
+                        50));
         var søknadFar = lagSøknadForeldrepengerFødsel(
                 fødselsdato, aktørIdFar, SøkersRolle.FAR)
                 .medAnnenForelder(testscenario.getPersonopplysninger().getAnnenPartAktørIdent())
@@ -351,17 +341,45 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.avslåManuellePerioderMedPeriodeResultatÅrsak(
-                new Kode("IKKE_OPPFYLT_AARSAK", "4050", "§14-13 første ledd bokstav a: Aktivitetskravet arbeid ikke oppfylt"));
-        fastsettUttaksperioderManueltBekreftelse.setBegrunnelse("");
+        /* Fellesperioden skal splittes slik at første periode på 8 uker blir avslått og en andre perioden (av splitten)
+           skal stjele dager fra fedrekvoten. Deretter skal fedrekvoten reduseres med 8 uker. (trenger også en split).*/
+        fastsettUttaksperioderManueltBekreftelse.splitPeriode(
+                fpStartdatoFar.plusWeeks(3),
+                fpStartdatoFar.plusWeeks(19).minusDays(1),
+                fpStartdatoFar.plusWeeks(11).minusDays(1));
+        fastsettUttaksperioderManueltBekreftelse.avslåPeriode(
+                fpStartdatoFar.plusWeeks(3),
+                fpStartdatoFar.plusWeeks(11).minusDays(1),
+                new Kode("IKKE_OPPFYLT_AARSAK","4050", "§14-13 første ledd bokstav a: Aktivitetskravet arbeid ikke oppfylt"));
+        fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
+                fpStartdatoFar.plusWeeks(11),
+                fpStartdatoFar.plusWeeks(19).minusDays(1),
+                new Kode("INNVILGET_AARSAK","2031", "§14-12, jf. §14-16: Gradering av kvote/overført kvote"),
+                FEDREKVOTE);
+        fastsettUttaksperioderManueltBekreftelse.splitPeriode(
+                fpStartdatoFar.plusWeeks(19),
+                fpStartdatoFar.plusWeeks(49).minusDays(1),
+                fpStartdatoFar.plusWeeks(41).minusDays(1));
+        fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
+                fpStartdatoFar.plusWeeks(19),
+                fpStartdatoFar.plusWeeks(41).minusDays(1),
+                new Kode("INNVILGET_AARSAK","2031", "§14-12, jf. §14-16: Gradering av kvote/overført kvote"));
+        fastsettUttaksperioderManueltBekreftelse.avslåPeriode(
+                fpStartdatoFar.plusWeeks(41),
+                fpStartdatoFar.plusWeeks(49).minusDays(1),
+                new Kode("IKKE_OPPFYLT_AARSAK","4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
+        fastsettUttaksperioderManueltBekreftelse.setBegrunnelse("Begrunnelse fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
-        // TODO: Fellesperioden skal splittes slik at første periode bruker opp fellesperioden.
-        //  Den andre perioden (av splitten) skal stjele dger fra fedrekvoten.
-        //  Deretter skal fedrekvoten reduseres med 8 uker. (trenger også en split).
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
 
-
+        Saldoer saldoer = saksbehandler.valgtBehandling.getSaldoer();
+        verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
+        verifiser(saldoer.getStonadskontoer().get(MØDREKVOTE).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
+        verifiser(saldoer.getStonadskontoer().get(FEDREKVOTE).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FEDREKVOTE er brukt opp!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(100),
                 "Forventer at hele summen utbetales til arbeidsgiver, og derfor ingenting til søker!");
     }
@@ -418,18 +436,18 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Godkjenner Aktivitet");
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
-        verifiser(saksbehandler.sjekkOmDetErFrilansinntektDagenFørSkjæringstidspuktet(),
+        verifiser(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("FRILANS"),
                 "Forventer at det er registert en opptjeningsaktivitet med aktivitettype FRILANSER som " +
                         "har frilansinntekt på skjæringstidspunktet!");
 
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-        vurderFaktaOmBeregningBekreftelse.behandleFrilansMottarIkke();
-        // TODO: Legg inn en begrunnelse.
+        vurderFaktaOmBeregningBekreftelse
+                .leggTilMottarYtelseFrilans(false)
+                .setBegrunnelse("Begrunnelse fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        // TODO: Finn ut hvilken kode §14-9, jf.§14-13: Innvilget fellesperiode til Far har.
-        fastsettUttaksperioderManueltBekreftelse.innvilgManuellePerioder(new Kode("INNVILGET_AARSAK", "2002", "§14-9, jf.§14-13: Innvilget fellesperiode til Far"));
+        fastsettUttaksperioderManueltBekreftelse.innvilgManuellePerioder(new Kode("INNVILGET", "2037", "§14-9, jf.§14-13: Innvilget fellesperiode til Far"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
@@ -507,7 +525,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         AvklarArbeidsforholdBekreftelse avklarArbeidsforholdBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        // TODO: Forenkle slik at det blir slik som frontend.
         var ansettelsesperiodeFom = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(2)
                 .getAnsettelsesperiodeFom();
         var tomGyldighetsperiode = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
@@ -534,7 +551,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 fpStartdatoFar.plusWeeks(40).minusDays(1),
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
-        // TODO: Finn på noe bedre!
         fastsettUttaksperioderManueltBekreftelse.innvilgAktiviteterOgAvslåResten(
                 fpStartdatoFar.plusWeeks(40),
                 fpStartdatoFar.plusWeeks(100).minusDays(1),
@@ -554,8 +570,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(beregningsresultatPerioder[1].getTom().isEqual(fpStartdatoFar.plusWeeks(40).minusDays(1)),
                 "Forventer den andre periden har en varighet på 40 uker.");
 
-        List<BeregningsresultatPeriodeAndel> andelerForAT1 = saksbehandler.hentBeregningsresultatPeriodeAndelerForArbeidsforhold(orgNummerFar1);
-        List<BeregningsresultatPeriodeAndel> andelerForAT2 = saksbehandler.hentBeregningsresultatPeriodeAndelerForArbeidsforhold(orgNummerFar2);
+        List<BeregningsresultatPeriodeAndel> andelerForAT1 = saksbehandler.hentBeregningsresultatPerioderMedAndelIArbeidsforhold(orgNummerFar1);
+        List<BeregningsresultatPeriodeAndel> andelerForAT2 = saksbehandler.hentBeregningsresultatPerioderMedAndelIArbeidsforhold(orgNummerFar2);
         List<Integer> forventetDagsatsForFørstePeriode = regnUtForventetDagsatsForPeriode(List.of(månedsinntektFar1, månedsinntektFar2),
                 List.of(40, 100), List.of(true, true));
         verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[0].getDagsats() == sumOfList(forventetDagsatsForFørstePeriode),
@@ -630,12 +646,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerFar);
         AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder avklarFaktaUttakPerioder =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
-        Kode godkjenningskode = saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_OK");
-        avklarFaktaUttakPerioder.godkjennPeriode(
-                fpStartdatoFarEndret,
-                fødselsdato.plusWeeks(15).minusDays(1),
-                godkjenningskode,
-                true);
+        avklarFaktaUttakPerioder.godkjennPeriode(fpStartdatoFarEndret, fødselsdato.plusWeeks(15).minusDays(1));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
@@ -647,14 +658,20 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.hentBehandlingsresultat().equalsIgnoreCase("FORELDREPENGER_ENDRET"),
                 "Foreldrepenger skal være endret pga annenpart har overlappende uttak!");
 
-        List<UttakResultatPeriode> avslåttePerioder = saksbehandler.hentAvslåtteUttaksperioder();
-        verifiser(avslåttePerioder.size() == 2, "Forventer at det er 2 avslåtte uttaksperioder");
-        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak().kode.equalsIgnoreCase("4084"),
+        verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 2,
+                "Forventer at det er 2 avslåtte uttaksperioder");
+        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak().kodeverk.equalsIgnoreCase("IKKE_OPPFYLT_AARSAK"),
                 "Perioden burde være avslått fordi annenpart har overlappende uttak!");
-        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak().kode.equalsIgnoreCase("4084"),
+        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak().kodeverk.equalsIgnoreCase("IKKE_OPPFYLT_AARSAK"),
                 "Perioden burde være avslått fordi annenpart har overlappende uttak!");
 
-        // TODO: Sjekk med simulering! Er ikke støtte for det for øyeblikket. Ukelønn jobber med det.
+        BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
+        verifiser(tilkjentYtelsePerioder.getPerioder()[2].getDagsats() == 0,
+                "Siden perioden er avslått, forventes det 0 i dagsats.");
+        verifiser(tilkjentYtelsePerioder.getPerioder()[3].getDagsats() == 0,
+                "Siden perioden er avslått, forventes det 0 i dagsats.");
+
+        // TODO: Sjekk med simulering! Er ikke støtte for det for øyeblikket. Trenger å inkludere fpoppdrag.
 
     }
 
@@ -710,13 +727,14 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
 
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+        Saldoer saldoerFørstgangsbehandling = saksbehandler.valgtBehandling.getSaldoer();
+        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(MØDREKVOTE).getSaldo() == 0,
+        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(MØDREKVOTE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
+        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FLERBARNSDAGER).getSaldo() == 0,
+        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(FLERBARNSDAGER).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FLERBARNSDAGER er brukt opp!");
 
         /*
@@ -768,6 +786,31 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode.equalsIgnoreCase("AT_SN"),
                 "Forventer at far får kombinert satus i beregning (da AT og SN)");
 
+        BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0);
+        var dagsats = beregningsgrunnlagPeriode.getDagsats();
+        var redusertPrAar = beregningsgrunnlagPeriode.getRedusertPrAar();
+        var prosentfaktorAvDagsatsTilAF =
+                beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndel().get(0).getRedusertPrAar() / redusertPrAar;
+        var dagsatsTilAF = Math.round(dagsats * prosentfaktorAvDagsatsTilAF);
+
+        List<BeregningsresultatPeriodeAndel> perioderMedAndelIArbeidsforhold = saksbehandler.hentBeregningsresultatPerioderMedAndelIArbeidsforhold(orgNummerFar);
+        verifiser(perioderMedAndelIArbeidsforhold.get(0).getTilSoker() == dagsatsTilAF,
+                "Forventer at dagsatsen for arbeidsforholdet blir beregnet først – rest går til søker for SN");
+        verifiser(perioderMedAndelIArbeidsforhold.get(1).getTilSoker() == dagsatsTilAF,
+                "Forventer at dagsatsen for arbeidsforholdet blir beregnet først – rest går til søker for SN");
+        verifiser(perioderMedAndelIArbeidsforhold.get(2).getTilSoker() == dagsatsTilAF,
+                "Forventer at dagsatsen for arbeidsforholdet blir beregnet først – rest går til søker for SN");
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummerFar, 0),
+                "Foventer at hele den utbetalte dagsatsen går til søker!");
+
+        List<BeregningsresultatPeriodeAndel> perioderMedAndelISN = saksbehandler.hentBeregningsresultatPerioderMedAndelISN();
+        verifiser(perioderMedAndelISN.get(0).getTilSoker() == dagsats - dagsatsTilAF,
+                "Forventer at resten av dagsatsen går til søker for SN");
+        verifiser(perioderMedAndelISN.get(1).getTilSoker() == dagsats - dagsatsTilAF,
+                "Forventer at resten av dagsatsen går til søker for SN");
+        verifiser(perioderMedAndelISN.get(2).getTilSoker() == dagsats - dagsatsTilAF,
+                "Forventer at resten av dagsatsen går til søker for SN");
+
 
         /* Mor: Berørt sak */
         saksbehandler.hentFagsak(saksnummerMor);
@@ -796,12 +839,29 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelse.avslåPeriode(
                 fpStartdatoFar.plusWeeks(13),
                 fpStartdatoFar.plusWeeks(17).minusDays(1),
-                new Kode("IKKE_OPPFYLT_AARSAK", "4059",
-                        "§14-13 sjette ledd, jf. §14-9 fjerde ledd: Unntak for Aktivitetskravet, flerbarnsfødsel - ikke nok dager")
-        );
+                new Kode("IKKE_OPPFYLT_AARSAK","4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, true);
+
+        Saldoer saldoerBerørtSak = saksbehandler.valgtBehandling.getSaldoer();
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(MØDREKVOTE).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(FEDREKVOTE).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FEDREKVOTE er brukt opp!");
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(FLERBARNSDAGER).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FLERBARNSDAGER er brukt opp!");
+
+        verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 1,
+                "Forventer at det er 1 avslåtte uttaksperioder");
+        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(6).getPeriodeResultatÅrsak().kodeverk.equalsIgnoreCase("IKKE_OPPFYLT_AARSAK"),
+                "Perioden burde være avslått fordi det er ingen stønadsdager igjen på stønadskontoen.");
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[6].getDagsats() == 0,
+                "Siden perioden er avslått, forventes det 0 i dagsats i tilkjent ytelse");
     }
 
     @Test
@@ -844,11 +904,15 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
+
+        verifiser(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("DAGPENGER"),
+                "Forventer at det er registert en opptjeningsaktivitet med aktivitettype DAGPENGER med " +
+                        "opptjening frem til skjæringstidspunktet for opptjening.");
+
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
-                .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING.kode)
-                .leggTilTomBesteBeregningAndeler()
+                .fordelEtterBesteBeregningForDagpenger(false)
                 .setBegrunnelse("Bruker IKKE besteberegning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
@@ -877,6 +941,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         klagebehandler.velgKlageBehandling();
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp
+                .setPåklagdVedtak(Integer.toString(klagebehandler.valgtBehandling.id - 1))
                 .godkjennAlleFormkrav()
                 .setBegrunnelse("Godkjenner alle formkrav");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
@@ -908,8 +973,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse2 =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse2
-                .leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING.kode)
-                .leggTilBesteBeregningAndeler(30_000.0, new Kode("","DAGPENGER", "Dagpenger"))
+                .fordelEtterBesteBeregningForDagpenger(true)
+                .leggTilBesteBeregningAndeler(30_000.0, saksbehandler.kodeverk.Inntektskategori.getKode("DAGPENGER"))
                 .setBegrunnelse("Legger til en beste beregning andel periode som gjør at vi bruker besteberegning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 
@@ -961,6 +1026,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 uttaksperiode(FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar)
         );
 
+        // TODO: Fjern tilleggsopplysninger!
         var søknadFar = lagSøknadForeldrepengerAdopsjon(
                 omsorgsovertakelsedatoe, aktørIdFar, SøkersRolle.FAR, false)
                 .medFordeling(fordelingFar);
@@ -988,12 +1054,15 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
+        // TODO: Fjern tilleggsopplysninger!
         AvklarFaktaTillegsopplysningerBekreftelse avklarFaktaTillegsopplysningerBekreftelseFar
                 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTillegsopplysningerBekreftelseFar);
 
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse avklarFaktaAdopsjonsdokumentasjonBekreftelseFar =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
+        // TODO: BarnetsAnkomstTilNorgeDato hentes fra søknadden, sammen med resten. Bare begrunnelse som kreves.
+        //  legg til begrunnelse. Sjekk historikkinnslag?
         avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedatoe);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
 
@@ -1025,6 +1094,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medArbeidsforholdId(arbeidsforholdIdFar)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar))
                 .medEndringIRefusjonslist(endringRefusjonMap);
+        // TODO: Se om det går an å fjerne medEndringIRefusjonslist.
         fordel.sendInnInntektsmelding(
                 inntektsmeldingEndringFar,
                 aktørIdFar,
@@ -1036,7 +1106,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
-                .leggTilFaktaOmBeregningTilfeller("VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT")
+                // TODO: Sjekk om det er slik det gjøres i FE
                 .leggTilRefusjonGyldighetVurdering(orgNummerFar, false)
                 .setBegrunnelse("Refusjonskrav er sendt inn for sent!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
@@ -1045,6 +1115,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelseRevurdering.innvilgManuellePerioder(
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
+        // TODO: SE omd hvorfor en annen kode kommer?
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering);
 
 
@@ -1068,7 +1139,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     }
 
     @Test
-    @Disabled
     @DisplayName("11: Far søker adopsjon hvor han søker hele fedrekvoten og fellesperiode, og får berørt sak pga mor")
     @Description("Far søker adopsjon hvor han søker hele fedrekvoten og fellesperioden. Mor søker noe av mødrekvoten midt " +
             "midt i fars periode med fullt uttak. Deretter søker more 9 uker av fellesperiode med samtidig uttak. Far får " +
@@ -1115,12 +1185,15 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
+        // TODO: Fjern denne.
         AvklarFaktaTillegsopplysningerBekreftelse avklarFaktaTillegsopplysningerBekreftelseFar
                 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTillegsopplysningerBekreftelseFar);
 
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse avklarFaktaAdopsjonsdokumentasjonBekreftelseFar =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
+        // TODO: BarnetsAnkomstTilNorgeDato hentes fra søknadden, sammen med resten. Bare begrunnelse som kreves.
+        //  legg til begrunnelse. Sjekk historikkinnslag?
         avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedatoe);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
 
@@ -1176,6 +1249,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 saksnummerMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
+        // TODO: Fjern denne.
         AvklarFaktaTillegsopplysningerBekreftelse avklarFaktaTillegsopplysningerBekreftelseMor
                 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTillegsopplysningerBekreftelseMor);
@@ -1234,6 +1308,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, true);
+
+        // TODO: Uttak: Legg til verifisering på at disponible fellesperiode dager er tom.
+        // TODO: Tilkjent Ytelse: Verifiser at avslåtte perioden ikke er inkludert
+        // TODO: Tilkjent Ytelse: Sjekk at alt går til søker
+        // TODO: Tilkjent Ytelse: Sjekk at perioden vhor det er samtidig uttak og utbetalingsgrad 60% er redusert.
     }
 
 

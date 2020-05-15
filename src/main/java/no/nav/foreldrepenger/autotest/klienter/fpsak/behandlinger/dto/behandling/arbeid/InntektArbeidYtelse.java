@@ -8,5 +8,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class InntektArbeidYtelse {
 
     public List<Arbeidsforhold> arbeidsforhold = null;
-    
+
+    public List<Arbeidsforhold> getArbeidsforhold() {
+        return arbeidsforhold;
+    }
+
 }

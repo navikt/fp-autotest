@@ -48,8 +48,8 @@ public class Termin extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse
-                .antallBarn(1)
-                .utstedtdato(LocalDate.now().minusMonths(1))
+                .setAntallBarn(1)
+                .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
@@ -108,8 +108,8 @@ public class Termin extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse
-                .antallBarn(1)
-                .utstedtdato(LocalDate.now().minusMonths(1))
+                .setAntallBarn(1)
+                .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
@@ -154,8 +154,9 @@ public class Termin extends FpsakTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
-        avklarFaktaTerminBekreftelse.antallBarn(1)
-                .utstedtdato(LocalDate.now().minusMonths(1))
+        avklarFaktaTerminBekreftelse
+                .setAntallBarn(1)
+                .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 

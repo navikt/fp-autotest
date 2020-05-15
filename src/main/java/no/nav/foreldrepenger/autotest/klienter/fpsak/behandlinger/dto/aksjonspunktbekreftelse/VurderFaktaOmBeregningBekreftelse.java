@@ -2,13 +2,16 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @BekreftelseKode(kode="5058")
+//TODO: Rydd opp i denne. Ganske uoversiktlig.
 public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
 
     protected FaktaOmBeregningLagreDto fakta = new FaktaOmBeregningLagreDto();
@@ -22,28 +25,35 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilVurderTidsbegrenset(List<VurderteArbeidsforholdDto> tidsbegrensetAndeler) {
-        fakta.leggTilVurderTidsbegrenset(tidsbegrensetAndeler);
+    public VurderFaktaOmBeregningBekreftelse fjernFaktaOmBeregningTilfeller(String kode) {
+        fakta.fjernFaktaOmBeregningTilfeller(kode);
+        return this;
+    }
+
+    public VurderFaktaOmBeregningBekreftelse leggTilVurderTidsbegrenset(boolean vurderTidsbegrenset) {
+        fakta.leggTilVurderTidsbegrenset(vurderTidsbegrenset);
         return this;
     }
 
     public VurderFaktaOmBeregningBekreftelse leggTilMottarYtelse(List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses) {
-        fakta.leggTilMottarYtelse(false, arbeidstakerandelUtenIMMottarYtelses);
+        fakta.leggTilMottarYtelse(null, arbeidstakerandelUtenIMMottarYtelses);
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilMottarYtelseFrilans(boolean frilansMottarYtelse) {
-        fakta.leggTilMottarYtelse(frilansMottarYtelse, List.of());
+    public VurderFaktaOmBeregningBekreftelse leggTilVurdertLønnsendring(boolean vurdertLonnsendring) {
+        fakta.leggTilVurdertLonnsendring(vurdertLonnsendring);
         return this;
     }
 
     public VurderFaktaOmBeregningBekreftelse leggTilMaanedsinntektUtenInntektsmelding(List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe) {
         fakta.leggTilMaanedsinntektUtenInntektsmelding(andelListe);
+        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSLONN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING.kode);
         return this;
     }
 
     public VurderFaktaOmBeregningBekreftelse leggTilMaanedsinntektFL(int maanedsinntekt) {
         fakta.leggTilMaanedsinntektFL(maanedsinntekt);
+        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL.kode);
         return this;
     }
 
@@ -54,6 +64,7 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
 
     public VurderFaktaOmBeregningBekreftelse settSkalHaBesteberegningForKunYtelse(boolean skalHaBesteberegning) {
         fakta.settKunYtelseBesteberegning(skalHaBesteberegning);
+        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_BESTEBEREGNING.kode);
         return this;
     }
 
@@ -68,8 +79,12 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilTomBesteBeregningAndeler() {
-        fakta.leggTilTomBesteBeregningAndeler();
+    public VurderFaktaOmBeregningBekreftelse fordelEtterBesteBeregningForDagpenger(boolean harDagpengerIOpptjening) {
+        if (harDagpengerIOpptjening) {
+            leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE.kode);
+        } else {
+            fakta.leggTilTomBesteBeregningAndeler();
+        }
         return this;
     }
 
@@ -78,17 +93,22 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse behandleFrilansMottarIkke() {
-        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode);
-        fakta.leggTilMottarYtelse(false, List.of());
+    public VurderFaktaOmBeregningBekreftelse leggTilMottarYtelseFrilans(boolean frilansMottarYtelse) {
+        fakta.leggTilMottarYtelse(frilansMottarYtelse, List.of());
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse behandleFrilansMottar(int maanedsinntekt) {
+    public VurderFaktaOmBeregningBekreftelse leggTilmånedsinntektFLMottarStøtte(int maanedsinntekt) {
         fakta.leggTilMaanedsinntektFL(maanedsinntekt);
-        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE.kode);
         fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL.kode);
-        fakta.leggTilMottarYtelse(true, List.of());
         return this;
     }
+
+    @Override
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
+        for (FaktaOmBeregningTilfelle faktaOmBeregningTilfeller : behandling.getBeregningsgrunnlag().getFaktaOmBeregning().getFaktaOmBeregningTilfeller()) {
+            fakta.leggTilFaktaOmBeregningTilfeller(faktaOmBeregningTilfeller.kode);
+        }
+    }
+
 }

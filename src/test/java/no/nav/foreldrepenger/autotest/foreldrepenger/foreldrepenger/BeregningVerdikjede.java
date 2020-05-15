@@ -224,10 +224,9 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         // FAKTA OM BEREGNING: Vurder besteberegning og fastsett månedsinntekt fra ytelse
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
-                .leggTilFaktaOmBeregningTilfeller("FASTSETT_BG_KUN_YTELSE")
-                .leggTilFaktaOmBeregningTilfeller("VURDER_BESTEBEREGNING")
-                .leggTilAndelerYtelse(10000.0, new Kode("INNTEKTSKATEGORI", "ARBEIDSTAKER", ""))
-                .settSkalHaBesteberegningForKunYtelse(true);
+                .leggTilAndelerYtelse(10000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"))
+                .settSkalHaBesteberegningForKunYtelse(true)
+                .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         // FORESLÅ VEDTAK //
@@ -349,8 +348,9 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         // FAKTA OM BEREGNING: Vurder gyldighet for refusjonskrav som har kommet for sent
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-        vurderFaktaOmBeregningBekreftelse.leggTilFaktaOmBeregningTilfeller("VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT")
-                .leggTilRefusjonGyldighetVurdering(orgNr, true);
+        vurderFaktaOmBeregningBekreftelse
+                .leggTilRefusjonGyldighetVurdering(orgNr, true)
+                .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         VurderBeregnetInntektsAvvikBekreftelse vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);

@@ -8,7 +8,7 @@
 				"vedtak": [
 					{
 						"fom": "now() - P5M",
-						"tom": "now() - P5W",
+						"tom": "now() - P5W1D",
 						"vedtakDato": "now() - P5M",
 						"kravMottattDato": "now() - P5M",
 						"status": "IVERK",
@@ -16,7 +16,7 @@
 						"meldekort": [
 							{
 								"fom": "now() - P5M",
-								"tom": "now() - P5W",
+								"tom": "now() - P5W1D",
 								"dagsats": 1000,
 								"beløp": 21667,
 								"utbetalingsgrad": 100

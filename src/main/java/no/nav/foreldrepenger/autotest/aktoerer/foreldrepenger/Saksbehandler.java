@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,6 +34,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.BehandlingMedUttaksperioderDto;
@@ -55,6 +55,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterD
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
+
 
 public class Saksbehandler extends Aktoer {
 
@@ -291,19 +292,19 @@ public class Saksbehandler extends Aktoer {
     }
 
 
-    public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPeriodeAndelerForArbeidsforhold(String organisasjonsnummer) {
+    public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelIArbeidsforhold(String organisasjonsnummer) {
         return Arrays.stream(valgtBehandling.getBeregningResultatForeldrepenger().getPerioder())
                 .flatMap(beregningsresultatPeriode -> Arrays.stream(beregningsresultatPeriode.getAndeler()))
-                .filter(andeler -> andeler.getArbeidsgiverOrgnr().equalsIgnoreCase(organisasjonsnummer))
+                .filter(andeler -> organisasjonsnummer.equalsIgnoreCase(andeler.getArbeidsgiverOrgnr()))
                 .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
                 .collect(Collectors.toList());
     }
 
-    public Optional<BeregningsresultatPeriodeAndel> hentBeregningsresultatPeriodeAndelerForSN() {
+    public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelISN() {
         return Arrays.stream(valgtBehandling.getBeregningResultatForeldrepenger().getPerioder())
                 .flatMap(beregningsresultatPeriode -> Arrays.stream(beregningsresultatPeriode.getAndeler()))
                 .filter(andeler -> andeler.getAktivitetStatus().kode.equalsIgnoreCase("SN"))
-                .findAny();
+                .collect(Collectors.toList());
     }
 
     /* VERIFISERINGER */
@@ -315,10 +316,10 @@ public class Saksbehandler extends Aktoer {
                         beregningsresultatPeriodeAndel.getAktivitetStatus().kode.equalsIgnoreCase(aktivitetskode));
     }
 
-    public boolean sjekkOmDetErFrilansinntektDagenFørSkjæringstidspuktet() {
+    public boolean sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet(String aktivitet) {
         var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
-            if (opptjening.getAktivitetType().kode.equalsIgnoreCase("FRILANS") &&
+            if (opptjening.getAktivitetType().kode.equalsIgnoreCase(aktivitet) &&
                     opptjening.getOpptjeningTom().isEqual(skjaeringstidspunkt.minusDays(1))) {
                 return true;
             }
@@ -326,9 +327,9 @@ public class Saksbehandler extends Aktoer {
         return false;
     }
 
-    public boolean sjekkOmSykepengerLiggerTilGrunnForOpptjening() {
+    public boolean sjekkOmYtelseLiggerTilGrunnForOpptjening(String ytelse) {
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
-            if (opptjening.getAktivitetType().kode.equalsIgnoreCase("SYKEPENGER")) {
+            if (opptjening.getAktivitetType().kode.equalsIgnoreCase(ytelse)) {
                 return true;
             }
         }
@@ -364,10 +365,19 @@ public class Saksbehandler extends Aktoer {
         return true;
     }
 
+    private String hentInternArbeidsforholdId(String orgnummer) {
+        return valgtBehandling.getInntektArbeidYtelse().getArbeidsforhold().stream()
+                .filter(arbeidsforhold -> arbeidsforhold.getArbeidsgiverIdentifikator().equalsIgnoreCase(orgnummer))
+                .map(Arbeidsforhold::getArbeidsforholdId)
+                .findFirst()
+                .orElseThrow();
+    }
 
-    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(String internArbeidsforholdID,
+
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(String orgnummer,
                                                                                        double prosentAvDagsatsTilArbeidsgiver) {
         var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
+        var internArbeidsforholdID = hentInternArbeidsforholdId(orgnummer);
         for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
             if (verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForPeriode(periode, internArbeidsforholdID, prosentfaktor))
                 return false;
@@ -391,6 +401,8 @@ public class Saksbehandler extends Aktoer {
         }
         return false;
     }
+
+
 
     /*
      * Henting av kodeverk

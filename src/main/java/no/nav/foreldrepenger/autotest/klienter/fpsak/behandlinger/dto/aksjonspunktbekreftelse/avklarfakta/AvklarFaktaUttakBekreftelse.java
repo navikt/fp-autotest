@@ -37,23 +37,16 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
             bekreftedePerioder.add(bekreftetUttakPeriode);
         }
     }
-
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til) {
+        return godkjennPeriode(fra, til, new Kode("UTTAK_PERIODE_VURDERING_TYPE","PERIODE_OK"), true);
+    }
     public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode godkjenningskode) {
         return godkjennPeriode(fra, til, godkjenningskode, false);
     }
-
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode godkjenningskode, boolean dokumenterPeriode) {
-        BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
-
-        periode.bekreftetPeriode.setBekreftet(true);
-        periode.bekreftetPeriode.setResultat(godkjenningskode);
-        periode.bekreftetPeriode.setBegrunnelse("Godkjent av autotest");
-        if (dokumenterPeriode) {
-            periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(fra, til));
-        }
-        return this;
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, boolean dokumenterPeriode) {
+        return godkjennPeriode(fra, til, new Kode("UTTAK_PERIODE_VURDERING_TYPE","PERIODE_OK"), dokumenterPeriode);
     }
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(KontrollerFaktaPeriode faktaPeriode, Kode godkjenningskode, boolean dokumenterPeriode) {
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(KontrollerFaktaPeriode faktaPeriode, Kode godkjenningskode) {
         godkjennPeriode(faktaPeriode.getFom(), faktaPeriode.getTom(), godkjenningskode, true);
         return this;
     }
@@ -62,7 +55,6 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         delvisGodkjennPeriode(fra, til, godkjentFra, godkjentTil, godkjenningskode, false);
         return this;
     }
-
     public AvklarFaktaUttakBekreftelse delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra, LocalDate godkjentTil, Kode godkjenningskode, boolean dokumenterPeriode) {
         BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
 
@@ -74,6 +66,20 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         periode.bekreftetPeriode.setTom(godkjentTil);
         if (dokumenterPeriode) {
             periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(godkjentFra, godkjentTil));
+        }
+        return this;
+    }
+
+
+
+    private AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode godkjenningskode, boolean dokumenterPeriode) {
+        BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
+
+        periode.bekreftetPeriode.setBekreftet(true);
+        periode.bekreftetPeriode.setResultat(godkjenningskode);
+        periode.bekreftetPeriode.setBegrunnelse("Godkjent av autotest");
+        if (dokumenterPeriode) {
+            periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(fra, til));
         }
         return this;
     }
