@@ -16,41 +16,41 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
     public VurderPerioderOpptjeningBekreftelse() {
         super();
     }
-    public List<OpptjeningAktivitet> hentOpptjeningAktiviteter(String aktivitetType) {
-        return opptjeningAktivitetList.stream()
-                .filter(aktivitet -> aktivitet.getAktivitetType().kode.equals(aktivitetType)).collect(Collectors.toList());
+
+    public VurderPerioderOpptjeningBekreftelse godkjennAllOpptjening() {
+        opptjeningAktivitetList.forEach(aktivitet -> aktivitet.vurder(true, "Godkjent", false));
+        return this;
     }
 
     public VurderPerioderOpptjeningBekreftelse godkjennOpptjening(String aktivitetType) {
         for (OpptjeningAktivitet aktivitet : hentOpptjeningAktiviteter(aktivitetType)) {
-            aktivitet.vurder(true, "Godkjent", false);
+            godkjennOpptjening(aktivitet);
         }
         return this;
     }
 
     public VurderPerioderOpptjeningBekreftelse avvisOpptjening(String aktivitetType) {
         for (OpptjeningAktivitet aktivitet : hentOpptjeningAktiviteter(aktivitetType)) {
-            aktivitet.vurder(false, "Avvist", false);
+            avvisOpptjening(aktivitet);
         }
         return this;
     }
 
-    public void godkjennOpptjening(OpptjeningAktivitet aktivitet) {
-        aktivitet.vurder(true, "Godkjent", false);
-    }
-
-    public void avvisOpptjening(OpptjeningAktivitet aktivitet) {
-        aktivitet.vurder(false, "Avvist", false);
-    }
-
-    public void leggTilOpptjening(OpptjeningAktivitet aktivitet) {
+    public VurderPerioderOpptjeningBekreftelse leggTilOpptjening(OpptjeningAktivitet aktivitet) {
         aktivitet.setErManueltOpprettet(true);
         opptjeningAktivitetList.add(aktivitet);
+        return this;
     }
 
-    public VurderPerioderOpptjeningBekreftelse godkjennAllOpptjening() {
-        opptjeningAktivitetList.forEach(aktivitet -> aktivitet.vurder(true, "Godkjent", false));
-        return this;
+    private void godkjennOpptjening(OpptjeningAktivitet aktivitet) {
+        aktivitet.vurder(true, "Godkjent", false);
+    }
+    private void avvisOpptjening(OpptjeningAktivitet aktivitet) {
+        aktivitet.vurder(false, "Avvist", false);
+    }
+    private List<OpptjeningAktivitet> hentOpptjeningAktiviteter(String aktivitetType) {
+        return opptjeningAktivitetList.stream()
+                .filter(aktivitet -> aktivitet.getAktivitetType().kode.equals(aktivitetType)).collect(Collectors.toList());
     }
 
     @Override
@@ -60,13 +60,11 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
         }
 
         for (OpptjeningAktivitet opptjeningAktivitet : behandling.getOpptjening().getOpptjeningAktivitetList()) {
-
             opptjeningAktivitet.setOriginalFom(opptjeningAktivitet.getOpptjeningFom());
             opptjeningAktivitet.setOriginalTom(opptjeningAktivitet.getOpptjeningTom());
             opptjeningAktivitet.setOppdragsgiverOrg(opptjeningAktivitet.getOppdragsgiverOrg());
             opptjeningAktivitet.setArbeidsforholdRef(opptjeningAktivitet.getArbeidsforholdRef());
             opptjeningAktivitet.setAktivitetType(opptjeningAktivitet.getAktivitetType());
-
             opptjeningAktivitetList.add(opptjeningAktivitet);
         }
     }

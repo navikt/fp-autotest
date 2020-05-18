@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Arbeidsforhold {
@@ -71,6 +71,14 @@ public class Arbeidsforhold {
 
     public void setNavn(String navn) {
         this.navn = navn;
+    }
+
+    public String getArbeidsgiverIdentifikator() {
+        return arbeidsgiverIdentifikator;
+    }
+
+    public String getArbeidsforholdId() {
+        return arbeidsforholdId;
     }
 
     public void setOverstyrtTom(LocalDate overstyrtTom) {

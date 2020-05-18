@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.autotest.erketyper;
 
+import java.time.LocalDate;
+
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.UkjentForelder;
-
-import java.time.LocalDate;
 
 public class SøknadForeldrepengeErketyper {
 
@@ -29,7 +29,6 @@ public class SøknadForeldrepengeErketyper {
 
     public static ForeldrepengerBuilder lagSøknadForeldrepengerAdopsjon(LocalDate omsorgsovertakelsedatoen, String søkerAktørId, SøkersRolle søkersRolle, Boolean ektefellesBarn) {
         return lagSøknadForeldrepenger(omsorgsovertakelsedatoen, søkerAktørId, søkersRolle)
-                .medTilleggsopplysninger("Autogenerert erketypetest" + søkersRolle.toString() + "søker på adopsjon")
                 .medRelasjonTilBarnet(RelasjonTilBarnetErketyper.adopsjon(omsorgsovertakelsedatoen, ektefellesBarn));
 
     }

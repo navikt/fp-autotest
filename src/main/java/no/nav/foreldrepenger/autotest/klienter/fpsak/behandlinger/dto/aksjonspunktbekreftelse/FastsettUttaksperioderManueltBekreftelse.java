@@ -39,9 +39,9 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public FastsettUttaksperioderManueltBekreftelse innvilgManuellePerioder() {
-        for(UttakResultatPeriode uttakPeriode : perioder) {
-            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
-                innvilgPeriode(uttakPeriode);
+        for(UttakResultatPeriode uttaksperiode : perioder) {
+            if(uttaksperiode.getManuellBehandlingÅrsak() != null && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+                innvilgPeriode(uttaksperiode);
             }
         }
         return this;
@@ -49,7 +49,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     public FastsettUttaksperioderManueltBekreftelse innvilgManuellePerioder(Kode periodeResultatÅrsak) {
         for(UttakResultatPeriode uttaksperiode : perioder) {
-            if (!uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+            if (uttaksperiode.getManuellBehandlingÅrsak() != null && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
                 innvilgPeriode(uttaksperiode, periodeResultatÅrsak);
             }
         }
@@ -57,9 +57,9 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public FastsettUttaksperioderManueltBekreftelse avslåManuellePerioder() {
-        for(UttakResultatPeriode uttakPeriode : perioder) {
-            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
-                avslåPeriode(uttakPeriode);
+        for(UttakResultatPeriode uttaksperiode : perioder) {
+            if(uttaksperiode.getManuellBehandlingÅrsak() != null && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+                avslåPeriode(uttaksperiode);
             }
         }
         return this;
@@ -88,6 +88,12 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     public FastsettUttaksperioderManueltBekreftelse innvilgPeriode(LocalDate fra, LocalDate til, Kode periodeResultatÅrsak) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         innvilgPeriode(periode, periodeResultatÅrsak);
+        return this;
+    }
+    public FastsettUttaksperioderManueltBekreftelse innvilgPeriode(LocalDate fra, LocalDate til, Kode periodeResultatÅrsak,
+                                                                   Stønadskonto stønadskonto) {
+        UttakResultatPeriode periode = finnPeriode(fra, til);
+        innvilgPeriode(periode, periodeResultatÅrsak, stønadskonto);
         return this;
     }
     public FastsettUttaksperioderManueltBekreftelse innvilgPeriode(LocalDate fra, LocalDate til, Kode periodeResultatÅrsak,
@@ -136,13 +142,25 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     // PRIVATE METODER //
+
     private void innvilgPeriode(UttakResultatPeriode periode) {
         innvilgPeriode(periode, new Kode("INNVILGET_AARSAK", "2001", "§14-6: Uttak er oppfylt"));
     }
+
+    private void innvilgPeriode(UttakResultatPeriode periode, Kode periodeResultatÅrsak, Stønadskonto stønadskonto) {
+        periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
+        periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
+        periode.setBegrunnelse("Perioden er innvilget av Autotest.");
+        for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
+            aktivitet.setStønadskontoType(stønadskonto);
+            innvilgAktivitetForPeriode(periode, aktivitet);
+        }
+    }
+
     private void innvilgPeriode(UttakResultatPeriode periode, Kode periodeResultatÅrsak) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setBegrunnelse("Perioden er innvilget av autotest");
+        periode.setBegrunnelse("Perioden er innvilget av Autotest.");
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             innvilgAktivitetForPeriode(periode, aktivitet);
         }
@@ -180,6 +198,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     private void avslåPeriode(UttakResultatPeriode periode, Kode periodeResultatÅrsak) {
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "AVSLÅTT", "Avslått"));
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
+        periode.setBegrunnelse("Perioden er avslått av Autotest.");
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             avslåAktivitet(aktivitet);
         }

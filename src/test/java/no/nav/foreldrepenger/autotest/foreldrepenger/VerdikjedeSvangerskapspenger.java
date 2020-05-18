@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Arbeidsforhold;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Execution(ExecutionMode.CONCURRENT)
@@ -238,8 +237,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         verifiser(beregningsgrunnlagPeriode.getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen bare beregnes ut i fra årsinntekten til det ene arbeidsforholdet og dens utbetalingsgrad!");
 
-        var internArbeidforholdId = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId1);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidforholdId, 0),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer1, 0),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
     }
 
@@ -313,8 +311,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         int beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!");
-        var internArbeidforholdId = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidforholdId, 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer, 100),
                 "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver siden de ønsker full refusjon!");
 
 
@@ -353,7 +350,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer2, true);
 
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidforholdId, 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer, 100),
                 "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver siden de ønsker full refusjon!");
         BeregningsresultatPeriode[] beregningsresultatPerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
         verifiser(beregningsresultatPerioder[0].getAndeler().length == 1,
@@ -368,9 +365,9 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 "Forventer aktivitetsstatus for første andel for andre periode er AT.");
         verifiser(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder[1], "SN"),
                 "Forventer aktivitetsstatus for andre andel for andre periode er SN.");
-        BeregningsresultatPeriodeAndel beregningsresultatPeriodeAndel = saksbehandler.hentBeregningsresultatPeriodeAndelerForSN().get();
-        verifiser(beregningsresultatPeriodeAndel.getRefusjon() == 0, "Hele dagsatsen går til AF og dermed ingenting til SN");
-        verifiser(beregningsresultatPeriodeAndel.getTilSoker() == 0, "Hele dagsatsen går til AF og dermed ingenting til SN");
+        List<BeregningsresultatPeriodeAndel> beregningsresultatPeriodeAndeler = saksbehandler.hentBeregningsresultatPerioderMedAndelISN();
+        verifiser(beregningsresultatPeriodeAndeler.get(0).getRefusjon() == 0, "Hele dagsatsen går til AF og dermed ingenting til SN");
+        verifiser(beregningsresultatPeriodeAndeler.get(0).getTilSoker() == 0, "Hele dagsatsen går til AF og dermed ingenting til SN");
     }
 
     @Test
@@ -452,13 +449,11 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         double månedsinntekt = månedsinntekt1 + månedsinntekt2;
         double prosentTilArbeidsgiver1 = (Double.valueOf(månedsinntekt1) / månedsinntekt) * 100;
-        var internArbeidforholdId1 = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId1);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidforholdId1, prosentTilArbeidsgiver1),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer1, prosentTilArbeidsgiver1),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
 
         double prosentTilArbeidforhold2 = 100 - prosentTilArbeidsgiver1;
-        var internArbeidsgiver2 = hentInternArbeidsforholdIdVedHjelpAvEkstern(avklarFaktaFødselOgTilrettelegging, arbeidsforholdId2);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(internArbeidsgiver2, prosentTilArbeidforhold2),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer2, prosentTilArbeidforhold2),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
     }
 
@@ -484,13 +479,5 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
             årsinntekt = seksG;
         }
         return ((int) Math.round(årsinntekt * utbetalingProsentFaktor / 260));
-    }
-
-    private String hentInternArbeidsforholdIdVedHjelpAvEkstern(AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging, String arbeidsforholdId) {
-        return avklarFaktaFødselOgTilrettelegging.getBekreftetSvpArbeidsforholdList().stream()
-                .filter(arbeidsforhold -> arbeidsforhold.getEksternArbeidsforholdReferanse().equalsIgnoreCase(arbeidsforholdId))
-                .map(Arbeidsforhold::getInternArbeidsforholdReferanse)
-                .findFirst()
-                .orElseThrow();
     }
 }

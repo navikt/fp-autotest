@@ -1,15 +1,16 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.MottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FaktaOmBeregningLagreDto {
@@ -22,6 +23,7 @@ public class FaktaOmBeregningLagreDto {
     protected BesteberegningFødendeKvinneDto besteberegningAndeler;
     protected VurderTidsbegrensetArbeidsforholdDto vurderTidsbegrensetArbeidsforhold;
     protected YtelseForedeling kunYtelseFordeling;
+    protected VurderLønnsendringDto vurdertLonnsendring;
     protected List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet = new ArrayList<>();
 
     public FaktaOmBeregningLagreDto leggTilFaktaOmBeregningTilfeller(String kode) {
@@ -29,7 +31,14 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilVurderTidsbegrenset(List<VurderteArbeidsforholdDto> tidsbegrensetAndeler) {
+    public FaktaOmBeregningLagreDto fjernFaktaOmBeregningTilfeller(String kode) {
+        this.faktaOmBeregningTilfeller.remove(kode);
+        return this;
+    }
+
+    public FaktaOmBeregningLagreDto leggTilVurderTidsbegrenset(Boolean tidsbegrenset) {
+        List<VurderteArbeidsforholdDto> tidsbegrensetAndeler =
+                Collections.singletonList(new VurderteArbeidsforholdDto(2L, tidsbegrenset, false));
         this.vurderTidsbegrensetArbeidsforhold = new VurderTidsbegrensetArbeidsforholdDto(tidsbegrensetAndeler);
         return this;
     }
@@ -55,7 +64,6 @@ public class FaktaOmBeregningLagreDto {
             besteberegningAndeler = new BesteberegningFødendeKvinneDto();
         }
         besteberegningAndeler.leggTilBesteberegningAndel(new BesteberegningFødendeKvinneAndelDto(beløp, inntektskategori.kode));
-        leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE.kode);
         return this;
     }
 
@@ -96,6 +104,14 @@ public class FaktaOmBeregningLagreDto {
             fastsettEndringBeregningsgrunnlag = new FastsettEndretBeregningsgrunnlag();
         }
         fastsettEndringBeregningsgrunnlag.leggTilAndelTilPeriode(periode, andel, fastsatteVerdier);
+        return this;
+    }
+
+    public FaktaOmBeregningLagreDto leggTilVurdertLonnsendring(Boolean vurdertLønnsendring) {
+        if (vurdertLonnsendring == null) {
+            vurdertLonnsendring = new VurderLønnsendringDto();
+        }
+        vurdertLonnsendring.setErLønnsendringIBeregningsperioden(vurdertLønnsendring);
         return this;
     }
 

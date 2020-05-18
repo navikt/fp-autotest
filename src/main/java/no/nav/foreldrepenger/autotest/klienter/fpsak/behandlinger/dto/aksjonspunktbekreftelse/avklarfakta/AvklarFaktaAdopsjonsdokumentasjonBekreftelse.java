@@ -40,6 +40,7 @@ public class AvklarFaktaAdopsjonsdokumentasjonBekreftelse extends AksjonspunktBe
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         if (behandling.getSoknad().getOmsorgsovertakelseDato() != null) {
             omsorgsovertakelseDato = behandling.getSoknad().getOmsorgsovertakelseDato();
+            barnetsAnkomstTilNorgeDato = omsorgsovertakelseDato;
         }
 
         if (behandling.getSoknad().getAdopsjonFodelsedatoer() != null) {
