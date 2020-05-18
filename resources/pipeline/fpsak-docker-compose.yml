@@ -17,7 +17,7 @@ services:
       - "JAVAX_NET_SSL_TRUSTSTORE=/root/.modig/truststore.jks"
       - "ISSO_OAUTH2_ISSUER=https://vtp:8063/rest/isso/oauth2"
       - "VTP_KAFKA_HOST=localhost:9093"
-      - "CREATE_TOPICS=privat-familie-vedtakFattet-v1-vtp"
+      - "CREATE_TOPICS=privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1"
     volumes:
       - "${WORKSPACE}/.modig:/root/.modig"
     ports:

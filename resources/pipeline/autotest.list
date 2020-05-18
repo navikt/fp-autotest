@@ -28,4 +28,5 @@ FPABAKUS_URL=http://abakus:8080/fpabakus
 FPOPPDRAG_OVERRIDE_PROXY_URL=http://vtp:8060/rest/dummy/fpoppdrag
 FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/fpoppdrag
 FPTILBAKE_OVERRIDE_DIREKTE_URL=https://vtp:8063/rest/dummy/boolean/false
+KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1
 
