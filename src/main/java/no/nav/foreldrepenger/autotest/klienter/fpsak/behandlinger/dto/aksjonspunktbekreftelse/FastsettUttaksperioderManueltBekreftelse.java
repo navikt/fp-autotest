@@ -39,9 +39,9 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public FastsettUttaksperioderManueltBekreftelse innvilgManuellePerioder() {
-        for(UttakResultatPeriode uttakPeriode : perioder) {
-            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
-                innvilgPeriode(uttakPeriode);
+        for(UttakResultatPeriode uttaksperiode : perioder) {
+            if(uttaksperiode.getManuellBehandlingÅrsak() != null && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+                innvilgPeriode(uttaksperiode);
             }
         }
         return this;
@@ -49,7 +49,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     public FastsettUttaksperioderManueltBekreftelse innvilgManuellePerioder(Kode periodeResultatÅrsak) {
         for(UttakResultatPeriode uttaksperiode : perioder) {
-            if (!uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+            if (uttaksperiode.getManuellBehandlingÅrsak() != null && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
                 innvilgPeriode(uttaksperiode, periodeResultatÅrsak);
             }
         }
@@ -57,9 +57,9 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public FastsettUttaksperioderManueltBekreftelse avslåManuellePerioder() {
-        for(UttakResultatPeriode uttakPeriode : perioder) {
-            if(!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
-                avslåPeriode(uttakPeriode);
+        for(UttakResultatPeriode uttaksperiode : perioder) {
+            if(uttaksperiode.getManuellBehandlingÅrsak() != null && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+                avslåPeriode(uttaksperiode);
             }
         }
         return this;

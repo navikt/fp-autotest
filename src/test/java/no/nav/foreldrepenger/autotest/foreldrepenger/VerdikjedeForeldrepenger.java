@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTillegsopplysningerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
@@ -1023,10 +1023,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fellesperiodeSluttFar = fellesperiodeStartFar.plusWeeks(16).minusDays(1);
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar, fellesperiodeStartFar.minusDays(1)),
-                uttaksperiode(FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar)
-        );
-
-        // TODO: Fjern tilleggsopplysninger!
+                uttaksperiode(FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar));
         var søknadFar = lagSøknadForeldrepengerAdopsjon(
                 omsorgsovertakelsedatoe, aktørIdFar, SøkersRolle.FAR, false)
                 .medFordeling(fordelingFar);
@@ -1054,16 +1051,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
-        // TODO: Fjern tilleggsopplysninger!
-        AvklarFaktaTillegsopplysningerBekreftelse avklarFaktaTillegsopplysningerBekreftelseFar
-                = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaTillegsopplysningerBekreftelseFar);
-
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse avklarFaktaAdopsjonsdokumentasjonBekreftelseFar =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
-        // TODO: BarnetsAnkomstTilNorgeDato hentes fra søknadden, sammen med resten. Bare begrunnelse som kreves.
-        //  legg til begrunnelse. Sjekk historikkinnslag?
-        avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedatoe);
+        avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
 
         VurderSoknadsfristForeldrepengerBekreftelse vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
@@ -1092,9 +1082,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar))
-                .medEndringIRefusjonslist(endringRefusjonMap);
-        // TODO: Se om det går an å fjerne medEndringIRefusjonslist.
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar));
         fordel.sendInnInntektsmelding(
                 inntektsmeldingEndringFar,
                 aktørIdFar,
@@ -1106,16 +1094,14 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
-                // TODO: Sjekk om det er slik det gjøres i FE
                 .leggTilRefusjonGyldighetVurdering(orgNummerFar, false)
-                .setBegrunnelse("Refusjonskrav er sendt inn for sent!");
+                .setBegrunnelse("Refusjonskrav er sendt inn for sent og skal ikke tas med i beregning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelseRevurdering =
                 saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelseRevurdering.innvilgManuellePerioder(
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
-        // TODO: SE omd hvorfor en annen kode kommer?
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering);
 
 
@@ -1127,18 +1113,19 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, true);
 
-        BeregningsresultatPeriode[] resultatPerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
-        verifiser(resultatPerioder.length == 3,
+        BeregningsresultatPeriode[] perioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
+        verifiser(perioder.length == 3,
                 "Foventer at den berørte saken har 3 tilkjent ytelse peridoer, og ikke 2 som i førstegangsbehandling!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(resultatPerioder[0], 0),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[0], 0),
                 "Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(resultatPerioder[1], 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[1], 100),
                 "Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(resultatPerioder[2], 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[2], 100),
                 "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
     }
 
     @Test
+    @Disabled("FEIL: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect)")
     @DisplayName("11: Far søker adopsjon hvor han søker hele fedrekvoten og fellesperiode, og får berørt sak pga mor")
     @Description("Far søker adopsjon hvor han søker hele fedrekvoten og fellesperioden. Mor søker noe av mødrekvoten midt " +
             "midt i fars periode med fullt uttak. Deretter søker more 9 uker av fellesperiode med samtidig uttak. Far får " +
@@ -1155,9 +1142,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fellesperiodeSluttFar = fellesperiodeStartFar.plusWeeks(16).minusDays(1);
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar, fellesperiodeStartFar.minusDays(1)),
-                uttaksperiode(FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar)
-        );
-
+                uttaksperiode(FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar));
         var søknadFar = lagSøknadForeldrepengerAdopsjon(
                 omsorgsovertakelsedatoe, aktørIdFar, SøkersRolle.FAR, false)
                 .medFordeling(fordelingFar);
@@ -1185,16 +1170,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
-        // TODO: Fjern denne.
-        AvklarFaktaTillegsopplysningerBekreftelse avklarFaktaTillegsopplysningerBekreftelseFar
-                = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaTillegsopplysningerBekreftelseFar);
-
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse avklarFaktaAdopsjonsdokumentasjonBekreftelseFar =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
-        // TODO: BarnetsAnkomstTilNorgeDato hentes fra søknadden, sammen med resten. Bare begrunnelse som kreves.
-        //  legg til begrunnelse. Sjekk historikkinnslag?
-        avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedatoe);
+        avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
 
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse =
@@ -1217,12 +1195,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fpStartdatoMor = fpStartdatoFar.plusWeeks(7);
         var fellesperiodeStartMor = fpStartdatoMor.plusWeeks(4);
         var fellesperiodeSluttMor = fellesperiodeStartMor.plusWeeks(9).minusDays(1);
-
         var fordelingMor = generiskFordeling(
                 uttaksperiode(MØDREKVOTE, fpStartdatoMor, fellesperiodeStartMor.minusDays(1), false, false),
-                uttaksperiode(FELLESPERIODE, fellesperiodeStartMor, fellesperiodeSluttMor, false, true, 40)
-        );
-
+                uttaksperiode(FELLESPERIODE, fellesperiodeStartMor, fellesperiodeSluttMor, false, true, 40));
         var søknadMor = lagSøknadForeldrepengerAdopsjon(
                 omsorgsovertakelsedatoe, aktørIdMor, SøkersRolle.MOR, false)
                 .medFordeling(fordelingMor)
@@ -1249,16 +1224,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 saksnummerMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        // TODO: Fjern denne.
-        AvklarFaktaTillegsopplysningerBekreftelse avklarFaktaTillegsopplysningerBekreftelseMor
-                = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTillegsopplysningerBekreftelse.class);
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaTillegsopplysningerBekreftelseMor);
-
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse avklarFaktaAdopsjonsdokumentasjonBekreftelseMor =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
-        avklarFaktaAdopsjonsdokumentasjonBekreftelseMor.setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedatoe);
+        avklarFaktaAdopsjonsdokumentasjonBekreftelseMor.setBegrunnelse("Adopsjon behandlet av Autotest.");
         // TODO: Finn ut hvorfor denne fører til prosesstaks i vrang tilstand.
         //  det vil si "Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect)
+        //  Sjekk om TFP-3331 fikser denne.
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseMor);
 
         saksbehandler.ventTilAvsluttetBehandling();
@@ -1272,7 +1243,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at det er 1 avslåtte uttaksperioder (automatisk avslått)");
         verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(1).getPeriodeResultatÅrsak().kode.equalsIgnoreCase("4084"),
                 "Perioden burde være avslått fordi annenpart tar ut mødrekovte med 100% utbetalingsgrad samtidig!");
-
 
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelseMor =
                 saksbehandler.hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
@@ -1309,10 +1279,22 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, true);
 
-        // TODO: Uttak: Legg til verifisering på at disponible fellesperiode dager er tom.
-        // TODO: Tilkjent Ytelse: Verifiser at avslåtte perioden ikke er inkludert
-        // TODO: Tilkjent Ytelse: Sjekk at alt går til søker
-        // TODO: Tilkjent Ytelse: Sjekk at perioden vhor det er samtidig uttak og utbetalingsgrad 60% er redusert.
+        // verifisering i uttak
+        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp (dvs = 0)!");
+        verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 2,
+                "Forventer at det er 2 avslåtte uttaksperioder");
+
+        // verifisering i tilkjent ytelse
+        BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
+        verifiser(tilkjentYtelsePerioder.getPerioder()[1].getDagsats() == 0,
+                "Siden perioden er avslått, forventes det 0 i dagsats.");
+        verifiser(tilkjentYtelsePerioder.getPerioder()[3].getDagsats() == Math.ceil(tilkjentYtelsePerioder.getPerioder()[2].getDagsats() * 0.6),
+                "Siden perioden er avslått, forventes det 0 i dagsats.");
+        verifiser(tilkjentYtelsePerioder.getPerioder()[5].getDagsats() == 0,
+                "Siden perioden er avslått, forventes det 0 i dagsats.");
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
+                "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
     }
 
 

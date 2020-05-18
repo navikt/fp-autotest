@@ -24,7 +24,6 @@ public class FaktaOmBeregningLagreDto {
     protected VurderTidsbegrensetArbeidsforholdDto vurderTidsbegrensetArbeidsforhold;
     protected YtelseForedeling kunYtelseFordeling;
     protected VurderLønnsendringDto vurdertLonnsendring;
-
     protected List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet = new ArrayList<>();
 
     public FaktaOmBeregningLagreDto leggTilFaktaOmBeregningTilfeller(String kode) {
