@@ -1134,7 +1134,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     }
 
     @Test
-    //@Disabled("FEIL: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect)")
     @DisplayName("11: Far søker adopsjon hvor han søker hele fedrekvoten og fellesperiode, og får berørt sak pga mor")
     @Description("Far søker adopsjon hvor han søker hele fedrekvoten og fellesperioden. Mor søker noe av mødrekvoten midt " +
             "midt i fars periode med fullt uttak. Deretter søker more 9 uker av fellesperiode med samtidig uttak. Far får " +
@@ -1236,9 +1235,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse avklarFaktaAdopsjonsdokumentasjonBekreftelseMor =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
         avklarFaktaAdopsjonsdokumentasjonBekreftelseMor.setBegrunnelse("Adopsjon behandlet av Autotest.");
-        // TODO: Finn ut hvorfor denne fører til prosesstaks i vrang tilstand.
-        //  det vil si "Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect)
-        //  Sjekk om TFP-3331 fikser denne.
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseMor);
 
         saksbehandler.ventTilAvsluttetBehandling();
@@ -1287,6 +1283,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, true);
+        // TODO: Kommenter inn når TFP-3373 er fikset!
+        //beslutter.ventTilFagsakLøpende();
 
         // verifisering i uttak
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
