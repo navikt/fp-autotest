@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -134,6 +133,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var avklarFaktaAleneomsorgBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class);
         avklarFaktaAleneomsorgBekreftelse.bekreftBrukerHarAleneomsorg();
+        avklarFaktaAleneomsorgBekreftelse.setBegrunnelse("Bekreftelse sendt fra Autotest.");
         saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse);
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer, false);
@@ -177,6 +177,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
         vurderPerioderOpptjeningBekreftelse.godkjennAllOpptjening();
+        vurderPerioderOpptjeningBekreftelse.setBegrunnelse("Opptjening godkjent av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
         VurderVarigEndringEllerNyoppstartetSNBekreftelse vurderVarigEndringEllerNyoppstartetSNBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class);
@@ -193,6 +194,13 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at søker får utbetaling med status SN!");
         verifiser(beregningAktivitetStatus.size() == 1, "Forventer bare en periode med aktivitetstatus lik SN");
 
+        Saldoer saldoer = saksbehandler.valgtBehandling.getSaldoer();
+        verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
+        verifiser(saldoer.getStonadskontoer().get(MØDREKVOTE).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
+        verifiser(saldoer.getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
+                "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
     }
 
 
@@ -225,6 +233,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 DekningsgradDto.AATI);
         saksbehandler.bekreftAksjonspunkt(papirSoknadForeldrepengerBekreftelse);
 
+        // TODO: Avventer svar fra Cecilie.
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD);
         saksbehandler.gjenopptaBehandling();
 
@@ -1125,7 +1134,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     }
 
     @Test
-    @Disabled("FEIL: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect)")
+    //@Disabled("FEIL: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect)")
     @DisplayName("11: Far søker adopsjon hvor han søker hele fedrekvoten og fellesperiode, og får berørt sak pga mor")
     @Description("Far søker adopsjon hvor han søker hele fedrekvoten og fellesperioden. Mor søker noe av mødrekvoten midt " +
             "midt i fars periode med fullt uttak. Deretter søker more 9 uker av fellesperiode med samtidig uttak. Far får " +

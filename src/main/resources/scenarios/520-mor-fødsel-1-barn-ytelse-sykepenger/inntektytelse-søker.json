@@ -21,7 +21,7 @@
 				"arbeidsforhold":  [],
 				"periode": {
 					"fom": "now() - P9M",
-					"tom": "now()"
+					"tom": "now() + P1D"
 				},
 				"behandlingstema": {
 					"kode": "SP",
@@ -48,7 +48,17 @@
 		"barnsykdom": []
 	},
 	"inntektskomponent": {
-		"inntektsperioder": []
+		"inntektsperioder": [
+			{
+				"fom": "now() - P4Y",
+				"tom": "now() - P12M",
+				"beløp": 40000,
+				"orgnr": "910909088",
+				"type": "Lønnsinntekt",
+				"fordel": "kontantytelse",
+				"beskrivelse": "fastloenn"
+			}
+		]
 	},
 	"aareg": {
 		"arbeidsforhold": [
