@@ -13,6 +13,8 @@ services:
     mem_limit: 1gb
     mem_reservation: 512mb
     shm_size: 2gb
+    volumes:
+      - ./oracle-init:/docker-entrypoint-initdb.d/
     ports:
       - "1521:1521"
   postgres:
@@ -99,6 +101,28 @@ services:
         condition: service_started
       vtp:
         condition: service_healthy
+  fpoppdrag:
+    image: $FPOPPDRAG_IMAGE
+    container_name: fpoppdrag
+    restart: on-failure
+    env_file:
+      - "fpoppdrag_datasource.list"
+      - "common.env"
+    environment:
+      - "OPPDRAG_SERVICE_URL=https://vtp:8063/soap/cics/services/oppdragService"
+      - "LOADBALANCER_URL=http://localhost:8070"
+      - "LOADBALANCER_FQDN=localhost:8070"
+      - "SYSTEMBRUKER_USERNAME=vtp-nouser"
+      - "SYSTEMBRUKER_PASSWORD=tullepassord"
+    volumes:
+      - "~/.modig:/var/run/secrets/naisd.io"
+    ports:
+      - "8070:8070"
+    depends_on:
+      oracle:
+        condition: service_started
+      vtp:
+        condition: service_healthy
   fpsak:
     image: $FPSAK_IMAGE
     container_name: fpsak
@@ -107,9 +131,9 @@ services:
     environment:
       - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
       - "FPABAKUS_URL=http://abakus:8080/fpabakus"
-      - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://vtp:8060/rest/dummy/fpoppdrag"
-      - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/fpoppdrag"
-      - "FPTILBAKE_OVERRIDE_URL=http://vtp:8060/rest/dummy/boolean/false"
+      - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://fpoppdrag:8070/fpoppdrag/api"
+      - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8070/fpoppdrag/api"
+      - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/boolean/false"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
       - "LOADBALANCER_FQDN=localhost:8080"
