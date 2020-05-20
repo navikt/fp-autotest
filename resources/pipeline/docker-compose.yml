@@ -112,12 +112,11 @@ services:
       - "OPPDRAG_SERVICE_URL=https://vtp:8063/soap/cics/services/oppdragService"
       - "LOADBALANCER_URL=http://localhost:8070"
       - "LOADBALANCER_FQDN=localhost:8070"
-      - "SYSTEMBRUKER_USERNAME=vtp-nouser"
-      - "SYSTEMBRUKER_PASSWORD=tullepassord"
+      - "OPENIDCONNECT_USERNAME=fpoppdrag-localhost"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
-      - "8070:8070"
+      - "8070:8080"
     depends_on:
       oracle:
         condition: service_started
@@ -132,7 +131,7 @@ services:
       - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
       - "FPABAKUS_URL=http://abakus:8080/fpabakus"
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://fpoppdrag:8070/fpoppdrag/api"
-      - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8070/fpoppdrag/api"
+      - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/boolean/false"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
