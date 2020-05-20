@@ -11,11 +11,10 @@ location  /fpoppdrag/api/ {
 }
 
 # Simple Proxy to backend
-location  /fpsak/formidling/ {
+location  /fpformidling/api/ {
     access_by_lua_file oidc_protected.lua;
-    proxy_pass "${APP_URL_FPFORMIDLING}/fpsak/formidling/";
+    proxy_pass "${APP_URL_FPFORMIDLING}/fpformidling/api/";
 }
-
 
 # Simple Proxy to backend middlertidig fix frem til bedre løsning kommer på plass.
 location  /fpsak/oppgaveredirect {
