@@ -130,7 +130,7 @@ services:
     environment:
       - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
       - "FPABAKUS_URL=http://abakus:8080/fpabakus"
-      - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://fpoppdrag:8070/fpoppdrag/api"
+#      - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://fpoppdrag:8070/fpoppdrag/api"
       - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/boolean/false"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
@@ -165,10 +165,14 @@ services:
       - "TZ=Europe/Oslo"
       - "APP_PORT=9000"
       - "APP_URL_FPSAK=http://fpsak:8080"
+      - "APP_URL_FPOPPDRAG=http://fpoppdrag:8080"
+      - "APP_URL_FPFORMIDLING=http://fpformidling:8010"
       - "OIDC_HOST_URL=https://vtp:8063/rest/isso/oauth2"
       - "OIDC_AGENTNAME=fpsak-localhost"
       - "OIDC_PASSWORD=vtp"
       - "REDIS_HOST=redis"
+    volumes:
+      - "./frontend/:/nginx"
     ports:
       - "9000:9000"
     depends_on:
