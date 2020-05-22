@@ -14,7 +14,7 @@ on:
       - '.github/workflows/build-pr.yml'
       - 'resources/keystore/**'
   repository_dispatch:
-    types: [fpsak-autotest, fpsak-verdikjede, fpformidling-verdikjede, abakus-verdikjede]
+    types: [fpsak-autotest, fpsak-verdikjede, fpformidling-verdikjede, abakus-verdikjede, fpoppdrag-verikjede]
   schedule:
     - cron:  '0 0 * * *'
 

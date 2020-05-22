@@ -150,6 +150,7 @@ services:
       - vtp
       - abakus
       - fpformidling
+      - fpoppdrag
   redis:
     image: redis
     container_name: redis
