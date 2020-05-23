@@ -69,7 +69,7 @@ jobs:
           echo "Sjekker ikke fp-formidling fordi curl mot isReady returnerte 400 bad request. Antar at den er oppe!"
           echo
           echo "Tester om fpoppdrag er oppe"
-          timeout 90 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpoppdrag/internal/health/isAlive)" != "200" ]]; do sleep 2; done' || false
+          timeout 90 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8070/fpoppdrag/internal/health/isAlive)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
           echo "Tester om fp-sak er oppe"
