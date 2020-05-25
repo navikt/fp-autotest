@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus; //Denne FPSAK import er OK. Ellers skal man generelt ikke blande fpsak og fptilbake
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.FptilbakeKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
@@ -14,11 +15,13 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
+import org.apache.http.HttpResponse;
 
 public class BehandlingerKlient extends FptilbakeKlient {
 
     private static final String BEHANDLINGER_URL = "/behandlinger";
     private static final String BEHANDLINGER_GET_URL = "/behandlinger?behandlingId=%s";
+    private static final String BEHANDLINGER_STATUS_URL = "/behandlinger/status?behandlingId=%s";
 
     private static final String BEHANDLINGER_OPPRETT = BEHANDLINGER_URL + "/opprett";
     private static final String BEHANDLINGER_ALLE_URL = BEHANDLINGER_URL + "/alle?saksnummer=%s";
@@ -70,6 +73,29 @@ public class BehandlingerKlient extends FptilbakeKlient {
     public void postAksjonspunkt(BehandledeAksjonspunkter aksjonspunkter) {
         String url = hentRestRotUrl() + AKSJONSPUNKT_URL;
         postOgVerifiser(url, aksjonspunkter, StatusRange.STATUS_SUCCESS);
+    }
+
+    /*
+     * Hent status for behandling
+     */
+    @Step("Henter status for behandling")
+    public AsyncPollingStatus hentStatus(int behandlingId) {
+        HttpResponse response = status(behandlingId);
+        if (StatusRange.STATUS_REDIRECT.inRange(response.getStatusLine().getStatusCode())) {
+            return null;
+        } else {
+            return fromJson(hentResponseBody(response), AsyncPollingStatus.class);
+        }
+    }
+
+    private HttpResponse status(int behandlingId) {
+        try {
+            session.setRedirect(false);
+            String url = hentRestRotUrl() + String.format(BEHANDLINGER_STATUS_URL, behandlingId);
+            return getJson(url);
+        } finally {
+            session.setRedirect(true);
+        }
     }
 
 }

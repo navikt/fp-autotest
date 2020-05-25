@@ -6,5 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class AksjonspunktDto {
     public AksjonspunktDefinisjon definisjon;
     public boolean erAktivt;
+    public boolean kanLoses;
 
 }

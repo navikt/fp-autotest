@@ -1,10 +1,16 @@
 package no.nav.foreldrepenger.autotest.aktoerer.fptilbake;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;   //denne, --
+import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;         //denne --
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;//-- og denne FPSAK import er OK. Ellers skal man generelt ikke blande fpsak og fptilbake
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
@@ -20,6 +26,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ForeslåVedtak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
+import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
 public class TilbakekrevingSaksbehandler extends Aktoer {
@@ -30,11 +37,13 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     private BehandlingerKlient behandlingerKlient;
     private OkonomiKlient okonomiKlient;
+    private ProsesstaskKlient prosesstaskKlient;
 
     public TilbakekrevingSaksbehandler() {
         super();
         behandlingerKlient = new BehandlingerKlient(session);
         okonomiKlient = new OkonomiKlient(session);
+        prosesstaskKlient = new ProsesstaskKlient(session);
     }
 
     // Behandlinger actions
@@ -98,7 +107,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     public boolean harAktivtAksjonspunkt(int kode) {
         AksjonspunktDto aksjonspunktDto = hentAksjonspunkt(kode);
         if (aksjonspunktDto == null) { return false; }
-        return aksjonspunktDto.erAktivt;
+        return (aksjonspunktDto.kanLoses && aksjonspunktDto.erAktivt);
     }
 
     public AksjonspunktBehandling hentAksjonspunktbehandling(int aksjonspunktkode) {
@@ -150,6 +159,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             return;
         }
         Vent.til(() -> {
+            ventPåProsessering(valgtBehandling);
             refreshBehandling();
             return harAktivtAksjonspunkt(aksjonspunktKode);
         }, 60, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
@@ -159,11 +169,54 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             return;
         }
         Vent.til(() -> {
+            ventPåProsessering(valgtBehandling);
             refreshBehandling();
             return harBehandlingsstatus(status);
         }, 30, "Saken har ikke fått behanldingsstatus " + status);
     }
     public void ventTilAvsluttetBehandling() {
         ventTilBehandlingsstatus("AVSLU");
+    }
+
+    private void ventPåProsessering(Behandling behandling) {
+        Vent.til(() -> {
+            return verifiserProsesseringFerdig(behandling);
+        }, 90, () -> {
+            List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
+            String prosessTaskList = "";
+            for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
+                prosessTaskList += prosessTaskListItemDto.getTaskType() + " - " + prosessTaskListItemDto.getStatus() + "\n";
+            }
+            return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
+        });
+    }
+
+    private boolean verifiserProsesseringFerdig(Behandling behandling) {
+        AsyncPollingStatus status = behandlingerKlient.hentStatus(behandling.id);
+
+        if (status == null || status.getStatusCode() == null) {
+            return true;
+        } else if (status.getStatusCode() == 418) {
+            if (status.getStatus() != AsyncPollingStatus.Status.DELAYED) {
+                AllureHelper.debugFritekst("Prosesstask feilet i behandlingsverifisering: " + status.getMessage());
+                throw new IllegalStateException("Prosesstask i vrang tilstand: " + status.getMessage());
+            } else {
+                AllureHelper.debugFritekst("Prossesstask DELAYED: " + status.getMessage());
+                return false;
+            }
+        } else if (status.isPending()) {
+            return false;
+        } else {
+            AllureHelper.debugFritekst("Prosesstask feilet for behandling[" + behandling.id + "] i behandlingsverifisering: " + status.getMessage());
+            throw new RuntimeException("Status for behandling " + behandling.id + " feilet: " + status.getMessage());
+        }
+    }
+
+    private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
+        SokeFilterDto filter = new SokeFilterDto();
+        filter.setSisteKjoeretidspunktFraOgMed(LocalDateTime.now().minusMinutes(5));
+        filter.setSisteKjoeretidspunktTilOgMed(LocalDateTime.now());
+        List<ProsessTaskListItemDto> prosesstasker = prosesstaskKlient.list(filter);
+        return prosesstasker.stream().filter(p -> p.getTaskParametre().getBehandlingId() == "" + behandling.id).collect(Collectors.toList());
     }
 }
