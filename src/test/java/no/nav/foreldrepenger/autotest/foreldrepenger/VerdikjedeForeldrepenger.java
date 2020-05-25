@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -189,7 +188,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer, false);
 
-        Set<Kode> beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
+        var beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
         verifiser(beregningAktivitetStatus.contains(new Kode("AKTIVITET_STATUS", "SN")),
                 "Forventer at søker får utbetaling med status SN!");
         verifiser(beregningAktivitetStatus.size() == 1, "Forventer bare en periode med aktivitetstatus lik SN");
@@ -412,7 +411,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         VurderSoknadsfristForeldrepengerBekreftelse vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class);
-        vurderSoknadsfristForeldrepengerBekreftelse.bekreftHarGyldigGrunn(fpStartdatoMor);
+        vurderSoknadsfristForeldrepengerBekreftelse
+                .bekreftHarGyldigGrunn(fpStartdatoMor)
+                .setBegrunnelse("Begrunnelse fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
@@ -441,7 +442,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
-        vurderPerioderOpptjeningBekreftelse.godkjennOpptjening("FRILANS")
+        vurderPerioderOpptjeningBekreftelse
+                .godkjennOpptjening("FRILANS")
                 .setBegrunnelse("Godkjenner Aktivitet");
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
@@ -470,7 +472,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @DisplayName("6: Far søker foreldrepenger med AF som ikke er avsluttet og mor ikke har rett.")
     @Description("Far søker foreldrepenger med to aktive arbeidsforhold og ett gammelt arbeidsforhold som skulle vært " +
             "avsluttet. Søker en graderingsperiode i en av virksomheten og gjennopptar full deltidsstilling: I dette " +
-            "arbeidsforholdet vil AG ha full refusjon i hele perioden. I det andre vil bare ha refusjon i to måneder.")
+            "arbeidsforholdet vil AG ha full refusjon i hele perioden. I det andre vil AG bare ha refusjon i to måneder.")
     public void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var testscenario = opprettTestscenario("570");
         var identFar = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -538,11 +540,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .getAnsettelsesperiodeFom();
         var tomGyldighetsperiode = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getAnsettelsesperiodeFom();
-        avklarArbeidsforholdBekreftelse.bekreftArbeidsforholdErOverstyrt(
+        avklarArbeidsforholdBekreftelse.bekreftArbeidsforholdErIkkeAktivt(
                 "TEST TRANSPORT AS",
                 ansettelsesperiodeFom,
-                tomGyldighetsperiode.minusDays(1));
-        avklarArbeidsforholdBekreftelse.setBegrunnelse("Arbeidsforholdet skulle vært avsluttet");
+                tomGyldighetsperiode.minusDays(1),
+                "Arbeidsforholdet skulle vært avsluttet");
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         AvklarFaktaAnnenForeldreHarRett avklarFaktaAnnenForeldreHarRett =
@@ -630,7 +632,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*
-         * FAR: Søker overføring av mødrekvoten og fellesperiode fordi mor er syk innenfor 6 første uker av mødrekvoten.
+         * FAR: Søker overføring av mødrekvoten fordi mor er syk innenfor de 6 første uker av mødrekvoten.
          */
         var identFar = testscenario.getPersonopplysninger().getSøkerIdent();
         var aktørIdFar = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -657,6 +659,14 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         avklarFaktaUttakPerioder.godkjennPeriode(fpStartdatoFarEndret, fødselsdato.plusWeeks(15).minusDays(1));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
+
+        var beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
+        verifiser(beregningAktivitetStatus.contains(new Kode("AKTIVITET_STATUS", "AAP")),
+                "Forventer at beregningsstatusen er APP!");
+        verifiser(beregningAktivitetStatus.size() == 1,
+                "Forventer bare en periode med aktivitetstatus lik AAP");
+        verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getRedusertPrAar() > 0,
+                "Forventer at beregningsgrunnlaget baserer seg på en årsinntekt større enn 0. Søker har bare AAP.");
 
         foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
 
@@ -1321,7 +1331,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         );
         var søknadMor = lagSøknadForeldrepengerFødsel(
                 fødselsdato, aktørIdMor, SøkersRolle.MOR)
-                .medFordeling(fordelingMor);
+                .medFordeling(fordelingMor)
+                // TODO: Sjekk hvofor mottatdato ikke blir satt. Viser feil dato i frontend.
+                .medMottattDato(fpStartdatoMor.minusWeeks(4));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         var saksnummerMor = fordel.sendInnSøknad(
                 søknadMor.build(),

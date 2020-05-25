@@ -91,7 +91,7 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.gjenopptaBehandling();
 
         var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
+                .bekreftArbeidsforholdErAktivt("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunkt(ab);
 
 
@@ -136,7 +136,7 @@ public class Termin extends ForeldrepengerTestBase {
 
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
-        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();;
+        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
         perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)));
         perioder.add(uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)));
         perioder.add(graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1), orgnr2, 40));

@@ -28,22 +28,24 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         }
     }
 
-    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErRelevant(String navn, boolean fortsettUtenInntekt) {
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErAktivt(String navn, boolean fortsettUtenInntekt) {
         Arbeidsforhold forhold = finnArbeidsforhold(navn);
         if (forhold == null) {
             throw new RuntimeException("fant ikke arbeidsforhold: " + navn);
         }
-        bekreftArbeidsforholdErRelevant(forhold, fortsettUtenInntekt);
+        bekreftArbeidsforholdErAktivt(forhold, fortsettUtenInntekt);
         return this;
     }
 
-    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErOverstyrt(String navn, LocalDate startDato, LocalDate overstyrtTom) {
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErIkkeAktivt(String navn, LocalDate startDato,
+                                                                             LocalDate overstyrtTom, String begrunnelse) {
         Arbeidsforhold forhold = finnArbeidsforhold(navn, startDato);
         if (forhold == null) {
             throw new RuntimeException("fant ikke arbeidsforhold: " + navn);
         }
         forhold.setFortsettBehandlingUtenInntektsmelding(true);
         forhold.setOverstyrtTom(overstyrtTom);
+        forhold.setBegrunnelse(begrunnelse);
         return this;
     }
 
@@ -58,21 +60,10 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public void bekreftArbeidsforholdErRelevant(Arbeidsforhold forhold, boolean fortsettUtenInntekt) {
+    public void bekreftArbeidsforholdErAktivt(Arbeidsforhold forhold, boolean fortsettUtenInntekt) {
         forhold.setBrukArbeidsforholdet(true);
         forhold.setFortsettBehandlingUtenInntektsmelding(fortsettUtenInntekt);
-    }
-
-    public void bekreftArbeidsforholdErIkkeRelevant(String navn) {
-        Arbeidsforhold forhold = finnArbeidsforhold(navn);
-        if (forhold == null) {
-            throw new RuntimeException("fant ikke arbeidsforhold: " + navn);
-        }
-        bekreftArbeidsforholdErIkkeRelevant(forhold);
-    }
-
-    public void bekreftArbeidsforholdErIkkeRelevant(Arbeidsforhold forhold) {
-        forhold.setBrukArbeidsforholdet(false);
+        forhold.setBegrunnelse("Begrunnelse fra Autotest.");
     }
 
     private Arbeidsforhold finnArbeidsforhold(String navn) {
