@@ -105,6 +105,7 @@ services:
     image: $FPOPPDRAG_IMAGE
     container_name: fpoppdrag
     restart: on-failure
+    mem_limit: 512mb
     env_file:
       - "fpoppdrag_datasource.list"
       - "common.env"
