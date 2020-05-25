@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.aktoerer.fpoppdrag;
 
-import java.io.IOException;
-
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.SimuleringKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpoppdrag.simulering.dto.BehandlingIdDto;
