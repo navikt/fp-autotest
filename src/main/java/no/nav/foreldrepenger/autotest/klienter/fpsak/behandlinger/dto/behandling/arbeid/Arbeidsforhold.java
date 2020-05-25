@@ -16,7 +16,7 @@ public class Arbeidsforhold {
     protected LocalDate tomDato = null;
     protected ArbeidsforholdKilde kilde = null;
     protected LocalDate mottattDatoInntektsmelding = null;
-    protected String beskrivelse = null;
+    protected String begrunnelse = null;
     protected BigDecimal stillingsprosent = null;
     protected Boolean brukArbeidsforholdet = null;
     protected Boolean fortsettBehandlingUtenInntektsmelding = null;
@@ -79,6 +79,10 @@ public class Arbeidsforhold {
 
     public String getArbeidsforholdId() {
         return arbeidsforholdId;
+    }
+
+    public void setBegrunnelse(String begrunnelse) {
+        this.begrunnelse = begrunnelse;
     }
 
     public void setOverstyrtTom(LocalDate overstyrtTom) {

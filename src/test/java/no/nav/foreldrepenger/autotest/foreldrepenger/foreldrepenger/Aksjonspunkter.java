@@ -186,7 +186,7 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
         AvklarArbeidsforholdBekreftelse arbeidsforholdBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        arbeidsforholdBekreftelse.bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
+        arbeidsforholdBekreftelse.bekreftArbeidsforholdErAktivt("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunkt(arbeidsforholdBekreftelse);
 
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse =

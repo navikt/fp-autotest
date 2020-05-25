@@ -410,7 +410,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         // FAKTA OM ARBEIDSFORHOLD
         AvklarArbeidsforholdBekreftelse avklarArbeidsforholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        avklarArbeidsforholdBekreftelse.bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
+        avklarArbeidsforholdBekreftelse.bekreftArbeidsforholdErAktivt("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         // FAKTA OM BEREGNING
@@ -439,7 +439,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.gjenopptaBehandling();
 
         AvklarArbeidsforholdBekreftelse avklarArbeidsforholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        avklarArbeidsforholdBekreftelse.bekreftArbeidsforholdErRelevant("BEDRIFT AS", true);
+        avklarArbeidsforholdBekreftelse.bekreftArbeidsforholdErAktivt("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
