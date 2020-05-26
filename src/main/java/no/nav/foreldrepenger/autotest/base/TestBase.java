@@ -4,14 +4,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioRepositoryImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.util.konfigurasjon.MiljoKonfigurasjon;
-import no.nav.foreldrepenger.vtp.felles.PropertiesUtils;
+import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioRepositoryImpl;
 
 public abstract class TestBase {
 
@@ -28,8 +27,6 @@ public abstract class TestBase {
      */
     @BeforeAll
     protected static void setUpAll() {
-        String propertiesDir = System.getProperty("application.root");
-        PropertiesUtils.initProperties(propertiesDir == null ? ".." : propertiesDir);
         MiljoKonfigurasjon.initProperties();
         testscenarioRepositoryImpl = new TestscenarioRepositoryImpl();
     }
@@ -37,15 +34,6 @@ public abstract class TestBase {
     /*
      * Verifisering
      */
-    protected void verifiserListeInneholder(List<Object> liste, Object object1) {
-        for (Object object2 : liste) {
-            if (object1.equals(object2)) {
-                return;
-            }
-        }
-        verifiser(false, "Listen: " + liste.toString() + " inneholdt ikke: " + object1.toString());
-    }
-
     protected void verifiserLikhet(Object verdiGjeldende, Object verdiForventet) {
         verifiserLikhet(verdiGjeldende, verdiForventet, "Object");
     }

@@ -70,8 +70,12 @@ public class Fordel extends Aktoer {
     @Step("Sender inn søknad")
     public long sendInnSøknad(Soeknad søknad, String aktørId, String fnr, DokumenttypeId dokumenttypeId, Long saksnummer) {
         String xml = null;
+        LocalDate mottattDato;
         if (null != søknad) {
             xml = SøknadBuilder.tilXML(søknad);
+            mottattDato = søknad.getMottattDato();
+        } else {
+            mottattDato = LocalDate.now();
         }
 
         JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml == null ? "" : xml, fnr, dokumenttypeId);
@@ -83,7 +87,8 @@ public class Fordel extends Aktoer {
         String behandlingstemaOffisiellKode = finnBehandlingstemaKode(dokumenttypeId);
         String dokumentTypeIdOffisiellKode = dokumenttypeId.getKode();
         debugSenderInnDokument("Foreldrepengesøknad", xml);
-        long sakId = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
+        long sakId = sendInnJournalpost(xml, mottattDato, journalpostId, behandlingstemaOffisiellKode,
+                dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
         journalpostModell.setSakId(String.valueOf(sakId));
         logger.info("Sendt inn søknad på sak med saksnummer: {}", sakId);
 
@@ -258,7 +263,6 @@ public class Fordel extends Aktoer {
 
     @Step("Sender inn klage for bruker")
     public long sendInnKlage(String xmlstring, TestscenarioDto scenario, Long saksnummer) {
-        String xml = xmlstring;
         String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
         String behandlingstemaOffisiellKode = "ab0047";
         String dokumentKategori = Dokumentkategori.KLAGE_ANKE.getKode();
@@ -267,7 +271,7 @@ public class Fordel extends Aktoer {
         JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostUstrukturertDokument(scenario.getPersonopplysninger().getSøkerIdent(), DokumenttypeId.KLAGEANKE);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
 
-        long sakId = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
+        long sakId = sendInnJournalpost(xmlstring, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
         journalpostModell.setSakId(String.valueOf(sakId));
         return sakId;
     }
@@ -276,8 +280,16 @@ public class Fordel extends Aktoer {
     /*
      * Sender inn journalpost og returnerer saksnummer
      */
+    private Long sendInnJournalpost(String xml, String journalpostId, String behandlingstemaOffisiellKode,
+                                    String dokumentTypeIdOffisiellKode, String dokumentKategori, String aktørId, Long saksnummer) {
+        return sendInnJournalpost(xml, LocalDate.now(), journalpostId, behandlingstemaOffisiellKode,
+                dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
+    }
+
     @Step("Sender inn journalpost")
-    private Long sendInnJournalpost(String xml, String journalpostId, String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode, String dokumentKategori, String aktørId, Long saksnummer) {
+    private Long sendInnJournalpost(String xml, LocalDate mottattDato, String journalpostId,
+                                    String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode,
+                                    String dokumentKategori, String aktørId, Long saksnummer) {
 
         if (saksnummer == null || saksnummer.longValue() == 0L) {
             OpprettSak journalpost = new OpprettSak(journalpostId, behandlingstemaOffisiellKode, aktørId);
@@ -290,7 +302,8 @@ public class Fordel extends Aktoer {
         fordelKlient.fagsakKnyttJournalpost(journalpostKnyttning);
 
 
-        JournalpostMottak journalpostMottak = new JournalpostMottak("" + saksnummer, journalpostId, LocalDate.now(), behandlingstemaOffisiellKode);
+        JournalpostMottak journalpostMottak = new JournalpostMottak("" + saksnummer, journalpostId, mottattDato,
+                behandlingstemaOffisiellKode);
         journalpostMottak.setDokumentTypeIdOffisiellKode(dokumentTypeIdOffisiellKode);
         journalpostMottak.setForsendelseId(UUID.randomUUID().toString());
         journalpostMottak.setDokumentKategoriOffisiellKode(dokumentKategori);
