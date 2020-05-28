@@ -4,7 +4,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 public class VurderTilbakekrevingVedFeilutbetalingBekreftelse extends AksjonspunktBekreftelse {
     protected boolean hindreTilbaketrekk;
 
-    public void setHindreTilbaketrekk(boolean hindreTilbaketrekk) {
-        this.hindreTilbaketrekk = hindreTilbaketrekk;
+    public void setTilbakekrevFrasøker(boolean tilbakekrevFrasøker) {
+        this.hindreTilbaketrekk = !tilbakekrevFrasøker;
     }
 }

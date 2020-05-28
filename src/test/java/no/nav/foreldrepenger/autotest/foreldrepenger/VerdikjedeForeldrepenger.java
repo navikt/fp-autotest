@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -891,6 +890,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
+        // TODO: Her får en avventer dokumentasjon hvis en ikke sender inn IM. Her skal det ikke være behov for å sende inn IM.
         var månedsinntektMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
         var orgNummerMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
         var inntektsmeldingMor = lagInntektsmelding(
@@ -925,7 +925,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         BeregningsresultatPeriode[] beregningsresultatPeriodeFørstegangsbehandling =
                 saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
         verifiser(beregningsresultatPeriodeFørstegangsbehandling.length == 4,
-                "Forventer 3 forskjelige beregningsresultatsperioder!");
+                "Forventer 4 forskjelige beregningsresultatsperioder!");
         verifiser(beregningsresultatPeriodeFørstegangsbehandling[0].getDagsats() == 1_000,
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
         verifiser(beregningsresultatPeriodeFørstegangsbehandling[1].getDagsats() == 1_000,
@@ -1073,8 +1073,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
 
         // AG sender inn en IM med endring i refusjon som skal føre til revurdering på far sin sak
-        HashMap<LocalDate, BigDecimal> endringRefusjonMap = new HashMap<>();
-        endringRefusjonMap.put(fpStartdatoFar, BigDecimal.valueOf(månedsinntektFar));
         var inntektsmeldingEndringFar = lagInntektsmelding(
                 månedsinntektFar,
                 identFar,
@@ -1106,7 +1104,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         VurderTilbakekrevingVedFeilutbetalingBekreftelse vurderTilbakekrevingVedFeilutbetalingBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedFeilutbetalingBekreftelse.class);
-        vurderTilbakekrevingVedFeilutbetalingBekreftelse.setHindreTilbaketrekk(true);
+        vurderTilbakekrevingVedFeilutbetalingBekreftelse.setTilbakekrevFrasøker(false);
         vurderTilbakekrevingVedFeilutbetalingBekreftelse.setBegrunnelse("AG ber om refusjon for sent til å få alt!");
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedFeilutbetalingBekreftelse);
 
@@ -1126,8 +1124,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Test
     @DisplayName("11: Far søker adopsjon hvor han søker hele fedrekvoten og fellesperiode, og får berørt sak pga mor")
     @Description("Far søker adopsjon hvor han søker hele fedrekvoten og fellesperioden. Mor søker noe av mødrekvoten midt " +
-            "midt i fars periode med fullt uttak. Deretter søker more 9 uker av fellesperiode med samtidig uttak. Far får " +
-            "berørt sak hvor hanf år avkortet fellesperidoen på slutten og redusert perioder hvor mor søker samtidig uttak")
+            "i fars periode med fullt uttak. Deretter søker mor 9 uker av fellesperioden med samtidig uttak. Far får " +
+            "berørt sak hvor han får avkortet fellesperidoen på slutten og redusert perioder hvor mor søker samtidig uttak")
     public void FarSøkerAdopsjonOgMorMødrekvoteMidtIFarsOgDeretterSamtidigUttakAvFellesperidoe() {
         TestscenarioDto testscenario = opprettTestscenario("563");
 
