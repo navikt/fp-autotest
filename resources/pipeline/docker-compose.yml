@@ -54,9 +54,9 @@ services:
       interval: 15s
       timeout: 5s
       retries: 5
-  abakus:
-    image: $ABAKUS_IMAGE
-    container_name: abakus
+  fpabakus:
+    image: $FPABAKUS_IMAGE
+    container_name: fpabakus
     restart: on-failure
     mem_limit: 512mb
     environment:
@@ -78,6 +78,33 @@ services:
         condition: service_started
       vtp:
         condition: service_healthy
+  fpsak:
+    image: $FPSAK_IMAGE
+    container_name: fpsak
+    restart: on-failure
+    mem_limit: 1gb
+    environment:
+      - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
+      - "FPABAKUS_URL=http://fpabakus:8080/fpabakus"
+      - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
+      - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/boolean/false"
+      - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
+      - "LOADBALANCER_URL=http://localhost:8080"
+      - "LOADBALANCER_FQDN=localhost:8080"
+      - "EXTRA_CLASS_PATH=:vtp-lib/*"
+    env_file:
+      - "fpsak_datasource.list"
+      - "fpsak_mq.list"
+      - "common.env"
+    volumes:
+      - "~/.modig:/var/run/secrets/naisd.io"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - audit.nais
+      - oracle
+      - vtp
+      - fpabakus
   fpformidling:
     image: $FORMIDLING_IMAGE
     container_name: fpformidling
@@ -97,10 +124,9 @@ services:
     ports:
       - "8010:8010"
     depends_on:
-      postgres:
-        condition: service_started
-      vtp:
-        condition: service_healthy
+      - postgres
+      - vtp
+      - fpsak
   fpoppdrag:
     image: $FPOPPDRAG_IMAGE
     container_name: fpoppdrag
@@ -119,39 +145,9 @@ services:
     ports:
       - "8070:8080"
     depends_on:
-      oracle:
-        condition: service_started
-      vtp:
-        condition: service_healthy
-  fpsak:
-    image: $FPSAK_IMAGE
-    container_name: fpsak
-    restart: on-failure
-    mem_limit: 1gb
-    environment:
-      - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
-      - "FPABAKUS_URL=http://abakus:8080/fpabakus"
-      - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
-      - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/boolean/false"
-      - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
-      - "LOADBALANCER_URL=http://localhost:8080"
-      - "LOADBALANCER_FQDN=localhost:8080"
-      - "EXTRA_CLASS_PATH=:vtp-lib/*"
-    env_file:
-      - "fpsak_datasource.list"
-      - "fpsak_mq.list"
-      - "common.env"
-    volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
-    ports:
-      - "8080:8080"
-    depends_on:
-      - audit.nais
-      - oracle
+      - postgres
       - vtp
-      - abakus
-      - fpformidling
-      - fpoppdrag
+      - fpsak
   redis:
     image: redis
     container_name: redis

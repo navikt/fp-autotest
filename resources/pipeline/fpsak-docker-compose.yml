@@ -34,9 +34,9 @@ services:
       timeout: 5s
     networks:
       - autotestverk
-  abakus:
-    image: $ABAKUS_IMAGE
-    container_name: abakus
+  fpabakus:
+    image: $FPABAKUS_IMAGE
+    container_name: fpabakus
     environment:
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
       - "DEFAULTDS_USERNAME=fpabakus"

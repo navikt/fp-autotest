@@ -45,8 +45,11 @@ application-local.properties
 .allure/*
 allure-results/*
 *-result.json
+.DS_Store
 server/src/main/resources/webapps
 resources/ssl-terminator/localhost.*
 resources/pipeline/.env
-.DS_Store
 resources/.DS_Store
+lokal-utvikling/docker-compose-lokal
+lokal-utvikling/update-versions.sh
+lokal-utvikling/.env
