@@ -28,7 +28,7 @@ NB. dette kjører opp hele verdikjeden og passer ikke for de som har en PC som e
 ### Docker Compose for lokal utvikling
 I en del situasjoner ønskes det ikke at hele verdikjeden kjøres opp, men bare det applikasjonene som er nødvendig. 
 For å bruke docker-compose for lokal utvikling er det laget et script (*lokal-utvikling.sh* som ligger i mappen 
-"_lokal-utviling/_") som skal gjøre dette lettere. Når du kjører scriptet spesifiserer du hvilke applikasjoner du ønsker å kjøre utenfor docker-compose:
+"_lokal-utvikling/_") som skal gjøre dette lettere. Når du kjører scriptet spesifiserer du hvilke applikasjoner du ønsker å kjøre utenfor docker-compose:
 
     ./lokal-utvikling [APPLIKASJONER_UTENFOR_DOCKER_COMPOSE ...]
 
