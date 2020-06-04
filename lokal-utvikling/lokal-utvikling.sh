@@ -24,7 +24,7 @@ hentSedArguement () {
       with_port_array=("8015")
       ;;
     fpformidling)
-      replace_port_array=("8010")
+      replace_port_array=("8080")
       with_port_array=("8010")
       ;;
     fpoppdrag)
@@ -117,9 +117,9 @@ fi
 if [[ "$*" != *fpformidling* ]]; then
   echo "Argumentet inneholder ikke fpformidling. Bruker derfor mock i vtp istedenfor den faktiske applikasjonen."
   if [[ "$*" == *vtp* ]]; then
-    sed -i.bak "s*fpformidling:8010*host.docker.internal:8060/rest/dummy*g" "docker-compose.yml"
+    sed -i.bak "s*fpformidling:8080*host.docker.internal:8060/rest/dummy*g" "docker-compose.yml"
   else
-    sed -i.bak "s*fpformidling:8010*vtp:8060/rest/dummy*g" "docker-compose.yml"
+    sed -i.bak "s*fpformidling:8080*vtp:8060/rest/dummy*g" "docker-compose.yml"
   fi
   rm docker-compose.yml.bak
 fi
