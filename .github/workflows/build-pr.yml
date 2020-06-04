@@ -33,7 +33,7 @@ jobs:
           echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          docker-compose up --quiet-pull --detach fpsak
+          docker-compose up --quiet-pull --detach fpsak fpformidling fpoppdrag
 
       - name: Venter på stacken og sjekker status
         shell: bash
@@ -45,7 +45,7 @@ jobs:
           timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
-          echo "Tester om abakus er oppe"
+          echo "Tester om fpabakus er oppe"
           timeout 90 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
