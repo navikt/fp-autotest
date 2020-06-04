@@ -27,8 +27,8 @@ NB. dette kjører opp hele verdikjeden og passer ikke for de som har en PC som e
 
 ### Docker Compose for lokal utvikling
 I en del situasjoner ønskes det ikke at hele verdikjeden kjøres opp, men bare det applikasjonene som er nødvendig. 
-For å bruke docker-compose for lokal utvikling er det laget et script (*lokal-utvikling.sh* som ligger i root dir) som skal gjøre dette lettere.
-Når du kjører scriptet spesifiserer du hvilke applikasjoner du ønsker å kjøre utenfor docker-compose:
+For å bruke docker-compose for lokal utvikling er det laget et script (*lokal-utvikling.sh* som ligger i mappen 
+"_lokal-utvikling/_") som skal gjøre dette lettere. Når du kjører scriptet spesifiserer du hvilke applikasjoner du ønsker å kjøre utenfor docker-compose:
 
     ./lokal-utvikling [APPLIKASJONER_UTENFOR_DOCKER_COMPOSE ...]
 
@@ -62,9 +62,13 @@ versjon for hver gang du skriver inn kommandoet.
 **NB: Her er det viktig å kjøre opp tjenestene i riktig rekkefølge. Gyldige applikasjonsnavn er: oracle, postgres, vtp, 
 fpabakus, fpsak, fpsak-frontend, fpformidling, fpoppdrag og fptilbake.**
 
-Det finnes to scripts under "lokal-utvikling" som gjør alt automatisk. Disse scriptene kan brukes for lokal utvikling for enten FPSAK, 
-FPFORMIDLING, FPTILBAKE eller FPOPPDRAG. Mer informasjon og eksempler på hvordan dette gjøres kan du finne her: [lokal utvikling eksempler](lokal-utvikling-eksempler.md).
+Det finnes to scripts under "lokal-utvikling" som kan brukes for dette formålet. Disse scriptene kan brukes for å sette opp miljøet for FPSAK, 
+FPFORMIDLING, FPTILBAKE eller FPOPPDRAG. Disse to scriptene heter:
+*   `lokal-utvikling-fpsak.sh`: Brukes for lokal utvikling av fpsak.
+*   `lokal-utvikling-formidling-oppdrag-tilbake.sh`: Brukes for lokal utvikling av enten fpformidling, fpoppdrag eller fptilbake.
 
+Etter at du har brukt en av disse scriptene kan du alltids kjøre ned applikasjonene med å kalle scriptet igjen med argumentet "_down_"
+– på lignende måte som du gjør med Docker Compose. Mer informasjon og eksempler på hvordan dette gjøres kan du finne her: [lokal utvikling eksempler](lokal-utvikling-eksempler.md).
 
 
 ### Docker Compose for utvikling av tester
