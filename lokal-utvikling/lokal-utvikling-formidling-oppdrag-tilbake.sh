@@ -2,7 +2,7 @@
 
 APPLIKASJON=${1}
 
-# Dette scriptet setter opp avhengighetene til fpsak, slik at fpsak kan kjøres utenfor i IDE.
+# Dette scriptet setter opp avhengighetene til enten fpformidling, fpoppdrag eller fptilbake, slik disse kan kjøres utenfor i IDE.
 
 if [[ $APPLIKASJON == fpformidling ]] || [[ $APPLIKASJON == fpoppdrag ]] || [[ $APPLIKASJON == fptilbake ]]; then
   sh ./lokal-utvikling.sh $APPLIKASJON
