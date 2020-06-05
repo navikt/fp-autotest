@@ -574,13 +574,8 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Venter på historikkinnslag {type}")
     public void ventTilHistorikkinnslag(HistorikkInnslag.Type type) {
-        if (type == HistorikkInnslag.VEDLEGG_MOTTATT) {
-            Vent.til(() -> harHistorikkinnslagForBehandling(type, 0),
-                    30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
-        } else {
-            Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.id),
-                    30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
-        }
+        Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.id),
+                30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
 
 
     }
@@ -596,6 +591,9 @@ public class Saksbehandler extends Aktoer {
     }
 
     public boolean harHistorikkinnslagForBehandling(HistorikkInnslag.Type type, int behandlingsId) {
+        if (type == HistorikkInnslag.VEDLEGG_MOTTATT) {
+            behandlingsId = 0;
+        }
         for (HistorikkInnslag innslag : getHistorikkInnslag()) {
             if (innslag.getTypeKode().contains(type.getKode()) && innslag.getBehandlingsid() == behandlingsId) {
                 return true;
