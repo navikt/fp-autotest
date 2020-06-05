@@ -43,32 +43,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
-
-        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        lagOgSendInntekstsmelding(testscenario, fpStartdato, saksnummer);
-
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.velgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
-        AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
-
-        Fordeling fordeling = generiskFordeling(FordelingErketyper.uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer.toString());
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
-
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummerE);
-        saksbehandler.velgRevurderingBehandling();
-        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        Long saksnummer = prepareFpsakMedRevurdering(testscenario);
 
         tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
@@ -103,6 +78,43 @@ public class Tilbakekreving extends FptilbakeTestBase {
         fattVedtak.godkjennAksjonspunkt(5004);
         tbkbeslutter.behandleAksjonspunkt(fattVedtak);
         tbkbeslutter.ventTilAvsluttetBehandling();
+    }
+
+    @Test
+    @DisplayName("Oppretter en tilbakekreving manuelt med verge fra Fpsak")
+    @Description("Enkel periode, treffer ikke foreldelse, full tilbakekreving men med verge.")
+    public void tilbakeKrevingMedVerge(){
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+//        Long saksnummer = prepareFpsakMedRevurdering(testscenario, true);
+    }
+
+    private Long prepareFpsakMedRevurdering(TestscenarioDto testscenario) {
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+
+        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        lagOgSendInntekstsmelding(testscenario, fpStartdato, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.velgFørstegangsbehandling();
+        saksbehandler.ventTilAvsluttetBehandling();
+        AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
+
+        Fordeling fordeling = generiskFordeling(FordelingErketyper.uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer.toString());
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        return saksnummer;
     }
 
     private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) {

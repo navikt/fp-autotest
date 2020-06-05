@@ -15,4 +15,9 @@ public class Behandling {
     public boolean behandlingPaaVent;
     public String venteArsakKode;
     public BehandlingType status;
+    protected boolean harVerge;
+
+    public boolean harVerge() {
+        return harVerge;
+    }
 }

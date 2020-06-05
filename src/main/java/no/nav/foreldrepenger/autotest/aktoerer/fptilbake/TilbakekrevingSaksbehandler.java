@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;   //denne, --
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;         //denne --
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.*;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;//-- og denne FPSAK import er OK. Ellers skal man generelt ikke blande fpsak og fptilbake
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerKlient;
@@ -18,12 +20,6 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behand
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingPerioder;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.AksjonspunktBehandling;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ForeslåVedtak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
@@ -54,6 +50,18 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     public void opprettTilbakekrevingRevurdering(Long saksnummer, UUID uuid, int behandlingId, String ytelseType, RevurderingArsak behandlingArsakType) {
         behandlingerKlient.putTilbakekreving(new BehandlingOpprettRevurdering(saksnummer, valgtBehandling.id, uuid, "BT-009", ytelseType, behandlingArsakType));
     }
+
+    //Verge actions
+    public void leggTilVerge(int behandlingId){
+        behandlingerKlient.addVerge(new BehandlingIdBasicDto(behandlingId));
+        ventPåProsessering(valgtBehandling);
+    }
+    public void fjernVerge(int behandlingId){
+        behandlingerKlient.removeVerge(new BehandlingIdBasicDto(behandlingId));
+        ventPåProsessering(valgtBehandling);
+        refreshBehandling();
+    }
+
     //Henter siste behandlingen fra fptilbake på gitt saksnummer.
     public void hentSisteBehandling(Long saksnummer) {
         behandlingList = behandlingerKlient.hentAlleTbkBehandlinger(saksnummer);
@@ -131,6 +139,8 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
                 return new ForeslåVedtak();
             case 5005:
                 return new FattVedtakTilbakekreving();
+            case 5030:
+                return new ApVerge();
             default:
                 throw new IllegalArgumentException(aksjonspunktkode + " er ikke et gyldig aksjonspunkt");
         }
@@ -156,6 +166,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
     public void ventTilBehandlingHarAktivtAksjonspunkt(int aksjonspunktKode) {
         if (harAktivtAksjonspunkt(aksjonspunktKode)) {
+            refreshBehandling();
             return;
         }
         Vent.til(() -> {
