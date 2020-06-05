@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behand
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 import org.apache.http.HttpResponse;
@@ -25,6 +26,9 @@ public class BehandlingerKlient extends FptilbakeKlient {
 
     private static final String BEHANDLINGER_OPPRETT = BEHANDLINGER_URL + "/opprett";
     private static final String BEHANDLINGER_ALLE_URL = BEHANDLINGER_URL + "/alle?saksnummer=%s";
+    private static final String VERGE_URL = "/verge";
+    private static final String LEGG_TIL_VERGE_URL = VERGE_URL + "/opprett";
+    private static final String FJERN_VERGE_URL = VERGE_URL + "/fjern";
 
     private static final String AKSJONSPUNKT_URL = "/behandling/aksjonspunkt";
     private static final String AKSJONSPUNKT_GET_URL = AKSJONSPUNKT_URL + "?behandlingId=%s";
@@ -43,6 +47,15 @@ public class BehandlingerKlient extends FptilbakeKlient {
     public void putTilbakekreving(BehandlingOpprettRevurdering behandlingOpprettRevurdering) {
         String url = hentRestRotUrl() + BEHANDLINGER_OPPRETT;
         postOgVerifiser(url, behandlingOpprettRevurdering, StatusRange.STATUS_SUCCESS);
+    }
+
+    public void addVerge(BehandlingIdBasicDto behandlingIdBasicDto){
+        String url = hentRestRotUrl() + LEGG_TIL_VERGE_URL;
+        postOgVerifiser(url, behandlingIdBasicDto, StatusRange.STATUS_SUCCESS);
+    }
+    public void removeVerge(BehandlingIdBasicDto behandlingIdBasicDto){
+        String url = hentRestRotUrl() + FJERN_VERGE_URL;
+        postOgVerifiser(url, behandlingIdBasicDto, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Henter ut alle behandlinger fra fptilbake på gitt saksnummer")
