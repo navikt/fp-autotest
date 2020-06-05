@@ -574,8 +574,15 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Venter på historikkinnslag {type}")
     public void ventTilHistorikkinnslag(HistorikkInnslag.Type type) {
-        Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.id),
-                30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
+        if (type == HistorikkInnslag.VEDLEGG_MOTTATT) {
+            Vent.til(() -> harHistorikkinnslagForBehandling(type, 0),
+                    30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
+        } else {
+            Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.id),
+                    30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
+        }
+
+
     }
 
     @Step("Venter antall sekunder på historikkinnslag {type}")
