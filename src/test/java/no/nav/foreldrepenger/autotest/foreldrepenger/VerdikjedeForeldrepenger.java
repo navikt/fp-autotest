@@ -21,7 +21,6 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErket
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -133,7 +132,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         avklarFaktaAleneomsorgBekreftelse.setBegrunnelse("Bekreftelse sendt fra Autotest.");
         saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
 
         Saldoer saldoer = saksbehandler.valgtBehandling.getSaldoer();
         verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
@@ -184,7 +183,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Vurder varig endring for selvstendig næringsdrivende begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
 
         var beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
         verifiser(beregningAktivitetStatus.contains(new Kode("AKTIVITET_STATUS", "SN")),
@@ -260,7 +259,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, false);
 
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
@@ -373,7 +372,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelse.setBegrunnelse("Begrunnelse fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
         Saldoer saldoer = saksbehandler.valgtBehandling.getSaldoer();
         verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
@@ -449,7 +448,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelse.innvilgManuellePerioder(new Kode("INNVILGET", "2037", "§14-9, jf.§14-13: Innvilget fellesperiode til Far"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
@@ -556,7 +555,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 List.of(orgNummerFar1));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
         /* VERIFISERINGER */
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER).getSaldo() == 0,
@@ -656,7 +655,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getRedusertPrAar() > 0,
                 "Forventer at beregningsgrunnlaget baserer seg på en årsinntekt større enn 0. Søker har bare AAP.");
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
         /* Mor: berørt sak */
         saksbehandler.hentFagsak(saksnummerMor);
@@ -843,7 +842,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 new Kode("IKKE_OPPFYLT_AARSAK","4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
 
         Saldoer saldoerBerørtSak = saksbehandler.valgtBehandling.getSaldoer();
         verifiser(saldoerBerørtSak.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
@@ -918,9 +917,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Bruker IKKE besteberegning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, false);
 
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_BESTILT),
+        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT),
                 "Brev er bestillt i førstegangsbehandling");
         BeregningsresultatPeriode[] beregningsresultatPeriodeFørstegangsbehandling =
                 saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
@@ -984,7 +983,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 saksbehandler.hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class);
         saksbehandler.bekreftAksjonspunkt(kontrollerManueltOpprettetRevurdering);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerMor, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
 
         BeregningsresultatPeriode[] beregningsresultatPeriodeRevurdering = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
         List<Integer> forventetDagsats = regnUtForventetDagsatsForPeriode(List.of(30_000), List.of(100), List.of(false));
@@ -1002,7 +1001,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
         verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode.equalsIgnoreCase("ENDRING_I_BEREGNING"),
                 "Foventer at konsekvens for ytelse er satt til ENDRING_I_BEREGNING.");
-        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT, saksbehandler.valgtBehandling.id) == false,
+        verifiser(!saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT, saksbehandler.valgtBehandling.id),
                 "Forventer at det ikke sendes et nytt vedtaksbrev i revurderingen");
 
 
@@ -1065,7 +1064,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
         verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().length == 2,
                 "Forventer at det er to perioder i tilkjent ytelse. En for fedrekvote og en for fellesperioden");
@@ -1108,7 +1107,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         vurderTilbakekrevingVedFeilutbetalingBekreftelse.setBegrunnelse("AG ber om refusjon for sent til å få alt!");
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedFeilutbetalingBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
 
         BeregningsresultatPeriode[] perioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
         verifiser(perioder.length == 3,
@@ -1177,7 +1176,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
         verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().length == 2,
                 "Forventer at det er to perioder i tilkjent ytelse. En for fedrekvote og en for fellesperioden");
@@ -1270,7 +1269,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
-        foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(saksnummerFar, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
         // TODO: Kommenter inn når TFP-3373 er fikset!
         //beslutter.ventTilFagsakLøpende();
 
@@ -1333,73 +1332,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         return saksnummerMor;
     }
-    private void foreslårVedtakFatterVedtakOgVenterTilAvsluttetBehandling(long saksnummer, boolean revurdering) {
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
-        beslutter.hentFagsak(saksnummer);
-        if ( beslutter.harRevurderingBehandling() && revurdering ) {
-            beslutter.velgRevurderingBehandling();
-        }
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-    }
-    private List<Integer> regnUtForventetDagsatsForPeriode(List<Integer> månedsinntekter, List<Integer> utbetalingsgraderForPeriode,
-                                                           List<Boolean> refusjonerForPeriode) {
-        List<Integer> dagsatser = Arrays.asList(new Integer[månedsinntekter.size()]);
-        double årsinntekt = sumOfList(månedsinntekter).doubleValue() * 12;
-        if ( refusjonerForPeriode.contains(true) ) {
-            double sumAvÅrsinntektTilRefusjon = 0;
-            double sumAvÅrsinntektDirekteTilSøker = 0;
-            for (int i=0; i < månedsinntekter.size(); i++) {
-                if ( refusjonerForPeriode.get(i) ) {
-                    sumAvÅrsinntektTilRefusjon += månedsinntekter.get(i).doubleValue() * 12;
-                } else {
-                    sumAvÅrsinntektDirekteTilSøker += månedsinntekter.get(i).doubleValue() * 12;
-                }
-            }
 
-            double redusertSumAvÅrsinntektTilRefusjon = justerÅrsinntekt(sumAvÅrsinntektTilRefusjon);
-            for (int i=0; i < månedsinntekter.size(); i++) {
-                if ( refusjonerForPeriode.get(i) ) {
-                    double fordeling = månedsinntekter.get(i).doubleValue() * 12 / sumAvÅrsinntektTilRefusjon;
-                    dagsatser.set(i, (int) Math.round(redusertSumAvÅrsinntektTilRefusjon  / 260 * fordeling * utbetalingsgraderForPeriode.get(i).doubleValue() / 100));
-                }
-            }
-
-            double resterendeÅrsinntekt = justerÅrsinntekt(årsinntekt);
-            resterendeÅrsinntekt -= redusertSumAvÅrsinntektTilRefusjon;
-            for (int i=0; i < månedsinntekter.size(); i++) {
-                if ( dagsatser.get(i) == null ) {
-                    double fordeling = månedsinntekter.get(i).doubleValue() * 12 / sumAvÅrsinntektDirekteTilSøker;
-                    dagsatser.set(i, (int) Math.round(resterendeÅrsinntekt / 260 * fordeling * utbetalingsgraderForPeriode.get(i).doubleValue() / 100));
-                }
-            }
-        } else {
-            double redusertÅrsinntekt = justerÅrsinntekt(årsinntekt);
-            for (int i=0; i < månedsinntekter.size(); i++) {
-                if ( dagsatser.get(i) == null ) {
-                    double fordeling = månedsinntekter.get(i).doubleValue() * 12 / årsinntekt;
-                    dagsatser.set(i, (int) Math.round(redusertÅrsinntekt / 260 * fordeling * utbetalingsgraderForPeriode.get(i).doubleValue() / 100));
-                }
-            }
-        }
-
-        return dagsatser;
-    }
-    private Double justerÅrsinntekt(Double opprinneligÅrsinntekt) {
-        double seksG = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getHalvG() * 2 * 6;
-        if ( opprinneligÅrsinntekt > seksG ) {
-            return seksG;
-        }
-        return opprinneligÅrsinntekt;
-    }
-    private Integer sumOfList(List<Integer> list) {
-        int sum = 0;
-        for (int i : list) {
-            sum += i;
-        }
-        return sum;
-    }
 }

@@ -1,9 +1,10 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HistorikkInnslag {
@@ -39,7 +40,7 @@ public class HistorikkInnslag {
     protected HistorikkTekst tekst;
     protected List<HistorikkinnslagDel> historikkinnslagDeler;
 
-    protected int behandlingsid;
+    protected int behandlingId;
     protected Kode type;
     protected Kode aktoer;
     protected Kode kjoenn;
@@ -49,12 +50,12 @@ public class HistorikkInnslag {
     }
 
     public int getBehandlingsid() {
-        return behandlingsid;
+        return behandlingId;
     }
 
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + String.format("<behandlingsid=%s, type=%s, tekst=%s, innslag=%s>", behandlingsid, type.kode, tekst, historikkinnslagDeler);
+        return getClass().getSimpleName() + String.format("<behandlingsid=%s, type=%s, tekst=%s, innslag=%s>", behandlingId, type.kode, tekst, historikkinnslagDeler);
     }
 }

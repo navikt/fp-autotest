@@ -1,6 +1,14 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -15,13 +23,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -68,9 +69,9 @@ public class Revurdering extends FpsakTestBase {
         varselOmRevurderingBekreftelse.bekreftSendVarsel(saksbehandler.kodeverk.Venteårsak.getKode("UTV_FRIST"), "Send brev");
         saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 
-        saksbehandler.harHistorikkinnslag(HistorikkInnslag.REVURD_OPPR);
-        saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
-        saksbehandler.harHistorikkinnslag(HistorikkInnslag.BEH_VENT);
+        saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.REVURD_OPPR);
+        saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT);
+        saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BEH_VENT);
 
         verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er ikke satt på vent etter varsel for revurdering");
     }

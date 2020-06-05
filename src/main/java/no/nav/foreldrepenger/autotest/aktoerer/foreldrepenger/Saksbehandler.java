@@ -215,7 +215,7 @@ public class Saksbehandler extends Aktoer {
          */
 
         if (behandling.type.kode.equalsIgnoreCase("BT-006") /* Dokumentinnsyn */) {
-
+            // Gjør ingenting
         } else if (behandling.type.kode.equalsIgnoreCase("BT-003" /* Klage */)) {
             behandling.setKlagevurdering(new Lazy<>(() -> behandlingerKlient.klage(behandling.uuid)));
         } else {
@@ -574,24 +574,26 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Venter på historikkinnslag {type}")
     public void ventTilHistorikkinnslag(HistorikkInnslag.Type type) {
-        Vent.til(() -> harHistorikkinnslag(type),
+        Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.id),
                 30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
+
+
     }
 
-    /*
-     * Historikkinnslag
-     */
-    @Step("Venter sekunder antall sekunder på historikkinnslag {type}")
+    @Step("Venter antall sekunder på historikkinnslag {type}")
     public void ventTilAntallHistorikkinnslag(HistorikkInnslag.Type type, Integer sekunder, Integer antallHistorikkInnslag) {
         Vent.til(() -> harAntallHistorikkinnslag(type) == antallHistorikkInnslag, sekunder,
                 () -> "Saken  hadde ikke historikkinslag " + type + " \nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
     }
 
-    public boolean harHistorikkinnslag(HistorikkInnslag.Type type) {
-        return getHistorikkInnslag(type) != null;
+    public boolean harHistorikkinnslagForBehandling(HistorikkInnslag.Type type) {
+        return harHistorikkinnslagForBehandling(type, valgtBehandling.id);
     }
 
     public boolean harHistorikkinnslagForBehandling(HistorikkInnslag.Type type, int behandlingsId) {
+        if (type == HistorikkInnslag.VEDLEGG_MOTTATT) {
+            behandlingsId = 0;
+        }
         for (HistorikkInnslag innslag : getHistorikkInnslag()) {
             if (innslag.getTypeKode().contains(type.getKode()) && innslag.getBehandlingsid() == behandlingsId) {
                 return true;
@@ -600,15 +602,8 @@ public class Saksbehandler extends Aktoer {
         return false;
     }
 
-
-    private HistorikkInnslag getHistorikkInnslag(HistorikkInnslag.Type type) {
-        for (HistorikkInnslag innslag : getHistorikkInnslag()) {
-            if (innslag.getTypeKode().contains(type.getKode())) {
-                return innslag;
-            }
-        }
-        return null;
-    }
+    /*
+     */
 
     public boolean harFagsakstatus(Kode status) {
         return valgtFagsak.hentStatus().equals(status);
@@ -766,6 +761,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     public List<HistorikkInnslag> getHistorikkInnslag() {
+        refreshBehandling();
         return get(historikkInnslag);
     }
 
