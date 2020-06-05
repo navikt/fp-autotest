@@ -534,7 +534,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiser(beslutter.harHistorikkinnslag(HistorikkInnslag.VEDTAK_FATTET), "behandling har ikke historikkinslag 'Vedtak fattet'");
+        verifiser(beslutter.harHistorikkinnslagForBehandling(HistorikkInnslag.VEDTAK_FATTET), "behandling har ikke historikkinslag 'Vedtak fattet'");
         beslutter.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
 
 

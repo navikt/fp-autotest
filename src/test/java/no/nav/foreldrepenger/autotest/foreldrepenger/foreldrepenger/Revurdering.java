@@ -259,7 +259,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiser(saksbehandler.behandlinger.size() == 2, "Fagsaken har mer enn én revurdering.");
         saksbehandler.velgRevurderingBehandling();
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET);
-        verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET), "Mangler historikkinnslag om at behandlingen er flyttet.");
+        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET), "Mangler historikkinnslag om at behandlingen er flyttet.");
         verifiser(saksbehandler.harAksjonspunkt("5045"), "Behandling hopper ikke tilbake til 'Avklar startdato for foreldrepengeperioden'.");
         var avklarFaktaStartdatoForForeldrepengerBekreftelse2 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class)
                 .setStartdatoFraSoknad(fpStartdato.plusDays(2))
