@@ -39,7 +39,7 @@ services:
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
-      - "CREATE_TOPICS=privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1"
+      - "CREATE_TOPICS=privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -87,7 +87,7 @@ services:
       - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
       - "FPABAKUS_URL=http://fpabakus:8080/fpabakus"
       - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
-      - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://vtp:8060/rest/dummy/boolean/false"
+      - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://fptilbake:8080/fptilbake/api"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
       - "LOADBALANCER_FQDN=localhost:8080"
@@ -146,6 +146,33 @@ services:
       - "8070:8080"
     depends_on:
       - postgres
+      - vtp
+      - fpsak
+  fptilbake:
+    image: $FPTILBAKE_IMAGE
+    container_name: fptilbake
+    restart: on-failure
+    mem_limit: 512mb
+    env_file:
+      - "fptilbake_datasource.list"
+      - "common.env"
+    environment:
+      - "FPSAK_OVERRIDE_URL=http://fpsak:8080"
+      - "FPOPPDRAG_OVERRIDE_URL=http://fpoppdrag:8080"
+      - "FPSAK_PIP_AKTOER_FOR_SAK_URL=https://fpsak:8080/fpsak/api/pip/aktoer-for-sak"
+      - "JOURNALPOSTAPI_OVERRIDE_URL=https://vtp:8063/rest/dokarkiv/"
+      - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
+      - "KAFKA_FPLOS_TOPIC=tilbakebetaling-aksjonspunkthendelse"
+      - "KAFKA_FPLOS_CLIENT_ID=tilbakebetaling-aksjonspunkthendelse"
+      - "LOADBALANCER_URL=http://localhost:8080"
+      - "LOADBALANCER_FQDN=localhost:8080"
+      - "EXTRA_CLASS_PATH=:vtp-lib/*"
+    volumes:
+      - "~/.modig:/var/run/secrets/naisd.io"
+    ports:
+      - "8030:8080"
+    depends_on:
+      - oracle
       - vtp
       - fpsak
   redis:

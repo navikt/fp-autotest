@@ -72,6 +72,10 @@ jobs:
           timeout 90 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8070/fpoppdrag/internal/health/isAlive)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
+          echo "Tester om fptilbake er oppe"
+          timeout 90 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8030/fptilbake/internal/health/isAlive)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
           echo "Tester om fp-sak er oppe"
           timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
