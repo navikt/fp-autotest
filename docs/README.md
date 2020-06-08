@@ -5,10 +5,10 @@
 3. Kjør `resources/keystore/make-dummy-keystore.sh`
 4. Legg til følgende i hosts-filen (på Mac/Linux: "/etc/hosts", på Windows: "C:\Windows\System32\drivers\etc\hosts"):
 ```
-127.0.0.1  fpoppdrag fpformidling fpsak-frontend fpsak fpabakus vtp oracle postgres
+127.0.0.1  fptilbake fpoppdrag fpformidling fpsak-frontend fpsak fpabakus vtp oracle postgres
 ```
 
-NB. dette trenger du bare å gjøre en gang.
+NB. stegene over trenger du bare å gjøre en gang!
 
 ## Docker Compose
 Docker Compose brukes til å sette opp verdikjeden for testing lokalt, i pipeline (GA og Jenkins), og utvikling lokalt.
