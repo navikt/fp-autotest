@@ -1,6 +1,6 @@
 # Fpsak-autotest
 Fpsak-autotest har to testfunksjoner for øyeblikket: Teste spesifikke applikasjoner og teste hele verdikjeden. Navnet fpsak-autotest
-er fra gammelt av hvor den ble bare brukt til å teste fpsak. Nå i senere tid blir den også brukt til å teste resten av verdikjeden.
+er fra gammelt av, hvor fpsak-autotest ble bare brukt til å teste fpsak. Nå i senere tid blir repoet også brukt til å teste resten av verdikjeden.
 Da kan man dele fpsak-autotest i to, basert på hva den tester, altså: **fpsak spesifikke tester** og **verdikjedetester**.
 
 For lokalt oppsett eller utvikling se [utvikling lokalt](docs).
@@ -8,7 +8,7 @@ For lokalt oppsett eller utvikling se [utvikling lokalt](docs).
 ## Verdikjede [![](https://github.com/navikt/fpsak-autotest/workflows/Kjører%20Autotestene%20for%20verdikjeden/badge.svg)](https://github.com/navikt/fpsak-autotest/actions?query=workflow%3A%22Kjører+Autotestene+for+verdikjeden%22)
 Verdikjeden som disse testene kjøres på er listet opp i tabellen nedunder med status om bygg og promotering i GA. For denne 
 verdikjeden kjøres det et sett med verdikjedetester for ytelsene engangsstønad, foreldrepenger og svangeskapspenger. 
-Alle disse testene befinner seg under "fpsak-autotest/test/foreldrepenger" og er ellers tagget med taggen "_verdikjede_".
+Alle disse testene befinner seg under "fpsak-autotest/test/verdikjedetester" og er ellers tagget med taggen "_verdikjede_".
 
 Disse verdikjedetestene blir trigget av alle prosjektene/applikasjonene som er nevnt i listen under ved endring på master.
 

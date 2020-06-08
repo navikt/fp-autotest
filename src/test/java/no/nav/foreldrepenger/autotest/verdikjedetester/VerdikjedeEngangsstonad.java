@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.foreldrepenger;
+package no.nav.foreldrepenger.autotest.verdikjedetester;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
 
