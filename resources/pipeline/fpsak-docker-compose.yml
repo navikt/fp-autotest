@@ -50,6 +50,7 @@ services:
       - "INNTEKT_V3_URL=https://vtp:8063/soap/inntektskomponenten-ws/inntekt/v3/Inntekt"
       - "ARBEIDSFORHOLD_V3_URL=https://vtp:8063/soap/aareg-core/ArbeidsforholdService/v3"
       - "ORGANISASJON_V4_URL=https://vtp:8063/soap/ereg/ws/OrganisasjonService/v4"
+      - "ORGANISASJON_RS_URL=https://vtp:8063/rest/ereg/api/v1/organisasjon"
       - "KODEVERK_V2_URL=https://vtp:8063/soap/kodeverk/ws/Kodeverk/v2"
       - "MELDEKORTUTBETALINGSGRUNNLAG_V1_URL=https://vtp:8063/soap/ail_ws/MeldekortUtbetalingsgrunnlag_v1"
       - "SIGRUNRESTBEREGNETSKATT_URL=https://vtp:8063/rest"
