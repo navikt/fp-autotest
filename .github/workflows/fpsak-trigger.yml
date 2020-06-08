@@ -1,0 +1,167 @@
+name: Kjører autotestene for fpsak
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - 'JenkinsfileAutotest'
+      - 'JenkinsfileAutotestNew'
+      - 'CODEOWNERS'
+      - '.github/workflows/build-pr.yml'
+      - 'resources/keystore/**'
+  repository_dispatch:
+    types: [fpsak-autotest]
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  build:
+    name: Utfører autotestene for fpsak
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.2.0
+      - name: Henter historie for allure rapport
+        uses: actions/checkout@v2.2.0
+        with:
+          ref: gh-pages
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          path: gh-pages
+      - name: Set cache key
+        run: |
+          echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
+          echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
+      - uses: actions/cache@v2.0.0
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
+          restore-keys: |
+            ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
+      - uses: actions/setup-java@v1.3.0
+        with:
+          java-version: 1.11
+
+      - name: Setup fpsak og dens avhengigheter
+        shell: bash
+        run: |
+          echo ::set-env name=STACK_STARTED::false
+          echo "Oppretter dummy keystore for testing"
+          cd resources/keystore
+          ./make-dummy-keystore.sh
+          echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
+          cd ../../lokal-utvikling
+          ./lokal-utvikling.sh
+          ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+          docker-compose -f docker-compose-lokal/docker-compose.yml up --quiet-pull --detach fpsak
+
+      - name: Venter på stacken og sjekker status
+        shell: bash
+        run: |
+          echo ::set-env name=STACK_CREATED::true
+          docker ps -a
+          echo
+          echo "Tester om VTP er oppe"
+          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om fpabakus er oppe"
+          timeout 90 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om fp-sak er oppe"
+          timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo ::set-env name=STACK_STARTED::true
+
+      - name: Utfører foreldrepengetestene for fpsak
+        id: tester
+        shell: bash
+        run: |
+          mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
+        env:
+          GITHUB_USERNAME: x-access-token
+          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Dumper logger for feilsøking
+        if: failure() && env.STACK_CREATED == 'true'
+        run: |
+          mkdir container-logs
+          cd container-logs
+          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+
+      - name: Laste opp logger
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: container-logs
+
+      - name: Sjekker storage
+        if: failure()
+        shell: bash
+        run: |
+          docker system df -v
+          docker system df
+          df -h
+
+      - name: Generer testrapport
+        if: always() && env.STACK_STARTED == 'true'
+        shell: bash
+        run: |
+          resources/allure/set-environment-variables-fpsak.sh ${{ github.event.client_payload.trigger }}
+          cp resources/allure/environment.properties target/allure-results
+          cp resources/allure/categories.json target/allure-results
+          cp -r gh-pages/fpsak/history target/allure-results
+          mvn allure:report --batch-mode --file pom.xml
+          mkdir target/allure-report-temp
+          cp -r target/allure-report target/allure-report-temp/fpsak
+
+      - name: Deploy testrapport
+        if: always() && env.STACK_STARTED == 'true'
+        uses: crazy-max/ghaction-github-pages@v2.0.1
+        with:
+          target_branch: gh-pages
+          keep_history: true
+          build_dir: target/allure-report-temp
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Slack Notification
+        if: steps.tester.outcome == 'success' && env.STACK_STARTED == 'true'
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_CHANNEL: fpsak-autotest
+          SLACK_COLOR: '#37df1d'
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_MESSAGE: 'Alle testene gikk grønne! :rocket:'
+          SLACK_TITLE: Autotestene til FPSAK er kjørt!
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Slack Notification
+        if: steps.tester.outcome != 'success' && env.STACK_STARTED == 'true'
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_CHANNEL: fpsak-autotest
+          SLACK_COLOR: '#df1515'
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_MESSAGE: 'Det er test feil! :boom:'
+          SLACK_TITLE: Autotestene til FPSAK er kjørt!
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Slack Notification
+        if: failure() && env.STACK_STARTED == 'false'
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_CHANNEL: fpsak-autotest
+          SLACK_COLOR: '#e79a07'
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_MESSAGE: 'GHA fikk ikke opp verdikjeden! :man-shrugging: '
+          SLACK_TITLE: Autotestene til FPSAK er kjørt!
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

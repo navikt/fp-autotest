@@ -1,6 +1,9 @@
 name: Kjører Autotestene for verdikjeden PR
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -66,7 +69,7 @@ jobs:
           echo Oppe!
           echo ::set-env name=STACK_STARTED::true
 
-      - name: Utfører tester
+      - name: Utfører autotestene for fpsak
         shell: bash
         run: |
           mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
