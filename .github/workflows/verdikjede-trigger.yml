@@ -1,4 +1,4 @@
-name: Kjører Autotestene for verdikjeden
+name: Kjører verdikjedetestene for verdikjeden
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
       - '.github/workflows/build-pr.yml'
       - 'resources/keystore/**'
   repository_dispatch:
-    types: [fpsak-autotest, fpsak-verdikjede, fpformidling-verdikjede, abakus-verdikjede, fpoppdrag-verdikjede]
+    types: [fpsak-verdikjede, fpformidling-verdikjede, fabakus-verdikjede, fpoppdrag-verdikjede, fptilbake-verdikjede]
   schedule:
     - cron:  '0 0 * * *'
 
@@ -24,12 +24,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.2.0
+      - name: Henter historie for allure rapport
+        uses: actions/checkout@v2.2.0
+        with:
+          ref: gh-pages
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          path: gh-pages
       - name: Set cache key
         run: |
           echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
           echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
-      - uses: actions/cache@v1.1.2
+      - uses: actions/cache@v2.0.0
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
@@ -65,11 +71,11 @@ jobs:
           timeout 90 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
-          echo "Tester om fp-sak er oppe"
+          echo "Tester om fpsak er oppe"
           timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
-          echo "Tester om fp-formidling er oppe"
+          echo "Tester om fpformidling er oppe"
           timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8010/fpformidling/internal/health/isAlive)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
@@ -82,19 +88,8 @@ jobs:
           echo Oppe!
           echo ::set-env name=STACK_STARTED::true
 
-      - name: Utfører foreldrepengetestene
-        if: github.event_name == 'push' || github.event.action == 'fpsak-autotest'
-        id: foreldrepengetestser
-        shell: bash
-        run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-
       - name: Utfører verdikjedetestene
-        if: steps.foreldrepengetestser.outcome == 'skipped'
-        id: verdiekjedetester
+        id: tester
         shell: bash
         run: |
           mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede
@@ -103,7 +98,7 @@ jobs:
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Oppdaterer issue ved feilfrie tester
-        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
+        if: steps.tester.outcome == 'success' && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -112,28 +107,13 @@ jobs:
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
 
       - name: Oppdaterer issue ved testfeil
-        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
+        if: steps.tester.outcome != 'success' && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           repository: ${{ github.event.client_payload.trigger }}
           event-type: update-issue
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
-
-      - name: Generer testrapport
-        if: always() && env.STACK_STARTED == 'true' && steps.foreldrepengetestser.outcome == 'skipped'
-        shell: bash
-        run: |
-          cd resources/allure
-          ./set-environment-variables.sh ${{ github.event.client_payload.trigger }}
-          cd ../../target/allure-results
-          git fetch origin gh-pages
-          git checkout origin/gh-pages ../../history
-          cp -r ../../history history
-          cp ../../resources/allure/environment.properties .
-          cp ../../resources/allure/categories.json .
-          cd ../..
-          mvn allure:report --batch-mode --file pom.xml
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'
@@ -157,26 +137,60 @@ jobs:
           docker system df
           df -h
 
-      - name: Deploy testrapport
-        if: always() && env.STACK_STARTED == 'true' && steps.foreldrepengetestser.outcome == 'skipped'
-        uses: crazy-max/ghaction-github-pages@v2.0.0
-        with:
-          target_branch: gh-pages
-          build_dir: target/allure-report/
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Notification til slack
-        if: failure() || env.STACK_STARTED == 'false'
+      - name: Generer testrapport
+        if: always() && env.STACK_STARTED == 'true'
         shell: bash
         run: |
-          curl -X POST --data-urlencode \
-          'payload={"channel": "#fpsak-autotest",
-          "username": "autotestern",
-          "blocks": [ { "type": "section", "text": {
-          "type": "mrkdwn",
-          "text": "  :scream: De automatiske testene feilet: <https://navikt.github.io/fpsak-autotest/|Testrapport> \n
-          repository: ${{ github.event.client_payload.trigger }} versjon: ${{ github.event.client_payload.version }} "
-          } } ],
-          "icon_emoji": ":snowman:"}' ${{ secrets.SLACK_WEBHOOK }}
+          resources/allure/set-environment-variables.sh ${{ github.event.client_payload.trigger }}
+          cp resources/allure/environment.properties target/allure-results
+          cp resources/allure/categories.json target/allure-results
+          cp -r gh-pages/verdikjede/history target/allure-results
+          mvn allure:report --batch-mode --file pom.xml
+          mkdir target/allure-report-temp
+          cp -r target/allure-report target/allure-report-temp/verdikjede
 
+      - name: Deploy testrapport
+        if: always() && env.STACK_STARTED == 'true'
+        uses: crazy-max/ghaction-github-pages@v2.0.1
+        with:
+          target_branch: gh-pages
+          keep_history: true
+          build_dir: target/allure-report-temp
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Slack Notification
+        if: steps.tester.outcome == 'success' && env.STACK_STARTED == 'true'
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_CHANNEL: fpsak-autotest
+          SLACK_COLOR: '#37df1d'
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_MESSAGE: 'Alle testene gikk grønne! :rocket:'
+          SLACK_TITLE: Verdikjedetestene er trigget av ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Slack Notification
+        if: steps.tester.outcome != 'success' && env.STACK_STARTED == 'true'
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_CHANNEL: fpsak-autotest
+          SLACK_COLOR: '#df1515'
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_MESSAGE: 'Det er test feil! :boom:'
+          SLACK_TITLE: Verdikjedetestene er trigget av ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Slack Notification
+        if: failure() && env.STACK_STARTED == 'false'
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_CHANNEL: fpsak-autotest
+          SLACK_COLOR: '#e79a07'
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_MESSAGE: 'GHA fikk ikke opp verdikjeden! :man-shrugging:'
+          SLACK_TITLE: Verdikjedetestene er trigget av ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

@@ -10,4 +10,4 @@ else
   echo trigger="$TRIGGER" >>environment.properties
 fi
 
-cat ../pipeline/.env >> environment.properties
+grep -e '^disclaimer\|^trigger\|^AUDIT_NAIS_IMAGE\|^ORACLE_IMAGE\|^POSTGRES_IMAGE\|^VTP_IMAGE\|^FPABAKUS_IMAGE\|^FPSAK_IMAGE' ../../lokal-utvikling/.env >> environment.properties
