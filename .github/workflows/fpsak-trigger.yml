@@ -1,18 +1,6 @@
 name: Kjører autotestene for fpsak
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '**.md'
-      - '**.MD'
-      - '.gitignore'
-      - 'JenkinsfileAutotest'
-      - 'JenkinsfileAutotestNew'
-      - 'CODEOWNERS'
-      - '.github/workflows/build-pr.yml'
-      - 'resources/keystore/**'
   repository_dispatch:
     types: [fpsak-autotest]
   schedule:
