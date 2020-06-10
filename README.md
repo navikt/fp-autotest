@@ -5,7 +5,7 @@ Da kan man dele fpsak-autotest i to, basert på hva den tester, altså: **fpsak 
 
 For lokalt oppsett eller utvikling se [utvikling lokalt](docs).
 
-## Verdikjede [![](https://github.com/navikt/fpsak-autotest/workflows/Kjører%20Autotestene%20for%20verdikjeden/badge.svg)](https://github.com/navikt/fpsak-autotest/actions?query=workflow%3A%22Kjører+Autotestene+for+verdikjeden%22)
+## Verdikjede [![](https://github.com/navikt/fpsak-autotest/workflows/Kjører%20verdikjedetestene%20for%20verdikjeden/badge.svg)](https://github.com/navikt/fpsak-autotest/actions?query=workflow%3A%22Kjører+verdikjedetestene+for+verdikjeden%22)
 Verdikjeden som disse testene kjøres på er listet opp i tabellen nedunder med status om bygg og promotering i GA. For denne 
 verdikjeden kjøres det et sett med verdikjedetester for ytelsene engangsstønad, foreldrepenger og svangeskapspenger. 
 Alle disse testene befinner seg under "fpsak-autotest/test/verdikjedetester" og er ellers tagget med taggen "_verdikjede_".
@@ -22,7 +22,7 @@ Disse verdikjedetestene blir trigget av alle prosjektene/applikasjonene som er n
 | fp-abakus       | [![](https://github.com/navikt/fp-abakus/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-abakus/actions?query=workflow%3A%22Bygg+og+deploy%22) |
 | vtp             | [![](https://github.com/navikt/vtp/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/vtp/actions?query=workflow%3A%22Bygg+og+deploy%22) |
 
-## Fpsak spesifikke tester
+## Fpsak spesifikke tester [![](https://github.com/navikt/fpsak-autotest/workflows/Kjører%20autotestene%20for%20fpsak/badge.svg)](https://github.com/navikt/fpsak-autotest/actions?query=workflow%3A%22Kjører+autotestene+for+fpsak%22)
 Fpsak spesifikke tester er tagget med taggen "_fpsak_" og tester fpsak med fokus på forskjellige ytelser og komponenter i fpsak.
 Disse testene blir kjørt av både GA og Jenkins ved merge til fpsak. 
 

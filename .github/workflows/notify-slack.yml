@@ -1,0 +1,95 @@
+name: notify-slack
+on:
+  repository_dispatch:
+    types: [notify-slack]
+
+env:
+  TRIGGER:  ${{ github.event.client_payload.trigger }}
+  VERSION: ${{ github.event.client_payload.version }}
+  STACK_STARTED:  ${{ github.event.client_payload.stack_started }}
+  OUTCOME:  ${{ github.event.client_payload.outcome }}
+  TEST_RESULT: ${{ github.event.client_payload.test_result }}
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Henter ut historie
+        uses: actions/checkout@v2.2.0
+        with:
+          repository: ${{ github.event.client_payload.trigger }}
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          fetch-depth: 5
+
+      - name: Hent ut versjon fra forrige issue
+        shell: bash
+        run: |
+          CURRENT_HASH=$(echo "$VERSION" | awk -F'-' '{print $3}')
+
+          curl -s "https://api.github.com/repos/$TRIGGER/issues?state=open&labels=deployment" \
+            -u "x-access-token:${{ secrets.GITHUB_ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Content-Type: application/json" \
+            | sed '/'"${CURRENT_HASH}"'/,$!d' > temp.txt
+
+          PREVIOUS_HASH=$(grep -m2 '"title": "' temp.txt | tail -n1 | grep -m2 '"title": "' | cut -d '"' -f 4 | cut -d ' ' -f 3 | awk -F'-' '{print $3}')
+
+          git remote -v
+          git fetch
+          echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" ${CURRENT_HASH}...${PREVIOUS_HASH})"
+
+
+      - name: Bygger opp slack melding
+        shell: bash
+        run: |
+          if [ $STACK_STARTED == true ]; then
+            echo "Stack up and running!"
+            if [ $TRIGGER == navikt/fp-sak ]; then
+              echo "Change title to FPSAK"
+              if [ $OUTCOME == success ]; then
+                echo "Test success!"
+                echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK er kjørt uten feil :rocket: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}"
+                echo "::set-env name=SLACK_MESSAGE::{{ env.TEST_RESULT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A${{ env.DIFFERANSE }}"
+                echo "::set-env name=SLACK_COLOR::#37df1d"
+              else
+                echo "Test failure!"
+                echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK feilet :boom: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}"
+                echo "::set-env name=SLACK_MESSAGE::{{ env.TEST_RESULT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A${{ env.DIFFERANSE }}"
+                echo "::set-env name=SLACK_COLOR::#df1515"
+              fi
+
+            else
+              echo "Change title to verdikjede"
+              if [ $OUTCOME == success ]; then
+                echo "Test success!"
+                echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt uten feil :rocket: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}"
+                echo "::set-env name=SLACK_MESSAGE::{{ env.TEST_RESULT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A${{ env.DIFFERANSE }}"
+                echo "::set-env name=SLACK_COLOR::#37df1d"
+              else
+                echo "Test failure!"
+                echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt med feil :boom: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}"
+                echo "::set-env name=SLACK_MESSAGE::{{ env.TEST_RESULT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A${{ env.DIFFERANSE }}"
+                echo "::set-env name=SLACK_COLOR::#df1515"
+              fi
+            fi
+
+          else
+            echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
+            echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}"
+            echo "::set-env name=SLACK_MESSAGE::${{ env.DIFFERANSE }}"
+            echo "::set-env name=SLACK_COLOR::#e79a07"
+          fi
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_CHANNEL: fpsak-autotest
+          SLACK_COLOR: ${{ env.SLACK_COLOR }}
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ${{ env.SLACK_TITLE }}
+          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
