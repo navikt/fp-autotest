@@ -20,7 +20,7 @@ on:
 
 jobs:
   build:
-    name: Utfør verdikjede-test
+    name: Utfør verdikjede-test for ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
     runs-on: ubuntu-latest
 
     steps:
