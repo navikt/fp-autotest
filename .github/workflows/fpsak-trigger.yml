@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Utfører autotestene for fpsak
+    name: Utfører autotestene for ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
     runs-on: ubuntu-latest
 
     steps:
@@ -139,7 +139,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Notify slack
-        if: failure() || github.event_name == 'pull_request'
+        if: always()
         uses: peter-evans/repository-dispatch@v1.1.1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
