@@ -1,4 +1,4 @@
-name: Kjører autotestene for fpsak
+name: Kjører autotestene for ${{ github.event.client_payload.trigger }}
 
 on:
   pull_request:
