@@ -1,9 +1,6 @@
-name: Kjører autotestene for ${{ github.event.client_payload.trigger }}
+name: Kjører autotestene for fpsak
 
 on:
-  pull_request:
-    branches:
-      - master
   repository_dispatch:
     types: [fpsak-autotest]
   schedule:
@@ -142,7 +139,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Notify slack
-        if: failure() || github.event_name == 'pull_request'
+        if: always()
         uses: peter-evans/repository-dispatch@v1.1.1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
