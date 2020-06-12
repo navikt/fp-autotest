@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Utfører autotestene for fpsak
+    name: Utfører autotestene for fpsak ${{ github.event.client_payload.version }}
     runs-on: ubuntu-latest
 
     steps:

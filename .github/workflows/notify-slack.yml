@@ -51,12 +51,12 @@ jobs:
               if [ $OUTCOME == success ]; then
                 echo "Test success!"
                 echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK er kjørt uten feil :rocket:"
-                echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION$%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
                 echo "::set-env name=SLACK_COLOR::#37df1d"
               else
                 echo "Test failure!"
                 echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK feilet :boom:"
-                echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION$%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
                 echo "::set-env name=SLACK_COLOR::#df1515"
               fi
 
@@ -65,12 +65,12 @@ jobs:
               if [ $OUTCOME == success ]; then
                 echo "Test success!"
                 echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt uten feil :rocket:"
-                echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION$%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
                 echo "::set-env name=SLACK_COLOR::#37df1d"
               else
                 echo "Test failure!"
                 echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt med feil :boom:"
-                echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION$%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
                 echo "::set-env name=SLACK_COLOR::#df1515"
               fi
             fi
@@ -78,7 +78,7 @@ jobs:
           else
             echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
             echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
-            echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION$%0A${TEST_RESULT}%0A*Endringer*%0A$DIFFERANSE"
+            echo "::set-env name=SLACK_MESSAGE::Trigger: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}%0A*Endringer*%0A$DIFFERANSE"
             echo "::set-env name=SLACK_COLOR::#e79a07"
           fi
 
