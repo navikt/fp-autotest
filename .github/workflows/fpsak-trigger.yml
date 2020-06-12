@@ -146,6 +146,6 @@ jobs:
           event-type: notify-slack
           client-payload: '{  "trigger": "${{ github.event.client_payload.trigger }}",
                               "version": "${{ github.event.client_payload.version }}",
-                              "test_result": "${{ env.TEST_RESULTAT }}",
+                              "test_resultat": "${{ env.TEST_RESULTAT }}",
                               "outcome": "${{ steps.tester.outcome }}",
                               "stack_started": "${{ env.STACK_STARTED }}" }'

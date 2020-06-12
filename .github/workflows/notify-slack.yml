@@ -8,7 +8,7 @@ env:
   VERSION: ${{ github.event.client_payload.version }}
   STACK_STARTED:  ${{ github.event.client_payload.stack_started }}
   OUTCOME:  ${{ github.event.client_payload.outcome }}
-  TEST_RESULT: ${{ github.event.client_payload.test_result }}
+  TEST_RESULTAT: ${{ github.event.client_payload.test_resultat }}
 
 jobs:
   notify:
@@ -51,12 +51,12 @@ jobs:
               if [ $OUTCOME == success ]; then
                 echo "Test success!"
                 echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK er kjørt uten feil :rocket:"
-                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
                 echo "::set-env name=SLACK_COLOR::#37df1d"
               else
                 echo "Test failure!"
                 echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK feilet :boom:"
-                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
                 echo "::set-env name=SLACK_COLOR::#df1515"
               fi
 
@@ -65,12 +65,12 @@ jobs:
               if [ $OUTCOME == success ]; then
                 echo "Test success!"
                 echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt uten feil :rocket:"
-                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
                 echo "::set-env name=SLACK_COLOR::#37df1d"
               else
                 echo "Test failure!"
                 echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt med feil :boom:"
-                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
                 echo "::set-env name=SLACK_COLOR::#df1515"
               fi
             fi
@@ -78,7 +78,7 @@ jobs:
           else
             echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
             echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
-            echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULT}%0A*Endringer*%0A$DIFFERANSE"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULTAT}%0A*Endringer*%0A$DIFFERANSE"
             echo "::set-env name=SLACK_COLOR::#e79a07"
           fi
 
