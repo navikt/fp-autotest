@@ -25,12 +25,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.2.0
-      - name: Henter historie for allure rapport
-        uses: actions/checkout@v2.2.0
-        with:
-          ref: gh-pages
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          path: gh-pages
       - name: Set cache key
         run: |
           echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
@@ -92,7 +86,8 @@ jobs:
         id: tester
         shell: bash
         run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede
+          mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede | tee test-result-log.txt
+          echo "::set-env name=TEST_RESULTAT::$(grep 'Tests run: [0-9], Failures: [0-9], Errors: [0-9], Skipped: [0-9]$' test-result-log.txt | cut -c 8-)"
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -137,6 +132,13 @@ jobs:
           docker system df
           df -h
 
+      - name: Henter historie for allure rapport
+        uses: actions/checkout@v2.2.0
+        with:
+          ref: gh-pages
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          path: gh-pages
+
       - name: Generer testrapport
         if: always() && env.STACK_STARTED == 'true'
         shell: bash
@@ -159,38 +161,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
-      - name: Slack Notification
-        if: steps.tester.outcome == 'success' && env.STACK_STARTED == 'true'
-        uses: rtCamp/action-slack-notify@v2.0.2
-        env:
-          SLACK_CHANNEL: fpsak-autotest
-          SLACK_COLOR: '#37df1d'
-          SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_MESSAGE: 'Alle testene gikk grønne! :rocket:'
-          SLACK_TITLE: Verdikjedetestene er trigget av ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          SLACK_USERNAME: Github Action
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
-      - name: Slack Notification
-        if: steps.tester.outcome != 'success' && env.STACK_STARTED == 'true'
-        uses: rtCamp/action-slack-notify@v2.0.2
-        env:
-          SLACK_CHANNEL: fpsak-autotest
-          SLACK_COLOR: '#df1515'
-          SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_MESSAGE: 'Det er test feil! :boom:'
-          SLACK_TITLE: Verdikjedetestene er trigget av ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          SLACK_USERNAME: Github Action
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
-      - name: Slack Notification
-        if: failure() && env.STACK_STARTED == 'false'
-        uses: rtCamp/action-slack-notify@v2.0.2
-        env:
-          SLACK_CHANNEL: fpsak-autotest
-          SLACK_COLOR: '#e79a07'
-          SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_MESSAGE: 'GHA fikk ikke opp verdikjeden! :man-shrugging:'
-          SLACK_TITLE: Verdikjedetestene er trigget av ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          SLACK_USERNAME: Github Action
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Notify slack
+        if: failure() || github.event_name == 'pull_request'
+        uses: peter-evans/repository-dispatch@v1.1.1
+        with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          event-type: notify-slack
+          client-payload: '{  "trigger": "${{ github.event.client_payload.trigger }}",
+                              "version": "${{ github.event.client_payload.version }}",
+                              "test_result": "${{ env.TEST_RESULTAT }}",
+                              "outcome": "${{ steps.tester.outcome }}",
+                              "stack_started": "${{ env.STACK_STARTED }}" }'
