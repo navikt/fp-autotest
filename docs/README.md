@@ -35,12 +35,12 @@ som skal gjøre dette lettere. Scriptene som finnes der, og skal brukes til loka
 3)  `lokal-utvikling.sh`: Brukes for lokal utvikling hvis de over ikke skulle dekke ditt behov.
 
 Etter at du har kjørt enten script 1 eller 2 er det mulig å kjøre ned applikasjonene i Docker Compose med å kalle 
-scriptet igjen argumentet "_down_" – på lignende måte som en gjør med Docker Compose.
+scriptet igjen med argumentet "_down_" – på lignende måte som en gjør docker-compose.
 
 
 Skulle script 1 eller 2 ikke dekke ditt behov, så kan du bruke det tredje scriptet `lokal-utvikling.sh` til å sette opp
 hva enn du måtte ønske. Dette scriptet brukes til å sette opp miljøvariablene slik at de peker ut på applikasjonene som
-du ønkser å kjøre utenfor Docker Compose. Når du kjører dette scriptet spesifiserer du hvilke applikasjoner du ønsker å 
+du utenfor Docker Compose. Når du kjører dette scriptet spesifiserer du hvilke applikasjoner du ønsker å 
 kjøre utenfor docker-compose:
 
     ./lokal-utvikling.sh [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
