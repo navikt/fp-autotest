@@ -17,6 +17,7 @@ jobs:
     steps:
 
       - name: Henter ut historie
+        if: env.TRIGGER != null || env.VERSION != null
         uses: actions/checkout@v2.2.0
         with:
           repository: ${{ env.TRIGGER }}
@@ -24,6 +25,7 @@ jobs:
           fetch-depth: 5
 
       - name: Hent ut versjon fra forrige issue
+        if: env.TRIGGER != null || env.VERSION != null
         shell: bash
         run: |
           CURRENT_HASH=$(echo "$VERSION" | awk -F'-' '{print $3}')

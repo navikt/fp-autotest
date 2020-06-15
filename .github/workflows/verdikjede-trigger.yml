@@ -87,7 +87,7 @@ jobs:
         shell: bash
         run: |
           mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede | tee test-result-log.txt
-          echo "::set-env name=TEST_RESULTAT::$(grep 'Tests run: \d\+, Failures: \d\+, Errors: \d\+, Skipped: \d\+$' test-result-log.txt -o)"
+          echo "::set-env name=TEST_RESULTAT::$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)"
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -161,14 +161,66 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
-      - name: Notify slack
-        if: always() && github.event_name != 'push'
-        uses: peter-evans/repository-dispatch@v1.1.1
+      - name: Henter ut historie
+        if: github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
+        id: slacknotify
+        uses: actions/checkout@v2.2.0
         with:
+          repository: ${{ github.event.client_payload.trigger }}
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          event-type: notify-slack
-          client-payload: '{  "trigger": "${{ github.event.client_payload.trigger }}",
-                              "version": "${{ github.event.client_payload.version }}",
-                              "test_resultat": "${{ env.TEST_RESULTAT }}",
-                              "outcome": "${{ steps.tester.outcome }}",
-                              "stack_started": "${{ env.STACK_STARTED }}" }'
+          fetch-depth: 5
+
+      - name: Hent ut versjon fra forrige issue
+        if: steps.slacknotify.outcome == 'success'
+        shell: bash
+        run: |
+          CURRENT_HASH=$(echo "${{ github.event.client_payload.version }}" | awk -F'-' '{print $3}')
+
+          curl -s "https://api.github.com/repos/${{ github.event.client_payload.trigger }}/issues?state=open&labels=deployment" \
+            -u "x-access-token:${{ secrets.GITHUB_ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Content-Type: application/json" \
+            | sed '/'"${CURRENT_HASH}"'/,$!d' > temp.txt
+
+          PREVIOUS_HASH=$(grep -m2 '"title": "' temp.txt | tail -n1 | grep -m2 '"title": "' | cut -d '"' -f 4 | cut -d ' ' -f 3 | awk -F'-' '{print $3}')
+
+          git remote -v
+          git fetch
+          echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" ${CURRENT_HASH}...${PREVIOUS_HASH})"
+
+
+      - name: Bygger opp slack melding
+        if: steps.slacknotify.outcome == 'success' || (env.STACK_STARTED == 'false' && github.event_name == 'repository_dispatch')
+        shell: bash
+        run: |
+          if [ ${{ env.STACK_STARTED }} == true ]; then
+            echo "Stack up and running!"
+            if [ ${{ steps.tester.outcome }} == success ]; then
+              echo "Test success!"
+              echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK er kjørt uten feil :rocket:"
+              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+              echo "::set-env name=SLACK_COLOR::#37df1d"
+            else
+              echo "Test failure!"
+              echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK feilet :boom:"
+              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+              echo "::set-env name=SLACK_COLOR::#df1515"
+            fi
+          else
+            echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
+            echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+            echo "::set-env name=SLACK_COLOR::#e79a07"
+          fi
+
+      - name: Slack Notification
+        if: steps.slacknotify.outcome == 'success' || (env.STACK_STARTED == 'false' && github.event_name == 'repository_dispatch')
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_CHANNEL: fpsak-autotest
+          SLACK_COLOR: ${{ env.SLACK_COLOR }}
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ${{ env.SLACK_TITLE }}
+          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
