@@ -135,12 +135,12 @@ jobs:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Henter ut historie
-          if: github.event.client_payload.trigger != null || github.event.client_payload.version != null
-          uses: actions/checkout@v2.2.0
-          with:
-            repository: ${{ github.event.client_payload.trigger }}
-            token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-            fetch-depth: 5
+        if: github.event.client_payload.trigger != null || github.event.client_payload.version != null
+        uses: actions/checkout@v2.2.0
+        with:
+          repository: ${{ github.event.client_payload.trigger }}
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          fetch-depth: 5
 
       - name: Hent ut versjon fra forrige issue
         if: github.event.client_payload.trigger != null || github.event.client_payload.version != null
