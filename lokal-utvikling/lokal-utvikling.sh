@@ -129,3 +129,4 @@ cd ../../resources/pipeline
 cp "update-versions.sh" "${relativ_path}"
 cp "update-versions.sh" "${relativ_path}/.."
 
+sh "${relativ_path}"/update-versions.sh

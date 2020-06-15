@@ -110,6 +110,8 @@ jobs:
           df -h
 
       - name: Henter historie for allure rapport
+        if: always() && env.STACK_STARTED == 'true'
+        id: ghpages
         uses: actions/checkout@v2.2.0
         with:
           ref: gh-pages
@@ -117,7 +119,7 @@ jobs:
           path: gh-pages
 
       - name: Generer testrapport
-        if: always() && env.STACK_STARTED == 'true'
+        if: steps.ghpages.outcome == 'success'
         shell: bash
         run: |
           resources/allure/set-environment-variables-fpsak.sh ${{ github.event.client_payload.trigger }}
@@ -129,7 +131,7 @@ jobs:
           cp -r target/allure-report target/allure-report-temp/fpsak
 
       - name: Deploy testrapport
-        if: always() && env.STACK_STARTED == 'true'
+        if: steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
           target_branch: gh-pages
