@@ -145,7 +145,7 @@ services:
     ports:
       - "8070:8080"
     depends_on:
-      - postgres
+      - oracle
       - vtp
       - fpsak
   fptilbake:

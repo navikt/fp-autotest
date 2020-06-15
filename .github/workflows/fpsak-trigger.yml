@@ -70,7 +70,7 @@ jobs:
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Oppdaterer issue ved feilfrie tester
-        if: steps.tester.outcome == 'success' && github.event.client_payload.issue-number != null
+        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -79,7 +79,7 @@ jobs:
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
 
       - name: Oppdaterer issue ved testfeil
-        if: steps.tester.outcome != 'success' && github.event.client_payload.issue-number != null
+        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -110,6 +110,8 @@ jobs:
           df -h
 
       - name: Henter historie for allure rapport
+        if: always() && env.STACK_STARTED == 'true'
+        id: ghpages
         uses: actions/checkout@v2.2.0
         with:
           ref: gh-pages
@@ -117,7 +119,7 @@ jobs:
           path: gh-pages
 
       - name: Generer testrapport
-        if: always() && env.STACK_STARTED == 'true'
+        if: steps.ghpages.outcome == 'success'
         shell: bash
         run: |
           resources/allure/set-environment-variables-fpsak.sh ${{ github.event.client_payload.trigger }}
@@ -129,7 +131,7 @@ jobs:
           cp -r target/allure-report target/allure-report-temp/fpsak
 
       - name: Deploy testrapport
-        if: always() && env.STACK_STARTED == 'true'
+        if: steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
           target_branch: gh-pages
@@ -194,7 +196,7 @@ jobs:
         if: steps.slacknotify.outcome == 'success' || (env.STACK_STARTED == 'false' && github.event_name == 'repository_dispatch')
         uses: rtCamp/action-slack-notify@v2.0.2
         env:
-          SLACK_CHANNEL: fpsak-autotest
+          SLACK_CHANNEL: vtp-autotest-resultat
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ${{ env.SLACK_TITLE }}

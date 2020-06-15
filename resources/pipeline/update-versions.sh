@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd $(dirname $0)
+
 TRIGGER=${1-not an repo}
 TRIGGER_VERSION=${2-latest}
 

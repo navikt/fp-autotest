@@ -26,15 +26,29 @@ NB. dette kjører opp hele verdikjeden og passer ikke for de som har en PC som e
 
 
 ### Docker Compose for lokal utvikling
-I en del situasjoner ønskes det ikke at hele verdikjeden kjøres opp, men bare det applikasjonene som er nødvendig. 
-For å bruke docker-compose for lokal utvikling er det laget et script (*lokal-utvikling.sh* som ligger i mappen 
-"_lokal-utvikling/_") som skal gjøre dette lettere. Når du kjører scriptet spesifiserer du hvilke applikasjoner du ønsker å kjøre utenfor docker-compose:
+I en del situasjoner ønsker man ikke å kjøre opp hele verdikjeden, men bare de applikasjonene som er nødvendige. 
+For å bruke docker-compose for lokal utvikling er det laget flere script – som ligger i mappen "_lokal-utvikling/_" – 
+som skal gjøre dette lettere. Scriptene som finnes der, og skal brukes til lokal utvikling, er: 
 
-    ./lokal-utvikling [APPLIKASJONER_UTENFOR_DOCKER_COMPOSE ...]
+1)  `lokal-utvikling-fpsak.sh`: Brukes for lokal utvikling av FPSAK.
+2)  `lokal-utvikling-formidling-oppdrag-tilbake.sh`: Brukes for lokal utvikling av enten FPFORMIDLING, FPOPPDRAG eller FPTILBAKE.
+3)  `lokal-utvikling.sh`: Brukes for lokal utvikling hvis de over ikke skulle dekke ditt behov.
 
-Etter at du har kjørt scriptet vil det lages en mappen: *lokal-utvikling/docker-compose-lokal*: Gå inn i denne mappen.
-Denne mappen inneholder spesifikasjonene for å kjøre opp Docker Compose. By default så hentes det siste versjon av alle 
-Docker imagene. Ønsker du mot formodning en annen versjon kan du gjøre dette ved følgende kommando:
+Etter at du har kjørt enten script 1 eller 2 er det mulig å kjøre ned applikasjonene i Docker Compose med å kalle 
+scriptet igjen med argumentet "_down_" – på lignende måte som en gjør docker-compose.
+
+
+Skulle script 1 eller 2 ikke dekke ditt behov, så kan du bruke det tredje scriptet `lokal-utvikling.sh` til å sette opp
+hva enn du måtte ønske. Dette scriptet brukes til å sette opp miljøvariablene slik at de peker ut på applikasjonene som
+du utenfor Docker Compose. Når du kjører dette scriptet spesifiserer du hvilke applikasjoner du ønsker å 
+kjøre utenfor docker-compose:
+
+    ./lokal-utvikling.sh [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
+
+Etter at du har kjørt scriptet vil det lages en mappen: *lokal-utvikling/docker-compose-lokal*; gå inn i denne mappen.
+Denne mappen inneholder riktig konfigurasjonen for oppsettet i Docker Compose. Som standard så hentes den siste versjon 
+av Docker imagene til samtlige applikasjoner. Ønsker du mot formodning en annen versjon kan du gjøre detteved å kjøre 
+følgende kommando:
 
     ./update-versions.sh <APPLIKASJONSNAVN> <VERSION>
 
@@ -42,8 +56,8 @@ Deretter henter du ned Docker imagene og kjører opp de spesifiserte tjenestene 
 
 Alternativ 1:
 
-    docker-compose pull [SERVICE...]
-    docker-compose up -d [--scale APPLIKASJON_UTENFOR_DOCKER_COMPOSE=0] [SERVICE...]
+    docker-compose pull [SERVICE ...]
+    docker-compose up --detach  [--scale APPLIKASJON_UTENFOR_DOCKER_COMPOSE=0] [SERVICE...]
     
 Alternativ 2:
 
@@ -54,7 +68,7 @@ Alternativ 2:
 * _[--scale APPLIKASJON_UTENFOR_DOCKER_COMPOSE=0]_: Her spesifiserer du at du ikke ønsker å kjøre opp en eller flere tjenester.
 * _[SERVICE...]_: Det siste ordet/ordene referer til hvilke tjenste(r) som skal kjøres (med sine respektive avhengigeter).
 
-Forskjellen mellom disse to alternativene over er at i den første får du muligheten til å hoppe over _"pull"_ steget hvis du
+Forskjellen mellom de to alternativene over er at i den første får du muligheten til å hoppe over _"pull"_ steget hvis du
 ikke ønsker å hente ned "en ny siste versjon" (hvis det har vært endringer på master nylig). Den tar da utgangspunkt i et 
 image som du har lastet ned tidligere (f.eks. for noen timer eller dager siden). For det andre alternativet henter du siste 
 versjon for hver gang du skriver inn kommandoet. 
@@ -62,13 +76,7 @@ versjon for hver gang du skriver inn kommandoet.
 **NB: Her er det viktig å kjøre opp tjenestene i riktig rekkefølge. Gyldige applikasjonsnavn er: oracle, postgres, vtp, 
 fpabakus, fpsak, fpsak-frontend, fpformidling, fpoppdrag og fptilbake.**
 
-Det finnes to scripts under "lokal-utvikling" som kan brukes for dette formålet. Disse scriptene kan brukes for å sette opp miljøet for FPSAK, 
-FPFORMIDLING, FPTILBAKE eller FPOPPDRAG. Disse to scriptene heter:
-*   `lokal-utvikling-fpsak.sh`: Brukes for lokal utvikling av fpsak.
-*   `lokal-utvikling-formidling-oppdrag-tilbake.sh`: Brukes for lokal utvikling av enten fpformidling, fpoppdrag eller fptilbake.
-
-Etter at du har brukt en av disse scriptene kan du alltids kjøre ned applikasjonene med å kalle scriptet igjen med argumentet "_down_"
-– på lignende måte som du gjør med Docker Compose. Mer informasjon og eksempler på hvordan dette gjøres kan du finne her: [lokal utvikling eksempler](lokal-utvikling-eksempler.md).
+ Mer informasjon og eksempler på hvordan dette gjøres kan du finne her: [lokal utvikling eksempler](lokal-utvikling-eksempler.md).
 
 
 ### Docker Compose for utvikling av tester
