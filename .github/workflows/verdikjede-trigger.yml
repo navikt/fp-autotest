@@ -93,7 +93,7 @@ jobs:
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Oppdaterer issue ved feilfrie tester
-        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
+        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != ''
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -102,7 +102,7 @@ jobs:
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
 
       - name: Oppdaterer issue ved testfeil
-        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
+        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != ''
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -164,7 +164,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Henter ut historie
-        if: github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
+        if: github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != '' && github.event.client_payload.version != ''
         id: slacknotify
         uses: actions/checkout@v2.2.0
         with:
