@@ -139,11 +139,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .findFirst().get();
         double totaltBg = aapAndel.getBeregnetPrAar();
 
-        FordelBeregningsgrunnlagBekreftelse fordelBeregningsgrunnlagBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
-        fordelBeregningsgrunnlagBekreftelse.settFastsattBeløpOgInntektskategori(fpStartdato, 0, new Kode("ARBEIDSAVKLARINGSPENGER"), 1)
-                .settFastsattBeløpOgInntektskategori(fpStartdato, (int) totaltBg, new Kode("ARBEIDSAVKLARINGSPENGER"), 2);
-        saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
-
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0), lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().kode, totaltBg, totaltBg, 0));
@@ -184,11 +179,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .stream().filter(a -> a.getAndelsnr() == 1)
                 .findFirst().get();
         double totaltBg = aapAndel.getBeregnetPrAar();
-
-        FordelBeregningsgrunnlagBekreftelse fordelBeregningsgrunnlagBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
-        fordelBeregningsgrunnlagBekreftelse.settFastsattBeløpOgInntektskategori(fpStartdato, 0, new Kode("ARBEIDSAVKLARINGSPENGER"), 1)
-        .settFastsattBeløpOgInntektskategori(fpStartdato, (int) totaltBg, new Kode("ARBEIDSAVKLARINGSPENGER"), 2);
-        saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
