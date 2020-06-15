@@ -59,7 +59,7 @@ jobs:
         id: tester
         shell: bash
         run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P internal | tee test-result-log.txt
+          mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak | tee test-result-log.txt
           echo "::set-env name=TEST_RESULTAT::$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)"
         env:
           GITHUB_USERNAME: x-access-token
@@ -124,15 +124,15 @@ jobs:
           mkdir target/allure-report-temp
           cp -r target/allure-report target/allure-report-temp/fpsak
 
-#      - name: Deploy testrapport
-#        if: always() && env.STACK_STARTED == 'true'
-#        uses: crazy-max/ghaction-github-pages@v2.0.1
-#        with:
-#          target_branch: gh-pages
-#          keep_history: true
-#          build_dir: target/allure-report-temp
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+      - name: Deploy testrapport
+        if: always() && env.STACK_STARTED == 'true'
+        uses: crazy-max/ghaction-github-pages@v2.0.1
+        with:
+          target_branch: gh-pages
+          keep_history: true
+          build_dir: target/allure-report-temp
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Henter ut historie
         if: github.event.client_payload.trigger != null || github.event.client_payload.version != null
@@ -166,7 +166,7 @@ jobs:
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
-            if [ $${{ steps.tester.outcome }} == success ]; then
+            if [ ${{ steps.tester.outcome }} == success ]; then
               echo "Test success!"
               echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK er kjørt uten feil :rocket:"
               echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }}, versjon: ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A${{ env.DIFFERANSE }}"
