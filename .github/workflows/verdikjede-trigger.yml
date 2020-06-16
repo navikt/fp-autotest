@@ -142,7 +142,7 @@ jobs:
         with:
           build_dir: gh-pages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Henter ut historie
         if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null

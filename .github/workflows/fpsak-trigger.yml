@@ -133,10 +133,9 @@ jobs:
         if: steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
-          keep_history: true
           build_dir: gh-pages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Henter ut historie
         if: always() && github.event.client_payload.trigger != null && github.event.client_payload.version != null
