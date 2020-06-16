@@ -116,6 +116,7 @@ jobs:
         uses: actions/checkout@v2.2.0
         with:
           repository: ${{ github.event.client_payload.trigger }}
+          path: ${{ github.event.client_payload.trigger }}
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           fetch-depth: 5
 
@@ -133,6 +134,8 @@ jobs:
 
           PREVIOUS_HASH=$(grep -m2 '"title": "' temp.txt | tail -n1 | grep -m2 '"title": "' | cut -d '"' -f 4 | cut -d ' ' -f 3 | awk -F'-' '{print $3}')
 
+          git remote -v
+          cd "${{ github.event.client_payload.trigger }}"
           git remote -v
           git fetch
           echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" ${CURRENT_HASH}...${PREVIOUS_HASH})"
