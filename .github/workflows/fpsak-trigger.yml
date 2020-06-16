@@ -120,15 +120,14 @@ jobs:
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
             if [ ${{ steps.tester.outcome }} == success ]; then
               echo "Test success!"
               echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK er kjørt uten feil :rocket:"
-              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
               echo "::set-env name=SLACK_COLOR::#37df1d"
             else
               echo "Test failure!"
               echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK feilet :boom:"
-              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
               echo "::set-env name=SLACK_COLOR::#df1515"
             fi
           else
