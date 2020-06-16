@@ -40,14 +40,21 @@ scriptet igjen med argumentet "_down_" – på lignende måte som en gjør docke
 
 Skulle script 1 eller 2 ikke dekke ditt behov, så kan du bruke det tredje scriptet `lokal-utvikling.sh` til å sette opp
 hva enn du måtte ønske. Dette scriptet brukes til å sette opp miljøvariablene slik at de peker ut på applikasjonene som
-du utenfor Docker Compose. Når du kjører dette scriptet spesifiserer du hvilke applikasjoner du ønsker å 
-kjøre utenfor docker-compose:
+du kjører utenfor Docker Compose. Når du kjører dette scriptet spesifiserer du hvilke applikasjoner du ønsker å 
+kjøre utenfor docker-compose (og valgfritt, om du ønsker å kjøre opp mer av verdikjeden innenfor Docker Compose):
 
-    ./lokal-utvikling.sh [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
+    ./lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
+      
+    Options:
+    -i,--inkluder <arg>     Her kan du spesifisere applikasjoner, som vanligvis ikke settes opp, til å
+                            settes opp for kjøring i Docker Compose. Eksempler på slike applikasjoner
+                            er fptilbake, fpoppdrag og fpformidling hvor mock i vtp brukes som standard.
+                            Eksempel: Kjøre også opp fptilbake og fpoppdrag i Docker Compose: 
+                             ./lokal-utvikling.sh -i fptilbake -i fpoppdrag [APPLIKASJON_UTENFOR ...]
 
 Etter at du har kjørt scriptet vil det lages en mappen: *lokal-utvikling/docker-compose-lokal*; gå inn i denne mappen.
 Denne mappen inneholder riktig konfigurasjonen for oppsettet i Docker Compose. Som standard så hentes den siste versjon 
-av Docker imagene til samtlige applikasjoner. Ønsker du mot formodning en annen versjon kan du gjøre detteved å kjøre 
+av Docker imagene til samtlige applikasjoner. Ønsker du mot formodning en annen versjon kan du gjøre dette ved å kjøre 
 følgende kommando:
 
     ./update-versions.sh <APPLIKASJONSNAVN> <VERSION>
