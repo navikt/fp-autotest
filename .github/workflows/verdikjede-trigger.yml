@@ -1,22 +1,6 @@
 name: Kjører verdikjedetestene for verdikjeden
 
-on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '**.md'
-      - '**.MD'
-      - '.gitignore'
-      - 'JenkinsfileAutotest'
-      - 'JenkinsfileAutotestNew'
-      - 'CODEOWNERS'
-      - '.github/workflows/build-pr.yml'
-      - 'resources/keystore/**'
-  repository_dispatch:
-    types: [fpsak-verdikjede, fpformidling-verdikjede, fabakus-verdikjede, fpoppdrag-verdikjede, fptilbake-verdikjede]
-  schedule:
-    - cron:  '0 0 * * *'
+on: [pull_request]
 
 jobs:
   build:
@@ -118,7 +102,7 @@ jobs:
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
-        if: failure()
+        if: failure() && env.STACK_CREATED == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: logs
@@ -150,18 +134,16 @@ jobs:
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/verdikjede/history target/allure-results
           mvn allure:report --batch-mode --file pom.xml
-          mkdir target/allure-report-temp
-          cp -r target/allure-report target/allure-report-temp/verdikjede
+          cp -r target/allure-report gh-pages/verdikjede
 
       - name: Deploy testrapport
         if: steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
-          target_branch: gh-pages
           keep_history: true
-          build_dir: target/allure-report-temp
+          build_dir: gh-pages/verdikjede
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Henter ut historie
         if: github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != '' && github.event.client_payload.version != ''
@@ -199,12 +181,12 @@ jobs:
             echo "Stack up and running!"
             if [ ${{ steps.tester.outcome }} == success ]; then
               echo "Test success!"
-              echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK er kjørt uten feil :rocket:"
+              echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt uten feil :rocket:"
               echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
               echo "::set-env name=SLACK_COLOR::#37df1d"
             else
               echo "Test failure!"
-              echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK feilet :boom:"
+              echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt med feil :boom:"
               echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
               echo "::set-env name=SLACK_COLOR::#df1515"
             fi
