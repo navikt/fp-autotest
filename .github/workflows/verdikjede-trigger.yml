@@ -95,7 +95,7 @@ jobs:
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
 
       - name: Henter ut historie
-        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
+        if: always() && github.event_name == 'pull_request' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
         id: slacknotify
         uses: actions/checkout@v2.2.0
         with:
