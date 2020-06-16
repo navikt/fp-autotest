@@ -70,7 +70,7 @@ jobs:
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Oppdaterer issue ved feilfrie tester
-        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != ''
+        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -79,7 +79,7 @@ jobs:
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
 
       - name: Oppdaterer issue ved testfeil
-        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != ''
+        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -95,7 +95,7 @@ jobs:
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
-        if: failure()
+        if: failure() && env.STACK_CREATED == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: logs
@@ -127,21 +127,19 @@ jobs:
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fpsak/history target/allure-results
           mvn allure:report --batch-mode --file pom.xml
-          mkdir target/allure-report-temp
-          cp -r target/allure-report target/allure-report-temp/fpsak
+          cp -a target/allure-report/. gh-pages/fpsak/
 
       - name: Deploy testrapport
         if: steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
-          target_branch: gh-pages
           keep_history: true
-          build_dir: target/allure-report-temp
+          build_dir: gh-pages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Henter ut historie
-        if: github.event.client_payload.trigger != '' && github.event.client_payload.version != ''
+        if: always() && github.event.client_payload.trigger != null && github.event.client_payload.version != null
         id: slacknotify
         uses: actions/checkout@v2.2.0
         with:
@@ -169,7 +167,7 @@ jobs:
 
 
       - name: Bygger opp slack melding
-        if: steps.slacknotify.outcome == 'success' || (env.STACK_STARTED == 'false' && github.event_name == 'repository_dispatch')
+        if: steps.slacknotify.outcome == 'success'
         shell: bash
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
@@ -193,7 +191,7 @@ jobs:
           fi
 
       - name: Slack Notification
-        if: steps.slacknotify.outcome == 'success' || (env.STACK_STARTED == 'false' && github.event_name == 'repository_dispatch')
+        if: steps.slacknotify.outcome == 'success'
         uses: rtCamp/action-slack-notify@v2.0.2
         env:
           SLACK_CHANNEL: vtp-autotest-resultat
