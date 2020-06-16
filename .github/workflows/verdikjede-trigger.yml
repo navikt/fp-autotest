@@ -146,7 +146,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Henter ut historie
-        if: github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
+        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
         id: slacknotify
         uses: actions/checkout@v2.2.0
         with:
@@ -174,7 +174,7 @@ jobs:
 
 
       - name: Bygger opp slack melding
-        if: steps.slacknotify.outcome == 'success' || (env.STACK_STARTED == 'false' && github.event_name == 'repository_dispatch')
+        if: steps.slacknotify.outcome == 'success'
         shell: bash
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
@@ -198,7 +198,7 @@ jobs:
           fi
 
       - name: Slack Notification
-        if: steps.slacknotify.outcome == 'success' || (env.STACK_STARTED == 'false' && github.event_name == 'repository_dispatch')
+        if: steps.slacknotify.outcome == 'success'
         uses: rtCamp/action-slack-notify@v2.0.2
         env:
           SLACK_CHANNEL: fpsak-autotest
