@@ -1,22 +1,6 @@
 name: Kjører verdikjedetestene for verdikjeden
 
-on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '**.md'
-      - '**.MD'
-      - '.gitignore'
-      - 'JenkinsfileAutotest'
-      - 'JenkinsfileAutotestNew'
-      - 'CODEOWNERS'
-      - '.github/workflows/build-pr.yml'
-      - 'resources/keystore/**'
-  repository_dispatch:
-    types: [fpsak-verdikjede, fpformidling-verdikjede, fabakus-verdikjede, fpoppdrag-verdikjede, fptilbake-verdikjede]
-  schedule:
-    - cron:  '0 0 * * *'
+on: [pull_request]
 
 jobs:
   build:
@@ -156,7 +140,6 @@ jobs:
         if: steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
-          keep_history: true
           build_dir: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
