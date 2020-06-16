@@ -1,6 +1,10 @@
 name: Kjører autotestene for fpsak
 
-on: [pull_request]
+on:
+  repository_dispatch:
+    types: [fpsak-autotest]
+  schedule:
+    - cron:  '0 0 * * *'
 
 jobs:
   build:
