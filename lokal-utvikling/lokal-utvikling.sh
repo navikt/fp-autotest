@@ -118,7 +118,7 @@ for applikasjon in "${applikasjoner[@]}"; do
 done
 
 
-if [[ "$*" != *fpoppdrag* ]] && [[ ${med_applikasjon[*]} == *fpoppdrag* ]]; then
+if [[ "$*" != *fpoppdrag* ]] && [[ ! "${med_applikasjon[*]}" =~ "fpoppdrag" ]]; then
   echo "Argumentet inneholder IKKE fpoppdrag; bruker mock i vtp istedenfor den faktiske applikasjonen."
   if [[ "$*" == *vtp* ]]; then
     sed -i.bak "s*fpoppdrag:8080*host.docker.internal:8060/rest/dummy*g" "docker-compose.yml"
@@ -130,7 +130,7 @@ else
   echo "Argumentet inneholder fpoppdrag; setter opp for kjøring med fpoppdrag."
 fi
 
-if [[ "$*" != *fptilbake* ]] && [[ ${med_applikasjon[*]} == *fptilbake* ]]; then
+if [[ "$*" != *fptilbake* ]] && [[ ! "${med_applikasjon[*]}" =~ "fptilbake" ]]; then
   echo "Argumentet inneholder IKKE fptilbake; bruker mock i vtp istedenfor den faktiske applikasjonen."
   if [[ "$*" == *vtp* ]]; then
     sed -i.bak "s*fptilbake:8080*host.docker.internal:8060/rest/dummy/boolean/false*g" "docker-compose.yml"
@@ -142,7 +142,7 @@ else
   echo "Argumentet inneholder fptilbake; setter opp for kjøring med fptilbake."
 fi
 
-if [[ "$*" != *fpformidling* ]] && [[ ${med_applikasjon[*]} == *fpformidling* ]]; then
+if [[ "$*" != *fpformidling* ]] && [[ ! "${med_applikasjon[*]}" =~ "fpformidling" ]]; then
   echo "Argumentet inneholder IKKE fpformidling; bruker mock i vtp istedenfor den faktiske applikasjonen."
   if [[ "$*" == *vtp* ]]; then
     sed -i.bak "s*fpformidling:8080*host.docker.internal:8060/rest/dummy*g" "docker-compose.yml"
