@@ -51,7 +51,7 @@ jobs:
           PREVIOUS_HASH=$(grep -m2 '"title": "' temp.txt | tail -n1 | grep -m2 '"title": "' | cut -d '"' -f 4 | cut -d ' ' -f 3 | awk -F'-' '{print $3}')
 
           git remote -v
-          cd "${{ github.event.client_payload.trigger }}"
+          cd navikt/fp-formidling
           git remote -v
           git fetch
           echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" ${CURRENT_HASH}...${PREVIOUS_HASH})"
