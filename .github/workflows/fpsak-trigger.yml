@@ -70,7 +70,7 @@ jobs:
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Oppdaterer issue ved feilfrie tester
-        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != ''
+        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -79,7 +79,7 @@ jobs:
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
 
       - name: Oppdaterer issue ved testfeil
-        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != ''
+        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -135,12 +135,12 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
           keep_history: true
-          build_dir: gh-pages/fpsak
+          build_dir: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Henter ut historie
-        if: github.event.client_payload.trigger != '' && github.event.client_payload.version != ''
+        if: github.event.client_payload.trigger != null && github.event.client_payload.version != null
         id: slacknotify
         uses: actions/checkout@v2.2.0
         with:
