@@ -17,6 +17,7 @@ on:
     types: [fpsak-verdikjede, fpformidling-verdikjede, fabakus-verdikjede, fpoppdrag-verdikjede, fptilbake-verdikjede]
   schedule:
     - cron:  '0 0 * * *'
+
 jobs:
   build:
     name: Utfør verdikjede-test for ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
