@@ -49,8 +49,8 @@ kjøre utenfor docker-compose (og valgfritt, om du ønsker å kjøre opp mer av 
     -i,--inkluder <arg>     Her kan du spesifisere applikasjon, som vanligvis ikke spinnes opp, til å
                             settes opp for applikasjon i Docker Compose. Eksempler på slike applikasjoner
                             er fptilbake, fpoppdrag og fpformidling hvor mock i vtp brukes som standard.
-                            e.g. kjøre også opp fptilbake og fpoppdrag i Docker Compose: 
-                            ./lokal-utvikling.sh -i fptilbake -i fpoppdrag [APPLIKASJON_UTENFOR ...]
+                            Eksempel: Kjøre også opp fptilbake og fpoppdrag i Docker Compose: 
+                             ./lokal-utvikling.sh -i fptilbake -i fpoppdrag [APPLIKASJON_UTENFOR ...]
 
 Etter at du har kjørt scriptet vil det lages en mappen: *lokal-utvikling/docker-compose-lokal*; gå inn i denne mappen.
 Denne mappen inneholder riktig konfigurasjonen for oppsettet i Docker Compose. Som standard så hentes den siste versjon 
