@@ -1,0 +1,80 @@
+name: Kjører Autotestene for verdikjeden PR
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Utfør verdikjede-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set cache key
+        run: |
+          echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
+          echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
+      - uses: actions/cache@v2.0.0
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
+          restore-keys: |
+            ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
+      - uses: actions/setup-java@v1.3.0
+        with:
+          java-version: 1.11
+
+      - name: Henter ut historie
+        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
+        id: slacknotify
+        uses: actions/checkout@v2.2.0
+        with:
+          repository: ${{ github.event.client_payload.trigger }}
+          path: ${{ github.event.client_payload.trigger }}
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          fetch-depth: 5
+
+      - name: Hent ut versjon fra forrige issue
+        if: steps.slacknotify.outcome == 'success'
+        shell: bash
+        run: |
+          CURRENT_HASH=$(echo "${{ github.event.client_payload.version }}" | awk -F'-' '{print $3}')
+
+          curl -s "https://api.github.com/repos/${{ github.event.client_payload.trigger }}/issues?state=open&labels=deployment" \
+            -u "x-access-token:${{ secrets.GITHUB_ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Content-Type: application/json" \
+            | sed '/'"${CURRENT_HASH}"'/,$!d' > temp.txt
+
+          PREVIOUS_HASH=$(grep -m2 '"title": "' temp.txt | tail -n1 | grep -m2 '"title": "' | cut -d '"' -f 4 | cut -d ' ' -f 3 | awk -F'-' '{print $3}')
+
+          git remote -v
+          cd "${{ github.event.client_payload.trigger }}"
+          git remote -v
+          git fetch
+          echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" ${CURRENT_HASH}...${PREVIOUS_HASH})"
+
+      - name: Bygger opp slack melding
+        if: steps.slacknotify.outcome == 'success'
+        shell: bash
+        run: |
+          if [ ${{ env.STACK_STARTED }} == true ]; then
+            echo "Stack up and running!"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+            if [ ${{ steps.tester.outcome }} == success ]; then
+              echo "Test success!"
+              echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt uten feil :rocket:"
+              echo "::set-env name=SLACK_COLOR::#37df1d"
+            else
+              echo "Test failure!"
+              echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt med feil :boom:"
+              echo "::set-env name=SLACK_COLOR::#df1515"
+            fi
+          else
+            echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
+            echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+            echo "::set-env name=SLACK_COLOR::#e79a07"
+          fi
