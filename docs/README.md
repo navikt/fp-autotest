@@ -40,10 +40,15 @@ scriptet igjen med argumentet "_down_" – på lignende måte som en gjør docke
 
 Skulle script 1 eller 2 ikke dekke ditt behov, så kan du bruke det tredje scriptet `lokal-utvikling.sh` til å sette opp
 hva enn du måtte ønske. Dette scriptet brukes til å sette opp miljøvariablene slik at de peker ut på applikasjonene som
-du utenfor Docker Compose. Når du kjører dette scriptet spesifiserer du hvilke applikasjoner du ønsker å 
-kjøre utenfor docker-compose:
+du kjører utenfor Docker Compose. Når du kjører dette scriptet spesifiserer du hvilke applikasjoner du ønsker å 
+kjøre utenfor docker-compose (og valgfritt, om du ønsker å kjøre opp mer av verdikjeden innenfor Docker Compose):
 
-    ./lokal-utvikling.sh [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
+    ./lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
+      
+    Options:
+    -i,--inkluder <arg>     Her kan du spesifisere applikasjoner, som vanligvis ikke spinnes opp,
+                            til å kjøre i Docker Compose. Eksempler på dette er fptilbake, fpoppdrag
+                            og fpformidling hvor mock i vtp brukes som standard.
 
 Etter at du har kjørt scriptet vil det lages en mappen: *lokal-utvikling/docker-compose-lokal*; gå inn i denne mappen.
 Denne mappen inneholder riktig konfigurasjonen for oppsettet i Docker Compose. Som standard så hentes den siste versjon 

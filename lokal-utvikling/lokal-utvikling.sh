@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-applikasjoner=( "$@" )
-folder=docker-compose-lokal
-relativ_path=../../lokal-utvikling/$folder
-
 hentSedArguement () {
   applikasjon=$1
   case $applikasjon in
@@ -50,9 +46,38 @@ hentSedArguement () {
     *)
       replace_port_array=()
       with_port_array=()
-      echo "Angitt applikasjon er ikke med i verdikjeden. Gjør derfor ingen endringer for denne applikasjonen."
+      echo "Angitt applikasjon '$applikasjon' er ikke med i verdikjeden; ignorerer denne variabelen."
   esac
 }
+
+while [ -n "$1" ]; do # while loop starts
+
+    case "$1" in
+      -i|--inkluder)
+        med_applikasjon+=("$2")
+        shift
+        ;;
+      --help)
+        echo "usage: ./lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]"
+        echo ""
+        echo "Options:"
+        echo "-i,--inkluder <arg>     Her kan du spesifisere applikasjoner, som vanligvis ikke spinnes opp,"
+        echo "                        til å kjøre i Docker Compose. Eksempler på dette er fptilbake, fpoppdrag"
+        echo "                        og fpformidling hvor mock i vtp brukes som standard."
+        exit 0
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift
+
+done
+
+
+applikasjoner=( "$@" )
+folder=docker-compose-lokal
+relativ_path=../../lokal-utvikling/$folder
 
 if [ $# -eq 0 ]; then
   echo "Applikasjonnavn er ikke spesifisert. Lager dermed oppsett for å kjøre den minste verdikjeden i Docker Compose."
@@ -93,35 +118,40 @@ for applikasjon in "${applikasjoner[@]}"; do
 done
 
 
-if [[ "$*" != *fpoppdrag* ]]; then
-  echo "Argumentet inneholder ikke fpoppdrag. Bruker derfor mock i vtp istedenfor den faktiske applikasjonen."
+if [[ "$*" != *fpoppdrag* ]] && [[ ${med_applikasjon[*]} == *fpoppdrag* ]]; then
+  echo "Argumentet inneholder IKKE fpoppdrag; bruker mock i vtp istedenfor den faktiske applikasjonen."
   if [[ "$*" == *vtp* ]]; then
     sed -i.bak "s*fpoppdrag:8080*host.docker.internal:8060/rest/dummy*g" "docker-compose.yml"
   else
     sed -i.bak "s*fpoppdrag:8080*vtp:8060/rest/dummy*g" "docker-compose.yml"
   fi
   rm docker-compose.yml.bak
+else
+  echo "Argumentet inneholder fpoppdrag; setter opp for kjøring med fpoppdrag."
 fi
 
-if [[ "$*" != *fptilbake* ]]; then
-  echo "Argumentet inneholder ikke fptilbake. Bruker derfor mock i vtp istedenfor den faktiske applikasjonen."
+if [[ "$*" != *fptilbake* ]] && [[ ${med_applikasjon[*]} == *fptilbake* ]]; then
+  echo "Argumentet inneholder IKKE fptilbake; bruker mock i vtp istedenfor den faktiske applikasjonen."
   if [[ "$*" == *vtp* ]]; then
     sed -i.bak "s*fptilbake:8080*host.docker.internal:8060/rest/dummy/boolean/false*g" "docker-compose.yml"
   else
     sed -i.bak "s*fptilbake:8080*vtp:8060/rest/dummy/boolean/false*g" "docker-compose.yml"
   fi
   rm docker-compose.yml.bak
+else
+  echo "Argumentet inneholder fptilbake; setter opp for kjøring med fptilbake."
 fi
 
-
-if [[ "$*" != *fpformidling* ]]; then
-  echo "Argumentet inneholder ikke fpformidling. Bruker derfor mock i vtp istedenfor den faktiske applikasjonen."
+if [[ "$*" != *fpformidling* ]] && [[ ${med_applikasjon[*]} == *fpformidling* ]]; then
+  echo "Argumentet inneholder IKKE fpformidling; bruker mock i vtp istedenfor den faktiske applikasjonen."
   if [[ "$*" == *vtp* ]]; then
     sed -i.bak "s*fpformidling:8080*host.docker.internal:8060/rest/dummy*g" "docker-compose.yml"
   else
     sed -i.bak "s*fpformidling:8080*vtp:8060/rest/dummy*g" "docker-compose.yml"
   fi
   rm docker-compose.yml.bak
+else
+  echo "Argumentet inneholder fpformidling; setter opp for kjøring med fpformidling."
 fi
 
 
