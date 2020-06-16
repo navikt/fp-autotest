@@ -1,7 +1,22 @@
 name: Kjører verdikjedetestene for verdikjeden
 
-on: [pull_request]
-
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - 'JenkinsfileAutotest'
+      - 'JenkinsfileAutotestNew'
+      - 'CODEOWNERS'
+      - '.github/workflows/build-pr.yml'
+      - 'resources/keystore/**'
+  repository_dispatch:
+    types: [fpsak-verdikjede, fpformidling-verdikjede, fabakus-verdikjede, fpoppdrag-verdikjede, fptilbake-verdikjede]
+  schedule:
+    - cron:  '0 0 * * *'
 jobs:
   build:
     name: Utfør verdikjede-test for ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
@@ -95,7 +110,7 @@ jobs:
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
 
       - name: Henter ut historie
-        if: always() && github.event_name == 'pull_request' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
+        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
         id: slacknotify
         uses: actions/checkout@v2.2.0
         with:
