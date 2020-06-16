@@ -46,8 +46,8 @@ kjøre utenfor docker-compose (og valgfritt, om du ønsker å kjøre opp mer av 
     ./lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
       
     Options:
-    -i,--inkluder <arg>     Her kan du spesifisere applikasjon, som vanligvis ikke spinnes opp, til å
-                            settes opp for applikasjon i Docker Compose. Eksempler på slike applikasjoner
+    -i,--inkluder <arg>     Her kan du spesifisere applikasjoner, som vanligvis ikke settes opp, til å
+                            settes opp for kjøring i Docker Compose. Eksempler på slike applikasjoner
                             er fptilbake, fpoppdrag og fpformidling hvor mock i vtp brukes som standard.
                             Eksempel: Kjøre også opp fptilbake og fpoppdrag i Docker Compose: 
                              ./lokal-utvikling.sh -i fptilbake -i fpoppdrag [APPLIKASJON_UTENFOR ...]
