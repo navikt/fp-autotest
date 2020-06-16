@@ -87,57 +87,6 @@ jobs:
           event-type: update-issue
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
 
-      - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
-        run: |
-          mkdir container-logs
-          cd container-logs
-          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
-
-      - name: Laste opp logger
-        if: failure() && env.STACK_CREATED == 'true'
-        uses: actions/upload-artifact@v2
-        with:
-          name: logs
-          path: container-logs
-
-      - name: Sjekker storage
-        if: failure()
-        shell: bash
-        run: |
-          docker system df -v
-          docker system df
-          df -h
-
-      - name: Henter historie for allure rapport
-        if: always() && env.STACK_STARTED == 'true'
-        id: ghpages
-        uses: actions/checkout@v2.2.0
-        with:
-          ref: gh-pages
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          path: gh-pages
-
-      - name: Generer testrapport
-        if: steps.ghpages.outcome == 'success'
-        shell: bash
-        run: |
-          resources/allure/set-environment-variables-fpsak.sh ${{ github.event.client_payload.trigger }}
-          cp resources/allure/environment.properties target/allure-results
-          cp resources/allure/categories.json target/allure-results
-          cp -r gh-pages/fpsak/history target/allure-results
-          mvn allure:report --batch-mode --file pom.xml
-          cp -a target/allure-report/. gh-pages/fpsak/
-
-      - name: Deploy testrapport
-        if: steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.0.1
-        with:
-          keep_history: true
-          build_dir: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Henter ut historie
         if: always() && github.event.client_payload.trigger != null && github.event.client_payload.version != null
         id: slacknotify
@@ -165,22 +114,20 @@ jobs:
           git fetch
           echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" ${CURRENT_HASH}...${PREVIOUS_HASH})"
 
-
       - name: Bygger opp slack melding
         if: steps.slacknotify.outcome == 'success'
         shell: bash
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
             if [ ${{ steps.tester.outcome }} == success ]; then
               echo "Test success!"
               echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK er kjørt uten feil :rocket:"
-              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
               echo "::set-env name=SLACK_COLOR::#37df1d"
             else
               echo "Test failure!"
               echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK feilet :boom:"
-              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
               echo "::set-env name=SLACK_COLOR::#df1515"
             fi
           else
@@ -201,3 +148,53 @@ jobs:
           SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
           SLACK_USERNAME: Github Action
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Henter historie for allure rapport
+        if: always() && env.STACK_STARTED == 'true'
+        id: ghpages
+        uses: actions/checkout@v2.2.0
+        with:
+          ref: gh-pages
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          path: gh-pages
+
+      - name: Generer testrapport
+        if: steps.ghpages.outcome == 'success'
+        shell: bash
+        run: |
+          resources/allure/set-environment-variables-fpsak.sh ${{ github.event.client_payload.trigger }}
+          cp resources/allure/environment.properties target/allure-results
+          cp resources/allure/categories.json target/allure-results
+          cp -r gh-pages/fpsak/history target/allure-results
+          mvn allure:report --batch-mode --file pom.xml
+          cp -a target/allure-report/. gh-pages/fpsak/
+
+      - name: Deploy testrapport
+        if: steps.ghpages.outcome == 'success'
+        uses: crazy-max/ghaction-github-pages@v2.0.1
+        with:
+          build_dir: gh-pages
+        env:
+          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+
+      - name: Dumper logger for feilsøking
+        if: failure() && env.STACK_CREATED == 'true'
+        run: |
+          mkdir container-logs
+          cd container-logs
+          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+
+      - name: Laste opp logger
+        if: failure() && env.STACK_CREATED == 'true'
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs
+          path: container-logs
+
+      - name: Sjekker storage
+        if: failure()
+        shell: bash
+        run: |
+          docker system df -v
+          docker system df
+          df -h
