@@ -12,7 +12,7 @@ on:
       - 'JenkinsfileAutotestNew'
       - 'CODEOWNERS'
       - '.github/workflows/build-pr.yml'
-      - 'resources/keystore/**'
+      - 'lokalutvikling/*'
   repository_dispatch:
     types: [fpsak-verdikjede, fpformidling-verdikjede, fabakus-verdikjede, fpoppdrag-verdikjede, fptilbake-verdikjede]
   schedule:
