@@ -127,8 +127,7 @@ jobs:
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fpsak/history target/allure-results
           mvn allure:report --batch-mode --file pom.xml
-          mkdir target/allure-report-temp
-          cp -r target/allure-report gh-pages/fpsak
+          cp -a target/allure-report/. gh-pages/fpsak/
 
       - name: Deploy testrapport
         if: steps.ghpages.outcome == 'success'
