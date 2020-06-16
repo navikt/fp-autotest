@@ -114,6 +114,7 @@ jobs:
           git remote -v
           cd "${{ github.event.client_payload.trigger }}"
           git remote -v
+          git fetch
           echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" ${CURRENT_HASH}...${PREVIOUS_HASH})"
 
       - name: Bygger opp slack melding
