@@ -31,26 +31,28 @@ For å bruke docker-compose for lokal utvikling er det laget flere script – so
 som skal gjøre dette lettere. Scriptene som finnes der, og skal brukes til lokal utvikling, er: 
 
 1)  `lokal-utvikling-fpsak.sh`: Brukes for lokal utvikling av FPSAK.
-2)  `lokal-utvikling-formidling-oppdrag-tilbake.sh`: Brukes for lokal utvikling av enten FPFORMIDLING, FPOPPDRAG eller FPTILBAKE.
-3)  `lokal-utvikling.sh`: Brukes for lokal utvikling hvis de over ikke skulle dekke ditt behov.
+2)  `lokal-utvikling-fpsak-frontend.sh`: Brukes for lokal utvikling av FPSAK-FRONTEND.
+3)  `lokal-utvikling-formidling-oppdrag-tilbake.sh`: Brukes for lokal utvikling av enten FPFORMIDLING, FPOPPDRAG eller
+FPTILBAKE; dette scriptet kjøres med argumentet fpformidling, fpoppdrag eller fptilbake.
+4)  `setup-lokal-utvikling.sh`: Brukes for lokal utvikling hvis de over ikke skulle dekke ditt behov.
 
-Etter at du har kjørt enten script 1 eller 2 er det mulig å kjøre ned applikasjonene i Docker Compose med å kalle 
+Etter at du har kjørt enten script 1, 2 eller 3 er det mulig å kjøre ned applikasjonene i Docker Compose med å kalle 
 scriptet igjen med argumentet "_down_" – på lignende måte som en gjør docker-compose.
 
 
-Skulle script 1 eller 2 ikke dekke ditt behov, så kan du bruke det tredje scriptet `lokal-utvikling.sh` til å sette opp
+Skulle script 1, 2 eller 3 mot formodning ikke dekke ditt behov, så kan du bruke det fjerde scriptet `setup-lokal-utvikling.sh` til å sette opp
 hva enn du måtte ønske. Dette scriptet brukes til å sette opp miljøvariablene slik at de peker ut på applikasjonene som
 du kjører utenfor Docker Compose. Når du kjører dette scriptet spesifiserer du hvilke applikasjoner du ønsker å 
 kjøre utenfor docker-compose (og valgfritt, om du ønsker å kjøre opp mer av verdikjeden innenfor Docker Compose):
 
-    ./lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
+    ./setup-lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
       
     Options:
     -i,--inkluder <arg>     Her kan du spesifisere applikasjoner, som vanligvis ikke settes opp, til å
                             settes opp for kjøring i Docker Compose. Eksempler på slike applikasjoner
                             er fptilbake, fpoppdrag og fpformidling hvor mock i vtp brukes som standard.
                             Eksempel: Kjøre også opp fptilbake og fpoppdrag i Docker Compose: 
-                             ./lokal-utvikling.sh -i fptilbake -i fpoppdrag [APPLIKASJON_UTENFOR ...]
+                             ./setup-lokal-utvikling.sh -i fptilbake -i fpoppdrag [APPLIKASJON_UTENFOR ...]
 
 Etter at du har kjørt scriptet vil det lages en mappen: *lokal-utvikling/docker-compose-lokal*; gå inn i denne mappen.
 Denne mappen inneholder riktig konfigurasjonen for oppsettet i Docker Compose. Som standard så hentes den siste versjon 

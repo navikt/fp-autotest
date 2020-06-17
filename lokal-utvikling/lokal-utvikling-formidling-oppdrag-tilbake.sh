@@ -4,7 +4,7 @@
 ARGUMENT=${1}
 
 if [[ $ARGUMENT == fpformidling ]] || [[ $ARGUMENT == fpoppdrag ]] || [[ $ARGUMENT == fptilbake ]]; then
-  sh ./lokal-utvikling.sh $ARGUMENT
+  sh ./setup-lokal-utvikling.sh $ARGUMENT
 
   if [ -f .env ]; then
     echo "Bruker eksisterende .env fil: $(pwd)/.env"
