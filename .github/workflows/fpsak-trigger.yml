@@ -36,7 +36,7 @@ jobs:
           ./make-dummy-keystore.sh
           echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../../lokal-utvikling
-          ./lokal-utvikling.sh
+          ./setup-lokal-utvikling.sh
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
           docker-compose -f docker-compose-lokal/docker-compose.yml up --quiet-pull --detach fpsak
 

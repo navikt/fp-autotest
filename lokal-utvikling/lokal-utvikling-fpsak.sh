@@ -6,7 +6,7 @@ ARGUMENT=${1}
 if [[ $ARGUMENT == down ]]; then
   docker-compose -f docker-compose-lokal/docker-compose.yml down
 else
-  sh ./lokal-utvikling.sh fpsak
+  sh ./setup-lokal-utvikling.sh fpsak
 
   if [ -f .env ]; then
     echo "Bruker eksisterende .env fil: $(pwd)/.env"

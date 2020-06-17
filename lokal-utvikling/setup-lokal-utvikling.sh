@@ -58,7 +58,7 @@ while [ -n "$1" ]; do # while loop starts
         shift
         ;;
       --help)
-        echo "usage: ./lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]"
+        echo "usage: ./setup-lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]"
         echo ""
         echo "Options:"
         echo "-i,--inkluder <arg>     Her kan du spesifisere applikasjoner, som vanligvis ikke spinnes opp,"
