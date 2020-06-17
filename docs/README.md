@@ -37,7 +37,7 @@ FPTILBAKE; dette scriptet kjøres med argumentet fpformidling, fpoppdrag eller f
 4)  `setup-lokal-utvikling.sh`: Brukes for lokal utvikling hvis de over ikke skulle dekke ditt behov.
 
 Etter at du har kjørt enten script 1, 2 eller 3 er det mulig å kjøre ned applikasjonene i Docker Compose med å kalle 
-scriptet igjen med argumentet "_down_" – på lignende måte som en gjør docker-compose.
+scriptet igjen med argumentet "_down_" – på lignende måte som en gjør i docker-compose.
 
 
 Skulle script 1, 2 eller 3 mot formodning ikke dekke ditt behov, så kan du bruke det fjerde scriptet `setup-lokal-utvikling.sh` til å sette opp
