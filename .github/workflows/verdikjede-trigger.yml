@@ -157,7 +157,7 @@ jobs:
         if: steps.slacknotify.outcome == 'success'
         uses: rtCamp/action-slack-notify@v2.0.2
         env:
-          SLACK_CHANNEL: fpsak-autotest
+          SLACK_CHANNEL: fp-verdikjedetester
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ${{ env.SLACK_TITLE }}
