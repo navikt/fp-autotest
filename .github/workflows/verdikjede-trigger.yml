@@ -121,7 +121,7 @@ jobs:
           fetch-depth: 5
 
       - name: Hent ut versjon fra forrige issue
-        if: steps.slacknotify.outcome == 'success'
+        if: always() && steps.slacknotify.outcome == 'success'
         shell: bash
         run: |
           CURRENT_HASH=$(echo "${{ github.event.client_payload.version }}" | awk -F'-' '{print $3}')
@@ -131,7 +131,7 @@ jobs:
           echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" -n 1 ${CURRENT_HASH})"
 
       - name: Bygger opp slack melding
-        if: steps.slacknotify.outcome == 'success'
+        if: always() && steps.slacknotify.outcome == 'success'
         shell: bash
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
@@ -154,7 +154,7 @@ jobs:
           fi
 
       - name: Slack Notification
-        if: steps.slacknotify.outcome == 'success'
+        if: always() && steps.slacknotify.outcome == 'success'
         uses: rtCamp/action-slack-notify@v2.0.2
         env:
           SLACK_CHANNEL: fp-verdikjedetester
@@ -181,7 +181,7 @@ jobs:
           cp -a target/allure-report/. gh-pages/verdikjede/
 
       - name: Deploy testrapport
-        if: steps.ghpages.outcome == 'success'
+        if: always() && steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
           build_dir: gh-pages
