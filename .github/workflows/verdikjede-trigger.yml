@@ -188,10 +188,9 @@ jobs:
         if: steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
-          keep_history: false
-          allow_empty_commit: true
-          commit_message: ''
+          target_branch: gh-pages
           build_dir: gh-pages
+          keep_history: false
         env:
           GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 

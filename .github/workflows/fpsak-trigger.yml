@@ -168,6 +168,7 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: gh-pages
+          keep_history: false
         env:
           GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
