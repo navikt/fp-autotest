@@ -172,6 +172,7 @@ jobs:
         with:
           ref: gh-pages
           path: gh-pages
+          fetch-depth: 0
 
       - name: Generer testrapport
         if: steps.ghpages.outcome == 'success'

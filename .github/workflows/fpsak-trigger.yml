@@ -150,6 +150,7 @@ jobs:
           ref: gh-pages
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           path: gh-pages
+          fetch-depth: 0
 
       - name: Generer testrapport
         if: steps.ghpages.outcome == 'success'
