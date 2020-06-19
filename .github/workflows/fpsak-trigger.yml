@@ -166,7 +166,7 @@ jobs:
         if: steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
-          keep_history: false
+          target_branch: gh-pages
           build_dir: gh-pages
         env:
           GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
