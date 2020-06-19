@@ -168,10 +168,9 @@ jobs:
       - name: Henter historie for allure rapport
         if: always() && env.STACK_STARTED == 'true'
         id: ghpages
-        uses: actions/checkout@v2.2.0
+        uses: actions/checkout@v2.3.1
         with:
           ref: gh-pages
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           path: gh-pages
 
       - name: Generer testrapport
@@ -190,6 +189,8 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
           keep_history: false
+          allow_empty_commit: true
+          commit_message: ''
           build_dir: gh-pages
         env:
           GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
