@@ -143,7 +143,8 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Generer testrapport
-        if: steps.ghpages.outcome == 'success'
+        if: always() && env.STACK_STARTED == 'true'
+        id: ghpages
         shell: bash
         run: |
           git fetch origin gh-pages
