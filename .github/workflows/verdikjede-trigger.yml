@@ -172,8 +172,6 @@ jobs:
         with:
           ref: gh-pages
           path: gh-pages
-          fetch-depth: 0
-          persist-credentials: false
 
       - name: Generer testrapport
         if: steps.ghpages.outcome == 'success'
@@ -188,7 +186,7 @@ jobs:
 
       - name: Deploy testrapport
         if: steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.0.1
+        uses: crazy-max/ghaction-github-pages@v2.0.0
         with:
           target_branch: gh-pages
           build_dir: gh-pages
