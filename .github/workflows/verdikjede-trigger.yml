@@ -165,18 +165,13 @@ jobs:
           SLACK_USERNAME: Github Action
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Henter historie for allure rapport
-        if: always() && env.STACK_STARTED == 'true'
-        id: ghpages
-        uses: actions/checkout@v2.3.1
-        with:
-          ref: gh-pages
-          path: gh-pages
-
       - name: Generer testrapport
         if: steps.ghpages.outcome == 'success'
         shell: bash
         run: |
+          git fetch origin gh-pages
+          mkdir gh-pages
+          git --work-tree=gh-pages checkout origin/gh-pages -- .
           resources/allure/set-environment-variables.sh ${{ github.event.client_payload.trigger }}
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
@@ -186,13 +181,11 @@ jobs:
 
       - name: Deploy testrapport
         if: steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.0.0
+        uses: crazy-max/ghaction-github-pages@v2.0.1
         with:
-          target_branch: gh-pages
           build_dir: gh-pages
-          keep_history: false
         env:
-          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'
