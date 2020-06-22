@@ -1,7 +1,7 @@
 name: Kjører verdikjedetestene for verdikjeden
 
 on:
-  push:
+  pull_request:
     branches:
       - master
     paths-ignore:
@@ -91,23 +91,23 @@ jobs:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
-      - name: Oppdaterer issue ved feilfrie tester
-        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          repository: ${{ github.event.client_payload.trigger }}
-          event-type: update-issue
-          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
-
-      - name: Oppdaterer issue ved testfeil
-        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          repository: ${{ github.event.client_payload.trigger }}
-          event-type: update-issue
-          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
+#      - name: Oppdaterer issue ved feilfrie tester
+#        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
+#        uses: peter-evans/repository-dispatch@v1
+#        with:
+#          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+#          repository: ${{ github.event.client_payload.trigger }}
+#          event-type: update-issue
+#          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
+#
+#      - name: Oppdaterer issue ved testfeil
+#        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
+#        uses: peter-evans/repository-dispatch@v1
+#        with:
+#          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+#          repository: ${{ github.event.client_payload.trigger }}
+#          event-type: update-issue
+#          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
 
       - name: Henter ut historie
         if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
@@ -130,13 +130,13 @@ jobs:
           echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" -n 1 ${CURRENT_HASH})"
 
       - name: Bygger opp slack melding
-        if: always() && steps.slacknotify.outcome == 'success'
+        if: always()
         shell: bash
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
             TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)
-            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A*Resultat*:${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }}:${{ github.event.client_payload.version }}%0A*Resultat*: ${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
             if [ ${{ steps.tester.outcome }} == success ]; then
               echo "Test success!"
               echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt uten feil :rocket:"
@@ -149,15 +149,15 @@ jobs:
           else
             echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
             echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
-            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }}:${{ github.event.client_payload.version }}%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
             echo "::set-env name=SLACK_COLOR::#e79a07"
           fi
 
       - name: Slack Notification
-        if: always() && steps.slacknotify.outcome == 'success'
+        if: always()
         uses: rtCamp/action-slack-notify@v2.0.2
         env:
-          SLACK_CHANNEL: fp-verdikjedetester
+          SLACK_CHANNEL: fpsak-autotest
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ${{ env.SLACK_TITLE }}
@@ -165,29 +165,29 @@ jobs:
           SLACK_USERNAME: Github Action
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Generer testrapport
-        if: always() && env.STACK_STARTED == 'true'
-        id: ghpages
-        shell: bash
-        run: |
-          git fetch origin gh-pages
-          mkdir gh-pages
-          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
-          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
-          resources/allure/set-environment-variables.sh ${{ github.event.client_payload.trigger }}
-          cp resources/allure/environment.properties target/allure-results
-          cp resources/allure/categories.json target/allure-results
-          cp -r gh-pages/verdikjede/history target/allure-results
-          mvn allure:report --batch-mode --file pom.xml
-          cp -a target/allure-report/. gh-pages/verdikjede/
-
-      - name: Deploy testrapport
-        if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.0.1
-        with:
-          build_dir: gh-pages
-        env:
-          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+#      - name: Generer testrapport
+#        if: always() && env.STACK_STARTED == 'true'
+#        id: ghpages
+#        shell: bash
+#        run: |
+#          git fetch origin gh-pages
+#          mkdir gh-pages
+#          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
+#          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
+#          resources/allure/set-environment-variables.sh ${{ github.event.client_payload.trigger }}
+#          cp resources/allure/environment.properties target/allure-results
+#          cp resources/allure/categories.json target/allure-results
+#          cp -r gh-pages/verdikjede/history target/allure-results
+#          mvn allure:report --batch-mode --file pom.xml
+#          cp -a target/allure-report/. gh-pages/verdikjede/
+#
+#      - name: Deploy testrapport
+#        if: always() && steps.ghpages.outcome == 'success'
+#        uses: crazy-max/ghaction-github-pages@v2.0.1
+#        with:
+#          build_dir: gh-pages
+#        env:
+#          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'
