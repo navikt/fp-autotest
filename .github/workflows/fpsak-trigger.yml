@@ -149,7 +149,8 @@ jobs:
         run: |
           git fetch origin gh-pages
           mkdir gh-pages
-          git --work-tree=gh-pages checkout origin/gh-pages -- .
+          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede
+          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak/history
           resources/allure/set-environment-variables-fpsak.sh ${{ github.event.client_payload.trigger }}
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
