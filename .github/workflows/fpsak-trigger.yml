@@ -163,7 +163,7 @@ jobs:
         with:
           build_dir: gh-pages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'
