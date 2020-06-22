@@ -87,7 +87,6 @@ jobs:
         shell: bash
         run: |
           mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede | tee test-result-log.txt
-          echo "::set-env name=TEST_RESULTAT::$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)"
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -136,6 +135,7 @@ jobs:
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
+            echo "::set-env name=TEST_RESULTAT::$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)"
             echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
             if [ ${{ steps.tester.outcome }} == success ]; then
               echo "Test success!"
