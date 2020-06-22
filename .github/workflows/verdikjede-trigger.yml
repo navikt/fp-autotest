@@ -136,7 +136,7 @@ jobs:
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
             TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)
-            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A*Resultat*:${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }}:${{ github.event.client_payload.version }}%0A*Resultat*: ${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
             if [ ${{ steps.tester.outcome }} == success ]; then
               echo "Test success!"
               echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt uten feil :rocket:"
@@ -149,7 +149,7 @@ jobs:
           else
             echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
             echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
-            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }}:${{ github.event.client_payload.version }}%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
             echo "::set-env name=SLACK_COLOR::#e79a07"
           fi
 
