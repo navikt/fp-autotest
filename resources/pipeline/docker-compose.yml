@@ -167,6 +167,7 @@ services:
       - "LOADBALANCER_URL=http://localhost:8080"
       - "LOADBALANCER_FQDN=localhost:8080"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
+      - "TEST_ONLY_DISABLE_MQ=true"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
