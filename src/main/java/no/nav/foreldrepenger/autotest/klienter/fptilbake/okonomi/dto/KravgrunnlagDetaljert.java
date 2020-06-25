@@ -1,11 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -76,8 +73,8 @@ public class KravgrunnlagDetaljert {
             throw new IllegalStateException("Periode for Engangsstønad ikke tillatt for fagområde: "+this.fagOmrådeKode);
         }
         KravgrunnlagPeriode kravgrunnlagPeriode = new KravgrunnlagPeriode(
-                LocalDate.now().minusMonths(6).withDayOfMonth(15).toString(),
-                LocalDate.now().minusMonths(6).withDayOfMonth(15).toString(),
+                LocalDate.now().minusMonths(6).withDayOfMonth(1).toString(),
+                LocalDate.now().minusMonths(6).withDayOfMonth(LocalDate.now().minusMonths(6).lengthOfMonth()).toString(),
                 BigDecimal.ZERO);
         kravgrunnlagPeriode.leggTilPosteringForEngangsstonad();
         this.perioder.add(kravgrunnlagPeriode);
