@@ -125,6 +125,9 @@ if [[ "$*" != *fpoppdrag* ]] && [[ ! "${med_applikasjon[*]}" =~ "fpoppdrag" ]]; 
   else
     sed -i.bak "s*fpoppdrag:8080*vtp:8060/rest/dummy*g" "docker-compose.yml"
   fi
+  if [[ "$*" == *fpsak-frontend* ]]; then
+    sed -i.bak "s*localhost:9000/fpoppdrag/api*vtp:8060/rest/dummy/fpoppdrag/api*g" "docker-compose.yml"
+  fi
   rm docker-compose.yml.bak
 else
   echo "Argumentet inneholder fpoppdrag; setter opp for kjøring med fpoppdrag."
