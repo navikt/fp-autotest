@@ -1270,8 +1270,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
-        // TODO: Kommenter inn når TFP-3373 er fikset!
-        //beslutter.ventTilFagsakLøpende();
+
+        beslutter.ventTilFagsakLøpende();
 
         // verifisering i uttak
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
