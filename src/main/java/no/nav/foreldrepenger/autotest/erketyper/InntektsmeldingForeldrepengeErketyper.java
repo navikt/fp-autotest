@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenariodataDto;
+import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
 import no.nav.inntektsmelding.xml.kodeliste._20180702.YtelseKodeliste;
@@ -63,10 +63,9 @@ public class InntektsmeldingForeldrepengeErketyper {
     }
 
     @Deprecated
-    public static List<InntektsmeldingBuilder> makeInntektsmeldingFromtestscenariodata(
-            TestscenariodataDto testscenariodata,
-            String søkerIdent,
-            LocalDate startDatoForeldrepenger) {
+    public static List<InntektsmeldingBuilder> makeInntektsmeldingFromtestscenariodata(InntektYtelseModell testscenariodata,
+                                                                                       String søkerIdent,
+                                                                                       LocalDate startDatoForeldrepenger) {
 
         List<Inntektsperiode> inntektsperioder;
         List<Arbeidsforhold> arbeidsforholdEtterStartdatoFP;

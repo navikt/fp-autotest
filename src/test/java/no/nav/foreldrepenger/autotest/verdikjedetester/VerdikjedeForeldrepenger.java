@@ -161,11 +161,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
-        var gjennomsnittFraTreSisteÅreneISigrun = 300_000; // TODO: HARDCODET! Bør hentes fra sigrun i scenario
-                                                           // (gjennomsnittet at de tre siste årene)
-        BigInteger næringsnntekt = BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun * 1.80).toBigInteger(); // >
-                                                                                                                  // 25%
-                                                                                                                  // avvik
+        var gjennomsnittFraTreSisteÅreneISigrun = hentNæringsinntektFraSigrun(testscenario, 2018,false);
+        BigInteger næringsnntekt = BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun * 1.80).toBigInteger(); // >25% avvik
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, næringsnntekt, true);
         var søknad = lagSøknadForeldrepengerFødsel(
                 fødselsdato, søkerAktørId, SøkersRolle.MOR)
@@ -239,7 +236,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 DekningsgradDto.AATI);
         saksbehandler.bekreftAksjonspunkt(papirSoknadForeldrepengerBekreftelse);
 
-        // TODO: Avventer svar fra Cecilie.
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD);
         saksbehandler.gjenopptaBehandling();
 
@@ -279,10 +275,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("4: Far søker resten av fellesperioden og hele fedrekvoten med gradert uttak.")
-    @Description("Mor har løpende fagsak med hele mødrekvoten og deler av fellesperioden. Far søker resten av fellesperioden"
-            +
-            "og hele fedrekvoten med gradert uttak. Far har to arbeidsforhold i samme virksomhet, samme org.nr, men ulik"
-            +
+    @Description("Mor har løpende fagsak med hele mødrekvoten og deler av fellesperioden. Far søker resten av fellesperioden" +
+            "og hele fedrekvoten med gradert uttak. Far har to arbeidsforhold i samme virksomhet, samme org.nr, men ulik" +
             "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge.")
     public void fraSøkerForeldrepengerTest() {
         TestscenarioDto testscenario = opprettTestscenario("560");
@@ -410,9 +404,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("5: Far søker fellesperiode og fedrekvote som frilanser.")
-    @Description("Mor søker hele mødrekvoten og deler av fellesperiode, happy case. Far søker etter føsdsel og søker noe"
-            +
-            "av fellesperioden og hele fedrekvoten. Opplyser at han er frilanser og har frilanserinntekt frem til" +
+    @Description("Mor søker hele mødrekvoten og deler av fellesperiode, happy case. Far søker etter føsdsel og søker" +
+            "noe av fellesperioden og hele fedrekvoten. Opplyser at han er frilanser og har frilanserinntekt frem til" +
             "skjæringstidspunktet.")
     public void farSøkerSomFrilanser() {
         TestscenarioDto testscenario = opprettTestscenario("561");
@@ -484,8 +477,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("6: Far søker foreldrepenger med AF som ikke er avsluttet og mor ikke har rett.")
-    @Description("Far søker foreldrepenger med to aktive arbeidsforhold og ett gammelt arbeidsforhold som skulle vært "
-            +
+    @Description("Far søker foreldrepenger med to aktive arbeidsforhold og ett gammelt arbeidsforhold som skulle vært " +
             "avsluttet. Søker en graderingsperiode i en av virksomheten og gjennopptar full deltidsstilling: I dette " +
             "arbeidsforholdet vil AG ha full refusjon i hele perioden. I det andre vil AG bare ha refusjon i to måneder.")
     public void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
@@ -647,10 +639,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("7: Far har AAP og søker overføring av gjennværende mødrekvoten fordi mor er syk.")
-    @Description("Mor har løpende sak hvor hun har søkt om hele mødrekvoten og deler av fellesperioden. Mor blir syk 4"
-            +
-            "uker inn i mødrekvoten og far søker om overføring av resten. Far søker ikke overføring av fellesperioden."
-            +
+    @Description("Mor har løpende sak hvor hun har søkt om hele mødrekvoten og deler av fellesperioden. Mor blir syk 4" +
+            "uker inn i mødrekvoten og far søker om overføring av resten. Far søker ikke overføring av fellesperioden." +
             "Far får innvilget mødrevkoten og mor sin sak blir berørt og automatisk revurdert.")
     public void FarTestMorSyk() {
         TestscenarioDto testscenario = opprettTestscenario("562");
@@ -739,10 +729,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("8: Mor har tvillinger og søker om hele utvidelsen.")
-    @Description("Mor føder tvillinger og søker om hele mødrekvoten og fellesperioden, inkludert utvidelse. Far søker "
-            +
-            "samtidig uttak av fellesperioden fra da mor starter utvidelsen av fellesperioden. Søker deretter samtidig "
-            +
+    @Description("Mor føder tvillinger og søker om hele mødrekvoten og fellesperioden, inkludert utvidelse. Far søker " +
+            "samtidig uttak av fellesperioden fra da mor starter utvidelsen av fellesperioden. Søker deretter samtidig " +
             "av fedrekvoten, frem til mor er ferdig med fellesperioden, og deretter søker resten av fedrekvoten.")
     public void MorSøkerFor2BarnHvorHunFårBerørtSakPgaFar() {
         TestscenarioDto testscenario = opprettTestscenario("512");
@@ -803,9 +791,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
          */
         var identFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
         var aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        var gjennomsnittFraTreSisteÅreneISigrun = (1_000_000 * 3) / 3; // TODO: HARDCODET! Bør hentes fra sigrun i
-                                                                       // scenario (gjennomsnittet at de tre siste
-                                                                       // årene)
+        var gjennomsnittFraTreSisteÅreneISigrun = hentNæringsinntektFraSigrun(testscenario, 2018,true);
         var opptjeningFar = OpptjeningErketyper.medEgenNaeringOpptjening(
                 LocalDate.now().minusYears(4),
                 fpStartdatoFar,
@@ -1209,8 +1195,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("11: Far søker adopsjon hvor han søker hele fedrekvoten og fellesperiode, og får berørt sak pga mor")
-    @Description("Far søker adopsjon hvor han søker hele fedrekvoten og fellesperioden. Mor søker noe av mødrekvoten midt "
-            +
+    @Description("Far søker adopsjon hvor han søker hele fedrekvoten og fellesperioden. Mor søker noe av mødrekvoten midt " +
             "i fars periode med fullt uttak. Deretter søker mor 9 uker av fellesperioden med samtidig uttak. Far får " +
             "berørt sak hvor han får avkortet fellesperidoen på slutten og redusert perioder hvor mor søker samtidig uttak")
     public void FarSøkerAdopsjonOgMorMødrekvoteMidtIFarsOgDeretterSamtidigUttakAvFellesperidoe() {
