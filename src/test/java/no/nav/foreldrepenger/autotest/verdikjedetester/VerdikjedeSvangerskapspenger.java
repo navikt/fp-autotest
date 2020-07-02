@@ -168,8 +168,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("3: Mor søk fullt uttak for ett av to arbeidsforhold i samme virksomhet")
-    @Description("Mor søker ingen tilrettelegging for ett av to arbeidsforhold i samme virksomhet. Arbeidsgiver leverer to"
-            +
+    @Description("Mor søker ingen tilrettelegging for ett av to arbeidsforhold i samme virksomhet. Arbeidsgiver leverer to" +
             "inntektsmeldinger med forskjellig arbeidsforholdID, med ulik lønn.")
     public void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
         var testscenario = opprettTestscenario("503");
@@ -392,8 +391,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("5: Mor har flere AG og søker fullt uttak for begge AFene")
-    @Description("Mor søker inten tilrettelegging for begge arbeidsforholdene. Begge arbeidsgiverene ønsker 100% reufsjon."
-            +
+    @Description("Mor søker inten tilrettelegging for begge arbeidsforholdene. Begge arbeidsgiverene ønsker 100% reufsjon." +
             "Inntekten i disse to arbeidsforholdne er samlet over 6G hvor fordelingen er 2/3 og 1/3 av inntekten.")
     public void morSøkerIngenTilretteleggingForToArbeidsforholdFullRefusjonTest() {
         var testscenario = opprettTestscenario("504");
