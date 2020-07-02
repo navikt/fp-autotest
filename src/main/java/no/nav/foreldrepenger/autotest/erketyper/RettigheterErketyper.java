@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.autotest.erketyper;
 
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Rettigheter;
 
-
 public class RettigheterErketyper {
     public static Rettigheter beggeForeldreRettIkkeAleneomsorg() {
         Rettigheter rettigheter = new Rettigheter();

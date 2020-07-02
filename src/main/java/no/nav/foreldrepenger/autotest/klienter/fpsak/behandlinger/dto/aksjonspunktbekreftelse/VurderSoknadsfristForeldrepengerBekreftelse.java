@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.time.LocalDate;
 
-@BekreftelseKode(kode="5043")
+@BekreftelseKode(kode = "5043")
 public class VurderSoknadsfristForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
 
     protected Boolean harGyldigGrunn;

@@ -12,7 +12,8 @@ public class KravgrunnlagPeriodePostering {
     protected BigDecimal uinnkrevdBelop;
     protected BigDecimal skattProsent;
 
-    public KravgrunnlagPeriodePostering(String klasseKode, String klasseType, BigDecimal opprUtbetBelop, BigDecimal nyBelop, BigDecimal tilbakekrevesBelop, BigDecimal uinnkrevdBelop, BigDecimal skattProsent) {
+    public KravgrunnlagPeriodePostering(String klasseKode, String klasseType, BigDecimal opprUtbetBelop,
+            BigDecimal nyBelop, BigDecimal tilbakekrevesBelop, BigDecimal uinnkrevdBelop, BigDecimal skattProsent) {
         this.klasseKode = klasseKode;
         this.klasseType = klasseType;
         this.opprUtbetBelop = opprUtbetBelop;

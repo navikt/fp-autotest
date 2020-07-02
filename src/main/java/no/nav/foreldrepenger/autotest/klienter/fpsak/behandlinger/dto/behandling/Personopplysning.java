@@ -26,35 +26,43 @@ public class Personopplysning {
     protected Kode region;
     protected Kode siviltilstand;
     protected Object valgtOpplysning;
-    
-    
+
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public LocalDate getDoedsdato() {
         return doedsdato;
     }
+
     public void setDoedsdato(LocalDate doedsdato) {
         this.doedsdato = doedsdato;
     }
+
     public Kode getNavBrukerKjonn() {
         return navBrukerKjonn;
     }
+
     public void setNavBrukerKjonn(Kode navBrukerKjonn) {
         this.navBrukerKjonn = navBrukerKjonn;
     }
+
     public String getNavn() {
         return navn;
     }
+
     public void setNavn(String navn) {
         this.navn = navn;
     }
+
     public long getAktoerId() {
         return aktoerId;
     }
+
     public void setAktoerId(long aktoerId) {
         this.aktoerId = aktoerId;
     }

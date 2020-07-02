@@ -19,13 +19,16 @@ public class Vent {
 
         while (!supplier.get()) {
             if (LocalDateTime.now().isAfter(end)) {
-                throw new RuntimeException(String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds, errorMessageProducer.get()));
+                throw new RuntimeException(String.format("Async venting timet ut etter %s sekunder fordi: %s",
+                        timeoutInSeconds, errorMessageProducer.get()));
             }
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 throw new RuntimeException(
-                    String.format("Async venting interrupted ut etter %s sekunder fordi: %s", ChronoUnit.SECONDS.between(start, LocalDateTime.now()), errorMessageProducer.get()), e);
+                        String.format("Async venting interrupted ut etter %s sekunder fordi: %s",
+                                ChronoUnit.SECONDS.between(start, LocalDateTime.now()), errorMessageProducer.get()),
+                        e);
             }
         }
     }

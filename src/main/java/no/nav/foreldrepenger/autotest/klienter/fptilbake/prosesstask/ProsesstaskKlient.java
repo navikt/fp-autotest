@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsesstaskDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsesstaskResultatDto;
@@ -7,9 +10,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterD
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.FptilbakeKlient;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProsesstaskKlient extends FptilbakeKlient {
 
@@ -23,7 +23,8 @@ public class ProsesstaskKlient extends FptilbakeKlient {
 
     public List<ProsessTaskListItemDto> list(SokeFilterDto sokeFilter) {
         String url = hentRestRotUrl() + PROSESSTASK_LIST_URL;
-        return postOgHentJson(url, sokeFilter, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, ProsessTaskListItemDto.class), StatusRange.STATUS_SUCCESS);
+        return postOgHentJson(url, sokeFilter, hentObjectMapper().getTypeFactory()
+                .constructCollectionType(ArrayList.class, ProsessTaskListItemDto.class), StatusRange.STATUS_SUCCESS);
     }
 
     public ProsesstaskResultatDto launch(ProsesstaskDto prosessTask) {

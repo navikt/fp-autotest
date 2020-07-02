@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5074")
+@BekreftelseKode(kode = "5074")
 public class FastsettUttakKontrollerOpplysningerOmMedlemskap extends AksjonspunktBekreftelse {
 
     protected List<UttakResultatPeriode> perioder = new ArrayList<>();

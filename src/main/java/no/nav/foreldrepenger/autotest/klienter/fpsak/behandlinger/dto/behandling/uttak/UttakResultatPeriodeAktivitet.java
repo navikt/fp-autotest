@@ -1,11 +1,12 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UttakResultatPeriodeAktivitet implements Serializable {
@@ -24,27 +25,35 @@ public class UttakResultatPeriodeAktivitet implements Serializable {
     public BigDecimal getUtbetalingsgrad() {
         return utbetalingsgrad;
     }
+
     public void setUtbetalingsgrad(BigDecimal utbetalingsgrad) {
         this.utbetalingsgrad = utbetalingsgrad;
     }
+
     public BigDecimal getTrekkdagerDesimaler() {
         return trekkdagerDesimaler;
     }
+
     public void setTrekkdagerDesimaler(BigDecimal trekkdagerDesimaler) {
         this.trekkdagerDesimaler = trekkdagerDesimaler;
     }
+
     public Stønadskonto getStønadskontoType() {
         return stønadskontoType;
     }
+
     public void setStønadskontoType(Stønadskonto stønadskontoType) {
         this.stønadskontoType = stønadskontoType;
     }
+
     public Arbeidsgiver getArbeidsgiver() {
         return arbeidsgiver;
     }
+
     public Kode getUttakArbeidType() {
         return uttakArbeidType;
     }
+
     public BigDecimal getProsentArbeid() {
         return prosentArbeid;
     }

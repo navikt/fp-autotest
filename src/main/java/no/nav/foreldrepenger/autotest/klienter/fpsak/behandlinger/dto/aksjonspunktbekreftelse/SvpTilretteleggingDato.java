@@ -11,7 +11,7 @@ public class SvpTilretteleggingDato {
     private BigDecimal stillingsprosent;
 
     public SvpTilretteleggingDato() {
-        //nix
+        // nix
     }
 
     SvpTilretteleggingDato(LocalDate fom, TilretteleggingType type, BigDecimal stillingsprosent) {

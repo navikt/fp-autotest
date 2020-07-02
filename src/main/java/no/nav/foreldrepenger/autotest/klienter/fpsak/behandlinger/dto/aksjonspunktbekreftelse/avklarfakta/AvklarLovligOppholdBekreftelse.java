@@ -10,8 +10,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.medlem.MedlemPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5019")
-public class AvklarLovligOppholdBekreftelse extends BekreftedePerioderMalDto{
+@BekreftelseKode(kode = "5019")
+public class AvklarLovligOppholdBekreftelse extends BekreftedePerioderMalDto {
 
     public AvklarLovligOppholdBekreftelse() {
         super();

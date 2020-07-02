@@ -9,7 +9,6 @@ import no.nav.vedtak.felles.xml.soeknad.felles.v3.Omsorgsovertakelse;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Termin;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Omsorgsovertakelseaarsaker;
 
-
 public class RelasjonTilBarnetErketyper {
     public static Foedsel fødsel(LocalDate fødselsdato) {
         return fødsel(1, fødselsdato);
@@ -26,6 +25,7 @@ public class RelasjonTilBarnetErketyper {
     public static Termin termin(LocalDate termindato) {
         return termin(1, termindato);
     }
+
     public static Termin termin(int antall, LocalDate termindato) {
         Termin termin = new Termin();
         termin.setAntallBarn(antall);
@@ -58,21 +58,19 @@ public class RelasjonTilBarnetErketyper {
         return adopsjon;
     }
 
-        //Mulige aarsaker ANDRE_FORELDER_DØD, OVERTATT_OMSORG, OVERTATT_OMSORG_F, ADOPTERER_ALENE
+    // Mulige aarsaker ANDRE_FORELDER_DØD, OVERTATT_OMSORG, OVERTATT_OMSORG_F,
+    // ADOPTERER_ALENE
     public static Omsorgsovertakelse omsorgsovertakelse(OmsorgsovertakelseÅrsak årsak) {
         Omsorgsovertakelse omsorgsovertakelse = new Omsorgsovertakelse();
         omsorgsovertakelse.setAntallBarn(1);
         Omsorgsovertakelseaarsaker omsorgsovertakelseaarsaker = new Omsorgsovertakelseaarsaker();
         if (årsak == OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD) {
             omsorgsovertakelseaarsaker.setKode("ANDRE_FORELDER_DØD");
-        }
-        else if (årsak == OmsorgsovertakelseÅrsak.OVERTATT_OMSORG) {
+        } else if (årsak == OmsorgsovertakelseÅrsak.OVERTATT_OMSORG) {
             omsorgsovertakelseaarsaker.setKode("OVERTATT_OMSORG");
-        }
-        else if (årsak == OmsorgsovertakelseÅrsak.OVERTATT_OMSORG_F) {
+        } else if (årsak == OmsorgsovertakelseÅrsak.OVERTATT_OMSORG_F) {
             omsorgsovertakelseaarsaker.setKode("OVERTATT_OMSORG_F");
-        }
-        else {
+        } else {
             omsorgsovertakelseaarsaker.setKode("ADOPTERER_ALENE");
         }
         omsorgsovertakelseaarsaker.setKodeverk("FAR_SOEKER_TYPE");
@@ -82,6 +80,5 @@ public class RelasjonTilBarnetErketyper {
 
         return omsorgsovertakelse;
     }
-
 
 }

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -64,13 +63,13 @@ public class Behandling {
     private Lazy<Tilrettelegging> tilrettelegging;
 
     public List<UttakResultatPeriode> hentUttaksperioder() {
-        return getUttakResultatPerioder().getPerioderForSøker().stream().sorted(Comparator.comparing(UttakResultatPeriode::getFom)).collect(Collectors.toList());
+        return getUttakResultatPerioder().getPerioderForSøker().stream()
+                .sorted(Comparator.comparing(UttakResultatPeriode::getFom)).collect(Collectors.toList());
     }
 
     public UttakResultatPeriode hentUttaksperiode(int index) {
         return hentUttaksperioder().get(index);
     }
-
 
     public boolean erSattPåVent() {
         return behandlingPaaVent;
@@ -85,7 +84,7 @@ public class Behandling {
     }
 
     public String hentAvslagsarsak() {
-        if(null != behandlingsresultat && null != behandlingsresultat.avslagsarsak) {
+        if ((null != behandlingsresultat) && (null != behandlingsresultat.avslagsarsak)) {
             return behandlingsresultat.avslagsarsak.kode;
         }
         return "Ingen avslagsårsak";
@@ -93,16 +92,17 @@ public class Behandling {
 
     @Override
     public String toString() {
-        //Ikke bruk fields som er deferred i tostring, skaper mange kall
+        // Ikke bruk fields som er deferred i tostring, skaper mange kall
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("{Behandlingsid: %s}\n",this.id));
+        sb.append(String.format("{Behandlingsid: %s}\n", this.id));
         sb.append(String.format("{Behandlingsstatus: %s}\n", this.status.kode));
-        sb.append(String.format("{Behandlingstype: %s}",  this.type.kode));
-        if(this.behandlingsresultat != null && this.behandlingsresultat.avslagsarsak != null) {
+        sb.append(String.format("{Behandlingstype: %s}", this.type.kode));
+        if ((this.behandlingsresultat != null) && (this.behandlingsresultat.avslagsarsak != null)) {
             sb.append(String.format("{Årsak avslag: %s}\n", this.behandlingsresultat.avslagsarsak.kode));
         }
         return sb.toString();
     }
+
     public List<BehandlingÅrsak> getBehandlingArsaker() {
         return behandlingArsaker;
     }
@@ -143,7 +143,8 @@ public class Behandling {
         return get(beregningResultatForeldrepenger);
     }
 
-    public void setBeregningResultatForeldrepenger(Lazy<BeregningsresultatMedUttaksplan> dBeregningsresultatMedUttaksplan) {
+    public void setBeregningResultatForeldrepenger(
+            Lazy<BeregningsresultatMedUttaksplan> dBeregningsresultatMedUttaksplan) {
         this.beregningResultatForeldrepenger = dBeregningsresultatMedUttaksplan;
     }
 
@@ -182,6 +183,7 @@ public class Behandling {
     public KontrollerFaktaData getKontrollerFaktaData() {
         return get(kontrollerFaktaData);
     }
+
     public List<KontrollerFaktaPeriode> getKontrollerFaktaPerioderManuell() {
         return Objects.requireNonNull(get(kontrollerFaktaData)).getPerioder().stream()
                 .filter(perioder -> perioder.bekreftet.equals(false))

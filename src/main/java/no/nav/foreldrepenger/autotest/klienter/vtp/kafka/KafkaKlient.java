@@ -13,14 +13,15 @@ public class KafkaKlient extends VTPKlient {
     private static final String KAFKA_GET_TOPICS_URL = KAFKA_URL + "/topics";
     private static final String KAFKA_SEND_URL = KAFKA_URL + "/send/%s";
 
-
     public KafkaKlient(HttpSession session) {
         super(session);
     }
 
     public String getKafkaTopics() {
         String url = hentRestRotUrl() + KAFKA_GET_TOPICS_URL;
-        List<Topic> topics = getOgHentJson(url, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Topic.class), StatusRange.STATUS_SUCCESS);
+        List<Topic> topics = getOgHentJson(url,
+                hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Topic.class),
+                StatusRange.STATUS_SUCCESS);
         String result = "";
         for (Topic topic : topics) {
             result += String.format("%s : %s\n", topic.getName(), topic.getInternal());

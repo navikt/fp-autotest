@@ -2,9 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
-
-
-@BekreftelseKode(kode="5011")
+@BekreftelseKode(kode = "5011")
 public class VurderingAvOmsorgsvilkoret extends AksjonspunktBekreftelse {
 
     protected String avslagskode;

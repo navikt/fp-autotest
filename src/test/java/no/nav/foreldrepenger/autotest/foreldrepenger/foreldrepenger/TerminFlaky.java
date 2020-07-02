@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggHistorikkinnslag;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -9,16 +20,6 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggHistorikkinnslag;
 
 @Tag("flaky")
 public class TerminFlaky extends ForeldrepengerTestBase {
@@ -34,12 +35,14 @@ public class TerminFlaky extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 startDatoForeldrepenger,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                        .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -54,9 +57,12 @@ public class TerminFlaky extends ForeldrepengerTestBase {
         debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDTAK_FATTET);
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
-        //TODO (OL): Byttet verifisering på historikkinnslag til asynk venting. Feilet med at behandlingen ikke hadde historikkinnslag
-        //verifiser(saksbehandler.harHistorikkinnslag("Vedtak fattet"), "behandling har ikke historikkinslag 'Vedtak fattet'");
-        //verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENT), "behandling har ikke historikkinslag 'Brev sendt'");
+        // TODO (OL): Byttet verifisering på historikkinnslag til asynk venting. Feilet
+        // med at behandlingen ikke hadde historikkinnslag
+        // verifiser(saksbehandler.harHistorikkinnslag("Vedtak fattet"), "behandling har
+        // ikke historikkinslag 'Vedtak fattet'");
+        // verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENT),
+        // "behandling har ikke historikkinslag 'Brev sendt'");
     }
 
 }

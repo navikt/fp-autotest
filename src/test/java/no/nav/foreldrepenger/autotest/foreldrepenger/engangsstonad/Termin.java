@@ -42,11 +42,13 @@ public class Termin extends FpsakTestBase {
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse
                 .setAntallBarn(1)
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
@@ -66,7 +68,7 @@ public class Termin extends FpsakTestBase {
 
     }
 
-    @Disabled //Disabled til Kafka støtte for brev er i VTP
+    @Disabled // Disabled til Kafka støtte for brev er i VTP
     @Test
     @DisplayName("Mor søker termin men mangler dokumentasjon")
     @Description("Mor søker termin men mangler dokumentasjon og sender melding om manglende brev")
@@ -78,15 +80,16 @@ public class Termin extends FpsakTestBase {
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.sendBrev("INNHEN", "Søker", "Trenger utstedt dato");
         saksbehandler.settBehandlingPåVent(LocalDate.now().plusDays(2), "AVV_DOK");
 
-        //Todo mock brev
-        //verifiser(saksbehandler.harDokument(""), "Behandling har ikke dokument");
+        // Todo mock brev
+        // verifiser(saksbehandler.harDokument(""), "Behandling har ikke dokument");
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
     }
@@ -102,11 +105,13 @@ public class Termin extends FpsakTestBase {
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse
                 .setAntallBarn(1)
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
@@ -135,7 +140,7 @@ public class Termin extends FpsakTestBase {
     }
 
     public void behandleTerminMorUtenTerminbekreftelse() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        opprettTestscenarioFraVTPTemplate("55");
     }
 
     @Test
@@ -149,11 +154,13 @@ public class Termin extends FpsakTestBase {
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse
                 .setAntallBarn(1)
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
@@ -167,16 +174,17 @@ public class Termin extends FpsakTestBase {
     @DisplayName("Setter behandling på vent og gjennoptar og henlegger")
     @Description("Setter behandling på vent og gjennoptar og henlegger")
     public void settBehandlingPåVentOgGjenopptaOgHenlegg() {
-        //Opprett scenario og søknad
+        // Opprett scenario og søknad
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
                 LocalDate.now().plusWeeks(3));
 
-        //Send inn søknad
+        // Send inn søknad
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -187,7 +195,8 @@ public class Termin extends FpsakTestBase {
         saksbehandler.gjenopptaBehandling();
         verifiser(!saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er satt på vent");
 
-        saksbehandler.henleggBehandling(saksbehandler.kodeverk.BehandlingResultatType.getKode("HENLAGT_SØKNAD_TRUKKET"));
+        saksbehandler
+                .henleggBehandling(saksbehandler.kodeverk.BehandlingResultatType.getKode("HENLAGT_SØKNAD_TRUKKET"));
         verifiser(saksbehandler.valgtBehandling.erHenlagt(), "Behandlingen ble uventet ikke henlagt");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU", "behandlingsstatus");
     }
@@ -203,11 +212,13 @@ public class Termin extends FpsakTestBase {
                 LocalDate.now().minusDays(26));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
+        VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
         vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 

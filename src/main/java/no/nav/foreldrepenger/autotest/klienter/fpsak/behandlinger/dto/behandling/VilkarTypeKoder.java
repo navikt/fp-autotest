@@ -6,5 +6,4 @@ public class VilkarTypeKoder {
 
     public static final String BEREGNINGSGRUNNLAGVILKÅR = "FP_VK_41"; //$NON-NLS-1$
 
-
 }

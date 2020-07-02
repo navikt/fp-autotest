@@ -16,8 +16,7 @@ public class ForeslaaDto {
 
     @JsonProperty("oppgaveId")
     protected Long oppgaveId;
-    
-    
+
     public ForeslaaDto(String tema, Long aktorId, String gosysSakId) {
         super();
         this.tema = tema;

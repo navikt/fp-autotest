@@ -56,7 +56,6 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
-
 public class Saksbehandler extends Aktoer {
 
     public Fagsak valgtFagsak;
@@ -129,7 +128,7 @@ public class Saksbehandler extends Aktoer {
     private void refreshFagsak() {
         Behandling behandling = valgtBehandling;
         hentFagsak(valgtFagsak.saksnummer);
-        if (valgtBehandling == null && behandling != null) {
+        if ((valgtBehandling == null) && (behandling != null)) {
             velgBehandling(behandling);
         }
     }
@@ -188,8 +187,10 @@ public class Saksbehandler extends Aktoer {
     public void velgBehandling(Behandling behandling) {
         debugLoggBehandling(behandling);
 
-        //Sjekker om behandlingen prosesserer. Siden vi vil vente på at den er ferdig for å få den siste behandling.versjon. Og å hindre at tester henter
-        //data fra behandlingen som kan endre seg ettersom behandlingen ikke har stoppet opp
+        // Sjekker om behandlingen prosesserer. Siden vi vil vente på at den er ferdig
+        // for å få den siste behandling.versjon. Og å hindre at tester henter
+        // data fra behandlingen som kan endre seg ettersom behandlingen ikke har
+        // stoppet opp
         ventPåProsessering(behandling);
 
         valgtBehandling = behandlingerKlient.getBehandling(behandling.uuid);
@@ -206,11 +207,8 @@ public class Saksbehandler extends Aktoer {
         behandling.setVilkar(new Lazy<>(() -> behandlingerKlient.behandlingVilkår(behandling.uuid)));
 
         /*
-         * KODE OFFISIELL_KODE BESKRIVELSE
-         * BT-002 ae0034 Førstegangsbehandling
-         * BT-003 ae0058 Klage
-         * BT-004 ae0028 Revurdering
-         * BT-005 ae0043 Tilbakebetaling endring
+         * KODE OFFISIELL_KODE BESKRIVELSE BT-002 ae0034 Førstegangsbehandling BT-003
+         * ae0058 Klage BT-004 ae0028 Revurdering BT-005 ae0043 Tilbakebetaling endring
          * BT-006 ae0042 Dokumentinnsyn
          */
 
@@ -219,26 +217,36 @@ public class Saksbehandler extends Aktoer {
         } else if (behandling.type.kode.equalsIgnoreCase("BT-003" /* Klage */)) {
             behandling.setKlagevurdering(new Lazy<>(() -> behandlingerKlient.klage(behandling.uuid)));
         } else {
-            // FIXME: Forespørslene her burde konsultere resultat for valgtbehandling for å sjekke om URLene er tilgjengelig før de kjører.
-            // URLene kan endre seg, men koden i behandlingerKlient tar ikke hensyn til det p.t. I tillegg er det unødvendig å spørre på noe som ikke
+            // FIXME: Forespørslene her burde konsultere resultat for valgtbehandling for å
+            // sjekke om URLene er tilgjengelig før de kjører.
+            // URLene kan endre seg, men koden i behandlingerKlient tar ikke hensyn til det
+            // p.t. I tillegg er det unødvendig å spørre på noe som ikke
             // finnes slik det skjer nå.
 
-            behandling.setUttakResultatPerioder(new Lazy<>(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid)));
+            behandling.setUttakResultatPerioder(
+                    new Lazy<>(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid)));
             behandling.setSaldoer(new Lazy<>(() -> behandlingerKlient.behandlingUttakStonadskontoer(behandling.uuid)));
 
-            behandling.setBeregningsgrunnlag(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsgrunnlag(behandling.uuid)));
-            behandling.setInntektArbeidYtelse(new Lazy<>(() -> behandlingerKlient.behandlingInntektArbeidYtelse(behandling.uuid)));
+            behandling.setBeregningsgrunnlag(
+                    new Lazy<>(() -> behandlingerKlient.behandlingBeregningsgrunnlag(behandling.uuid)));
+            behandling.setInntektArbeidYtelse(
+                    new Lazy<>(() -> behandlingerKlient.behandlingInntektArbeidYtelse(behandling.uuid)));
 
-            behandling.setBeregningResultatEngangsstonad(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatEngangsstønad(behandling.uuid)));
-            behandling.setBeregningResultatForeldrepenger(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatForeldrepenger(behandling.uuid)));
-            behandling.setPersonopplysning(new Lazy<>(() -> behandlingerKlient.behandlingPersonopplysninger(behandling.uuid)));
+            behandling.setBeregningResultatEngangsstonad(
+                    new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatEngangsstønad(behandling.uuid)));
+            behandling.setBeregningResultatForeldrepenger(
+                    new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatForeldrepenger(behandling.uuid)));
+            behandling.setPersonopplysning(
+                    new Lazy<>(() -> behandlingerKlient.behandlingPersonopplysninger(behandling.uuid)));
             behandling.setSoknad(new Lazy<>(() -> behandlingerKlient.behandlingSøknad(behandling.uuid)));
             behandling.setOpptjening(new Lazy<>(() -> behandlingerKlient.behandlingOpptjening(behandling.uuid)));
 
-            behandling.setKontrollerFaktaData(new Lazy<>(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid)));
+            behandling.setKontrollerFaktaData(
+                    new Lazy<>(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid)));
             behandling.setMedlem(new Lazy<>(() -> behandlingerKlient.behandlingMedlemskap(behandling.uuid)));
 
-            behandling.setTilrettelegging(new Lazy<>(() -> behandlingerKlient.behandlingTilrettelegging(behandling.id)));
+            behandling
+                    .setTilrettelegging(new Lazy<>(() -> behandlingerKlient.behandlingTilrettelegging(behandling.id)));
         }
     }
 
@@ -249,7 +257,8 @@ public class Saksbehandler extends Aktoer {
             List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
             String prosessTaskList = "";
             for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
-                prosessTaskList += prosessTaskListItemDto.getTaskType() + " - " + prosessTaskListItemDto.getStatus() + "\n";
+                prosessTaskList += prosessTaskListItemDto.getTaskType() + " - " + prosessTaskListItemDto.getStatus()
+                        + "\n";
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
         });
@@ -258,7 +267,7 @@ public class Saksbehandler extends Aktoer {
     private boolean verifiserProsesseringFerdig(Behandling behandling) {
         AsyncPollingStatus status = behandlingerKlient.statusAsObject(behandling.uuid, null);
 
-        if (status == null || status.getStatusCode() == null) {
+        if ((status == null) || (status.getStatusCode() == null)) {
             return true;
         } else if (status.getStatusCode() == 418) {
             if (status.getStatus() != AsyncPollingStatus.Status.DELAYED) {
@@ -271,14 +280,16 @@ public class Saksbehandler extends Aktoer {
         } else if (status.isPending()) {
             return false;
         } else {
-            AllureHelper.debugFritekst("Prosesstask feilet for behandling[" + behandling.id + "] i behandlingsverifisering: " + status.getMessage());
+            AllureHelper.debugFritekst("Prosesstask feilet for behandling[" + behandling.id
+                    + "] i behandlingsverifisering: " + status.getMessage());
             throw new RuntimeException("Status for behandling " + behandling.id + " feilet: " + status.getMessage());
         }
     }
 
     public List<UttakResultatPeriode> hentAvslåtteUttaksperioder() {
         return valgtBehandling.hentUttaksperioder().stream()
-                .filter(uttakResultatPeriode -> uttakResultatPeriode.getPeriodeResultatType().kode.equalsIgnoreCase("AVSLÅTT"))
+                .filter(uttakResultatPeriode -> uttakResultatPeriode.getPeriodeResultatType().kode
+                        .equalsIgnoreCase("AVSLÅTT"))
                 .collect(Collectors.toList());
     }
 
@@ -291,8 +302,8 @@ public class Saksbehandler extends Aktoer {
         return behandlingerKlient.behandlingUttakStonadskontoerGittUttaksperioder(behandlingMedUttaksperioderDto);
     }
 
-
-    public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelIArbeidsforhold(String organisasjonsnummer) {
+    public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelIArbeidsforhold(
+            String organisasjonsnummer) {
         return Arrays.stream(valgtBehandling.getBeregningResultatForeldrepenger().getPerioder())
                 .flatMap(beregningsresultatPeriode -> Arrays.stream(beregningsresultatPeriode.getAndeler()))
                 .filter(andeler -> organisasjonsnummer.equalsIgnoreCase(andeler.getArbeidsgiverOrgnr()))
@@ -310,10 +321,10 @@ public class Saksbehandler extends Aktoer {
     /* VERIFISERINGER */
     // TODO: Flytte dem en annen plass? Egen verifiserings-saksbehander?
     public boolean sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(BeregningsresultatPeriode beregningsresultatPeriode,
-                                                                    String aktivitetskode) {
+            String aktivitetskode) {
         return Arrays.stream(beregningsresultatPeriode.getAndeler())
-                .anyMatch(beregningsresultatPeriodeAndel ->
-                        beregningsresultatPeriodeAndel.getAktivitetStatus().kode.equalsIgnoreCase(aktivitetskode));
+                .anyMatch(beregningsresultatPeriodeAndel -> beregningsresultatPeriodeAndel.getAktivitetStatus().kode
+                        .equalsIgnoreCase(aktivitetskode));
     }
 
     public boolean sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet(String aktivitet) {
@@ -336,7 +347,8 @@ public class Saksbehandler extends Aktoer {
         return false;
     }
 
-    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(double prosentAvDagsatsTilArbeidsgiver) {
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(
+            double prosentAvDagsatsTilArbeidsgiver) {
         for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
             if (!verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(periode, prosentAvDagsatsTilArbeidsgiver)) {
                 return false;
@@ -345,7 +357,8 @@ public class Saksbehandler extends Aktoer {
         return true;
     }
 
-    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(BeregningsresultatPeriode periode, double prosentAvDagsatsTilArbeidsgiver) {
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(BeregningsresultatPeriode periode,
+            double prosentAvDagsatsTilArbeidsgiver) {
         var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
         var dagsats = periode.getDagsats();
         var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
@@ -356,7 +369,8 @@ public class Saksbehandler extends Aktoer {
             utbetaltTilSøkerForAndeler.add(andel.getTilSoker());
             utbetaltRefusjonForAndeler.add(andel.getRefusjon());
         }
-        if (utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver) {
+        if (utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue)
+                .sum() != forventetUtbetaltDagsatsTilArbeidsgiver) {
             return false;
         }
         if (utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker) {
@@ -373,36 +387,37 @@ public class Saksbehandler extends Aktoer {
                 .orElseThrow();
     }
 
-
     public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(String orgnummer,
-                                                                                       double prosentAvDagsatsTilArbeidsgiver) {
+            double prosentAvDagsatsTilArbeidsgiver) {
         var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
         var internArbeidsforholdID = hentInternArbeidsforholdId(orgnummer);
         for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
-            if (verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForPeriode(periode, internArbeidsforholdID, prosentfaktor))
+            if (verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForPeriode(periode, internArbeidsforholdID,
+                    prosentfaktor)) {
                 return false;
+            }
         }
         return true;
     }
 
     public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForPeriode(BeregningsresultatPeriode periode,
-                                                                                   String internArbeidsforholdID,
-                                                                                   double prosentfaktor) {
+            String internArbeidsforholdID,
+            double prosentfaktor) {
         var dagsats = periode.getDagsats();
         var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
         List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
         for (var andel : periode.getAndeler()) {
-            if (andel.getArbeidsforholdId() != null && andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID)) {
+            if ((andel.getArbeidsforholdId() != null)
+                    && andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID)) {
                 utbetaltRefusjonForAndeler.add(andel.getRefusjon());
             }
         }
-        if (utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilArbeidsgiver) {
+        if (utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue)
+                .sum() != forventetUtbetaltDagsatsTilArbeidsgiver) {
             return true;
         }
         return false;
     }
-
-
 
     /*
      * Henting av kodeverk
@@ -436,7 +451,8 @@ public class Saksbehandler extends Aktoer {
 
     @Step("Henlegger behandling")
     public void henleggBehandling(Kode årsak) {
-        behandlingerKlient.henlegg(new BehandlingHenlegg(valgtBehandling.id, valgtBehandling.versjon, årsak.kode, "Henlagt"));
+        behandlingerKlient
+                .henlegg(new BehandlingHenlegg(valgtBehandling.id, valgtBehandling.versjon, årsak.kode, "Henlagt"));
         refreshBehandling();
     }
 
@@ -521,7 +537,8 @@ public class Saksbehandler extends Aktoer {
     @Step("Bekrefter aksjonspunktbekreftelser")
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
         debugAksjonspunktbekreftelser(bekreftelser);
-        BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
+        BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtFagsak, valgtBehandling,
+                bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
     }
@@ -575,15 +592,17 @@ public class Saksbehandler extends Aktoer {
     @Step("Venter på historikkinnslag {type}")
     public void ventTilHistorikkinnslag(HistorikkInnslag.Type type) {
         Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.id),
-                30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
-
+                30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
+                        + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
 
     }
 
     @Step("Venter antall sekunder på historikkinnslag {type}")
-    public void ventTilAntallHistorikkinnslag(HistorikkInnslag.Type type, Integer sekunder, Integer antallHistorikkInnslag) {
+    public void ventTilAntallHistorikkinnslag(HistorikkInnslag.Type type, Integer sekunder,
+            Integer antallHistorikkInnslag) {
         Vent.til(() -> harAntallHistorikkinnslag(type) == antallHistorikkInnslag, sekunder,
-                () -> "Saken  hadde ikke historikkinslag " + type + " \nHistorikkInnslag:" + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
+                () -> "Saken  hadde ikke historikkinslag " + type + " \nHistorikkInnslag:"
+                        + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
     }
 
     public boolean harHistorikkinnslagForBehandling(HistorikkInnslag.Type type) {
@@ -595,7 +614,7 @@ public class Saksbehandler extends Aktoer {
             behandlingsId = 0;
         }
         for (HistorikkInnslag innslag : getHistorikkInnslag()) {
-            if (innslag.getTypeKode().contains(type.getKode()) && innslag.getBehandlingsid() == behandlingsId) {
+            if (innslag.getTypeKode().contains(type.getKode()) && (innslag.getBehandlingsid() == behandlingsId)) {
                 return true;
             }
         }
@@ -639,7 +658,8 @@ public class Saksbehandler extends Aktoer {
                 return vilkår;
             }
         }
-        throw new IllegalStateException(String.format("Fant ikke vilkår %s for behandling %s", vilkårKode.toString(), valgtBehandling.id));
+        throw new IllegalStateException(
+                String.format("Fant ikke vilkår %s for behandling %s", vilkårKode.toString(), valgtBehandling.id));
     }
 
     private Vilkar hentVilkår(String vilkårKode) {
@@ -661,7 +681,8 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             refreshBehandling();
             return harBehandlingsstatus(status);
-        }, 60, "Behandlingsstatus var ikke " + status + " men var " + getBehandlingsstatus() + " i sak: " + valgtFagsak.saksnummer);
+        }, 60, "Behandlingsstatus var ikke " + status + " men var " + getBehandlingsstatus() + " i sak: "
+                + valgtFagsak.saksnummer);
     }
 
     public boolean harBehandlingsstatus(String status) {
@@ -725,7 +746,8 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Oppretter behandling på gitt fagsak")
     private void opprettBehandling(Kode behandlingstype, Kode årsak, Fagsak fagsak) {
-        behandlingerKlient.putBehandlinger(new BehandlingNy(fagsak.saksnummer, behandlingstype.kode, årsak == null ? null : årsak.kode));
+        behandlingerKlient.putBehandlinger(
+                new BehandlingNy(fagsak.saksnummer, behandlingstype.kode, årsak == null ? null : årsak.kode));
         velgFagsak(valgtFagsak); // Henter fagsaken på ny
     }
 
@@ -735,7 +757,8 @@ public class Saksbehandler extends Aktoer {
         filter.setSisteKjoeretidspunktFraOgMed(LocalDateTime.now().minusMinutes(5));
         filter.setSisteKjoeretidspunktTilOgMed(LocalDateTime.now());
         List<ProsessTaskListItemDto> prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream().filter(p -> p.getTaskParametre().getBehandlingId() == "" + behandling.id).collect(Collectors.toList());
+        return prosesstasker.stream().filter(p -> p.getTaskParametre().getBehandlingId() == ("" + behandling.id))
+                .collect(Collectors.toList());
     }
 
     public boolean sakErKobletTilAnnenpart() {
@@ -744,7 +767,8 @@ public class Saksbehandler extends Aktoer {
 
     public void mellomlagreOgGjennåpneKlage() {
         behandlingerKlient.mellomlagreGjennapne(
-                new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling, hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
+                new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling,
+                        hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
         refreshBehandling();
     }
 

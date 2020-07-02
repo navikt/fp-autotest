@@ -11,11 +11,12 @@ public class OverstyrAksjonspunkter {
     protected String saksnummer;
     protected int behandlingVersjon;
     protected List<AksjonspunktBekreftelse> overstyrteAksjonspunktDtoer;
-    
-    public OverstyrAksjonspunkter(Fagsak fagsak, Behandling behandling, List<AksjonspunktBekreftelse> aksjonspunktBekreftelser) {
+
+    public OverstyrAksjonspunkter(Fagsak fagsak, Behandling behandling,
+            List<AksjonspunktBekreftelse> aksjonspunktBekreftelser) {
         this(behandling.id, "" + fagsak.saksnummer, behandling.versjon, aksjonspunktBekreftelser);
     }
-    
+
     public OverstyrAksjonspunkter(int behandlingId, String saksnummer, int behandlingVersjon,
             List<AksjonspunktBekreftelse> bekreftedeAksjonspunktDtoer) {
         super();

@@ -48,7 +48,8 @@ public class Førstegangsbehandling extends FpsakTestBase {
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
-        final String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        final String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                .getArbeidsgiverOrgnr();
         final int beløpMor = 45_000;
 
         final Tilrettelegging tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
@@ -77,7 +78,8 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
 
-        var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+        var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
                 .leggTilInntekt(beløpMor * 12, 1);
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
@@ -85,7 +87,6 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
-
 
     }
 
@@ -98,8 +99,10 @@ public class Førstegangsbehandling extends FpsakTestBase {
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
-        final List<Inntektsperiode> inntektsperioder = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder();
-        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
+        final List<Inntektsperiode> inntektsperioder = testscenario.getScenariodata().getInntektskomponentModell()
+                .getInntektsperioder();
+        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell()
+                .getArbeidsforhold();
         final String orgnr1 = arbeidsforhold.get(0).getArbeidsgiverOrgnr();
         final String orgnr2 = arbeidsforhold.get(1).getArbeidsgiverOrgnr();
 
@@ -112,15 +115,19 @@ public class Førstegangsbehandling extends FpsakTestBase {
                 LocalDate.now().plusWeeks(3),
                 ArbeidsforholdErketyper.virksomhet(orgnr2));
 
-        SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR, LocalDate.now().plusWeeks(4),
+        SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR,
+                LocalDate.now().plusWeeks(4),
                 List.of(forsteTilrettelegging, andreTilrettelegging2));
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
         // Inntektsmelding
-        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, inntektsperioder.get(0).getBeløp(), orgnr1);
-        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, inntektsperioder.get(1).getBeløp(), orgnr2);
+        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor,
+                inntektsperioder.get(0).getBeløp(), orgnr1);
+        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor,
+                inntektsperioder.get(1).getBeløp(), orgnr2);
         fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -138,7 +145,8 @@ public class Førstegangsbehandling extends FpsakTestBase {
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
-        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
+        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell()
+                .getArbeidsforhold();
         final String orgnr1 = arbeidsforhold.get(0).getArbeidsgiverOrgnr();
         final String orgnr2 = arbeidsforhold.get(1).getArbeidsgiverOrgnr();
         final String orgnr3 = arbeidsforhold.get(2).getArbeidsgiverOrgnr();
@@ -164,15 +172,17 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
 
-        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
         // Inntektsmelding
         InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, 20_833, orgnr1);
         InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, 62_500, orgnr2)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(27_778));
-        InntektsmeldingBuilder inntektsmelding3 = lagSvangerskapspengerInntektsmelding(fnrMor,50_000, orgnr3)
+        InntektsmeldingBuilder inntektsmelding3 = lagSvangerskapspengerInntektsmelding(fnrMor, 50_000, orgnr3)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(46_667));
-        fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2, inntektsmelding3), testscenario, saksnummer);
+        fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2, inntektsmelding3), testscenario,
+                saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -180,7 +190,8 @@ public class Førstegangsbehandling extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        List<BeregningsgrunnlagPeriodeDto> bgPerioder = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder()
+        List<BeregningsgrunnlagPeriodeDto> bgPerioder = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
+                .getBeregningsgrunnlagPerioder()
                 .stream()
                 .sorted(Comparator.comparing(BeregningsgrunnlagPeriodeDto::getBeregningsgrunnlagPeriodeFom))
                 .collect(Collectors.toList());
@@ -195,6 +206,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
         BeregningsgrunnlagPeriodeDto tredjePeriode = bgPerioder.get(2);
         assertThat(tredjePeriode.getDagsats()).isEqualTo(0);
     }
+
     @Test
     @DisplayName("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
@@ -204,10 +216,11 @@ public class Førstegangsbehandling extends FpsakTestBase {
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
-        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold();
+        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell()
+                .getArbeidsforhold();
         final String orgnr1 = arbeidsforhold.get(0).getArbeidsgiverOrgnr();
         final String orgnr2 = arbeidsforhold.get(1).getArbeidsgiverOrgnr();
-        final String orgnr3 = arbeidsforhold.get(2).getArbeidsgiverOrgnr();
+        arbeidsforhold.get(2).getArbeidsgiverOrgnr();
 
         LocalDate termindato = LocalDate.now().plusMonths(3);
 
@@ -222,13 +235,13 @@ public class Førstegangsbehandling extends FpsakTestBase {
                 ArbeidsforholdErketyper.virksomhet(orgnr2),
                 BigDecimal.valueOf(70));
 
-
         SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR, termindato,
                 List.of(delvisTilrettelegging, delvisTilrettelegging2));
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
 
-        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
         // Inntektsmelding
         InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, 20_833, orgnr1)
@@ -251,8 +264,10 @@ public class Førstegangsbehandling extends FpsakTestBase {
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
-        final int beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
-        final String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        final int beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+                .getBeløp();
+        final String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                .getArbeidsgiverOrgnr();
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
 
@@ -273,7 +288,6 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-
     }
 
     @Test
@@ -283,10 +297,9 @@ public class Førstegangsbehandling extends FpsakTestBase {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnPapirsøknadSvangerskapspenger(testscenario);
+        fordel.sendInnPapirsøknadSvangerskapspenger(testscenario);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-
 
     }
 

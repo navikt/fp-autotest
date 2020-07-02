@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class InntektsmeldingerDto {
 
     protected List<InntektsmeldingDto> inntektsmeldinger;
-    
+
     public InntektsmeldingerDto() {
     }
 }

@@ -29,7 +29,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +72,7 @@ public abstract class AbstractHttpSession implements HttpSession {
     public HttpResponse get(String url, Map<String, String> headers) {
         HttpGet request = new HttpGet(url);
 
-        HttpResponse response =  execute(request, headers);
+        HttpResponse response = execute(request, headers);
 
         log.info("GET[{}]: [{}]", url, response.getStatusLine().getStatusCode());
         return response;
@@ -89,9 +88,9 @@ public abstract class AbstractHttpSession implements HttpSession {
             log.info("POST[{}]: [{}] med content\n\t[{}]\n\tHeaders: {}",
                     url,
                     response.getStatusLine().getStatusCode(),
-                    new BufferedReader(new InputStreamReader(entity.getContent())).lines().parallel().collect(Collectors.joining("\n")),
-                    new ObjectMapper().writeValueAsString(headers)
-            );
+                    new BufferedReader(new InputStreamReader(entity.getContent())).lines().parallel()
+                            .collect(Collectors.joining("\n")),
+                    new ObjectMapper().writeValueAsString(headers));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -154,22 +153,17 @@ public abstract class AbstractHttpSession implements HttpSession {
     }
 
     protected static ConnectionKeepAliveStrategy createKeepAliveStrategy(int seconds) {
-        ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
-            @Override
-            public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
-                HeaderElementIterator it = new BasicHeaderElementIterator
-                        (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-                while (it.hasNext()) {
-                    HeaderElement he = it.nextElement();
-                    String param = he.getName();
-                    String value = he.getValue();
-                    if (value != null && param.equalsIgnoreCase
-                            ("timeout")) {
-                        return Long.parseLong(value) * 1000;
-                    }
+        ConnectionKeepAliveStrategy myStrategy = (response, context) -> {
+            HeaderElementIterator it = new BasicHeaderElementIterator(response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+            while (it.hasNext()) {
+                HeaderElement he = it.nextElement();
+                String param = he.getName();
+                String value = he.getValue();
+                if ((value != null) && param.equalsIgnoreCase("timeout")) {
+                    return Long.parseLong(value) * 1000;
                 }
-                return seconds * 1000;
             }
+            return seconds * 1000;
         };
         return myStrategy;
     }

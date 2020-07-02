@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.JsonRest;
 
-
 public class FpRiskKlient extends JsonRest {
 
     protected Logger log;

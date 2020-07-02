@@ -31,24 +31,26 @@ public class FpsakTestBase extends TestScenarioTestBase {
     }
 
     protected Kodeverk hentKodeverk() {
-        if (saksbehandler != null && saksbehandler.kodeverk != null) {
+        if ((saksbehandler != null) && (saksbehandler.kodeverk != null)) {
             return saksbehandler.kodeverk;
         }
         return null;
     }
 
-    protected void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer, boolean revurdering) {
+    protected void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,
+            boolean revurdering) {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
-        if ( beslutter.harRevurderingBehandling() && revurdering ) {
+        if (beslutter.harRevurderingBehandling() && revurdering) {
             beslutter.velgRevurderingBehandling();
         }
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        if (saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT, saksbehandler.valgtBehandling.id)) {
+        if (saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT,
+                saksbehandler.valgtBehandling.id)) {
             saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
         }
     }

@@ -27,7 +27,7 @@ public class InntektsmeldingDto {
     protected List<UtsettelsePeriodeDto> utsettelsePeriodeDtoer;
     protected List<NaturalYtelseDto> naturalYtelseDtoer;
     protected List<GraderingDto> graderingDtoer;
-    
+
     public InntektsmeldingDto() {
     }
 }

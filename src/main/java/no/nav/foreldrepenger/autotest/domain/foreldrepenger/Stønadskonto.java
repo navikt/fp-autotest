@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -19,8 +19,7 @@ public enum Stønadskonto implements Serializable {
     FELLESPERIODE("FELLESPERIODE"),
     FORELDREPENGER("FORELDREPENGER"),
     FLERBARNSDAGER("FLERBARNSDAGER"),
-    INGEN_STØNADSKONTO("-")
-    ;
+    INGEN_STØNADSKONTO("-");
 
     private static final Map<String, Stønadskonto> KODER = new LinkedHashMap<>();
 

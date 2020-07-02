@@ -16,7 +16,7 @@ public class BeregningsgrunnlagDto {
     protected Long id;
     protected String opprettet;
     protected Boolean sjømann;
-    
+
     public BeregningsgrunnlagDto() {
     }
 
@@ -52,6 +52,5 @@ public class BeregningsgrunnlagDto {
 
         return skjaeringstidspunktBeregning;
     }
-
 
 }

@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.io.Serializable;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Kode implements Serializable {
@@ -46,8 +46,12 @@ public class Kode implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if ((o == null) || (getClass() != o.getClass())) {
+            return false;
+        }
         Kode kode1 = (Kode) o;
         return Objects.equals(kode, kode1.kode);
     }
@@ -59,6 +63,6 @@ public class Kode implements Serializable {
 
     @Override
     public String toString() {
-        return kodeverk + " - " + kode + (navn==null?"": " - " + navn);
+        return kodeverk + " - " + kode + (navn == null ? "" : " - " + navn);
     }
 }

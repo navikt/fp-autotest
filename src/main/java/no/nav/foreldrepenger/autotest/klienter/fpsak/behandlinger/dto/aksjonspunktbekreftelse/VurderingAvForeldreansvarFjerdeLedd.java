@@ -1,9 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-
-@BekreftelseKode(kode="5014")
+@BekreftelseKode(kode = "5014")
 public class VurderingAvForeldreansvarFjerdeLedd extends AksjonspunktBekreftelse {
 
     protected Boolean erVilkarOk;
@@ -22,6 +19,5 @@ public class VurderingAvForeldreansvarFjerdeLedd extends AksjonspunktBekreftelse
         erVilkarOk = false;
         avslagskode = kode;
     }
-
 
 }

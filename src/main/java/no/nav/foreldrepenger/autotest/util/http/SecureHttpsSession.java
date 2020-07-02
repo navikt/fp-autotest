@@ -16,7 +16,8 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
 
 public class SecureHttpsSession extends AbstractHttpSession {
-    private static final ThreadLocal<SecureHttpsSession> sessions = ThreadLocal.withInitial(() -> new SecureHttpsSession());
+    private static final ThreadLocal<SecureHttpsSession> sessions = ThreadLocal
+            .withInitial(() -> new SecureHttpsSession());
 
     private static final CloseableHttpClient redirectClient = getKlient(true);
     private static final CloseableHttpClient nonRedirectClient = getKlient(false);

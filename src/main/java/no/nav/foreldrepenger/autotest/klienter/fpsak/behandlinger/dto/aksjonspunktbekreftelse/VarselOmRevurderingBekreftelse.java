@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
-@BekreftelseKode(kode="5026")
+@BekreftelseKode(kode = "5026")
 public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
 
     protected String begrunnelseForVarsel;

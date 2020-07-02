@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterD
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 
-public class ProsesstaskKlient  extends FpsakKlient{
+public class ProsesstaskKlient extends FpsakKlient {
 
     private static String PROSESSTASK_URL = "/prosesstask";
     private static String PROSESSTASK_LIST_URL = PROSESSTASK_URL + "/list";
@@ -23,7 +23,8 @@ public class ProsesstaskKlient  extends FpsakKlient{
 
     public List<ProsessTaskListItemDto> list(SokeFilterDto sokeFilter) {
         String url = hentRestRotUrl() + PROSESSTASK_LIST_URL;
-        return postOgHentJson(url, sokeFilter, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, ProsessTaskListItemDto.class), StatusRange.STATUS_SUCCESS);
+        return postOgHentJson(url, sokeFilter, hentObjectMapper().getTypeFactory()
+                .constructCollectionType(ArrayList.class, ProsessTaskListItemDto.class), StatusRange.STATUS_SUCCESS);
     }
 
     public ProsesstaskResultatDto launch(ProsesstaskDto prosessTask) {

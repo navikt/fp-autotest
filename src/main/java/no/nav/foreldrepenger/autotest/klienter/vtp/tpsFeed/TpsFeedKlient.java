@@ -14,7 +14,9 @@ public class TpsFeedKlient extends VTPKlient {
     private static final String TPS_FEED_URL = "/feed";
     private static final Logger LOG = LoggerFactory.getLogger(TpsFeedKlient.class);
 
-    public TpsFeedKlient(HttpSession session) {super(session);}
+    public TpsFeedKlient(HttpSession session) {
+        super(session);
+    }
 
     @Step("Legger til hendelse i tps-feed")
     public void leggTilHendelse(PersonhendelseDto personhendelseDto) {

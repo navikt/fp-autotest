@@ -7,7 +7,8 @@ public class BesteberegningFødendeKvinneAndelDto {
     protected Boolean lagtTilAvSaksbehandler;
     protected FastsatteVerdierForBesteberegningDto fastsatteVerdier;
 
-    public BesteberegningFødendeKvinneAndelDto() {}
+    public BesteberegningFødendeKvinneAndelDto() {
+    }
 
     public BesteberegningFødendeKvinneAndelDto(double fastsattBeløp, String inntektskategori) {
         nyAndel = false;

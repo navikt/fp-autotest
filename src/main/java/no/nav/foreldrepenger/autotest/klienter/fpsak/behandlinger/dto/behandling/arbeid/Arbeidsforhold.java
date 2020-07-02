@@ -32,12 +32,12 @@ public class Arbeidsforhold {
     protected Boolean lagtTilAvSaksbehandler;
     protected Boolean basertPaInntektsmelding;
 
-
     public Arbeidsforhold() {
         // jaxb
     }
 
-    public Arbeidsforhold(String navn, LocalDate fomDato, LocalDate tomDato, BigDecimal stillingsprosent, Boolean lagtTilAvSaksbehandler) {
+    public Arbeidsforhold(String navn, LocalDate fomDato, LocalDate tomDato, BigDecimal stillingsprosent,
+            Boolean lagtTilAvSaksbehandler) {
         this.navn = navn;
         this.fomDato = fomDato;
         this.tomDato = tomDato;

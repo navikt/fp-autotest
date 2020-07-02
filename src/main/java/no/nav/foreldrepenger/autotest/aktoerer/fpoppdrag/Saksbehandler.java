@@ -18,7 +18,6 @@ public class Saksbehandler extends Aktoer {
         return simuleringKlient.hentSimuleringResultat(behandlingIdDto);
     }
 
-
     public void startSimulering(SimulerOppdragDto simulerOppdragDto) {
         simuleringKlient.startSimulering(simulerOppdragDto);
     }

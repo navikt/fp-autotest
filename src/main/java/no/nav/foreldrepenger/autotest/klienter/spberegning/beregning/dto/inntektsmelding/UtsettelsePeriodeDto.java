@@ -12,7 +12,7 @@ public class UtsettelsePeriodeDto {
     protected LocalDate fom;
     protected LocalDate tom;
     protected Kode årsak;
-    
+
     public UtsettelsePeriodeDto() {
     }
 }

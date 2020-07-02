@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjo
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties (ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AksjonspunktDto {
     public AksjonspunktDefinisjon definisjon;
     public boolean erAktivt;

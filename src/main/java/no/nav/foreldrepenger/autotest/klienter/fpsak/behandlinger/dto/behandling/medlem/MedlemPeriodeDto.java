@@ -14,7 +14,6 @@ public class MedlemPeriodeDto {
     private Boolean erEosBorger;
     private Boolean lovligOppholdVurdering;
     private Boolean bosattVurdering;
-    private String begrunnelse;
 
     public MedlemPeriodeDto() {
         // trengs for deserialisering av JSON
@@ -35,8 +34,6 @@ public class MedlemPeriodeDto {
     void setAksjonspunkter(Set<String> aksjonspunkter) {
         this.aksjonspunkter = aksjonspunkter;
     }
-
-
 
     public Boolean getOppholdsrettVurdering() {
         return oppholdsrettVurdering;

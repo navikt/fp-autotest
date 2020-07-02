@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 
-@BekreftelseKode(kode="6007")
+@BekreftelseKode(kode = "6007")
 public class OverstyrBeregning extends OverstyringsBekreftelse {
 
     protected long beregnetTilkjentYtelse;

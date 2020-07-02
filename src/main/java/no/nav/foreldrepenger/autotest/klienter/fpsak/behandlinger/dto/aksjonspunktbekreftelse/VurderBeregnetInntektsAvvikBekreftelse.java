@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.InntektPrAndel;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@BekreftelseKode(kode="5038")
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.InntektPrAndel;
+
+@BekreftelseKode(kode = "5038")
 public class VurderBeregnetInntektsAvvikBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<InntektPrAndel> inntektPrAndelList = new ArrayList<>();

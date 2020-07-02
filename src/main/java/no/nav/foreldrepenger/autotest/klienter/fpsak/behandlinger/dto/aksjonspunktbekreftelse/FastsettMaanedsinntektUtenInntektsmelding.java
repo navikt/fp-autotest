@@ -4,7 +4,6 @@ import java.util.List;
 
 public class FastsettMaanedsinntektUtenInntektsmelding {
 
-
     protected List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe;
 
     public FastsettMaanedsinntektUtenInntektsmelding(List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe) {

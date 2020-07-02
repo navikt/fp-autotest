@@ -16,5 +16,5 @@ public class Kodeverk {
     public KodeListe Fagsystem;
     public KodeListe VariantFormat;
     public KodeListe AktivitetStatus;
-    
+
 }

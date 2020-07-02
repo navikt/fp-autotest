@@ -51,8 +51,7 @@ public class Fordel extends Aktoer {
     HistorikkKlient historikkKlient;
     TpsFeedKlient tpsFeedKlient;
 
-
-    //Vtp Klienter
+    // Vtp Klienter
     JournalforingKlient journalpostKlient;
 
     public Fordel() {
@@ -68,7 +67,8 @@ public class Fordel extends Aktoer {
      * Sender inn søkand og returnerer saksinformasjon
      */
     @Step("Sender inn søknad")
-    public long sendInnSøknad(Soeknad søknad, String aktørId, String fnr, DokumenttypeId dokumenttypeId, Long saksnummer) {
+    public long sendInnSøknad(Soeknad søknad, String aktørId, String fnr, DokumenttypeId dokumenttypeId,
+            Long saksnummer) {
         String xml = null;
         LocalDate mottattDato;
         if (null != søknad) {
@@ -78,8 +78,9 @@ public class Fordel extends Aktoer {
             mottattDato = LocalDate.now();
         }
 
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml == null ? "" : xml, fnr, dokumenttypeId);
-        if (saksnummer != null && saksnummer.longValue() != 0L) {
+        JournalpostModell journalpostModell = JournalpostModellGenerator
+                .lagJournalpostStrukturertDokument(xml == null ? "" : xml, fnr, dokumenttypeId);
+        if ((saksnummer != null) && (saksnummer.longValue() != 0L)) {
             journalpostModell.setSakId(saksnummer.toString());
         }
         String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
@@ -92,18 +93,20 @@ public class Fordel extends Aktoer {
         journalpostModell.setSakId(String.valueOf(sakId));
         logger.info("Sendt inn søknad på sak med saksnummer: {}", sakId);
 
-        //TODO: feiler, men sak og behandling er OK.
+        // TODO: feiler, men sak og behandling er OK.
         Vent.til(() -> {
             List<Behandling> behandlinger = behandlingerKlient.alle(sakId);
-            //TODO: Gjøre denne asynkron
+            // TODO: Gjøre denne asynkron
             if (behandlinger.size() > 1) {
                 sleep(5000);
             }
-            return !behandlinger.isEmpty() && behandlingerKlient.statusAsObject(behandlinger.get(0).uuid, null) == null;
+            return !behandlinger.isEmpty()
+                    && (behandlingerKlient.statusAsObject(behandlinger.get(0).uuid, null) == null);
         }, 60, "Saken hadde ingen behandlinger");
 
         if (DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD.equals(dokumenttypeId)) {
-            //TODO: Vent.til fungerer ikke med endringssøknad. Venter ikke til behandlingen er opprettet
+            // TODO: Vent.til fungerer ikke med endringssøknad. Venter ikke til behandlingen
+            // er opprettet
             sleep(5000);
         }
 
@@ -138,13 +141,15 @@ public class Fordel extends Aktoer {
         return sendInnSøknad(søknad, scenario, dokumenttypeId, null);
     }
 
-    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId, Long saksnummer) {
+    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId,
+            Long saksnummer) {
         String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
         String fnr = scenario.getPersonopplysninger().getSøkerIdent();
         return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
     }
 
-    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId, Long saksnummer, boolean annenPart) {
+    public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId, Long saksnummer,
+            boolean annenPart) {
         String aktørId;
         String fnr;
         if (annenPart) {
@@ -180,26 +185,30 @@ public class Fordel extends Aktoer {
      * Sender inn inntektsmelding og returnerer saksnummer
      */
     @Step("Sender inn inntektsmelding")
-    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, String aktørId, String fnr, Long gammeltSaksnummer) {
+    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, String aktørId, String fnr,
+            Long gammeltSaksnummer) {
         String xml = inntektsmelding.createInntektesmeldingXML();
         debugSenderInnDokument("Inntektsmelding", xml);
         String behandlingstemaOffisiellKode = "ab0047";
         String dokumentKategori = Dokumentkategori.IKKE_TOLKBART_SKJEMA.getKode();
         String dokumentTypeIdOffisiellKode = DokumenttypeId.INNTEKTSMELDING.getKode();
 
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, fnr, DokumenttypeId.INNTEKTSMELDING);
+        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, fnr,
+                DokumenttypeId.INNTEKTSMELDING);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
 
-        long nyttSaksnummer = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, gammeltSaksnummer);
+        long nyttSaksnummer = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode,
+                dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, gammeltSaksnummer);
         journalpostModell.setSakId(String.valueOf(nyttSaksnummer));
 
-        //vent til inntektsmelding er mottatt
+        // vent til inntektsmelding er mottatt
         if (gammeltSaksnummer != null) {
             final long saksnummerF = gammeltSaksnummer;
             AtomicReference<List<HistorikkInnslag>> historikkRef = new AtomicReference<>();
             Vent.til(() -> {
                 historikkRef.set(historikkKlient.hentHistorikk(saksnummerF));
-                return historikkRef.get().stream().anyMatch(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode()));
+                return historikkRef.get().stream()
+                        .anyMatch(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode()));
             }, 40, "Saken har ikke mottatt inntektsmeldingen.\nHar historikk: " + historikkRef.get());
         } else {
             Vent.til(() -> {
@@ -210,8 +219,10 @@ public class Fordel extends Aktoer {
         return nyttSaksnummer;
     }
 
-    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto testscenario, Long saksnummer) {
-        return sendInnInntektsmelding(inntektsmelding, testscenario.getPersonopplysninger().getSøkerAktørIdent(), testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
+    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto testscenario,
+            Long saksnummer) {
+        return sendInnInntektsmelding(inntektsmelding, testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
     }
 
     public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto scenario) {
@@ -220,7 +231,8 @@ public class Fordel extends Aktoer {
     }
 
     @Step("Sender inn innteksmeldinger")
-    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String aktørId, String fnr, Long saksnummer) {
+    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String aktørId, String fnr,
+            Long saksnummer) {
         int gammelAntallIM = 0;
         if (saksnummer != null) {
             gammelAntallIM = antallInntektsmeldingerMottatt(saksnummer);
@@ -228,13 +240,13 @@ public class Fordel extends Aktoer {
         for (InntektsmeldingBuilder builder : inntektsmeldinger) {
             saksnummer = sendInnInntektsmelding(builder, aktørId, fnr, saksnummer);
             if (inntektsmeldinger.size() > 1) {
-                sleep(4000); //TODO finn ut hva man må vente på her...
+                sleep(4000); // TODO finn ut hva man må vente på her...
             }
         }
         final int gammelAntallIMF = gammelAntallIM;
         final long saksnummerF = saksnummer;
         Vent.til(() -> {
-            return (antallInntektsmeldingerMottatt(saksnummerF) - gammelAntallIMF == inntektsmeldinger.size());
+            return ((antallInntektsmeldingerMottatt(saksnummerF) - gammelAntallIMF) == inntektsmeldinger.size());
         }, 20, "har ikke mottat alle inntektsmeldinger. Sak: " + saksnummer);
         return saksnummer;
     }
@@ -242,17 +254,22 @@ public class Fordel extends Aktoer {
     @Step("Henter antall innteksmeldingerMottatt for saksnummer [{saksnummer}]")
     private int antallInntektsmeldingerMottatt(long saksnummer) {
         List<HistorikkInnslag> historikk = historikkKlient.hentHistorikk(saksnummer);
-        return (int) historikk.stream().filter(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode())).count();
+        return (int) historikk.stream().filter(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode()))
+                .count();
     }
 
-    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto testscenario, Long saksnummer) {
-        return sendInnInntektsmeldinger(inntektsmeldinger, testscenario.getPersonopplysninger().getSøkerAktørIdent(), testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
+    public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto testscenario,
+            Long saksnummer) {
+        return sendInnInntektsmeldinger(inntektsmeldinger, testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
     }
 
-    public String journalførInnektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto scenario, Long saksnummer) {
+    public String journalførInnektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto scenario,
+            Long saksnummer) {
         String xml = inntektsmelding.createInntektesmeldingXML();
         String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, aktørId, DokumenttypeId.INNTEKTSMELDING);
+        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, aktørId,
+                DokumenttypeId.INNTEKTSMELDING);
         String id = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
         if (saksnummer != null) {
             journalpostModell.setSakId(saksnummer.toString());
@@ -268,30 +285,31 @@ public class Fordel extends Aktoer {
         String dokumentKategori = Dokumentkategori.KLAGE_ANKE.getKode();
         String dokumentTypeIdOffisiellKode = DokumenttypeId.KLAGEANKE.getKode();
 
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostUstrukturertDokument(scenario.getPersonopplysninger().getSøkerIdent(), DokumenttypeId.KLAGEANKE);
+        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostUstrukturertDokument(
+                scenario.getPersonopplysninger().getSøkerIdent(), DokumenttypeId.KLAGEANKE);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
 
-        long sakId = sendInnJournalpost(xmlstring, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
+        long sakId = sendInnJournalpost(xmlstring, journalpostId, behandlingstemaOffisiellKode,
+                dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
         journalpostModell.setSakId(String.valueOf(sakId));
         return sakId;
     }
-
 
     /*
      * Sender inn journalpost og returnerer saksnummer
      */
     private Long sendInnJournalpost(String xml, String journalpostId, String behandlingstemaOffisiellKode,
-                                    String dokumentTypeIdOffisiellKode, String dokumentKategori, String aktørId, Long saksnummer) {
+            String dokumentTypeIdOffisiellKode, String dokumentKategori, String aktørId, Long saksnummer) {
         return sendInnJournalpost(xml, LocalDate.now(), journalpostId, behandlingstemaOffisiellKode,
                 dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
     }
 
     @Step("Sender inn journalpost")
     private Long sendInnJournalpost(String xml, LocalDate mottattDato, String journalpostId,
-                                    String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode,
-                                    String dokumentKategori, String aktørId, Long saksnummer) {
+            String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode,
+            String dokumentKategori, String aktørId, Long saksnummer) {
 
-        if (saksnummer == null || saksnummer.longValue() == 0L) {
+        if ((saksnummer == null) || (saksnummer.longValue() == 0L)) {
             OpprettSak journalpost = new OpprettSak(journalpostId, behandlingstemaOffisiellKode, aktørId);
             saksnummer = fordelKlient.fagsakOpprett(journalpost).saksnummer;
         }
@@ -300,7 +318,6 @@ public class Fordel extends Aktoer {
         JournalpostId idDto = new JournalpostId(journalpostId);
         JournalpostKnyttning journalpostKnyttning = new JournalpostKnyttning(new Saksnummer(saksnummer), idDto);
         fordelKlient.fagsakKnyttJournalpost(journalpostKnyttning);
-
 
         JournalpostMottak journalpostMottak = new JournalpostMottak("" + saksnummer, journalpostId, mottattDato,
                 behandlingstemaOffisiellKode);

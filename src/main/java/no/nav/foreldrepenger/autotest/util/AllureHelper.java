@@ -16,7 +16,8 @@ import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
 public class AllureHelper {
 
     @Step("Henter aksjonspunkter: {aksjonspunkter}")
-    public static void debugListUtAksjonspunkter(String aksjonspunkter) { }
+    public static void debugListUtAksjonspunkter(String aksjonspunkter) {
+    }
 
     @Step("Informasjon om behandling:")
     public static void debugLoggBehandling(Behandling behandling) {
@@ -26,14 +27,14 @@ public class AllureHelper {
 
     @Step("Informasjon om behandlinger: ")
     public static void debugLoggBehandlingsliste(List<Behandling> behandlinger) {
-        for(Behandling behandling : behandlinger) {
+        for (Behandling behandling : behandlinger) {
             debugLoggBehandling(behandling);
         }
     }
 
     @Step("Informasjon om behandlinger: {tekst} ")
     public static void debugLoggBehandlingsliste(String tekst, List<Behandling> behandlinger) {
-        for(Behandling behandling : behandlinger) {
+        for (Behandling behandling : behandlinger) {
             debugLoggBehandling(behandling);
         }
     }
@@ -44,19 +45,21 @@ public class AllureHelper {
     }
 
     @Step("Fritekstlogg {fritekst}")
-    public static void debugFritekst(String fritekst) {}
+    public static void debugFritekst(String fritekst) {
+    }
 
     public static void debugLoggHistorikkinnslag(List<HistorikkInnslag> historikkInnslagList) {
         StringBuilder sb = new StringBuilder();
         sb.append("Historikkinnslag\n");
-        for(HistorikkInnslag historikkInnslag : historikkInnslagList) {
-            sb.append(String.format("\t{%s}",historikkInnslag.getTypeKode()));
+        for (HistorikkInnslag historikkInnslag : historikkInnslagList) {
+            sb.append(String.format("\t{%s}", historikkInnslag.getTypeKode()));
         }
         loggHistorikkinnslag(sb.toString());
     }
 
     @Step("Informasjon om historikkinnslag: {historikkinnslag}")
-    private static void loggHistorikkinnslag(String historikkinnslag) {}
+    private static void loggHistorikkinnslag(String historikkinnslag) {
+    }
 
     @Step("Informasjon om aksjonspunkt:")
     public static void debugAksjonspunkt(Aksjonspunkt aksjonspunkt) {
@@ -71,7 +74,7 @@ public class AllureHelper {
 
     @Step("Informasjon om aksjonspunktbekreftelser:")
     public static void debugAksjonspunktbekreftelser(List<AksjonspunktBekreftelse> aksjonspunkter) {
-        for(AksjonspunktBekreftelse aksjonspunkt : aksjonspunkter) {
+        for (AksjonspunktBekreftelse aksjonspunkt : aksjonspunkter) {
             debugAksjonspunktbekreftelse(aksjonspunkt);
         }
     }

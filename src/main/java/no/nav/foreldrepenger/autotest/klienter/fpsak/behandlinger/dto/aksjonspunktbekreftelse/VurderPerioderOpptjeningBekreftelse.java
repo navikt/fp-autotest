@@ -8,7 +8,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.OpptjeningAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5051")
+@BekreftelseKode(kode = "5051")
 public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<OpptjeningAktivitet> opptjeningAktivitetList = new ArrayList<>();
@@ -45,17 +45,20 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
     private void godkjennOpptjening(OpptjeningAktivitet aktivitet) {
         aktivitet.vurder(true, "Godkjent", false);
     }
+
     private void avvisOpptjening(OpptjeningAktivitet aktivitet) {
         aktivitet.vurder(false, "Avvist", false);
     }
+
     private List<OpptjeningAktivitet> hentOpptjeningAktiviteter(String aktivitetType) {
         return opptjeningAktivitetList.stream()
-                .filter(aktivitet -> aktivitet.getAktivitetType().kode.equals(aktivitetType)).collect(Collectors.toList());
+                .filter(aktivitet -> aktivitet.getAktivitetType().kode.equals(aktivitetType))
+                .collect(Collectors.toList());
     }
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        if(behandling.getOpptjening().getOpptjeningAktivitetList() == null) {
+        if (behandling.getOpptjening().getOpptjeningAktivitetList() == null) {
             return;
         }
 

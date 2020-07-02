@@ -17,10 +17,10 @@ import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.AnnenOpptjeningTyper;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Land;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Virksomhetstyper;
 
-
 public class OpptjeningErketyper {
 
-    private OpptjeningErketyper() {}
+    private OpptjeningErketyper() {
+    }
 
     public static Opptjening medFrilansOpptjening() {
 
@@ -68,11 +68,14 @@ public class OpptjeningErketyper {
 
     }
 
-    public static Opptjening medEgenNaeringOpptjening(boolean erNyIArbeidslivet, BigInteger næringsInntekt, boolean varigEndretNæring) {
-        return  medEgenNaeringOpptjening(LocalDate.now().minusYears(4), LocalDate.now(), erNyIArbeidslivet, næringsInntekt, varigEndretNæring);
+    public static Opptjening medEgenNaeringOpptjening(boolean erNyIArbeidslivet, BigInteger næringsInntekt,
+            boolean varigEndretNæring) {
+        return medEgenNaeringOpptjening(LocalDate.now().minusYears(4), LocalDate.now(), erNyIArbeidslivet,
+                næringsInntekt, varigEndretNæring);
     }
+
     public static Opptjening medEgenNaeringOpptjening(LocalDate Fom, LocalDate Tom, boolean erNyIArbeidslivet,
-                                                      BigInteger næringsInntekt, boolean varigEndretNæring) {
+            BigInteger næringsInntekt, boolean varigEndretNæring) {
 
         Opptjening opptjening = new Opptjening();
         List<EgenNaering> naeringer = opptjening.getEgenNaering();
@@ -110,6 +113,7 @@ public class OpptjeningErketyper {
         return opptjening;
 
     }
+
     public static Opptjening medUtenlandskArbeidsforhold(String arbeidsgiverNavn, String landKode) {
 
         Opptjening opptjening = new Opptjening();

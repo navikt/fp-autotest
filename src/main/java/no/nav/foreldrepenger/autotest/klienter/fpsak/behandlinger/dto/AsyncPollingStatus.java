@@ -22,12 +22,13 @@ public class AsyncPollingStatus {
         return status != null ? status.getHttpStatus() : null;
     }
 
-    public Status getStatus() {return status != null ? status : null;}
+    public Status getStatus() {
+        return status != null ? status : null;
+    }
 
     public String getMessage() {
         return message;
     }
-
 
     public enum Status {
         PENDING(200),

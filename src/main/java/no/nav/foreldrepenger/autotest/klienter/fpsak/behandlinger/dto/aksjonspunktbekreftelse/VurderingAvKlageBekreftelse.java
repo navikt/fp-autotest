@@ -26,21 +26,21 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
 
     // Omgjør vedtaket
     public VurderingAvKlageBekreftelse bekreftMedholdGunst(String årsak) {
-        klageVurdering  = VURDERING_MEDHOLD;
+        klageVurdering = VURDERING_MEDHOLD;
         klageVurderingOmgjoer = OMGJØR_GUNST;
         klageMedholdArsak = årsak;
         return this;
     }
 
     public VurderingAvKlageBekreftelse bekreftMedholdDelvisGunst(String årsak) {
-        klageVurdering  = VURDERING_MEDHOLD;
+        klageVurdering = VURDERING_MEDHOLD;
         klageVurderingOmgjoer = OMGJØR_DELVISGUNST;
         klageMedholdArsak = årsak;
         return this;
     }
 
     public VurderingAvKlageBekreftelse bekreftMedholdUGunst(String årsak) {
-        klageVurdering  = VURDERING_MEDHOLD;
+        klageVurdering = VURDERING_MEDHOLD;
         klageVurderingOmgjoer = OMGJØR_UGUNST;
         klageMedholdArsak = årsak;
         return this;
@@ -48,7 +48,7 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
 
     // oppretthold vedtaket
     public VurderingAvKlageBekreftelse bekreftStadfestet() {
-        klageVurdering  = VURDERING_STADFEST;
+        klageVurdering = VURDERING_STADFEST;
         return this;
     }
 
@@ -57,7 +57,7 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
         return this;
     }
 
-    @BekreftelseKode(kode="5035")
+    @BekreftelseKode(kode = "5035")
     public static class VurderingAvKlageNfpBekreftelse extends VurderingAvKlageBekreftelse {
 
         public VurderingAvKlageNfpBekreftelse() {
@@ -65,7 +65,7 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
         }
     }
 
-    @BekreftelseKode(kode="5036")
+    @BekreftelseKode(kode = "5036")
     public static class VurderingAvKlageNkBekreftelse extends VurderingAvKlageBekreftelse {
 
         private static final String VURDERING_OPPHEVE = "OPPHEVE_YTELSESVEDTAK";
@@ -76,7 +76,7 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
         }
 
         public VurderingAvKlageNkBekreftelse bekreftOpphevet(String årsak) {
-            klageVurdering  = VURDERING_OPPHEVE;
+            klageVurdering = VURDERING_OPPHEVE;
             klageMedholdArsak = årsak;
             return this;
         }
@@ -85,7 +85,6 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
             klageVurdering = VURDERING_HJEMSENDE;
             return this;
         }
-
 
     }
 

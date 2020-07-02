@@ -22,7 +22,8 @@ public class TestscenarioRepositoryImpl {
 
     private final Map<String, Object> scenarioObjects = new TreeMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
-    private final File rootDir = new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource("scenarios")).getFile());
+    private final File rootDir = new File(
+            Objects.requireNonNull(this.getClass().getClassLoader().getResource("scenarios")).getFile());
 
     public TestscenarioRepositoryImpl() {
     }
@@ -38,7 +39,6 @@ public class TestscenarioRepositoryImpl {
         return LesOgReturnerScenarioFraJsonfil(scenarioId);
     }
 
-
     private Object LesOgReturnerScenarioFraJsonfil(String scenarioId) {
         File scenarioFiles = hentScenarioFileneSomStarterMed(scenarioId);
         if (scenarioFiles == null) {
@@ -46,20 +46,23 @@ public class TestscenarioRepositoryImpl {
         }
 
         final ObjectNode root = mapper.createObjectNode();
-        root.set("scenario-navn", mapper.convertValue(scenarioFiles.getName(), new TypeReference<>() {}));
+        root.set("scenario-navn", mapper.convertValue(scenarioFiles.getName(), new TypeReference<>() {
+        }));
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, PERSONOPPLYSNING_JSON_FIL_NAVN, "personopplysninger");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, INNTEKTYTELSE_SØKER_JSON_FIL_NAVN, "inntektytelse-søker");
-        lesFilOgLeggTilIObjectNode(scenarioFiles, root, INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN, "inntektytelse-annenpart");
+        lesFilOgLeggTilIObjectNode(scenarioFiles, root, INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN,
+                "inntektytelse-annenpart");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, ORGANISASJON_JSON_FIL_NAVN, "organisasjon");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, VARS_JSON_FIL_NAVN, "vars");
 
-        Object obj = mapper.convertValue(root, new TypeReference<>() {});
+        Object obj = mapper.convertValue(root, new TypeReference<>() {
+        });
         scenarioObjects.put(scenarioId, obj);
         return obj;
     }
 
-
-    private void lesFilOgLeggTilIObjectNode(File scenarioFiles, ObjectNode root, String jsonFilNavn, String navnPåNøkkel) {
+    private void lesFilOgLeggTilIObjectNode(File scenarioFiles, ObjectNode root, String jsonFilNavn,
+            String navnPåNøkkel) {
         try {
             File fil = hentFilSomMatcherStreng(scenarioFiles, jsonFilNavn);
             if (fil != null) {
@@ -73,7 +76,7 @@ public class TestscenarioRepositoryImpl {
 
     private File hentFilSomMatcherStreng(File scenarioFiler, String FilNavnPåJsonFil) {
         File[] files = scenarioFiler.listFiles((dir, name) -> name.equalsIgnoreCase(FilNavnPåJsonFil));
-        if (files != null && files.length > 0) {
+        if ((files != null) && (files.length > 0)) {
             return files[0];
         }
         return null;
@@ -81,7 +84,7 @@ public class TestscenarioRepositoryImpl {
 
     private File hentScenarioFileneSomStarterMed(String scenarioNummer) {
         File[] filesFiltered = rootDir.listFiles((dir, name) -> name.startsWith(scenarioNummer));
-        if (filesFiltered != null && filesFiltered.length > 0) {
+        if ((filesFiltered != null) && (filesFiltered.length > 0)) {
             return filesFiltered[0];
         }
         return null;

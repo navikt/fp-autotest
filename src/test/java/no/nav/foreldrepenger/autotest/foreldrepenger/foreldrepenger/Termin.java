@@ -52,7 +52,8 @@ public class Termin extends ForeldrepengerTestBase {
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario, startDatoForeldrepenger);
+        List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario,
+                startDatoForeldrepenger);
         Long saksnummer = fordel.sendInnInntektsmeldinger(inntektsmeldinger, testscenario);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -80,12 +81,13 @@ public class Termin extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandling er ikke satt på vent etter uten inntektsmelding");
-
+        verifiser(saksbehandler.valgtBehandling.erSattPåVent(),
+                "Behandling er ikke satt på vent etter uten inntektsmelding");
 
         saksbehandler.gjenopptaBehandling();
         saksbehandler.gjenopptaBehandling();
@@ -94,14 +96,14 @@ public class Termin extends ForeldrepengerTestBase {
                 .bekreftArbeidsforholdErAktivt("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunkt(ab);
 
-
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 startDatoForeldrepenger,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                        .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -116,13 +118,15 @@ public class Termin extends ForeldrepengerTestBase {
     @Test
     @Disabled
     public void MorSøkerMedEttArbeidsforholdOvergangFraYtelse() {
-        //TODO
+        // TODO
     }
 
     @Test
     @DisplayName("Mor søker termin med avvik i gradering")
-    @Description("Mor med to arbeidsforhold søker termin. Søknad inneholder gradering. En periode som er forflyttet i fht IM, " +
-            "en periode som har feil graderingsprosent i fht IM, en periode som har feil orgnr i fht IM og en periode som " +
+    @Description("Mor med to arbeidsforhold søker termin. Søknad inneholder gradering. En periode som er forflyttet i fht IM, "
+            +
+            "en periode som har feil graderingsprosent i fht IM, en periode som har feil orgnr i fht IM og en periode som "
+            +
             "er ok.")
     public void morSøkerTerminEttArbeidsforhold_avvikIGradering() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("77");
@@ -130,49 +134,68 @@ public class Termin extends ForeldrepengerTestBase {
         LocalDate termindato = LocalDate.now().plusWeeks(6);
         LocalDate fpstartdato = termindato.minusWeeks(3);
         // 138 - 40%
-        String orgnr1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        String orgnr1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                .getArbeidsgiverOrgnr();
         // 200 - 60%
-        String orgnr2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr();
+        String orgnr2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
+                .getArbeidsgiverOrgnr();
 
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
         perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)));
         perioder.add(uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)));
-        perioder.add(graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1), orgnr2, 40));
+        perioder.add(graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(6),
+                termindato.plusWeeks(9).minusDays(1), orgnr2, 40));
         perioder.add(uttaksperiode(MØDREKVOTE, termindato.plusWeeks(9), termindato.plusWeeks(12).minusDays(1)));
-        perioder.add(graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(12), termindato.plusWeeks(15).minusDays(1), orgnr1, 10));
-        perioder.add(graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(15), termindato.plusWeeks(18).minusDays(1), orgnr2, 20));
-        perioder.add(graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(18), termindato.plusWeeks(21).minusDays(1), orgnr1, 30));
+        perioder.add(graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(12),
+                termindato.plusWeeks(15).minusDays(1), orgnr1, 10));
+        perioder.add(graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(15),
+                termindato.plusWeeks(18).minusDays(1), orgnr2, 20));
+        perioder.add(graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(18),
+                termindato.plusWeeks(21).minusDays(1), orgnr1, 30));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR)
                 .medFordeling(fordeling);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario, fpstartdato);
         fordel.sendInnInntektsmeldinger(inntektsmeldinger, testscenario, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        List<UttakResultatPeriode> resultatPerioder = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderForSøker();
+        List<UttakResultatPeriode> resultatPerioder = saksbehandler.valgtBehandling.getUttakResultatPerioder()
+                .getPerioderForSøker();
         verifiser(resultatPerioder.size() == 7, "Antall perioder er ikke 7.");
-        verifiser(resultatPerioder.get(0).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(1).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(2).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(3).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(4).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(5).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(6).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden er ikke automatisk innvilget.");
+        verifiser(resultatPerioder.get(0).getPeriodeResultatType().kode.equals("INNVILGET"),
+                "Perioden er ikke automatisk innvilget.");
+        verifiser(resultatPerioder.get(1).getPeriodeResultatType().kode.equals("INNVILGET"),
+                "Perioden er ikke automatisk innvilget.");
+        verifiser(resultatPerioder.get(2).getPeriodeResultatType().kode.equals("INNVILGET"),
+                "Perioden er ikke automatisk innvilget.");
+        verifiser(resultatPerioder.get(3).getPeriodeResultatType().kode.equals("INNVILGET"),
+                "Perioden er ikke automatisk innvilget.");
+        verifiser(resultatPerioder.get(4).getPeriodeResultatType().kode.equals("INNVILGET"),
+                "Perioden er ikke automatisk innvilget.");
+        verifiser(resultatPerioder.get(5).getPeriodeResultatType().kode.equals("INNVILGET"),
+                "Perioden er ikke automatisk innvilget.");
+        verifiser(resultatPerioder.get(6).getPeriodeResultatType().kode.equals("INNVILGET"),
+                "Perioden er ikke automatisk innvilget.");
         verifiser(resultatPerioder.get(2).getGraderingInnvilget().equals(true), "Gradering ikke innvilget");
         verifiser(resultatPerioder.get(4).getGraderingInnvilget().equals(true), "Gradering ikke innvilget");
         verifiser(resultatPerioder.get(5).getGraderingInnvilget().equals(true), "Gradering ikke innvilget");
         verifiser(resultatPerioder.get(6).getGraderingInnvilget().equals(true), "Gradering ikke innvilget");
-        verifiser(resultatPerioder.get(2).getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(40))== 0, "Feil graderingsprosent");
-        verifiser(resultatPerioder.get(4).getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(10))== 0, "Feil graderingsprosent");
-        verifiser(resultatPerioder.get(5).getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(20))== 0, "Feil graderingsprosent");
-        verifiser(resultatPerioder.get(6).getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(30))== 0, "Feil graderingsprosent");
+        verifiser(resultatPerioder.get(2).getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(40)) == 0,
+                "Feil graderingsprosent");
+        verifiser(resultatPerioder.get(4).getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(10)) == 0,
+                "Feil graderingsprosent");
+        verifiser(resultatPerioder.get(5).getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(20)) == 0,
+                "Feil graderingsprosent");
+        verifiser(resultatPerioder.get(6).getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(30)) == 0,
+                "Feil graderingsprosent");
         verifiser(saksbehandler.valgtBehandling.status.kode.equals("AVSLU"), "Behandlingen har ikke status avsluttet.");
     }
 
@@ -181,7 +204,7 @@ public class Termin extends ForeldrepengerTestBase {
     @Description("Mor søker termin uten periode for foreldrepenger før fødsel. Skjæringstidspunkt skal være 3 uker før termindato.")
     public void morSokerTerminUtenFPFFperiode() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
-        String søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate termindato = LocalDate.now().plusWeeks(3);
 
         Fordeling fordeling = new Fordeling();
@@ -194,13 +217,15 @@ public class Termin extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR)
                 .medFordeling(fordeling);
 
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 termindato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                        .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -212,12 +237,17 @@ public class Termin extends ForeldrepengerTestBase {
 
         List<UttakResultatPeriode> resultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         verifiser(resultatPerioder.size() == 2, "Det er ikke blitt opprettet riktig antall perioder.");
-        verifiser(resultatPerioder.get(0).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden søkt for skal være innvilget.");
-        verifiser(resultatPerioder.get(0).getAktiviteter().get(0).getStønadskontoType().equals(MØDREKVOTE), "Feil stønadskontotype.");
-        verifiser(resultatPerioder.get(1).getPeriodeResultatType().kode.equals("INNVILGET"), "Perioden søkt for skal være innvilget.");
-        verifiser(resultatPerioder.get(1).getAktiviteter().get(0).getStønadskontoType().equals(MØDREKVOTE), "Feil stønadskontotype.");
+        verifiser(resultatPerioder.get(0).getPeriodeResultatType().kode.equals("INNVILGET"),
+                "Perioden søkt for skal være innvilget.");
+        verifiser(resultatPerioder.get(0).getAktiviteter().get(0).getStønadskontoType().equals(MØDREKVOTE),
+                "Feil stønadskontotype.");
+        verifiser(resultatPerioder.get(1).getPeriodeResultatType().kode.equals("INNVILGET"),
+                "Perioden søkt for skal være innvilget.");
+        verifiser(resultatPerioder.get(1).getAktiviteter().get(0).getStønadskontoType().equals(MØDREKVOTE),
+                "Feil stønadskontotype.");
         LocalDate skjaeringstidspunkt = termindato.minusWeeks(3);
-        verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato().equals(skjaeringstidspunkt), "Mismatch på skjæringstidspunkt.");
+        verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato()
+                .equals(skjaeringstidspunkt), "Mismatch på skjæringstidspunkt.");
     }
 
 }

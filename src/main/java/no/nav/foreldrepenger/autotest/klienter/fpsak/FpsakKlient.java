@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.JsonRest;
 import no.nav.foreldrepenger.autotest.util.konfigurasjon.MiljoKonfigurasjon;
 
-public class FpsakKlient extends JsonRest{
+public class FpsakKlient extends JsonRest {
 
     protected Logger log;
 

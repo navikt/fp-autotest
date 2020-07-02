@@ -14,7 +14,7 @@ import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioRepositoryIm
 
 public abstract class TestBase {
 
-    //Logger for testruns
+    // Logger for testruns
     protected Logger log;
     protected static TestscenarioRepositoryImpl testscenarioRepositoryImpl;
 
@@ -40,19 +40,20 @@ public abstract class TestBase {
 
     @Step("Verifiserer likhet på {verdiNavn} mellom gjeldene {verdiGjeldende} og forventet {verdiForventet}")
     protected void verifiserLikhet(Object verdiGjeldende, Object verdiForventet, String verdiNavn) {
-        verifiser(verdiGjeldende.equals(verdiForventet), String.format("%s har uventet verdi. forventet %s, var %s", verdiNavn, verdiForventet, verdiGjeldende));
+        verifiser(verdiGjeldende.equals(verdiForventet),
+                String.format("%s har uventet verdi. forventet %s, var %s", verdiNavn, verdiForventet, verdiGjeldende));
     }
 
     @Step("Verifiserer at {listeGjeldende} inneholder {verdiForventet}")
     protected void verifiserInneholder(List<?> listeGjeldende, Object verdiForventet) {
-        verifiser(listeGjeldende.stream().anyMatch(it -> it.equals(verdiForventet)), String.format("%s inneholder ikke forventet verdi. forventet å finne %s", listeGjeldende, verdiForventet));
+        verifiser(listeGjeldende.stream().anyMatch(it -> it.equals(verdiForventet)), String
+                .format("%s inneholder ikke forventet verdi. forventet å finne %s", listeGjeldende, verdiForventet));
     }
 
     protected void verifiser(boolean statement, String message) {
         if (!statement) {
-             fail("Verifisering feilet: " + message);
+            fail("Verifisering feilet: " + message);
         }
     }
-
 
 }

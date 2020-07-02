@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-@BekreftelseKode(kode="5044")
+@BekreftelseKode(kode = "5044")
 public class VurderVilkaarForSykdomBekreftelse extends AksjonspunktBekreftelse {
 
     protected boolean erMorForSykVedFodsel;
@@ -9,7 +9,7 @@ public class VurderVilkaarForSykdomBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    //TODO Stub
+    // TODO Stub
     public void setErMorForSykVedFodsel(boolean morForSykVEdFodsel) {
         this.erMorForSykVedFodsel = morForSykVEdFodsel;
     }

@@ -8,7 +8,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5001")
+@BekreftelseKode(kode = "5001")
 public class AvklarFaktaTerminBekreftelse extends AksjonspunktBekreftelse {
 
     protected int antallBarn;

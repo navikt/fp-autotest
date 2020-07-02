@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5052")
+@BekreftelseKode(kode = "5052")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
 
@@ -25,13 +25,15 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
         vurdering.skalBrukes = skalBrukes;
         return this;
     }
-        public AvklarAktiviteterBekreftelse godkjennOpptjeningsAktivitet(String opptjeningsAktivitetType) {
+
+    public AvklarAktiviteterBekreftelse godkjennOpptjeningsAktivitet(String opptjeningsAktivitetType) {
         BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
                 .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
                 .findFirst().get();
         vurdering.skalBrukes = true;
         return this;
     }
+
     public AvklarAktiviteterBekreftelse avvisOpptjeningsAktivitet(String opptjeningsAktivitetType) {
         BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
                 .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
@@ -42,12 +44,16 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        beregningsaktivitetLagreDtoList = behandling.getBeregningsgrunnlag().getFaktaOmBeregning().getAvklarAktiviteter()
+        beregningsaktivitetLagreDtoList = behandling.getBeregningsgrunnlag().getFaktaOmBeregning()
+                .getAvklarAktiviteter()
                 .getAktiviteterTomDatoMapping().get(0)
                 .getAktiviteter()
                 .stream()
-                .map(aktivitet -> new BeregningsaktivitetLagreDto(aktivitet.getArbeidsforholdType(), aktivitet.getFom(), aktivitet.getTom(),
-                        aktivitet.getArbeidsgiverId(), aktivitet.getAktørId() == null ? null : aktivitet.getAktørId().getAktørId(), aktivitet.getArbeidsforholdId(), true))
+                .map(aktivitet -> new BeregningsaktivitetLagreDto(aktivitet.getArbeidsforholdType(), aktivitet.getFom(),
+                        aktivitet.getTom(),
+                        aktivitet.getArbeidsgiverId(),
+                        aktivitet.getAktørId() == null ? null : aktivitet.getAktørId().getAktørId(),
+                        aktivitet.getArbeidsforholdId(), true))
                 .collect(Collectors.toList());
     }
 }

@@ -24,7 +24,6 @@ public class FpriskTest extends FpriskTestBase {
 
     private static final String FPRISK_TOPIC_URL = "privat-foreldrepenger-fprisk";
 
-
     @Test
     @DisplayName("Sender Kafkamelding med risikovurderingsforespørsel, venter på at vurderingen blir gjort.")
     @Description("Sender inn forespørel om risikovurderinger til FPRISK for scenario 50 over Kafka (gjennom VTP). Venter på at saken er ferdig behandlet via polling over REST.")
@@ -38,16 +37,16 @@ public class FpriskTest extends FpriskTestBase {
         String behandlingstema = BEHANDLINGSTEMA_FORELDREPENGER;
         String annenPartAktørId = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
         String konsumentId = UUID.randomUUID().toString();
-        RisikovurderingRequest kontraktFpriskMelding = new RisikovurderingRequest(soekerAktoerId, skjæringstidspunkt, opplysningsperiodefraOgMed,
-                                                            opplysningsperiodeTilOgMed, behandlingstema, annenPartAktørId, konsumentId);
+        RisikovurderingRequest kontraktFpriskMelding = new RisikovurderingRequest(soekerAktoerId, skjæringstidspunkt,
+                opplysningsperiodefraOgMed,
+                opplysningsperiodeTilOgMed, behandlingstema, annenPartAktørId, konsumentId);
 
-        saksbehandler.sendMessageToKafkaTopic(FPRISK_TOPIC_URL, new RequestWrapper(UUID.randomUUID().toString(), kontraktFpriskMelding));
+        saksbehandler.sendMessageToKafkaTopic(FPRISK_TOPIC_URL,
+                new RequestWrapper(UUID.randomUUID().toString(), kontraktFpriskMelding));
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        saksbehandler.ventTilRisikoKlassefiseringsstatus(konsumentId,"IKKE_HOY");
+        saksbehandler.ventTilRisikoKlassefiseringsstatus(konsumentId, "IKKE_HOY");
 
     }
-
-
 
 }

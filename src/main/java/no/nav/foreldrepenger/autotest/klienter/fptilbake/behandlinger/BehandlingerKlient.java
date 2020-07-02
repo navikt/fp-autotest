@@ -3,20 +3,21 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus; //Denne FPSAK import er OK. Ellers skal man generelt ikke blande fpsak og fptilbake
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.FptilbakeKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprettRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
-import org.apache.http.HttpResponse;
 
 public class BehandlingerKlient extends FptilbakeKlient {
 
@@ -44,16 +45,18 @@ public class BehandlingerKlient extends FptilbakeKlient {
         String url = hentRestRotUrl() + BEHANDLINGER_OPPRETT;
         postOgVerifiser(url, behandlingOpprett, StatusRange.STATUS_SUCCESS);
     }
+
     public void putTilbakekreving(BehandlingOpprettRevurdering behandlingOpprettRevurdering) {
         String url = hentRestRotUrl() + BEHANDLINGER_OPPRETT;
         postOgVerifiser(url, behandlingOpprettRevurdering, StatusRange.STATUS_SUCCESS);
     }
 
-    public void addVerge(BehandlingIdBasicDto behandlingIdBasicDto){
+    public void addVerge(BehandlingIdBasicDto behandlingIdBasicDto) {
         String url = hentRestRotUrl() + LEGG_TIL_VERGE_URL;
         postOgVerifiser(url, behandlingIdBasicDto, StatusRange.STATUS_SUCCESS);
     }
-    public void removeVerge(BehandlingIdBasicDto behandlingIdBasicDto){
+
+    public void removeVerge(BehandlingIdBasicDto behandlingIdBasicDto) {
         String url = hentRestRotUrl() + FJERN_VERGE_URL;
         postOgVerifiser(url, behandlingIdBasicDto, StatusRange.STATUS_SUCCESS);
     }
@@ -61,7 +64,9 @@ public class BehandlingerKlient extends FptilbakeKlient {
     @Step("Henter ut alle behandlinger fra fptilbake på gitt saksnummer")
     public List<Behandling> hentAlleTbkBehandlinger(long saksnummer) {
         String url = hentRestRotUrl() + String.format(BEHANDLINGER_ALLE_URL, saksnummer);
-        return getOgHentJson(url, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Behandling.class), StatusRange.STATUS_SUCCESS);
+        return getOgHentJson(url,
+                hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Behandling.class),
+                StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Henter ut en bestemt behandling fra fptilbake")
@@ -73,7 +78,9 @@ public class BehandlingerKlient extends FptilbakeKlient {
     @Step("Henter ut alle aksjonspunkter på en gitt behandling fra fptilbake")
     public List<AksjonspunktDto> hentAlleAksjonspunkter(int behandlingId) {
         String url = hentRestRotUrl() + String.format(AKSJONSPUNKT_GET_URL, behandlingId);
-        return getOgHentJson(url, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, AksjonspunktDto.class), StatusRange.STATUS_SUCCESS);
+        return getOgHentJson(url,
+                hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, AksjonspunktDto.class),
+                StatusRange.STATUS_SUCCESS);
     }
 
     @Description("Henter faktaer som trengs for behandling av Fakta - aksjonspunkt 7003")

@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
-@BekreftelseKode(kode="5058")
+@BekreftelseKode(kode = "5058")
 //TODO: Rydd opp i denne. Ganske uoversiktlig.
 public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
 
@@ -35,7 +35,8 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilMottarYtelse(List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses) {
+    public VurderFaktaOmBeregningBekreftelse leggTilMottarYtelse(
+            List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses) {
         fakta.leggTilMottarYtelse(null, arbeidstakerandelUtenIMMottarYtelses);
         return this;
     }
@@ -45,9 +46,11 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilMaanedsinntektUtenInntektsmelding(List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe) {
+    public VurderFaktaOmBeregningBekreftelse leggTilMaanedsinntektUtenInntektsmelding(
+            List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe) {
         fakta.leggTilMaanedsinntektUtenInntektsmelding(andelListe);
-        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSLONN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING.kode);
+        fakta.leggTilFaktaOmBeregningTilfeller(
+                FaktaOmBeregningTilfelle.FASTSETT_MAANEDSLONN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING.kode);
         return this;
     }
 
@@ -68,13 +71,14 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-
-    public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(String orgnummer, boolean skalUtvideGyldighet) {
+    public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(String orgnummer,
+            boolean skalUtvideGyldighet) {
         fakta.leggTilRefusjonGyldighet(orgnummer, skalUtvideGyldighet);
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode, BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
+    public VurderFaktaOmBeregningBekreftelse leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode,
+            BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
         fakta.leggTilAndelerEndretBg(periode, andel, fastsatteVerdier);
         return this;
     }
@@ -106,7 +110,8 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        for (FaktaOmBeregningTilfelle faktaOmBeregningTilfeller : behandling.getBeregningsgrunnlag().getFaktaOmBeregning().getFaktaOmBeregningTilfeller()) {
+        for (FaktaOmBeregningTilfelle faktaOmBeregningTilfeller : behandling.getBeregningsgrunnlag()
+                .getFaktaOmBeregning().getFaktaOmBeregningTilfeller()) {
             fakta.leggTilFaktaOmBeregningTilfeller(faktaOmBeregningTilfeller.kode);
         }
     }

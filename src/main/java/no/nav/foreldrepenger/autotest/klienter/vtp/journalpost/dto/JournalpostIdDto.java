@@ -18,5 +18,4 @@ public class JournalpostIdDto {
         this.journalpostId = journalpostId;
     }
 
-
 }

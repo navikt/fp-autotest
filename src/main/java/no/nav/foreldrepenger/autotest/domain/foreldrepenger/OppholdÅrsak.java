@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -17,8 +17,7 @@ public enum OppholdÅrsak implements Serializable {
     FEDREKVOTE_ANNEN_FORELDER("UTTAK_FEDREKVOTE_ANNEN_FORELDER"),
     FELLESPERIODE_ANNEN_FORELDER("UTTAK_FELLESP_ANNEN_FORELDER"),
     FORELDREPENGER_ANNEN_FORELDER("UTTAK_FORELDREPENGER_ANNEN_FORELDER"),
-    UDEFINERT("-")
-    ;
+    UDEFINERT("-");
 
     private static final Map<String, OppholdÅrsak> KODER = new LinkedHashMap<>();
 

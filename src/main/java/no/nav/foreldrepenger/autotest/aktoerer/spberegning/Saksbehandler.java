@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.aktoerer.spberegning;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class Saksbehandler extends Aktoer {
     public void erLoggetInnMedRolle(Rolle rolle) {
         super.erLoggetInnMedRolle(rolle);
         kodeverk = kodeverkKlient.kodeverk();
-        //throw new RuntimeException("erLoggetInnMedRolle ikke ferdig implementert");
+        // throw new RuntimeException("erLoggetInnMedRolle ikke ferdig implementert");
     }
 
     /*
@@ -58,15 +57,16 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Foreslår beregning for Gosyssak {gosysSakId}")
     public BeregningDto foreslåBeregning(String tema, TestscenarioDto testscenario, String gosysSakId) {
-        ForeslaaDto foreslå = new ForeslaaDto(tema, Long.parseLong(testscenario.getPersonopplysninger().getSøkerAktørIdent()), gosysSakId);
+        ForeslaaDto foreslå = new ForeslaaDto(tema,
+                Long.parseLong(testscenario.getPersonopplysninger().getSøkerAktørIdent()), gosysSakId);
         forslag = beregningKlient.foreslaBeregningPost(foreslå);
         beregning = beregningKlient.hentBeregning(forslag.getBeregningId());
         beregning.getBeregningsgrunnlag().getId();
         logger.debug("Opprettet beregning for sak='{}' med id: {}", beregning.getSaksnummer(), beregning.getId());
-        logger.debug(String.format("http://localhost:9999/#/foresla-beregning/%s/%s/%s/", testscenario.getPersonopplysninger().getSøkerAktørIdent(), gosysSakId, tema));
+        logger.debug(String.format("http://localhost:9999/#/foresla-beregning/%s/%s/%s/",
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(), gosysSakId, tema));
         return beregning;
     }
-
 
     protected void oppdaterBeregning(LocalDate skjæringstidspunkt, Kode status) {
         OppdaterBeregningDto request = new OppdaterBeregningDto(beregning.getId());
@@ -100,7 +100,8 @@ public class Saksbehandler extends Aktoer {
     }
 
     public Double BruttoInkludertBortfaltNaturalytelsePrAar() {
-        return beregning.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode().get(0).getBruttoInkludertBortfaltNaturalytelsePrAar();
+        return beregning.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode().get(0)
+                .getBruttoInkludertBortfaltNaturalytelsePrAar();
     }
 
     public LocalDate sammenligningsperiodeTom() {
@@ -108,7 +109,8 @@ public class Saksbehandler extends Aktoer {
     }
 
     public List<AktivitetsAvtaleDto> getAktivitetsAvtaler() {
-        return beregning.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode().get(0).getBeregningsgrunnlagPrStatusOgAndel().get(0).getAktivitetsAvtaleDto();
+        return beregning.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode().get(0)
+                .getBeregningsgrunnlagPrStatusOgAndel().get(0).getAktivitetsAvtaleDto();
     }
 
     public Double getSammenligningsgrunnlag() {

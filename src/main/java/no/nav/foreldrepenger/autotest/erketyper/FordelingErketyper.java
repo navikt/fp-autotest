@@ -31,57 +31,68 @@ import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Uttaksperiode;
 public class FordelingErketyper {
 
     public static Fordeling fordelingHappyCase(LocalDate familehendelseDato, SøkersRolle søkerRolle) {
-        if(søkerRolle == SøkersRolle.MOR) {
+        if (søkerRolle == SøkersRolle.MOR) {
             return fordelingMorHappyCaseLong(familehendelseDato);
-        }
-        else {
+        } else {
             return fordelingFarHappyCase(familehendelseDato);
         }
     }
+
     public static Fordeling fordelingMorHappyCase(LocalDate familehendelseDato) {
         return generiskFordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)),
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3),
+                        familehendelseDato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, familehendelseDato, familehendelseDato.plusWeeks(10)));
     }
 
     public static Fordeling fordelingMorHappyCaseLong(LocalDate familehendelseDato) {
         return generiskFordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)),
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3),
+                        familehendelseDato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, familehendelseDato, familehendelseDato.plusWeeks(15).minusDays(1)),
-                uttaksperiode(FELLESPERIODE, familehendelseDato.plusWeeks(15), familehendelseDato.plusWeeks(31).minusDays(1)));
+                uttaksperiode(FELLESPERIODE, familehendelseDato.plusWeeks(15),
+                        familehendelseDato.plusWeeks(31).minusDays(1)));
     }
 
     public static Fordeling fordelingMorHappyCaseEkstraUttakFørFødsel(LocalDate familehendelseDato) {
         return generiskFordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(12), familehendelseDato.minusDays(1)),
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(12),
+                        familehendelseDato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, familehendelseDato, familehendelseDato.plusWeeks(10)));
     }
 
     public static Fordeling fordelingMorHappyCaseMedEkstraUttak(LocalDate familiehendelseDato) {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
-        fordeling.getPerioder().add(uttaksperiode(FELLESPERIODE, familiehendelseDato.plusWeeks(10).plusDays(1), familiehendelseDato.plusWeeks(12)));
+        fordeling.getPerioder().add(uttaksperiode(FELLESPERIODE, familiehendelseDato.plusWeeks(10).plusDays(1),
+                familiehendelseDato.plusWeeks(12)));
         return fordeling;
     }
 
     public static Fordeling fordelingMorMedAksjonspunkt(LocalDate familiehendelseDato) {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
-        fordeling.getPerioder().add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(3), familiehendelseDato.minusDays(1)));
+        fordeling.getPerioder().add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(3),
+                familiehendelseDato.minusDays(1)));
         return fordeling;
     }
 
-    public static Gradering graderingsperiodeArbeidstaker(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, String orgnummer, Integer arbeidstidsprosentIOrgnr) {
+    public static Gradering graderingsperiodeArbeidstaker(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom,
+            String orgnummer, Integer arbeidstidsprosentIOrgnr) {
         return new GraderingBuilder(stønadskonto.getKode(), fom, tom)
                 .medGraderingArbeidstaker(orgnummer, arbeidstidsprosentIOrgnr)
                 .build();
     }
-    public static Gradering graderingsperiodeFL(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, Integer arbeidstidsprosent) {
+
+    public static Gradering graderingsperiodeFL(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom,
+            Integer arbeidstidsprosent) {
         return new GraderingBuilder(stønadskonto.getKode(), fom, tom)
                 .medGraderingFL(arbeidstidsprosent)
                 .build();
     }
-    public static Gradering graderingsperiodeSN(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, Integer arbeidstidsprosent) {
+
+    public static Gradering graderingsperiodeSN(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom,
+            Integer arbeidstidsprosent) {
         return new GraderingBuilder(stønadskonto.getKode(), fom, tom)
                 .medGraderingSN(arbeidstidsprosent)
                 .build();
@@ -97,28 +108,33 @@ public class FordelingErketyper {
 
         return utsettelsesperiode;
     }
-    //TODO Kan slettes
+
+    // TODO Kan slettes
     public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom) {
         return new UttaksperiodeBuilder(stønadskonto.getKode(), fom, tom).build();
     }
-    public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, Boolean flerbarnsdager,
-                                              Boolean samtidigUttak) {
+
+    public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom,
+            Boolean flerbarnsdager,
+            Boolean samtidigUttak) {
         return uttaksperiode(stønadskonto, fom, tom, flerbarnsdager, samtidigUttak, 100);
     }
-    public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, Boolean flerbarnsdager,
-                                              Boolean samtidigUttak,  int uttaksprosent) {
+
+    public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom,
+            Boolean flerbarnsdager,
+            Boolean samtidigUttak, int uttaksprosent) {
         UttaksperiodeBuilder uttaksperiodeBuilder = new UttaksperiodeBuilder(stønadskonto.getKode(), fom, tom);
-        if ( flerbarnsdager ) {
+        if (flerbarnsdager) {
             uttaksperiodeBuilder.medFlerbarnsdager();
         }
-        if ( samtidigUttak ) {
+        if (samtidigUttak) {
             uttaksperiodeBuilder.medSamtidigUttak(BigDecimal.valueOf(uttaksprosent));
         }
-        return  uttaksperiodeBuilder.build();
+        return uttaksperiodeBuilder.build();
     }
 
-
-    public static Overfoeringsperiode overføringsperiode(OverføringÅrsak overføringÅrsak, Stønadskonto stønadskonto, LocalDate fom, LocalDate tom) {
+    public static Overfoeringsperiode overføringsperiode(OverføringÅrsak overføringÅrsak, Stønadskonto stønadskonto,
+            LocalDate fom, LocalDate tom) {
         Overfoeringsaarsaker overfoeringsaarsaker = new Overfoeringsaarsaker();
         overfoeringsaarsaker.setKode(overføringÅrsak.name());
 
@@ -155,25 +171,31 @@ public class FordelingErketyper {
     }
 
     public static Fordeling fordelingFarHappyCase(LocalDate familehendelseDato) {
-        return generiskFordeling(uttaksperiode(FELLESPERIODE, familehendelseDato.plusWeeks(3), familehendelseDato.plusWeeks(5)));
+        return generiskFordeling(
+                uttaksperiode(FELLESPERIODE, familehendelseDato.plusWeeks(3), familehendelseDato.plusWeeks(5)));
     }
+
     public static Fordeling fordelingFarHappyCase() {
-        return generiskFordeling(uttaksperiode(FEDREKVOTE, LocalDate.now().plusWeeks(3), LocalDate.now().plusWeeks(18).minusDays(1)));
+        return generiskFordeling(
+                uttaksperiode(FEDREKVOTE, LocalDate.now().plusWeeks(3), LocalDate.now().plusWeeks(18).minusDays(1)));
     }
 
     public static Fordeling fordelingFarHappyCaseMedMor(LocalDate familiehendelseDato) {
-        return generiskFordeling(uttaksperiode(FELLESPERIODE, familiehendelseDato.plusWeeks(6), familiehendelseDato.plusWeeks(9)));
+        return generiskFordeling(
+                uttaksperiode(FELLESPERIODE, familiehendelseDato.plusWeeks(6), familiehendelseDato.plusWeeks(9)));
     }
 
     public static Fordeling fordelingFarUtenOverlapp(LocalDate familehendelseDato) {
-        return generiskFordeling(uttaksperiode(FELLESPERIODE, familehendelseDato.plusWeeks(6).plusDays(1), familehendelseDato.plusWeeks(8)));
+        return generiskFordeling(uttaksperiode(FELLESPERIODE, familehendelseDato.plusWeeks(6).plusDays(1),
+                familehendelseDato.plusWeeks(8)));
     }
 
     public static Fordeling fordelingFarHappycaseKobletMedMorHappycase(LocalDate familehendelseDato) {
-        return generiskFordeling(uttaksperiode(FEDREKVOTE, familehendelseDato.plusWeeks(10).plusDays(1), familehendelseDato.plusWeeks(16)));
+        return generiskFordeling(uttaksperiode(FEDREKVOTE, familehendelseDato.plusWeeks(10).plusDays(1),
+                familehendelseDato.plusWeeks(16)));
     }
 
-    //TODO Flytte til TestBase
+    // TODO Flytte til TestBase
     public static Fordeling generiskFordeling(LukketPeriodeMedVedlegg... perioder) {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
@@ -189,8 +211,10 @@ public class FordelingErketyper {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(false);
 
-        fordeling.getPerioder().add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)));
-        fordeling.getPerioder().add(uttaksperiode(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(100)));
+        fordeling.getPerioder().add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3),
+                familehendelseDato.minusDays(1)));
+        fordeling.getPerioder()
+                .add(uttaksperiode(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(100)));
 
         return fordeling;
     }
@@ -199,7 +223,8 @@ public class FordelingErketyper {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(false);
 
-        fordeling.getPerioder().add(uttaksperiode(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(20)));
+        fordeling.getPerioder()
+                .add(uttaksperiode(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(20)));
 
         return fordeling;
     }

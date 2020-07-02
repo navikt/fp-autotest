@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.autotest.util.localdate;
 
+import static java.lang.Math.toIntExact;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-
-import static java.lang.Math.toIntExact;
 
 public class Virkedager {
 
@@ -25,12 +25,15 @@ public class Virkedager {
         }
 
         try {
-            // Utvid til nærmeste mandag tilbake i tid fra og med begynnelse (fom) (0-6 dager)
+            // Utvid til nærmeste mandag tilbake i tid fra og med begynnelse (fom) (0-6
+            // dager)
             int padBefore = fom.getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue();
             // Utvid til nærmeste søndag fram i tid fra og med slutt (tom) (0-6 dager)
             int padAfter = DayOfWeek.SUNDAY.getValue() - tom.getDayOfWeek().getValue();
             // Antall virkedager i perioden utvidet til hele uker
-            int virkedagerPadded = toIntExact(ChronoUnit.WEEKS.between(fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1)) * VIRKEDAGER_PR_UKE);
+            int virkedagerPadded = toIntExact(
+                    ChronoUnit.WEEKS.between(fom.minusDays(padBefore), tom.plusDays(padAfter).plusDays(1))
+                            * VIRKEDAGER_PR_UKE);
             // Antall virkedager i utvidelse
             int virkedagerPadding = Math.min(padBefore, VIRKEDAGER_PR_UKE) + Math.max(padAfter - HELGEDAGER_PR_UKE, 0);
             // Virkedager i perioden uten virkedagene fra utvidelse
@@ -46,7 +49,7 @@ public class Virkedager {
 
         LocalDate resultat = fom.plusWeeks(uker);
 
-        while (dager > 0 || erHelg(resultat)) {
+        while ((dager > 0) || erHelg(resultat)) {
             if (!erHelg(resultat)) {
                 dager--;
             }
@@ -61,7 +64,7 @@ public class Virkedager {
 
         LocalDate resultat = fom.minusWeeks(uker);
 
-        while (dager > 0 || erHelg(resultat)) {
+        while ((dager > 0) || erHelg(resultat)) {
             if (!erHelg(resultat)) {
                 dager--;
             }

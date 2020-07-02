@@ -7,7 +7,7 @@ public abstract class OverstyringsBekreftelse extends AksjonspunktBekreftelse {
 
     protected String avslagskode;
     protected boolean erVilkarOk = true;
-    
+
     public OverstyringsBekreftelse() {
         super();
     }

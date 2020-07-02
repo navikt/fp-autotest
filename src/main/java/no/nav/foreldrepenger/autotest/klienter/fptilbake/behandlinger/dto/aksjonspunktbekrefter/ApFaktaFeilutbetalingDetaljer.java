@@ -9,7 +9,7 @@ public class ApFaktaFeilutbetalingDetaljer {
 
     protected ApFaktaFeilutbetalingAarsak årsak = new ApFaktaFeilutbetalingAarsak();
 
-    public ApFaktaFeilutbetalingDetaljer (LocalDate fom, LocalDate tom) {
+    public ApFaktaFeilutbetalingDetaljer(LocalDate fom, LocalDate tom) {
         this.fom = fom;
         this.tom = tom;
     }

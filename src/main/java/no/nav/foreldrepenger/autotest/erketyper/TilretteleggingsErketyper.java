@@ -13,10 +13,10 @@ import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.IngenTilretteleggi
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.ObjectFactory;
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
 
+public class TilretteleggingsErketyper {
 
-public class TilretteleggingsErketyper{
-
-    public static Tilrettelegging helTilrettelegging(LocalDate behovForTilretteleggingFom, LocalDate tilrettelagtArbeidFom, Arbeidsforhold arbeidsforhold) {
+    public static Tilrettelegging helTilrettelegging(LocalDate behovForTilretteleggingFom,
+            LocalDate tilrettelagtArbeidFom, Arbeidsforhold arbeidsforhold) {
         Tilrettelegging tilrettelegging = new Tilrettelegging();
         tilrettelegging.setBehovForTilretteleggingFom(behovForTilretteleggingFom);
         tilrettelegging.setArbeidsforhold(arbeidsforhold);
@@ -26,7 +26,7 @@ public class TilretteleggingsErketyper{
         innsendingstype.setKode("LASTET_OPP");
         innsendingstype.setKodeverk("INNSENDINGSVALG");
         Vedlegg vedlegg = new Vedlegg();
-        vedlegg.setId("A"+UUID.randomUUID().toString().substring(0,6));
+        vedlegg.setId("A" + UUID.randomUUID().toString().substring(0, 6));
         vedlegg.setInnsendingstype(innsendingstype);
 
         HelTilrettelegging helTilrettelegging = new HelTilrettelegging();
@@ -36,7 +36,8 @@ public class TilretteleggingsErketyper{
         return tilrettelegging;
     }
 
-    public static Tilrettelegging delvisTilrettelegging(LocalDate behovForTilretteleggingFom, LocalDate tilrettelagtArbeidFom, Arbeidsforhold arbeidsforhold, BigDecimal stillingsprosent) {
+    public static Tilrettelegging delvisTilrettelegging(LocalDate behovForTilretteleggingFom,
+            LocalDate tilrettelagtArbeidFom, Arbeidsforhold arbeidsforhold, BigDecimal stillingsprosent) {
         Tilrettelegging tilrettelegging = new Tilrettelegging();
         tilrettelegging.setBehovForTilretteleggingFom(behovForTilretteleggingFom);
         tilrettelegging.setArbeidsforhold(arbeidsforhold);
@@ -46,7 +47,7 @@ public class TilretteleggingsErketyper{
         innsendingstype.setKode("LASTET_OPP");
         innsendingstype.setKodeverk("INNSENDINGSVALG");
         Vedlegg vedlegg = new Vedlegg();
-        vedlegg.setId("B"+UUID.randomUUID().toString().substring(0,6));
+        vedlegg.setId("B" + UUID.randomUUID().toString().substring(0, 6));
         vedlegg.setInnsendingstype(innsendingstype);
 
         DelvisTilrettelegging delvisTilrettelegging = new DelvisTilrettelegging();
@@ -58,8 +59,8 @@ public class TilretteleggingsErketyper{
     }
 
     public static Tilrettelegging ingenTilrettelegging(LocalDate behovForTilretteleggingFom,
-                                                       LocalDate tilrettelagtArbeidFom,
-                                                       Arbeidsforhold arbeidsforhold) {
+            LocalDate tilrettelagtArbeidFom,
+            Arbeidsforhold arbeidsforhold) {
         Tilrettelegging tilrettelegging = new Tilrettelegging();
         tilrettelegging.setBehovForTilretteleggingFom(behovForTilretteleggingFom);
         tilrettelegging.setArbeidsforhold(arbeidsforhold);
@@ -69,7 +70,7 @@ public class TilretteleggingsErketyper{
         innsendingstype.setKode("LASTET_OPP");
         innsendingstype.setKodeverk("INNSENDINGSVALG");
         Vedlegg vedlegg = new Vedlegg();
-        vedlegg.setId("C"+UUID.randomUUID().toString().substring(0,6));
+        vedlegg.setId("C" + UUID.randomUUID().toString().substring(0, 6));
         vedlegg.setInnsendingstype(innsendingstype);
 
         IngenTilrettelegging ingenTilrettelegging = new IngenTilrettelegging();

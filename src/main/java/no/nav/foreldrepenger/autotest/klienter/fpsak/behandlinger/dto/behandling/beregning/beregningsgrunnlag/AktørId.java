@@ -2,14 +2,11 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import java.util.Objects;
 
-import javax.validation.constraints.Pattern;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
@@ -17,10 +14,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public class AktørId {
 
     @JsonProperty(value = "aktørId")
-    private String aktørId;  // NOSONAR
+    private String aktørId; // NOSONAR
 
     @JsonCreator
-    public AktørId(@JsonProperty(value = "aktørId", required=true, index=1) String aktørId) {
+    public AktørId(@JsonProperty(value = "aktørId", required = true, index = 1) String aktørId) {
         this.aktørId = aktørId;
     }
 
@@ -28,12 +25,11 @@ public class AktørId {
         return aktørId;
     }
 
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
-        } else if (obj == null || !getClass().equals(obj.getClass())) {
+        } else if ((obj == null) || !getClass().equals(obj.getClass())) {
             return false;
         }
         AktørId other = (AktørId) obj;

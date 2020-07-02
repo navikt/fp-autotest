@@ -14,13 +14,14 @@ import no.nav.foreldrepenger.autotest.klienter.spberegning.beregning.dto.inntekt
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 
-public class BeregningKlient extends SpBeregningKlient{
+public class BeregningKlient extends SpBeregningKlient {
 
     public static final String BEREGNING_URL = "/beregning";
     public static final String BEREGNING_HENT_BEREGNING_URL = BEREGNING_URL + "/hent-beregning";
     public static final String BEREGNING_HENT_PERSON_INFO_URL = BEREGNING_URL + "/hent-person-info";
     public static final String BEREGNING_HENT_INNTEKTSMELDING_URL = BEREGNING_URL + "/hent-inntektsmeldinger";
-    public static final String BEREGNING_HENT_ALLE_INNTEKTSMELDINGER_URL = BEREGNING_URL + "/hent-alle-inntektsmeldinger";
+    public static final String BEREGNING_HENT_ALLE_INNTEKTSMELDINGER_URL = BEREGNING_URL
+            + "/hent-alle-inntektsmeldinger";
     public static final String BEREGNING_FORESLA_BEREGNING_URL = BEREGNING_URL + "/foresla-beregning";
     public static final String BEREGNING_OPPDATER_BEREGNING_URL = BEREGNING_URL + "/oppdater-beregning";
     public static final String BEREGNING_PING_URL = BEREGNING_URL + "/ping";
@@ -31,7 +32,7 @@ public class BeregningKlient extends SpBeregningKlient{
     }
 
     public BeregningDto hentBeregning(int beregningId) {
-        String url = hentRestRotUrl() + BEREGNING_HENT_BEREGNING_URL + "?beregningId="+beregningId;
+        String url = hentRestRotUrl() + BEREGNING_HENT_BEREGNING_URL + "?beregningId=" + beregningId;
         return getOgHentJson(url, BeregningDto.class, StatusRange.STATUS_SUCCESS);
     }
 
@@ -76,7 +77,7 @@ public class BeregningKlient extends SpBeregningKlient{
     }
 
     public void lagrenotat(LagreNotatDto notat) {
-        String url = hentRestRotUrl() + BEREGNING_LAGRE_NOTAT_URL;
+        hentRestRotUrl();
 
     }
 
