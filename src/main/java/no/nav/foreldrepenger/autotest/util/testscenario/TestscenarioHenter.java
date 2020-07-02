@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
+
 public class TestscenarioHenter {
 
     private static final String PERSONOPPLYSNING_JSON_FIL_NAVN = "personopplysning.json";
@@ -20,7 +22,7 @@ public class TestscenarioHenter {
     private static final String VARS_JSON_FIL_NAVN = "vars.json";
 
     private final Map<String, Object> scenarioObjects = new TreeMap<>();
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = JsonKlient.getObjectMapper();
     private final File rootDir = new File(
             Objects.requireNonNull(this.getClass().getClassLoader().getResource("scenarios")).getFile());
 

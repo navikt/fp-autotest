@@ -313,7 +313,7 @@ public class Fordel extends Aktoer {
 
         if ((saksnummer == null) || (saksnummer.longValue() == 0L)) {
             OpprettSak journalpost = new OpprettSak(journalpostId, behandlingstemaOffisiellKode, aktørId);
-            saksnummer = fordelKlient.fagsakOpprett(journalpost).saksnummer;
+            saksnummer = fordelKlient.fagsakOpprett(journalpost).getSaksnummer();
         }
 
         journalpostKlient.knyttSakTilJournalpost(journalpostId, saksnummer.toString());
@@ -321,8 +321,8 @@ public class Fordel extends Aktoer {
         JournalpostKnyttning journalpostKnyttning = new JournalpostKnyttning(new Saksnummer(saksnummer), idDto);
         fordelKlient.fagsakKnyttJournalpost(journalpostKnyttning);
 
-        JournalpostMottak journalpostMottak = new JournalpostMottak("" + saksnummer, journalpostId, mottattDato,
-                behandlingstemaOffisiellKode);
+        JournalpostMottak journalpostMottak = new JournalpostMottak("" + saksnummer, journalpostId,
+                mottattDato.toString(), behandlingstemaOffisiellKode);
         journalpostMottak.setDokumentTypeIdOffisiellKode(dokumentTypeIdOffisiellKode);
         journalpostMottak.setForsendelseId(UUID.randomUUID().toString());
         journalpostMottak.setDokumentKategoriOffisiellKode(dokumentKategori);

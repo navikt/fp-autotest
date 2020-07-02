@@ -3,7 +3,9 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
@@ -13,18 +15,22 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class FaktaOmBeregningLagreDto {
 
-    protected FastsettMaanedsinntektFL fastsettMaanedsinntektFL;
-    protected FastsettMaanedsinntektUtenInntektsmelding fastsattUtenInntektsmelding;
-    protected List<String> faktaOmBeregningTilfeller = new ArrayList<>();
-    protected MottarYtelse mottarYtelse;
-    protected FastsettEndretBeregningsgrunnlag fastsettEndringBeregningsgrunnlag;
-    protected BesteberegningFødendeKvinneDto besteberegningAndeler;
-    protected VurderTidsbegrensetArbeidsforholdDto vurderTidsbegrensetArbeidsforhold;
-    protected YtelseForedeling kunYtelseFordeling;
-    protected VurderLønnsendringDto vurdertLonnsendring;
-    protected List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet = new ArrayList<>();
+    private FastsettMaanedsinntektFL fastsettMaanedsinntektFL;
+    private FastsettMaanedsinntektUtenInntektsmelding fastsattUtenInntektsmelding;
+    private List<String> faktaOmBeregningTilfeller = new ArrayList<>();
+    private MottarYtelse mottarYtelse;
+    private FastsettEndretBeregningsgrunnlag fastsettEndringBeregningsgrunnlag;
+    private BesteberegningFødendeKvinneDto besteberegningAndeler;
+    private VurderTidsbegrensetArbeidsforholdDto vurderTidsbegrensetArbeidsforhold;
+    private FastsettBgKunYtelseDto kunYtelseFordeling;
+    private VurderLønnsendringDto vurdertLonnsendring;
+    private List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet = new ArrayList<>();
+
+    public FaktaOmBeregningLagreDto() {
+    }
 
     public FaktaOmBeregningLagreDto leggTilFaktaOmBeregningTilfeller(String kode) {
         this.faktaOmBeregningTilfeller.add(kode);
@@ -82,9 +88,9 @@ public class FaktaOmBeregningLagreDto {
 
     public FaktaOmBeregningLagreDto leggTilAndelerYtelse(double beløp, Kode inntektskategori) {
         if (kunYtelseFordeling == null) {
-            kunYtelseFordeling = new YtelseForedeling();
+            kunYtelseFordeling = new FastsettBgKunYtelseDto();
         }
-        kunYtelseFordeling.leggTilYtelseAndeler(new YtelseAndeler(beløp, inntektskategori.kode));
+        kunYtelseFordeling.leggTilYtelseAndeler(new FastsettBrukersAndel(beløp, inntektskategori.kode));
         return this;
     }
 
@@ -95,9 +101,9 @@ public class FaktaOmBeregningLagreDto {
 
     public FaktaOmBeregningLagreDto settKunYtelseBesteberegning(boolean skalHaBesteberegning) {
         if (kunYtelseFordeling == null) {
-            kunYtelseFordeling = new YtelseForedeling();
+            kunYtelseFordeling = new FastsettBgKunYtelseDto();
         }
-        kunYtelseFordeling.skalBrukeBesteberegning = skalHaBesteberegning;
+        kunYtelseFordeling.setSkalBrukeBesteberegning(skalHaBesteberegning);
         return this;
     }
 
@@ -118,43 +124,43 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public class YtelseForedeling {
-
-        public List<YtelseAndeler> andeler = new ArrayList<>();
-        public Boolean skalBrukeBesteberegning;
-
-        public YtelseForedeling() {
-            // TODO Auto-generated constructor stub
-        }
-
-        public void leggTilYtelseAndeler(YtelseAndeler andel) {
-            andel.setAndelsnr(andeler.size() + 1);
-            andeler.add(andel);
-        }
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FaktaOmBeregningLagreDto that = (FaktaOmBeregningLagreDto) o;
+        return Objects.equals(fastsettMaanedsinntektFL, that.fastsettMaanedsinntektFL) &&
+                Objects.equals(fastsattUtenInntektsmelding, that.fastsattUtenInntektsmelding) &&
+                Objects.equals(faktaOmBeregningTilfeller, that.faktaOmBeregningTilfeller) &&
+                Objects.equals(mottarYtelse, that.mottarYtelse) &&
+                Objects.equals(fastsettEndringBeregningsgrunnlag, that.fastsettEndringBeregningsgrunnlag) &&
+                Objects.equals(besteberegningAndeler, that.besteberegningAndeler) &&
+                Objects.equals(vurderTidsbegrensetArbeidsforhold, that.vurderTidsbegrensetArbeidsforhold) &&
+                Objects.equals(kunYtelseFordeling, that.kunYtelseFordeling) &&
+                Objects.equals(vurdertLonnsendring, that.vurdertLonnsendring) &&
+                Objects.equals(refusjonskravGyldighet, that.refusjonskravGyldighet);
     }
 
-    public class YtelseAndeler {
-        public int andelsnr;
-        public double fastsattBeløp;
-        public String inntektskategori;
-        public boolean lagtTilAvSaksbehandler;
-        public boolean nyAndel;
-
-        public YtelseAndeler() {
-            // TODO Auto-generated constructor stub
-        }
-
-        public YtelseAndeler(double fastsattBeløp, String inntektskategori) {
-            super();
-            this.fastsattBeløp = fastsattBeløp;
-            this.inntektskategori = inntektskategori;
-        }
-
-        public void setAndelsnr(int andelsnr) {
-            this.andelsnr = andelsnr;
-        }
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(fastsettMaanedsinntektFL, fastsattUtenInntektsmelding, faktaOmBeregningTilfeller,
+                mottarYtelse, fastsettEndringBeregningsgrunnlag, besteberegningAndeler, vurderTidsbegrensetArbeidsforhold,
+                kunYtelseFordeling, vurdertLonnsendring, refusjonskravGyldighet);
     }
 
+    @Override
+    public String toString() {
+        return "FaktaOmBeregningLagreDto{" +
+                "fastsettMaanedsinntektFL=" + fastsettMaanedsinntektFL +
+                ", fastsattUtenInntektsmelding=" + fastsattUtenInntektsmelding +
+                ", faktaOmBeregningTilfeller=" + faktaOmBeregningTilfeller +
+                ", mottarYtelse=" + mottarYtelse +
+                ", fastsettEndringBeregningsgrunnlag=" + fastsettEndringBeregningsgrunnlag +
+                ", besteberegningAndeler=" + besteberegningAndeler +
+                ", vurderTidsbegrensetArbeidsforhold=" + vurderTidsbegrensetArbeidsforhold +
+                ", kunYtelseFordeling=" + kunYtelseFordeling +
+                ", vurdertLonnsendring=" + vurdertLonnsendring +
+                ", refusjonskravGyldighet=" + refusjonskravGyldighet +
+                '}';
+    }
 }

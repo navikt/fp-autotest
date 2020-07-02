@@ -3,9 +3,11 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Kode implements Serializable {
 
     public String kodeverk;
@@ -17,7 +19,7 @@ public class Kode implements Serializable {
     @Deprecated
     private String navn;
 
-    protected Kode() {
+    public Kode() {
         // for deserialisering
     }
 

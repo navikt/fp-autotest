@@ -1,27 +1,32 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public enum Stønadskonto implements Serializable {
+public enum Stønadskonto {
 
-    FORELDREPENGER_FØR_FØDSEL("FORELDREPENGER_FØR_FØDSEL"),
-    MØDREKVOTE("MØDREKVOTE"),
-    FEDREKVOTE("FEDREKVOTE"),
-    FELLESPERIODE("FELLESPERIODE"),
-    FORELDREPENGER("FORELDREPENGER"),
-    FLERBARNSDAGER("FLERBARNSDAGER"),
-    INGEN_STØNADSKONTO("-");
+    FELLESPERIODE,
+    MØDREKVOTE,
+    FEDREKVOTE,
+    FORELDREPENGER,
+    FLERBARNSDAGER,
+    FORELDREPENGER_FØR_FØDSEL,
+    @JsonEnumDefaultValue
+    UDEFINERT("-"),
+    ;
 
     private static final Map<String, Stønadskonto> KODER = new LinkedHashMap<>();
+
+    public static final String KODEVERK = "STOENADSKONTOTYPE";
 
     static {
         for (var v : values()) {
@@ -34,11 +39,12 @@ public enum Stønadskonto implements Serializable {
     private String kode;
 
     Stønadskonto() {
-
+        this(null);
     }
 
     Stønadskonto(String kode) {
-        this.kode = kode;
+        this.kode = Optional.ofNullable(kode)
+                .orElse(name());
     }
 
     @JsonCreator
@@ -48,7 +54,7 @@ public enum Stønadskonto implements Serializable {
         }
         var ad = KODER.get(kode);
         if (ad == null) {
-            throw new IllegalArgumentException("Ukjent Stønadskonto: " + kode);
+            throw new IllegalArgumentException("Ukjent StønadskontoType: " + kode);
         }
         return ad;
     }
@@ -58,8 +64,9 @@ public enum Stønadskonto implements Serializable {
         return kode;
     }
 
-    @Override
-    public String toString() {
-        return getKode();
+    @JsonProperty
+    public String getKodeverk() {
+        return KODEVERK;
     }
+
 }

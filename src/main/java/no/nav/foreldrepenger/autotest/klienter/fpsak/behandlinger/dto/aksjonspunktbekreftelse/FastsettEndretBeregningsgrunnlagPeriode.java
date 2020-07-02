@@ -3,15 +3,21 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 
-class FastsettEndretBeregningsgrunnlagPeriode {
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public class FastsettEndretBeregningsgrunnlagPeriode {
 
-    protected List<FastsettEndretBeregningsgrunnlagAndel> andeler = new ArrayList<>();
-    protected LocalDate fom;
-    protected LocalDate tom;
+    private List<FastsettEndretBeregningsgrunnlagAndel> andeler = new ArrayList<>();
+    private LocalDate fom;
+    private LocalDate tom;
 
+    @JsonCreator
     public FastsettEndretBeregningsgrunnlagPeriode(List<FastsettEndretBeregningsgrunnlagAndel> andeler, LocalDate fom,
             LocalDate tom) {
         this.andeler = andeler;
@@ -28,7 +34,7 @@ class FastsettEndretBeregningsgrunnlagPeriode {
     }
 
     void leggTilAndel(BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
-        if (andeler.stream().anyMatch(a -> a.andelsnr == andel.getAndelsnr())) {
+        if (andeler.stream().anyMatch(a -> a.getAndelsnr() == andel.getAndelsnr())) {
             RedigerbarAndel andelInfo = new RedigerbarAndel("Andelsinfo", andel.getAndelsnr(),
                     andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsgiverId(),
                     andel.getArbeidsforhold().getArbeidsforholdId(),
@@ -70,5 +76,29 @@ class FastsettEndretBeregningsgrunnlagPeriode {
 
     public void setTom(LocalDate tom) {
         this.tom = tom;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FastsettEndretBeregningsgrunnlagPeriode that = (FastsettEndretBeregningsgrunnlagPeriode) o;
+        return Objects.equals(andeler, that.andeler) &&
+                Objects.equals(fom, that.fom) &&
+                Objects.equals(tom, that.tom);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(andeler, fom, tom);
+    }
+
+    @Override
+    public String toString() {
+        return "FastsettEndretBeregningsgrunnlagPeriode{" +
+                "andeler=" + andeler +
+                ", fom=" + fom +
+                ", tom=" + tom +
+                '}';
     }
 }

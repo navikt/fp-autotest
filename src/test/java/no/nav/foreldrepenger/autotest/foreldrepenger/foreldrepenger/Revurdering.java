@@ -42,7 +42,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaStartdatoForForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
@@ -116,7 +119,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "OPPHØR", "Behandlingsresultat");
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getAvslagsarsak().kode, "1020", "Avslagsårsak");
         verifiserLikhet(beslutter.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
-        logger.info("Status på sak: {}", beslutter.valgtFagsak.hentStatus().kode);
+        beslutter.ventTilFagsakAvsluttet();
+        logger.info("Status på sak: {}", beslutter.valgtFagsak.getStatus().kode);
     }
 
     @Test
@@ -174,7 +178,123 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK", "konsekvensForYtelsen");
         saksbehandler.hentFagsak(saksnummerE);
-        verifiser(saksbehandler.valgtFagsak.hentStatus().kode.equals("LOP"), "Status på fagsaken er ikke løpende.");
+        verifiser(saksbehandler.valgtFagsak.getStatus().kode.equals("LOP"), "Status på fagsaken er ikke løpende.");
+
+    }
+
+    @Disabled
+    @Test
+    @DisplayName("Revurdering og ny IM når behandling er hos beslutter.")
+    @Description("Førstegangsbehandling til positivt vedtak. Revurdering, og ny IM kommer når behandling er hos beslutter. Vedtak fortsatt løpende.")
+    public void nyInntektsmeldingUnderÅpenRevurdering() {
+        TestscenarioDto testscenario = opprettTestscenario("50");
+
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+
+        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                fpStartdato,
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                        .getArbeidsgiverOrgnr());
+        fordel.sendInnInntektsmelding(
+                inntektsmeldinger,
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                saksnummer);
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
+
+        // Sender inn ny IM
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        InntektsmeldingBuilder inntektsmeldingerEndret = lagInntektsmelding(
+                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                fpStartdato.plusWeeks(1),
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                        .getArbeidsgiverOrgnr());
+        fordel.sendInnInntektsmelding(
+                inntektsmeldingerEndret,
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.velgRevurderingBehandling();
+        var aksjonspunktBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class)
+                .setStartdatoFraSoknad(fpStartdato.plusWeeks(1))
+                .setBegrunnelse("Endret startdato for fp.");
+        saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
+        verifiser(saksbehandler.harAksjonspunkt("5081"), "Har ikke AP 5081");
+        var avklarFaktaUttakBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakFørsteUttakDato.class)
+                .delvisGodkjennPeriode(fpStartdato, fpStartdato.plusWeeks(3).minusDays(1), fpStartdato.plusWeeks(1),
+                        fpStartdato.plusWeeks(3).minusDays(1),
+                        hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_OK"));
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+
+        // Sender inn ny IM når revurdering ligger hos beslutter
+        inntektsmeldingerEndret = lagInntektsmelding(
+                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                fpStartdato.plusDays(2),
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                        .getArbeidsgiverOrgnr());
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        fordel.sendInnInntektsmelding(
+                inntektsmeldingerEndret,
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                saksnummer);
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        verifiser(saksbehandler.behandlinger.size() == 2, "Fagsaken har mer enn én revurdering.");
+        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET);
+        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET),
+                "Mangler historikkinnslag om at behandlingen er flyttet.");
+        verifiser(saksbehandler.harAksjonspunkt("5045"),
+                "Behandling hopper ikke tilbake til 'Avklar startdato for foreldrepengeperioden'.");
+        var avklarFaktaStartdatoForForeldrepengerBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaStartdatoForForeldrepengerBekreftelse.class)
+                .setStartdatoFraSoknad(fpStartdato.plusDays(2))
+                .setBegrunnelse("Endret startdato for fp.");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaStartdatoForForeldrepengerBekreftelse2);
+        verifiser(saksbehandler.harAksjonspunkt("5081"), "Har ikke AP 5081");
+        var avklarFaktaUttakBekreftelse1 = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakFørsteUttakDato.class)
+                .delvisGodkjennPeriode(fpStartdato, fpStartdato.plusWeeks(3).minusDays(1), fpStartdato.plusDays(2),
+                        fpStartdato.plusWeeks(3).minusDays(1),
+                        hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_OK"));
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse1);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+
+        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+        beslutter.velgRevurderingBehandling();
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_FØRSTE_UTTAKSDATO));
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "FORELDREPENGER_ENDRET",
+                "Behandlingsresultat");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
+                "ENDRING_I_UTTAK", "konsekvensForYtelsen");
+
+        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.velgRevurderingBehandling();
+        verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
+        verifiser(saksbehandler.valgtFagsak.getStatus().kode.equals("LOP"), "Fagsaken er ikke løpende.");
 
     }
 
@@ -210,8 +330,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
         verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size() == 4,
                 "Feil antall perioder.");
 
@@ -228,20 +348,21 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.velgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtFagsak.hentStatus().kode, "LOP", "Saken er ikke løpende.");
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "FORELDREPENGER_ENDRET");
+        // TODO bedre validering, funksjonelt så er denne søknaden ikke helt bra!
+        verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus er ikke avsluttet");
+        verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "LOP", "Saken er ikke løpende.");
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "FORELDREPENGER_ENDRET");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK");
-
-        // Verifisering av uttak
-        var UttaksPerioderForSøker = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker();
-        verifiserLikhet(UttaksPerioderForSøker.size(), 6,"Feil antall perioder.");
-        for (UttakResultatPeriode periode : UttaksPerioderForSøker) {
-            verifiserLikhet(periode.getAktiviteter().size(), 1, "Periode har mer enn én aktivitet");
+        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size() == 6,
+                "Feil antall perioder.");
+        for (UttakResultatPeriode periode : saksbehandler.valgtBehandling.getUttakResultatPerioder()
+                .getPerioderSøker()) {
+            verifiser(periode.getAktiviteter().size() == 1, "Periode har mer enn én aktivitet");
         }
-        verifiserLikhet(UttaksPerioderForSøker.get(4).getUtsettelseType(), UttakUtsettelseÅrsak.ARBEID,
-                "Feil i utsettelsetype eller periode.");
+        var utsettelseType = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().get(4)
+                .getUtsettelseType();
+        verifiser(utsettelseType.equals(UttakUtsettelseÅrsak.ARBEID), "Feil i utsettelsetype eller periode.");
 
         // Verifisering tilkjent ytelse
         BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
@@ -294,9 +415,10 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size(), 4,
-                "Feil antall perioder i uttak.");
+        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
+        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size() == 4,
+                "Feil antall perioder.");
 
         // Endringssøknad
         LocalDate graderingFom = fødselsdato.plusWeeks(20);
@@ -312,19 +434,19 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.velgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtFagsak.hentStatus().kode, "LOP", "Saken er ikke løpende.");
+        verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus er ikke avsluttet");
+        verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "LOP", "Saken er ikke løpende.");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "FORELDREPENGER_ENDRET");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK");
-        verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size(), 5,
-                "Feil antall perioder i uttak.");
+        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size() == 5,
+                "Feil antall perioder.");
         for (UttakResultatPeriode periode : saksbehandler.valgtBehandling.getUttakResultatPerioder()
                 .getPerioderSøker()) {
-            verifiserLikhet(periode.getAktiviteter().size(), 1, "Periode har mer enn én aktivitet");
+            verifiser(periode.getAktiviteter().size() == 1, "Periode har mer enn én aktivitet");
         }
-        verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().get(4)
-                .getGraderingInnvilget(), true, "Feil graderingsperiode.");
+        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().get(4)
+                .getGraderingInnvilget(), "Feil graderingsperiode.");
 
     }
 
@@ -389,7 +511,7 @@ public class Revurdering extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.velgRevurderingBehandling();
-        verifiserLikhet(saksbehandler.valgtFagsak.hentStatus().kode, "LOP", "Saken er ikke løpende.");
+        verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "LOP", "Saken er ikke løpende.");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "FORELDREPENGER_ENDRET");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK");

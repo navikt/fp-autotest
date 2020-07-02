@@ -1,10 +1,14 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
 import java.time.LocalDate;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftelse {
 
     private static final String VURDERING_STADFEST = "STADFESTE_YTELSESVEDTAK";
@@ -58,6 +62,7 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
     }
 
     @BekreftelseKode(kode = "5035")
+    @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
     public static class VurderingAvKlageNfpBekreftelse extends VurderingAvKlageBekreftelse {
 
         public VurderingAvKlageNfpBekreftelse() {
@@ -66,6 +71,7 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
     }
 
     @BekreftelseKode(kode = "5036")
+    @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
     public static class VurderingAvKlageNkBekreftelse extends VurderingAvKlageBekreftelse {
 
         private static final String VURDERING_OPPHEVE = "OPPHEVE_YTELSESVEDTAK";
@@ -91,5 +97,34 @@ public abstract class VurderingAvKlageBekreftelse extends AksjonspunktBekreftels
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         this.vedtaksdatoPaklagdBehandling = LocalDate.now();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VurderingAvKlageBekreftelse that = (VurderingAvKlageBekreftelse) o;
+        return Objects.equals(klageVurdering, that.klageVurdering) &&
+                Objects.equals(klageMedholdArsak, that.klageMedholdArsak) &&
+                Objects.equals(klageVurderingOmgjoer, that.klageVurderingOmgjoer) &&
+                Objects.equals(fritekstTilBrev, that.fritekstTilBrev) &&
+                Objects.equals(vedtaksdatoPaklagdBehandling, that.vedtaksdatoPaklagdBehandling);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(klageVurdering, klageMedholdArsak, klageVurderingOmgjoer, fritekstTilBrev,
+                vedtaksdatoPaklagdBehandling);
+    }
+
+    @Override
+    public String toString() {
+        return "VurderingAvKlageBekreftelse{" +
+                "klageVurdering='" + klageVurdering + '\'' +
+                ", klageMedholdArsak='" + klageMedholdArsak + '\'' +
+                ", klageVurderingOmgjoer='" + klageVurderingOmgjoer + '\'' +
+                ", fritekstTilBrev='" + fritekstTilBrev + '\'' +
+                ", vedtaksdatoPaklagdBehandling=" + vedtaksdatoPaklagdBehandling +
+                "} " + super.toString();
     }
 }

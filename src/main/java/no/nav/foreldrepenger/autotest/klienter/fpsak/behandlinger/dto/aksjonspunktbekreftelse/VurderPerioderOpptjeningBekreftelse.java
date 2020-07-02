@@ -2,19 +2,34 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.OpptjeningAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 @BekreftelseKode(kode = "5051")
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<OpptjeningAktivitet> opptjeningAktivitetList = new ArrayList<>();
 
     public VurderPerioderOpptjeningBekreftelse() {
         super();
+    }
+
+    @JsonCreator
+    public VurderPerioderOpptjeningBekreftelse(@JsonProperty("opptjeningAktivitetList") List<OpptjeningAktivitet> opptjeningAktivitetList) {
+        this.opptjeningAktivitetList = opptjeningAktivitetList;
+    }
+
+    public List<OpptjeningAktivitet> getOpptjeningAktivitetList() {
+        return opptjeningAktivitetList;
     }
 
     public VurderPerioderOpptjeningBekreftelse godkjennAllOpptjening() {
@@ -70,5 +85,25 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
             opptjeningAktivitet.setAktivitetType(opptjeningAktivitet.getAktivitetType());
             opptjeningAktivitetList.add(opptjeningAktivitet);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VurderPerioderOpptjeningBekreftelse that = (VurderPerioderOpptjeningBekreftelse) o;
+        return Objects.equals(opptjeningAktivitetList, that.opptjeningAktivitetList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(opptjeningAktivitetList);
+    }
+
+    @Override
+    public String toString() {
+        return "VurderPerioderOpptjeningBekreftelse{" +
+                "opptjeningAktivitetList=" + opptjeningAktivitetList +
+                "} " + super.toString();
     }
 }

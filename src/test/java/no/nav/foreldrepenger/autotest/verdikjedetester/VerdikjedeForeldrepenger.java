@@ -301,6 +301,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     public void fraSøkerForeldrepengerTest() {
         TestscenarioDto testscenario = opprettTestscenario("560");
 
+
+
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         var fpStartdatoMor = fødselsdato.minusWeeks(3);

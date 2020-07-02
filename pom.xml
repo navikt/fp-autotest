@@ -16,11 +16,11 @@
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
 
-        <vtp.versjon>1.0-2020.07.02.145041-a3e814b</vtp.versjon>
+        <vtp.versjon>1.0-2020.08.25.113432-8a51e7f</vtp.versjon>
 
         <aspectj.version>1.9.6</aspectj.version>
 
-        <jackson.version>2.10.3</jackson.version>
+        <jackson.version>2.11.2</jackson.version>
 
         <dokumentgenerator.version>1.0-20200327105749-73dec14</dokumentgenerator.version>
     </properties>
@@ -153,9 +153,13 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
+		    <parameters>true</parameters>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>

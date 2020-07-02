@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -10,10 +12,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * {@link #behandlingUuid} vil være satt.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BehandlingIdDto {
-    protected Long saksnummer;
-    protected Long behandlingId;
-    protected UUID behandlingUuid;
+
+    private Long saksnummer;
+    private Long behandlingId;
+    private UUID behandlingUuid;
 
     public BehandlingIdDto() {
         behandlingId = null; // NOSONAR
@@ -28,6 +32,7 @@ public class BehandlingIdDto {
         }
     }
 
+    @JsonCreator
     public BehandlingIdDto(Long saksnummer, Long behandlingId, UUID behandlingUuid) {
         this.saksnummer = saksnummer;
         this.behandlingId = behandlingId;
@@ -54,4 +59,27 @@ public class BehandlingIdDto {
         return saksnummer;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BehandlingIdDto that = (BehandlingIdDto) o;
+        return Objects.equals(saksnummer, that.saksnummer) &&
+                Objects.equals(behandlingId, that.behandlingId) &&
+                Objects.equals(behandlingUuid, that.behandlingUuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(saksnummer, behandlingId, behandlingUuid);
+    }
+
+    @Override
+    public String toString() {
+        return "BehandlingIdDto{" +
+                "saksnummer=" + saksnummer +
+                ", behandlingId=" + behandlingId +
+                ", behandlingUuid=" + behandlingUuid +
+                '}';
+    }
 }

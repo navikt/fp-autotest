@@ -9,6 +9,10 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
@@ -20,18 +24,17 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 
 @BekreftelseKode(kode = "5071")
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekreftelse {
 
-    protected List<UttakResultatPeriode> perioder = new ArrayList<>();
+    private List<UttakResultatPeriode> perioder = new ArrayList<>();
 
     public FastsettUttaksperioderManueltBekreftelse() {
         super();
     }
 
-    @Override
-    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        perioder = new ArrayList<>(behandling.hentUttaksperioder());
-        innvilgManuellePerioder();
+    public FastsettUttaksperioderManueltBekreftelse(@JsonProperty("perioder") List<UttakResultatPeriode> perioder) {
+        this.perioder = perioder;
     }
 
     public List<UttakResultatPeriode> getPerioder() {
@@ -226,7 +229,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         // HACK for manglende aktivitet i periode (set aktivitet til å trekke fra
         // mødrekvoten)
         if ((aktivitet.getStønadskontoType() == null)
-                || aktivitet.getStønadskontoType().equals(Stønadskonto.INGEN_STØNADSKONTO)) {
+                || aktivitet.getStønadskontoType().equals(Stønadskonto.UDEFINERT)) {
             aktivitet.setStønadskontoType(Stønadskonto.MØDREKVOTE);
         }
     }
@@ -285,5 +288,31 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
+        perioder = new ArrayList<>(behandling.hentUttaksperioder());
+        innvilgManuellePerioder();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FastsettUttaksperioderManueltBekreftelse that = (FastsettUttaksperioderManueltBekreftelse) o;
+        return Objects.equals(perioder, that.perioder);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(perioder);
+    }
+
+    @Override
+    public String toString() {
+        return "FastsettUttaksperioderManueltBekreftelse{" +
+                "perioder=" + perioder +
+                '}';
     }
 }

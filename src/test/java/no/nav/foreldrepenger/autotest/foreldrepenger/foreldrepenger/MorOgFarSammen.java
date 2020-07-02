@@ -84,11 +84,11 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
-        verifiserLikhet(saksbehandler.valgtFagsak.hentStatus().kode, "UBEH", "Fagsakstatus sak mor");
+        verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "UBEH", "Fagsakstatus sak mor");
         long saksnummerFar = sendInnSøknadFar(testscenario, fødselsdato, fpstartdatoFar);
         saksbehandler.hentFagsak(saksnummerFar);
         debugLoggBehandlingsliste(saksbehandler.behandlinger);
-        verifiserLikhet(saksbehandler.valgtFagsak.hentStatus().kode, "UBEH", "Fagsakstatus sak far");
+        verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "UBEH", "Fagsakstatus sak far");
         verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er ikke på vent.");
 
         // Behandle ferdig mor sin sak
@@ -105,7 +105,8 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         beslutter.ventTilFagsakLøpende();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(beslutter.valgtFagsak.getStatus().kode, "LOP", "Fagsakstatus");
+
         debugFritekst("Ferdig med behandling mor");
 
         // Behandle ferdig far sin sak

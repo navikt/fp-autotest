@@ -33,7 +33,7 @@ import org.apache.http.protocol.HttpCoreContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
 
 public abstract class AbstractHttpSession implements HttpSession {
 
@@ -90,7 +90,7 @@ public abstract class AbstractHttpSession implements HttpSession {
                     response.getStatusLine().getStatusCode(),
                     new BufferedReader(new InputStreamReader(entity.getContent())).lines().parallel()
                             .collect(Collectors.joining("\n")),
-                    new ObjectMapper().writeValueAsString(headers));
+                    JsonKlient.getObjectMapper().writeValueAsString(headers));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
