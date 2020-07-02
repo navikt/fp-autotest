@@ -7,8 +7,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 
-
-@BekreftelseKode(kode="5016")
+@BekreftelseKode(kode = "5016")
 public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<AksjonspunktGodkjenningDto> aksjonspunktGodkjenningDtos = new ArrayList<>();
@@ -25,9 +24,10 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
     }
 
     public FatterVedtakBekreftelse godkjennAksjonspunkt(Aksjonspunkt aksjonspunkt) {
-        if(!aksjonspunkt.skalTilToTrinnsBehandling()) {
+        if (!aksjonspunkt.skalTilToTrinnsBehandling()) {
             AllureHelper.debugAksjonspunkt(aksjonspunkt);
-            throw new RuntimeException("Godkjenner aksjonspunkt som ikke skal til totrinnskontroll: "+ aksjonspunkt.getDefinisjon().kode);
+            throw new RuntimeException(
+                    "Godkjenner aksjonspunkt som ikke skal til totrinnskontroll: " + aksjonspunkt.getDefinisjon().kode);
         }
 
         AksjonspunktGodkjenningDto godkjenning = new AksjonspunktGodkjenningDto(aksjonspunkt);
@@ -44,8 +44,9 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
     }
 
     public void avvisAksjonspunkt(Aksjonspunkt aksjonspunkt, List<String> arsaker) {
-        if(!aksjonspunkt.skalTilToTrinnsBehandling()) {
-            throw new RuntimeException("Avvister aksjonspunkt som ikke skal til totrinnskontroll: "+ aksjonspunkt.getDefinisjon().kode);
+        if (!aksjonspunkt.skalTilToTrinnsBehandling()) {
+            throw new RuntimeException(
+                    "Avvister aksjonspunkt som ikke skal til totrinnskontroll: " + aksjonspunkt.getDefinisjon().kode);
         }
 
         AksjonspunktGodkjenningDto godkjenning = new AksjonspunktGodkjenningDto(aksjonspunkt);
@@ -67,6 +68,6 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
 
     @Override
     public String toString() {
-        return String.format("FatterVedtakBekreftelse: {kode:%s, begrunnelse%s}",kode,begrunnelse);
+        return String.format("FatterVedtakBekreftelse: {kode:%s, begrunnelse%s}", kode, begrunnelse);
     }
 }

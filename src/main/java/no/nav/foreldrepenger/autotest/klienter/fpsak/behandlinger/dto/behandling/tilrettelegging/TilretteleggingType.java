@@ -13,5 +13,4 @@ public class TilretteleggingType extends KodeListe {
         super(kode, DISCRIMINATOR);
     }
 
-
 }

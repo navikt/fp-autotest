@@ -21,7 +21,6 @@ public class MiljoKonfigurasjon extends KonfigurasjonBase {
     public static String PROPERTY_FPSAK_HTTP_ROUTING_METRICS = "autotest.fpsak.http.routing.metrics";
     public static String PROPERTY_FPSAK_HTTP_ROUTING_API = "autotest.fpsak.http.routing.api";
 
-
     /*
      * Load env
      */
@@ -83,7 +82,6 @@ public class MiljoKonfigurasjon extends KonfigurasjonBase {
     public static String getRouteMetrics() {
         return getRoute(PROPERTY_FPSAK_HTTP_ROUTING_METRICS, "/fpsak/internal/metrics");
     }
-
 
     /*
      * Private

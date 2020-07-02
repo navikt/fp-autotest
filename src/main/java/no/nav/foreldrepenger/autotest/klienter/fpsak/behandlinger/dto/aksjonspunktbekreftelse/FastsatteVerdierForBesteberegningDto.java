@@ -5,7 +5,8 @@ public class FastsatteVerdierForBesteberegningDto {
     protected double fastsattBeløp;
     protected String inntektskategori;
 
-    public FastsatteVerdierForBesteberegningDto() {}
+    public FastsatteVerdierForBesteberegningDto() {
+    }
 
     public FastsatteVerdierForBesteberegningDto(double fastsattBeløp, String inntektskategori) {
         super();

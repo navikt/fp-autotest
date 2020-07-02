@@ -11,7 +11,7 @@ public class BestillBrev {
     protected String fritekst;
     protected String arsakskode;
     protected String årsakskode;
-    
+
     public BestillBrev(int behandlingId, String mottaker, String brevmalkode, String fritekst) {
         super();
         this.behandlingId = behandlingId;

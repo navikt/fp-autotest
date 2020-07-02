@@ -8,11 +8,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
-@BekreftelseKode(kode="6008")
-public class OverstyrUttaksperioder extends OverstyringsBekreftelse{
+@BekreftelseKode(kode = "6008")
+public class OverstyrUttaksperioder extends OverstyringsBekreftelse {
 
     protected List<UttakResultatPeriode> perioder;
-
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {

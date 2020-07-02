@@ -52,5 +52,4 @@ public class MedlemskapErketyper {
         return oppholdUtlandet;
     }
 
-
 }

@@ -30,6 +30,7 @@ public class ApFaktaFeilutbetalingAarsak {
         this.hendelseUndertype.kode = "IKKE_INNTEKT";
         this.hendelseUndertype.navn = "Ikke inntekt 6 av siste 10 måneder";
     }
+
     private void addGeneriskHendelserSvangerskapspenger() {
         this.hendelseType.kode = "SVP_FAKTA_TYPE";
         this.hendelseType.navn = "§14-4 Fakta om svangerskap";
@@ -37,6 +38,7 @@ public class ApFaktaFeilutbetalingAarsak {
         this.hendelseUndertype.kode = "SVP_IKKE_HELSEFARLIG";
         this.hendelseUndertype.navn = "Ikke helsefarlig for ventende barn";
     }
+
     private void addGeneriskHendelserEngangsstonad() {
         this.hendelseType.kode = "ES_ADOPSJONSVILKAARET_TYPE";
         this.hendelseType.navn = "§14-17 1. ledd Adopsjonsvilkåret";

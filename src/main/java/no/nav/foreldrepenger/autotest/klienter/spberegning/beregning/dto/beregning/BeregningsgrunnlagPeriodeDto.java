@@ -13,7 +13,7 @@ public class BeregningsgrunnlagPeriodeDto {
     protected Double bruttoPrAar;
     protected Double bruttoInkludertBortfaltNaturalytelsePrAar;
     protected List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndel;
-    
+
     public BeregningsgrunnlagPeriodeDto() {
     }
 
@@ -40,6 +40,5 @@ public class BeregningsgrunnlagPeriodeDto {
     public List<BeregningsgrunnlagPrStatusOgAndelDto> getBeregningsgrunnlagPrStatusOgAndel() {
         return beregningsgrunnlagPrStatusOgAndel;
     }
-    
-    
+
 }

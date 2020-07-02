@@ -1,26 +1,27 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-
 import java.time.LocalDate;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Soknad {
-    //Generelt
+    // Generelt
     protected LocalDate mottattDato;
     protected String tilleggsopplysninger;
     protected String begrunnelseForSenInnsending;
     protected String annenPartNavn;
 
-    //Fødsel
+    // Fødsel
     protected LocalDate utstedtdato;
     protected LocalDate termindato;
     protected int antallBarn;
     protected Map<Integer, LocalDate> fodselsdatoer;
 
-    //adopsjon
+    // adopsjon
     protected Kode farSokerType;
     protected LocalDate omsorgsovertakelseDato;
     protected Map<Integer, LocalDate> adopsjonFodelsedatoer;

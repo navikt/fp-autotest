@@ -4,10 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-
-@BekreftelseKode(kode="5061")
+@BekreftelseKode(kode = "5061")
 public class VurderOmsorgForBarnBekreftelse extends AksjonspunktBekreftelse {
 
     protected Boolean omsorg;
@@ -16,7 +13,6 @@ public class VurderOmsorgForBarnBekreftelse extends AksjonspunktBekreftelse {
     public VurderOmsorgForBarnBekreftelse() {
         super();
     }
-
 
     public void bekreftBrukerHarOmsorg() {
         omsorg = true;

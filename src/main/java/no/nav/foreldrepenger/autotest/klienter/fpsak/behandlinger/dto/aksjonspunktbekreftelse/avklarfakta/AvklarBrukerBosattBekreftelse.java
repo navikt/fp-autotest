@@ -15,6 +15,7 @@ public class AvklarBrukerBosattBekreftelse extends BekreftedePerioderMalDto {
         super();
     }
 
+    @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         List<MedlemPeriodeDto> perioder = behandling.getMedlem().getPerioder();
         List<BekreftedePerioderDto> bekreftedePerioderDtos = new ArrayList<>();
@@ -26,4 +27,3 @@ public class AvklarBrukerBosattBekreftelse extends BekreftedePerioderMalDto {
         setBekreftedePerioder(bekreftedePerioderDtos);
     }
 }
-

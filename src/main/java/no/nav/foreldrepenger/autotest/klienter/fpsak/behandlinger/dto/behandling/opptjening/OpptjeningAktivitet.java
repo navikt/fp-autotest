@@ -14,7 +14,7 @@ public class OpptjeningAktivitet {
     protected String arbeidsgiver;
     protected String arbeidsgiverIdentifikator;
     protected String begrunnelse;
-    
+
     protected LocalDate originalFom;
     protected LocalDate originalTom;
     protected LocalDate opptjeningFom;
@@ -23,7 +23,6 @@ public class OpptjeningAktivitet {
     protected boolean erGodkjent;
     protected boolean erManueltOpprettet;
     protected String oppdragsgiverOrg;
-
 
     public String getOppdragsgiverOrg() {
         return oppdragsgiverOrg;

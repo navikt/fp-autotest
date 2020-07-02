@@ -28,8 +28,7 @@ public class KravgrunnlagPeriode {
                 BigDecimal.valueOf(1637),
                 BigDecimal.valueOf(1616),
                 BigDecimal.ZERO,
-                BigDecimal.valueOf(25.5221)
-        );
+                BigDecimal.valueOf(25.5221));
         this.posteringer.add(kravgrunnlagPeriodePostering);
         kravgrunnlagPeriodePostering = new KravgrunnlagPeriodePostering(
                 "KL_KODE_FEIL_KORTTID", "FEIL",
@@ -37,8 +36,7 @@ public class KravgrunnlagPeriode {
                 BigDecimal.valueOf(1616),
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
-                BigDecimal.valueOf(25.5221)
-        );
+                BigDecimal.valueOf(25.5221));
         this.posteringer.add(kravgrunnlagPeriodePostering);
     }
 
@@ -49,8 +47,7 @@ public class KravgrunnlagPeriode {
                 BigDecimal.ZERO,
                 BigDecimal.valueOf(83140),
                 BigDecimal.ZERO,
-                BigDecimal.ZERO
-        );
+                BigDecimal.ZERO);
         this.posteringer.add(kravgrunnlagPeriodePostering);
         kravgrunnlagPeriodePostering = new KravgrunnlagPeriodePostering(
                 "KL_KODE_FEIL_REFUTG", "FEIL",
@@ -58,8 +55,7 @@ public class KravgrunnlagPeriode {
                 BigDecimal.valueOf(83140),
                 BigDecimal.ZERO,
                 BigDecimal.ZERO,
-                BigDecimal.ZERO
-        );
+                BigDecimal.ZERO);
         this.posteringer.add(kravgrunnlagPeriodePostering);
     }
 }

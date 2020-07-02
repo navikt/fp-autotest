@@ -1,11 +1,12 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
+import java.lang.reflect.InvocationTargetException;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-
-import java.lang.reflect.InvocationTargetException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Aksjonspunkt {
@@ -33,12 +34,16 @@ public class Aksjonspunkt {
     public boolean skalTilToTrinnsBehandling() {
         return toTrinnsBehandling;
     }
-    public boolean getKanLoses() {return kanLoses;}
+
+    public boolean getKanLoses() {
+        return kanLoses;
+    }
 
     public AksjonspunktBekreftelse getBekreftelse() {
         try {
             return AksjonspunktBekreftelse.fromAksjonspunkt(this);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+                | NoSuchMethodException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -50,7 +55,6 @@ public class Aksjonspunkt {
     public void setBekreftelse(AksjonspunktBekreftelse bekreftelse) {
         this.bekreftelse = bekreftelse;
     }
-
 
     @Override
     public String toString() {

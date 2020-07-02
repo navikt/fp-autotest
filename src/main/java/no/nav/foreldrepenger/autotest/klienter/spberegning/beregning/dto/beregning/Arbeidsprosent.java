@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Arbeidsprosent {
     public Double verdi;
 
-    public Arbeidsprosent() { }
+    public Arbeidsprosent() {
+    }
 
     public Arbeidsprosent(Double verdi) {
         this.verdi = verdi;

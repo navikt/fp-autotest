@@ -4,7 +4,8 @@ public class OrgNummer {
 
     /**
      * Orgnr for KUNSTIG organisasjoner. Går sammen med OrganisasjonType#KUNSTIG.
-     * (p.t. kun en kunstig organisasjon som holder på arbeidsforhold lagt til av saksbehandler.)
+     * (p.t. kun en kunstig organisasjon som holder på arbeidsforhold lagt til av
+     * saksbehandler.)
      */
     public static final String KUNSTIG_ORG = "342352362";
 

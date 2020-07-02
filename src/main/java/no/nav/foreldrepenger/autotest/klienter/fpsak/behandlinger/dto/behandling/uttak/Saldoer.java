@@ -14,7 +14,11 @@ public class Saldoer {
 
     protected Map<Stønadskonto, Stonadskontoer> stonadskontoer;
 
-    public LocalDate getMaksDatoUttak() {return this.maksDatoUttak;}
+    public LocalDate getMaksDatoUttak() {
+        return this.maksDatoUttak;
+    }
 
-    public Map<Stønadskonto, Stonadskontoer> getStonadskontoer() {return this.stonadskontoer;}
+    public Map<Stønadskonto, Stonadskontoer> getStonadskontoer() {
+        return this.stonadskontoer;
+    }
 }

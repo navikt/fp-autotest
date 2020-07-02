@@ -15,7 +15,6 @@ public class SimuleringResultatDto {
     private Long sumInntrekk;
     private boolean ingenPerioderMedAvvik = true;
 
-
     public LocalDate getPeriodeFom() {
         return periodeFom;
     }

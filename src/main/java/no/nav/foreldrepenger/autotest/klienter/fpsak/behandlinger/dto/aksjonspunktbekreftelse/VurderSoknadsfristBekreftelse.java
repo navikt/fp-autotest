@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5007")
+@BekreftelseKode(kode = "5007")
 public class VurderSoknadsfristBekreftelse extends AksjonspunktBekreftelse {
 
     protected boolean erVilkarOk;

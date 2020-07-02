@@ -1,11 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,17 +29,17 @@ public class KravgrunnlagDetaljert {
 
     protected List<KravgrunnlagPeriode> perioder;
 
-    public KravgrunnlagDetaljert(Long saksnummer, String ident, String behandlingId, String ytelseType, String kravStatusKode) {
-        this.vedtakId = saksnummer-11111;
-        this.kravgrunnlagId = saksnummer-11112;
+    public KravgrunnlagDetaljert(Long saksnummer, String ident, String behandlingId, String ytelseType,
+            String kravStatusKode) {
+        this.vedtakId = saksnummer - 11111;
+        this.kravgrunnlagId = saksnummer - 11112;
         this.kravStatusKode = kravStatusKode;
         if (ytelseType.equals("ES")) {
             this.fagOmrådeKode = "REFUTG";
-        }
-        else {
+        } else {
             this.fagOmrådeKode = ytelseType;
         }
-        this.fagSystemId = saksnummer.toString()+"100";
+        this.fagSystemId = saksnummer.toString() + "100";
         this.vedtakFagSystemDato = LocalDate.now().toString();
         this.omgjortVedtakId = 0;
         this.gjelderVedtakId = ident;
@@ -52,7 +49,7 @@ public class KravgrunnlagDetaljert {
         this.ansvarligEnhet = "8020";
         this.bostedEnhet = "8020";
         this.behandlendeEnhet = "8020";
-        this.kontrollFelt = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss").format(new Date()); //2019-10-22-18.59.28.484337
+        this.kontrollFelt = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss").format(new Date()); // 2019-10-22-18.59.28.484337
         this.saksBehId = "K231B433";
         this.referanse = behandlingId;
 
@@ -66,14 +63,17 @@ public class KravgrunnlagDetaljert {
     public void leggTilPeriode() {
         KravgrunnlagPeriode kravgrunnlagPeriode = new KravgrunnlagPeriode(
                 LocalDate.now().minusMonths(6).withDayOfMonth(1).toString(),
-                LocalDate.now().minusMonths(6).withDayOfMonth(LocalDate.now().minusMonths(6).lengthOfMonth()).toString(),
+                LocalDate.now().minusMonths(6).withDayOfMonth(LocalDate.now().minusMonths(6).lengthOfMonth())
+                        .toString(),
                 BigDecimal.valueOf(412));
         kravgrunnlagPeriode.leggTilPostering();
         this.perioder.add(kravgrunnlagPeriode);
     }
+
     public void leggTilPeriodeForEngangsstonad() {
         if (!this.fagOmrådeKode.equals("REFUTG")) {
-            throw new IllegalStateException("Periode for Engangsstønad ikke tillatt for fagområde: "+this.fagOmrådeKode);
+            throw new IllegalStateException(
+                    "Periode for Engangsstønad ikke tillatt for fagområde: " + this.fagOmrådeKode);
         }
         KravgrunnlagPeriode kravgrunnlagPeriode = new KravgrunnlagPeriode(
                 LocalDate.now().minusMonths(6).withDayOfMonth(15).toString(),

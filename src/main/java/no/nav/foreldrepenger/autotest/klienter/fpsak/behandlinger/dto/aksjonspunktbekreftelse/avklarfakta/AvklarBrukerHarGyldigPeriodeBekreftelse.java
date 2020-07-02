@@ -13,7 +13,8 @@ public class AvklarBrukerHarGyldigPeriodeBekreftelse extends BekreftedePerioderM
         super();
     }
 
-    public AvklarBrukerHarGyldigPeriodeBekreftelse setVurdering(Kode medlem, List<BekreftedePerioderDto> medlemskapPerioder) {
+    public AvklarBrukerHarGyldigPeriodeBekreftelse setVurdering(Kode medlem,
+            List<BekreftedePerioderDto> medlemskapPerioder) {
         for (BekreftedePerioderDto bekreftedePerioderDto : medlemskapPerioder) {
             bekreftedePerioderDto.setMedlemskapManuellVurderingType(medlem);
             bekreftedePerioder.add(bekreftedePerioderDto);

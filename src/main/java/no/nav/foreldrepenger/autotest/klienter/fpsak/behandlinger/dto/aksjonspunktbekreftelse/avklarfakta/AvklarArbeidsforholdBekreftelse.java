@@ -20,6 +20,7 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
+    @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         arbeidsforhold = behandling.getInntektArbeidYtelse().arbeidsforhold;
 
@@ -38,7 +39,7 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
     }
 
     public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErIkkeAktivt(String navn, LocalDate startDato,
-                                                                             LocalDate overstyrtTom, String begrunnelse) {
+            LocalDate overstyrtTom, String begrunnelse) {
         Arbeidsforhold forhold = finnArbeidsforhold(navn, startDato);
         if (forhold == null) {
             throw new RuntimeException("fant ikke arbeidsforhold: " + navn);
@@ -49,7 +50,8 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErBasertPåInntektsmelding(String navn, LocalDate startDato, LocalDate sluttDato, BigDecimal stillingsprosent) {
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErBasertPåInntektsmelding(String navn,
+            LocalDate startDato, LocalDate sluttDato, BigDecimal stillingsprosent) {
         Arbeidsforhold arbeidsforhold = finnArbeidsforhold(navn);
 
         arbeidsforhold.setBrukArbeidsforholdet(true);
@@ -75,7 +77,7 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         return null;
     }
 
-    //Trenger og skille to arbeidsforhold i samme bedrift
+    // Trenger og skille to arbeidsforhold i samme bedrift
     private Arbeidsforhold finnArbeidsforhold(String navn, LocalDate startDato) {
         for (Arbeidsforhold arbeidsforhold : this.arbeidsforhold) {
             if (arbeidsforhold.getNavn().equals(navn) && arbeidsforhold.getFomDato().equals(startDato)) {
@@ -85,8 +87,10 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         return null;
     }
 
-    public AvklarArbeidsforholdBekreftelse leggTilArbeidsforhold(String navn, LocalDate startDato, LocalDate sluttDato, int stillingsprosent) {
-        Arbeidsforhold arbeid = new Arbeidsforhold(navn, startDato, sluttDato, BigDecimal.valueOf(stillingsprosent), true);
+    public AvklarArbeidsforholdBekreftelse leggTilArbeidsforhold(String navn, LocalDate startDato, LocalDate sluttDato,
+            int stillingsprosent) {
+        Arbeidsforhold arbeid = new Arbeidsforhold(navn, startDato, sluttDato, BigDecimal.valueOf(stillingsprosent),
+                true);
         arbeid.setBrukArbeidsforholdet(true);
         arbeidsforhold.add(arbeid);
         return this;

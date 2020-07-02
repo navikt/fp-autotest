@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FrilansDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@BekreftelseKode(kode="5040")
+@BekreftelseKode(kode = "5040")
 public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
 
     protected String tema = "FODSL";
@@ -38,7 +38,7 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
 
     protected Integer antallBarnFraTerminbekreftelse = 1;
 
-    protected List<LocalDate> foedselsDato =  Collections.singletonList(LocalDate.now().minusDays(1));
+    protected List<LocalDate> foedselsDato = Collections.singletonList(LocalDate.now().minusDays(1));
 
     protected LocalDate mottattDato = LocalDate.now().minusDays(10);
 
@@ -56,14 +56,14 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
 
     protected boolean annenForelderInformert = true;
 
-
     public void morSøkerFødsel(FordelingDto fordeling, LocalDate fødselsdato, LocalDate mottattDato) {
         this.tidsromPermisjon = fordeling;
         this.foedselsDato = Collections.singletonList(fødselsdato);
         this.mottattDato = mottattDato.minusWeeks(3);
     }
 
-    public void morSøkerTermin(FordelingDto fordeling, LocalDate termindato, LocalDate mottattDato, DekningsgradDto dekningsgrad) {
+    public void morSøkerTermin(FordelingDto fordeling, LocalDate termindato, LocalDate mottattDato,
+            DekningsgradDto dekningsgrad) {
         this.tidsromPermisjon = fordeling;
         this.erBarnetFodt = false;
         this.termindato = termindato;

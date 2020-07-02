@@ -18,12 +18,12 @@ public class GraderingPeriodeDto {
     public boolean erSelvstNæringsdrivende;
 
     public GraderingPeriodeDto(Stønadskonto stønadskonto,
-                               LocalDate fom, LocalDate tom,
-                               BigDecimal prosentandelArbeid,
-                               String arbeidsgiverIdentifikator,
-                               boolean erArbeidstaker,
-                               boolean erFrilanser,
-                               boolean erSelvstNæringsdrivende) {
+            LocalDate fom, LocalDate tom,
+            BigDecimal prosentandelArbeid,
+            String arbeidsgiverIdentifikator,
+            boolean erArbeidstaker,
+            boolean erFrilanser,
+            boolean erSelvstNæringsdrivende) {
         periodeForGradering = stønadskonto;
         periodeFom = fom;
         periodeTom = tom;

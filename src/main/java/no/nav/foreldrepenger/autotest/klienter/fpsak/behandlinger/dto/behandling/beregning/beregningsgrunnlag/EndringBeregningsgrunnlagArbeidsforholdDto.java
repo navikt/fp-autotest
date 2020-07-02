@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EndringBeregningsgrunnlagArbeidsforholdDto extends BeregningsgrunnlagArbeidsforholdDto {
 
-
     protected List<GraderingEllerRefusjonDto> perioderMedGraderingEllerRefusjon;
 
     public List<GraderingEllerRefusjonDto> getPerioderMedGraderingEllerRefusjon() {

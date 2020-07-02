@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 class VentelønnVartpenger {
 
-
-
     protected boolean inkludert;
 
     public VentelønnVartpenger(boolean inkludert) {

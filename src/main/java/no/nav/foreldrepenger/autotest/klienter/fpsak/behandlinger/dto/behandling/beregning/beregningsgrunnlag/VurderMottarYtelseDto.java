@@ -6,12 +6,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VurderMottarYtelseDto {
-    
+
     protected boolean erFrilans;
     protected boolean frilansMottarYtelse;
     protected double frilansInntektPrMnd;
     protected List<ArbeidstakerUtenInntektsmeldingAndelDto> arbeidstakerAndelerUtenIM;
-
 
     public boolean isErFrilans() {
         return erFrilans;

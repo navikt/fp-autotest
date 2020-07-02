@@ -1,11 +1,9 @@
 package no.nav.foreldrepenger.autotest.util.http;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -13,15 +11,17 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.util.EntityUtils;
 
+import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
+
 public interface HttpSession {
     static Map<String, String> createEmptyHeaders() {
         return new HashMap<>();
     }
 
     static String readResponse(HttpResponse response) {
-        try{
+        try {
             HttpEntity entity = response.getEntity();
-            if(entity == null) {
+            if (entity == null) {
                 return "";
             }
             final var mapper = JsonKlient.getObjectMapper();
@@ -30,8 +30,7 @@ public interface HttpSession {
                 return "";
             }
             return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(mapper.readValue(content, Object.class));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -55,11 +54,11 @@ public interface HttpSession {
             request.addHeader(headerKey, headers.get(headerKey));
         }
 
-        //Hack for missing cookies in header (Client refuses to set cookies from one domain to another)
+        // Hack for missing cookies in header (Client refuses to set cookies from one
+        // domain to another)
         StringBuilder cookies = new StringBuilder();
         CookieStore cookieStore = hentCookieStore();
         List<Cookie> cookiesList = cookieStore.getCookies();
-
 
         for (Cookie cookie : cookiesList) {
             cookies.append(String.format("%s=%s; ", cookie.getName(), cookie.getValue()));

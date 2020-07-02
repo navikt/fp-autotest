@@ -8,7 +8,7 @@ public class BehandlingNy {
     protected String behandlingType;
     protected String behandlingArsakType = null;
     protected Boolean nyBehandlingEtterKlage = null;
-    
+
     public BehandlingNy(Long saksnummer, String behandlingType, String behandlingArsakType) {
         super();
         this.saksnummer = saksnummer;

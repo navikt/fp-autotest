@@ -40,15 +40,13 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.Adopsjon;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 
-
 @Tag("util")
-public class Aksjonspunkter  extends ForeldrepengerTestBase {
-
+public class Aksjonspunkter extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("REGISTRER_PAPIRSØKNAD_FORELDREPENGER")
     public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5040() {
-        var testscenario = opprettTestscenario("500");        // Fødselsdato er for 2 uker siden, ved bruk av "500"
+        var testscenario = opprettTestscenario("500"); // Fødselsdato er for 2 uker siden, ved bruk av "500"
         var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -58,8 +56,9 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         var inntektsmelding = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 søkerIdent,
-                testscenario.getPersonopplysninger().getFødselsdato(),         //Mor Starter uttak ved fødsel
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.getPersonopplysninger().getFødselsdato(), // Mor Starter uttak ved fødsel
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                        .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(inntektsmelding, søkerAktørIdent, søkerIdent, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -76,7 +75,8 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -104,7 +104,8 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
                 .medFordeling(fordeling)
                 .medRelasjonTilBarnet(adopsjon);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -120,19 +121,21 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID,
                 SøkersRolle.MOR, OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse =
-                saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
+        AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
         avklarFaktaOmsorgOgForeldreansvarBekreftelse.setVilkårType(
                 saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_5"));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET);
     }
+
     @Test
     @DisplayName("VURDER_OPPTJENINGSVILKÅRET")
     public void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5089() {
@@ -141,7 +144,8 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -152,12 +156,13 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
 
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_OPPTJENINGSVILKÅRET);
     }
+
     @Test
     @DisplayName("VURDER_FAKTA_FOR_ATFL_SN")
     public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("74");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        testscenario.getPersonopplysninger().getSøkerIdent();
         LocalDate fødselsdato = LocalDate.now().minusWeeks(3);
 
         Fordeling fordeling = FordelingErketyper.generiskFordeling(
@@ -168,13 +173,12 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
                 FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER,
                         fødselsdato.plusWeeks(10).plusDays(1), fødselsdato.plusWeeks(20).minusDays(1)),
                 uttaksperiode(FEDREKVOTE,
-                        fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(30))
-        ) ;
+                        fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(30)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medFordeling(fordeling);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -184,23 +188,23 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
-        AvklarArbeidsforholdBekreftelse arbeidsforholdBekreftelse =
-                saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
+        AvklarArbeidsforholdBekreftelse arbeidsforholdBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
         arbeidsforholdBekreftelse.bekreftArbeidsforholdErAktivt("BEDRIFT AS", true);
         saksbehandler.bekreftAksjonspunkt(arbeidsforholdBekreftelse);
 
-        VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse =
-                saksbehandler.hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
+        VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
         vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
-        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse =
-                saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse.leggTilMottarYtelse(Collections.emptyList());
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
-
     }
+
     @Test
     @DisplayName("VURDER_OM_VILKÅR_FOR_SYKDOM_OPPFYLT")
     public void aksjonspunkt_FAR_FOEDSELSSOKNAD_FORELDREPENGER_5044() {
@@ -217,33 +221,36 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
                 uttaksperiode(FEDREKVOTE,
                         termindato.plusWeeks(20), termindato.plusWeeks(30))
 
-        ) ;
+        );
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, søkerAktørIdent, SøkersRolle.FAR)
                 .medFordeling(fordeling);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), søkerAktørIdent, søkerFnr, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), søkerAktørIdent, søkerFnr,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                        .getBeløp(),
                 søkerFnr, termindato,
-                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr()
-        );
+                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                        .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(inntektsmelding, søkerAktørIdent, søkerFnr, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse =
-                saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse.setUtstedtdato(termindato.minusWeeks(3));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        VurderVilkaarForSykdomBekreftelse vurderVilkaarForSykdomBekreftelse =
-                saksbehandler.hentAksjonspunktbekreftelse(VurderVilkaarForSykdomBekreftelse.class);
+        VurderVilkaarForSykdomBekreftelse vurderVilkaarForSykdomBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderVilkaarForSykdomBekreftelse.class);
         vurderVilkaarForSykdomBekreftelse.setErMorForSykVedFodsel(true);
         saksbehandler.bekreftAksjonspunkt(vurderVilkaarForSykdomBekreftelse);
 
     }
+
     @DisplayName("AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE")
     @Test
     public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_() {
@@ -255,9 +262,8 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
                 LocalDate.now().plusWeeks(3),
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR)
-                .medSpesiellOpptjening(
-                        OpptjeningErketyper.medUtenlandskArbeidsforhold("1222", "NOR")
-                );
+                        .medSpesiellOpptjening(
+                                OpptjeningErketyper.medUtenlandskArbeidsforhold("1222", "NOR"));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnSøknad(søknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
@@ -266,12 +272,15 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE);
 
-        var inntektbeløp = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
-        var orgnummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var inntektbeløp = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+                .getBeløp();
+        var orgnummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                .getArbeidsgiverOrgnr();
         var im = lagInntektsmelding(inntektbeløp, testscenario.getPersonopplysninger().getSøkerIdent(), LocalDate.now(),
                 orgnummer);
         fordel.sendInnInntektsmelding(im, søkerAktørIdent, søkerIdent, saksnummer);
     }
+
     @DisplayName("SJEKK_MANGLENDE_FØDSEL")
     @Test
     public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_5027() {
@@ -282,10 +291,13 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), søkerAktørIdent, søkerIdent,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
 
-        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
-        var orgnummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+                .getBeløp();
+        var orgnummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                .getArbeidsgiverOrgnr();
         var im = lagInntektsmelding(inntekt, søkerIdent, fødselsdato.minusWeeks(3), orgnummer);
         fordel.sendInnInntektsmelding(im, søkerAktørIdent, søkerIdent, saksnummer);
 
@@ -293,6 +305,5 @@ public class Aksjonspunkter  extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL);
     }
-
 
 }

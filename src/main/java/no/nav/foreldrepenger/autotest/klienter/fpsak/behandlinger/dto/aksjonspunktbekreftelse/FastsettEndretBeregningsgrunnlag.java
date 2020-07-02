@@ -11,16 +11,18 @@ class FastsettEndretBeregningsgrunnlag {
 
     protected List<FastsettEndretBeregningsgrunnlagPeriode> endretBeregningsgrunnlagPerioder = new ArrayList<>();
 
-
-    public FastsettEndretBeregningsgrunnlag(List<FastsettEndretBeregningsgrunnlagPeriode> endretBeregningsgrunnlagPerioder) {
+    public FastsettEndretBeregningsgrunnlag(
+            List<FastsettEndretBeregningsgrunnlagPeriode> endretBeregningsgrunnlagPerioder) {
         this.endretBeregningsgrunnlagPerioder = endretBeregningsgrunnlagPerioder;
     }
 
     FastsettEndretBeregningsgrunnlag() {
     }
 
-    void leggTilAndelTilPeriode(BeregningsgrunnlagPeriodeDto periode, BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
-        Optional<FastsettEndretBeregningsgrunnlagPeriode> eksisterendePeriode = endretBeregningsgrunnlagPerioder.stream()
+    void leggTilAndelTilPeriode(BeregningsgrunnlagPeriodeDto periode, BeregningsgrunnlagPrStatusOgAndelDto andel,
+            FastsatteVerdier fastsatteVerdier) {
+        Optional<FastsettEndretBeregningsgrunnlagPeriode> eksisterendePeriode = endretBeregningsgrunnlagPerioder
+                .stream()
                 .filter(p -> p.fom.isEqual(periode.getBeregningsgrunnlagPeriodeFom())).findFirst();
         if (eksisterendePeriode.isPresent()) {
             eksisterendePeriode.get().leggTilAndel(andel, fastsatteVerdier);
@@ -33,7 +35,8 @@ class FastsettEndretBeregningsgrunnlag {
         return endretBeregningsgrunnlagPerioder;
     }
 
-    public void setEndretBeregningsgrunnlagPerioder(List<FastsettEndretBeregningsgrunnlagPeriode> endretBeregningsgrunnlagPerioder) {
+    public void setEndretBeregningsgrunnlagPerioder(
+            List<FastsettEndretBeregningsgrunnlagPeriode> endretBeregningsgrunnlagPerioder) {
         this.endretBeregningsgrunnlagPerioder = endretBeregningsgrunnlagPerioder;
     }
 }

@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Status;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 
-public class FagsakKlient extends FpsakKlient{
+public class FagsakKlient extends FpsakKlient {
 
     private static String STATUS_URL_FORMAT = "/fagsak/status?saksnummer=%1$s&gruppe=%2$s";
     private static String FAGSAK_URL_FORMAT = "/fagsak?saksnummer=%1$s";
@@ -39,6 +39,8 @@ public class FagsakKlient extends FpsakKlient{
 
     public ArrayList<Fagsak> søk(Sok søk) {
         String url = hentRestRotUrl() + FAGSAK_SØK_URL_FORMAT;
-        return postOgHentJson(url, søk, hentObjectMapper().getTypeFactory().constructCollectionType(List.class, Fagsak.class), StatusRange.STATUS_200);
+        return postOgHentJson(url, søk,
+                hentObjectMapper().getTypeFactory().constructCollectionType(List.class, Fagsak.class),
+                StatusRange.STATUS_200);
     }
 }

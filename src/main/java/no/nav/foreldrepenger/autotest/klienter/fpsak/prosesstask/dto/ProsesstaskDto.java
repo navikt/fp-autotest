@@ -7,7 +7,7 @@ public class ProsesstaskDto {
 
     protected int prosessTaskId;
     protected String naaVaaerendeStatus;
-    
+
     public ProsesstaskDto(int prosessTaskId, String naaVaaerendeStatus) {
         super();
         this.prosessTaskId = prosessTaskId;

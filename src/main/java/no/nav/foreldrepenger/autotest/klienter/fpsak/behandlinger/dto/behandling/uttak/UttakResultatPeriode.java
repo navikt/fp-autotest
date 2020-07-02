@@ -1,15 +1,16 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UttakResultatPeriode implements Serializable {
@@ -106,6 +107,7 @@ public class UttakResultatPeriode implements Serializable {
     public void setOppholdÅrsak(OppholdÅrsak oppholdÅrsak) {
         this.oppholdÅrsak = oppholdÅrsak;
     }
+
     public OppholdÅrsak getOppholdÅrsak() {
         return oppholdÅrsak;
     }
@@ -120,19 +122,33 @@ public class UttakResultatPeriode implements Serializable {
         }
     }
 
-    public Boolean getFlerbarnsdager() {return flerbarnsdager;}
+    public Boolean getFlerbarnsdager() {
+        return flerbarnsdager;
+    }
 
-    public void setFlerbarnsdager(Boolean flerbarnsdager) {this.flerbarnsdager = flerbarnsdager;}
+    public void setFlerbarnsdager(Boolean flerbarnsdager) {
+        this.flerbarnsdager = flerbarnsdager;
+    }
 
-    public Boolean getSamtidigUttak() {return samtidigUttak;}
+    public Boolean getSamtidigUttak() {
+        return samtidigUttak;
+    }
 
-    public void setSamtidigUttak(Boolean samtidigUttak) {this.samtidigUttak = samtidigUttak;}
+    public void setSamtidigUttak(Boolean samtidigUttak) {
+        this.samtidigUttak = samtidigUttak;
+    }
 
-    public Kode getManuellBehandlingÅrsak() {return manuellBehandlingÅrsak;}
+    public Kode getManuellBehandlingÅrsak() {
+        return manuellBehandlingÅrsak;
+    }
 
-    public void setManuellBehandlingÅrsak(Kode manuellBehandlingÅrsak) {this.manuellBehandlingÅrsak = manuellBehandlingÅrsak;}
+    public void setManuellBehandlingÅrsak(Kode manuellBehandlingÅrsak) {
+        this.manuellBehandlingÅrsak = manuellBehandlingÅrsak;
+    }
 
-    public BigDecimal getSamtidigUttaksprosent() {return samtidigUttaksprosent;}
+    public BigDecimal getSamtidigUttaksprosent() {
+        return samtidigUttaksprosent;
+    }
 
     public void setSamtidigUttaksprosent(BigDecimal samtidigUttaksprosent) {
         this.samtidigUttaksprosent = samtidigUttaksprosent;

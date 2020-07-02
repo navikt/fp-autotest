@@ -49,9 +49,9 @@ public class SimulerOppdragDto {
     public static SimulerOppdragDto lagDto(Long behandlingId, List<String> råXml) {
         Objects.requireNonNull(råXml, "Rå XML kan ikke være null");
         List<String> encoded = råXml.stream()
-            .map(str -> Base64.getEncoder()
-                .encodeToString(str.getBytes(Charset.forName("UTF-8"))))
-            .collect(Collectors.toList());
+                .map(str -> Base64.getEncoder()
+                        .encodeToString(str.getBytes(Charset.forName("UTF-8"))))
+                .collect(Collectors.toList());
         return new SimulerOppdragDto(behandlingId, encoded);
     }
 }

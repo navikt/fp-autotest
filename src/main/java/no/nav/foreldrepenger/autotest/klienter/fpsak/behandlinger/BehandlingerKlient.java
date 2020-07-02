@@ -53,9 +53,9 @@ public class BehandlingerKlient extends FpsakKlient {
     private static final String BEHANDLINGER_ENDRE_PA_VENT_URL = BEHANDLINGER_URL + "/endre-pa-vent";
     private static final String BEHANDLINGER_HENLEGG_URL = BEHANDLINGER_URL + "/henlegg";
     private static final String BEHANDLINGER_GJENOPPTA_URL = BEHANDLINGER_URL + "/gjenoppta";
-    private static final String BEHANDLINGER_BYTT_ENHET_URL = BEHANDLINGER_URL + "/bytt-enhet";
     private static final String BEHANDLINGER_ALLE_URL = BEHANDLINGER_URL + "/alle?saksnummer=%s";
-    private static final String BEHANDLINGER_ANNEN_PART_BEHANDLING_URL = BEHANDLINGER_URL + "/annen-part-behandling?saksnummer=%s";
+    private static final String BEHANDLINGER_ANNEN_PART_BEHANDLING_URL = BEHANDLINGER_URL
+            + "/annen-part-behandling?saksnummer=%s";
 
     private static final String BEHANDLING_URL = "/behandling";
     private static final String BEHANDLING_PERSONOPPLYSNINGER_URL = BEHANDLING_URL + "/person/personopplysninger";
@@ -75,19 +75,22 @@ public class BehandlingerKlient extends FpsakKlient {
     private static final String BEHANDLING_INNSYN_URL = BEHANDLING_URL + "/innsyn";
     private static final String BEHANDLING_KLAGE_URL = BEHANDLING_URL + "/klage-v2";
     private static final String BEHANDLING_KLAGE_MELLOMLAGRE_URL = BEHANDLING_URL + "/klage/mellomlagre-klage";
-    private static final String BEHANDLING_KLAGE_MELLOMLAGRE_GJENNÅPNE_URL = BEHANDLING_URL + "/klage/mellomlagre-gjennapne-klage";
+    private static final String BEHANDLING_KLAGE_MELLOMLAGRE_GJENNÅPNE_URL = BEHANDLING_URL
+            + "/klage/mellomlagre-gjennapne-klage";
     private static final String BEHANDLING_YTELSEFORDELING_URL = BEHANDLING_URL + "/ytelsefordeling";
 
     private static final String BEHANDLING_UTTAK = BEHANDLING_URL + "/uttak";
-    private static final String BEHANDLING_UTTAK_KONTROLLER_FAKTA_PERIODER_URL = BEHANDLING_UTTAK + "/kontroller-fakta-perioder";
+    private static final String BEHANDLING_UTTAK_KONTROLLER_FAKTA_PERIODER_URL = BEHANDLING_UTTAK
+            + "/kontroller-fakta-perioder";
     private static final String BEHANDLING_UTTAK_STONADSKONTOER_URL = BEHANDLING_UTTAK + "/stonadskontoer";
-    private static final String BEHANDLING_UTTAK_STONADSKONTOER_GITT_UTTAKSPERIODER_URL = BEHANDLING_UTTAK + "/stonadskontoerGittUttaksperioder";
+    private static final String BEHANDLING_UTTAK_STONADSKONTOER_GITT_UTTAKSPERIODER_URL = BEHANDLING_UTTAK
+            + "/stonadskontoerGittUttaksperioder";
     private static final String BEHANDLING_UTTAK_RESULTAT_PERIODER_URL = BEHANDLING_UTTAK + "/resultat-perioder";
     private static final String BEHANDLING_UTTAK_PERIODE_GRENSE_URL = BEHANDLING_UTTAK + "/periode-grense";
 
     private static final String BEHANDLING_SVANGERSKAPSPENGER = BEHANDLING_URL + "/svangerskapspenger";
-    private static final String BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL = BEHANDLING_SVANGERSKAPSPENGER + "/tilrettelegging?behandlingId=%s";
-
+    private static final String BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL = BEHANDLING_SVANGERSKAPSPENGER
+            + "/tilrettelegging?behandlingId=%s";
 
     public BehandlingerKlient(HttpSession session) {
         super(session);
@@ -191,7 +194,9 @@ public class BehandlingerKlient extends FpsakKlient {
     @Step("Henter alle behandlinger")
     public List<Behandling> alle(long saksnummer) {
         String url = hentRestRotUrl() + String.format(BEHANDLINGER_ALLE_URL, saksnummer);
-        return getOgHentJson(url, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Behandling.class), StatusRange.STATUS_SUCCESS);
+        return getOgHentJson(url,
+                hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Behandling.class),
+                StatusRange.STATUS_SUCCESS);
     }
 
     /*
@@ -263,7 +268,9 @@ public class BehandlingerKlient extends FpsakKlient {
     @Step("Henter ut vilkår for behanlding {behandlingUuid}")
     public List<Vilkar> behandlingVilkår(UUID behandlingUuid) {
         String url = createBehandlingGetUrl(BEHANDLING_VILKAAR_URL, behandlingUuid);
-        return getOgHentJson(url, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Vilkar.class), StatusRange.STATUS_SUCCESS);
+        return getOgHentJson(url,
+                hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Vilkar.class),
+                StatusRange.STATUS_SUCCESS);
     }
 
     /*
@@ -272,7 +279,9 @@ public class BehandlingerKlient extends FpsakKlient {
     @Step("Henter aksjonspunkter for behandling {behandlingUuid}")
     public List<Aksjonspunkt> getBehandlingAksjonspunkt(UUID behandlingUuid) {
         String url = createBehandlingGetUrl(BEHANDLING_AKSJONSPUNKT_GET_URL, behandlingUuid);
-        return getOgHentJson(url, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Aksjonspunkt.class), StatusRange.STATUS_SUCCESS);
+        return getOgHentJson(url,
+                hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, Aksjonspunkt.class),
+                StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Sender inn aksjonspunktbekreftelse.")
@@ -416,7 +425,7 @@ public class BehandlingerKlient extends FpsakKlient {
     @Step("Henter tilrettelegging for behandling")
     public Tilrettelegging behandlingTilrettelegging(Integer behandlingId) {
         String url = hentRestRotUrl() + String.format(BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL, behandlingId);
-        return getOgHentJson(url,Tilrettelegging.class,StatusRange.STATUS_SUCCESS);
+        return getOgHentJson(url, Tilrettelegging.class, StatusRange.STATUS_SUCCESS);
     }
 
 }

@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5045")
+@BekreftelseKode(kode = "5045")
 public class AvklarFaktaStartdatoForForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
 
     protected LocalDate startdatoFraSoknad;

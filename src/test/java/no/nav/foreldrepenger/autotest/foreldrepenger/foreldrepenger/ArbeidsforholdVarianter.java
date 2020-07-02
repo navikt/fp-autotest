@@ -51,14 +51,15 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         List<Integer> inntekter = sorterteInntektsbeløp(testscenario);
 
         InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(inntekter.get(0), fnr,
                 fpStartdato, "910909088")
-                .medArbeidsforholdId("ARB001-001");
+                        .medArbeidsforholdId("ARB001-001");
 
         fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -66,7 +67,8 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
 
         // LØSER AKSJONSPUNKT 5080 //
         var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErBasertPåInntektsmelding("BEDRIFT AS", LocalDate.now().minusYears(3), LocalDate.now().plusYears(2), BigDecimal.valueOf(100));
+                .bekreftArbeidsforholdErBasertPåInntektsmelding("BEDRIFT AS", LocalDate.now().minusYears(3),
+                        LocalDate.now().plusYears(2), BigDecimal.valueOf(100));
         saksbehandler.bekreftAksjonspunkt(ab);
 
         // FORESLÅ VEDTAK //
@@ -97,7 +99,8 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medAnnenForelder(annenPartAktørid);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
@@ -109,19 +112,23 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(apBekreftelse);
 
         // VURDER OPPTJENING: Godkjenn fiktivt arbeidsforhold i opptjening //
-        VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
+        VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
         vurderPerioderOpptjeningBekreftelse.godkjennAllOpptjening();
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
-        // FAKTA OM BERGNING: Fastsett inntekt for fiktivt arbeidsforhold og vurder om mottatt ytelse
-        FastsettMaanedsinntektUtenInntektsmeldingAndel fastsattInntekt = new FastsettMaanedsinntektUtenInntektsmeldingAndel(1l, 25_000);
+        // FAKTA OM BERGNING: Fastsett inntekt for fiktivt arbeidsforhold og vurder om
+        // mottatt ytelse
+        FastsettMaanedsinntektUtenInntektsmeldingAndel fastsattInntekt = new FastsettMaanedsinntektUtenInntektsmeldingAndel(
+                1l, 25_000);
         var ab = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilMaanedsinntektUtenInntektsmelding(List.of(fastsattInntekt))
                 .leggTilMottarYtelse(List.of(new ArbeidstakerandelUtenIMMottarYtelse(1L, false)));
         saksbehandler.bekreftAksjonspunkt(ab);
 
         // AVVIK I BEREGNING //
-        var aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+        var aksjonspunktBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
                 .leggTilInntekt(300_000, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
@@ -132,12 +139,14 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         // FATTE VEDTAK //
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
-        Aksjonspunkt apAvvikBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
+        Aksjonspunkt apAvvikBeregning = beslutter
+                .hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
         Aksjonspunkt apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
         Aksjonspunkt apVurderArbeidsforhold = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
         Aksjonspunkt apVurderOpptjening = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING);
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(List.of(apAvvikBeregning, apFaktaOmBeregning, apVurderArbeidsforhold, apVurderOpptjening));
+        bekreftelse.godkjennAksjonspunkter(
+                List.of(apAvvikBeregning, apFaktaOmBeregning, apVurderArbeidsforhold, apVurderOpptjening));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
     }
 }

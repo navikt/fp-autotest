@@ -53,5 +53,4 @@ public abstract class KlageFormkravBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-
 }

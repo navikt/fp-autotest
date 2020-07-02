@@ -24,9 +24,13 @@ public class Behandlingsresultat {
         return type.kode;
     }
 
-    public List<Kode> getKonsekvenserForYtelsen() {return konsekvenserForYtelsen;}
+    public List<Kode> getKonsekvenserForYtelsen() {
+        return konsekvenserForYtelsen;
+    }
 
-    public Kode getAvslagsarsak() { return avslagsarsak;}
+    public Kode getAvslagsarsak() {
+        return avslagsarsak;
+    }
 
     public SkjæringstidspunktDto getSkjæringstidspunkt() {
         return skjæringstidspunkt;

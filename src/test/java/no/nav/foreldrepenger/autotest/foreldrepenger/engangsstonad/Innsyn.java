@@ -41,7 +41,8 @@ public class Innsyn extends FpsakTestBase {
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -49,7 +50,8 @@ public class Innsyn extends FpsakTestBase {
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.velgDokumentInnsynBehandling();
 
-        AksjonspunktBekreftelse aksjonspunktBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class)
+        AksjonspunktBekreftelse aksjonspunktBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class)
                 .setMottattDato(LocalDate.now())
                 .setInnsynResultatType(saksbehandler.kodeverk.InnsynResultatType.getKode("INNV"))
                 .skalSetteSakPåVent(false)
@@ -61,9 +63,11 @@ public class Innsyn extends FpsakTestBase {
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         AllureHelper.debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_INNVILGET", "Behandlingstatus");
-        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT), "Brev er ikke bestilt etter innsyn er godkjent");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_INNVILGET",
+                "Behandlingstatus");
+        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT),
+                "Brev er ikke bestilt etter innsyn er godkjent");
+        // TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
 
     @Test
@@ -77,7 +81,8 @@ public class Innsyn extends FpsakTestBase {
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -85,7 +90,8 @@ public class Innsyn extends FpsakTestBase {
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.velgDokumentInnsynBehandling();
 
-        VurderingAvInnsynBekreftelse vurderingAvInnsynBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class);
+        VurderingAvInnsynBekreftelse vurderingAvInnsynBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class);
         vurderingAvInnsynBekreftelse.setMottattDato(LocalDate.now())
                 .setInnsynResultatType(saksbehandler.kodeverk.InnsynResultatType.getKode("AVVIST"))
                 .setBegrunnelse("Test");
@@ -95,11 +101,14 @@ public class Innsyn extends FpsakTestBase {
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_AVVIST", "Behandlingstatus");
-        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT), "Brev er ikke bestilt etter innsyn er godkjent");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_AVVIST",
+                "Behandlingstatus");
+        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT),
+                "Brev er ikke bestilt etter innsyn er godkjent");
+        // TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
-    @Disabled //Disabled til Kafka støtte for brev er i VTP
+
+    @Disabled // Disabled til Kafka støtte for brev er i VTP
     @Test
     @DisplayName("Behandle innsyn for far - avvist")
     @Description("Behandle innsyn for far - avvist ved vurdering")
@@ -111,7 +120,8 @@ public class Innsyn extends FpsakTestBase {
                 LocalDate.now().plusWeeks(3));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -128,8 +138,10 @@ public class Innsyn extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         saksbehandler.ventTilBehandlingsstatus("AVSLU");
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_AVVIST", "Behandlingstatus");
-        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT), "Brev er ikke bestilt etter innsyn er godkjent");
-        //TODO: Fjernet vent på brev sendt - bytte med annen assertion
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNSYN_AVVIST",
+                "Behandlingstatus");
+        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT),
+                "Brev er ikke bestilt etter innsyn er godkjent");
+        // TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
 }

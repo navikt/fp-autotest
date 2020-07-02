@@ -44,11 +44,13 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        AvklarLovligOppholdBekreftelse avklarLovligOppholdBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarLovligOppholdBekreftelse.class);
+        AvklarLovligOppholdBekreftelse avklarLovligOppholdBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarLovligOppholdBekreftelse.class);
         avklarLovligOppholdBekreftelse.bekreftBrukerHarLovligOpphold();
         saksbehandler.bekreftAksjonspunkt(avklarLovligOppholdBekreftelse);
 

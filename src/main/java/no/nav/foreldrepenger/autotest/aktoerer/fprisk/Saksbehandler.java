@@ -27,11 +27,11 @@ public class Saksbehandler extends Aktoer {
 
     public String sendMessageToKafkaTopic(String topic, Object messageObject) {
         return kafkaKlient.putMessageOnKafkaTopic(topic, messageObject);
-}
+    }
 
     public RisikovurderingResponse getRisikovurdering(String konsumentId) {
         return risikovurderingKlient.getRisikovurdering(konsumentId);
-}
+    }
 
     /*
      * Behandlingsstatus
@@ -45,7 +45,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     public boolean harRisikoKlassefiseringsstatus(String status, RisikovurderingResponse responseDto) {
-         LOG.info("Har status: {} ", responseDto.getRisikoklasse());
-         return responseDto.getRisikoklasse().equalsIgnoreCase(status);
+        LOG.info("Har status: {} ", responseDto.getRisikoklasse());
+        return responseDto.getRisikoklasse().equalsIgnoreCase(status);
     }
 }

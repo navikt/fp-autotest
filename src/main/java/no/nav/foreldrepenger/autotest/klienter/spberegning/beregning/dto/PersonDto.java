@@ -12,9 +12,8 @@ public class PersonDto {
     protected Boolean erKvinne;
     protected String diskresjonskode;
     protected LocalDate dodsdato;
-    
+
     public PersonDto() {
     }
-    
-    
+
 }

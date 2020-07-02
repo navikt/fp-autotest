@@ -1,17 +1,17 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter;
 
-import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
 
 @AksjonspunktKode(kode = "5002", fagsystem = Fagsystem.FPTILBAKE)
 public class ApVilkårsvurdering extends AksjonspunktBehandling {
 
     protected List<ApVilkårsvurderingDetaljer> vilkarsVurdertePerioder = new ArrayList<>();
 
-    public ApVilkårsvurdering () {
+    public ApVilkårsvurdering() {
         this.kode = "5002";
     }
 
