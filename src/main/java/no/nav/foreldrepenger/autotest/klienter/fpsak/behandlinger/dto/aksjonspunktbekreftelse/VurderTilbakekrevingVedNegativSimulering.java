@@ -1,18 +1,15 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 
 @BekreftelseKode(kode="5084")
 public class VurderTilbakekrevingVedNegativSimulering extends AksjonspunktBekreftelse {
 
-    protected VidereBehandling videreBehandling;
-    protected String varseltekst;
-    @JsonProperty("@type")
-    protected String kode;
+    private VidereBehandling videreBehandling;
+    private String varseltekst;
 
     public VurderTilbakekrevingVedNegativSimulering(){
-        this.setBegrunnelse("Dette er begrunnelsen");
-        this.kode = "5084";
+        super();
     }
 
     private void setVidereBehandling(VidereBehandling videreBehandling) {
@@ -22,14 +19,39 @@ public class VurderTilbakekrevingVedNegativSimulering extends AksjonspunktBekref
         this.varseltekst = varseltekst;
     }
 
-    public void setTilbakekrevingMedVarsel(){
+    public VurderTilbakekrevingVedNegativSimulering setTilbakekrevingMedVarsel(){
         setTilbakekrevingMedVarsel("Dette er friteksten i varselbrevet. Her skriver saksbehandler litt om hvorfor det er oppstått en feilutbetaling");
+        return this;
     }
-    public void setTilbakekrevingMedVarsel(String varseltekst){
+    public VurderTilbakekrevingVedNegativSimulering setTilbakekrevingMedVarsel(String varseltekst){
         setVidereBehandling(VidereBehandling.TILBAKEKR_INFOTRYGD);
         setVarseltekst(varseltekst);
+        return this;
     }
-    public void setTilbakekrevingIgnorer(){
+    public VurderTilbakekrevingVedNegativSimulering setTilbakekrevingIgnorer(){
         setVidereBehandling(VidereBehandling.TILBAKEKR_IGNORER);
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VurderTilbakekrevingVedNegativSimulering that = (VurderTilbakekrevingVedNegativSimulering) o;
+        return videreBehandling == that.videreBehandling &&
+                Objects.equals(varseltekst, that.varseltekst);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(videreBehandling, varseltekst);
+    }
+
+    @Override
+    public String toString() {
+        return "VurderTilbakekrevingVedNegativSimulering{" +
+                "videreBehandling=" + videreBehandling +
+                ", varseltekst='" + varseltekst + '\'' +
+                "} " + super.toString();
     }
 }

@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.INGEN_STØNADSKONTO;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.UDEFINERT;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
@@ -536,7 +536,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 fødselsdato, fødselsdato.plusWeeks(10));
         fordeling.permisjonsPerioder.add(fpff);
         fordeling.permisjonsPerioder.add(mødrekvote);
-        aksjonspunktBekreftelse.morSøkerFødsel(fordeling, fødselsdato, fpff.periodeFom.minusWeeks(3));
+        aksjonspunktBekreftelse.morSøkerFødsel(fordeling, fødselsdato, fpff.getPeriodeFom());
 
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
         saksbehandler.ventTilAvsluttetBehandling();
@@ -1033,10 +1033,10 @@ public class Fodsel extends ForeldrepengerTestBase {
         assertThat(utsettelse.getUtsettelseType()).isEqualTo(UttakUtsettelseÅrsak.ARBEID);
         assertThat(utsettelse.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(utsettelse.getAktiviteter().get(0).getTrekkdagerDesimaler()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(utsettelse.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(INGEN_STØNADSKONTO);
+        assertThat(utsettelse.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(UDEFINERT);
         assertThat(utsettelse.getAktiviteter().get(1).getUtbetalingsgrad()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(utsettelse.getAktiviteter().get(1).getTrekkdagerDesimaler()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(utsettelse.getAktiviteter().get(1).getStønadskontoType()).isEqualTo(INGEN_STØNADSKONTO);
+        assertThat(utsettelse.getAktiviteter().get(1).getStønadskontoType()).isEqualTo(UDEFINERT);
 
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().size() == 4,
                 "Feil i antall stønadskontoer, skal være 4.");

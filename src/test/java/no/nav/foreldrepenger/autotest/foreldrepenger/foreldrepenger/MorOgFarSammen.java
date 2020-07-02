@@ -105,7 +105,8 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         beslutter.ventTilFagsakLøpende();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(beslutter.valgtFagsak.getStatus().kode, "LOP", "Fagsakstatus");
+
         debugFritekst("Ferdig med behandling mor");
 
         // Behandle ferdig far sin sak

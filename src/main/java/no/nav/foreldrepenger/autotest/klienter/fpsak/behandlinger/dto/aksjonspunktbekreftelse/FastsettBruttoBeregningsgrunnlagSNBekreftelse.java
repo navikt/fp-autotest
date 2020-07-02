@@ -1,15 +1,26 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @BekreftelseKode(kode = "5042")
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class FastsettBruttoBeregningsgrunnlagSNBekreftelse extends AksjonspunktBekreftelse {
 
-    protected Integer bruttoBeregningsgrunnlag;
+    private Integer bruttoBeregningsgrunnlag;
 
     public FastsettBruttoBeregningsgrunnlagSNBekreftelse() {
         super();
     }
 
-    public Integer hentBruttoBeregningsgrunnlag() {
+    public FastsettBruttoBeregningsgrunnlagSNBekreftelse(@JsonProperty("bruttoBeregningsgrunnlag") Integer bruttoBeregningsgrunnlag) {
+        super();
+        this.bruttoBeregningsgrunnlag = bruttoBeregningsgrunnlag;
+    }
+
+    public Integer getBruttoBeregningsgrunnlag() {
         return bruttoBeregningsgrunnlag;
     }
 
@@ -18,4 +29,25 @@ public class FastsettBruttoBeregningsgrunnlagSNBekreftelse extends AksjonspunktB
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FastsettBruttoBeregningsgrunnlagSNBekreftelse that = (FastsettBruttoBeregningsgrunnlagSNBekreftelse) o;
+        return Objects.equals(bruttoBeregningsgrunnlag, that.bruttoBeregningsgrunnlag);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bruttoBeregningsgrunnlag);
+    }
+
+    @Override
+    public String toString() {
+        return "FastsettBruttoBeregningsgrunnlagSNBekreftelse{" +
+                "bruttoBeregningsgrunnlag=" + bruttoBeregningsgrunnlag +
+                ", kode='" + kode + '\'' +
+                ", begrunnelse='" + begrunnelse + '\'' +
+                '}';
+    }
 }

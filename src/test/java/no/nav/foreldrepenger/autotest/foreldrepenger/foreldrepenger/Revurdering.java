@@ -42,7 +42,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaStartdatoForForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
@@ -233,15 +236,15 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "FORELDREPENGER_ENDRET");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK");
-
-        // Verifisering av uttak
-        var UttaksPerioderForSøker = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker();
-        verifiserLikhet(UttaksPerioderForSøker.size(), 6,"Feil antall perioder.");
-        for (UttakResultatPeriode periode : UttaksPerioderForSøker) {
-            verifiserLikhet(periode.getAktiviteter().size(), 1, "Periode har mer enn én aktivitet");
+        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size() == 6,
+                "Feil antall perioder.");
+        for (UttakResultatPeriode periode : saksbehandler.valgtBehandling.getUttakResultatPerioder()
+                .getPerioderSøker()) {
+            verifiser(periode.getAktiviteter().size() == 1, "Periode har mer enn én aktivitet");
         }
-        verifiserLikhet(UttaksPerioderForSøker.get(4).getUtsettelseType(), UttakUtsettelseÅrsak.ARBEID,
-                "Feil i utsettelsetype eller periode.");
+        var utsettelseType = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().get(4)
+                .getUtsettelseType();
+        verifiser(utsettelseType.equals(UttakUtsettelseÅrsak.ARBEID), "Feil i utsettelsetype eller periode.");
 
         // Verifisering tilkjent ytelse
         BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
@@ -294,9 +297,10 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size(), 4,
-                "Feil antall perioder i uttak.");
+        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
+        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size() == 4,
+                "Feil antall perioder.");
 
         // Endringssøknad
         LocalDate graderingFom = fødselsdato.plusWeeks(20);
@@ -317,14 +321,14 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "FORELDREPENGER_ENDRET");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK");
-        verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size(), 5,
-                "Feil antall perioder i uttak.");
+        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size() == 5,
+                "Feil antall perioder.");
         for (UttakResultatPeriode periode : saksbehandler.valgtBehandling.getUttakResultatPerioder()
                 .getPerioderSøker()) {
-            verifiserLikhet(periode.getAktiviteter().size(), 1, "Periode har mer enn én aktivitet");
+            verifiser(periode.getAktiviteter().size() == 1, "Periode har mer enn én aktivitet");
         }
-        verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().get(4)
-                .getGraderingInnvilget(), true, "Feil graderingsperiode.");
+        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().get(4)
+                .getGraderingInnvilget(), "Feil graderingsperiode.");
 
     }
 

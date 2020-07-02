@@ -1,6 +1,11 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
 import java.util.List;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
@@ -10,14 +15,24 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
-@BekreftelseKode(kode = "5058")
 //TODO: Rydd opp i denne. Ganske uoversiktlig.
+@BekreftelseKode(kode = "5058")
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
 
-    protected FaktaOmBeregningLagreDto fakta = new FaktaOmBeregningLagreDto();
+    private FaktaOmBeregningLagreDto fakta = new FaktaOmBeregningLagreDto();
 
     public VurderFaktaOmBeregningBekreftelse() {
         super();
+    }
+
+    @JsonCreator
+    public VurderFaktaOmBeregningBekreftelse(@JsonProperty("fakta") FaktaOmBeregningLagreDto fakta) {
+        this.fakta = fakta;
+    }
+
+    public FaktaOmBeregningLagreDto getFakta() {
+        return fakta;
     }
 
     public VurderFaktaOmBeregningBekreftelse leggTilFaktaOmBeregningTilfeller(String kode) {
@@ -116,4 +131,23 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VurderFaktaOmBeregningBekreftelse that = (VurderFaktaOmBeregningBekreftelse) o;
+        return Objects.equals(fakta, that.fakta);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fakta);
+    }
+
+    @Override
+    public String toString() {
+        return "VurderFaktaOmBeregningBekreftelse{" +
+                "fakta=" + fakta +
+                '}';
+    }
 }

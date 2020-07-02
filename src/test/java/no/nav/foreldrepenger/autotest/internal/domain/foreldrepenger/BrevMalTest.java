@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.internal.brevmal;
+package no.nav.foreldrepenger.autotest.internal.domain.foreldrepenger;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
