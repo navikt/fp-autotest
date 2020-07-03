@@ -74,7 +74,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        int inntektPerMåned = 30_000;
+        int inntektPerMåned = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
@@ -174,7 +174,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        int inntektPerMåned = 30_000;
+        int inntektPerMåned = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
@@ -279,8 +279,8 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .getArbeidsforhold();
         Arbeidsforhold tilkommet = arbeidsforhold.get(0);
         String orgNr = tilkommet.getArbeidsgiverOrgnr();
-        int inntektPerMåned = 60_000;
-        BigDecimal refusjon = BigDecimal.valueOf(60_000);
+        int inntektPerMåned = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        BigDecimal refusjon = BigDecimal.valueOf(inntektPerMåned);
         Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(
                 false, BigInteger.valueOf(30_000), false);
 
@@ -297,8 +297,8 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato,
-                orgNr).medRefusjonsBelopPerMnd(refusjon);
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato, orgNr)
+                .medRefusjonsBelopPerMnd(refusjon);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -356,14 +356,15 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        int inntektPerMåned = 30_000;
+        int inntektPerMåned = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+                .getBeløp()/2;
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato,
-                orgNr).medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned));
-        InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato,
-                orgNr).medRefusjonsBelopPerMnd(BigDecimal.valueOf(29_000));
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato,orgNr)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned));
+        InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato,orgNr)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(29_000));
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -409,7 +410,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
-        saksbehandler.ventTilAvsluttetBehandling();
         Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
                 lagBGAndel(orgNr, 360_000, 360_000, 0, 348_000));
@@ -428,8 +428,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .medSpesiellOpptjening(opptjening);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         debugLoggBehandling(saksbehandler.valgtBehandling);
@@ -455,7 +454,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Uten inntektsmelding, med lønnsendring")
     @Description("Uten inntektsmelding, med lønnsendring")
     public void vurder_mottar_ytelse_vurder_lonnsendring() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("161");
+        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("161"); //  TODO: To med samme tall. Velger første (alfabetisk)
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -493,15 +492,16 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        int inntektPerMåned = 30_000;
+        int inntektPerMåned1 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        int inntektPerMåned2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp();
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
-        String orgNr1 = "910909088";
-        String orgNr2 = "973861778";
-        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato, orgNr1)
+        String orgNr1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        String orgNr2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(3).getArbeidsgiverOrgnr();
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned1, fnr, fpStartdato, orgNr1)
                 .medArbeidsforholdId("ARB001-003")
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned));
-        InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato, orgNr2)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned));
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned1));
+        InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmelding(inntektPerMåned2, fnr, fpStartdato, orgNr2)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned2));
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);

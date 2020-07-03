@@ -48,10 +48,41 @@
 		"barnsykdom": []
 	},
 	"inntektskomponent": {
-		"inntektsperioder": []
+		"inntektsperioder": [
+			{
+				"fom": "now() - P9M",
+				"tom": "now() - P4M",
+				"beløp": 5000,
+				"orgnr": "910909088",
+				"type": "Lønnsinntekt",
+				"fordel": "kontantytelse",
+				"beskrivelse": "fastloenn"
+			}
+		]
 	},
 	"aareg": {
-		"arbeidsforhold": []
+		"arbeidsforhold": [
+			{
+				"arbeidsforholdId": "ARB001-001",
+
+				"ansettelsesperiodeFom": "now() - P4Y",
+				"arbeidsforholdstype": "ordinaertArbeidsforhold",
+				"arbeidsgiverOrgnr": "910909088",
+
+
+				"arbeidsavtaler" : [
+					{
+						"fomGyldighetsperiode": "now() - P9M",
+						"sisteLønnsendringsdato": "now() - P4M",
+						"avlønningstype": "fastlønn",
+						"avtaltArbeidstimerPerUke": "40",
+						"stillingsprosent" : 100,
+						"beregnetAntallTimerPerUke": "30"
+					}
+				]
+
+			}
+		]
 	},
 	"sigrun": {
 		"inntektsår": []
