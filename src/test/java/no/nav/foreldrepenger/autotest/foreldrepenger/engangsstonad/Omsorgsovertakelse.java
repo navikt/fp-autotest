@@ -34,7 +34,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Mor søker Omsorgsovertakelse - godkjent")
     @Description("Mor søker Omsorgsovertakelse - godkjent happy case")
     public void MorSøkerOmsorgsovertakelseGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
 
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
@@ -74,7 +74,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Mor søker Omsorgsovertakelse - avvist")
     @Description("Mor søker Omsorgsovertakelse - avvist fordi mor ikke er død")
     public void morSøkerOmsorgsovertakelseAvvist() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
 
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
@@ -113,7 +113,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     @Test
     @Disabled("TODO hvorfor")
     public void behenadleOmsorgsovertakelseMorOverstyrt() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
                 OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
@@ -139,7 +139,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Far søker Omsorgsovertakelse - godkjent")
     @Description("Far søker Omsorgsovertakelse - får godkjent aksjonspunkt og blir invilget")
     public void farSøkerOmsorgsovertakelseGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
+        TestscenarioDto testscenario = opprettTestscenario("61");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         RelasjonTilBarnetErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
@@ -179,7 +179,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Far søker Foreldreansvar 2. ledd - godkjent")
     @Description("Far søker Foreldreansvar 2. ledd - får godkjent aksjonspunkt og blir invilget")
     public void farSøkerForeldreansvarGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
+        TestscenarioDto testscenario = opprettTestscenario("61");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
                 OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);

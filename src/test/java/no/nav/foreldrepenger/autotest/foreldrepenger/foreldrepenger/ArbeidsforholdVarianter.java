@@ -43,7 +43,7 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel, men har ikke arbeidsforhold i AAREG, sender inntektsmelding")
     @Description("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til arbeidsforhold basert på inntektsmelding")
     public void utenArbeidsforholdMenMedInntektsmelding() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("171");
+        TestscenarioDto testscenario = opprettTestscenario("171");
 
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -91,7 +91,7 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
     @Description("Mor søker termin, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til fiktivt arbeidsforhold")
     public void morSøkerTerminUtenAktiviteterIAareg() {
         // SØKNAD //
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("168");
+        TestscenarioDto testscenario = opprettTestscenario("168");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String annenPartAktørid = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
         LocalDate fødselsdato = LocalDate.now().plusDays(2);
@@ -120,7 +120,7 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         // FAKTA OM BERGNING: Fastsett inntekt for fiktivt arbeidsforhold og vurder om
         // mottatt ytelse
         FastsettMaanedsinntektUtenInntektsmeldingAndel fastsattInntekt = new FastsettMaanedsinntektUtenInntektsmeldingAndel(
-                1l, 25_000);
+                1L, 25_000);
         var ab = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilMaanedsinntektUtenInntektsmelding(List.of(fastsattInntekt))
                 .leggTilMottarYtelse(List.of(new ArbeidstakerandelUtenIMMottarYtelse(1L, false)));

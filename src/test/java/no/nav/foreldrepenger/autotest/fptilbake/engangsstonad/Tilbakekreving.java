@@ -43,7 +43,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR, false);
@@ -121,7 +121,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling med verge")
     @Description("FPsak med søker under 18, kopierer verge fra FPSAK, fjerner i FPTILBAKE og legger til ny.")
     public void tilbakeKrevingMedVerge() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("54");
+        TestscenarioDto testscenario = opprettTestscenario("54");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,

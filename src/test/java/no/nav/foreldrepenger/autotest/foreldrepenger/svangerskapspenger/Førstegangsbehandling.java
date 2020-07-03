@@ -44,7 +44,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Description("Mor søker SVP med ett arbeidsforhold fire uke før termin. ingen tilrettelegging")
     public void morSøkerSvp_IngenTilrettelegging_FireUkerFørTermin_EttArbeidsforhold() {
 
-        final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        final TestscenarioDto testscenario = opprettTestscenario("50");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
@@ -95,7 +95,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Description("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
     public void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() {
 
-        final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("56");
+        final TestscenarioDto testscenario = opprettTestscenario("56");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
@@ -141,7 +141,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Description("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     public void mor_søker_svp_tre_arbeidsforhold_hel_halv_og_ingen_tilrettelegging() {
 
-        final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("79");
+        final TestscenarioDto testscenario = opprettTestscenario("79");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
@@ -260,7 +260,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
         // TODO: Gjør ferdig, feiler på tilkjentytelse.
         // TODO (OL) Utvide med videre funksjonalitet
 
-        final TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        final TestscenarioDto testscenario = opprettTestscenario("50");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
@@ -294,7 +294,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
     @Disabled
     @DisplayName("Papirsøknad for Svangerskapspenger")
     public void morSøkerSvangersskapspengerMedPapirsøknad() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         fordel.sendInnPapirsøknadSvangerskapspenger(testscenario);

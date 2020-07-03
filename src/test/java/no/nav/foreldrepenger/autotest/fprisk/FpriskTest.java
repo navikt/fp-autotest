@@ -28,7 +28,7 @@ public class FpriskTest extends FpriskTestBase {
     @DisplayName("Sender Kafkamelding med risikovurderingsforespørsel, venter på at vurderingen blir gjort.")
     @Description("Sender inn forespørel om risikovurderinger til FPRISK for scenario 50 over Kafka (gjennom VTP). Venter på at saken er ferdig behandlet via polling over REST.")
     public void sendRisikovurderingsforespørselOgVentPåResultat() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         String soekerAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate skjæringstidspunkt = LocalDate.now();

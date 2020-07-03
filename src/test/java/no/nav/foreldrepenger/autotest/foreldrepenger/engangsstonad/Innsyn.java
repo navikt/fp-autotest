@@ -34,7 +34,7 @@ public class Innsyn extends FpsakTestBase {
     @DisplayName("Behandle innsyn for mor - godkjent")
     @Description("Behandle innsyn for mor - godkjent happy case")
     public void behandleInnsynMorGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -74,7 +74,7 @@ public class Innsyn extends FpsakTestBase {
     @DisplayName("Behandle innsyn for mor - avvist")
     @Description("Behandle innsyn for mor - avvist ved vurdering")
     public void behandleInnsynMorAvvist() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -113,7 +113,7 @@ public class Innsyn extends FpsakTestBase {
     @DisplayName("Behandle innsyn for far - avvist")
     @Description("Behandle innsyn for far - avvist ved vurdering")
     public void behandleInnsynFarAvvist() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
+        TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR,

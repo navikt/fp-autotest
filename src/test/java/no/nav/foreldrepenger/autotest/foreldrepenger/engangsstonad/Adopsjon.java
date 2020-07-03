@@ -34,7 +34,7 @@ public class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon - godkjent")
     @Description("Mor søker adopsjon - godkjent happy case")
     public void morSøkerAdopsjonGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR, false);
@@ -70,7 +70,7 @@ public class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon - avvist - barn er over 15 år")
     @Description("Mor søker adopsjon - avvist - barn er over 15 år og blir dermed avlått")
     public void morSøkerAdopsjonAvvist() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR, false);
@@ -105,7 +105,7 @@ public class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon med overstyrt vilkår")
     @Description("Mor søker adopsjon med overstyrt vilkår som tar behandlingen fra innvilget til avslått")
     public void morSøkerAdopsjonOverstyrt() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR, false);
@@ -149,7 +149,7 @@ public class Adopsjon extends FpsakTestBase {
     @DisplayName("Far søker adopsjon - godkjent")
     @Description("Far søker adopsjon - godkjent happy case")
     public void farSøkerAdopsjonGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
+        TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR, false);
@@ -188,7 +188,7 @@ public class Adopsjon extends FpsakTestBase {
     @DisplayName("Far søker adopsjon av ektefelles barn")
     @Description("Far søker adopsjon av ektefelles barn fører til avvist behandling")
     public void farSøkerAdopsjonAvvist() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
+        TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR, true);

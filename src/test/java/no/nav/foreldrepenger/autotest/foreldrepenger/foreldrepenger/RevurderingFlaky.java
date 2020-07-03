@@ -28,7 +28,7 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
     @DisplayName("Revurdering via Inntektsmelding")
     @Description("Førstegangsbehandling til positivt vedtak. Sender inn IM uten endring. Så ny IM med endring i inntekt. Vedtak fortsatt løpende.")
     public void revurderingViaInntektsmelding() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -108,7 +108,7 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
          * saksbehandler.hentAksjonspunktbekreftelse(ForesloVedtakBekreftelse.class)
          * .setBegrunnelse("Fritektst til brev.");
          * saksbehandler.bekreftAksjonspunktBekreftelse(ForesloVedtakBekreftelse.class);
-         * 
+         *
          * beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
          * beslutter.hentFagsak(saksnummer);
          * beslutter.velgBehandling(beslutter.behandlinger.get(2));
@@ -116,7 +116,7 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
          * .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.
          * FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS));
          * beslutter.bekreftAksjonspunktBekreftelse(FatterVedtakBekreftelse.class);
-         * 
+         *
          * saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
          * saksbehandler.hentFagsak(saksnummer);
          * saksbehandler.velgBehandling(saksbehandler.behandlinger.get(2));

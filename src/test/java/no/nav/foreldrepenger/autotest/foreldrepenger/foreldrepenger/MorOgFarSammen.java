@@ -71,7 +71,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     @Description("Mor søker, får AP slik at behandling stopper opp. Far sender søknad og blir satt på vent. Behandler ferdig mor sin søknad (positivt vedtak)." +
                  "Behandler far sin søknad (positivt vedtak). Ingen overlapp. Verifiserer at sakene er koblet og at det ikke opprettes revurdering berørt sak.")
     public void morOgFar_fødsel_ettArbeidsforholdHver_kobletsak_kantTilKant() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("82");
+        TestscenarioDto testscenario = opprettTestscenario("82");
         String morIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         String morAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String farIdent = testscenario.getPersonopplysninger().getAnnenpartIdent();
@@ -183,7 +183,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
             "Berørt sak opprettet mor. Siste periode blir spittet i to og siste del blir avlsått. Det opprettes ikke" +
             "berørt sak på far.")
     public void farOgMor_fødsel_ettArbeidsforholdHver_overlappendePeriode() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("82");
+        TestscenarioDto testscenario = opprettTestscenario("82");
         String morIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         String morAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String farIdent = testscenario.getPersonopplysninger().getAnnenpartIdent();
@@ -263,7 +263,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     @Description("Mor og far sender inn søknader med oppholdsperiode for den andre parten. Periodene er kant til kant. " +
             "Berørt sak opprettes fordi periodene anses som overlapp. Verifiserer på like trekkdager i siste behandling hos begge.")
     public void morOgFar_berørtSak_oppholdsperioder() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("82");
+        TestscenarioDto testscenario = opprettTestscenario("82");
 
         testscenario.getPersonopplysninger().getSøkerIdent();
         String farIdent = testscenario.getPersonopplysninger().getAnnenpartIdent();
@@ -382,7 +382,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     @Description("Sender inn søknad mor. Sender inn søknad far uten overlapp. Sender inn endringssøknad mor som er lik " +
                  "førstegangsbehandlingen. Verifiserer at det ikke blir berørt sak på far.")
     public void KobletSakIngenEndring() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("84");
+        TestscenarioDto testscenario = opprettTestscenario("84");
         long saksnummerMor = behandleSøknadForMorUtenOverlapp(testscenario, LocalDate.now().minusMonths(4));
         long saksnummerFar = behandleSøknadForFarUtenOverlapp(testscenario, LocalDate.now().minusMonths(4));
 
@@ -422,7 +422,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     @DisplayName("Mor får revurdering fra endringssøknad vedtak opphører")
     @Description("Mor får revurdering fra endringssøknad vedtak opphører - far får revurdering")
     public void BerørtSakOpphør() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("84");
+        TestscenarioDto testscenario = opprettTestscenario("84");
         long saksnummerMor = behandleSøknadForMorUtenOverlapp(testscenario, LocalDate.now().minusMonths(4));
         long saksnummerFar = behandleSøknadForFarUtenOverlapp(testscenario, LocalDate.now().minusMonths(4));
 
@@ -464,7 +464,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     @DisplayName("Mor får revurdering fra endringssøknad endring av uttak")
     @Description("Mor får revurdering fra endringssøknad endring av uttak - fører til revurdering hos far")
     public void BerørtSakEndringAvUttak() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("84");
+        TestscenarioDto testscenario = opprettTestscenario("84");
         long saksnummerMor = behandleSøknadForMorUtenOverlapp(testscenario, LocalDate.now().minusMonths(4));
         long saksnummerFar = behandleSøknadForFarUtenOverlapp(testscenario, LocalDate.now().minusMonths(4));
         sendInnEndringssøknadforMorMedEndretUttak(testscenario, saksnummerMor);
@@ -503,7 +503,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     @Description("Far søker. Blir satt på vent pga for tidlig søknad. Mor søker og får innvilget. Oppretter manuell " +
                  "revurdering på mor. ")
     public void KobletSakMorSøkerEtterFar() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("84");
+        TestscenarioDto testscenario = opprettTestscenario("84");
         LocalDate fødselsdato = LocalDate.now().minusDays(15);
         behandleSøknadForFarSattPåVent(testscenario, fødselsdato);
         long saksnummerMor = behandleSøknadForMorUregistrert(testscenario, fødselsdato);

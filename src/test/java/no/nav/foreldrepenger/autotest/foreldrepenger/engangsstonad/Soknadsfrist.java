@@ -34,7 +34,7 @@ public class Soknadsfrist extends FpsakTestBase {
     @DisplayName("Mor søker for sent men får godkjent")
     @Description("Mor søker for sent men får godkjent alikevel")
     public void behandleFødselEngangstønadSøknadsfristGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("52");
+        TestscenarioDto testscenario = opprettTestscenario("52");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
@@ -65,7 +65,7 @@ public class Soknadsfrist extends FpsakTestBase {
     @DisplayName("Behandle søknadsfrist og sent tilbake")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist")
     public void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
@@ -110,7 +110,7 @@ public class Soknadsfrist extends FpsakTestBase {
     @DisplayName("Behandle søknadsfrist og sent tilbake på grunn av fødsel")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av fødsel - tester tilbakesending")
     public void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);

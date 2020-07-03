@@ -42,7 +42,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         Long saksnummer = prepareFpsakMedRevurdering(testscenario);
 
         tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -86,7 +86,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @DisplayName("Oppretter en tilbakekreving manuelt med verge fra Fpsak")
     @Description("Enkel periode, treffer ikke foreldelse, full tilbakekreving men med verge.")
     public void tilbakeKrevingMedVerge() {
-        opprettTestscenarioFraVTPTemplate("50");
+        opprettTestscenario("50");
     }
 
     private Long prepareFpsakMedRevurdering(TestscenarioDto testscenario) {
