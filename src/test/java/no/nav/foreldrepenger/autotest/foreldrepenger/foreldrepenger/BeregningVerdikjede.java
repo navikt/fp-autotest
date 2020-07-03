@@ -63,7 +63,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold og tre bortfalte naturalytelser på forskjellige tidspunkt")
     public void morSøkerFødselMedEttArbeidsforhold() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("49");
+        TestscenarioDto testscenario = opprettTestscenario("49");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -125,7 +125,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som tilkommer etter skjæringstidspunktet")
     public void morSøkerFødselMedFullAAPOgArbeidsforhold() {
         // LAG SØKNAD OG SEND INN INNTEKTSMELDING //
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("166");
+        TestscenarioDto testscenario = opprettTestscenario("166");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
@@ -166,7 +166,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som ikke skal benyttes.")
     public void morSøkerFødselMedFullAAPOgArbeidsforholdSomErAktivtPåStp() {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("167");
+        TestscenarioDto testscenario = opprettTestscenario("167");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -348,7 +348,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Mor med for sent refusjonskrav.")
     public void morFødselForSentRefusjonskrav() {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("84");
+        TestscenarioDto testscenario = opprettTestscenario("84");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(4);
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -420,7 +420,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @Description("ATFL i samme org med lønnsendring")
     public void ATFL_samme_org_med_lønnendring_uten_inntektsmelding() {
         // OPPSETT, INNTEKTSMELDING, SØKNAD //
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("163");
+        TestscenarioDto testscenario = opprettTestscenario("163");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         Opptjening opptjening = OpptjeningErketyper.medFrilansOpptjening();
@@ -454,7 +454,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Uten inntektsmelding, med lønnsendring")
     @Description("Uten inntektsmelding, med lønnsendring")
     public void vurder_mottar_ytelse_vurder_lonnsendring() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("161"); //  TODO: To med samme tall. Velger første (alfabetisk)
+        TestscenarioDto testscenario = opprettTestscenario("161"); //  TODO: To med samme tall. Velger første (alfabetisk)
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();

@@ -35,7 +35,7 @@ public class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin - godkjent")
     @Description("Mor søker termin - godkjent happy case")
     public void morSøkerTerminGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -73,7 +73,7 @@ public class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin men mangler dokumentasjon")
     @Description("Mor søker termin men mangler dokumentasjon og sender melding om manglende brev")
     public void morSøkerTerminManglerDokumentasjon() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -98,7 +98,7 @@ public class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin overstyrt vilkår")
     @Description("Mor søker termin overstyrt vilkår fødsel fra oppfylt til avvist")
     public void morSøkerTerminOvertyrt() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -140,14 +140,14 @@ public class Termin extends FpsakTestBase {
     }
 
     public void behandleTerminMorUtenTerminbekreftelse() {
-        opprettTestscenarioFraVTPTemplate("55");
+        opprettTestscenario("55");
     }
 
     @Test
     @DisplayName("Far søker termin")
     @Description("Far søker termin avslått pga søker er far")
     public void farSøkerTermin() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("61");
+        TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.FAR,
@@ -175,7 +175,7 @@ public class Termin extends FpsakTestBase {
     @Description("Setter behandling på vent og gjennoptar og henlegger")
     public void settBehandlingPåVentOgGjenopptaOgHenlegg() {
         // Opprett scenario og søknad
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -205,7 +205,7 @@ public class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin 25 dager etter fødsel")
     @Description("Mor søker termin 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
     public void morSøkerTermin25DagerTilbakeITid() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,

@@ -116,7 +116,7 @@ public class Aksjonspunkter extends ForeldrepengerTestBase {
     @Test
     @DisplayName("MANUELL_VURDERING_AV_OMSORGSVILKÅRET")
     public void aksjonspunkt_ADOPSJONSSOKNAD_ENGANGSSTONAD_5011() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID,
                 SøkersRolle.MOR, OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
@@ -160,7 +160,7 @@ public class Aksjonspunkter extends ForeldrepengerTestBase {
     @Test
     @DisplayName("VURDER_FAKTA_FOR_ATFL_SN")
     public void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("74");
+        TestscenarioDto testscenario = opprettTestscenario("501");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         testscenario.getPersonopplysninger().getSøkerIdent();
         LocalDate fødselsdato = LocalDate.now().minusWeeks(3);
@@ -208,7 +208,7 @@ public class Aksjonspunkter extends ForeldrepengerTestBase {
     @Test
     @DisplayName("VURDER_OM_VILKÅR_FOR_SYKDOM_OPPFYLT")
     public void aksjonspunkt_FAR_FOEDSELSSOKNAD_FORELDREPENGER_5044() {
-        TestscenarioDto testscenario = opprettTestscenario("60");
+        TestscenarioDto testscenario = opprettTestscenario("86");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
         String søkerFnr = testscenario.getPersonopplysninger().getAnnenpartIdent();
         LocalDate termindato = LocalDate.now().plusWeeks(2);

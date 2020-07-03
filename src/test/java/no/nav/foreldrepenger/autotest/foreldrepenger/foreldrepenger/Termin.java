@@ -46,7 +46,7 @@ public class Termin extends ForeldrepengerTestBase {
     @Description("Mor med ett arbeidsforhold sender inn inntektsmelding før søknad. " +
             "Forventer at vedtak bli fattet og det blir bare opprettet en behandling")
     public void MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         LocalDate termindato = LocalDate.now().plusWeeks(3);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -74,7 +74,7 @@ public class Termin extends ForeldrepengerTestBase {
     @DisplayName("Mor søker sak behandlet før inntektsmelding mottatt")
     @Description("Mor søker og saken  blir behandlet før inntektsmelding er mottat basert på data fra inntektskomponenten, så mottas inntektsmeldingen ")
     public void MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         LocalDate termindato = LocalDate.now().minusWeeks(1);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
 
@@ -127,7 +127,7 @@ public class Termin extends ForeldrepengerTestBase {
             "fht IM, en periode som har feil graderingsprosent i fht IM, en periode som har feil orgnr i fht IM og " +
             "en periode som er ok.")
     public void morSøkerTerminEttArbeidsforhold_avvikIGradering() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("77");
+        TestscenarioDto testscenario = opprettTestscenario("77");
 
         LocalDate termindato = LocalDate.now().plusWeeks(6);
         LocalDate fpstartdato = termindato.minusWeeks(3);
@@ -201,7 +201,7 @@ public class Termin extends ForeldrepengerTestBase {
     @DisplayName("Mor søker termin uten FPFF")
     @Description("Mor søker termin uten periode for foreldrepenger før fødsel. Skjæringstidspunkt skal være 3 uker før termindato.")
     public void morSokerTerminUtenFPFFperiode() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate termindato = LocalDate.now().plusWeeks(3);
 

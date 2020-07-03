@@ -37,7 +37,7 @@ public class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker fødsel er utvandret")
     @Description("Mor søker fødsel og er utvandret. Skal føre til aksjonspunkt angående medlemskap - avslått")
     public void morSøkerFødselErUtvandret() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("51");
+        TestscenarioDto testscenario = opprettTestscenario("51");
 
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -81,7 +81,7 @@ public class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker med personstatus uregistrert")
     @Description("Mor søker med personstatus uregistrert, får askjonspunkt så hennlegges")
     public void morSøkerFødselUregistrert() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("120");
+        TestscenarioDto testscenario = opprettTestscenario("120");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -106,7 +106,7 @@ public class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker med utenlandsk adresse")
     @Description("Mor søker med utelandsk adresse")
     public void morSøkerFødselUtenlandsadresse() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("121");
+        TestscenarioDto testscenario = opprettTestscenario("121");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,

@@ -91,7 +91,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Mor fødsel med arbeidsforhold og frilans. Vurderer opptjening og beregning. Finner avvik")
     @Description("Mor søker fødsel med ett arbeidsforhold og frilans. Vurder opptjening. Vurder fakta om beregning. Avvik i beregning")
     public void morSøkerFødselMedEttArbeidsforholdOgFrilans_VurderOpptjening_VurderFaktaOmBeregning_AvvikIBeregning() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("59");
+        TestscenarioDto testscenario = opprettTestscenario("59");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -193,7 +193,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Description("Mor søker fødsel som selvstendig næringsdrivende. Avvik i beregning")
     public void morSøkerFødselSomSelvstendingNæringsdrivende_AvvikIBeregning() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("48");
+        TestscenarioDto testscenario = opprettTestscenario("48");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -255,7 +255,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold og avvik i beregning")
     public void morSøkerFødselMedToArbeidsforhold_AvvikIBeregning() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("57");
+        TestscenarioDto testscenario = opprettTestscenario("57");
 
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -325,7 +325,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold og avvik i beregning")
     public void morSøkerFødselMedEttArbeidsforhold_AvvikIBeregning() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("49");
+        TestscenarioDto testscenario = opprettTestscenario("49");
 
         String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
@@ -381,7 +381,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold i samme organisasjon")
     public void morSøkerFødselMedToArbeidsforholdISammeOrganisasjon() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("57");
+        TestscenarioDto testscenario = opprettTestscenario("57");
 
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -431,7 +431,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold")
     public void morSøkerFødselMedEttArbeidsforhold() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("49");
+        TestscenarioDto testscenario = opprettTestscenario("49");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -469,7 +469,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold")
     public void morSøkerFødselMedToArbeidsforhold() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("56");
+        TestscenarioDto testscenario = opprettTestscenario("56");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -518,7 +518,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Far søker fødsel med 1 arbeidsforhold")
     public void farSøkerFødselMedEttArbeidsforhold() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("62");
+        TestscenarioDto testscenario = opprettTestscenario("62");
 
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate startDatoForeldrepenger = fødselsdato.plusWeeks(3);
@@ -583,7 +583,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold i samme organisasjon med 1 inntektsmelding")
     public void morSøkerFødselMedToArbeidsforholdISammeOrganisasjonEnInntektsmelding() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("57");
+        TestscenarioDto testscenario = opprettTestscenario("57");
 
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -618,7 +618,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold, Papirsøkand")
     public void morSøkerFødselMedEttArbeidsforhold_papirsøknad() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);
@@ -688,7 +688,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Description("Mor søker fødsel med 2 arbeidsforhold med arbeidsforhold som ikke matcher på ID")
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold med arbeidsforhold som ikke matcher på ID")
     public void morSøkerFødselMed2ArbeidsforholdArbeidsforholdIdMatcherIkke() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("56");
+        TestscenarioDto testscenario = opprettTestscenario("56");
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
@@ -732,11 +732,11 @@ public class Fodsel extends ForeldrepengerTestBase {
         int overstyrtInntekt = 250_000;
 
         // Lag privat arbeidsgiver
-        TestscenarioDto arbeidsgiverScenario = opprettTestscenarioFraVTPTemplate("59");
+        TestscenarioDto arbeidsgiverScenario = opprettTestscenario("59");
         String arbeidsgiverFnr = arbeidsgiverScenario.getPersonopplysninger().getSøkerIdent();
 
         // Lag testscenario
-        TestscenarioDto testscenario = opprettScenarioMedPrivatArbeidsgiverFraVTPTemplate("152", arbeidsgiverFnr);
+        TestscenarioDto testscenario = opprettTestscenarioMedPrivatArbeidsgiver("152", arbeidsgiverFnr);
 
         // Send inn søknad
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -811,11 +811,11 @@ public class Fodsel extends ForeldrepengerTestBase {
         int overstyrtInntekt = 250_000;
 
         // Lag privat arbeidsgiver
-        TestscenarioDto arbeidsgiverScenario = opprettTestscenarioFraVTPTemplate("59");
+        TestscenarioDto arbeidsgiverScenario = opprettTestscenario("59");
         String arbeidsgiverFnr = arbeidsgiverScenario.getPersonopplysninger().getSøkerIdent();
 
         // Lag testscenario
-        TestscenarioDto testscenario = opprettScenarioMedPrivatArbeidsgiverFraVTPTemplate("152", arbeidsgiverFnr);
+        TestscenarioDto testscenario = opprettTestscenarioMedPrivatArbeidsgiver("152", arbeidsgiverFnr);
 
         // Send inn søknad
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -915,7 +915,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Far søker fødsel med aleneomsorg men er gift og bor med annenpart")
     public void farSøkerFødselAleneomsorgMenErGiftOgBorMedAnnenpart() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("62");
+        TestscenarioDto testscenario = opprettTestscenario("62");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -979,7 +979,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel har stillingsprosent 0")
     @Description("Mor søker fødsel har stillingsprosent 0 som fører til aksjonspunkt for opptjening")
     public void morSøkerFødselStillingsprosent0() { // TODO
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("45");
+        TestscenarioDto testscenario = opprettTestscenario("45");
 
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -1025,7 +1025,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Description("Mor, med to arbeidsforhold, søker gradering og utsettelse. Samsvar med IM.")
     public void morSøkerGraderingOgUtsettelseMedToArbeidsforhold_utenAvvikendeInntektsmeldinger() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("76");
+        TestscenarioDto testscenario = opprettTestscenario("76");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -1166,7 +1166,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Description("Mor søker fødsel aleneomsorg. Annen forelder ikke kjent.")
     public void morSøkerFødselAleneomsorgKunEnHarRett() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("102");
+        TestscenarioDto testscenario = opprettTestscenario("102");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -1243,7 +1243,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel for 2 barn med 1 barn registrert")
     @Description("Mor søker fødsel for 2 barn med 1 barn registrert. dette fører til aksjonspunkt for bekreftelse av antall barn")
     public void morSøker2Barn1Registrert() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -1288,7 +1288,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Mor søker uregistrert fødsel før det har gått 2 uker")
     @Description("Mor søker uregistrert fødsel før det har gått 2 uker - skal sette behandling på vent")
     public void morSøkerUregistrertEtterFør2Uker() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusDays(5);
@@ -1324,7 +1324,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     @DisplayName("Mor sender inntektsmelding inn etter behandlet behandling men før foreslå vedtak")
     @Description("Mor sender inntektsmelding inn etter behandlet behandling men før foreslå vedtak - behandling starter på nytt")
     public void morSenderInntektsmeldingEtterInnvilgetMenFørVedtak() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusWeeks(3);
@@ -1378,7 +1378,7 @@ public class Fodsel extends ForeldrepengerTestBase {
             +
             "dokumentasjon skal bli manuelt behandlet i fakta om uttak. Ingen AP i uttak.")
     public void utsettelse_med_avvik() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         String søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødsel = testscenario.getPersonopplysninger().getFødselsdato();

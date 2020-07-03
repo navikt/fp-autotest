@@ -32,7 +32,7 @@ public class Klage extends FpsakTestBase {
     @Description("Behandle klage via NFP - vurdert til medhold")
     public void klageMedholdNFP() {
         // Opprette førstegangssøknad engangsstønad
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -81,7 +81,7 @@ public class Klage extends FpsakTestBase {
     @DisplayName("Behandle klage via NFP - påklaget vedtak opphevet")
     @Description("Behandle klage via NFP - stadfestet af NFP og opphevet av KA")
     public void klageOppheveAvKA() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -157,7 +157,7 @@ public class Klage extends FpsakTestBase {
     @DisplayName("Behandle klage via KA - påklaget vedtak omgjort/medhold")
     @Description("Behandle klage via KA - stadfestet af NFP og medhold av KA")
     public void klageOmgjortAvKA() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -235,7 +235,7 @@ public class Klage extends FpsakTestBase {
     @DisplayName("Behandle klage via KA - avslag")
     @Description("Behandle klage via KA - stadfestet af NFP og medhold av KA")
     public void klageAvslaattAvKA() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -291,7 +291,7 @@ public class Klage extends FpsakTestBase {
     @DisplayName("Behandle klage via NFP - avvist av beslutter")
     @Description("Behandle klage via NFP - medhold av NFP avvist av beslutter send tilbake til NFP vurdert til delvist gunst")
     public void avvistAvBelutterNFP() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,

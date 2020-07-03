@@ -39,7 +39,7 @@ public class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel - godkjent")
     @Description("Mor søker fødsel - godkjent happy case")
     public void morSøkerFødselGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -59,7 +59,7 @@ public class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel - avvist")
     @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i tps")
     public void morSøkerFødselAvvist() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -93,7 +93,7 @@ public class Fodsel extends FpsakTestBase {
     @DisplayName("Far søker registrert fødsel")
     @Description("Far søker registrert fødsel og blir avvist fordi far søker")
     public void farSøkerFødselRegistrert() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("60");
+        TestscenarioDto testscenario = opprettTestscenario("60");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -113,7 +113,7 @@ public class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel overstyrt vilkår")
     @Description("Mor søker fødsel overstyrt vilkår adopsjon fra godkjent til avslått")
     public void morSøkerFødselOverstyrt() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -159,7 +159,7 @@ public class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel - beregning overstyrt")
     @Description("Mor søker fødsel - beregning overstyrt fra ett beløp til 10 kroner")
     public void morSøkerFødselBeregningOverstyrt() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -205,7 +205,7 @@ public class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel med flere barn")
     @Description("Mor søker fødsel med flere barn - happy case flere barn")
     public void morSøkerFødselFlereBarn() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("53");
+        TestscenarioDto testscenario = opprettTestscenario("53");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 aktørID, SøkersRolle.MOR, LocalDate.now().minusDays(30L))
@@ -248,7 +248,7 @@ public class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel med verge")
     @Description("Mor søker fødsel med verge - skal få aksjonspunkt om registrering av verge når man er under 18")
     public void morSøkerFødselMedVerge() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("54");
+        TestscenarioDto testscenario = opprettTestscenario("54");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
@@ -295,7 +295,7 @@ public class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel")
     @Description("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel. Behandlingen skal bli satt på vent")
     public void morSøkerUregistrertFødselMindreEnn14DagerEtter() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusWeeks(1);
 
@@ -314,7 +314,7 @@ public class Fodsel extends FpsakTestBase {
     @DisplayName("Medmor søker fødsel")
     @Description("Medmor søker fødsel - søkand blir avslått fordi søker er medmor")
     public void medmorSøkerFødsel() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("90");
+        TestscenarioDto testscenario = opprettTestscenario("90");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MEDMOR,

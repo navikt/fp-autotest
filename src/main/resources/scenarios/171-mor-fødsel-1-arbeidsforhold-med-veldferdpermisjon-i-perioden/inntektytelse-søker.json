@@ -1,0 +1,27 @@
+{
+	"arena": {
+		"saker": [
+		]
+	},
+	"inntektskomponent": {
+		"inntektsperioder": [
+			{
+				"fom": "now() - P2Y",
+				"tom": "now()",
+				"beløp": 30000,
+				"orgnr": "910909088",
+				"type": "Lønnsinntekt",
+				"fordel": "kontantytelse",
+				"beskrivelse": "testbeskrivelsesomfungererennsålenge"
+			}
+		]
+	},
+	"aareg": {
+		"arbeidsforhold": []
+	},
+	"sigrun": {
+		"inntektsår": [
+
+		]
+	}
+ }

@@ -13,16 +13,10 @@ public abstract class TestScenarioTestBase extends TestBase {
         testscenarioKlient = new TestscenarioKlient(BasicHttpSession.session());
     }
 
-    @Step("Oppretter testscenario {id} fra Json fil lokalisert i VTP")
-    @Deprecated
-    protected TestscenarioDto opprettTestscenarioFraVTPTemplate(String id) {
-        return testscenarioKlient.opprettTestscenarioFraVTPTemplate(id);
-    }
-
-    @Step("Oppretter testscenario {id} fra Json fil lokalisert i VTP")
-    @Deprecated
-    protected TestscenarioDto opprettScenarioMedPrivatArbeidsgiverFraVTPTemplate(String id, String aktorId) {
-        return testscenarioKlient.opprettTestscenarioMedAktorIdFraVTPTemplate(id, aktorId);
+    @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
+    protected TestscenarioDto opprettTestscenarioMedPrivatArbeidsgiver(String id, String aktorId) {
+        Object testscenarioObject = testscenarioRepositoryImpl.hentScenario(id);
+        return testscenarioKlient.opprettTestscenarioMedAktorId(id, testscenarioObject, aktorId);
     }
 
     @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")

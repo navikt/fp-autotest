@@ -79,7 +79,7 @@ public class Revurdering extends ForeldrepengerTestBase {
             "Overstyrer medlemskap. Vedtaket opphører.")
     public void opprettRevurderingManuelt() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -141,7 +141,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Endringssøknad med ekstra uttaksperiode.")
     @Description("Førstegangsbehandling til positivt vedtak. Søker sender inn endringsøknad. Endring i uttak. Vedtak fortsatt løpende.")
     public void endringssøknad() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         // Førstegangssøknad
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -207,7 +207,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Revurdering og ny IM når behandling er hos beslutter.")
     @Description("Førstegangsbehandling til positivt vedtak. Revurdering, og ny IM kommer når behandling er hos beslutter. Vedtak fortsatt løpende.")
     public void nyInntektsmeldingUnderÅpenRevurdering() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -322,7 +322,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Endringssøknad med utsettelse")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med utsettelse fra bruker. Vedtak fortsatt løpende.")
     public void endringssøknadMedUtsettelse() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -391,7 +391,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Endringssøknad med gradering")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med gradering fra bruker. Vedtak fortsatt løpende.")
     public void endringssøknadMedGradering() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -523,7 +523,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Ikke få avslåg på innvilget perioder pga søknadsfrist")
     @Description("Ikke få avslåg på innvilget perioder pga søknadsfrist. Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
     public void ikke_avslag_pa_innvilget_perioder_pga_søknadsfrist_i_revurdering() {
-        var testscenario = opprettTestscenario("76");
+        var testscenario = opprettTestscenario("74");
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);
@@ -577,7 +577,7 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Fortsatt få avslag på avslåtte perioder pga søknadsfrist i neste revurdering")
     @Description("Fortsatt få avslag på avslåtte perioder pga søknadsfrist i neste revurdering. Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
     public void fortsatt_tape_avslåtte_perioder_pga_søknadsfrist_i_revurdering() {
-        var testscenario = opprettTestscenario("76");
+        var testscenario = opprettTestscenario("74");
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);

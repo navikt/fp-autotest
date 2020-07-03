@@ -28,7 +28,7 @@ public class TerminFlaky extends ForeldrepengerTestBase {
     @DisplayName("Mor søker med ett arbeidsforhold")
     @Description("Mor søkner med ett arbeidsforhold. Forventer at vedtak blir fattet og brev blir sendt")
     public void MorSøkerMedEttArbeidsforhold() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         LocalDate termindato = LocalDate.now().plusWeeks(3);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
