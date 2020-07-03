@@ -123,11 +123,9 @@ public class Termin extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor søker termin med avvik i gradering")
-    @Description("Mor med to arbeidsforhold søker termin. Søknad inneholder gradering. En periode som er forflyttet i fht IM, "
-            +
-            "en periode som har feil graderingsprosent i fht IM, en periode som har feil orgnr i fht IM og en periode som "
-            +
-            "er ok.")
+    @Description("Mor med to arbeidsforhold søker termin. Søknad inneholder gradering. En periode som er forflyttet i" +
+            "fht IM, en periode som har feil graderingsprosent i fht IM, en periode som har feil orgnr i fht IM og " +
+            "en periode som er ok.")
     public void morSøkerTerminEttArbeidsforhold_avvikIGradering() {
         TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("77");
 

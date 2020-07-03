@@ -58,6 +58,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
@@ -1373,6 +1374,50 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
+    }
+
+    @Test
+    @DisplayName("12: Mor søker fødsel og mottar sykepenger som er under 1/2 G")
+    @Description("12: Mor søker fødsel og mottar sykepenger som er under 1/2 G. Har ingen inntektskilder. Hun har " +
+            "for lite inntekt og har dermed ikke rett til foreldrepenger – beregning avvist søknadden.")
+    public void morSøkerFødselMottarForLite() {
+        var testscenario = opprettTestscenario("70");
+        var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(
+                søknad.build(),
+                søkerAktørIdent,
+                søkerIdent,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+
+        var avklarArbeidsforholdBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+
+        verifiser(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"),
+                "Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +
+                        "er forut for permisjonen på skjæringstidspunktet!");
+
+        var vurderFaktaOmBeregningBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .leggTilAndelerYtelse(4000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"));
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
+
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+
+        verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
+                        .getRedusertPrAar() < saksbehandler.valgtBehandling.getBeregningsgrunnlag().getHalvG(),
+                "Forventer at beregningsgrunnlaget baserer seg på et grunnlag som er mindre enn 1/2 G.");
+        verifiserLikhet(saksbehandler.vilkårStatus(VilkarTypeKoder.BEREGNINGSGRUNNLAGVILKÅR).kode, "IKKE_OPPFYLT");
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT",
+                "Forventer at behandlingen er avslått fordi søker ikke har rett på foreldrepenger.");
     }
 
     private Long sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(TestscenarioDto testscenario,
