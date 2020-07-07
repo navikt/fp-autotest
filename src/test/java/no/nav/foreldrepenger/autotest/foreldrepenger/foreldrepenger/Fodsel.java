@@ -9,8 +9,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.grader
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingBuilderMedEndringIRefusjonPrivatArbeidsgiver;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingBuilderPrivatArbeidsgiver;
+import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingPrivateArbeidsgiver;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
@@ -97,8 +96,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
 
         int inntektPerMåned = 20_000;
         int overstyrtInntekt = 500_000;
@@ -750,9 +748,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         int inntektPerMaaned = 10_000;
         LocalDate startDatoForeldrepenger = fødselsdato.minusWeeks(3);
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
-        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilderPrivatArbeidsgiver(inntektPerMaaned,
-                fnr,
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingPrivateArbeidsgiver(inntektPerMaaned, fnr,
                 startDatoForeldrepenger, arbeidsgiverFnr);
+
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -834,9 +832,10 @@ public class Fodsel extends ForeldrepengerTestBase {
         endringRefusjonMap.put(endringsdato, BigDecimal.valueOf(endret_refusjon));
         LocalDate startDatoForeldrepenger = fødselsdato.minusWeeks(3);
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
-        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingBuilderMedEndringIRefusjonPrivatArbeidsgiver(
-                inntektPerMaaned, fnr,
-                startDatoForeldrepenger, arbeidsgiverFnr, BigDecimal.valueOf(refusjon), endringRefusjonMap);
+        InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmeldingPrivateArbeidsgiver(inntektPerMaaned, fnr, startDatoForeldrepenger,
+                arbeidsgiverFnr)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(refusjon))
+                .medEndringIRefusjonslist(endringRefusjonMap);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

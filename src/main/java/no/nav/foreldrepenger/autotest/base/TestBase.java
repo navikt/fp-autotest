@@ -10,13 +10,13 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.util.konfigurasjon.MiljoKonfigurasjon;
-import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioRepositoryImpl;
+import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioHenter;
 
 public abstract class TestBase {
 
     // Logger for testruns
     protected Logger log;
-    protected static TestscenarioRepositoryImpl testscenarioRepositoryImpl;
+    protected static TestscenarioHenter testscenarioHenter;
 
     public TestBase() {
         log = LoggerFactory.getLogger(this.getClass());
@@ -28,7 +28,7 @@ public abstract class TestBase {
     @BeforeAll
     protected static void setUpAll() {
         MiljoKonfigurasjon.initProperties();
-        testscenarioRepositoryImpl = new TestscenarioRepositoryImpl();
+        testscenarioHenter = new TestscenarioHenter();
     }
 
     /*

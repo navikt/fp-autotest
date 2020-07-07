@@ -41,7 +41,8 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel, men har ikke arbeidsforhold i AAREG, sender inntektsmelding")
-    @Description("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til arbeidsforhold basert på inntektsmelding")
+    @Description("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til arbeidsforhold " +
+            "basert på inntektsmelding")
     public void utenArbeidsforholdMenMedInntektsmelding() {
         TestscenarioDto testscenario = opprettTestscenario("171");
 
@@ -57,9 +58,8 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
         List<Integer> inntekter = sorterteInntektsbeløp(testscenario);
 
-        InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(inntekter.get(0), fnr,
-                fpStartdato, "910909088")
-                        .medArbeidsforholdId("ARB001-001");
+        InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(inntekter.get(0), fnr, fpStartdato, "910909088")
+                .medArbeidsforholdId("ARB001-001");
 
         fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -99,8 +99,7 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medAnnenForelder(annenPartAktørid);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 

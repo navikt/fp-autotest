@@ -15,13 +15,13 @@ public abstract class TestScenarioTestBase extends TestBase {
 
     @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
     protected TestscenarioDto opprettTestscenarioMedPrivatArbeidsgiver(String id, String aktorId) {
-        Object testscenarioObject = testscenarioRepositoryImpl.hentScenario(id);
+        Object testscenarioObject = testscenarioHenter.hentScenario(id);
         return testscenarioKlient.opprettTestscenarioMedAktorId(id, testscenarioObject, aktorId);
     }
 
     @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
     protected TestscenarioDto opprettTestscenario(String id) {
-        Object testscenarioObject = testscenarioRepositoryImpl.hentScenario(id);
+        Object testscenarioObject = testscenarioHenter.hentScenario(id);
         return testscenarioKlient.opprettTestscenario(id, testscenarioObject);
     }
 }
