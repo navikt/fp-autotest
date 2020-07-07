@@ -251,7 +251,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo() == 80,
                 "Feil i stønadsdager fellesperiode.");
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL)
-                .getSaldo() >= 0, "Feil i stønadsdager FPFF.");
+                .getSaldo() >= 0, "Feil i stønadsdager FØR_FØDSEL.");
         // verifiser ikke berørt sak far
         saksbehandler.hentFagsak(saksnummerFar);
         verifiser(saksbehandler.behandlinger.size() == 1, "Feil antall behandlinger i fagsak til far.");

@@ -13,7 +13,6 @@ import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.overf�
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerAdopsjon;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
@@ -92,10 +91,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, termindato.plusWeeks(15),
                         termindato.plusWeeks(20).minusDays(1)),
                 uttaksperiode(FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
-        var søknad = lagSøknadForeldrepengerTermin(
-                termindato, søkerAktørId, SøkersRolle.MOR)
-                        .medFordeling(fordeling)
-                        .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett());
+        var søknad = lagSøknadForeldrepengerTermin(termindato, søkerAktørId, SøkersRolle.MOR)
+                .medFordeling(fordeling)
+                .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett());
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(
                 søknad.build(),
@@ -109,12 +107,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .getArbeidsgiverOrgnr();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
         var avvikendeMånedsinntekt = månedsinntekt * 1.3;
-        var inntektsmeldinger = lagInntektsmelding(
-                (int) avvikendeMånedsinntekt,
-                søkerFnr,
-                fpStartdato,
-                orgNummer)
-                        .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
+        var inntektsmeldinger = lagInntektsmelding((int) avvikendeMånedsinntekt, søkerFnr, fpStartdato, orgNummer)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -145,8 +139,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at saldoen for stønadskonton FORELDREPENGER er 75 dager!");
         List<Integer> beregnetDagsats = regnUtForventetDagsatsForPeriode(List.of(månedsinntekt), List.of(100),
                 List.of(false));
-        verifiser(
-                saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
+        verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
                         .getDagsats() == beregnetDagsats.get(0),
                 "Forventer at dagsatsen blir justert ut i fra årsinntekten og utbeatlinsggrad, og IKKE 6G fordi inntekten er under 6G!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(60),
@@ -165,10 +158,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var gjennomsnittFraTreSisteÅreneISigrun = hentNæringsinntektFraSigrun(testscenario, 2018,false);
         BigInteger næringsnntekt = BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun * 1.80).toBigInteger(); // >25% avvik
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, næringsnntekt, true);
-        var søknad = lagSøknadForeldrepengerFødsel(
-                fødselsdato, søkerAktørId, SøkersRolle.MOR)
-                        .medSpesiellOpptjening(opptjening)
-                        .medMottattDato(fødselsdato.plusWeeks(2));
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørId, SøkersRolle.MOR)
+                .medSpesiellOpptjening(opptjening)
+                .medMottattDato(fødselsdato.plusWeeks(2));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(
                 søknad.build(),
@@ -210,7 +202,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("3: Mor, sykepenger, kun ytelse, papirsøknad")
-    @Description("Mor søker fullt uttak, men søker mer en det hun har rett til.")
+    @Description("Mor søker fullt uttak, men søker mer enn det hun har rett til.")
     public void morSykepengerKunYtelseTest() {
         var testscenario = opprettTestscenario("520");
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -325,28 +317,16 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektFar1 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var arbeidsforholdIdFar1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsforholdId();
-        InntektsmeldingBuilder inntektsmeldingFar1 = lagInntektsmelding(
-                månedsinntektFar1,
-                identFar,
-                fpStartdatoFar,
-                orgNummerFar)
-                        .medArbeidsforholdId(arbeidsforholdIdFar1)
-                        .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar1));
-        var månedsinntektFar2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1)
-                .getBeløp();
-        var arbeidsforholdIdFar2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getArbeidsforholdId();
-        InntektsmeldingBuilder inntektsmeldingFar2 = lagInntektsmelding(
-                månedsinntektFar2,
-                identFar,
-                fpStartdatoFar,
-                orgNummerFar)
-                        .medArbeidsforholdId(arbeidsforholdIdFar2)
-                        .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar2));
+        var månedsinntektFar1 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var arbeidsforholdIdFar1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsforholdId();
+        InntektsmeldingBuilder inntektsmeldingFar1 = lagInntektsmelding(månedsinntektFar1, identFar, fpStartdatoFar, orgNummerFar)
+                .medArbeidsforholdId(arbeidsforholdIdFar1)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar1));
+        var månedsinntektFar2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp();
+        var arbeidsforholdIdFar2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsforholdId();
+        InntektsmeldingBuilder inntektsmeldingFar2 = lagInntektsmelding(månedsinntektFar2, identFar, fpStartdatoFar, orgNummerFar)
+                .medArbeidsforholdId(arbeidsforholdIdFar2)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar2));
         fordel.sendInnInntektsmeldinger(
                 List.of(inntektsmeldingFar1, inntektsmeldingFar2),
                 aktørIdFar,
@@ -435,10 +415,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var frilansFom = testscenario.getScenariodata().getInntektskomponentModell().getFrilansarbeidsforholdperioder()
                 .get(0).getFrilansFom();
         var opptjeningFar = OpptjeningErketyper.medFrilansOpptjening(frilansFom, fpStartdatoFar.minusDays(1));
-        var søknadFar = lagSøknadForeldrepengerFødsel(
-                fødselsdato, aktørIdFar, SøkersRolle.FAR)
-                        .medFordeling(fordelingFar)
-                        .medSpesiellOpptjening(opptjeningFar);
+        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
+                .medFordeling(fordelingFar)
+                .medSpesiellOpptjening(opptjeningFar);
+        // TODO: Burde søke med annenforeldre registrert i søknadden?
         var saksnummerFar = fordel.sendInnSøknad(
                 søknadFar.build(),
                 aktørIdFar,
@@ -479,8 +459,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Test
     @DisplayName("6: Far søker foreldrepenger med AF som ikke er avsluttet og mor ikke har rett.")
     @Description("Far søker foreldrepenger med to aktive arbeidsforhold og ett gammelt arbeidsforhold som skulle vært " +
-            "avsluttet. Søker en graderingsperiode i en av virksomheten og gjennopptar full deltidsstilling: I dette " +
-            "arbeidsforholdet vil AG ha full refusjon i hele perioden. I det andre vil AG bare ha refusjon i to måneder.")
+            "avsluttet, men er ikke det. Søker en graderingsperiode i en av virksomheten og gjennopptar full " +
+            "deltidsstilling: I dette arbeidsforholdet vil AG ha full refusjon i hele perioden. I det andre vil AG " +
+            "bare ha refusjon i to måneder.")
     public void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var testscenario = opprettTestscenario("570");
         var identFar = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -515,13 +496,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .getBeløp();
         var arbeidsforholdIdFar1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsforholdId();
-        InntektsmeldingBuilder inntektsmeldingFar1 = lagInntektsmelding(
-                månedsinntektFar1,
-                identFar,
-                fpStartdatoFar,
-                orgNummerFar1)
-                        .medArbeidsforholdId(arbeidsforholdIdFar1)
-                        .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar1));
+        InntektsmeldingBuilder inntektsmeldingFar1 = lagInntektsmelding(månedsinntektFar1, identFar, fpStartdatoFar, orgNummerFar1)
+                .medArbeidsforholdId(arbeidsforholdIdFar1)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar1));
         var månedsinntektFar2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1)
                 .getBeløp();
         var orgNummerFar2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
@@ -529,14 +506,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var arbeidsforholdIdFar2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getArbeidsforholdId();
         var opphørsDatoForRefusjon = fpStartdatoFar.plusMonths(2).minusDays(1);
-        InntektsmeldingBuilder inntektsmeldingFar2 = lagInntektsmelding(
-                månedsinntektFar2,
-                identFar,
-                fpStartdatoFar,
-                orgNummerFar2)
-                        .medArbeidsforholdId(arbeidsforholdIdFar2)
-                        .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar2))
-                        .medRefusjonsOpphordato(opphørsDatoForRefusjon);
+        InntektsmeldingBuilder inntektsmeldingFar2 = lagInntektsmelding(månedsinntektFar2, identFar, fpStartdatoFar, orgNummerFar2)
+                .medArbeidsforholdId(arbeidsforholdIdFar2)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar2))
+                .medRefusjonsOpphordato(opphørsDatoForRefusjon);
         fordel.sendInnInntektsmeldinger(
                 List.of(inntektsmeldingFar1, inntektsmeldingFar2),
                 aktørIdFar,
@@ -604,8 +577,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         List<Integer> forventetDagsatsForFørstePeriode = regnUtForventetDagsatsForPeriode(
                 List.of(månedsinntektFar1, månedsinntektFar2),
                 List.of(40, 100), List.of(true, true));
-        verifiser(
-                saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[0]
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[0]
                         .getDagsats() == sumOfList(forventetDagsatsForFørstePeriode),
                 "Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel");
         verifiser(andelerForAT1.get(0).getTilSoker().equals(forventetDagsatsForFørstePeriode.get(0)),
@@ -616,8 +588,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         List<Integer> forventetDagsatsForAndrePeriode = regnUtForventetDagsatsForPeriode(
                 List.of(månedsinntektFar1, månedsinntektFar2),
                 List.of(40, 100), List.of(true, false));
-        verifiser(
-                saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[1]
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[1]
                         .getDagsats() == sumOfList(forventetDagsatsForAndrePeriode),
                 "Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel");
         verifiser(andelerForAT1.get(1).getTilSoker().equals(forventetDagsatsForAndrePeriode.get(0)),
@@ -628,8 +599,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         List<Integer> forventetDagsatsForTredjePeriode = regnUtForventetDagsatsForPeriode(
                 List.of(månedsinntektFar1, månedsinntektFar2),
                 List.of(40, 0), List.of(true, false));
-        verifiser(
-                saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[2]
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[2]
                         .getDagsats() == sumOfList(forventetDagsatsForTredjePeriode),
                 "Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel");
         verifiser(andelerForAT1.get(2).getTilSoker().equals(forventetDagsatsForTredjePeriode.get(0)),
@@ -669,11 +639,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                         fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFarOrdinær, fpStartdatoFarOrdinær.plusWeeks(15).minusDays(1)));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var søknadFar = lagSøknadForeldrepengerFødsel(
-                fødselsdato, aktørIdFar, SøkersRolle.FAR)
-                        .medFordeling(fordelingFar)
-                        .medAnnenForelder(testscenario.getPersonopplysninger().getAnnenPartAktørIdent())
-                        .medMottattDato(fødselsdato.plusWeeks(6));
+        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
+                .medFordeling(fordelingFar)
+                .medAnnenForelder(testscenario.getPersonopplysninger().getAnnenPartAktørIdent())
+                .medMottattDato(fødselsdato.plusWeeks(6));
         var saksnummerFar = fordel.sendInnSøknad(
                 søknadFar.build(),
                 aktørIdFar,
@@ -707,12 +676,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 2,
                 "Forventer at det er 2 avslåtte uttaksperioder");
-        verifiser(
-                saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak().kodeverk
+        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak().kodeverk
                         .equalsIgnoreCase("IKKE_OPPFYLT_AARSAK"),
                 "Perioden burde være avslått fordi annenpart har overlappende uttak!");
-        verifiser(
-                saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak().kodeverk
+        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak().kodeverk
                         .equalsIgnoreCase("IKKE_OPPFYLT_AARSAK"),
                 "Perioden burde være avslått fordi annenpart har overlappende uttak!");
 
@@ -747,11 +714,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fpStartdatoFar.minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fpStartdatoFar, fpStartdatoFar.plusWeeks(17).minusDays(1), true, false));
-        var søknadMor = lagSøknadForeldrepenger(
-                fødselsdato, aktørIdMor, SøkersRolle.MOR)
-                        .medFordeling(fordelingMor)
-                        .medRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(2, fødselsdato))
-                        .medMottattDato(fpStartdatoMor.minusWeeks(3));
+        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
+                .medFordeling(fordelingMor)
+                .medRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(2, fødselsdato))
+                .medMottattDato(fpStartdatoMor.minusWeeks(3));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         var saksnummerMor = fordel.sendInnSøknad(
                 søknadMor.build(),
@@ -800,16 +766,16 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun).toBigInteger(),
                 false);
         var fordelingFar = generiskFordeling(
-                uttaksperiode(FELLESPERIODE, fpStartdatoFar, fpStartdatoFar.plusWeeks(4).minusDays(1), true, true),
-                uttaksperiode(FEDREKVOTE, fpStartdatoFar.plusWeeks(4), fpStartdatoFar.plusWeeks(17).minusDays(1), false,
-                        true),
+                uttaksperiode(FELLESPERIODE, fpStartdatoFar, fpStartdatoFar.plusWeeks(4).minusDays(1),
+                        true, true),
+                uttaksperiode(FEDREKVOTE, fpStartdatoFar.plusWeeks(4), fpStartdatoFar.plusWeeks(17).minusDays(1),
+                        false,true),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar.plusWeeks(17), fpStartdatoFar.plusWeeks(19).minusDays(1)));
-        var søknadFar = lagSøknadForeldrepenger(
-                fødselsdato, aktørIdFar, SøkersRolle.FAR)
-                        .medFordeling(fordelingFar)
-                        .medSpesiellOpptjening(opptjeningFar)
-                        .medRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(2, fødselsdato))
-                        .medAnnenForelder(aktørIdMor);
+        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
+                .medFordeling(fordelingFar)
+                .medSpesiellOpptjening(opptjeningFar)
+                .medRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(2, fødselsdato))
+                .medAnnenForelder(aktørIdMor);
         var saksnummerFar = fordel.sendInnSøknad(
                 søknadFar.build(),
                 aktørIdFar,
@@ -827,7 +793,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 fpStartdatoFar,
                 orgNummerFar)
-                        .medArbeidsforholdId(arbeidsforholdIdFar);
+                .medArbeidsforholdId(arbeidsforholdIdFar);
         fordel.sendInnInntektsmelding(
                 inntektsmeldingFar,
                 aktørIdFar,
@@ -836,8 +802,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiser(
-                saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode
+        verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode
                         .equalsIgnoreCase("AT_SN"),
                 "Forventer at far får kombinert satus i beregning (da AT og SN)");
 
@@ -914,8 +879,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 1,
                 "Forventer at det er 1 avslåtte uttaksperioder");
-        verifiser(
-                saksbehandler.valgtBehandling.hentUttaksperiode(6).getPeriodeResultatÅrsak().kodeverk
+        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(6).getPeriodeResultatÅrsak().kodeverk
                         .equalsIgnoreCase("IKKE_OPPFYLT_AARSAK"),
                 "Perioden burde være avslått fordi det er ingen stønadsdager igjen på stønadskontoen.");
         verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[6].getDagsats() == 0,
@@ -937,9 +901,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(31).minusDays(1)));
 
-        var søknadMor = lagSøknadForeldrepengerFødsel(
-                fødselsdato, aktørIdMor, SøkersRolle.MOR)
-                        .medFordeling(fordelingMor);
+        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
+                .medFordeling(fordelingMor);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         var saksnummerMor = fordel.sendInnSøknad(
                 søknadMor.build(),
@@ -1029,8 +992,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.opprettBehandlingRevurdering("ETTER_KLAGE");
         saksbehandler.velgRevurderingBehandling();
 
-        verifiser(
-                saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
+        verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
                         .equalsIgnoreCase("ETTER_KLAGE"),
                 "Foventer at revurderingen har årsakskode ETTER_KLAGE.");
 
@@ -1095,10 +1057,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar, fellesperiodeStartFar.minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar));
-        var søknadFar = lagSøknadForeldrepengerAdopsjon(
-                omsorgsovertakelsedatoe, aktørIdFar, SøkersRolle.FAR, false)
-                        .medFordeling(fordelingFar)
-                        .medMottattDato(fpStartdatoFar.minusWeeks(3));
+        var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, aktørIdFar, SøkersRolle.FAR, false)
+                .medFordeling(fordelingFar)
+                .medMottattDato(fpStartdatoFar.minusWeeks(3));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         var saksnummerFar = fordel.sendInnSøknad(
                 søknadFar.build(),
@@ -1117,7 +1078,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 fpStartdatoFar,
                 orgNummerFar)
-                        .medArbeidsforholdId(arbeidsforholdIdFar);
+                .medArbeidsforholdId(arbeidsforholdIdFar);
         fordel.sendInnInntektsmelding(
                 inntektsmeldingFar,
                 aktørIdFar,
@@ -1151,8 +1112,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 fpStartdatoFar,
                 orgNummerFar)
-                        .medArbeidsforholdId(arbeidsforholdIdFar)
-                        .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar));
+                .medArbeidsforholdId(arbeidsforholdIdFar)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar));
         fordel.sendInnInntektsmelding(
                 inntektsmeldingEndringFar,
                 aktørIdFar,
@@ -1212,9 +1173,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar, fellesperiodeStartFar.minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar));
-        var søknadFar = lagSøknadForeldrepengerAdopsjon(
-                omsorgsovertakelsedatoe, aktørIdFar, SøkersRolle.FAR, false)
-                        .medFordeling(fordelingFar);
+        var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, aktørIdFar, SøkersRolle.FAR, false)
+                .medFordeling(fordelingFar);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         var saksnummerFar = fordel.sendInnSøknad(
                 søknadFar.build(),
@@ -1233,7 +1193,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 fpStartdatoFar,
                 orgNummerFar)
-                        .medArbeidsforholdId(arbeidsforholdIdFar);
+                .medArbeidsforholdId(arbeidsforholdIdFar);
         fordel.sendInnInntektsmelding(
                 inntektsmeldingFar,
                 aktørIdFar,
@@ -1269,10 +1229,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fordelingMor = generiskFordeling(
                 uttaksperiode(MØDREKVOTE, fpStartdatoMor, fellesperiodeStartMor.minusDays(1), false, false),
                 uttaksperiode(FELLESPERIODE, fellesperiodeStartMor, fellesperiodeSluttMor, false, true, 40));
-        var søknadMor = lagSøknadForeldrepengerAdopsjon(
-                omsorgsovertakelsedatoe, aktørIdMor, SøkersRolle.MOR, false)
-                        .medFordeling(fordelingMor)
-                        .medAnnenForelder(aktørIdFar);
+        var søknadMor = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, aktørIdMor, SøkersRolle.MOR, false)
+                .medFordeling(fordelingMor)
+                .medAnnenForelder(aktørIdFar);
         var saksnummerMor = fordel.sendInnSøknad(
                 søknadMor.build(),
                 aktørIdMor,
@@ -1288,9 +1247,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var inntektsmeldingMor = lagInntektsmelding(
                 månedsinntektMor,
                 identMor,
-                fpStartdatoFar.plusWeeks(7),
+                fpStartdatoMor,
                 orgNummerMor)
-                        .medArbeidsforholdId(arbeidsforholdIdMor);
+                .medArbeidsforholdId(arbeidsforholdIdMor);
         fordel.sendInnInntektsmelding(
                 inntektsmeldingMor,
                 aktørIdMor,
@@ -1312,8 +1271,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         List<UttakResultatPeriode> avslåttePerioder = saksbehandler.hentAvslåtteUttaksperioder();
         verifiser(avslåttePerioder.size() == 1,
                 "Forventer at det er 1 avslåtte uttaksperioder (automatisk avslått)");
-        verifiser(
-                saksbehandler.valgtBehandling.hentUttaksperiode(1).getPeriodeResultatÅrsak().kode
+        verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(1).getPeriodeResultatÅrsak().kode
                         .equalsIgnoreCase("4084"),
                 "Perioden burde være avslått fordi annenpart tar ut mødrekovte med 100% utbetalingsgrad samtidig!");
 
@@ -1431,10 +1389,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fpStartdatoFar.minusDays(1)));
-        var søknadMor = lagSøknadForeldrepengerFødsel(
-                fødselsdato, aktørIdMor, SøkersRolle.MOR)
-                        .medFordeling(fordelingMor)
-                        .medMottattDato(fpStartdatoMor.minusWeeks(4));
+        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
+                .medFordeling(fordelingMor)
+                .medMottattDato(fpStartdatoMor.minusWeeks(4));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         var saksnummerMor = fordel.sendInnSøknad(
                 søknadMor.build(),

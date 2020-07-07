@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.autotest.util.testscenario;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -12,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class TestscenarioRepositoryImpl {
+public class TestscenarioHenter {
 
     private static final String PERSONOPPLYSNING_JSON_FIL_NAVN = "personopplysning.json";
     private static final String INNTEKTYTELSE_SØKER_JSON_FIL_NAVN = "inntektytelse-søker.json";
@@ -25,11 +24,7 @@ public class TestscenarioRepositoryImpl {
     private final File rootDir = new File(
             Objects.requireNonNull(this.getClass().getClassLoader().getResource("scenarios")).getFile());
 
-    public TestscenarioRepositoryImpl() {
-    }
-
-    public Collection<Object> hentAlleScenarioer() {
-        return scenarioObjects.values();
+    public TestscenarioHenter() {
     }
 
     public Object hentScenario(String scenarioId) {
@@ -46,17 +41,14 @@ public class TestscenarioRepositoryImpl {
         }
 
         final ObjectNode root = mapper.createObjectNode();
-        root.set("scenario-navn", mapper.convertValue(scenarioFiles.getName(), new TypeReference<>() {
-        }));
+        root.set("scenario-navn", mapper.convertValue(scenarioFiles.getName(), new TypeReference<>() {}));
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, PERSONOPPLYSNING_JSON_FIL_NAVN, "personopplysninger");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, INNTEKTYTELSE_SØKER_JSON_FIL_NAVN, "inntektytelse-søker");
-        lesFilOgLeggTilIObjectNode(scenarioFiles, root, INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN,
-                "inntektytelse-annenpart");
+        lesFilOgLeggTilIObjectNode(scenarioFiles, root, INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN,   "inntektytelse-annenpart");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, ORGANISASJON_JSON_FIL_NAVN, "organisasjon");
         lesFilOgLeggTilIObjectNode(scenarioFiles, root, VARS_JSON_FIL_NAVN, "vars");
 
-        Object obj = mapper.convertValue(root, new TypeReference<>() {
-        });
+        Object obj = mapper.convertValue(root, new TypeReference<>() {});
         scenarioObjects.put(scenarioId, obj);
         return obj;
     }
