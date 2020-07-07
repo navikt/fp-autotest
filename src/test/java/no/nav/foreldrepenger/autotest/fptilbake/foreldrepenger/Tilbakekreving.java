@@ -6,8 +6,12 @@ import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepe
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -42,8 +46,33 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() {
+
         TestscenarioDto testscenario = opprettTestscenario("50");
-        Long saksnummer = prepareFpsakMedRevurdering(testscenario);
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+
+        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.velgFørstegangsbehandling();
+        saksbehandler.ventTilAvsluttetBehandling();
+        AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
+
+        Fordeling fordeling = generiskFordeling(FordelingErketyper.uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer.toString());
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventTilBehandlingsstatus("AVSLU");
 
         tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
@@ -83,23 +112,20 @@ public class Tilbakekreving extends FptilbakeTestBase {
     }
 
     @Test
-    @DisplayName("Oppretter en tilbakekreving manuelt med verge fra Fpsak")
-    @Description("Enkel periode, treffer ikke foreldelse, full tilbakekreving men med verge.")
-    public void tilbakeKrevingMedVerge() {
-        opprettTestscenario("50");
-    }
+    @DisplayName("Oppretter en tilbakekreving automatisk etter negativ simulering på fpsak revurdering")
+    @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
+    @Disabled
+    public void opprettTilbakekrevingAutomatisk() {
+        TestscenarioDto testscenario = opprettTestscenario("142");
 
-    private Long prepareFpsakMedRevurdering(TestscenarioDto testscenario) {
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        lagOgSendInntekstsmelding(testscenario, fpStartdato, saksnummer);
+        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -107,24 +133,37 @@ public class Tilbakekreving extends FptilbakeTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
-        Fordeling fordeling = generiskFordeling(FordelingErketyper.uttaksperiode(FELLESPERIODE,
-                fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling,
-                saksnummer.toString());
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD,
-                saksnummer);
+        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer, true);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgRevurderingBehandling();
-        saksbehandler.ventTilBehandlingsstatus("AVSLU");
-        return saksnummer;
+        var vurderBeregnetInntektsAvvikBekreftelse =
+                saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
+        vurderBeregnetInntektsAvvikBekreftelse
+                .leggTilInntekt(testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp() * 6, 1)
+                .setBegrunnelse("Begrunnelse");
+        saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
+        saksbehandler.harAksjonspunkt("5084");
+        var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingMedVarsel();
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+
+        tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        tbksaksbehandler.hentSisteBehandling(saksnummer);
+        tbksaksbehandler.ventTilBehandlingErPåVent();
+        verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_BRUKERTILBAKEMELDING"), "Behandling har feil vent årsak.");
     }
 
-    private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) {
+    private void lagOgSendInntektsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer){
+        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer, false);
+    }
+    private void lagOgSendInntektsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer, Boolean redusert) {
+        Integer belop = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        if (redusert){
+            belop = BigInteger.valueOf(belop).divide(BigInteger.valueOf(2)).intValue();
+        }
         InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                belop,
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 fpStartdato,
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
