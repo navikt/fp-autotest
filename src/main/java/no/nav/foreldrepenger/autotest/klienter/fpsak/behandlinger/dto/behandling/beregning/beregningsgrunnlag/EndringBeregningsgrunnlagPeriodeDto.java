@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EndringBeregningsgrunnlagPeriodeDto {
 
-    protected LocalDate fom; 
+    protected LocalDate fom;
     protected LocalDate tom;
     protected List<EndringBeregningsgrunnlagAndelDto> endringBeregningsgrunnlagAndeler;
     protected boolean harPeriodeAarsakGraderingEllerRefusjon;

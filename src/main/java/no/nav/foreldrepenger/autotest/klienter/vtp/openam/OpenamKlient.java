@@ -41,9 +41,9 @@ public class OpenamKlient extends VTPKlient {
         BasicClientCookie cookie = new BasicClientCookie("ID_token", token);
         cookie.setPath("/");
         cookie.setDomain("");
-        cookie.setExpiryDate(new Date(LocalDateTime.now().plusHours(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+        cookie.setExpiryDate(
+                new Date(LocalDateTime.now().plusHours(1).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
         return cookie;
     }
-
 
 }

@@ -10,7 +10,8 @@ public class UttakDokumentasjon {
     protected LocalDate fom;
     protected LocalDate tom;
 
-    public UttakDokumentasjon() {}
+    public UttakDokumentasjon() {
+    }
 
     public UttakDokumentasjon(LocalDate fom, LocalDate tom) {
         super();

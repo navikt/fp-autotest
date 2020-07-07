@@ -7,9 +7,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Adresse {
 
-    //public AdresseInfo adresse;
+    // public AdresseInfo adresse;
     protected Kode adresseType;
-    
+
     protected String adresselinje1;
     protected String adresselinje2;
     protected String adresselinje3;

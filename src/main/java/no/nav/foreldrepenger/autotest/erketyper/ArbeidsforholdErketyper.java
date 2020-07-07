@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.erketyper;
 
-
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Frilanser;
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.PrivatArbeidsgiver;
 import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.SelvstendigNæringsdrivende;
@@ -28,7 +27,5 @@ public class ArbeidsforholdErketyper {
     public static Frilanser frilanser() {
         return new Frilanser();
     }
-
-
 
 }

@@ -17,8 +17,10 @@ class RedigerbarAndel {
     protected LocalDate beregningsperiodeFom;
     protected LocalDate beregningsperiodeTom;
 
-    public RedigerbarAndel(String andel, int andelsnr, String arbeidsgiverId, String arbeidsforholdId, Boolean nyAndel, Boolean lagtTilAvSaksbehandler,
-                           Kode aktivitetStatus, LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom, Kode arbeidsforholdType) {
+    public RedigerbarAndel(String andel, int andelsnr, String arbeidsgiverId, String arbeidsforholdId, Boolean nyAndel,
+            Boolean lagtTilAvSaksbehandler,
+            Kode aktivitetStatus, LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom,
+            Kode arbeidsforholdType) {
         this.andel = andel;
         this.andelsnr = andelsnr;
         this.arbeidsgiverId = arbeidsgiverId;

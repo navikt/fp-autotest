@@ -8,7 +8,7 @@ public class OpprettSak {
     protected String journalpostId;
     protected String behandlingstemaOffisiellKode;
     protected String aktørId;
-    
+
     public OpprettSak(String journalpostId, String behandlingstemaOffisiellKode, String aktørId) {
         super();
         this.journalpostId = journalpostId;

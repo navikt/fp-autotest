@@ -37,8 +37,7 @@ public class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker fødsel er utvandret")
     @Description("Mor søker fødsel og er utvandret. Skal føre til aksjonspunkt angående medlemskap - avslått")
     public void morSøkerFødselErUtvandret() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("51");
-
+        TestscenarioDto testscenario = opprettTestscenario("51");
 
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -46,7 +45,8 @@ public class Medlemskap extends FpsakTestBase {
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
         logger.info("Opprettet sak med saksnummer: {}", saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -81,37 +81,39 @@ public class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker med personstatus uregistrert")
     @Description("Mor søker med personstatus uregistrert, får askjonspunkt så hennlegges")
     public void morSøkerFødselUregistrert() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("120");
+        TestscenarioDto testscenario = opprettTestscenario("120");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
                 testscenario.getPersonopplysninger().getFødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
-
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaPersonstatusBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaPersonstatusBekreftelse.class)
+        var avklarFaktaPersonstatusBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaPersonstatusBekreftelse.class)
                 .bekreftHenleggBehandling();
         saksbehandler.bekreftAksjonspunkt(avklarFaktaPersonstatusBekreftelse);
 
-        verifiser(saksbehandler.valgtBehandling.erHenlagt(), "Behandlingen ble ikke henlagt etter bekreftet ugyldig status");
+        verifiser(saksbehandler.valgtBehandling.erHenlagt(),
+                "Behandlingen ble ikke henlagt etter bekreftet ugyldig status");
     }
 
-    @Disabled //TODO (OL): Denne må fikses og kunne kjøre lokalt før tas inn i pipe.
+    @Disabled // TODO (OL): Denne må fikses og kunne kjøre lokalt før tas inn i pipe.
     @Test
     @DisplayName("Mor søker med utenlandsk adresse")
     @Description("Mor søker med utelandsk adresse")
     public void morSøkerFødselUtenlandsadresse() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("121");
+        TestscenarioDto testscenario = opprettTestscenario("121");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
                 testscenario.getPersonopplysninger().getFødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
-
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

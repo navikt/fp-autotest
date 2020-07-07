@@ -9,7 +9,7 @@ public class ForslagDto {
 
     public ForslagDto() {
     }
-    
+
     public Integer getBeregningId() {
         return beregningId;
     }

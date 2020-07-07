@@ -2,8 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 
-@BekreftelseKode(kode="6006")
+@BekreftelseKode(kode = "6006")
 public class OverstyrSoknadsfristvilkaaret extends OverstyringsBekreftelse {
-
 
 }

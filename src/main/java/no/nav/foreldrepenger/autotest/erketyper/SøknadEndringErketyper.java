@@ -5,7 +5,8 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 
 public class SøknadEndringErketyper {
-    public static EndringssøknadBuilder lagEndringssøknad(String aktoerId, SøkersRolle søkersRolle, Fordeling fordeling, String saksnummer) {
+    public static EndringssøknadBuilder lagEndringssøknad(String aktoerId, SøkersRolle søkersRolle, Fordeling fordeling,
+            String saksnummer) {
         return new EndringssøknadBuilder(aktoerId, søkersRolle)
                 .medFordeling(fordeling)
                 .medSaksnummer(saksnummer);

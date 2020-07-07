@@ -21,10 +21,10 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
 
     protected List<AktivitetsAvtaleDto> aktivitetsAvtaleDto;
     protected Boolean frilans;
-    
+
     public BeregningsgrunnlagPrStatusOgAndelDto() {
     }
-    
+
     public String getOrgNummer() {
         return orgNummer;
     }

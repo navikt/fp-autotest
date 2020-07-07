@@ -1,6 +1,19 @@
 name: Kjører Autotestene for verdikjeden PR
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - 'JenkinsfileAutotest'
+      - 'JenkinsfileAutotestNew'
+      - 'CODEOWNERS'
+      - '.github/workflows/verdikjede-trigger.yml'
+      - '.github/workflows/fpsak-trigger.yml'
+      - 'lokalutvikling/*'
 
 jobs:
   build:
@@ -8,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.1
       - name: Set cache key
         run: |
           echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"

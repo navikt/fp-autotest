@@ -10,7 +10,7 @@ public class NaturalYtelseDto {
     protected String kode;
     protected Double beløpPerMnd;
     protected LocalDate tom;
-    
+
     public NaturalYtelseDto() {
     }
 }

@@ -32,14 +32,15 @@ public class Klage extends FpsakTestBase {
     @Description("Behandle klage via NFP - vurdert til medhold")
     public void klageMedholdNFP() {
         // Opprette førstegangssøknad engangsstønad
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage NFP
@@ -56,7 +57,8 @@ public class Klage extends FpsakTestBase {
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
-        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
         vurderingAvKlageNfpBekreftelse
                 .bekreftMedholdGunst("PROSESSUELL_FEIL")
                 .fritekstBrev("Fritektst til brev fra klagebehandler.")
@@ -79,14 +81,15 @@ public class Klage extends FpsakTestBase {
     @DisplayName("Behandle klage via NFP - påklaget vedtak opphevet")
     @Description("Behandle klage via NFP - stadfestet af NFP og opphevet av KA")
     public void klageOppheveAvKA() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
@@ -103,28 +106,33 @@ public class Klage extends FpsakTestBase {
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
-        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
         vurderingAvKlageNfpBekreftelse
                 .bekreftStadfestet()
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
+                "KLAGE_YTELSESVEDTAK_STADFESTET");
 
-        // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme klagebehandler.
+        // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme
+        // klagebehandler.
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
         klageFormkravKa.godkjennAlleFormkrav()
                 .setBegrunnelse("blabla begrunnelse");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
 
-        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
+        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
         vurderingAvKlageNkBekreftelse.bekreftOpphevet("NYE_OPPLYSNINGER")
                 .fritekstBrev("Fritekst brev fra KA")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_YTELSESVEDTAK_OPPHEVET");
+        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
+                "KLAGE_YTELSESVEDTAK_OPPHEVET");
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
@@ -135,7 +143,8 @@ public class Klage extends FpsakTestBase {
         klagebehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.velgKlageBehandling();
-        AksjonspunktBekreftelse bekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
+        AksjonspunktBekreftelse bekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
                 .bekreftOpphevet("NYE_OPPLYSNINGER")
                 .fritekstBrev("Fritekst brev fra KA")
                 .setBegrunnelse("Fordi");
@@ -148,14 +157,15 @@ public class Klage extends FpsakTestBase {
     @DisplayName("Behandle klage via KA - påklaget vedtak omgjort/medhold")
     @Description("Behandle klage via KA - stadfestet af NFP og medhold av KA")
     public void klageOmgjortAvKA() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
@@ -172,34 +182,38 @@ public class Klage extends FpsakTestBase {
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
-        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
         vurderingAvKlageNfpBekreftelse
                 .bekreftStadfestet()
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
+                "KLAGE_YTELSESVEDTAK_STADFESTET");
 
-        // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme klagebehandler.
+        // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme
+        // klagebehandler.
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
         klageFormkravKa
                 .godkjennAlleFormkrav()
                 .setBegrunnelse("blabla begrunnelse");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
 
-        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
+        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
         vurderingAvKlageNkBekreftelse
-            .bekreftMedholdGunst("NYE_OPPLYSNINGER")
-            .fritekstBrev("Brev");
+                .bekreftMedholdGunst("NYE_OPPLYSNINGER")
+                .fritekstBrev("Brev");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter
+                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtakBekreftelse
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NK));
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
@@ -208,7 +222,8 @@ public class Klage extends FpsakTestBase {
         klagebehandler.hentFagsak(sakId);
         klagebehandler.velgKlageBehandling();
 
-        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse1 = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
+        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse1 = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
         vurderingAvKlageNkBekreftelse1
                 .bekreftMedholdGunst("NYE_OPPLYSNINGER")
                 .fritekstBrev("Brev");
@@ -220,14 +235,15 @@ public class Klage extends FpsakTestBase {
     @DisplayName("Behandle klage via KA - avslag")
     @Description("Behandle klage via KA - stadfestet af NFP og medhold av KA")
     public void klageAvslaattAvKA() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
@@ -243,12 +259,14 @@ public class Klage extends FpsakTestBase {
                 .godkjennAlleFormkrav()
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
-        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
         vurderingAvKlageNfpBekreftelse
                 .bekreftStadfestet()
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
+                "KLAGE_YTELSESVEDTAK_STADFESTET");
 
         // Behandle klage - KA
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -261,8 +279,10 @@ public class Klage extends FpsakTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        fatterVedtakBekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDERING_AV_FORMKRAV_KLAGE_KA));
+        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter
+                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse
+                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDERING_AV_FORMKRAV_KLAGE_KA));
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_AVVIST");
     }
@@ -271,14 +291,15 @@ public class Klage extends FpsakTestBase {
     @DisplayName("Behandle klage via NFP - avvist av beslutter")
     @Description("Behandle klage via NFP - medhold av NFP avvist av beslutter send tilbake til NFP vurdert til delvist gunst")
     public void avvistAvBelutterNFP() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
                 testscenario.getPersonopplysninger().getFødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
@@ -297,8 +318,8 @@ public class Klage extends FpsakTestBase {
         String fritekstbrev1 = "Fritekst brev nfp.";
         String begrunnelse1 = "Fordi.";
 
-
-        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
         vurderingAvKlageNfpBekreftelse
                 .bekreftMedholdGunst("NYE_OPPLYSNINGER")
                 .fritekstBrev(fritekstbrev1)
@@ -306,27 +327,36 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD", "Behandlingsresultat");
-        verifiserKlageVurderingOmgjoer(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(), "GUNST_MEDHOLD_I_KLAGE");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD",
+                "Behandlingsresultat");
+        verifiserKlageVurderingOmgjoer(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP()
+                .getKlageVurderingOmgjoer(), "GUNST_MEDHOLD_I_KLAGE");
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
 
-        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter
+                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtakBekreftelse
-                .avvisAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP), beslutter.kodeverk.VurderÅrsak.getKode("FEIL_REGEL"))
+                .avvisAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP),
+                        beslutter.kodeverk.VurderÅrsak.getKode("FEIL_REGEL"))
                 .setBegrunnelse("Avvist av beslutter");
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
         klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.velgKlageBehandling();
-        verifiserFritekst(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(), fritekstbrev1);
-        verifiserFritekst(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(), begrunnelse1);
+        verifiserFritekst(
+                klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
+                fritekstbrev1);
+        verifiserFritekst(
+                klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(),
+                begrunnelse1);
         String fritekstbrev2 = "Fritekst brev nr 2 .";
         String begrunnelse2 = "Fordi.";
-        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse1 = klagebehandler.hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse1 = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
         vurderingAvKlageNfpBekreftelse1
                 .bekreftMedholdDelvisGunst("NYE_OPPLYSNINGER")
                 .fritekstBrev(fritekstbrev2)
@@ -342,9 +372,14 @@ public class Klage extends FpsakTestBase {
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse1);
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
-        verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(), fritekstbrev2);
-        verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(), begrunnelse2);
-        verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(), "DELVIS_MEDHOLD_I_KLAGE");
+        verifiserFritekst(
+                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
+                fritekstbrev2);
+        verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(),
+                begrunnelse2);
+        verifiserKlageVurderingOmgjoer(
+                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(),
+                "DELVIS_MEDHOLD_I_KLAGE");
         verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
     }
 

@@ -1,11 +1,12 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.medlem;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BekreftedePerioderDto {
@@ -27,7 +28,6 @@ public class BekreftedePerioderDto {
     public void setBosattVurdering(Boolean bosattVurdering) {
         this.bosattVurdering = bosattVurdering;
     }
-
 
     public void setErEosBorger(Boolean erEosBorger) {
         this.erEosBorger = erEosBorger;

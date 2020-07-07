@@ -1,7 +1,8 @@
 package no.nav.foreldrepenger.autotest.base;
 
-import no.nav.foreldrepenger.autotest.aktoerer.fptilbake.TilbakekrevingSaksbehandler;
 import org.junit.jupiter.api.BeforeEach;
+
+import no.nav.foreldrepenger.autotest.aktoerer.fptilbake.TilbakekrevingSaksbehandler;
 
 public class FptilbakeTestBase extends FpsakTestBase {
 

@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Behandling {

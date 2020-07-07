@@ -4,10 +4,8 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5030")
+@BekreftelseKode(kode = "5030")
 public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
 
     protected String fnr;
@@ -27,7 +25,7 @@ public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
     public AvklarFaktaVergeBekreftelse setVerge(String fnr) {
         this.fnr = fnr;
 
-        //Defaults
+        // Defaults
         gyldigFom = LocalDate.now().minusYears(1);
         gyldigTom = LocalDate.now().plusYears(2);
         mandatTekst = "Hva er dette";
@@ -75,6 +73,5 @@ public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
         vergeErKontaktPerson = false;
         return this;
     }
-
 
 }

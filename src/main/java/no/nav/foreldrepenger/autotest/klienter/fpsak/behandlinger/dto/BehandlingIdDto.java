@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.Objects;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * Referanse til en behandling.
- * Enten {@link #behandlingId} eller {@link #behandlingUuid} vil være satt.
+ * Referanse til en behandling. Enten {@link #behandlingId} eller
+ * {@link #behandlingUuid} vil være satt.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingIdDto {
@@ -39,7 +39,8 @@ public class BehandlingIdDto {
     }
 
     /**
-     * Denne er kun intern nøkkel, bør ikke eksponeres ut men foreløpig støttes både Long id og UUID id for behandling på grensesnittene.
+     * Denne er kun intern nøkkel, bør ikke eksponeres ut men foreløpig støttes både
+     * Long id og UUID id for behandling på grensesnittene.
      */
     public Long getBehandlingId() {
         return behandlingId;

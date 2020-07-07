@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
-
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
 
 import java.time.LocalDate;
@@ -32,19 +31,22 @@ public class Revurdering extends FpsakTestBase {
     @DisplayName("Manuelt opprettet revurdering")
     @Description("Manuelt opprettet revurdering etter avsluttet behandling med utsendt varsel")
     public void manueltOpprettetRevurderingSendVarsel() {
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("55");
+        TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                SøkersRolle.MOR,false);
+                SøkersRolle.MOR, false);
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaAdopsjonsdokumentasjonBekreftelse bekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
+        AvklarFaktaAdopsjonsdokumentasjonBekreftelse bekreftelse1 = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
         bekreftelse1.setBarnetsAnkomstTilNorgeDato(LocalDate.now());
-        VurderEktefellesBarnBekreftelse bekreftelse2 = saksbehandler.hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class);
+        VurderEktefellesBarnBekreftelse bekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class);
         bekreftelse2.bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunktbekreftelserer(bekreftelse1, bekreftelse2);
 
@@ -53,9 +55,9 @@ public class Revurdering extends FpsakTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
-
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
+        bekreftelse.godkjennAksjonspunkt(
+                beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingsresultat");
@@ -65,14 +67,17 @@ public class Revurdering extends FpsakTestBase {
         saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
         saksbehandler.velgRevurderingBehandling();
 
-        VarselOmRevurderingBekreftelse varselOmRevurderingBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
-        varselOmRevurderingBekreftelse.bekreftSendVarsel(saksbehandler.kodeverk.Venteårsak.getKode("UTV_FRIST"), "Send brev");
+        VarselOmRevurderingBekreftelse varselOmRevurderingBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
+        varselOmRevurderingBekreftelse.bekreftSendVarsel(saksbehandler.kodeverk.Venteårsak.getKode("UTV_FRIST"),
+                "Send brev");
         saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 
         saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.REVURD_OPPR);
         saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT);
         saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BEH_VENT);
 
-        verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er ikke satt på vent etter varsel for revurdering");
+        verifiser(saksbehandler.valgtBehandling.erSattPåVent(),
+                "Behandlingen er ikke satt på vent etter varsel for revurdering");
     }
 }

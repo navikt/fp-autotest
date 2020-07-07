@@ -18,7 +18,6 @@ public class BrukersAndelDto {
     protected List<Double> andelIArbeid;
     protected Double fastsattBelopPrMnd;
 
-
     public int getAndelsnr() {
         return andelsnr;
     }

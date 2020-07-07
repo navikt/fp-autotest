@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5091")
+@BekreftelseKode(kode = "5091")
 public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse {
 
     protected LocalDate termindato;
@@ -31,12 +31,12 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
         return bekreftetSvpArbeidsforholdList;
     }
 
-
     public void setSkalBrukesTilFalseForArbeidsforhold(String arbeidsforholdId) {
         setSkalBrukesTilFalseForAngitteArbeidsforhold(List.of(arbeidsforholdId));
     }
+
     public void setSkalBrukesTilFalseForAngitteArbeidsforhold(List<String> arbeidsforholdId) {
-        for ( var arbeidsforhold : getBekreftetSvpArbeidsforholdList() ) {
+        for (var arbeidsforhold : getBekreftetSvpArbeidsforholdList()) {
             if (arbeidsforholdId.contains(arbeidsforhold.getEksternArbeidsforholdReferanse())) {
                 arbeidsforhold.setSkalBrukes(false);
             }

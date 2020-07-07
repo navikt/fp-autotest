@@ -1,38 +1,30 @@
 {
 	"trex": {
-		"foreldrepenger": [
+		"foreldrepenger": [],
+		"svangerskapspenger": [],
+		"sykepenger": [
 			{
 				"status": {
-					"kode": "A",
+					"kode": "L",
 					"termnavn": "status"
 				},
 				"tema": {
-					"kode": "FA",
+					"kode": "SP",
 					"termnavn": "tema"
 				},
-				"dekningsgrad": 100,
-				"foedselsdatoBarn": "now()",
+				"dekningsgrad": 80,
+				"foedselsdatoBarn": "now()-P2D",
 				"arbeidskategori": {
 					"kode": "01",
 					"termnavn": "ketegori"
 				},
-				"arbeidsforhold":  [
-					{
-						"orgnr": "1",
-						"inntekt": 10000,
-						"inntektsperiode": {
-							"kode": "M",
-							"termnavn": "inntektperiode"
-						},
-						"refusjon": true
-					}
-				],
+				"arbeidsforhold":  [],
 				"periode": {
 					"fom": "now() - P9M",
-					"tom": "now()"
+					"tom": "now() + P1D"
 				},
 				"behandlingstema": {
-					"kode": "FØ",
+					"kode": "SP",
 					"termnavn": "behandlingstema"
 				},
 				"identdato": "now() - P9M",
@@ -53,8 +45,6 @@
 				]
 			}
 		],
-		"svangerskapspenger": [],
-		"sykepenger": [],
 		"barnsykdom": []
 	},
 	"inntektskomponent": {

@@ -10,9 +10,8 @@ public class AksjonspunktKoder {
     public static final String AUTO_VENT_KOMPLETT_OPPDATERING = new String("7009"); //$NON-NLS-1$
     public static final String AUTO_VENT_PÅ_REGISTEROPPLYSNINGER = new String("7010"); //$NON-NLS-1$
     public static final String AUTO_KØET_BEHANDLING = new String("7011"); //$NON-NLS-1$
-    public static final String AUTO_VENT_PÅ_INNTEKT_RAPPORTERINGSFRIST  = new String("7014"); //$NON-NLS-1$
+    public static final String AUTO_VENT_PÅ_INNTEKT_RAPPORTERINGSFRIST = new String("7014"); //$NON-NLS-1$
     public static final String AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE = new String("7030");
-
 
     public static final String AVKLAR_ADOPSJONSDOKUMENTAJON = new String("5004"); //$NON-NLS-1$
     public static final String AVKLAR_FAKTA_FOR_PERSONSTATUS = new String("5022"); //$NON-NLS-1$
@@ -36,15 +35,14 @@ public class AksjonspunktKoder {
     public static final String FORESLÅ_VEDTAK = new String("5015"); // $NON-NL //$NON-NLS-1$
     public static final String FORESLÅ_VEDTAK_MANUELT = new String("5028");
 
-
     public static final String MANUELL_VURDERING_AV_FORELDREANSVARSVILKÅRET_2_LEDD = new String("5013"); //$NON-NLS-1$
     public static final String MANUELL_VURDERING_AV_FORELDREANSVARSVILKÅRET_4_LEDD = new String("5014"); //$NON-NLS-1$
     public static final String MANUELL_VURDERING_AV_MEDLEMSKAP = new String("5010"); //$NON-NLS-1$
     public static final String MANUELL_VURDERING_AV_OMSORGSVILKÅRET = new String("5011"); //$NON-NLS-1$
     public static final String MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET = new String("5007"); //$NON-NLS-1$
 
-    public static final String AVKLAR_TILBAKREVING_AV_FEILUTBETALING = new String ("5090");
-    public static final String AVKLAR_FØDSEL_OG_TILRETTELEGGING = new String ("5091");
+    public static final String AVKLAR_TILBAKREVING_AV_FEILUTBETALING = new String("5090");
+    public static final String AVKLAR_FØDSEL_OG_TILRETTELEGGING = new String("5091");
     public static final String BEKREFT_SVANGERSKAPSPENGER_VILKÅR = new String("5092");
 
     public static final String OVERSTYRING_AV_ADOPSJONSVILKÅRET = new String("6004"); //$NON-NLS-1$
@@ -92,16 +90,17 @@ public class AksjonspunktKoder {
     public static final String FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS = new String("5038"); //$NON-NLS-1$
     public static final String FASTSETT_BEREGNINGSGRUNNLAG_TIDSBEGRENSET_ARBEIDSFORHOLD = new String("5047"); //$NON-NLS-1$
     public static final String FASTSETT_BEREGNINGSGRUNNLAG_FOR_SN_NY_I_ARBEIDSLIVET = new String("5049"); //$NON-NLS-1$
-    public static final String AVKLAR_BEREGNINGSGRUNNLAG_OG_INNTEKTSKATEGORI_FOR_BRUKER_MED_TILSTØTENDE_YTELSE = new String("5050"); //$NON-NLS-1$
+    public static final String AVKLAR_BEREGNINGSGRUNNLAG_OG_INNTEKTSKATEGORI_FOR_BRUKER_MED_TILSTØTENDE_YTELSE = new String(
+            "5050"); //$NON-NLS-1$
     public static final String AVKLAR_AKTIVITETER = new String("5052"); //$NON-NLS-1$
 
     public static final String MANUELL_KONTROLL_AV_OM_BRUKER_HAR_ALENEOMSORG = new String("5060"); //$NON-NLS-1$
-    public static final String VURDER_VARIG_ENDRET_ELLER_NYOPPSTARTET_NÆRING_SELVSTENDIG_NÆRINGSDRIVENDE = new String("5039");
+    public static final String VURDER_VARIG_ENDRET_ELLER_NYOPPSTARTET_NÆRING_SELVSTENDIG_NÆRINGSDRIVENDE = new String(
+            "5039");
     public static final String REGISTRER_PAPIRSØKNAD_FORELDREPENGER = new String("5040");
     public static final String REGISTRER_PAPIR_ENDRINGSØKNAD_FORELDREPENGER = new String("5057");
     public static final String VURDER_FAKTA_FOR_ATFL_SN = new String("5058");
     public static final String FORDEL_BEREGNINGSGRUNNLAG = new String("5046");
-
 
     public static final String MANUELL_VURDERING_AV_SØKNADSFRIST_FORELDREPENGER = new String("5043");
 

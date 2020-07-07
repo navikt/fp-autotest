@@ -4,7 +4,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
-@BekreftelseKode(kode="5031")
+@BekreftelseKode(kode = "5031")
 public class AvklarLopendeVedtakBekreftelse extends AksjonspunktBekreftelse {
 
     protected boolean erVilkarOk;
@@ -25,7 +25,5 @@ public class AvklarLopendeVedtakBekreftelse extends AksjonspunktBekreftelse {
         this.avslagskode = avslagskode.kode;
         return this;
     }
-
-
 
 }

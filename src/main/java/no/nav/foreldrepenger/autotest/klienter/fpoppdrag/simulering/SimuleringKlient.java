@@ -15,7 +15,6 @@ public class SimuleringKlient extends FPOppdragKlient {
     static final String START_SIMULERING_URL = SIMULERING_URL + "/start";
     static final String KANSELLER_SIMULERING_URL = SIMULERING_URL + "/kanseller";
 
-
     public SimuleringKlient(HttpSession session) {
         super(session);
     }

@@ -16,7 +16,6 @@ public class KlageFormkravResultat {
     protected boolean erKlagefirstOverholdt;
     protected boolean erSignert;
 
-
     public Long getPaKlagdBehandlingId() {
         return paKlagdBehandlingId;
     }
@@ -65,6 +64,8 @@ public class KlageFormkravResultat {
         this.erSignert = erSignert;
     }
 
-    public List<Kode> getAvvistArsaker() {return avvistArsaker;}
+    public List<Kode> getAvvistArsaker() {
+        return avvistArsaker;
+    }
 
 }

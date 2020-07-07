@@ -1,10 +1,11 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Beregningsgrunnlag {
@@ -37,7 +38,8 @@ public class Beregningsgrunnlag {
     }
 
     public BeregningsgrunnlagPeriodeDto getBeregningsgrunnlagPeriode(LocalDate fom) {
-        return beregningsgrunnlagPeriode.stream().filter(p -> p.getBeregningsgrunnlagPeriodeFom().equals(fom)).findFirst().orElseThrow();
+        return beregningsgrunnlagPeriode.stream().filter(p -> p.getBeregningsgrunnlagPeriodeFom().equals(fom))
+                .findFirst().orElseThrow();
     }
 
     public List<BeregningsgrunnlagPeriodeDto> getBeregningsgrunnlagPerioder() {

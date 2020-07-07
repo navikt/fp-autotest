@@ -22,7 +22,6 @@ public class FaktaOmBeregningDto {
     protected AvklarAktiviteterDto avklarAktiviteter;
     protected VurderBesteberegning vurderBesteberegning;
 
-
     public List<KortvarigeArbeidsforholdDto> getKortvarigeArbeidsforhold() {
         return kortvarigeArbeidsforhold;
     }

@@ -37,13 +37,14 @@ public class FaktaOmBeregningLagreDto {
     }
 
     public FaktaOmBeregningLagreDto leggTilVurderTidsbegrenset(Boolean tidsbegrenset) {
-        List<VurderteArbeidsforholdDto> tidsbegrensetAndeler =
-                Collections.singletonList(new VurderteArbeidsforholdDto(2L, tidsbegrenset, false));
+        List<VurderteArbeidsforholdDto> tidsbegrensetAndeler = Collections
+                .singletonList(new VurderteArbeidsforholdDto(2L, tidsbegrenset, false));
         this.vurderTidsbegrensetArbeidsforhold = new VurderTidsbegrensetArbeidsforholdDto(tidsbegrensetAndeler);
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilMottarYtelse(Boolean frilansMottarYtelse, List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses) {
+    public FaktaOmBeregningLagreDto leggTilMottarYtelse(Boolean frilansMottarYtelse,
+            List<ArbeidstakerandelUtenIMMottarYtelse> arbeidstakerandelUtenIMMottarYtelses) {
         if (this.mottarYtelse != null) {
             arbeidstakerandelUtenIMMottarYtelses.forEach(this.mottarYtelse::leggTilArbeidstakerandelUtenIMMottarYtelse);
         } else {
@@ -53,21 +54,23 @@ public class FaktaOmBeregningLagreDto {
     }
 
     public FaktaOmBeregningLagreDto leggTilTomBesteBeregningAndeler() {
-        if ( besteberegningAndeler == null ) {
+        if (besteberegningAndeler == null) {
             besteberegningAndeler = new BesteberegningFødendeKvinneDto();
         }
         return this;
     }
 
     public FaktaOmBeregningLagreDto leggTilBesteBeregningAndeler(double beløp, Kode inntektskategori) {
-        if ( besteberegningAndeler == null ) {
+        if (besteberegningAndeler == null) {
             besteberegningAndeler = new BesteberegningFødendeKvinneDto();
         }
-        besteberegningAndeler.leggTilBesteberegningAndel(new BesteberegningFødendeKvinneAndelDto(beløp, inntektskategori.kode));
+        besteberegningAndeler
+                .leggTilBesteberegningAndel(new BesteberegningFødendeKvinneAndelDto(beløp, inntektskategori.kode));
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilMaanedsinntektUtenInntektsmelding(List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe) {
+    public FaktaOmBeregningLagreDto leggTilMaanedsinntektUtenInntektsmelding(
+            List<FastsettMaanedsinntektUtenInntektsmeldingAndel> andelListe) {
         this.fastsattUtenInntektsmelding = new FastsettMaanedsinntektUtenInntektsmelding(andelListe);
         return this;
     }
@@ -98,8 +101,8 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-
-    public FaktaOmBeregningLagreDto leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode, BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
+    public FaktaOmBeregningLagreDto leggTilAndelerEndretBg(BeregningsgrunnlagPeriodeDto periode,
+            BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
         if (fastsettEndringBeregningsgrunnlag == null) {
             fastsettEndringBeregningsgrunnlag = new FastsettEndretBeregningsgrunnlag();
         }
@@ -115,8 +118,7 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-
-    public class YtelseForedeling{
+    public class YtelseForedeling {
 
         public List<YtelseAndeler> andeler = new ArrayList<>();
         public Boolean skalBrukeBesteberegning;
@@ -132,7 +134,7 @@ public class FaktaOmBeregningLagreDto {
 
     }
 
-    public class YtelseAndeler{
+    public class YtelseAndeler {
         public int andelsnr;
         public double fastsattBeløp;
         public String inntektskategori;

@@ -73,7 +73,7 @@ public abstract class Rest {
     public String UrlEncodeQuery(Map<String, String> data, String prefix) {
         StringBuilder query = new StringBuilder(prefix);
         for (Map.Entry<String, String> item : data.entrySet()) {
-            if (item.getValue() != null && !item.getKey().isEmpty() && !item.getValue().isEmpty()) {
+            if ((item.getValue() != null) && !item.getKey().isEmpty() && !item.getValue().isEmpty()) {
                 String queryKey = UrlEncodeItem(item.getKey());
                 String queryValue = UrlEncodeItem(item.getValue());
                 query.append(String.format("%s=%s&", queryKey, queryValue));

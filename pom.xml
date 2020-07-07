@@ -16,7 +16,7 @@
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
 
-        <vtp.versjon>1.0-2020.04.02.093535-9e8687f</vtp.versjon>
+        <vtp.versjon>1.0-2020.07.02.145041-a3e814b</vtp.versjon>
 
         <aspectj.version>1.9.5</aspectj.version>
 
@@ -96,7 +96,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M4</version>
+                    <version>3.0.0-M5</version>
                 </plugin>
             </plugins>
         </pluginManagement>

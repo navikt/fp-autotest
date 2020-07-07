@@ -17,16 +17,16 @@ public class FastsettBeregningsgrunnlagPeriodeDto {
     protected LocalDate fom;
     protected LocalDate tom;
 
-    public FastsettBeregningsgrunnlagPeriodeDto(FordelBeregningsgrunnlagPeriodeDto periodeDto, BeregningsgrunnlagPeriodeDto bgPeriodeDto) {
+    public FastsettBeregningsgrunnlagPeriodeDto(FordelBeregningsgrunnlagPeriodeDto periodeDto,
+            BeregningsgrunnlagPeriodeDto bgPeriodeDto) {
 
         this.andeler = periodeDto.getFordelBeregningsgrunnlagAndeler().stream().map(a -> {
-            BeregningsgrunnlagPrStatusOgAndelDto bgAndel = bgPeriodeDto.getBeregningsgrunnlagPrStatusOgAndel().stream().filter(bga -> bga.getAndelsnr() == a.getAndelsnr()).findFirst().orElseThrow();
+            BeregningsgrunnlagPrStatusOgAndelDto bgAndel = bgPeriodeDto.getBeregningsgrunnlagPrStatusOgAndel().stream()
+                    .filter(bga -> bga.getAndelsnr() == a.getAndelsnr()).findFirst().orElseThrow();
             return new FastsettBeregningsgrunnlagAndelDto(a, bgAndel);
         }).collect(Collectors.toList());
         this.fom = periodeDto.getFom();
         this.tom = periodeDto.getTom();
     }
-
-
 
 }

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -17,14 +16,18 @@ public class FastsettBeregningsgrunnlagAndelDto extends RedigerbarAndel {
     protected Integer forrigeRefusjonPrÅr;
     protected Integer forrigeArbeidsinntektPrÅr;
 
-
-    public FastsettBeregningsgrunnlagAndelDto(String andel, int andelsnr, String arbeidsforholdId, String arbeidsgiverId, Boolean nyAndel,
-                                              Boolean lagtTilAvSaksbehandler, Kode aktivitetStatus, LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom, Kode arbeidsforholdType) {
-        super(andel, andelsnr, arbeidsgiverId, arbeidsforholdId, nyAndel, lagtTilAvSaksbehandler, aktivitetStatus, beregningsperiodeFom, beregningsperiodeTom, arbeidsforholdType);
+    public FastsettBeregningsgrunnlagAndelDto(String andel, int andelsnr, String arbeidsforholdId,
+            String arbeidsgiverId, Boolean nyAndel,
+            Boolean lagtTilAvSaksbehandler, Kode aktivitetStatus, LocalDate beregningsperiodeFom,
+            LocalDate beregningsperiodeTom, Kode arbeidsforholdType) {
+        super(andel, andelsnr, arbeidsgiverId, arbeidsforholdId, nyAndel, lagtTilAvSaksbehandler, aktivitetStatus,
+                beregningsperiodeFom, beregningsperiodeTom, arbeidsforholdType);
     }
 
-    public FastsettBeregningsgrunnlagAndelDto(FordelBeregningsgrunnlagAndelDto andelDto, BeregningsgrunnlagPrStatusOgAndelDto bgAndelDto) {
-        super("", andelDto.getAndelsnr(), andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsgiverId(),
+    public FastsettBeregningsgrunnlagAndelDto(FordelBeregningsgrunnlagAndelDto andelDto,
+            BeregningsgrunnlagPrStatusOgAndelDto bgAndelDto) {
+        super("", andelDto.getAndelsnr(),
+                andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsgiverId(),
                 andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsforholdId(),
                 false, andelDto.isLagtTilAvSaksbehandler(),
                 andelDto.getAktivitetStatus(),
@@ -33,7 +36,8 @@ public class FastsettBeregningsgrunnlagAndelDto extends RedigerbarAndel {
                 andelDto.getArbeidsforholdType());
         forrigeArbeidsinntektPrÅr = andelDto.getFordeltPrAar() == null ? null : andelDto.getFordeltPrAar().intValue();
         forrigeInntektskategori = andelDto.getInntektskategori();
-        forrigeRefusjonPrÅr = andelDto.getRefusjonskravPrAar() == null ? null : andelDto.getRefusjonskravPrAar().intValue();
+        forrigeRefusjonPrÅr = andelDto.getRefusjonskravPrAar() == null ? null
+                : andelDto.getRefusjonskravPrAar().intValue();
 
     }
 

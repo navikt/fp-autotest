@@ -11,12 +11,12 @@ public class SokeFilterDto {
     protected List<ProsessTaskStatusDto> prosessTaskStatuser = new ArrayList<>();
     protected LocalDateTime sisteKjoeretidspunktFraOgMed;
     protected LocalDateTime sisteKjoeretidspunktTilOgMed;
-    
+
     public SokeFilterDto setSisteKjoeretidspunktFraOgMed(LocalDateTime tid) {
         this.sisteKjoeretidspunktFraOgMed = tid;
         return this;
     }
-    
+
     public SokeFilterDto setSisteKjoeretidspunktTilOgMed(LocalDateTime tid) {
         this.sisteKjoeretidspunktTilOgMed = tid;
         return this;

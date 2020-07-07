@@ -6,7 +6,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.brev.dto.BestillBrev;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 
-public class BrevKlient extends FpsakKlient{
+public class BrevKlient extends FpsakKlient {
 
     private static String BREV_URL = "/brev";
     private static String BREV_BESTILL_URL = BREV_URL + "/bestill";
@@ -20,6 +20,5 @@ public class BrevKlient extends FpsakKlient{
         String url = hentRestRotUrl() + BREV_BESTILL_URL;
         postOgVerifiser(url, brev, StatusRange.STATUS_SUCCESS);
     }
-
 
 }

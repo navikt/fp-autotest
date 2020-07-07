@@ -1,22 +1,22 @@
 package no.nav.foreldrepenger.autotest.base;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import no.nav.foreldrepenger.autotest.aktoerer.fprisk.Saksbehandler;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.AktørId;
-import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
-import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import no.nav.foreldrepenger.autotest.aktoerer.fprisk.Saksbehandler;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.AktørId;
+import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
+import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
 
 public class FpriskTestBase extends TestScenarioTestBase {
 
     protected Saksbehandler saksbehandler;
     protected TestscenarioKlient testscenarioKlient;
 
-    public FpriskTestBase () {
+    public FpriskTestBase() {
         saksbehandler = new Saksbehandler();
         testscenarioKlient = new TestscenarioKlient(BasicHttpSession.session());
     }
@@ -31,7 +31,7 @@ public class FpriskTestBase extends TestScenarioTestBase {
         }
     }
 
-    //TODO: Flytte ut i egne DTOer?
+    // TODO: Flytte ut i egne DTOer?
     public static class RisikovurderingRequest {
         protected AktoerIdDto soekerAktoerId;
         protected LocalDate skjæringstidspunkt;
@@ -40,8 +40,10 @@ public class FpriskTestBase extends TestScenarioTestBase {
         protected AnnenPart annenPart;
         protected String konsumentId;
 
-        public RisikovurderingRequest(String soekerAktoerId, LocalDate skjæringstidspunkt, LocalDate opplysningsperiodefraOgMed,
-                                      LocalDate opplysningsperiodeTilOgMed, String behandlingstema, String annenPartAktørId , String konsumentId ) {
+        public RisikovurderingRequest(String soekerAktoerId, LocalDate skjæringstidspunkt,
+                LocalDate opplysningsperiodefraOgMed,
+                LocalDate opplysningsperiodeTilOgMed, String behandlingstema, String annenPartAktørId,
+                String konsumentId) {
             this.soekerAktoerId = new AktoerIdDto(soekerAktoerId);
             this.skjæringstidspunkt = skjæringstidspunkt;
             this.opplysningsperiode = new Opplysningsperiode(opplysningsperiodefraOgMed, opplysningsperiodeTilOgMed);
@@ -50,7 +52,6 @@ public class FpriskTestBase extends TestScenarioTestBase {
             this.konsumentId = konsumentId;
         }
     }
-
 
     public static class AktoerIdDto {
 
@@ -68,7 +69,6 @@ public class FpriskTestBase extends TestScenarioTestBase {
             return Optional.of(new AktørId(aktørId));
         }
     }
-
 
     public static class Opplysningsperiode {
 
@@ -95,11 +95,11 @@ public class FpriskTestBase extends TestScenarioTestBase {
         public LocalDate getFraOgMed() {
             return fraOgMed;
         }
+
         public LocalDate getTilOgMed() {
             return tilOgMed;
         }
     }
-
 
     public static class AnnenPart {
 

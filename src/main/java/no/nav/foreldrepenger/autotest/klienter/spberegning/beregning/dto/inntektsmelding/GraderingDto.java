@@ -10,7 +10,7 @@ public class GraderingDto {
     protected LocalDate fom;
     protected LocalDate tom;
     protected Double prosent;
-    
+
     public GraderingDto() {
     }
 }

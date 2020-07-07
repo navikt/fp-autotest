@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.autotest.klienter.spberegning.kodeverk.dto.Kode;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AktivitetStatusDto {
     protected Kode aktivitetStatus;
-    
+
     public AktivitetStatusDto() {
     }
 }

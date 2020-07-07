@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 
-@BekreftelseKode(kode="5022")
+@BekreftelseKode(kode = "5022")
 public class AvklarFaktaPersonstatusBekreftelse extends AksjonspunktBekreftelse {
 
     protected String erEosBorger;
@@ -15,22 +15,22 @@ public class AvklarFaktaPersonstatusBekreftelse extends AksjonspunktBekreftelse 
     }
 
     public AvklarFaktaPersonstatusBekreftelse bekreftErEøsBorger() {
-        erEosBorger =  "true";
+        erEosBorger = "true";
         return this;
     }
 
     public AvklarFaktaPersonstatusBekreftelse bekreftErIkkeEøsBorger() {
-        erEosBorger =  "false";
+        erEosBorger = "false";
         return this;
     }
 
     public AvklarFaktaPersonstatusBekreftelse bekreftHarOppholdsrett() {
-        erEosBorger =  "true";
+        erEosBorger = "true";
         return this;
     }
 
     public AvklarFaktaPersonstatusBekreftelse bekreftHarIkkeOppholdsrett() {
-        erEosBorger =  "false";
+        erEosBorger = "false";
         return this;
     }
 

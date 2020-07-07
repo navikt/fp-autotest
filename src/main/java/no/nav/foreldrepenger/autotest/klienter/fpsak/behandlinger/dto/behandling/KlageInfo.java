@@ -9,25 +9,33 @@ public class KlageInfo {
     protected KlageFormkravResultat klageFormkravResultatNFP;
     protected KlageFormkravResultat klageFormkravResultatKA;
 
-    public KlageVurderingResultat getKlageVurderingResultatNFP() { return klageVurderingResultatNFP; }
+    public KlageVurderingResultat getKlageVurderingResultatNFP() {
+        return klageVurderingResultatNFP;
+    }
 
     public void setKlageVurderingResultatNFP(KlageVurderingResultat klageVurderingResultatNFP) {
         this.klageVurderingResultatNFP = klageVurderingResultatNFP;
     }
 
-    public KlageVurderingResultat getKlageVurderingResultatNK() { return klageVurderingResultatNK; }
+    public KlageVurderingResultat getKlageVurderingResultatNK() {
+        return klageVurderingResultatNK;
+    }
 
     public void setKlageVurderingResultatNK(KlageVurderingResultat klageVurderingResultatNK) {
         this.klageVurderingResultatNK = klageVurderingResultatNK;
     }
 
-    public KlageFormkravResultat getKlageFormkravResultatNFP() { return klageFormkravResultatNFP; }
+    public KlageFormkravResultat getKlageFormkravResultatNFP() {
+        return klageFormkravResultatNFP;
+    }
 
     public void setKlageFormkravResultatNFP(KlageFormkravResultat klageFormkravResultatNFP) {
         this.klageFormkravResultatNFP = klageFormkravResultatNFP;
     }
 
-    public KlageFormkravResultat getKlageFormkravResultatKA() { return klageFormkravResultatKA; }
+    public KlageFormkravResultat getKlageFormkravResultatKA() {
+        return klageFormkravResultatKA;
+    }
 
     public void setKlageFormkravResultatKA(KlageFormkravResultat klageFormkravResultatKA) {
         this.klageFormkravResultatKA = klageFormkravResultatKA;

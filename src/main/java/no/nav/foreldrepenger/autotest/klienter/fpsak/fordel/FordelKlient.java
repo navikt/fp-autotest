@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.VurderFagsystem;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 
-public class FordelKlient extends FpsakKlient{
+public class FordelKlient extends FpsakKlient {
 
     private static final String FORDEL_URL = "/fordel";
     private static final String VURDER_FAGSYSTEM_URL = FORDEL_URL + "/vurderFagsystem";
@@ -23,11 +23,9 @@ public class FordelKlient extends FpsakKlient{
     private static final String FAGSAK_INFORMASJON_URL = FAGSAK_URL + "/informasjon";
     private static final String FAGSAK_KNYTT_JOURNALPOST_URL = FAGSAK_URL + "/knyttJournalpost";
 
-
     public FordelKlient(HttpSession session) {
         super(session);
     }
-
 
     public BehandlendeFagsystem vurderFagsystem(VurderFagsystem vurderFagsystem) {
         String url = hentRestRotUrl() + VURDER_FAGSYSTEM_URL;
@@ -39,6 +37,7 @@ public class FordelKlient extends FpsakKlient{
         String url = hentRestRotUrl() + JOURNALPOST_URL;
         postOgVerifiser(url, journalpostMottak, StatusRange.STATUS_SUCCESS);
     }
+
     @Step("Oppretter fagsak")
     public Saksnummer fagsakOpprett(OpprettSak journalpost) {
         String url = hentRestRotUrl() + FAGSAK_OPPRETT_URL;

@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter;
 
+import java.time.LocalDate;
+
 import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
-import java.time.LocalDate;
-
 @AksjonspunktKode(kode = "5030", fagsystem = Fagsystem.FPTILBAKE)
-public class ApVerge extends AksjonspunktBehandling{
+public class ApVerge extends AksjonspunktBehandling {
 
     protected String begrunnelse;
     protected String fnr;
@@ -20,7 +20,7 @@ public class ApVerge extends AksjonspunktBehandling{
         this.begrunnelse = "Dette er en begrunnelse dannet av Autotest!";
     }
 
-    public void setVerge(TestscenarioDto person){
+    public void setVerge(TestscenarioDto person) {
         this.fnr = person.getPersonopplysninger().getSøkerIdent();
         this.gyldigFom = LocalDate.now().withDayOfMonth(1).minusMonths(3);
         this.gyldigTom = LocalDate.now().withDayOfMonth(1).plusMonths(6);

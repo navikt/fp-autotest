@@ -6,7 +6,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Kodeverk{
+public class Kodeverk {
     public KodeListe ArbeidType;
     public KodeListe OpptjeningAktivitetType;
     public Map<String, KodeListe> Avslagsårsak;
@@ -42,13 +42,12 @@ public class Kodeverk{
     public KodeListe Inntektskategori;
     public KodeListe VurderÅrsak;
 
-
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class KodeListe extends ArrayList<Kode>{
+    public static class KodeListe extends ArrayList<Kode> {
 
         public Kode getKode(String kodeverdi) {
             for (Kode kode : this) {
-                if(kode.kode.equals(kodeverdi)) {
+                if (kode.kode.equals(kodeverdi)) {
                     return kode;
                 }
             }

@@ -13,7 +13,7 @@ public class OppdaterBeregningDto {
     protected String aktivitetStatusKode;
     protected Boolean overstyrInntektsmeldinger;
     protected List<Integer> inntektsmeldinger;
-    
+
     public OppdaterBeregningDto(int beregningId) {
         this.beregningId = beregningId;
     }
@@ -37,6 +37,5 @@ public class OppdaterBeregningDto {
     public void setInntektsmeldinger(List<Integer> inntektsmeldinger) {
         this.inntektsmeldinger = inntektsmeldinger;
     }
-    
-    
+
 }

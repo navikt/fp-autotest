@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
 import org.w3c.dom.Document;
 
-public class VedtakOmMedhold000114 extends BrevMalXml{
+public class VedtakOmMedhold000114 extends BrevMalXml {
 
     public VedtakOmMedhold000114(Document root) {
         super(root);

@@ -40,20 +40,24 @@ public abstract class JsonRest extends Rest {
         return post(url, hentJsonPostEntity(json), headers);
     }
 
-    protected <T> T postOgHentJson(String url, Object requestData, JavaType returnType, StatusRange expectedStatusRange) {
+    protected <T> T postOgHentJson(String url, Object requestData, JavaType returnType,
+            StatusRange expectedStatusRange) {
         return postOgHentJson(url, requestData, new HashMap<>(), returnType, expectedStatusRange);
     }
 
-    protected <T> T postOgHentJson(String url, Object requestData, Class<T> returnType, StatusRange expectedStatusRange) {
+    protected <T> T postOgHentJson(String url, Object requestData, Class<T> returnType,
+            StatusRange expectedStatusRange) {
         return postOgHentJson(url, requestData, new HashMap<>(), returnType, expectedStatusRange);
     }
 
-    protected <T> T postOgHentJson(String url, Object requestData, Map<String, String> headers, Class<T> returnType, StatusRange expectedStatusRange) {
+    protected <T> T postOgHentJson(String url, Object requestData, Map<String, String> headers, Class<T> returnType,
+            StatusRange expectedStatusRange) {
         String json = postOgVerifiser(url, requestData, headers, expectedStatusRange);
         return json.equals("") ? null : fromJson(json, returnType);
     }
 
-    protected <T> T postOgHentJson(String url, Object requestData, Map<String, String> headers, JavaType returnType, StatusRange expectedStatusRange) {
+    protected <T> T postOgHentJson(String url, Object requestData, Map<String, String> headers, JavaType returnType,
+            StatusRange expectedStatusRange) {
         String json = postOgVerifiser(url, requestData, headers, expectedStatusRange);
         return json.equals("") ? null : fromJson(returnType, json);
     }
@@ -62,7 +66,8 @@ public abstract class JsonRest extends Rest {
         return postOgVerifiser(url, requestData, new HashMap<>(), expectedStatusRange);
     }
 
-    protected String postOgVerifiser(String url, Object requestData, Map<String, String> headers, StatusRange expectedStatusRange) {
+    protected String postOgVerifiser(String url, Object requestData, Map<String, String> headers,
+            StatusRange expectedStatusRange) {
         String request = requestData == null ? "{}" : toJson(requestData);
         HttpResponse response = postJson(url, request, headers);
         String json = hentResponseBody(response);
@@ -82,6 +87,7 @@ public abstract class JsonRest extends Rest {
     protected HttpResponse getJson(String url, Map<String, String> headers, Map<String, String> data) {
         return getJson(url + UrlEncodeQuery(data), headers);
     }
+
     protected HttpResponse getJson(String url, Map<String, String> headers) {
         headers.put("Accept", ACCEPT_JSON_HEADER);
         return get(url, headers);
@@ -90,18 +96,21 @@ public abstract class JsonRest extends Rest {
     protected <T> T getOgHentJson(String url, Class<T> returnType, StatusRange expectedStatusRange) {
         return getOgHentJson(url, new HashMap<>(), returnType, expectedStatusRange);
     }
+
     protected <T> T getOgHentJson(String url, JavaType returnType, StatusRange expectedStatusRange) {
         return getOgHentJson(url, new HashMap<>(), returnType, expectedStatusRange);
     }
 
-    protected <T> T getOgHentJson(String url, Map<String, String> headers, Class<T> returnType, StatusRange expectedStatusRange) {
+    protected <T> T getOgHentJson(String url, Map<String, String> headers, Class<T> returnType,
+            StatusRange expectedStatusRange) {
         HttpResponse response = getJson(url, headers);
         String json = hentResponseBody(response);
         ValidateResponse(response, expectedStatusRange, url + "\n\n" + json);
         return json.equals("") ? null : fromJson(json, returnType);
     }
 
-    protected <T> T getOgHentJson(String url, Map<String, String> headers, JavaType returnType, StatusRange expectedStatusRange) {
+    protected <T> T getOgHentJson(String url, Map<String, String> headers, JavaType returnType,
+            StatusRange expectedStatusRange) {
         HttpResponse response = getJson(url, headers);
         String json = hentResponseBody(response);
         ValidateResponse(response, expectedStatusRange, url + "\n\n" + json);
@@ -109,14 +118,13 @@ public abstract class JsonRest extends Rest {
     }
 
     protected <T> T postFormOgHentJson(String url, Map<String, String> query, Class<T> returnType) {
-        String content = UrlEncodeQuery(query,"");
+        String content = UrlEncodeQuery(query, "");
         HttpEntity entity = new StringEntity(content, ContentType.APPLICATION_FORM_URLENCODED);
-        Map<String,String> headers = Map.of("Content-Type", ContentType.APPLICATION_FORM_URLENCODED.getMimeType());
+        Map<String, String> headers = Map.of("Content-Type", ContentType.APPLICATION_FORM_URLENCODED.getMimeType());
         HttpResponse response = post(url, entity, headers);
         String json = hentResponseBody(response);
         return json.equals("") ? null : fromJson(json, returnType);
     }
-
 
     /*
      * PUT
@@ -126,6 +134,7 @@ public abstract class JsonRest extends Rest {
         String json = toJson(requestData);
         return putJson(url, json, expectedStatusRange);
     }
+
     protected HttpResponse putJson(String url, String json, StatusRange expectedStatusRange) {
         HttpResponse response = put(url, hentJsonPostEntity(json));
         ValidateResponse(response, expectedStatusRange);
@@ -140,6 +149,7 @@ public abstract class JsonRest extends Rest {
             return null;
         }
     }
+
     protected ObjectMapper hentObjectMapper() {
         return JsonKlient.getObjectMapper();
     }

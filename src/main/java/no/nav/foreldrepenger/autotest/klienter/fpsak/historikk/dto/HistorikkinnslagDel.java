@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class HistorikkinnslagDel {
 
     protected Hendelse hendelse;
-    
+
     @Override
     public String toString() {
         return String.valueOf(hendelse);

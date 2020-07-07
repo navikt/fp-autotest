@@ -29,7 +29,10 @@ import org.jboss.jandex.IndexReader;
 import org.jboss.jandex.Indexer;
 import org.slf4j.Logger;
 
-/** Henter persistert index (hvis generert) eller genererer index for angitt location (typisk matcher en jar/war fil). */
+/**
+ * Henter persistert index (hvis generert) eller genererer index for angitt
+ * location (typisk matcher en jar/war fil).
+ */
 public class IndexClasses {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(IndexClasses.class);
 
@@ -50,7 +53,8 @@ public class IndexClasses {
     public Index getIndex() {
 
         if ("file".equals(scanLocation.getScheme()) && scanLocation.getSchemeSpecificPart().contains("/target/")) {
-            // må regenerere index fra fil system i IDE ved å scanne dir, ellers kan den mulig være utdatert (når kjører Jetty i IDE f.eks)
+            // må regenerere index fra fil system i IDE ved å scanne dir, ellers kan den
+            // mulig være utdatert (når kjører Jetty i IDE f.eks)
             return scanIndexFromFilesystem(scanLocation);
         } else {
             return getPersistedJandexIndex(scanLocation);
@@ -65,11 +69,12 @@ public class IndexClasses {
             try (Stream<Path> paths = Files.walk(source)) {
                 paths.filter(Files::isRegularFile).forEach(f -> {
                     Path fileName = f.getFileName();
-                    if (fileName != null && fileName.toString().endsWith(".class")) {
+                    if ((fileName != null) && fileName.toString().endsWith(".class")) {
                         try (InputStream newInputStream = Files.newInputStream(f, StandardOpenOption.READ)) {
                             indexer.index(newInputStream);
                         } catch (IOException e) {
-                            throw new IllegalStateException("Fikk ikke indeksert klasse " + f + ", kan ikke scanne klasser", e);
+                            throw new IllegalStateException(
+                                    "Fikk ikke indeksert klasse " + f + ", kan ikke scanne klasser", e);
                         }
                     }
                 });
@@ -100,25 +105,24 @@ public class IndexClasses {
         classLoaders.add(Thread.currentThread().getContextClassLoader());
 
         return classLoaders
-            .stream()
-            .flatMap(cl -> {
-                try {
-                    return Collections.list(cl.getResources("META-INF/" + jandexIndexFileName)).stream();
-                } catch (IOException e2) {
-                    throw new IllegalArgumentException("Kan ikke lese jandex index fil", e2);
-                }
-            })
-            .filter(url -> {
-                try {
-                    return
-                        String.valueOf(url.toURI()).startsWith(uriString) ||
-                            String.valueOf(url.toURI().getSchemeSpecificPart()).startsWith(uriString);
-                } catch (URISyntaxException e1) {
-                    throw new IllegalArgumentException("Kan ikke scanne URI", e1);
-                }
-            })
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException("Fant ikke jandex index for location=" + location));
+                .stream()
+                .flatMap(cl -> {
+                    try {
+                        return Collections.list(cl.getResources("META-INF/" + jandexIndexFileName)).stream();
+                    } catch (IOException e2) {
+                        throw new IllegalArgumentException("Kan ikke lese jandex index fil", e2);
+                    }
+                })
+                .filter(url -> {
+                    try {
+                        return String.valueOf(url.toURI()).startsWith(uriString) ||
+                                String.valueOf(url.toURI().getSchemeSpecificPart()).startsWith(uriString);
+                    } catch (URISyntaxException e1) {
+                        throw new IllegalArgumentException("Kan ikke scanne URI", e1);
+                    }
+                })
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Fant ikke jandex index for location=" + location));
     }
 
     public List<Class<?>> getClassesWithAnnotation(Class<?> annotationClass) {
@@ -144,7 +148,8 @@ public class IndexClasses {
     @SuppressWarnings("unchecked")
     public <C> List<Class<C>> getSubClassesWithAnnotation(Class<C> klasse, Class<?> annotationClass) {
         List<Class<?>> classesWithAnnotation = getClassesWithAnnotation(annotationClass);
-        return classesWithAnnotation.stream().filter(c -> klasse.isAssignableFrom(c)).map(c -> (Class<C>) c).collect(Collectors.toList());
+        return classesWithAnnotation.stream().filter(c -> klasse.isAssignableFrom(c)).map(c -> (Class<C>) c)
+                .collect(Collectors.toList());
     }
 
     public List<Class<?>> getClasses(Predicate<ClassInfo> predicate, Predicate<Class<?>> classPredicate) {

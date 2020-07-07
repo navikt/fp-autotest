@@ -17,13 +17,15 @@ jobs:
     steps:
 
       - name: Henter ut historie
-        uses: actions/checkout@v2.2.0
+        if: env.TRIGGER != '' || env.VERSION != ''
+        uses: actions/checkout@v2.3.1
         with:
           repository: ${{ env.TRIGGER }}
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           fetch-depth: 5
 
       - name: Hent ut versjon fra forrige issue
+        if: env.TRIGGER != '' || env.VERSION != ''
         shell: bash
         run: |
           CURRENT_HASH=$(echo "$VERSION" | awk -F'-' '{print $3}')

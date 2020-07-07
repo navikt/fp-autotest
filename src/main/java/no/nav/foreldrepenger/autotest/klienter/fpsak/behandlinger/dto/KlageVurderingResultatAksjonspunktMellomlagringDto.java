@@ -13,8 +13,7 @@ public class KlageVurderingResultatAksjonspunktMellomlagringDto {
     protected String klageMedholdArsak;
     protected String klageVurdering;
     protected String klageVurderingOmgjoer;
-    
-    
+
     public KlageVurderingResultatAksjonspunktMellomlagringDto(String kode, String begrunnelse, int behandlingId,
             String fritekstTilBrev, String klageMedholdArsak, String klageVurdering, String klageVurderingOmgjoer) {
         super();
@@ -27,11 +26,15 @@ public class KlageVurderingResultatAksjonspunktMellomlagringDto {
         this.klageVurderingOmgjoer = klageVurderingOmgjoer;
     }
 
-    public KlageVurderingResultatAksjonspunktMellomlagringDto(int behandlingId, KlageVurderingResultat resultat, Aksjonspunkt aksjonspunkt) {
-        this(aksjonspunkt.getDefinisjon().kode, resultat.getBegrunnelse(), behandlingId, resultat.getFritekstTilBrev(), resultat.getKlageMedholdArsak(), resultat.getKlageVurdering(), resultat.getKlageVurderingOmgjoer());
+    public KlageVurderingResultatAksjonspunktMellomlagringDto(int behandlingId, KlageVurderingResultat resultat,
+            Aksjonspunkt aksjonspunkt) {
+        this(aksjonspunkt.getDefinisjon().kode, resultat.getBegrunnelse(), behandlingId, resultat.getFritekstTilBrev(),
+                resultat.getKlageMedholdArsak(), resultat.getKlageVurdering(), resultat.getKlageVurderingOmgjoer());
     }
-    
+
     public KlageVurderingResultatAksjonspunktMellomlagringDto(Behandling behandling, Aksjonspunkt aksjonspunkt) {
-        this(behandling.id, behandling.getKlagevurdering().getKlageVurderingResultatNFP(), aksjonspunkt); //lage for hvert av dem?
+        this(behandling.id, behandling.getKlagevurdering().getKlageVurderingResultatNFP(), aksjonspunkt); // lage for
+                                                                                                          // hvert av
+                                                                                                          // dem?
     }
 }

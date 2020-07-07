@@ -21,7 +21,7 @@ public class JournalpostMottak {
             String behandlingstemaOffisiellKode) {
         this(saksnummer, journalpostId, forsendelseMottatt.toString(), behandlingstemaOffisiellKode);
     }
-    
+
     public JournalpostMottak(String saksnummer, String journalpostId, String forsendelseMottatt,
             String behandlingstemaOffisiellKode) {
         super();
@@ -54,11 +54,11 @@ public class JournalpostMottak {
     public void setPayloadLength(Integer payloadLength) {
         this.payloadLength = payloadLength;
     }
-    
+
     public void setForsendelseId(String forsendelseId) {
         this.forsendelseId = forsendelseId;
     }
-    
+
     public void setDokumentKategoriOffisiellKode(String dokumentKategoriOffisiellKode) {
         this.dokumentKategoriOffisiellKode = dokumentKategoriOffisiellKode;
     }

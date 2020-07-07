@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Personopplysning;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5054")
+@BekreftelseKode(kode = "5054")
 public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreftelse {
 
     protected Integer antallBarn;
@@ -19,8 +19,8 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
     protected LocalDate omsorgsovertakelseDato;
     protected LocalDate foreldreansvarDato;
 
-    protected List<OmsorgovertakelseBarn> barn= new ArrayList<>();
-    protected List<OmsorgovertakelseForelder> foreldre= new ArrayList<>();
+    protected List<OmsorgovertakelseBarn> barn = new ArrayList<>();
+    protected List<OmsorgovertakelseForelder> foreldre = new ArrayList<>();
 
     public AvklarFaktaForeldreansvarFPBrekreftelse() {
         super();
@@ -33,20 +33,19 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
 
         foreldre.add(new OmsorgovertakelseForelder(behandling.getPersonopplysning()));
 
-        if(behandling.getSoknad().getAdopsjonFodelsedatoer() != null) {
+        if (behandling.getSoknad().getAdopsjonFodelsedatoer() != null) {
             Map<Integer, LocalDate> fodselsdatoer = behandling.getSoknad().getAdopsjonFodelsedatoer();
 
-            for(int i = 0; i < fodselsdatoer.size(); i++) {
-                barn.add(new OmsorgovertakelseBarn(fodselsdatoer.get(i+1), "SAKSBEH", (i+1)));
+            for (int i = 0; i < fodselsdatoer.size(); i++) {
+                barn.add(new OmsorgovertakelseBarn(fodselsdatoer.get(i + 1), "SAKSBEH", (i + 1)));
             }
-        }
-        else{
-            for(int i = 0; i < behandling.getSoknad().getAntallBarn(); i++) {
-                barn.add(new OmsorgovertakelseBarn(behandling.getSoknad().getFodselsdatoer().get(i+1), "SAKSBEH", (i+1)));
+        } else {
+            for (int i = 0; i < behandling.getSoknad().getAntallBarn(); i++) {
+                barn.add(new OmsorgovertakelseBarn(behandling.getSoknad().getFodselsdatoer().get(i + 1), "SAKSBEH",
+                        (i + 1)));
             }
         }
     }
-
 
     public class OmsorgovertakelseForelder {
         public int id;

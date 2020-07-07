@@ -13,6 +13,7 @@ public class BesteberegningFødendeKvinneDto {
         andel.setAndelsnr(besteberegningAndelListe.size() + 1);
         besteberegningAndelListe.add(andel);
     }
+
     public void setBesteberegningAndelListe(List<BesteberegningFødendeKvinneAndelDto> besteberegningAndelListe) {
         this.besteberegningAndelListe = besteberegningAndelListe;
     }

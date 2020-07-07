@@ -20,17 +20,17 @@ public class BrevMalTest {
 
     @Test
     public void skalKunneOprettesFraText() throws Exception {
-        BrevMalXml xml = VedtakOmMedhold000114.fromString("<root></root>");
+        VedtakOmMedhold000114.fromString("<root></root>");
     }
 
     @Test
     public void skalKunneOprettesFraFil() throws Exception {
-        BrevMalXml xml = VedtakOmMedhold000114.fromFile("src/test/resources/docprodXml/klageMedholUgunstNFP61.xml");
+        VedtakOmMedhold000114.fromFile("src/test/resources/docprodXml/klageMedholUgunstNFP61.xml");
     }
 
     @Test
     public void skalKunneOprettesFraRessurs() throws Exception {
-        BrevMalXml xml = VedtakOmMedhold000114.fromResource("klageMedholUgunstNFP61.xml");
+        VedtakOmMedhold000114.fromResource("klageMedholUgunstNFP61.xml");
     }
 
     @Test

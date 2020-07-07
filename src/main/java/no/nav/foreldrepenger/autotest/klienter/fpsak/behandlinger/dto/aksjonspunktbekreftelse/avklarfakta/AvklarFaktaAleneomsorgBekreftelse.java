@@ -2,10 +2,8 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode="5060")
+@BekreftelseKode(kode = "5060")
 public class AvklarFaktaAleneomsorgBekreftelse extends AksjonspunktBekreftelse {
 
     protected Boolean aleneomsorg;
@@ -14,11 +12,11 @@ public class AvklarFaktaAleneomsorgBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    public void  bekreftBrukerHarAleneomsorg() {
+    public void bekreftBrukerHarAleneomsorg() {
         this.aleneomsorg = true;
     }
 
-    public void  bekreftBrukerHarIkkeAleneomsorg() {
+    public void bekreftBrukerHarIkkeAleneomsorg() {
         this.aleneomsorg = false;
     }
 

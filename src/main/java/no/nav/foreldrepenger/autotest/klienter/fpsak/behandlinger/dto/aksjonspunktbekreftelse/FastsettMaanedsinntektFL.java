@@ -8,6 +8,5 @@ public class FastsettMaanedsinntektFL {
     }
 
     protected int maanedsinntekt;
-    
-    
+
 }

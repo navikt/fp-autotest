@@ -12,7 +12,7 @@ on:
       - 'JenkinsfileAutotestNew'
       - 'CODEOWNERS'
       - '.github/workflows/build-pr.yml'
-      - 'resources/keystore/**'
+      - 'lokalutvikling/*'
   repository_dispatch:
     types: [fpsak-verdikjede, fpformidling-verdikjede, fabakus-verdikjede, fpoppdrag-verdikjede, fptilbake-verdikjede]
   schedule:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.2.0
+      - uses: actions/checkout@v2.3.1
       - name: Set cache key
         run: |
           echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
@@ -86,14 +86,13 @@ jobs:
         id: tester
         shell: bash
         run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede | tee test-result-log.txt
-          echo "::set-env name=TEST_RESULTAT::$(grep 'Tests run: \d\+, Failures: \d\+, Errors: \d\+, Skipped: \d\+$' test-result-log.txt -o)"
+          mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede > >(tee test-result-log.txt)
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Oppdaterer issue ved feilfrie tester
-        if: steps.tester.outcome == 'success' && github.event_name != 'push' && github.event.client_payload.issue-number != null
+        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
@@ -102,13 +101,93 @@ jobs:
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
 
       - name: Oppdaterer issue ved testfeil
-        if: steps.tester.outcome != 'success' && github.event_name != 'push' && github.event.client_payload.issue-number != null
+        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           repository: ${{ github.event.client_payload.trigger }}
           event-type: update-issue
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
+
+      - name: Henter ut historie
+        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
+        id: slacknotify
+        uses: actions/checkout@v2.3.1
+        with:
+          repository: ${{ github.event.client_payload.trigger }}
+          path: ${{ github.event.client_payload.trigger }}
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          fetch-depth: 5
+
+      - name: Hent ut versjon fra forrige issue
+        if: always() && steps.slacknotify.outcome == 'success'
+        shell: bash
+        run: |
+          CURRENT_HASH=$(echo "${{ github.event.client_payload.version }}" | awk -F'-' '{print $3}')
+          cd "${{ github.event.client_payload.trigger }}"
+          git remote -v
+          git fetch
+          echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" -n 1 ${CURRENT_HASH})"
+
+      - name: Bygger opp slack melding
+        if: always() && steps.slacknotify.outcome == 'success'
+        shell: bash
+        run: |
+          if [ ${{ env.STACK_STARTED }} == true ]; then
+            echo "Stack up and running!"
+            TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }}:${{ github.event.client_payload.version }}%0A*Resultat*: ${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+            if [ ${{ steps.tester.outcome }} == success ]; then
+              echo "Test success!"
+              echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt uten feil :rocket:"
+              echo "::set-env name=SLACK_COLOR::#37df1d"
+            else
+              echo "Test failure!"
+              echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt med feil :boom:"
+              echo "::set-env name=SLACK_COLOR::#df1515"
+            fi
+          else
+            echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
+            echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ github.event.client_payload.trigger }}:${{ github.event.client_payload.version }}%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+            echo "::set-env name=SLACK_COLOR::#e79a07"
+          fi
+
+      - name: Slack Notification
+        if: always() && steps.slacknotify.outcome == 'success'
+        uses: rtCamp/action-slack-notify@v2.0.2
+        env:
+          SLACK_CHANNEL: fp-verdikjedetester
+          SLACK_COLOR: ${{ env.SLACK_COLOR }}
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ${{ env.SLACK_TITLE }}
+          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Generer testrapport
+        if: always() && env.STACK_STARTED == 'true'
+        id: ghpages
+        shell: bash
+        run: |
+          git fetch origin gh-pages
+          mkdir gh-pages
+          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
+          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
+          resources/allure/set-environment-variables.sh ${{ github.event.client_payload.trigger }}
+          cp resources/allure/environment.properties target/allure-results
+          cp resources/allure/categories.json target/allure-results
+          cp -r gh-pages/verdikjede/history target/allure-results
+          mvn allure:report --batch-mode --file pom.xml
+          cp -a target/allure-report/. gh-pages/verdikjede/
+
+      - name: Deploy testrapport
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: crazy-max/ghaction-github-pages@v2.1.0
+        with:
+          build_dir: gh-pages
+        env:
+          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'
@@ -118,7 +197,7 @@ jobs:
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
-        if: failure()
+        if: failure() && env.STACK_CREATED == 'true'
         uses: actions/upload-artifact@v2
         with:
           name: logs
@@ -131,44 +210,3 @@ jobs:
           docker system df -v
           docker system df
           df -h
-
-      - name: Henter historie for allure rapport
-        uses: actions/checkout@v2.2.0
-        with:
-          ref: gh-pages
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          path: gh-pages
-
-      - name: Generer testrapport
-        if: always() && env.STACK_STARTED == 'true'
-        shell: bash
-        run: |
-          resources/allure/set-environment-variables.sh ${{ github.event.client_payload.trigger }}
-          cp resources/allure/environment.properties target/allure-results
-          cp resources/allure/categories.json target/allure-results
-          cp -r gh-pages/verdikjede/history target/allure-results
-          mvn allure:report --batch-mode --file pom.xml
-          mkdir target/allure-report-temp
-          cp -r target/allure-report target/allure-report-temp/verdikjede
-
-      - name: Deploy testrapport
-        if: always() && env.STACK_STARTED == 'true'
-        uses: crazy-max/ghaction-github-pages@v2.0.1
-        with:
-          target_branch: gh-pages
-          keep_history: true
-          build_dir: target/allure-report-temp
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-
-      - name: Notify slack
-        if: always() && github.event_name != 'push'
-        uses: peter-evans/repository-dispatch@v1.1.1
-        with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          event-type: notify-slack
-          client-payload: '{  "trigger": "${{ github.event.client_payload.trigger }}",
-                              "version": "${{ github.event.client_payload.version }}",
-                              "test_resultat": "${{ env.TEST_RESULTAT }}",
-                              "outcome": "${{ steps.tester.outcome }}",
-                              "stack_started": "${{ env.STACK_STARTED }}" }'

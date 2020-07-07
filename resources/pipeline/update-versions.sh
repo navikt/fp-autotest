@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd $(dirname $0)
+
 TRIGGER=${1-not an repo}
 TRIGGER_VERSION=${2-latest}
 
@@ -20,6 +22,6 @@ echo FPSAK_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-sak/fpsak-test
 echo FPSAK_FRONTEND_IMAGE="$(imageVersion "docker.io/navikt/fpsak-frontend")" >> .env
 echo FORMIDLING_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-formidling/fpformidling")" >> .env
 echo FPOPPDRAG_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpoppdrag/fpoppdrag")" >> .env
-echo FPTILBAKE_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fptilbake/fptilbake-test")" >> .env
+echo FPTILBAKE_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fptilbake/fptilbake")" >> .env
 
 echo ".env fil opprettet - Klart for docker-compose up"

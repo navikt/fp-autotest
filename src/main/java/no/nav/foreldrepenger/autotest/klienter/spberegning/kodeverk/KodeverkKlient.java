@@ -13,7 +13,6 @@ public class KodeverkKlient extends SpBeregningKlient {
         super(session);
     }
 
-
     public Kodeverk kodeverk() {
         String url = hentRestRotUrl() + KODEVERK_URL;
         return getOgHentJson(url, Kodeverk.class, StatusRange.STATUS_SUCCESS);

@@ -23,7 +23,8 @@ public class BeregningsaktivitetLagreDto {
 
     protected Boolean skalBrukes;
 
-    public BeregningsaktivitetLagreDto(Kode opptjeningAktivitetType, LocalDate fom, LocalDate tom, String oppdragsgiverOrg, String arbeidsgiverIdentifikator, String arbeidsforholdRef, boolean skalBrukes) {
+    public BeregningsaktivitetLagreDto(Kode opptjeningAktivitetType, LocalDate fom, LocalDate tom,
+            String oppdragsgiverOrg, String arbeidsgiverIdentifikator, String arbeidsforholdRef, boolean skalBrukes) {
         this.opptjeningAktivitetType = opptjeningAktivitetType;
         this.fom = fom;
         this.tom = tom;
@@ -32,7 +33,6 @@ public class BeregningsaktivitetLagreDto {
         this.arbeidsforholdRef = arbeidsforholdRef;
         this.skalBrukes = skalBrukes;
     }
-
 
     public Kode getOpptjeningAktivitetType() {
         return opptjeningAktivitetType;

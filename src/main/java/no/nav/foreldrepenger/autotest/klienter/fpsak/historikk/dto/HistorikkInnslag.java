@@ -25,6 +25,7 @@ public class HistorikkInnslag {
             return name();
         }
     }
+
     public static final Type REVURD_OPPR = Type.REVURD_OPPR;
     public static final Type BEH_VENT = Type.BEH_VENT;
     public static final Type BREV_BESTILT = Type.BREV_BESTILT;
@@ -35,7 +36,6 @@ public class HistorikkInnslag {
     public static final Type NYE_REGOPPLYSNINGER = Type.NYE_REGOPPLYSNINGER;
     public static final Type UENDRET_UTFALL = Type.UENDRET_UTFALL;
     public static final Type BEH_OPPDATERT_NYE_OPPL = Type.BEH_OPPDATERT_NYE_OPPL;
-
 
     protected HistorikkTekst tekst;
     protected List<HistorikkinnslagDel> historikkinnslagDeler;
@@ -53,9 +53,9 @@ public class HistorikkInnslag {
         return behandlingId;
     }
 
-
     @Override
     public String toString() {
-        return getClass().getSimpleName() + String.format("<behandlingsid=%s, type=%s, tekst=%s, innslag=%s>", behandlingId, type.kode, tekst, historikkinnslagDeler);
+        return getClass().getSimpleName() + String.format("<behandlingsid=%s, type=%s, tekst=%s, innslag=%s>",
+                behandlingId, type.kode, tekst, historikkinnslagDeler);
     }
 }

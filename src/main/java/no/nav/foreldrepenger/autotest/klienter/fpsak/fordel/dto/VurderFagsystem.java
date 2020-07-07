@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VurderFagsystem {
     protected String journalpostId;
-    protected boolean strukturertSøknad ;
-    protected String aktørId ;
-    protected String behandlingstemaOffisiellKode ;
+    protected boolean strukturertSøknad;
+    protected String aktørId;
+    protected String behandlingstemaOffisiellKode;
     protected List<String> adopsjonsBarnFodselsdatoer;
     protected String barnTermindato;
     protected String barnFodselsdato;
