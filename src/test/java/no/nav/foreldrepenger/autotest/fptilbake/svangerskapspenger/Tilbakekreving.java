@@ -75,7 +75,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
 
-        //TODO: legg inn de to manglende aksjonspunktene; Foreslå vedtak (saksbehandler) og fatte vedtak (beslutter)
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
 
         saksbehandler.ventTilAvsluttetBehandling();
 

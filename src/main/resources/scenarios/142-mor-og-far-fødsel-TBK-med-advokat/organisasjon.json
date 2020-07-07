@@ -16,24 +16,23 @@
       "orgnummer": "973861778",
       "navn": {
         "navnelinje": [
-          "KJELLTECH"
+          "JURISTENE ADVOKATER"
         ]
       },
       "organisasjonDetaljer": {
         "registreringsDato": "now() - P10Y",
-        "datoSistEndret": "now() - P1Y"
-      }
-    },
-    {
-      "orgnummer": "991779493",
-      "navn": {
-        "navnelinje": [
-          "TEST TRANSPORT AS"
+        "datoSistEndret": "now() - P1Y",
+        "postadresser": [
+          {
+            "adresselinje1": "NEDRE LINDHAUGEN 88",
+            "adresselinje2": "",
+            "adresselinje3": "",
+            "kommunenummer": "",
+            "landkode": "NO",
+            "postnummer": "1772",
+            "poststed": "HALDEN"
+          }
         ]
-      },
-      "organisasjonDetaljer": {
-        "registreringsDato": "now() - P10Y",
-        "datoSistEndret": "now() - P1Y"
       }
     }
   ]
