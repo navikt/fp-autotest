@@ -47,7 +47,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() {
 
-        TestscenarioDto testscenario = opprettTestscenarioFraVTPTemplate("50");
+        TestscenarioDto testscenario = opprettTestscenario("50");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();

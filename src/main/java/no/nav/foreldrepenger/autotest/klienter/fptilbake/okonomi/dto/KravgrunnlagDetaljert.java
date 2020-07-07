@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
