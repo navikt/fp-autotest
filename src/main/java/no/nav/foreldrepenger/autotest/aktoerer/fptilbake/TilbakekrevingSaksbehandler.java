@@ -11,11 +11,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPolli
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;//-- og denne FPSAK import er OK. Ellers skal man generelt ikke blande fpsak og fptilbake
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto; //denne --
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerKlient;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprettRevurdering;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.*;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.AksjonspunktBehandling;
@@ -61,14 +57,22 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
                 "BT-009", ytelseType, behandlingArsakType));
     }
 
+    // Brukerrespons action
+    public void registrerBrukerrespons(boolean akseptertFaktagrunnlag){
+        BrukerresponsDto brukerrespons = new BrukerresponsDto(valgtBehandling.id);
+        brukerrespons.setAkseptertFaktagrunnlag(akseptertFaktagrunnlag);
+        behandlingerKlient.registrerBrukerrespons(brukerrespons);
+    }
+
+
     // Verge actions
-    public void leggTilVerge(int behandlingId) {
-        behandlingerKlient.addVerge(new BehandlingIdBasicDto(behandlingId));
+    public void leggTilVerge() {
+        behandlingerKlient.addVerge(new BehandlingIdBasicDto(valgtBehandling.id));
         ventPåProsessering(valgtBehandling);
     }
 
-    public void fjernVerge(int behandlingId) {
-        behandlingerKlient.removeVerge(new BehandlingIdBasicDto(behandlingId));
+    public void fjernVerge() {
+        behandlingerKlient.removeVerge(new BehandlingIdBasicDto(valgtBehandling.id));
         ventPåProsessering(valgtBehandling);
         refreshBehandling();
     }
