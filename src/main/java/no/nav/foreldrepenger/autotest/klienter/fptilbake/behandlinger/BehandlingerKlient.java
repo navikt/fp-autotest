@@ -3,16 +3,13 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.*;
 import org.apache.http.HttpResponse;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus; //Denne FPSAK import er OK. Ellers skal man generelt ikke blande fpsak og fptilbake
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.FptilbakeKlient;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprettRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
@@ -27,9 +24,12 @@ public class BehandlingerKlient extends FptilbakeKlient {
 
     private static final String BEHANDLINGER_OPPRETT = BEHANDLINGER_URL + "/opprett";
     private static final String BEHANDLINGER_ALLE_URL = BEHANDLINGER_URL + "/alle?saksnummer=%s";
+
     private static final String VERGE_URL = "/verge";
     private static final String LEGG_TIL_VERGE_URL = VERGE_URL + "/opprett";
     private static final String FJERN_VERGE_URL = VERGE_URL + "/fjern";
+
+    private static final String REGISTRER_BRUKERRESPONS = "/varsel/respons/registrer";
 
     private static final String AKSJONSPUNKT_URL = "/behandling/aksjonspunkt";
     private static final String AKSJONSPUNKT_GET_URL = AKSJONSPUNKT_URL + "?behandlingId=%s";
@@ -59,6 +59,11 @@ public class BehandlingerKlient extends FptilbakeKlient {
     public void removeVerge(BehandlingIdBasicDto behandlingIdBasicDto) {
         String url = hentRestRotUrl() + FJERN_VERGE_URL;
         postOgVerifiser(url, behandlingIdBasicDto, StatusRange.STATUS_SUCCESS);
+    }
+
+    public void registrerBrukerrespons(BrukerresponsDto brukerresponsDto){
+        String url = hentRestRotUrl() + REGISTRER_BRUKERRESPONS;
+        postOgVerifiser(url, brukerresponsDto, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Henter ut alle behandlinger fra fptilbake på gitt saksnummer")

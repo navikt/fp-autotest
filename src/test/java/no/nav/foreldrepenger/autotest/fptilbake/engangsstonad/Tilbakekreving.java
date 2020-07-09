@@ -173,9 +173,9 @@ public class Tilbakekreving extends FptilbakeTestBase {
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 
-        tbksaksbehandler.fjernVerge(tbksaksbehandler.valgtBehandling.id);
+        tbksaksbehandler.fjernVerge();
         verifiser(!tbksaksbehandler.valgtBehandling.harVerge(), "Behandling har verge men skulle ikke hatt det");
-        tbksaksbehandler.leggTilVerge(tbksaksbehandler.valgtBehandling.id);
+        tbksaksbehandler.leggTilVerge();
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5030);
         var vergeFakta = (ApVerge) tbksaksbehandler.hentAksjonspunktbehandling(5030);
         vergeFakta.setVerge(opprettTestscenario("01"));
