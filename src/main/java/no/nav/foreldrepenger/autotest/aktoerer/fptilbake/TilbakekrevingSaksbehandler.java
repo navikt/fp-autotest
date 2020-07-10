@@ -98,7 +98,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     // Generisk handling for å hente behandling på nytt
     private void refreshBehandling() {
-        valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.id);
+        valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.uuid);
     }
 
     // Økonomi actions
@@ -121,7 +121,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     // Henter aksjonspunkt for en gitt kode, brukes ikke direkte i test men av
     // metoder for å verifisere at aksjonspunktet finnes.
     private AksjonspunktDto hentAksjonspunkt(int kode) {
-        for (AksjonspunktDto aksjonspunktDto : behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.id)) {
+        for (AksjonspunktDto aksjonspunktDto : behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid)) {
             if (aksjonspunktDto.definisjon.kode.equals(String.valueOf(kode))) {
                 return aksjonspunktDto;
             }
@@ -144,14 +144,14 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         switch (aksjonspunktkode) {
             case 7003:
                 ApFaktaFeilutbetaling apFaktaFeilutbetaling = new ApFaktaFeilutbetaling();
-                for (FeilutbetalingPerioder perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.id)
+                for (FeilutbetalingPerioder perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.uuid)
                         .getPerioder()) {
                     apFaktaFeilutbetaling.addFaktaPeriode(perioder.fom, perioder.tom);
                 }
                 return apFaktaFeilutbetaling;
             case 5002:
                 ApVilkårsvurdering apVilkårsvurdering = new ApVilkårsvurdering();
-                for (FeilutbetalingPerioder perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.id)
+                for (FeilutbetalingPerioder perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.uuid)
                         .getPerioder()) {
                     apVilkårsvurdering.addVilkårPeriode(perioder.fom, perioder.tom);
                 }

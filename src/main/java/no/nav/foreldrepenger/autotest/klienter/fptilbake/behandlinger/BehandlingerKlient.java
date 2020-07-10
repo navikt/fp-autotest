@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.*;
 import org.apache.http.HttpResponse;
@@ -19,8 +20,8 @@ import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 public class BehandlingerKlient extends FptilbakeKlient {
 
     private static final String BEHANDLINGER_URL = "/behandlinger";
-    private static final String BEHANDLINGER_GET_URL = "/behandlinger?behandlingId=%s";
-    private static final String BEHANDLINGER_STATUS_URL = "/behandlinger/status?behandlingId=%s";
+    private static final String BEHANDLINGER_GET_URL = "/behandlinger?uuid=%s";
+    private static final String BEHANDLINGER_STATUS_URL = "/behandlinger/status?uuid=%s";
 
     private static final String BEHANDLINGER_OPPRETT = BEHANDLINGER_URL + "/opprett";
     private static final String BEHANDLINGER_ALLE_URL = BEHANDLINGER_URL + "/alle?saksnummer=%s";
@@ -32,9 +33,9 @@ public class BehandlingerKlient extends FptilbakeKlient {
     private static final String REGISTRER_BRUKERRESPONS = "/varsel/respons/registrer";
 
     private static final String AKSJONSPUNKT_URL = "/behandling/aksjonspunkt";
-    private static final String AKSJONSPUNKT_GET_URL = AKSJONSPUNKT_URL + "?behandlingId=%s";
+    private static final String AKSJONSPUNKT_GET_URL = AKSJONSPUNKT_URL + "?uuid=%s";
 
-    private static final String FEILUTBETALING_FAKTA_URL = "/behandlingfakta/hent-fakta/feilutbetaling?behandlingId=%s";
+    private static final String FEILUTBETALING_FAKTA_URL = "/behandlingfakta/hent-fakta/feilutbetaling?uuid=%s";
 
     public BehandlingerKlient(HttpSession session) {
         super(session);
@@ -75,22 +76,22 @@ public class BehandlingerKlient extends FptilbakeKlient {
     }
 
     @Step("Henter ut en bestemt behandling fra fptilbake")
-    public Behandling hentTbkBehandling(int behandlingId) {
-        String url = hentRestRotUrl() + String.format(BEHANDLINGER_GET_URL, behandlingId);
+    public Behandling hentTbkBehandling(UUID behandlingUuid) {
+        String url = hentRestRotUrl() + String.format(BEHANDLINGER_GET_URL, behandlingUuid);
         return getOgHentJson(url, Behandling.class, StatusRange.STATUS_SUCCESS);
     }
 
     @Step("Henter ut alle aksjonspunkter på en gitt behandling fra fptilbake")
-    public List<AksjonspunktDto> hentAlleAksjonspunkter(int behandlingId) {
-        String url = hentRestRotUrl() + String.format(AKSJONSPUNKT_GET_URL, behandlingId);
+    public List<AksjonspunktDto> hentAlleAksjonspunkter(UUID behandlingUuid) {
+        String url = hentRestRotUrl() + String.format(AKSJONSPUNKT_GET_URL, behandlingUuid);
         return getOgHentJson(url,
                 hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class, AksjonspunktDto.class),
                 StatusRange.STATUS_SUCCESS);
     }
 
     @Description("Henter faktaer som trengs for behandling av Fakta - aksjonspunkt 7003")
-    public FeilutbetalingDto hentFeilutbetalingFakta(int behandlingId) {
-        String url = hentRestRotUrl() + String.format(FEILUTBETALING_FAKTA_URL, behandlingId);
+    public FeilutbetalingDto hentFeilutbetalingFakta(UUID behandlingUuid) {
+        String url = hentRestRotUrl() + String.format(FEILUTBETALING_FAKTA_URL, behandlingUuid);
         return getOgHentJson(url, FeilutbetalingDto.class, StatusRange.STATUS_SUCCESS);
     }
 
