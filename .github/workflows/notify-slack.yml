@@ -94,4 +94,5 @@ jobs:
           SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
           SLACK_USERNAME: Github Action
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_FOOTER: ''
 
