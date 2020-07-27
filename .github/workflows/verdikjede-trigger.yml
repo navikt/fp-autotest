@@ -1,7 +1,7 @@
 name: Kjører verdikjedetestene for verdikjeden
 
 on:
-  push:
+  pull_request:
     branches:
       - master
     paths-ignore:
@@ -86,28 +86,28 @@ jobs:
         id: tester
         shell: bash
         run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede > >(tee test-result-log.txt)
+          mvn test --batch-mode --settings .github/.m2/settings.xml -P internal > >(tee test-result-log.txt)
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
 
-      - name: Oppdaterer issue ved feilfrie tester
-        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          repository: ${{ github.event.client_payload.trigger }}
-          event-type: update-issue
-          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
-
-      - name: Oppdaterer issue ved testfeil
-        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          repository: ${{ github.event.client_payload.trigger }}
-          event-type: update-issue
-          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
+#      - name: Oppdaterer issue ved feilfrie tester
+#        if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
+#        uses: peter-evans/repository-dispatch@v1
+#        with:
+#          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+#          repository: ${{ github.event.client_payload.trigger }}
+#          event-type: update-issue
+#          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
+#
+#      - name: Oppdaterer issue ved testfeil
+#        if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
+#        uses: peter-evans/repository-dispatch@v1
+#        with:
+#          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+#          repository: ${{ github.event.client_payload.trigger }}
+#          event-type: update-issue
+#          client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
 
       - name: Henter ut historie
         if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
@@ -130,7 +130,7 @@ jobs:
           echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" -n 1 ${CURRENT_HASH})"
 
       - name: Bygger opp slack melding
-        if: always() && steps.slacknotify.outcome == 'success'
+        if: always()
         shell: bash
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
@@ -154,7 +154,7 @@ jobs:
           fi
 
       - name: Slack Notification
-        if: always() && steps.slacknotify.outcome == 'success'
+        if: always()
         uses: rtCamp/action-slack-notify@v2.1.0
         env:
           SLACK_CHANNEL: fp-verdikjedetester
@@ -164,37 +164,38 @@ jobs:
           SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
           SLACK_USERNAME: Github Action
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_FOOTER: ''
 
-      - name: Generer testrapport
-        if: always() && env.STACK_STARTED == 'true'
-        id: ghpages
-        shell: bash
-        run: |
-          git fetch origin gh-pages
-          mkdir gh-pages
-          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
-          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
-          resources/allure/set-environment-variables.sh ${{ github.event.client_payload.trigger }}
-          cp resources/allure/environment.properties target/allure-results
-          cp resources/allure/categories.json target/allure-results
-          cp -r gh-pages/verdikjede/history target/allure-results
-          mvn allure:report --batch-mode --file pom.xml
-          cp -a target/allure-report/. gh-pages/verdikjede/
-
-      - name: Deploy testrapport
-        if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.1.0
-        with:
-          build_dir: gh-pages
-        env:
-          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-
-      - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
-        run: |
-          mkdir container-logs
-          cd container-logs
-          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+#      - name: Generer testrapport
+#        if: always() && env.STACK_STARTED == 'true'
+#        id: ghpages
+#        shell: bash
+#        run: |
+#          git fetch origin gh-pages
+#          mkdir gh-pages
+#          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
+#          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
+#          resources/allure/set-environment-variables.sh ${{ github.event.client_payload.trigger }}
+#          cp resources/allure/environment.properties target/allure-results
+#          cp resources/allure/categories.json target/allure-results
+#          cp -r gh-pages/verdikjede/history target/allure-results
+#          mvn allure:report --batch-mode --file pom.xml
+#          cp -a target/allure-report/. gh-pages/verdikjede/
+#
+#      - name: Deploy testrapport
+#        if: always() && steps.ghpages.outcome == 'success'
+#        uses: crazy-max/ghaction-github-pages@v2.1.0
+#        with:
+#          build_dir: gh-pages
+#        env:
+#          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+#
+#      - name: Dumper logger for feilsøking
+#        if: failure() && env.STACK_CREATED == 'true'
+#        run: |
+#          mkdir container-logs
+#          cd container-logs
+#          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
         if: failure() && env.STACK_CREATED == 'true'
