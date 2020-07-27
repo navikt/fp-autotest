@@ -155,7 +155,7 @@ jobs:
 
       - name: Slack Notification
         if: always()
-        uses: rtCamp/action-slack-notify@v2.0.2
+        uses: rtCamp/action-slack-notify@v2.1.0
         env:
           SLACK_CHANNEL: fp-verdikjedetester
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
