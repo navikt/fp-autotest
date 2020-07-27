@@ -130,7 +130,7 @@ jobs:
           echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" -n 1 ${CURRENT_HASH})"
 
       - name: Bygger opp slack melding
-        if: always() && steps.slacknotify.outcome == 'success'
+        if: always()
         shell: bash
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
@@ -154,7 +154,7 @@ jobs:
           fi
 
       - name: Slack Notification
-        if: always() && steps.slacknotify.outcome == 'success'
+        if: always()
         uses: rtCamp/action-slack-notify@v2.0.2
         env:
           SLACK_CHANNEL: fp-verdikjedetester
