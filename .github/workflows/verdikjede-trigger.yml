@@ -164,6 +164,7 @@ jobs:
           SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
           SLACK_USERNAME: Github Action
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_FOOTER: ''
 
       - name: Generer testrapport
         if: always() && env.STACK_STARTED == 'true'
