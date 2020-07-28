@@ -46,7 +46,7 @@ jobs:
           echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
-          echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
+          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
           docker-compose up --quiet-pull --detach fpsak fpformidling fpoppdrag fptilbake
@@ -89,13 +89,13 @@ jobs:
           mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede > >(tee test-result-log.txt)
         env:
           GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Oppdaterer issue ved feilfrie tester
         if: success() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: ${{ github.event.client_payload.trigger }}
           event-type: update-issue
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "true" }'
@@ -104,7 +104,7 @@ jobs:
         if: failure() && github.event_name != 'push' && github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: ${{ github.event.client_payload.trigger }}
           event-type: update-issue
           client-payload: '{ "issue-number": "${{ github.event.client_payload.issue-number }}", "success": "false" }'
@@ -116,7 +116,7 @@ jobs:
         with:
           repository: ${{ github.event.client_payload.trigger }}
           path: ${{ github.event.client_payload.trigger }}
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
           fetch-depth: 5
 
       - name: Hent ut versjon fra forrige issue
@@ -188,7 +188,7 @@ jobs:
         with:
           build_dir: gh-pages
         env:
-          GH_PAT: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          GH_PAT: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'
