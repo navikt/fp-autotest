@@ -23,5 +23,6 @@ echo FPSAK_FRONTEND_IMAGE="$(imageVersion "docker.io/navikt/fpsak-frontend")" >>
 echo FORMIDLING_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-formidling/fpformidling")" >> .env
 echo FPOPPDRAG_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpoppdrag/fpoppdrag")" >> .env
 echo FPTILBAKE_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fptilbake/fptilbake")" >> .env
+echo FPRISK_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-risk/fprisk")" >> .env
 
 echo ".env fil opprettet - Klart for docker-compose up"
