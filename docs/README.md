@@ -32,8 +32,8 @@ som skal gjøre dette lettere. Scriptene som finnes der, og skal brukes til loka
 
 1)  `lokal-utvikling-fpsak.sh`: Brukes for lokal utvikling av FPSAK.
 2)  `lokal-utvikling-fpsak-frontend.sh`: Brukes for lokal utvikling av FPSAK-FRONTEND.
-3)  `lokal-utvikling-formidling-oppdrag-tilbake.sh`: Brukes for lokal utvikling av enten FPFORMIDLING, FPOPPDRAG eller
-FPTILBAKE; dette scriptet kjøres med argumentet fpformidling, fpoppdrag eller fptilbake.
+3)  `lokal-utvikling-formidling-oppdrag-tilbake-risk.sh`: Brukes for lokal utvikling av enten FPFORMIDLING, FPOPPDRAG,
+FPTILBAKE eller FPRISK; dette scriptet kjøres med argumentet fpformidling, fpoppdrag, fptilbake eller fprisk.
 4)  `setup-lokal-utvikling.sh`: Brukes for lokal utvikling hvis de over ikke skulle dekke ditt behov.
 
 Etter at du har kjørt enten script 1, 2 eller 3 er det mulig å kjøre ned applikasjonene i Docker Compose med å kalle 

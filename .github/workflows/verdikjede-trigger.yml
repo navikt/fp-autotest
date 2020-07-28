@@ -49,7 +49,7 @@ jobs:
           echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          docker-compose up --quiet-pull --detach fpsak fpformidling fpoppdrag fptilbake
+          docker-compose up --quiet-pull --detach fpsak fpformidling fpoppdrag fptilbake fprisk
 
       - name: Venter på stacken og sjekker status
         shell: bash
@@ -70,15 +70,19 @@ jobs:
           echo Oppe!
           echo
           echo "Tester om fpformidling er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8010/fpformidling/internal/health/isAlive)" != "200" ]]; do sleep 2; done' || false
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8010/fpformidling/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
           echo "Tester om fpoppdrag er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8070/fpoppdrag/internal/health/isAlive)" != "200" ]]; do sleep 2; done' || false
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8070/fpoppdrag/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
           echo "Tester om fptilbake er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8030/fptilbake/internal/isAlive)" != "200" ]]; do sleep 2; done' || false
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8030/fptilbake/internal/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om fprisk er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8075/fprisk/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo ::set-env name=STACK_STARTED::true
 

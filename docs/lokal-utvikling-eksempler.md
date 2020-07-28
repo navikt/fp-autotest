@@ -50,10 +50,10 @@ steg 3). Ønsker du å bruke en annen versjon enn den siste for noen av avhengig
 
         ./update-versions.sh <APPLIKASJONSNAVN> <VERSION>
 
-3) Kjør scriptet `lokal-utvikling-formidling-oppdrag-tilbake.sh`, som ligger i mappen _"fpsak-autotest/lokal-utvikling"_, med 
+3) Kjør scriptet `lokal-utvikling-formidling-oppdrag-tilbake-risk.sh`, som ligger i mappen _"fpsak-autotest/lokal-utvikling"_, med 
 argumentet "fpformidling".
-    1) For Mac skriv følgende i terminalen: `./lokal-utvikling-formidling-oppdrag-tilbake.sh fpformidling`
-    2) For Windows skriv følgende i terminalen: `sh lokal-utvikling-formidling-oppdrag-tilbake.sh fpformidling`
+    1) For Mac skriv følgende i terminalen: `./lokal-utvikling-formidling-oppdrag-tilbake-risk.sh fpformidling`
+    2) For Windows skriv følgende i terminalen: `sh lokal-utvikling-formidling-oppdrag-tilbake-risk.sh fpformidling`
 
 4) Kjør deretter opp _FPFORMIDLING_ i ønsket IDE.
 

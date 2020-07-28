@@ -182,6 +182,26 @@ services:
       - oracle
       - vtp
       - fpsak
+  fprisk:
+    image: $FPRISK_IMAGE
+    container_name: fprisk
+    restart: on-failure
+    mem_limit: 512mb
+    env_file:
+      - "fprisk_datasource.list"
+      - "common.env"
+    environment:
+      - "LOADBALANCER_URL=http://localhost:8075"
+      - "OPENIDCONNECT_USERNAME=fprisk-localhost"
+      - "BRREG_PROXY=https://vtp:8063/rest/brreg"
+    volumes:
+      - "~/.modig:/var/run/secrets/naisd.io"
+    ports:
+      - "8075:8080"
+    depends_on:
+      - oracle
+      - vtp
+      - fpsak
   redis:
     image: redis
     container_name: redis
@@ -209,23 +229,3 @@ services:
     depends_on:
       - fpsak
       - redis
-  fprisk:
-    image: $FPRISK_IMAGE
-    container_name: fprisk
-    restart: on-failure
-    mem_limit: 512mb
-    env_file:
-      - "fprisk_datasource.list"
-      - "common.env"
-    environment:
-      - "LOADBALANCER_URL=http://localhost:8075"
-      - "OPENIDCONNECT_USERNAME=fprisk-localhost"
-      - "BRREG_PROXY=https://vtp:8063/rest/brreg"
-    volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
-    ports:
-      - "8075:8080"
-    depends_on:
-      - oracle
-      - vtp
-      - fpsak
