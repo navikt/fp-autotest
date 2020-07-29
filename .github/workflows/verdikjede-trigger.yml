@@ -14,7 +14,7 @@ on:
       - '.github/workflows/build-pr.yml'
       - 'lokalutvikling/*'
   repository_dispatch:
-    types: [fpsak-verdikjede, fpformidling-verdikjede, fabakus-verdikjede, fpoppdrag-verdikjede, fptilbake-verdikjede]
+    types: [fpsak-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fptilbake-verdikjede, fprisk-verdikjede]
   schedule:
     - cron:  '0 0 * * *'
 
