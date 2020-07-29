@@ -62,8 +62,8 @@ services:
     environment:
       - "TZ=Europe/Oslo"
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
-      - "LOADBALANCER_URL=http://localhost:8080"
-      - "LOADBALANCER_FQDN=localhost:8080"
+      - "LOADBALANCER_URL=http://localhost:8015"
+      - "LOADBALANCER_FQDN=localhost:8015"
     env_file:
       - "fpabakus_datasource.list"
       - "common.env"
@@ -114,8 +114,8 @@ services:
       - "TZ=Europe/Oslo"
       - "FPSAK_REST_BASE_URL=http://fpsak:8080"
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
-      - "LOADBALANCER_URL=http://localhost:8080"
-      - "LOADBALANCER_FQDN=localhost:8080"
+      - "LOADBALANCER_URL=http://localhost:8010"
+      - "LOADBALANCER_FQDN=localhost:8010"
     env_file:
       - "fpformidling_datasource.list"
       - "common.env"
@@ -137,8 +137,8 @@ services:
       - "common.env"
     environment:
       - "OPPDRAG_SERVICE_URL=https://vtp:8063/soap/cics/services/oppdragService"
-      - "LOADBALANCER_URL=http://localhost:8080"
-      - "LOADBALANCER_FQDN=localhost:8080"
+      - "LOADBALANCER_URL=http://localhost:8070"
+      - "LOADBALANCER_FQDN=localhost:8070"
       - "OPENIDCONNECT_USERNAME=fpoppdrag-localhost"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
@@ -164,8 +164,8 @@ services:
       - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
       - "KAFKA_FPLOS_TOPIC=tilbakebetaling-aksjonspunkthendelse"
       - "KAFKA_FPLOS_CLIENT_ID=tilbakebetaling-aksjonspunkthendelse"
-      - "LOADBALANCER_URL=http://localhost:8080"
-      - "LOADBALANCER_FQDN=localhost:8080"
+      - "LOADBALANCER_URL=http://localhost:8030"
+      - "LOADBALANCER_FQDN=localhost:8030"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
       - "TEST_ONLY_DISABLE_MQ=true"
     volumes:
