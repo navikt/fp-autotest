@@ -201,6 +201,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
     // TODO: Finn ut om denne skal fjernes elle ei.
     @Test
+    @Disabled
     @DisplayName("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
     public void mor_søker_svp_tre_arbeidsforhold_to_halv() {
@@ -236,14 +237,10 @@ public class Førstegangsbehandling extends FpsakTestBase {
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
         // Inntektsmelding
-        var månedsinntekt1 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var månedsinntekt2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1)
-                .getBeløp();
-        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, månedsinntekt1, orgnr1)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt1/2));
-        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, månedsinntekt2, orgnr2)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt2/2));
+        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, 20_833, orgnr1)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(20_833));
+        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, 62_500, orgnr2)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(27_778));
         fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);

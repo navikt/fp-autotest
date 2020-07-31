@@ -63,7 +63,7 @@ public class Innsyn extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         AllureHelper.debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNSYN_INNVILGET");
         verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT),
                 "Brev er ikke bestilt etter innsyn er godkjent");
     }
