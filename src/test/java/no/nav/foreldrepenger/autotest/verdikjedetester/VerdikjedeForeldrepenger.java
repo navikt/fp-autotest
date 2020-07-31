@@ -16,6 +16,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepe
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerAdopsjon;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -38,6 +39,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅr
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -78,8 +80,9 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
-    @DisplayName("1: Mor automatisk førstegangssøknad fødsel")
-    @Description("Mor førstegangssøknad før fødsel på termin. Sender inn IM med over 25% avvik med delvis refusjon.")
+    @DisplayName("1: Mor automatisk førstegangssøknad termin, aleneomsorg og avvik i beregning")
+    @Description("Mor førstegangssøknad før fødsel på termin. Mor har aleneomsorg og enerett. Sender inn IM med over " +
+                "25% avvik med delvis refusjon.")
     public void testcase_mor_fødsel() {
         var testscenario = opprettTestscenario("501");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -176,15 +179,38 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         vurderPerioderOpptjeningBekreftelse.setBegrunnelse("Opptjening godkjent av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
+        // Verifiser at aksjonspunkt 5042 ikke blir oprettet uten varig endring
         VurderVarigEndringEllerNyoppstartetSNBekreftelse vurderVarigEndringEllerNyoppstartetSNBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class);
         vurderVarigEndringEllerNyoppstartetSNBekreftelse
-                .setErVarigEndretNaering(true)
-                .setBruttoBeregningsgrunnlag(næringsnntekt.intValue())
-                .setBegrunnelse("Vurder varig endring for selvstendig næringsdrivende begrunnelse");
+                .setErVarigEndretNaering(false)
+                .setBegrunnelse("Ingen endring");
         saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> {
+            saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_SELVSTENDIG_NÆRINGSDRIVENDE);
+        });
+        verifiser(runtimeException.getMessage().equalsIgnoreCase("Fant ikke aksjonspunkt med kode 5042"),
+                "Har uventet aksjonspunkt: 5042");
+
+        VurderVarigEndringEllerNyoppstartetSNBekreftelse vurderVarigEndringEllerNyoppstartetSNBekreftelse1 =
+                saksbehandler.hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class);
+        vurderVarigEndringEllerNyoppstartetSNBekreftelse1
+                .setErVarigEndretNaering(true)
+                .setBegrunnelse("Vurder varig endring for selvstendig næringsdrivende begrunnelse");
+        saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse1);
+        FastsettBruttoBeregningsgrunnlagSNBekreftelse fastsettBruttoBeregningsgrunnlagSNBekreftelse =
+                saksbehandler.hentAksjonspunktbekreftelse(FastsettBruttoBeregningsgrunnlagSNBekreftelse.class);
+        fastsettBruttoBeregningsgrunnlagSNBekreftelse
+                .setBruttoBeregningsgrunnlag(næringsnntekt.intValue())
+                .setBegrunnelse("Grunnlag begrunnelse");
+        saksbehandler.bekreftAksjonspunkt(fastsettBruttoBeregningsgrunnlagSNBekreftelse);
+
+        // verifiser skjæringstidspunkt i følge søknad
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getSkjaeringstidspunktBeregning(),
+                fødselsdato.minusWeeks(3));
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         var beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
         verifiser(beregningAktivitetStatus.contains(new Kode("AKTIVITET_STATUS", "SN")),
@@ -198,6 +224,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
         verifiser(saldoer.getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
+
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
+                "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
     }
 
     @Test

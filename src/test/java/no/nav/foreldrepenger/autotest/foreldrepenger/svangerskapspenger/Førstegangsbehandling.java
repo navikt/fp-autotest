@@ -24,10 +24,11 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.TilretteleggingsErketyper;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -39,65 +40,17 @@ import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
 @Tag("svangerskapspenger")
 public class Førstegangsbehandling extends FpsakTestBase {
 
-    @Test
-    @DisplayName("Mor søker SVP - ingen tilrettelegging")
-    @Description("Mor søker SVP med ett arbeidsforhold fire uke før termin. ingen tilrettelegging")
-    public void morSøkerSvp_IngenTilrettelegging_FireUkerFørTermin_EttArbeidsforhold() {
-
-        final TestscenarioDto testscenario = opprettTestscenario("50");
-        final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
-
-        final String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        final int beløpMor = 45_000;
-
-        final Tilrettelegging tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
-                LocalDate.now(),
-                LocalDate.now().plusDays(2),
-                ArbeidsforholdErketyper.virksomhet(orgNrMor));
-
-        final SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(
-                morAktoerId, SøkersRolle.MOR,
-                LocalDate.now().plusWeeks(4),
-                Collections.singletonList(tilrettelegging));
-
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-
-        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
-
-        final InntektsmeldingBuilder inntektsmelding = lagSvangerskapspengerInntektsmelding(fnrMor, beløpMor, orgNrMor);
-        fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
-
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-
-        saksbehandler.hentFagsak(saksnummer);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-
-        var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt(beløpMor * 12, 1);
-        saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
-        beslutter.hentFagsak(saksnummer);
-
-    }
+    // Sjekk VerdikjedeSvangeskapsenger.java om det finnes en eksisterende test før du lager en ny her.
 
     @Test
     @DisplayName("Mor søker SVP med to arbeidsforhold - hel tilrettelegging")
     @Description("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
     public void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() {
 
-        final TestscenarioDto testscenario = opprettTestscenario("56");
+        final TestscenarioDto testscenario = opprettTestscenario("504");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        final LocalDate termindato = LocalDate.now().plusWeeks(4);
 
         final List<Inntektsperiode> inntektsperioder = testscenario.getScenariodata().getInntektskomponentModell()
                 .getInntektsperioder();
@@ -115,8 +68,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
                 LocalDate.now().plusWeeks(3),
                 ArbeidsforholdErketyper.virksomhet(orgnr2));
 
-        SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR,
-                LocalDate.now().plusWeeks(4),
+        SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR, termindato,
                 List.of(forsteTilrettelegging, andreTilrettelegging2));
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -131,17 +83,40 @@ public class Førstegangsbehandling extends FpsakTestBase {
         fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
-
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+
+        BeregningsresultatPeriode[] tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
+                .getPerioder();
+        verifiser(tilkjentYtelsePerioder.length == 2, "Forventer 2 perioder i tilkjent ytelse!");
+        verifiserLikhet(tilkjentYtelsePerioder[0].getFom(), LocalDate.now().minusWeeks(1));
+        verifiserLikhet(tilkjentYtelsePerioder[0].getTom(), LocalDate.now().minusDays(1));
+        verifiserLikhet(tilkjentYtelsePerioder[1].getFom(), LocalDate.now());
+        verifiserLikhet(tilkjentYtelsePerioder[1].getTom(), termindato.minusWeeks(3).minusDays(1));
+        verifiser(tilkjentYtelsePerioder[0].getAndeler().length == 1,
+                "Forventer bare en andel i første periode fordi bare et AF skal tilrettelegges i perioden");
+        verifiser(tilkjentYtelsePerioder[1].getAndeler().length == 2,
+                "Forventer bare to andeler i andre periode fordi begge AFene skal tilrettelegges i perioden");
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
+                "Foventer at hele den utbetalte dagsatsen går til søker!");
     }
 
     @Test
+    @Disabled("Samle denne testen og den over?")
     @DisplayName("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     public void mor_søker_svp_tre_arbeidsforhold_hel_halv_og_ingen_tilrettelegging() {
 
-        final TestscenarioDto testscenario = opprettTestscenario("79");
+        final TestscenarioDto testscenario = opprettTestscenario("78");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
 
@@ -185,11 +160,19 @@ public class Førstegangsbehandling extends FpsakTestBase {
                 saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
-
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+
+        // Verifisering av Beregning
         List<BeregningsgrunnlagPeriodeDto> bgPerioder = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPerioder()
                 .stream()
@@ -205,13 +188,22 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
         BeregningsgrunnlagPeriodeDto tredjePeriode = bgPerioder.get(2);
         assertThat(tredjePeriode.getDagsats()).isEqualTo(0);
+
+        // Verifisering av Tilkjent ytelse
+        BeregningsresultatPeriode[] tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
+                .getPerioder();
+        verifiser(tilkjentYtelsePerioder.length == 1, "Forventer 1 perioder i tilkjent ytelse!");
+        verifiserLikhet(tilkjentYtelsePerioder[0].getFom(), termindato.minusMonths(2));
+        verifiserLikhet(tilkjentYtelsePerioder[0].getTom(), termindato.minusWeeks(3).minusDays(1));
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(100),
+                "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver!");
     }
 
+    // TODO: Finn ut om denne skal fjernes elle ei.
     @Test
     @DisplayName("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
     public void mor_søker_svp_tre_arbeidsforhold_to_halv() {
-
         final TestscenarioDto testscenario = opprettTestscenario("79");
         final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
@@ -228,12 +220,12 @@ public class Førstegangsbehandling extends FpsakTestBase {
                 termindato.minusMonths(3),
                 termindato.minusMonths(3),
                 ArbeidsforholdErketyper.virksomhet(orgnr1),
-                BigDecimal.valueOf(70));
+                BigDecimal.valueOf(35));
         final Tilrettelegging delvisTilrettelegging2 = TilretteleggingsErketyper.delvisTilrettelegging(
                 termindato.minusMonths(2),
                 termindato.minusMonths(2),
                 ArbeidsforholdErketyper.virksomhet(orgnr2),
-                BigDecimal.valueOf(70));
+                BigDecimal.valueOf(15));
 
         SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR, termindato,
                 List.of(delvisTilrettelegging, delvisTilrettelegging2));
@@ -244,11 +236,31 @@ public class Førstegangsbehandling extends FpsakTestBase {
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
         // Inntektsmelding
-        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, 20_833, orgnr1)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(20_833));
-        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, 62_500, orgnr2)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(27_778));
+        var månedsinntekt1 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+                .getBeløp();
+        var månedsinntekt2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1)
+                .getBeløp();
+        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, månedsinntekt1, orgnr1)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt1/2));
+        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, månedsinntekt2, orgnr2)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt2/2));
         fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
+                .getDagsats(), 0, "AT jobber full deltid i sine arbeidsforhold");
+
     }
 
     @Test

@@ -29,20 +29,7 @@
 				"kode": "GIFT"
 			}
 		],
-		"medlemskap": {
-			"perioder": [
-				{
-					"fom": "now() - P1Y",
-					"tom": "now() + P3Y",
-					"besluttetDato": "now() - P1Y",
-					"land": "DEU",
-					"trygdedekning": "Full",
-					"kilde": "ANNEN",
-					"lovvalgType": "ENDL",
-					"status": "GYLD"
-				}
-			]
-		}
+		"medlemskap": {}
 	},
 	"annenPart": {
 		"@type": "annenPart",
@@ -66,7 +53,7 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P1W"
+				"fødselsdato": "now()-P2D"
 			}
 		},
 		{

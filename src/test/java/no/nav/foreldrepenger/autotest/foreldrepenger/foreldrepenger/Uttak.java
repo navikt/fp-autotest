@@ -1011,8 +1011,6 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_endringsSøknad_medGradering_FL_AAP() {
         TestscenarioDto testscenario = opprettTestscenario("30");
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStart = fødselsdato.minusWeeks(3);
         Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOgFrilansOpptjening();
@@ -1026,6 +1024,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 SøkersRolle.MOR)
                         .medFordeling(fordeling)
                         .medSpesiellOpptjening(opptjening);
+        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerMor = fordel.sendInnSøknad(
                 søknad.build(),
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),

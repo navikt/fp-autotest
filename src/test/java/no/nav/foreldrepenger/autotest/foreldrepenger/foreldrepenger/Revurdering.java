@@ -642,7 +642,7 @@ public class Revurdering extends ForeldrepengerTestBase {
             +
             " Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
     public void utsettelser_og_gradering_fra_førstegangsbehandling_skal_ikke_gå_til_manuell_behandling_ved_endringssøknad() {
-        var testscenario = opprettTestscenario("76");
+        var testscenario = opprettTestscenario("56");
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);

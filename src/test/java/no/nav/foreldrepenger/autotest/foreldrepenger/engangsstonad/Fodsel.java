@@ -36,26 +36,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 public class Fodsel extends FpsakTestBase {
 
     @Test
-    @DisplayName("Mor søker fødsel - godkjent")
-    @Description("Mor søker fødsel - godkjent happy case")
-    public void morSøkerFødselGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
-
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
-
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
-    }
-
-    @Test
     @DisplayName("Mor søker fødsel - avvist")
     @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i tps")
     public void morSøkerFødselAvvist() {
@@ -152,8 +132,7 @@ public class Fodsel extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
     }
 
-    // TODO (OL): Analyser hvorfor denne ikke fungerer med ny henting av
-    // aksjonspunkter.
+    // TODO (OL): Analyser hvorfor denne ikke fungerer med ny henting av aksjonspunkter.
     @Test
     @Disabled
     @DisplayName("Mor søker fødsel - beregning overstyrt")
@@ -170,6 +149,7 @@ public class Fodsel extends FpsakTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
 
         // Overstyr beregning

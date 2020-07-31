@@ -3,8 +3,7 @@
 		"inntektsperioder": [
 			{
 				"fom": "now() - P2Y",
-				"tom": "now() - P2M",
-				"beløp": 60000,
+				"beløp": 50000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
@@ -12,8 +11,7 @@
 			},
 			{
 				"fom": "now() - P2Y",
-				"tom": "now() - P2M",
-				"beløp": 50000,
+				"beløp": 20000,
 				"orgnr": "973861778",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
@@ -26,7 +24,7 @@
 			{
 				"arbeidsforholdId": "ARB001-001",
 
-				"ansettelsesperiodeFom": "now() - P2Y",
+				"ansettelsesperiodeFom": "now() - P4Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "910909088",
 
@@ -34,10 +32,11 @@
 				"arbeidsavtaler" : [
 					{
 						"fomGyldighetsperiode": "now() - P2Y",
+						"sisteLønnsendringsdato": "now() - P1M",
 						"avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "30",
-						"stillingsprosent" : 50,
-						"beregnetAntallTimerPerUke": "20"
+						"stillingsprosent" : 70,
+						"beregnetAntallTimerPerUke": "30"
 					}
 				]
 
@@ -45,18 +44,42 @@
 			{
 				"arbeidsforholdId": "ARB001-002",
 
-				"ansettelsesperiodeFom": "now() - P2Y",
+				"ansettelsesperiodeFom": "now() - P4Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "973861778",
+
+
 				"arbeidsavtaler" : [
 					{
 						"fomGyldighetsperiode": "now() - P2Y",
+						"sisteLønnsendringsdato": "now() - P1M",
 						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "30",
-						"stillingsprosent" : 50,
-						"beregnetAntallTimerPerUke": "20"
+						"avtaltArbeidstimerPerUke": "15",
+						"stillingsprosent" : 30,
+						"beregnetAntallTimerPerUke": "15"
 					}
 				]
+
+			},
+			{
+				"arbeidsforholdId": "ARB001-003",
+
+				"ansettelsesperiodeFom": "now() - P4Y",
+				"arbeidsforholdstype": "ordinaertArbeidsforhold",
+				"arbeidsgiverOrgnr": "991779493",
+
+
+				"arbeidsavtaler" : [
+					{
+						"fomGyldighetsperiode": "now() - P2Y",
+						"sisteLønnsendringsdato": "now() - P1M",
+						"avlønningstype": "fastlønn",
+						"avtaltArbeidstimerPerUke": "40",
+						"stillingsprosent" : 0,
+						"beregnetAntallTimerPerUke": "40"
+					}
+				]
+
 			}
 		]
 	},

@@ -35,7 +35,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     @DisplayName("1: Mor søker fullt uttak med inntekt under 6G")
     @Description("Mor søker ingen tilrettelegging for en 100% stilling med inntekt over 6G.")
     public void morSøkerIngenTilretteleggingInntektOver6GTest() {
-        var testscenario = opprettTestscenario("500");
+        var testscenario = opprettTestscenario("501");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
         var orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
@@ -94,7 +94,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                         .getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen beregnes ut i fra årsinntekten og 100% utbetalingsgrad!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
-                "Foventer at hele utbetalte dagsatsen går til søker!");
+                "Foventer at hele den utbetalte dagsatsen går til søker!");
 
     }
 
@@ -162,7 +162,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                         .getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
-                "Foventer at hele utbetalte dagsatsen går til søker!");
+                "Foventer at hele den utbetalte dagsatsen går til søker!");
 
     }
 
@@ -255,7 +255,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("4: Mor kombinert AT/SN søker i to omganger")
-    @Description("Mor søker i første omgang bare for AT, hvor AG ønsker full refusjon av innekt over 6G." +
+    @Description("Mor søker i første omgang bare for AF, hvor AG ønsker full refusjon av innekt over 6G." +
             "To måneder senere sender mor inn ny søknad for SN")
     public void morSøkerFørstForATOgSenereForSNTest() {
         var testscenario = opprettTestscenario("511");
@@ -391,8 +391,8 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("5: Mor har flere AG og søker fullt uttak for begge AFene")
-    @Description("Mor søker inten tilrettelegging for begge arbeidsforholdene. Begge arbeidsgiverene ønsker 100% reufsjon." +
-            "Inntekten i disse to arbeidsforholdne er samlet over 6G hvor fordelingen er 2/3 og 1/3 av inntekten.")
+    @Description("Mor søker ingen tilrettelegging for begge arbeidsforholdene. Begge arbeidsgiverene ønsker 100% reufsjon." +
+            "Inntekten i disse to arbeidsforholdene er samlet over 6G hvor fordelingen er 2/3 og 1/3 av inntekten.")
     public void morSøkerIngenTilretteleggingForToArbeidsforholdFullRefusjonTest() {
         var testscenario = opprettTestscenario("504");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
