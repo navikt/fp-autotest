@@ -20,7 +20,7 @@
 
         <aspectj.version>1.9.6</aspectj.version>
 
-        <jackson.version>2.10.3</jackson.version>
+        <jackson.version>2.11.2</jackson.version>
 
         <dokumentgenerator.version>1.0-20200327105749-73dec14</dokumentgenerator.version>
     </properties>
