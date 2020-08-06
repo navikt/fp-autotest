@@ -1320,56 +1320,6 @@ public class Fodsel extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("Mor sender inntektsmelding inn etter behandlet behandling men før foreslå vedtak")
-    @Description("Mor sender inntektsmelding inn etter behandlet behandling men før foreslå vedtak - behandling starter på nytt")
-    public void morSenderInntektsmeldingEtterInnvilgetMenFørVedtak() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-
-        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        LocalDate fødselsdato = LocalDate.now().minusWeeks(3);
-        LocalDate startDatoForeldrepenger = fødselsdato.minusWeeks(3);
-
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                startDatoForeldrepenger,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                        .getArbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                saksnummer);
-
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummer);
-
-        VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
-        vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(2, fødselsdato);
-        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
-
-        inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                startDatoForeldrepenger,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                        .getArbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                saksnummer);
-
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BEH_OPPDATERT_NYE_OPPL);
-    }
-
-    @Test
     @DisplayName("Utsettelse av forskjellige årsaker")
     @Description("Mor søker fødsel med mange utsettelseperioder. Hensikten er å sjekke at alle årsaker fungerer. Kun arbeid "
             +
