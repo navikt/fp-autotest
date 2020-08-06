@@ -111,7 +111,6 @@ public class Førstegangsbehandling extends FpsakTestBase {
     }
 
     @Test
-    @Disabled("Samle denne testen og den over?")
     @DisplayName("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     public void mor_søker_svp_tre_arbeidsforhold_hel_halv_og_ingen_tilrettelegging() {
@@ -201,7 +200,7 @@ public class Førstegangsbehandling extends FpsakTestBase {
 
     // TODO: Finn ut om denne skal fjernes elle ei.
     @Test
-    @Disabled
+    @Disabled("Samle denne testen og den over?")
     @DisplayName("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
     public void mor_søker_svp_tre_arbeidsforhold_to_halv() {
