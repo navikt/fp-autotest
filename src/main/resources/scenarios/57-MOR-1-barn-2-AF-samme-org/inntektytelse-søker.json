@@ -2,20 +2,22 @@
 	"inntektskomponent": {
 		"inntektsperioder": [
 			{
-				"fom": "now() - P15M",
-				"beløp": 50000,
+				"fom": "now() - P2Y",
+				"tom": "now() - P2M",
+				"beløp": 30000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
 				"beskrivelse": "fastloenn"
 			},
 			{
-				"fom": "now() - P15M",
-				"beløp": 60000,
-				"orgnr": "994884174",
+				"fom": "now() - P3Y",
+				"tom": "now() - P2M",
+				"beløp": 15000,
+				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
-				"beskrivelse": "fastloenn"
+				"beskrivelse": "testbeskrivelsesomfungererennsålenge"
 			}
 		]
 	},
@@ -24,33 +26,32 @@
 			{
 				"arbeidsforholdId": "ARB001-001",
 
-				"ansettelsesperiodeFom": "now() - P4M",
+				"ansettelsesperiodeFom": "now() - P2Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "910909088",
 				"arbeidsavtaler" : [
 					{
-						"fomGyldighetsperiode": "now() - P4M",
+						"fomGyldighetsperiode": "now() - P2Y",
 						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "30",
-						"stillingsprosent" : 40,
+						"avtaltArbeidstimerPerUke": "20",
+						"stillingsprosent" : 50,
 						"beregnetAntallTimerPerUke": "20"
 					}
 				]
-
 			},
 			{
 				"arbeidsforholdId": "ARB001-002",
 
-				"ansettelsesperiodeFom": "now() - P4Y",
+				"ansettelsesperiodeFom": "now() - P3Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
-				"arbeidsgiverOrgnr": "994884174",
+				"arbeidsgiverOrgnr": "910909088",
 				"arbeidsavtaler" : [
 					{
-						"fomGyldighetsperiode": "now() - P4Y",
+						"fomGyldighetsperiode": "now() - P3Y",
 						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "40",
-						"stillingsprosent" : 60,
-						"beregnetAntallTimerPerUke": "30"
+						"avtaltArbeidstimerPerUke": "20",
+						"stillingsprosent" : 50,
+						"beregnetAntallTimerPerUke": "20"
 					}
 				]
 			}
@@ -59,18 +60,18 @@
 	"sigrun": {
 		"inntektsår": [
 			{
-				"år": "2017",
+				"år": "2016",
 				"oppføring": [
 					{
-						"tekniskNavn": "personinntektNaering",
-						"beløp": 500000
+						"tekniskNavn": "ettellerannet",
+						"beløp": 5000
 					},
 					{
-						"tekniskNavn": "personinntektLoenn",
-						"beløp": 600000
+						"tekniskNavn": "noeannet",
+						"beløp": 6000
 					}
 				]
 			}
 		]
 	}
- }
+}

@@ -14,8 +14,8 @@
 			{
 				"@type": "ref",
 				"fom": "now() - P1Y",
-				"adresseType": "POSTADRESSE",
-				"land": "NLD"
+				"adresseType": "BOSTEDSADRESSE",
+				"land": "NOR"
 			}
 		],
 		"personstatus": [
@@ -31,6 +31,16 @@
 		],
 		"medlemskap": {
 			"perioder": [
+				{
+					"fom": "now() - P1Y",
+					"tom": "now() + P3Y",
+					"besluttetDato": "now() - P1Y",
+					"land": "DEU",
+					"trygdedekning": "Full",
+					"kilde": "ANNEN",
+					"lovvalgType": "ENDL",
+					"status": "GYLD"
+				}
 			]
 		}
 	},
@@ -56,7 +66,7 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P30D"
+				"fødselsdato": "now()-P2W"
 			}
 		},
 		{

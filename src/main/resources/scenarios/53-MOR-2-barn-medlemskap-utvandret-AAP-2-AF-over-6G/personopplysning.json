@@ -2,10 +2,10 @@
 	"søker": {
 		"@type": "søker",
 		"ident": "${for1}",
-		"fornavn": "Donaldo",
+		"fornavn": "Dolly",
 		"etternavn": "Duck",
 		"fødselsdato": "now()-P50Y",
-		"kjønn": "M",
+		"kjønn": "K",
 		"geografiskTilknytning": {
 			"type": "Land",
 			"kode": "NOR"
@@ -20,7 +20,7 @@
 		],
 		"personstatus": [
 			{
-				"kode": "BOSA",
+				"kode": "UTVA",
                 "fom": "now()-P50Y"
 			}
 		],
@@ -36,7 +36,7 @@
 					"tom": "now() + P3Y",
 					"besluttetDato": "now() - P1Y",
 					"land": "DEU",
-					"trygdedekning": "Full",
+					"trygdedekning": "IHT_Avtale",
 					"kilde": "ANNEN",
 					"lovvalgType": "ENDL",
 					"status": "GYLD"
@@ -47,10 +47,10 @@
 	"annenPart": {
 		"@type": "annenPart",
 		"ident": "${for2}",
-		"fornavn": "Dolly",
+		"fornavn": "Donaldo",
 		"etternavn": "Duck",
 		"fødselsdato": "now()-P50Y",
-		"kjønn": "K",
+		"kjønn": "M",
 		"personstatus": [
 			{
 				"kode": "BOSA",
@@ -66,7 +66,17 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P2D"
+				"fødselsdato": "now()-P7M"
+			}
+		},
+		{
+			"rolle": "BARN",
+			"til": {
+				"@type": "barn",
+				"ident": "${barn2}",
+				"fornavn": "${nevø2}",
+				"etternavn": "Duck",
+				"fødselsdato": "now()-P1M"
 			}
 		},
 		{

@@ -63,8 +63,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold og tre bortfalte naturalytelser på forskjellige tidspunkt")
     public void morSøkerFødselMedEttArbeidsforhold() {
-        TestscenarioDto testscenario = opprettTestscenario("49");
-
+        TestscenarioDto testscenario = opprettTestscenario("500");
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
@@ -365,8 +364,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned));
         InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato,orgNr)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(29_000));
-        fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
-        fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
+        fordel.sendInnInntektsmeldinger(List.of(inntektsmeldingBuilder, inntektsmeldingBuilder2), testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
@@ -480,6 +478,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
     }
 
+    //TODO: Avventer svar fra Velsvik: Fjernes, utvides?
     @Test
     @DisplayName("To arbeidsforhold samme org.")
     public void toArbeidsforholdSammeOrgEttStarterEtterStp() {
@@ -498,14 +497,14 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         String orgNr1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
         String orgNr2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(3).getArbeidsgiverOrgnr();
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned1, fnr, fpStartdato, orgNr1)
-                .medArbeidsforholdId("ARB001-003")
+                //.medArbeidsforholdId("ARB001-003")
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned1));
         InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmelding(inntektPerMåned2, fnr, fpStartdato, orgNr2)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned2));
-        fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
-        fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
+        fordel.sendInnInntektsmeldinger(List.of(inntektsmeldingBuilder, inntektsmeldingBuilder2) , testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
 
     }
 

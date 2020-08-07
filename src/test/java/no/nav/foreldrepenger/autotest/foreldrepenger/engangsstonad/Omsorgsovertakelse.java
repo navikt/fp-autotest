@@ -67,7 +67,6 @@ public class Omsorgsovertakelse extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
-        // TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
 
     @Test
@@ -172,7 +171,6 @@ public class Omsorgsovertakelse extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
-        // TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
 
     @Test
@@ -211,6 +209,5 @@ public class Omsorgsovertakelse extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
-        // TODO: Fjernet vent på brev sendt - bytte med annen assertion
     }
 }

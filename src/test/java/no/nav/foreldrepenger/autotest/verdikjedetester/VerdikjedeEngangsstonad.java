@@ -61,8 +61,7 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
         FatterVedtakBekreftelse bekreftelseFar = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelseFar.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFar);
-
-        saksbehandler.ventTilAvsluttetBehandling();
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         verifiser(saksbehandler.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse() > 0,
                 "Forventer at det utbetales mer enn 0 kr.");

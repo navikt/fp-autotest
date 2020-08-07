@@ -35,7 +35,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     @DisplayName("1: Mor søker fullt uttak med inntekt under 6G")
     @Description("Mor søker ingen tilrettelegging for en 100% stilling med inntekt over 6G.")
     public void morSøkerIngenTilretteleggingInntektOver6GTest() {
-        var testscenario = opprettTestscenario("500");
+        var testscenario = opprettTestscenario("501");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
         var orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
@@ -87,14 +87,14 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         int beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
-        verifiser(
-                saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
+        verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
                         .getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen beregnes ut i fra årsinntekten og 100% utbetalingsgrad!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
-                "Foventer at hele utbetalte dagsatsen går til søker!");
+                "Foventer at hele den utbetalte dagsatsen går til søker!");
 
     }
 
@@ -155,6 +155,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         int beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
         verifiser(
@@ -162,7 +163,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                         .getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
-                "Foventer at hele utbetalte dagsatsen går til søker!");
+                "Foventer at hele den utbetalte dagsatsen går til søker!");
 
     }
 
@@ -238,6 +239,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         double årsinntekt = Double.valueOf(månedsinntekt1) * 12;
         double utbetalingProsentFaktor = (double) (100 - tilrettelegginsprosent) / 100;
@@ -255,7 +257,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("4: Mor kombinert AT/SN søker i to omganger")
-    @Description("Mor søker i første omgang bare for AT, hvor AG ønsker full refusjon av innekt over 6G." +
+    @Description("Mor søker i første omgang bare for AF, hvor AG ønsker full refusjon av innekt over 6G." +
             "To måneder senere sender mor inn ny søknad for SN")
     public void morSøkerFørstForATOgSenereForSNTest() {
         var testscenario = opprettTestscenario("511");
@@ -283,10 +285,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 List.of(tilrettelegging1))
                         .medSpesiellOpptjening(opptjening);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummer1 = fordel.sendInnSøknad(
-                søknad1.build(),
-                søkerAktørId,
-                søkerFnr,
+        var saksnummer1 = fordel.sendInnSøknad(søknad1.build(), søkerAktørId, søkerFnr,
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
         var månedsinntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
@@ -295,12 +294,9 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .getArbeidsgiverOrgnr();
         var arbeidsforholdId = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsforholdId();
-        var inntektsmedling = lagSvangerskapspengerInntektsmelding(
-                søkerFnr,
-                månedsinntekt,
-                orgNummer)
-                        .medArbeidsforholdId(arbeidsforholdId)
-                        .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt));
+        var inntektsmedling = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt, orgNummer)
+                .medArbeidsforholdId(arbeidsforholdId)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt));
         fordel.sendInnInntektsmeldinger(
                 List.of(inntektsmedling),
                 søkerAktørId,
@@ -321,12 +317,10 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer1, false);
-
-        saksbehandler.ventTilAvsluttetBehandling();
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         int beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
-        verifiser(
-                saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
+        verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
                         .getDagsats() == beregnetDagsats,
                 "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer, 100),
@@ -391,8 +385,8 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("5: Mor har flere AG og søker fullt uttak for begge AFene")
-    @Description("Mor søker inten tilrettelegging for begge arbeidsforholdene. Begge arbeidsgiverene ønsker 100% reufsjon." +
-            "Inntekten i disse to arbeidsforholdne er samlet over 6G hvor fordelingen er 2/3 og 1/3 av inntekten.")
+    @Description("Mor søker ingen tilrettelegging for begge arbeidsforholdene. Begge arbeidsgiverene ønsker 100% reufsjon." +
+            "Inntekten i disse to arbeidsforholdene er samlet over 6G hvor fordelingen er 2/3 og 1/3 av inntekten.")
     public void morSøkerIngenTilretteleggingForToArbeidsforholdFullRefusjonTest() {
         var testscenario = opprettTestscenario("504");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -429,24 +423,18 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .getArbeidsgiverOrgnr();
         var arbeidsforholdId1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsforholdId();
-        var inntektsmedling1 = lagSvangerskapspengerInntektsmelding(
-                søkerFnr,
-                månedsinntekt1,
-                orgNummer1)
-                        .medArbeidsforholdId(arbeidsforholdId1)
-                        .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt1));
+        var inntektsmedling1 = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt1, orgNummer1)
+                .medArbeidsforholdId(arbeidsforholdId1)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt1));
         var månedsinntekt2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1)
                 .getBeløp();
         var orgNummer2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getArbeidsgiverOrgnr();
         var arbeidsforholdId2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getArbeidsforholdId();
-        var inntektsmedling2 = lagSvangerskapspengerInntektsmelding(
-                søkerFnr,
-                månedsinntekt2,
-                orgNummer2)
-                        .medArbeidsforholdId(arbeidsforholdId2)
-                        .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt2));
+        var inntektsmedling2 = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt2, orgNummer2)
+                .medArbeidsforholdId(arbeidsforholdId2)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt2));
         fordel.sendInnInntektsmeldinger(
                 List.of(inntektsmedling1, inntektsmedling2),
                 søkerAktørId,
@@ -468,6 +456,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         int beregnetDagsats = regnUtForventetDagsats(månedsinntekt1 + månedsinntekt2, tilrettelegginsprosent);
         BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
@@ -477,14 +466,12 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         double månedsinntekt = månedsinntekt1 + månedsinntekt2;
         double prosentTilArbeidsgiver1 = (Double.valueOf(månedsinntekt1) / månedsinntekt) * 100;
-        verifiser(
-                saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer1,
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer1,
                         prosentTilArbeidsgiver1),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
 
         double prosentTilArbeidforhold2 = 100 - prosentTilArbeidsgiver1;
-        verifiser(
-                saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer2,
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer2,
                         prosentTilArbeidforhold2),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
     }

@@ -122,10 +122,9 @@ public class Tilbakekreving extends FptilbakeTestBase {
     @Description("FPsak med søker under 18, kopierer verge fra FPSAK, fjerner i FPTILBAKE og legger til ny.")
     public void tilbakeKrevingMedVerge() {
         TestscenarioDto testscenario = opprettTestscenario("54");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                SøkersRolle.MOR,
-                LocalDate.now().minusDays(30L));
+        var aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
