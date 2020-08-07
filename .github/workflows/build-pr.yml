@@ -26,13 +26,13 @@ jobs:
         run: |
           echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
           echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
-      - uses: actions/cache@v2.0.0
+      - uses: actions/cache@v2.1.0
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
           restore-keys: |
             ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
-      - uses: actions/setup-java@v1.3.0
+      - uses: actions/setup-java@v1.4.0
         with:
           java-version: 1.11
 
@@ -43,7 +43,7 @@ jobs:
           echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
-          echo "${{ secrets.GITHUB_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
+          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
           docker-compose up --quiet-pull --detach fpsak fpformidling fpoppdrag fptilbake
@@ -59,7 +59,7 @@ jobs:
           echo Oppe!
           echo
           echo "Tester om fpabakus er oppe"
-          timeout 90 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
+          timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
           echo "Tester om fp-sak er oppe"
@@ -85,7 +85,7 @@ jobs:
           mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
         env:
           GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'

@@ -3,7 +3,7 @@
 		"@type": "søker",
 		"ident": "${for1}",
 		"fornavn": "Dolly",
-		"etternavn": "Frilanser",
+		"etternavn": "Duck",
 		"fødselsdato": "now()-P50Y",
 		"kjønn": "K",
 		"geografiskTilknytning": {
@@ -28,7 +28,8 @@
 			{
 				"kode": "GIFT"
 			}
-		]
+		],
+		"medlemskap": {}
 	},
 	"annenPart": {
 		"@type": "annenPart",

@@ -4,7 +4,7 @@
 		"ident": "${for1}",
 		"fornavn": "Dolly",
 		"etternavn": "Duck",
-		"fødselsdato": "now()-P50Y",
+		"fødselsdato": "now()-P17Y",
 		"kjønn": "K",
 		"geografiskTilknytning": {
 			"type": "Land",
@@ -20,7 +20,7 @@
 		],
 		"personstatus": [
 			{
-				"kode": "BOSA",
+				"kode": "UTVA",
                 "fom": "now()-P50Y"
 			}
 		],
@@ -36,7 +36,7 @@
 					"tom": "now() + P3Y",
 					"besluttetDato": "now() - P1Y",
 					"land": "DEU",
-					"trygdedekning": "Full",
+					"trygdedekning": "IHT_Avtale",
 					"kilde": "ANNEN",
 					"lovvalgType": "ENDL",
 					"status": "GYLD"
@@ -66,14 +66,7 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P2D"
-			}
-		},
-		{
-			"rolle": "EKTE",
-			"til": {
-				"@type": "annenPart",
-				"ident": "${for2}"
+				"fødselsdato": "now()-P1M"
 			}
 		}
 	]

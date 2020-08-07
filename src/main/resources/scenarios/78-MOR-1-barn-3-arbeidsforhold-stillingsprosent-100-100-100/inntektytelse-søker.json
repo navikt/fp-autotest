@@ -43,7 +43,7 @@
 						"sisteLønnsendringsdato": "now() - P1M",
 						"avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "40",
-						"stillingsprosent" : 70,
+						"stillingsprosent" : 100,
 						"beregnetAntallTimerPerUke": "40"
 					}
 				]
@@ -63,7 +63,7 @@
 						"sisteLønnsendringsdato": "now() - P1M",
 						"avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "40",
-						"stillingsprosent" : 30,
+						"stillingsprosent" : 100,
 						"beregnetAntallTimerPerUke": "40"
 					}
 				]
@@ -83,7 +83,7 @@
 						"sisteLønnsendringsdato": "now() - P1M",
 						"avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "40",
-						"stillingsprosent" : 0,
+						"stillingsprosent" : 100,
 						"beregnetAntallTimerPerUke": "40"
 					}
 				]

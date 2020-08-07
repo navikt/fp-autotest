@@ -4,7 +4,7 @@
 		"ident": "${for1}",
 		"fornavn": "Dolly",
 		"etternavn": "Duck",
-		"fødselsdato": "now()-P17Y",
+		"fødselsdato": "now()-P50Y",
 		"kjønn": "K",
 		"geografiskTilknytning": {
 			"type": "Land",
@@ -20,7 +20,7 @@
 		],
 		"personstatus": [
 			{
-				"kode": "UTVA",
+				"kode": "BOSA",
                 "fom": "now()-P50Y"
 			}
 		],
@@ -29,20 +29,7 @@
 				"kode": "GIFT"
 			}
 		],
-		"medlemskap": {
-			"perioder": [
-				{
-					"fom": "now() - P1Y",
-					"tom": "now() + P3Y",
-					"besluttetDato": "now() - P1Y",
-					"land": "DEU",
-					"trygdedekning": "IHT_Avtale",
-					"kilde": "ANNEN",
-					"lovvalgType": "ENDL",
-					"status": "GYLD"
-				}
-			]
-		}
+		"medlemskap": {}
 	},
 	"annenPart": {
 		"@type": "annenPart",
@@ -66,7 +53,14 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P7M"
+				"fødselsdato": "now()-P30D"
+			}
+		},
+		{
+			"rolle": "EKTE",
+			"til": {
+				"@type": "annenPart",
+				"ident": "${for2}"
 			}
 		}
 	]

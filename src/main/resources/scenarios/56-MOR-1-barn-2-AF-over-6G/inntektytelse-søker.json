@@ -4,20 +4,20 @@
 			{
 				"fom": "now() - P2Y",
 				"tom": "now() - P2M",
-				"beløp": 30000,
+				"beløp": 60000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
 				"beskrivelse": "fastloenn"
 			},
 			{
-				"fom": "now() - P3Y",
+				"fom": "now() - P2Y",
 				"tom": "now() - P2M",
-				"beløp": 20000,
-				"orgnr": "910909088",
+				"beløp": 50000,
+				"orgnr": "973861778",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
-				"beskrivelse": "testbeskrivelsesomfungererennsålenge"
+				"beskrivelse": "fastloenn"
 			}
 		]
 	},
@@ -29,28 +29,31 @@
 				"ansettelsesperiodeFom": "now() - P2Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "910909088",
+
+
 				"arbeidsavtaler" : [
 					{
 						"fomGyldighetsperiode": "now() - P2Y",
 						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "20",
-						"stillingsprosent" : 50,
+						"avtaltArbeidstimerPerUke": "30",
+						"stillingsprosent" : 60,
 						"beregnetAntallTimerPerUke": "20"
 					}
 				]
+
 			},
 			{
 				"arbeidsforholdId": "ARB001-002",
 
-				"ansettelsesperiodeFom": "now() - P3Y",
+				"ansettelsesperiodeFom": "now() - P2Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
-				"arbeidsgiverOrgnr": "910909088",
+				"arbeidsgiverOrgnr": "973861778",
 				"arbeidsavtaler" : [
 					{
-						"fomGyldighetsperiode": "now() - P3Y",
+						"fomGyldighetsperiode": "now() - P2Y",
 						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "20",
-						"stillingsprosent" : 50,
+						"avtaltArbeidstimerPerUke": "30",
+						"stillingsprosent" : 40,
 						"beregnetAntallTimerPerUke": "20"
 					}
 				]

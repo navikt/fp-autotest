@@ -4,7 +4,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 public class VurderVarigEndringEllerNyoppstartetSNBekreftelse extends AksjonspunktBekreftelse {
 
     protected boolean erVarigEndretNaering;
-    protected int bruttoBeregningsgrunnlag;
+    protected Integer bruttoBeregningsgrunnlag = null;
 
     public VurderVarigEndringEllerNyoppstartetSNBekreftelse() {
         super();

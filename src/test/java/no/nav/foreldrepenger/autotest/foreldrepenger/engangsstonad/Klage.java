@@ -66,14 +66,14 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
+        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD");
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));
-        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
-        verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD");
 
     }
 
@@ -116,10 +116,10 @@ public class Klage extends FpsakTestBase {
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
                 "KLAGE_YTELSESVEDTAK_STADFESTET");
 
-        // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme
-        // klagebehandler.
+        // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme klagebehandler.
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
-        klageFormkravKa.godkjennAlleFormkrav()
+        klageFormkravKa
+                .godkjennAlleFormkrav()
                 .setBegrunnelse("blabla begrunnelse");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
 
@@ -137,9 +137,9 @@ public class Klage extends FpsakTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        FatterVedtakBekreftelse aksjonspunkt = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NK));
-        beslutter.bekreftAksjonspunkt(aksjonspunkt);
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
         klagebehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.velgKlageBehandling();
@@ -192,8 +192,7 @@ public class Klage extends FpsakTestBase {
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
                 "KLAGE_YTELSESVEDTAK_STADFESTET");
 
-        // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme
-        // klagebehandler.
+        // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme klagebehandler.
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
         klageFormkravKa
                 .godkjennAlleFormkrav()
@@ -212,10 +211,8 @@ public class Klage extends FpsakTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter
-                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        fatterVedtakBekreftelse
-                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NK));
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
         klagebehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -251,7 +248,6 @@ public class Klage extends FpsakTestBase {
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
         klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
-
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -279,12 +275,16 @@ public class Klage extends FpsakTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter
-                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        fatterVedtakBekreftelse
-                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDERING_AV_FORMKRAV_KLAGE_KA));
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
-        verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_AVVIST");
+
+        klagebehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        klagebehandler.hentFagsak(sakId);
+        klagebehandler.velgKlageBehandling();
+        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
+        klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
+        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_AVVIST");
     }
 
     @Test
@@ -327,7 +327,7 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD",
+        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD",
                 "Behandlingsresultat");
         verifiserKlageVurderingOmgjoer(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP()
                 .getKlageVurderingOmgjoer(), "GUNST_MEDHOLD_I_KLAGE");
@@ -368,10 +368,11 @@ public class Klage extends FpsakTestBase {
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        var fatterVedtakBekreftelse1 = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));
-        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse1);
-        verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+
+        verifiserBehandlingsresultat(beslutter.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD");
         verifiserFritekst(
                 beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
                 fritekstbrev2);
@@ -380,7 +381,6 @@ public class Klage extends FpsakTestBase {
         verifiserKlageVurderingOmgjoer(
                 beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(),
                 "DELVIS_MEDHOLD_I_KLAGE");
-        verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
     }
 
     @Step("Oppretter førstegangsvedtak")
@@ -388,7 +388,7 @@ public class Klage extends FpsakTestBase {
         // Opprette førstegangssøknad engangsstønad
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        verifiserBehandlingsresultat(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNVILGET");
+        verifiserBehandlingsresultat(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         saksbehandler.ventTilAvsluttetBehandling();
     }

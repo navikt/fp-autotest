@@ -15,4 +15,8 @@ public class Beregningsresultat {
     public int getSatsVerdi() {
         return satsVerdi;
     }
+
+    public int getAntallBarn() {
+        return antallBarn;
+    }
 }
