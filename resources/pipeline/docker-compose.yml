@@ -168,6 +168,11 @@ services:
       - "LOADBALANCER_FQDN=localhost:8030"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
       - "TEST_ONLY_DISABLE_MQ=true"
+      - "ABAC_ATTRIBUTT_APPLIKASJON=no.nav.abac.attributter.foreldrepenger"
+      - "ABAC_ATTRIBUTT_FAGSAK=no.nav.abac.attributter.foreldrepenger.fagsak"
+      - "ABAC_ATTRIBUTT_VENTEFRIST=no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist"
+      - "ABAC_ATTRIBUTT_BATCH=no.nav.abac.attributter.foreldrepenger.batch"
+      - "ABAC_ATTRIBUTT_DRIFT=no.nav.abac.attributter.foreldrepenger.drift"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
