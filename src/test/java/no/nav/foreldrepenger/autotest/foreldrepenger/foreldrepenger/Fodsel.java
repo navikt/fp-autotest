@@ -380,25 +380,20 @@ public class Fodsel extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+        InntektsmeldingBuilder inntektsmeldingEn = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 fpStartdato,
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                saksnummer);
         InntektsmeldingBuilder inntektsmeldingerTo = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 fpStartdato,
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
                         .getArbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingerTo,
+        fordel.sendInnInntektsmeldinger(
+                List.of(inntektsmeldingEn, inntektsmeldingerTo),
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 saksnummer);
@@ -608,8 +603,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 startDatoForeldrepenger,orgNr2)
                 .medArbeidsforholdId("9");
 
-        fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
-        fordel.sendInnInntektsmelding(inntektsmeldingBuilder2, testscenario, saksnummer);
+        fordel.sendInnInntektsmeldinger(List.of(inntektsmeldingBuilder,inntektsmeldingBuilder2), testscenario, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -952,25 +946,20 @@ public class Fodsel extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+        InntektsmeldingBuilder inntektsmeldingEn = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 startdatoForeldrePenger,
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
-                saksnummer);
         InntektsmeldingBuilder inntektsmeldingerTo = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 startdatoForeldrePenger,
                 testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
                         .getArbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingerTo,
+        fordel.sendInnInntektsmeldinger(
+                List.of(inntektsmeldingEn,inntektsmeldingerTo),
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 saksnummer);

@@ -240,7 +240,9 @@ public class Fordel extends Aktoer {
         for (InntektsmeldingBuilder builder : inntektsmeldinger) {
             saksnummer = sendInnInntektsmelding(builder, aktørId, fnr, saksnummer);
             if (inntektsmeldinger.size() > 1) {
-                sleep(4000); // TODO finn ut hva man må vente på her...
+                // Innteksmeldinger etter den førte returneres med en gang fordi det allerede finnes et historikkinnslag
+                // VEDLEGG_MOTTATT fra den tidligere. Vi må derfor vente litt.
+                sleep(4000); // TODO finn en bedre måte å gjøre dette på...
             }
         }
         final int gammelAntallIMF = gammelAntallIM;
