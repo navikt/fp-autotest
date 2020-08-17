@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
+import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingKlient;
+import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingResponse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
@@ -65,6 +67,7 @@ public class Saksbehandler extends Aktoer {
 
     public List<Behandling> behandlinger;
     public Behandling valgtBehandling;
+    public Kodeverk kodeverk;
 
     private FagsakKlient fagsakKlient;
     private BehandlingerKlient behandlingerKlient;
@@ -72,7 +75,8 @@ public class Saksbehandler extends Aktoer {
     private BrevKlient brevKlient;
     private HistorikkKlient historikkKlient;
     private ProsesstaskKlient prosesstaskKlient;
-    public Kodeverk kodeverk;
+    private RisikovurderingKlient risikovurderingKlient;
+
 
     public Saksbehandler() {
         super();
@@ -82,6 +86,7 @@ public class Saksbehandler extends Aktoer {
         brevKlient = new BrevKlient(session);
         historikkKlient = new HistorikkKlient(session);
         prosesstaskKlient = new ProsesstaskKlient(session);
+        risikovurderingKlient = new RisikovurderingKlient(session);
     }
 
     public Saksbehandler(Rolle rolle) {
@@ -251,9 +256,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     private void ventPåProsessering(Behandling behandling) {
-        Vent.til(() -> {
-            return verifiserProsesseringFerdig(behandling);
-        }, 90, () -> {
+        Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
             List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
             String prosessTaskList = "";
             for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
@@ -792,4 +795,25 @@ public class Saksbehandler extends Aktoer {
     public Behandling getAnnenPartBehandling() {
         return get(annenPartBehandling);
     }
+
+
+    /*
+     * Risikovurderingsklient
+     */
+    public RisikovurderingResponse getRisikovurdering(String konsumentId) {
+        return risikovurderingKlient.getRisikovurdering(konsumentId);
+    }
+    public boolean harRisikoKlassefiseringsstatus(String status, RisikovurderingResponse responseDto) {
+        return responseDto.getRisikoklasse().equalsIgnoreCase(status);
+    }
+
+    @Step("Venter til på risikovurdering")
+    public void ventTilRisikoKlassefiseringsstatus(String konsumentId) {
+        Vent.til(() -> {
+            RisikovurderingResponse response = getRisikovurdering(konsumentId);
+            return !harRisikoKlassefiseringsstatus("IKKE_KLASSIFISERT", response);
+        }, 30, "Feilet. Risikovurdering har status IKKE_KLASSIFISERT.");
+    }
+
+
 }

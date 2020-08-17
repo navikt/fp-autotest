@@ -193,7 +193,7 @@ services:
     environment:
       - "LOADBALANCER_URL=http://localhost:8075"
       - "OPENIDCONNECT_USERNAME=fprisk-localhost"
-      - "BRREG_PROXY=https://vtp:8063/rest/brreg"
+      - "BRREG_PROXY=https://vtp:8063/rest/brreg/proxy/not/implemented"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
