@@ -80,7 +80,7 @@ public class Behandling {
     }
 
     public String hentBehandlingsresultat() {
-        return behandlingsresultat.type.kode;
+        return behandlingsresultat.toString();
     }
 
     public String hentAvslagsarsak() {

@@ -187,9 +187,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setErVarigEndretNaering(false)
                 .setBegrunnelse("Ingen endring");
         saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse);
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> {
-            saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_SELVSTENDIG_NÆRINGSDRIVENDE);
-        });
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () ->
+                saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_SELVSTENDIG_NÆRINGSDRIVENDE));
         verifiser(runtimeException.getMessage().equalsIgnoreCase("Fant ikke aksjonspunkt med kode 5042"),
                 "Har uventet aksjonspunkt: 5042");
 
@@ -452,7 +451,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordelingFar)
                 .medSpesiellOpptjening(opptjeningFar);
-        // TODO: Burde søke med annenforeldre registrert i søknadden?
         var saksnummerFar = fordel.sendInnSøknad(
                 søknadFar.build(),
                 aktørIdFar,
@@ -1025,7 +1023,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerMor);
         beslutter.velgKlageBehandling();
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 

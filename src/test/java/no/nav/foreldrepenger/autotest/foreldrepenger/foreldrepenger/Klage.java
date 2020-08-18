@@ -66,12 +66,10 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         // Mellomlager og tilbakestiller
-        verifiserLikhet(
-                klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode,
+        verifiserLikhet(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode,
                 "UTFO", "Vurdering av klage");
         klagebehandler.mellomlagreOgGjennåpneKlage();
-        verifiserLikhet(
-                klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode,
+        verifiserLikhet(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode,
                 "OPPR", "Vurdering av klage");
 
         VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse1 = klagebehandler
@@ -87,23 +85,19 @@ public class Klage extends ForeldrepengerTestBase {
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP));
-        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
-        verifiserKlageVurderingOmgjoer(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(),
+        verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(),
                 "UGUNST_MEDHOLD_I_KLAGE");
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
         verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(),
                 begrunnelse);
-        verifiserFritekst(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
+        verifiserFritekst( beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
                 fritekstBrev);
-        verifiserLikhet(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageMedholdArsak(),
+        verifiserLikhet(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageMedholdArsak(),
                 "ULIK_VURDERING", "Årsak");
-        verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
 
     }
 
@@ -150,13 +144,12 @@ public class Klage extends ForeldrepengerTestBase {
                 .fritekstBrev("Fritekst brev fra KA")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
+        klagebehandler.ventTilAvsluttetBehandling();
 
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
                 "HJEMSENDE_UTEN_OPPHEVE");
-        verifiserKlageVurdering(
-                klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(),
+        verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(),
                 "HJEMSENDE_UTEN_Å_OPPHEVE");
-        verifiserBehandlingsstatus(klagebehandler.valgtBehandling.status.kode, "AVSLU");
     }
 
     @Test
@@ -172,7 +165,6 @@ public class Klage extends ForeldrepengerTestBase {
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
-
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -211,8 +203,7 @@ public class Klage extends ForeldrepengerTestBase {
         beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(),
                 "KLAGE_YTELSESVEDTAK_STADFESTET");
-        verifiserKlageVurdering(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(),
+        verifiserKlageVurdering(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(),
                 "STADFESTE_YTELSESVEDTAK");
         verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
     }
@@ -230,7 +221,6 @@ public class Klage extends ForeldrepengerTestBase {
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
-
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -264,15 +254,13 @@ public class Klage extends ForeldrepengerTestBase {
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
         beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
+        beslutter.ventTilAvsluttetBehandling();
 
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
-        verifiserKlageVurderingOmgjoer(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer(),
+        verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer(),
                 "DELVIS_MEDHOLD_I_KLAGE");
-        verifiserLikhet(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageMedholdArsak(),
+        verifiserLikhet(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageMedholdArsak(),
                 "ULIK_VURDERING");
-        verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
     }
 
     @Test
@@ -288,7 +276,6 @@ public class Klage extends ForeldrepengerTestBase {
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
-
         klagebehandler.velgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
@@ -300,15 +287,12 @@ public class Klage extends ForeldrepengerTestBase {
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter
-                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        fatterVedtakBekreftelse.setBegrunnelse("Godkjent");
-        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_AVVIST");
-        verifiserInneholder(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageFormkravResultatNFP().getAvvistArsaker(),
+        verifiserInneholder(beslutter.valgtBehandling.getKlagevurdering().getKlageFormkravResultatNFP().getAvvistArsaker(),
                 new Kode("KLAGE_AVVIST_AARSAK", "IKKE_KONKRET"));
-        verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
     }
 
     @Step("Klage: oppretter førstegangsbehandling")
