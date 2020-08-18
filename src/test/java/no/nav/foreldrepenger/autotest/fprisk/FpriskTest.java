@@ -22,7 +22,7 @@ public class FpriskTest extends FpriskTestBase {
     Logger LOG = LoggerFactory.getLogger(FpriskTest.class);
     private static final String BEHANDLINGSTEMA_FORELDREPENGER = "ab0326";
 
-    private static final String FPRISK_TOPIC_URL = "privat-foreldrepenger-fprisk-utfor-t4";
+    private static final String FPRISK_TOPIC_URL = "privat-foreldrepenger-fprisk-lokal";
 
     @Test
     @DisplayName("Sender Kafkamelding med risikovurderingsforespørsel, venter på at vurderingen blir gjort.")
