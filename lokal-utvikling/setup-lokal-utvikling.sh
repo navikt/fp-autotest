@@ -39,6 +39,10 @@ hentSedArguement () {
       replace_port_array=("9000")
       with_port_array=("9000")
       ;;
+    fprisk)
+      replace_port_array=("8080")
+      with_port_array=("8075")
+      ;;
     "")
       replace_port_array=()
       with_port_array=()

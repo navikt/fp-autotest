@@ -314,6 +314,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilRisikoKlassefiseringsstatus(saksbehandler.valgtBehandling.uuid.toString());
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*
@@ -432,6 +433,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilRisikoKlassefiseringsstatus(saksbehandler.valgtBehandling.uuid.toString());
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*
@@ -659,6 +661,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilRisikoKlassefiseringsstatus(saksbehandler.valgtBehandling.uuid.toString());
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*

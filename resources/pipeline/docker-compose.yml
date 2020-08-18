@@ -89,6 +89,7 @@ services:
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
       - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://fptilbake:8080/fptilbake/api"
+      - "FPRISK_RISIKOKLASSIFISERING_HENT_URL=https://fprisk:8080/fprisk/api/risikovurdering/hent"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
       - "LOADBALANCER_FQDN=localhost:8080"
@@ -177,6 +178,26 @@ services:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
       - "8030:8080"
+    depends_on:
+      - oracle
+      - vtp
+      - fpsak
+  fprisk:
+    image: $FPRISK_IMAGE
+    container_name: fprisk
+    restart: on-failure
+    mem_limit: 512mb
+    env_file:
+      - "fprisk_datasource.list"
+      - "common.env"
+    environment:
+      - "LOADBALANCER_URL=http://localhost:8075"
+      - "OPENIDCONNECT_USERNAME=fprisk-localhost"
+      - "BRREG_PROXY=https://vtp:8063/rest/brreg/proxy/not/implemented"
+    volumes:
+      - "~/.modig:/var/run/secrets/naisd.io"
+    ports:
+      - "8075:8080"
     depends_on:
       - oracle
       - vtp

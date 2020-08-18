@@ -15,8 +15,6 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLovligOppholdBekreftelse;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -54,15 +52,9 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
         avklarLovligOppholdBekreftelse.bekreftBrukerHarLovligOpphold();
         saksbehandler.bekreftAksjonspunkt(avklarLovligOppholdBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
 
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
-        beslutter.hentFagsak(saksnummer);
-        FatterVedtakBekreftelse bekreftelseFar = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelseFar.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFar);
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
-
         verifiser(saksbehandler.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse() > 0,
                 "Forventer at det utbetales mer enn 0 kr.");
     }

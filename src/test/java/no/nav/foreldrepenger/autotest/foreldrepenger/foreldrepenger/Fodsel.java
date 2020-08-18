@@ -673,7 +673,8 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         // Foreslå vedtak
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        var foreslåVedtakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(foreslåVedtakBekreftelse);
 
         // Totrinnskontroll
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
