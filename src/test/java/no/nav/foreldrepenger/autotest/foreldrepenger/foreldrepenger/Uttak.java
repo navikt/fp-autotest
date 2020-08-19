@@ -706,7 +706,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 uttaksperiode(FORELDREPENGER, startDato, startDato.plusWeeks(2).plusDays(1)));
 
         EndringssøknadBuilder søknadEndring = lagEndringssøknad(
-                aktørIdSøker, søkersRolle, endringsFordeling, saksnummer.toString());
+                aktørIdSøker, søkersRolle, endringsFordeling, saksnummer);
         fordel.sendInnSøknad(
                 søknadEndring.build(), aktørIdSøker, fnrSøker,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
@@ -751,7 +751,7 @@ public class Uttak extends ForeldrepengerTestBase {
                         fødselsdato.plusWeeks(10).plusDays(1), fødselsdato.plusWeeks(15)));
 
         EndringssøknadBuilder søknadE = lagEndringssøknad(aktørIdSøker, søkersRolle, fordelingEndring,
-                saksnummer.toString());
+                saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
@@ -793,7 +793,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(12).minusDays(1)));
         EndringssøknadBuilder søknadE = lagEndringssøknad(aktørIdSøker, søkersRolle, fordelingEndring,
-                saksnummer.toString());
+                saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
@@ -891,7 +891,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 aktørIdFar,
                 SøkersRolle.FAR,
                 endringFordeling,
-                String.valueOf(saksnummerFar));
+                saksnummerFar);
         fordel.sendInnSøknad(søknadEndring.build(),
                 aktørIdFar,
                 fnrFar,
@@ -1088,7 +1088,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 SøkersRolle.MOR,
                 fordelingEndring,
-                String.valueOf(saksnummerMor));
+                saksnummerMor);
         fordel.sendInnSøknad(søknadEndring.build(),
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),

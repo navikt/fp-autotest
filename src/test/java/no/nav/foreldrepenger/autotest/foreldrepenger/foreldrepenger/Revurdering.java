@@ -184,7 +184,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
         perioder.add(uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
         EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling,
-                saksnummer.toString());
+                saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
@@ -361,7 +361,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         LocalDate utsettelseTom = fødselsdato.plusWeeks(18);
         Fordeling fordelingUtsettelse = fordelingEndringssøknadUtsettelse(utsettelseFom, utsettelseTom);
         EndringssøknadBuilder endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
-                fordelingUtsettelse, saksnummer.toString());
+                fordelingUtsettelse, saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
@@ -431,7 +431,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         LocalDate graderingTom = fødselsdato.plusWeeks(23).minusDays(1);
         Fordeling fordelingGradering = fordelingEndringssøknadGradering(orgnr, graderingFom, graderingTom);
         EndringssøknadBuilder endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
-                fordelingGradering, saksnummer.toString());
+                fordelingGradering, saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
@@ -494,7 +494,7 @@ public class Revurdering extends ForeldrepengerTestBase {
                 utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødselsdato.plusWeeks(6),
                         fødselsdato.plusWeeks(10).minusDays(1)));
 
-        var søknadE = lagEndringssøknad(aktørIdSøker, søkersRolle, fordelingEndring, String.valueOf(saksnummer));
+        var søknadE = lagEndringssøknad(aktørIdSøker, søkersRolle, fordelingEndring, saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
@@ -556,7 +556,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         perioder.add(
                 uttaksperiode(FELLESPERIODE, mødrekvote.periodeTom.plusDays(1), mødrekvote.periodeTom.plusWeeks(2)));
         var søknadE = lagEndringssøknad(testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR,
-                fordelingEndringssøknad, String.valueOf(saksnummer));
+                fordelingEndringssøknad, saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
@@ -621,7 +621,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         perioder.add(
                 uttaksperiode(FELLESPERIODE, mødrekvote.periodeTom.plusDays(1), mødrekvote.periodeTom.plusWeeks(2)));
         var søknadE = lagEndringssøknad(testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR,
-                fordelingEndringssøknad, String.valueOf(saksnummer));
+                fordelingEndringssøknad, saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
@@ -681,7 +681,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         perioder.add(
                 uttaksperiode(FELLESPERIODE, utsettelse.periodeTom.plusDays(1), utsettelse.periodeTom.plusWeeks(1)));
         var søknadE = lagEndringssøknad(testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR,
-                fordelingEndringssøknad, String.valueOf(saksnummer));
+                fordelingEndringssøknad, saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
@@ -700,13 +700,10 @@ public class Revurdering extends ForeldrepengerTestBase {
 
     @Deprecated
     private Fordeling fordelingFørstegangsbehandling(LocalDate fødselsdato, LocalDate fpStartdato) {
-        Fordeling fordeling = new ObjectFactory().createFordeling();
-        fordeling.setAnnenForelderErInformert(true);
-        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)));
-        perioder.add(uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)));
-        perioder.add(uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(23).minusDays(1)));
-        return fordeling;
+        return generiskFordeling(
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(23).minusDays(1)));
     }
 
     private Fordeling fordelingEndringssøknadUtsettelse(LocalDate utsettelseFom, LocalDate utsettelseTom) {

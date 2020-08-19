@@ -65,7 +65,7 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
         Fordeling fordeling = generiskFordeling(FordelingErketyper.uttaksperiode(FELLESPERIODE,
                 fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
         EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling,
-                saksnummer.toString());
+                saksnummer);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
