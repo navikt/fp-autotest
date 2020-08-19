@@ -326,6 +326,9 @@ public class Fordel extends Aktoer {
         journalpostMottak.setDokumentTypeIdOffisiellKode(dokumentTypeIdOffisiellKode);
         journalpostMottak.setForsendelseId(UUID.randomUUID().toString());
         journalpostMottak.setDokumentKategoriOffisiellKode(dokumentKategori);
+        if (dokumentTypeIdOffisiellKode == DokumenttypeId.INNTEKTSMELDING.getKode()) {
+            journalpostMottak.setEksternReferanseId(journalpostMottak.lagUnikEksternReferanseId());
+        }
 
         if (null != xml) {
             journalpostMottak.setPayloadXml(new String(Base64.getUrlEncoder().withoutPadding().encode(xml.getBytes())));

@@ -31,7 +31,6 @@ public class JournalpostMottak {
         this.journalpostId = journalpostId;
         this.forsendelseMottatt = forsendelseMottatt;
         this.behandlingstemaOffisiellKode = behandlingstemaOffisiellKode;
-        this.eksternReferanseId = lagUnikEksternReferanseId();
     }
 
     public String getDokumentTypeIdOffisiellKode() {
@@ -66,15 +65,13 @@ public class JournalpostMottak {
         this.dokumentKategoriOffisiellKode = dokumentKategoriOffisiellKode;
     }
 
-    private String lagUnikEksternReferanseId() {
-        String signifikanteSifre = String.valueOf(inkrementForEksternReferanse);
-        StringBuilder sb = new StringBuilder();
-        while(sb.length() + signifikanteSifre.length() < 8) {
-            sb.append('0');
-        }
-        sb.append(signifikanteSifre);
+    public void setEksternReferanseId(String eksternReferanseId) {
+        this.eksternReferanseId = eksternReferanseId;
+    }
+
+    public String lagUnikEksternReferanseId() {
         inkrementForEksternReferanse++;
-        return "AR" + sb.toString();
+        return "AR" + String.format("%08d", inkrementForEksternReferanse);
     }
 
 }
