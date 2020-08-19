@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JournalpostMottak {
+    private static int inkrementForEksternReferanse = 0;
 
     protected String saksnummer;
     protected String journalpostId;
     protected String forsendelseId;
+    protected String eksternReferanseId;
     protected String behandlingstemaOffisiellKode;
     protected String dokumentTypeIdOffisiellKode;
     protected String forsendelseMottatt;
@@ -62,4 +64,14 @@ public class JournalpostMottak {
     public void setDokumentKategoriOffisiellKode(String dokumentKategoriOffisiellKode) {
         this.dokumentKategoriOffisiellKode = dokumentKategoriOffisiellKode;
     }
+
+    public void setEksternReferanseId(String eksternReferanseId) {
+        this.eksternReferanseId = eksternReferanseId;
+    }
+
+    public String lagUnikEksternReferanseId() {
+        inkrementForEksternReferanse++;
+        return "AR" + String.format("%08d", inkrementForEksternReferanse);
+    }
+
 }
