@@ -166,7 +166,7 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         List<UttakResultatPeriode> resultatPerioder = saksbehandler.valgtBehandling.getUttakResultatPerioder()
-                .getPerioderForSøker();
+                .getPerioderSøker();
         verifiser(resultatPerioder.size() == 7, "Antall perioder er ikke 7.");
         verifiser(resultatPerioder.get(0).getPeriodeResultatType().kode.equals("INNVILGET"),
                 "Perioden er ikke automatisk innvilget.");

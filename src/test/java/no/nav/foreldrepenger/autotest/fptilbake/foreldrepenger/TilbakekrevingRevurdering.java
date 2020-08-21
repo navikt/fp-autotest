@@ -73,7 +73,7 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.velgRevurderingBehandling();
-        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        saksbehandler.ventTilAvsluttetBehandling();
 
         tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);

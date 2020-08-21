@@ -58,7 +58,7 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         saksbehandler.ventTilAvsluttetBehandling();
-        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        saksbehandler.ventTilAvsluttetBehandling();
         debugFritekst("Ferdig med første behandling");
 
         // Inntektsmelding - ingen endring
@@ -70,8 +70,8 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
                 saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        verifiser(saksbehandler.harRevurderingBehandling(), "Saken har ikke opprettet revurdering.");
         saksbehandler.velgRevurderingBehandling();
+        verifiser(saksbehandler.harRevurderingBehandling(), "Saken har ikke opprettet revurdering.");
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INGEN_ENDRING",
                 "Behandlingsresultat");

@@ -9,7 +9,11 @@ public class UttakResultatPerioder {
     protected List<UttakResultatPeriode> perioderAnnenpart = List.of();
     protected List<UttakResultatPeriode> perioderSøker = List.of();
 
-    public List<UttakResultatPeriode> getPerioderForSøker() {
+    public List<UttakResultatPeriode> getPerioderAnnenpart() {
+        return perioderAnnenpart;
+    }
+
+    public List<UttakResultatPeriode> getPerioderSøker() {
         return perioderSøker;
     }
 }

@@ -429,7 +429,7 @@ public class Uttak extends ForeldrepengerTestBase {
         fordeling.permisjonsPerioder.add(før);
         fordeling.permisjonsPerioder.add(mk6);
         fordeling.graderingPeriode.add(gradering1);
-        aksjonspunktBekreftelseMor.morSøkerFødsel(fordeling, fødselsdato, fødselsdato);
+        aksjonspunktBekreftelseMor.morSøkerFødsel(fordeling, fødselsdato, fødselsdato.minusWeeks(3));
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelseMor);
 
         InntektsmeldingBuilder im = lagInntektsmelding(
@@ -638,7 +638,7 @@ public class Uttak extends ForeldrepengerTestBase {
         fordeling.permisjonsPerioder.add(fk2);
         fordeling.permisjonsPerioder.add(fk3);
         fordeling.permisjonsPerioder.add(fk4);
-        aksjonspunktBekreftelseFar.morSøkerFødsel(fordeling, fødselsdato, fødselsdato);
+        aksjonspunktBekreftelseFar.morSøkerFødsel(fordeling, fødselsdato, fødselsdato.minusWeeks(3));
 
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelseFar);
         InntektsmeldingBuilder inntektsmeldingerFar = lagInntektsmelding(
