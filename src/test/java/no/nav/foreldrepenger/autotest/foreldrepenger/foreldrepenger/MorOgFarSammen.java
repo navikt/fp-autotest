@@ -443,8 +443,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "OPPHØR");
 
         saksbehandler.hentFagsak(saksnummerFar);
-        verifiser(saksbehandler.harRevurderingBehandling(),
-                "Fars behandling fikk ikke revurdering selv med opphørt vedtak i mors behandling av endringssøknaden");
+        saksbehandler.velgRevurderingBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INGEN_ENDRING");
     }
 
@@ -483,8 +482,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 "ENDRING_I_UTTAK");
 
         saksbehandler.hentFagsak(saksnummerFar);
-        verifiser(saksbehandler.harRevurderingBehandling(),
-                "Fars behandling fikk ikke revurdering selv uten med endringer i mors behandling av endringssøknaden");
+        saksbehandler.velgRevurderingBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK");
     }
