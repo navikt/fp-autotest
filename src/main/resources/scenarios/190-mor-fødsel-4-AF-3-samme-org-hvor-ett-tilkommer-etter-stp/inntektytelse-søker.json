@@ -27,7 +27,7 @@
 				"arbeidsforholdId": "ARB001-001",
 
 				"ansettelsesperiodeFom": "now() - P12M",
-				"ansettelsesperiodeTom": "now()-P1M",
+				"ansettelsesperiodeTom": "now() - P1M",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "910909088",
 				"arbeidsavtaler" : [

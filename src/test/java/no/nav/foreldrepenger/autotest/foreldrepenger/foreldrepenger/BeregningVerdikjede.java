@@ -478,7 +478,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
     }
 
-    //TODO: Avventer svar fra Velsvik: Fjernes, utvides?
     @Test
     @DisplayName("To arbeidsforhold samme org.")
     public void toArbeidsforholdSammeOrgEttStarterEtterStp() {
@@ -497,7 +496,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         String orgNr1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
         String orgNr2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(3).getArbeidsgiverOrgnr();
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned1, fnr, fpStartdato, orgNr1)
-                //.medArbeidsforholdId("ARB001-003")
+                .medArbeidsforholdId("ARB001-004")
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned1));
         InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmelding(inntektPerMåned2, fnr, fpStartdato, orgNr2)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned2));
