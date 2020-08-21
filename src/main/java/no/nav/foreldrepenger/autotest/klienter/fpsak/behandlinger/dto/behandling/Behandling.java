@@ -63,7 +63,7 @@ public class Behandling {
     private Lazy<Tilrettelegging> tilrettelegging;
 
     public List<UttakResultatPeriode> hentUttaksperioder() {
-        return getUttakResultatPerioder().getPerioderForSøker().stream()
+        return getUttakResultatPerioder().getPerioderSøker().stream()
                 .sorted(Comparator.comparing(UttakResultatPeriode::getFom)).collect(Collectors.toList());
     }
 

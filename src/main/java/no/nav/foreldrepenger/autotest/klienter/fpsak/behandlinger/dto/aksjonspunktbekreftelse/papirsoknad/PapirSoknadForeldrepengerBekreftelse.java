@@ -59,7 +59,7 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
     public void morSøkerFødsel(FordelingDto fordeling, LocalDate fødselsdato, LocalDate mottattDato) {
         this.tidsromPermisjon = fordeling;
         this.foedselsDato = Collections.singletonList(fødselsdato);
-        this.mottattDato = mottattDato.minusWeeks(3);
+        this.mottattDato = mottattDato;
     }
 
     public void morSøkerTermin(FordelingDto fordeling, LocalDate termindato, LocalDate mottattDato,

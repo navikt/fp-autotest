@@ -536,7 +536,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 fødselsdato, fødselsdato.plusWeeks(10));
         fordeling.permisjonsPerioder.add(fpff);
         fordeling.permisjonsPerioder.add(mødrekvote);
-        aksjonspunktBekreftelse.morSøkerFødsel(fordeling, fødselsdato, fpff.periodeFom);
+        aksjonspunktBekreftelse.morSøkerFødsel(fordeling, fødselsdato, fpff.periodeFom.minusWeeks(3));
 
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
         saksbehandler.ventTilAvsluttetBehandling();

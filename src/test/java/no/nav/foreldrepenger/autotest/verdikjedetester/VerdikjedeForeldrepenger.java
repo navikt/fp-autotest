@@ -1075,8 +1075,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Test
     @DisplayName("10: Far søker adopsjon og får revurdert sak 4 måneder senere på grunn av IM med endring i refusjon.")
     @Description("Far søker adopsjon og får revurdert sak 4 måneder senere på grunn av IM med endring i refusjon. " +
-            "AG ber om full refusjon, men kommer for sent til å få alt. AG får refusjon for den inneværende måneden " +
-            "og tre måneder tilbake i tid; tiden før dette skal gå til søker.")
+            "Mens behandlingen er hos beslutter sender AG en ny korrigert IM. Behandlingen rulles tilbake. På den " +
+            "siste IM som AG sender ber AG om full refusjon, men kommer for sent til å få alt. AG får refusjon for" +
+            "den inneværende måneden og tre måneder tilbake i tid; tiden før dette skal gå til søker.")
     public void FarSøkerAdopsjon() {
         TestscenarioDto testscenario = opprettTestscenario("563");
 
@@ -1132,22 +1133,21 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
-
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+
         verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().length == 2,
                 "Forventer at det er to perioder i tilkjent ytelse. En for fedrekvote og en for fellesperioden");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
 
-        // AG sender inn en IM med endring i refusjon som skal føre til revurdering på
-        // far sin sak
+        // AG sender inn en IM med endring i refusjon som skal føre til revurdering på far sin sak.
         var inntektsmeldingEndringFar = lagInntektsmelding(
                 månedsinntektFar,
                 identFar,
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar));
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar/2));
         fordel.sendInnInntektsmelding(
                 inntektsmeldingEndringFar,
                 aktørIdFar,
@@ -1174,6 +1174,46 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         vurderTilbakekrevingVedFeilutbetalingBekreftelse.setTilbakekrevFrasøker(false);
         vurderTilbakekrevingVedFeilutbetalingBekreftelse.setBegrunnelse("AG ber om refusjon for sent til å få alt!");
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedFeilutbetalingBekreftelse);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+
+        // AG sender inn ny korrigert IM med endring i refusjon mens behandlingen er hos beslutter. Behandlingen skal
+        // rulles tilbake og behandles på nytt fra første AP i revurderingen.
+        var inntektsmeldingEndringFar2 = lagInntektsmelding(
+                månedsinntektFar,
+                identFar,
+                fpStartdatoFar,
+                orgNummerFar)
+                .medArbeidsforholdId(arbeidsforholdIdFar)
+                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar));
+        fordel.sendInnInntektsmelding(
+                inntektsmeldingEndringFar2,
+                aktørIdFar,
+                identFar,
+                saksnummerFar);
+
+        saksbehandler.hentFagsak(saksnummerFar);
+        verifiser(saksbehandler.behandlinger.size() == 2, "Fagsaken har mer enn én revurdering.");
+        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET);
+        saksbehandler.velgRevurderingBehandling();
+
+        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        vurderFaktaOmBeregningBekreftelse2
+                .leggTilRefusjonGyldighetVurdering(orgNummerFar, false)
+                .setBegrunnelse("Refusjonskrav er sendt inn for sent og skal ikke tas med i beregning!");
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
+
+        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelseRevurdering2 = saksbehandler
+                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
+        fastsettUttaksperioderManueltBekreftelseRevurdering2.innvilgManuellePerioder(
+                new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
+        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering2);
+
+        VurderTilbakekrevingVedFeilutbetalingBekreftelse vurderTilbakekrevingVedFeilutbetalingBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedFeilutbetalingBekreftelse.class);
+        vurderTilbakekrevingVedFeilutbetalingBekreftelse2.setTilbakekrevFrasøker(false);
+        vurderTilbakekrevingVedFeilutbetalingBekreftelse2.setBegrunnelse("AG ber om refusjon for sent til å få alt!");
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedFeilutbetalingBekreftelse2);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
 
@@ -1359,8 +1399,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .getBeregningResultatForeldrepenger();
         verifiser(tilkjentYtelsePerioder.getPerioder()[1].getDagsats() == 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
-        verifiser(
-                tilkjentYtelsePerioder.getPerioder()[3].getDagsats() == Math
+        verifiser(tilkjentYtelsePerioder.getPerioder()[3].getDagsats() == Math
                         .ceil(tilkjentYtelsePerioder.getPerioder()[2].getDagsats() * 0.6),
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
         verifiser(tilkjentYtelsePerioder.getPerioder()[5].getDagsats() == 0,

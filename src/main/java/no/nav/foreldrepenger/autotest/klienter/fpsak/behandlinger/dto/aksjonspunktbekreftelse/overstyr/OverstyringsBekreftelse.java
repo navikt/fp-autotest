@@ -17,11 +17,13 @@ public abstract class OverstyringsBekreftelse extends AksjonspunktBekreftelse {
         this.avslagskode = årsak;
     }
 
-    public void godkjenn() {
+    public OverstyringsBekreftelse godkjenn() {
         overstyr(true, null);
+        return this;
     }
 
-    public void avvis(Kode årsak) {
+    public OverstyringsBekreftelse avvis(Kode årsak) {
         overstyr(false, årsak.kode);
+        return this;
     }
 }

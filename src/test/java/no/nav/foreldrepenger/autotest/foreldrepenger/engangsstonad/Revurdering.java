@@ -62,7 +62,7 @@ public class Revurdering extends FpsakTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingsresultat");
 
-        saksbehandler.ventTilBehandlingsstatus("AVSLU");
+        saksbehandler.ventTilAvsluttetBehandling();
 
         saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
         saksbehandler.velgRevurderingBehandling();

@@ -81,7 +81,7 @@ public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        beslutter.ventTilBehandlingsstatus("AVSLU");
+        beslutter.ventTilAvsluttetBehandling();
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingsresultat");
     }
 }
