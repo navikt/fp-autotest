@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
@@ -13,7 +14,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -21,11 +21,13 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
+import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
@@ -33,8 +35,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -60,23 +60,26 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VENT_PÅ_SØKNAD);
         List<Behandling> behandlinger = saksbehandler.hentAlleBehandlingerForFagsak(saksnummer);
-        verifiser(behandlinger.size() == 1, "Antall behandlinger er ikke 1");
+        verifiserLikhet(behandlinger.size(),1, "Antall behandlinger er ikke 1");
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
         fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         behandlinger = saksbehandler.hentAlleBehandlingerForFagsak(saksnummer);
-        verifiser(behandlinger.size() == 1, "Antall behandlinger er ikke 1");
+        verifiserLikhet(behandlinger.size(),1, "Antall behandlinger er ikke 1");
     }
 
     @Test
     @DisplayName("Mor søker sak behandlet før inntektsmelding mottatt")
-    @Description("Mor søker og saken  blir behandlet før inntektsmelding er mottat basert på data fra inntektskomponenten, så mottas inntektsmeldingen ")
+    @Description("Mor søker og saken blir behandlet før inntektsmelding er mottat basert på data fra " +
+            "inntektskomponenten, så mottas inntektsmeldingen")
     public void MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         LocalDate termindato = LocalDate.now().minusWeeks(1);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
+        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -89,7 +92,9 @@ public class Termin extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.erSattPåVent(),
                 "Behandling er ikke satt på vent etter uten inntektsmelding");
 
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD);
         saksbehandler.gjenopptaBehandling();
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
         var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
@@ -100,25 +105,24 @@ public class Termin extends ForeldrepengerTestBase {
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                søkerIdent,
                 startDatoForeldrepenger,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                        .getArbeidsgiverOrgnr());
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                søkerIdent,
                 saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-    }
 
-    @Tag("pending")
-    @Test
-    @Disabled
-    public void MorSøkerMedEttArbeidsforholdOvergangFraYtelse() {
-        // TODO
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
     }
 
     @Test
@@ -137,21 +141,18 @@ public class Termin extends ForeldrepengerTestBase {
         // 200 - 60%
         String orgnr2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getArbeidsgiverOrgnr();
-
-        Fordeling fordeling = new Fordeling();
-        fordeling.setAnnenForelderErInformert(true);
-        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)));
-        perioder.add(uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)));
-        perioder.add(graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(6),
-                termindato.plusWeeks(9).minusDays(1), orgnr2, 40));
-        perioder.add(uttaksperiode(MØDREKVOTE, termindato.plusWeeks(9), termindato.plusWeeks(12).minusDays(1)));
-        perioder.add(graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(12),
-                termindato.plusWeeks(15).minusDays(1), orgnr1, 10));
-        perioder.add(graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(15),
-                termindato.plusWeeks(18).minusDays(1), orgnr2, 20));
-        perioder.add(graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(18),
-                termindato.plusWeeks(21).minusDays(1), orgnr1, 30));
+        var fordeling = generiskFordeling(
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)),
+                uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)),
+                graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(6),
+                        termindato.plusWeeks(9).minusDays(1), orgnr2, 40),
+                uttaksperiode(MØDREKVOTE, termindato.plusWeeks(9), termindato.plusWeeks(12).minusDays(1)),
+                graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(12),
+                        termindato.plusWeeks(15).minusDays(1), orgnr1, 10),
+                graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(15),
+                        termindato.plusWeeks(18).minusDays(1), orgnr2, 20),
+                graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(18),
+                        termindato.plusWeeks(21).minusDays(1), orgnr1, 30));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -165,6 +166,8 @@ public class Termin extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         List<UttakResultatPeriode> resultatPerioder = saksbehandler.valgtBehandling.getUttakResultatPerioder()
                 .getPerioderSøker();
         verifiser(resultatPerioder.size() == 7, "Antall perioder er ikke 7.");
@@ -194,7 +197,6 @@ public class Termin extends ForeldrepengerTestBase {
                 "Feil graderingsprosent");
         verifiser(resultatPerioder.get(6).getGradertArbeidsprosent().compareTo(BigDecimal.valueOf(30)) == 0,
                 "Feil graderingsprosent");
-        verifiser(saksbehandler.valgtBehandling.status.kode.equals("AVSLU"), "Behandlingen har ikke status avsluttet.");
     }
 
     @Test
@@ -205,10 +207,8 @@ public class Termin extends ForeldrepengerTestBase {
         testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate termindato = LocalDate.now().plusWeeks(3);
 
-        Fordeling fordeling = new Fordeling();
-        fordeling.setAnnenForelderErInformert(true);
-        List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        perioder.add(uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1)));
+        var fordeling = generiskFordeling(
+                uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1)));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -222,8 +222,7 @@ public class Termin extends ForeldrepengerTestBase {
                 testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 testscenario.getPersonopplysninger().getSøkerIdent(),
                 termindato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                        .getArbeidsgiverOrgnr());
+                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),
@@ -232,7 +231,8 @@ public class Termin extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-
+        saksbehandler.ventTilAvsluttetBehandling();
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         List<UttakResultatPeriode> resultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         verifiser(resultatPerioder.size() == 2, "Det er ikke blitt opprettet riktig antall perioder.");
         verifiser(resultatPerioder.get(0).getPeriodeResultatType().kode.equals("INNVILGET"),

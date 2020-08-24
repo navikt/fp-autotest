@@ -35,7 +35,6 @@ public class Ytelser extends ForeldrepengerTestBase {
     @Description("Mor søker fødsel og mottar sykepenger - opptjening automatisk oppfylt")
     public void morSøkerFødselMottarSykepenger() {
         TestscenarioDto testscenario = opprettTestscenario("70");
-
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -50,7 +49,6 @@ public class Ytelser extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-
         AvklarArbeidsforholdBekreftelse avklarArbeidsforholdBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
@@ -69,11 +67,12 @@ public class Ytelser extends ForeldrepengerTestBase {
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
 
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNVILGET",
+        saksbehandler.ventTilFagsakLøpende();
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET",
                 "Forventer at behandlingen er innvilget og søker får støtte om foreldrepenger.");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker!");
@@ -85,7 +84,6 @@ public class Ytelser extends ForeldrepengerTestBase {
     @Description("Mor søker fødsel og mottar sykepenger og inntekter - opptjening automatisk godkjent")
     public void morSøkerFødselMottarSykepengerOgInntekter() {
         TestscenarioDto testscenario = opprettTestscenario("72");
-
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -127,9 +125,12 @@ public class Ytelser extends ForeldrepengerTestBase {
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
-
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+
+        saksbehandler.ventTilFagsakLøpende();
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+
     }
 }
