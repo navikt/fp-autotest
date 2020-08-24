@@ -207,9 +207,9 @@ services:
     container_name: redis
     restart: on-failure
     mem_limit: 64mb
-  fpsak-frontend:
-    image: $FPSAK_FRONTEND_IMAGE
-    container_name: fpsak-frontend
+  fpfrontend:
+    image: $FP_FRONTEND_IMAGE
+    container_name: fpfrontend
     restart: on-failure
     mem_limit: 64mb
     environment:

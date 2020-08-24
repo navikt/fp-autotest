@@ -5,7 +5,7 @@
 3. Kjør `resources/keystore/make-dummy-keystore.sh`
 4. Legg til følgende i hosts-filen (på Mac/Linux: "/etc/hosts", på Windows: "C:\Windows\System32\drivers\etc\hosts"):
 ```
-127.0.0.1  fptilbake fpoppdrag fpformidling fpsak-frontend fpsak fpabakus vtp oracle postgres
+127.0.0.1  fptilbake fpoppdrag fpformidling fpfrontend fpsak fpabakus vtp oracle postgres
 ```
 
 NB. stegene over trenger du bare å gjøre en gang!
@@ -31,7 +31,7 @@ For å bruke docker-compose for lokal utvikling er det laget flere script – so
 som skal gjøre dette lettere. Scriptene som finnes der, og skal brukes til lokal utvikling, er: 
 
 1)  `lokal-utvikling-fpsak.sh`: Brukes for lokal utvikling av FPSAK.
-2)  `lokal-utvikling-fpsak-frontend.sh`: Brukes for lokal utvikling av FPSAK-FRONTEND.
+2)  `lokal-utvikling-fpfrontend.sh`: Brukes for lokal utvikling av FPFRONTEND.
 3)  `lokal-utvikling-formidling-oppdrag-tilbake-risk.sh`: Brukes for lokal utvikling av enten FPFORMIDLING, FPOPPDRAG,
 FPTILBAKE eller FPRISK; dette scriptet kjøres med argumentet fpformidling, fpoppdrag, fptilbake eller fprisk.
 4)  `setup-lokal-utvikling.sh`: Brukes for lokal utvikling hvis de over ikke skulle dekke ditt behov.
@@ -83,7 +83,7 @@ image som du har lastet ned tidligere (f.eks. for noen timer eller dager siden).
 versjon for hver gang du skriver inn kommandoet. 
 
 **NB: Her er det viktig å kjøre opp tjenestene i riktig rekkefølge. Gyldige applikasjonsnavn er: oracle, postgres, vtp, 
-fpabakus, fpsak, fpsak-frontend, fpformidling, fpoppdrag og fptilbake.**
+fpabakus, fpsak, fpfrontend, fpformidling, fpoppdrag og fptilbake.**
 
  Mer informasjon og eksempler på hvordan dette gjøres kan du finne her: [lokal utvikling eksempler](lokal-utvikling-eksempler.md).
 
