@@ -807,12 +807,12 @@ public class Saksbehandler extends Aktoer {
         return responseDto.getRisikoklasse().equalsIgnoreCase(status);
     }
 
-    @Step("Venter til på risikovurdering")
-    public void ventTilRisikoKlassefiseringsstatus(String konsumentId) {
+    @Step("Venter til risikovurdering har status: {status}")
+    public void ventTilRisikoKlassefiseringsstatus(String konsumentId, String status) {
         Vent.til(() -> {
             RisikovurderingResponse response = getRisikovurdering(konsumentId);
-            return !harRisikoKlassefiseringsstatus("IKKE_KLASSIFISERT", response);
-        }, 30, "Feilet. Risikovurdering har status IKKE_KLASSIFISERT.");
+            return harRisikoKlassefiseringsstatus(status, response);
+        }, 30, "Feilet. Fikk ikke riktig status");
     }
 
 
