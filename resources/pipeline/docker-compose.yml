@@ -107,7 +107,7 @@ services:
       - vtp
       - fpabakus
   fpformidling:
-    image: $FORMIDLING_IMAGE
+    image: $FPFORMIDLING_IMAGE
     container_name: fpformidling
     restart: on-failure
     mem_limit: 512mb
@@ -208,7 +208,7 @@ services:
     restart: on-failure
     mem_limit: 64mb
   fpfrontend:
-    image: $FP_FRONTEND_IMAGE
+    image: $FPFRONTEND_IMAGE
     container_name: fpfrontend
     restart: on-failure
     mem_limit: 64mb
