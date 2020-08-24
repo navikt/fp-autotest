@@ -4,11 +4,11 @@ gjennom testene. Dette er gjort med fokus på at det skal være enkelt og at det
 Denne fremgangsmåten vil sette opp den "minste verdikjeden". Den minste verdikjeden betyr at Docker setter bare opp de 
 nødvendige applikasjonene som trengs for å kunne kjøre testene. 
 
-*   Minste verdikjede for FPSAK: postgres, oracle, fpabakus, vtp og fpsak-frontend.
-*   IKKE minste verdikjede for FPSAK: postgres, oracle, fpabakus, vtp, fpsak-frontend, fpformidling, ...
+*   Minste verdikjede for FPSAK: postgres, oracle, fpabakus, vtp og fpfrontend.
+*   IKKE minste verdikjede for FPSAK: postgres, oracle, fpabakus, vtp, fpfrontend, fpformidling, ...
 
 
-## Eksempel 1: Setter opp den minste verdikjeden (oracle, postgres, vtp, fpabakus, fpsak, fpsak-frontend)
+## Eksempel 1: Setter opp den minste verdikjeden (oracle, postgres, vtp, fpabakus, fpsak, fpfrontend)
 Følg disse stegene for å sette opp (den minste) verdikjeden:
 
 1) Åpne terminalvinduet i Intellij eller på maskinen.

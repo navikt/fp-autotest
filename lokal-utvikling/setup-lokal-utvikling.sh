@@ -35,7 +35,7 @@ hentSedArguement () {
       replace_port_array=("8080")
       with_port_array=("8080")
       ;;
-    fpsak-frontend)
+    fpfrontend)
       replace_port_array=("9000")
       with_port_array=("9000")
       ;;
@@ -129,7 +129,7 @@ if [[ "$*" != *fpoppdrag* ]] && [[ ! "${med_applikasjon[*]}" =~ "fpoppdrag" ]]; 
   else
     sed -i.bak "s*fpoppdrag:8080*vtp:8060/rest/dummy*g" "docker-compose.yml"
   fi
-  if [[ "$*" == *fpsak-frontend* ]]; then
+  if [[ "$*" == *fpfrontend* ]]; then
     sed -i.bak "s*localhost:9000/fpoppdrag/api*vtp:8060/rest/dummy/fpoppdrag/api*g" "docker-compose.yml"
   fi
   rm docker-compose.yml.bak

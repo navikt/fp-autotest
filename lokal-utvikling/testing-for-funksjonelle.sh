@@ -17,6 +17,6 @@ else
   fi
   cp .env docker-compose-lokal/.env
 
-  docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps fpsak-frontend
-  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach fpsak-frontend
+  docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps fpfrontend
+  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach fpfrontend
 fi

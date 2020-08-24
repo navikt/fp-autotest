@@ -16,7 +16,7 @@ else
   cp .env docker-compose-lokal/.env
 
   docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps oracle fpabakus
-  docker-compose -f docker-compose-lokal/docker-compose.yml pull fpsak-frontend
-  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --scale fpsak=0 fpsak-frontend
+  docker-compose -f docker-compose-lokal/docker-compose.yml pull fpfrontend
+  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --scale fpsak=0 fpfrontend
 fi
 

@@ -9,14 +9,14 @@ er listet under.
     <ingen avhengigheter>   <----   postgres, oracle og vtp
     postgres og vtp         <----   fpabakus
     oracle og fpabakus      <----   fpsak
-    fpsak                   <----   fpformidlding/fpoppdrag/fptilbake/fpsak-frontend
+    fpsak                   <----   fpformidlding/fpoppdrag/fptilbake/fpfrontend
 
 Eksemplene nedenfor kjører opp den MINSTE verdikjeden for hver. Dette gjøres fordi det er godt kjent at en del av PCene
 har dårlig specs og ikke tåler at hele verdikjeden blir kjørt opp. Den minste verdikjeden betyr at Docker setter bare opp de 
 nødvendige applikasjonene som trengs for å kunne kjøre angitt applikasjon. 
 
 *   Minste verdikjede for FPSAK: postgres, oracle, fpabakus og vtp.
-*   IKKE minste verdikjede for FPSAK: postgres, oracle, fpabakus, vtp, fpformidling, fpsak-frontend, ...
+*   IKKE minste verdikjede for FPSAK: postgres, oracle, fpabakus, vtp, fpformidling, fpfrontend, ...
 
 Hvis en ønsker å kjøre opp hele verdikjeden med ingen applikasjoner utenfor i IDE kan `resources/pipeline/docker-compose.yml` kjøres.
 
@@ -92,7 +92,7 @@ opp først, mens FPABAKUS har avhengigheter til VTP og POSTGRES. I dette eksempe
 
 7) Kjøre deretter opp resten av verdikjeden. 
 
-    `docker-compose up --quiet-pull --detach --scale fpabakus=0 fpsak-frontend`
+    `docker-compose up --quiet-pull --detach --scale fpabakus=0 fpfrontend`
 
 
 ## Eksempel 4: Mer enn 1 applikasjon utenfor Docker Compose (e.g. FPSAK og FPFORMIDLING)
@@ -120,7 +120,7 @@ av. Her lages det ikke et script: Dette gjøres på den manuelle måten ettersom
     
 5) Kjør opp avhengighetene til FPSAK:
 
-    `docker-compose up --quiet-pull --detach --scale fpsak=0 fpsak-frontend`
+    `docker-compose up --quiet-pull --detach --scale fpsak=0 fpfrontend`
 
 6) Kjør deretter opp FPSAK i ønsket IDE.
 7) Kjør deretter opp FPFORMIDLING i ønsket IDE.
