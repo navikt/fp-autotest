@@ -37,7 +37,7 @@ jobs:
           java-version: 1.11
 
       - name: Slack Notification
-          if: always() && steps.slacknotify.outcome == 'success'
+          if: always()
           uses: rtCamp/action-slack-notify@v2.1.0
           env:
             SLACK_CHANNEL: fp-verdikjedetester
