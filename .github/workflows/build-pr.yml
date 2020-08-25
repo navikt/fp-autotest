@@ -36,6 +36,7 @@ jobs:
 
 
       - name: Notification til slack
+        if: always()
         shell: bash
         run: |
           curl -X POST --data-urlencode \
@@ -46,7 +47,6 @@ jobs:
           "text": " TEST "
           } } ],
           "icon_emoji": ":snowman:"}' ${{ secrets.SLACK_WEBHOOK }}
-
 #      - name: Setup fpsak og dens avhengigheter
 #        shell: bash
 #        run: |
