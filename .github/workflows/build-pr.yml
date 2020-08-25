@@ -22,20 +22,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.3.2
-      - name: Set cache key
-        run: |
-          echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
-          echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
-      - uses: actions/cache@v2.1.1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
-          restore-keys: |
-            ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
-      - uses: actions/setup-java@v1.4.1
-        with:
-          java-version: 1.11
-
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2.1.0
         env:
@@ -47,6 +33,19 @@ jobs:
           SLACK_USERNAME: Github Action
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_FOOTER: ''
+
+
+      - name: Notification til slack
+        shell: bash
+        run: |
+          curl -X POST --data-urlencode \
+          'payload={"channel": "#fp-verdikjedetester",
+          "username": "Github Action",
+          "blocks": [ { "type": "section", "text": {
+          "type": "mrkdwn",
+          "text": " TEST "
+          } } ],
+          "icon_emoji": ":snowman:"}' ${{ secrets.SLACK_WEBHOOK }}
 
 #      - name: Setup fpsak og dens avhengigheter
 #        shell: bash
