@@ -66,6 +66,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.FordelBeregningsgrunnlagAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.OpptjeningAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Arbeidsgiver;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
@@ -309,7 +310,7 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
 
     private FastsettEndretBeregningsgrunnlagAndel lagFastsettEndretBeregningsgrunnlagPeriode() {
         return new FastsettEndretBeregningsgrunnlagAndel(
-                new RedigerbarAndel("andel",1,"910909088","AR-0001",
+                new RedigerbarAndel("andel",1L,"910909088","AR-0001",
                         true, false, new Kode("ARBEIDSGIVER"), LocalDate.now(), LocalDate.now().minusDays(1),
                         new Kode("ARBEIDSGIVER")),
                 new FastsatteVerdier(123456,123456, new Kode("ARBEIDSGIVER")));
@@ -331,11 +332,13 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
     }
 
     private BesteberegningFødendeKvinneDto lagBesteberegningFødendeKvinneDto() {
-        return new BesteberegningFødendeKvinneDto(
-                List.of(new BesteberegningFødendeKvinneAndelDto(20_000,"ARBEIDSTAKER")),
+        var besteberegningFødendeKvinneDto = new BesteberegningFødendeKvinneDto();
+        besteberegningFødendeKvinneDto.leggTilBesteberegningAndel(
+                new BesteberegningFødendeKvinneAndelDto(20_000,"ARBEIDSTAKER"));
+        besteberegningFødendeKvinneDto.setNyDagpengeAndel(
                 new DagpengeAndelLagtTilBesteberegningDto(new FastsatteVerdierForBesteberegningDto(20_000.0,
-                        "ARBEIDSTAKER"))
-        );
+                        "ARBEIDSTAKER")));
+        return besteberegningFødendeKvinneDto;
     }
 
     private BeregningsaktivitetLagreDto lagBeregningsaktivitetLagreDto() {
@@ -374,9 +377,11 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
     }
 
     private FastsettBeregningsgrunnlagAndelDto lagFastsettBeregningsgrunnlagAndelDto() {
-        return new FastsettBeregningsgrunnlagAndelDto("andel",1, "AR-123456789", "ID-1234", true, true,
-                new Kode("2001"), LocalDate.now(), LocalDate.now().plusWeeks(1), new Kode("5001"),
-                lagFastsatteVerdierDto(), new Kode("ARBEIDSTAKER"), 40_000, 40_000);
+        var fastsettBeregningsgrunnlagAndelDto = new FastsettBeregningsgrunnlagAndelDto(
+                lagFordelBeregningsgrunnlagAndelDto(),
+                lagBeregningsgrunnlagPrStatusOgAndelDto());
+        fastsettBeregningsgrunnlagAndelDto.setFastsatteVerdier(lagFastsatteVerdierDto());
+        return fastsettBeregningsgrunnlagAndelDto;
     }
 
     private FastsatteVerdierDto lagFastsatteVerdierDto() {
@@ -413,7 +418,7 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
         beregningsgrunnlagPrStatusOgAndelDto.setErTidsbegrensetArbeidsforhold(false);
         beregningsgrunnlagPrStatusOgAndelDto.setErNyIArbeidslivet(false);
         beregningsgrunnlagPrStatusOgAndelDto.setLonnsendringIBeregningsperioden(false);
-        beregningsgrunnlagPrStatusOgAndelDto.setAndelsnr(1);
+        beregningsgrunnlagPrStatusOgAndelDto.setAndelsnr(1L);
         beregningsgrunnlagPrStatusOgAndelDto.setBesteberegningPrAar(0.0);
         beregningsgrunnlagPrStatusOgAndelDto.setInntektskategori(new Kode("INNTEKTSKATEGORI", "ARBEIDSTAKER"));
         beregningsgrunnlagPrStatusOgAndelDto.setArbeidsforhold(lagBeregningsgrunnlagArbeidsforholdDto());
@@ -436,6 +441,26 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
         beregningsgrunnlagPeriodeDto.setDagsats(1846);
         beregningsgrunnlagPeriodeDto.setBeregningsgrunnlagPrStatusOgAndel(List.of(lagBeregningsgrunnlagPrStatusOgAndelDto()));
         return beregningsgrunnlagPeriodeDto;
+    }
+
+    private FordelBeregningsgrunnlagAndelDto lagFordelBeregningsgrunnlagAndelDto() {
+        var fordelBeregningsgrunnlagAndelDto = new FordelBeregningsgrunnlagAndelDto();
+        fordelBeregningsgrunnlagAndelDto.setFordelingForrigeBehandlingPrAar(BigDecimal.valueOf(500_000));
+        fordelBeregningsgrunnlagAndelDto.setRefusjonskravPrAar(BigDecimal.ZERO);
+        fordelBeregningsgrunnlagAndelDto.setFordeltPrAar(BigDecimal.valueOf(200_000));
+        fordelBeregningsgrunnlagAndelDto.setBelopFraInntektsmeldingPrAar(BigDecimal.valueOf(250_000));
+        fordelBeregningsgrunnlagAndelDto.setFastsattForrigePrAar(BigDecimal.valueOf(300_000));
+        fordelBeregningsgrunnlagAndelDto.setRefusjonskravFraInntektsmeldingPrAar(BigDecimal.valueOf(300_000));
+        fordelBeregningsgrunnlagAndelDto.setNyttArbeidsforhold(true);
+        fordelBeregningsgrunnlagAndelDto.setArbeidsforholdType(new Kode("ARBEIDS_FORHOLD_TYPE","ARBEIDSGIVER"));
+        fordelBeregningsgrunnlagAndelDto.setAndelsnr(1L);
+        fordelBeregningsgrunnlagAndelDto.setArbeidsforhold(lagBeregningsgrunnlagArbeidsforholdDto());
+        fordelBeregningsgrunnlagAndelDto.setInntektskategori(new Kode("ARBEIDSGIVER"));
+        fordelBeregningsgrunnlagAndelDto.setAktivitetStatus(new Kode("AKTIVITET_STATUS", "AT", "Arbeidstaker"));
+        fordelBeregningsgrunnlagAndelDto.setLagtTilAvSaksbehandler(true);
+        fordelBeregningsgrunnlagAndelDto.setFastsattAvSaksbehandler(false);
+        fordelBeregningsgrunnlagAndelDto.setAndelIArbeid(List.of(0.0, 20_000.0));
+        return fordelBeregningsgrunnlagAndelDto;
     }
 
 }

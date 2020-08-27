@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BesteberegningFødendeKvinneDto {
@@ -14,13 +13,6 @@ public class BesteberegningFødendeKvinneDto {
     private DagpengeAndelLagtTilBesteberegningDto nyDagpengeAndel;
 
     public BesteberegningFødendeKvinneDto() {
-    }
-
-    @JsonCreator
-    public BesteberegningFødendeKvinneDto(List<BesteberegningFødendeKvinneAndelDto> besteberegningAndelListe,
-                                          DagpengeAndelLagtTilBesteberegningDto nyDagpengeAndel) {
-        this.besteberegningAndelListe = besteberegningAndelListe;
-        this.nyDagpengeAndel = nyDagpengeAndel;
     }
 
     public void leggTilBesteberegningAndel(BesteberegningFødendeKvinneAndelDto andel) {

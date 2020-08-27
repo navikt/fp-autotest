@@ -16,7 +16,6 @@ public class FastsatteVerdierForBesteberegningDto {
 
     @JsonCreator
     public FastsatteVerdierForBesteberegningDto(double fastsattBeløp, String inntektskategori) {
-        super();
         this.fastsattBeløp = fastsattBeløp;
         this.inntektskategori = inntektskategori;
     }

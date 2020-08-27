@@ -54,7 +54,7 @@ class BehandlingerDtoSeraliseringDeserialiseringTest extends SerializationTestBa
 
     @Test
     void BehandlingNyTest() {
-        test(new BehandlingNy(123456789L, "2003", "2001", false));
+        test(new BehandlingNy(123456789L, "BT-006", "2001", false));
     }
 
     @Test

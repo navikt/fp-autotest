@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 public class RedigerbarAndel {
 
     private String andel;
-    private int andelsnr;
+    private Long andelsnr;
     private String arbeidsgiverId;
     private String arbeidsforholdId;
     private Boolean nyAndel;
@@ -22,7 +22,7 @@ public class RedigerbarAndel {
     private Kode arbeidsforholdType;
 
 
-    public RedigerbarAndel(String andel, int andelsnr, String arbeidsgiverId, String arbeidsforholdId, Boolean nyAndel,
+    public RedigerbarAndel(String andel, Long andelsnr, String arbeidsgiverId, String arbeidsforholdId, Boolean nyAndel,
                            Boolean lagtTilAvSaksbehandler, Kode aktivitetStatus, LocalDate beregningsperiodeFom,
                            LocalDate beregningsperiodeTom, Kode arbeidsforholdType) {
         this.andel = andel;
@@ -45,11 +45,11 @@ public class RedigerbarAndel {
         this.andel = andel;
     }
 
-    public int getAndelsnr() {
+    public Long getAndelsnr() {
         return andelsnr;
     }
 
-    public void setAndelsnr(int andelsnr) {
+    public void setAndelsnr(Long andelsnr) {
         this.andelsnr = andelsnr;
     }
 

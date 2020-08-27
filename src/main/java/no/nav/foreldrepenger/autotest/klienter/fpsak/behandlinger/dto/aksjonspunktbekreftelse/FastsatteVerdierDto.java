@@ -20,18 +20,15 @@ public class FastsatteVerdierDto {
     private Boolean skalHaBesteberegning;
 
     public FastsatteVerdierDto(Integer fastsattBeløp) {
-        this.fastsattBeløp = fastsattBeløp;
+        this(null, null, fastsattBeløp, null, null, null);
     }
 
     public FastsatteVerdierDto(Integer fastsattÅrsbeløp, Kode inntektskategori) {
-        this.fastsattÅrsbeløp = fastsattÅrsbeløp;
-        this.inntektskategori = inntektskategori;
+        this(null, null, null, fastsattÅrsbeløp, inntektskategori, null);
     }
 
     public FastsatteVerdierDto(Integer fastsattÅrsbeløp, Integer refusjonPrÅr, Kode inntektskategori) {
-        this.fastsattÅrsbeløp = fastsattÅrsbeløp;
-        this.inntektskategori = inntektskategori;
-        this.refusjonPrÅr = refusjonPrÅr;
+        this(null, refusjonPrÅr, null, fastsattÅrsbeløp, inntektskategori, null);
     }
 
     @JsonCreator
