@@ -2,22 +2,24 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class FaktaOmBeregningAndelDto {
 
-    protected int andelsnr;
-    protected BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
-    protected Kode inntektskategori;
-    protected Kode aktivitetStatus;
-    protected boolean lagtTilAvSaksbehandler;
-    protected boolean fastsattAvSaksbehandler;
-    protected List<Double> andelIArbeid;
+    private Long andelsnr;
+    private BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
+    private Kode inntektskategori;
+    private Kode aktivitetStatus;
+    private boolean lagtTilAvSaksbehandler;
+    private boolean fastsattAvSaksbehandler;
+    private List<Double> andelIArbeid;
 
-    public int getAndelsnr() {
+    public Long getAndelsnr() {
         return andelsnr;
     }
 
@@ -43,5 +45,33 @@ public class FaktaOmBeregningAndelDto {
 
     public List<Double> getAndelIArbeid() {
         return andelIArbeid;
+    }
+
+    public void setAndelsnr(Long andelsnr) {
+        this.andelsnr = andelsnr;
+    }
+
+    public void setArbeidsforhold(BeregningsgrunnlagArbeidsforholdDto arbeidsforhold) {
+        this.arbeidsforhold = arbeidsforhold;
+    }
+
+    public void setInntektskategori(Kode inntektskategori) {
+        this.inntektskategori = inntektskategori;
+    }
+
+    public void setAktivitetStatus(Kode aktivitetStatus) {
+        this.aktivitetStatus = aktivitetStatus;
+    }
+
+    public void setLagtTilAvSaksbehandler(boolean lagtTilAvSaksbehandler) {
+        this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
+    }
+
+    public void setFastsattAvSaksbehandler(boolean fastsattAvSaksbehandler) {
+        this.fastsattAvSaksbehandler = fastsattAvSaksbehandler;
+    }
+
+    public void setAndelIArbeid(List<Double> andelIArbeid) {
+        this.andelIArbeid = andelIArbeid;
     }
 }

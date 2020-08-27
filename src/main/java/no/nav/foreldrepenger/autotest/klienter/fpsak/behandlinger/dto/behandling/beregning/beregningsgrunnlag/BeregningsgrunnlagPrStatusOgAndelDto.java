@@ -25,7 +25,7 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     private boolean erTidsbegrensetArbeidsforhold;
     private boolean erNyIArbeidslivet;
     private boolean lonnsendringIBeregningsperioden;
-    private int andelsnr;
+    private Long andelsnr;
     private double besteberegningPrAar;
     private Kode inntektskategori;
     private BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
@@ -145,11 +145,11 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
         this.lonnsendringIBeregningsperioden = lonnsendringIBeregningsperioden;
     }
 
-    public int getAndelsnr() {
+    public Long getAndelsnr() {
         return andelsnr;
     }
 
-    public void setAndelsnr(int andelsnr) {
+    public void setAndelsnr(Long andelsnr) {
         this.andelsnr = andelsnr;
     }
 

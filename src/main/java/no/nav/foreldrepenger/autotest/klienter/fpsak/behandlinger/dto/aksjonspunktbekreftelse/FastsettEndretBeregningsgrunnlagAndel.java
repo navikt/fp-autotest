@@ -13,8 +13,15 @@ public class FastsettEndretBeregningsgrunnlagAndel extends RedigerbarAndel {
 
     private FastsatteVerdier fastsatteVerdier;
 
+    public FastsettEndretBeregningsgrunnlagAndel(RedigerbarAndel redigerbarAndel, FastsatteVerdier fastsatteVerdier) {
+        this(redigerbarAndel.getAndel(), redigerbarAndel.getAndelsnr(), redigerbarAndel.getArbeidsgiverId(),
+                redigerbarAndel.getArbeidsforholdId(), redigerbarAndel.getNyAndel(), redigerbarAndel.getLagtTilAvSaksbehandler(),
+                redigerbarAndel.getAktivitetStatus(), redigerbarAndel.getBeregningsperiodeFom(),
+                redigerbarAndel.getBeregningsperiodeTom(), redigerbarAndel.getArbeidsforholdType(), fastsatteVerdier);
+    }
+
     @JsonCreator
-    public FastsettEndretBeregningsgrunnlagAndel(String andel, int andelsnr, String arbeidsgiverId,
+    public FastsettEndretBeregningsgrunnlagAndel(String andel, Long andelsnr, String arbeidsgiverId,
                                                  String arbeidsforholdId, Boolean nyAndel,
                                                  Boolean lagtTilAvSaksbehandler, Kode aktivitetStatus,
                                                  LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom,
@@ -23,15 +30,6 @@ public class FastsettEndretBeregningsgrunnlagAndel extends RedigerbarAndel {
                 beregningsperiodeFom, beregningsperiodeTom, arbeidsforholdType);
         this.fastsatteVerdier = fastsatteVerdier;
     }
-
-    public FastsettEndretBeregningsgrunnlagAndel(RedigerbarAndel redigerbarAndel, FastsatteVerdier fastsatteVerdier) {
-        super(redigerbarAndel.getAndel(), redigerbarAndel.getAndelsnr(), redigerbarAndel.getArbeidsgiverId(),
-                redigerbarAndel.getArbeidsforholdId(), redigerbarAndel.getNyAndel(), redigerbarAndel.getLagtTilAvSaksbehandler(),
-                redigerbarAndel.getAktivitetStatus(), redigerbarAndel.getBeregningsperiodeFom(),
-                redigerbarAndel.getBeregningsperiodeTom(), redigerbarAndel.getArbeidsforholdType());
-        this.fastsatteVerdier = fastsatteVerdier;
-    }
-
 
     public FastsatteVerdier getFastsatteVerdier() {
         return fastsatteVerdier;
