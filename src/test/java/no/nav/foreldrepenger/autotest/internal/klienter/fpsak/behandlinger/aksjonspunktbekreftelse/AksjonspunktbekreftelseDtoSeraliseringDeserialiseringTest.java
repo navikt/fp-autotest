@@ -91,7 +91,9 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
 
     @Test
     void FastsettBruttoBeregningsgrunnlagSNBekreftelseTest() {
-        test(new FastsettBruttoBeregningsgrunnlagSNBekreftelse(50000));
+        var fastsettBruttoBeregningsgrunnlagSNBekreftelse = new FastsettBruttoBeregningsgrunnlagSNBekreftelse();
+        fastsettBruttoBeregningsgrunnlagSNBekreftelse.setBruttoBeregningsgrunnlag(50_000);
+        test(fastsettBruttoBeregningsgrunnlagSNBekreftelse);
     }
 
     @Test
@@ -103,7 +105,9 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
 
     @Test
     void FastsettUttaksperioderManueltBekreftelseTest() {
-        test(new FastsettUttaksperioderManueltBekreftelse(List.of(lagUttakResultatPeriode())));
+        var fastsettUttaksperioderManueltBekreftelse = new FastsettUttaksperioderManueltBekreftelse();
+        fastsettUttaksperioderManueltBekreftelse.setPerioder(List.of(lagUttakResultatPeriode()));
+        test(fastsettUttaksperioderManueltBekreftelse);
     }
 
     @Test
@@ -114,13 +118,14 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
 
     @Test
     void FordelBeregningsgrunnlagBekreftelseTest() {
-        test(new FordelBeregningsgrunnlagBekreftelse(List.of(lagFastsettBeregningsgrunnlagPeriodeDto())));
+        var fordelBeregningsgrunnlagBekreftelse = new FordelBeregningsgrunnlagBekreftelse();
+        fordelBeregningsgrunnlagBekreftelse.setEndretBeregningsgrunnlagPerioder(List.of(lagFastsettBeregningsgrunnlagPeriodeDto()));
+        test(fordelBeregningsgrunnlagBekreftelse);
     }
 
     @Test
     void ForeslåVedtakBekreftelseTest() {
-        test(new ForeslåVedtakBekreftelse(new Kode("4001"), "fritekst", true,
-                false));
+        test(new ForeslåVedtakBekreftelse("Begrunnelse", "Overskrift", "Fritektsbrev", false));
     }
 
     @Test
@@ -139,12 +144,15 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
 
     @Test
     void MannAdoptererAleneBekreftelseTest() {
-        test(new MannAdoptererAleneBekreftelse(true));
+        var mannAdoptererAleneBekreftelse = new MannAdoptererAleneBekreftelse();
+        mannAdoptererAleneBekreftelse.bekreftMannAdoptererAlene();
+        mannAdoptererAleneBekreftelse.setBegrunnelse("Jupppp");
+        test(mannAdoptererAleneBekreftelse);
     }
 
     @Test
     void VarselOmRevurderingBekreftelseTest() {
-        test(new VarselOmRevurderingBekreftelse("Begrunnelse for varsel", "fritekst /nm", "varsel",
+        test(new VarselOmRevurderingBekreftelse("fritekst /nm", "varsel",
                 LocalDate.now(), "ARBEID"));
     }
 
@@ -223,7 +231,7 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
     @Test
     void VurderingAvOmsorgsvilkoretTest() {
         var vurderingAvOmsorgsvilkoret = new VurderingAvOmsorgsvilkoret();
-        vurderingAvOmsorgsvilkoret.bekreftAvvist(new Kode("4033"));
+        vurderingAvOmsorgsvilkoret. bekreftAvvist(new Kode("4033"));
         test(vurderingAvOmsorgsvilkoret);
     }
 
@@ -303,9 +311,9 @@ class AksjonspunktbekreftelseDtoSeraliseringDeserialiseringTest extends Serializ
 
     private FastsettEndretBeregningsgrunnlagAndel lagFastsettEndretBeregningsgrunnlagPeriode() {
         return new FastsettEndretBeregningsgrunnlagAndel(
-                new RedigerbarAndel("andel",1L,"910909088","AR-0001",
-                        true, false, new Kode("ARBEIDSGIVER"), LocalDate.now(), LocalDate.now().minusDays(1),
-                        new Kode("ARBEIDSGIVER")),
+                new RedigerbarAndel(1L,"910909088","AR-0001",
+                        true, new Kode("ARBEIDSGIVER"),new Kode("ARBEIDSGIVER"), false,
+                        LocalDate.now(), LocalDate.now().minusDays(1)),
                 new FastsatteVerdier(123456,123456, new Kode("ARBEIDSGIVER")));
     }
 

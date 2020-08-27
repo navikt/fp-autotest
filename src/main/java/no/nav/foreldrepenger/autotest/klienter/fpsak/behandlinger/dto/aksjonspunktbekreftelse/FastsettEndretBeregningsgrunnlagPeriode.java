@@ -35,21 +35,26 @@ public class FastsettEndretBeregningsgrunnlagPeriode {
 
     void leggTilAndel(BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
         if (andeler.stream().anyMatch(a -> a.getAndelsnr() == andel.getAndelsnr())) {
-            RedigerbarAndel andelInfo = new RedigerbarAndel("Andelsinfo", andel.getAndelsnr(),
+            RedigerbarAndel andelInfo = new RedigerbarAndel(andel.getAndelsnr(),
                     andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsgiverId(),
                     andel.getArbeidsforhold().getArbeidsforholdId(),
-                    true, true, andel.getAktivitetStatus(),
+                    true,
+                    andel.getAktivitetStatus(),
+                    andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsforholdType(),
+                    true,
                     andel.getBeregningsperiodeFom(),
-                    andel.getBeregningsperiodeTom(),
-                    andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsforholdType());
+                    andel.getBeregningsperiodeTom());
             andeler.add(new FastsettEndretBeregningsgrunnlagAndel(andelInfo, fastsatteVerdier));
         } else {
-            RedigerbarAndel andelInfo = new RedigerbarAndel("Andelsinfo", andel.getAndelsnr(),
-                    andel.getArbeidsforhold().getArbeidsgiverId(), andel.getArbeidsforhold().getArbeidsforholdId(),
-                    false, false,
-                    andel.getAktivitetStatus(), andel.getBeregningsperiodeFom(),
-                    andel.getBeregningsperiodeTom(),
-                    andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsforholdType());
+            RedigerbarAndel andelInfo = new RedigerbarAndel(andel.getAndelsnr(),
+                    andel.getArbeidsforhold().getArbeidsgiverId(),
+                    andel.getArbeidsforhold().getArbeidsforholdId(),
+                    false,
+                    andel.getAktivitetStatus(),
+                    andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsforholdType(),
+                    false,
+                    andel.getBeregningsperiodeFom(),
+                    andel.getBeregningsperiodeTom());
             andeler.add(new FastsettEndretBeregningsgrunnlagAndel(andelInfo, fastsatteVerdier));
         }
     }

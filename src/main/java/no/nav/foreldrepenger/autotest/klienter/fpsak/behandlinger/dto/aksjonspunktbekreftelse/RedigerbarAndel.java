@@ -10,39 +10,28 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class RedigerbarAndel {
 
-    private String andel;
     private Long andelsnr;
     private String arbeidsgiverId;
     private String arbeidsforholdId;
     private Boolean nyAndel;
-    private Boolean lagtTilAvSaksbehandler;
     private Kode aktivitetStatus;
+    private Kode arbeidsforholdType;
+    private Boolean lagtTilAvSaksbehandler;
     private LocalDate beregningsperiodeFom;
     private LocalDate beregningsperiodeTom;
-    private Kode arbeidsforholdType;
 
-
-    public RedigerbarAndel(String andel, Long andelsnr, String arbeidsgiverId, String arbeidsforholdId, Boolean nyAndel,
-                           Boolean lagtTilAvSaksbehandler, Kode aktivitetStatus, LocalDate beregningsperiodeFom,
-                           LocalDate beregningsperiodeTom, Kode arbeidsforholdType) {
-        this.andel = andel;
+    public RedigerbarAndel(Long andelsnr, String arbeidsgiverId, String arbeidsforholdId, Boolean nyAndel,
+                           Kode aktivitetStatus, Kode arbeidsforholdType, Boolean lagtTilAvSaksbehandler,
+                           LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom) {
         this.andelsnr = andelsnr;
         this.arbeidsgiverId = arbeidsgiverId;
         this.arbeidsforholdId = arbeidsforholdId;
         this.nyAndel = nyAndel;
-        this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
         this.aktivitetStatus = aktivitetStatus;
+        this.arbeidsforholdType = arbeidsforholdType;
+        this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
         this.beregningsperiodeFom = beregningsperiodeFom;
         this.beregningsperiodeTom = beregningsperiodeTom;
-        this.arbeidsforholdType = arbeidsforholdType;
-    }
-
-    public String getAndel() {
-        return andel;
-    }
-
-    public void setAndel(String andel) {
-        this.andel = andel;
     }
 
     public Long getAndelsnr() {
@@ -77,20 +66,28 @@ public class RedigerbarAndel {
         this.nyAndel = nyAndel;
     }
 
-    public Boolean getLagtTilAvSaksbehandler() {
-        return lagtTilAvSaksbehandler;
-    }
-
-    public void setLagtTilAvSaksbehandler(Boolean lagtTilAvSaksbehandler) {
-        this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
-    }
-
     public Kode getAktivitetStatus() {
         return aktivitetStatus;
     }
 
     public void setAktivitetStatus(Kode aktivitetStatus) {
         this.aktivitetStatus = aktivitetStatus;
+    }
+
+    public Kode getArbeidsforholdType() {
+        return arbeidsforholdType;
+    }
+
+    public void setArbeidsforholdType(Kode arbeidsforholdType) {
+        this.arbeidsforholdType = arbeidsforholdType;
+    }
+
+    public Boolean getLagtTilAvSaksbehandler() {
+        return lagtTilAvSaksbehandler;
+    }
+
+    public void setLagtTilAvSaksbehandler(Boolean lagtTilAvSaksbehandler) {
+        this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
     }
 
     public LocalDate getBeregningsperiodeFom() {
@@ -109,49 +106,39 @@ public class RedigerbarAndel {
         this.beregningsperiodeTom = beregningsperiodeTom;
     }
 
-    public Kode getArbeidsforholdType() {
-        return arbeidsforholdType;
-    }
-
-    public void setArbeidsforholdType(Kode arbeidsforholdType) {
-        this.arbeidsforholdType = arbeidsforholdType;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RedigerbarAndel that = (RedigerbarAndel) o;
-        return andelsnr == that.andelsnr &&
-                Objects.equals(andel, that.andel) &&
+        return Objects.equals(andelsnr, that.andelsnr) &&
                 Objects.equals(arbeidsgiverId, that.arbeidsgiverId) &&
                 Objects.equals(arbeidsforholdId, that.arbeidsforholdId) &&
                 Objects.equals(nyAndel, that.nyAndel) &&
-                Objects.equals(lagtTilAvSaksbehandler, that.lagtTilAvSaksbehandler) &&
                 Objects.equals(aktivitetStatus, that.aktivitetStatus) &&
+                Objects.equals(arbeidsforholdType, that.arbeidsforholdType) &&
+                Objects.equals(lagtTilAvSaksbehandler, that.lagtTilAvSaksbehandler) &&
                 Objects.equals(beregningsperiodeFom, that.beregningsperiodeFom) &&
-                Objects.equals(beregningsperiodeTom, that.beregningsperiodeTom) &&
-                Objects.equals(arbeidsforholdType, that.arbeidsforholdType);
+                Objects.equals(beregningsperiodeTom, that.beregningsperiodeTom);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(andel, andelsnr, arbeidsgiverId, arbeidsforholdId, nyAndel, lagtTilAvSaksbehandler, aktivitetStatus, beregningsperiodeFom, beregningsperiodeTom, arbeidsforholdType);
+        return Objects.hash(andelsnr, arbeidsgiverId, arbeidsforholdId, nyAndel, aktivitetStatus, arbeidsforholdType, lagtTilAvSaksbehandler, beregningsperiodeFom, beregningsperiodeTom);
     }
 
     @Override
     public String toString() {
         return "RedigerbarAndel{" +
-                "andel='" + andel + '\'' +
-                ", andelsnr=" + andelsnr +
+                "andelsnr=" + andelsnr +
                 ", arbeidsgiverId='" + arbeidsgiverId + '\'' +
                 ", arbeidsforholdId='" + arbeidsforholdId + '\'' +
                 ", nyAndel=" + nyAndel +
-                ", lagtTilAvSaksbehandler=" + lagtTilAvSaksbehandler +
                 ", aktivitetStatus=" + aktivitetStatus +
+                ", arbeidsforholdType=" + arbeidsforholdType +
+                ", lagtTilAvSaksbehandler=" + lagtTilAvSaksbehandler +
                 ", beregningsperiodeFom=" + beregningsperiodeFom +
                 ", beregningsperiodeTom=" + beregningsperiodeTom +
-                ", arbeidsforholdType=" + arbeidsforholdType +
                 '}';
     }
 }

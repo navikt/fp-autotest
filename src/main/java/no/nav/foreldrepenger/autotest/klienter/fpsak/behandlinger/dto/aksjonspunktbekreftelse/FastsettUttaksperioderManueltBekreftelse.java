@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
@@ -33,12 +32,12 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         super();
     }
 
-    public FastsettUttaksperioderManueltBekreftelse(@JsonProperty("perioder") List<UttakResultatPeriode> perioder) {
-        this.perioder = perioder;
-    }
-
     public List<UttakResultatPeriode> getPerioder() {
         return perioder;
+    }
+
+    public void setPerioder(List<UttakResultatPeriode> perioder) {
+        this.perioder = perioder;
     }
 
     public FastsettUttaksperioderManueltBekreftelse innvilgManuellePerioder() {

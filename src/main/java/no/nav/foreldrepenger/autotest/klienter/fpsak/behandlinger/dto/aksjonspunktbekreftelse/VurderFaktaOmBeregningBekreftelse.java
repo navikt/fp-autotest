@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -26,7 +25,6 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    @JsonCreator
     public VurderFaktaOmBeregningBekreftelse(@JsonProperty("fakta") FaktaOmBeregningLagreDto fakta) {
         this.fakta = fakta;
     }

@@ -20,25 +20,25 @@ public class FastsettBeregningsgrunnlagAndelDto extends RedigerbarAndel {
 
     public FastsettBeregningsgrunnlagAndelDto(FordelBeregningsgrunnlagAndelDto andelDto,
                                               BeregningsgrunnlagPrStatusOgAndelDto bgAndelDto) {
-        this("", andelDto.getAndelsnr(),
+        this(andelDto.getAndelsnr(),
                 andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsgiverId(),
                 andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsforholdId(),
-                false, andelDto.isLagtTilAvSaksbehandler(), andelDto.getAktivitetStatus(),
-                bgAndelDto.getBeregningsperiodeFom(), bgAndelDto.getBeregningsperiodeTom(),
-                andelDto.getArbeidsforholdType(), null, andelDto.getInntektskategori(),
+                false, andelDto.getAktivitetStatus(), andelDto.getArbeidsforholdType(),
+                andelDto.isLagtTilAvSaksbehandler(), bgAndelDto.getBeregningsperiodeFom(),
+                bgAndelDto.getBeregningsperiodeTom(), null, andelDto.getInntektskategori(),
                 andelDto.getRefusjonskravPrAar() == null ? null: andelDto.getRefusjonskravPrAar().intValue(),
                 andelDto.getFordeltPrAar() == null ? null : andelDto.getFordeltPrAar().intValue());
     }
 
     @JsonCreator
-    public FastsettBeregningsgrunnlagAndelDto(String andel, Long andelsnr, String arbeidsgiverId, String arbeidsforholdId,
-                                              Boolean nyAndel, Boolean lagtTilAvSaksbehandler, Kode aktivitetStatus,
-                                              LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom,
-                                              Kode arbeidsforholdType, FastsatteVerdierDto fastsatteVerdier,
+    public FastsettBeregningsgrunnlagAndelDto(Long andelsnr, String arbeidsgiverId, String arbeidsforholdId,
+                                              Boolean nyAndel, Kode aktivitetStatus, Kode arbeidsforholdType,
+                                              Boolean lagtTilAvSaksbehandler, LocalDate beregningsperiodeFom,
+                                              LocalDate beregningsperiodeTom, FastsatteVerdierDto fastsatteVerdier,
                                               Kode forrigeInntektskategori, Integer forrigeRefusjonPrÅr,
                                               Integer forrigeArbeidsinntektPrÅr) {
-        super(andel, andelsnr, arbeidsgiverId, arbeidsforholdId, nyAndel, lagtTilAvSaksbehandler, aktivitetStatus,
-                beregningsperiodeFom, beregningsperiodeTom, arbeidsforholdType);
+        super(andelsnr, arbeidsgiverId, arbeidsforholdId, nyAndel, aktivitetStatus, arbeidsforholdType,
+                lagtTilAvSaksbehandler, beregningsperiodeFom, beregningsperiodeTom);
         this.fastsatteVerdier = fastsatteVerdier;
         this.forrigeInntektskategori = forrigeInntektskategori;
         this.forrigeRefusjonPrÅr = forrigeRefusjonPrÅr;

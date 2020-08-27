@@ -14,20 +14,19 @@ public class FastsettEndretBeregningsgrunnlagAndel extends RedigerbarAndel {
     private FastsatteVerdier fastsatteVerdier;
 
     public FastsettEndretBeregningsgrunnlagAndel(RedigerbarAndel redigerbarAndel, FastsatteVerdier fastsatteVerdier) {
-        this(redigerbarAndel.getAndel(), redigerbarAndel.getAndelsnr(), redigerbarAndel.getArbeidsgiverId(),
-                redigerbarAndel.getArbeidsforholdId(), redigerbarAndel.getNyAndel(), redigerbarAndel.getLagtTilAvSaksbehandler(),
-                redigerbarAndel.getAktivitetStatus(), redigerbarAndel.getBeregningsperiodeFom(),
-                redigerbarAndel.getBeregningsperiodeTom(), redigerbarAndel.getArbeidsforholdType(), fastsatteVerdier);
+        this(redigerbarAndel.getAndelsnr(), redigerbarAndel.getArbeidsgiverId(),
+                redigerbarAndel.getArbeidsforholdId(), redigerbarAndel.getNyAndel(), redigerbarAndel.getAktivitetStatus(),
+                redigerbarAndel.getArbeidsforholdType(), redigerbarAndel.getLagtTilAvSaksbehandler(),
+                redigerbarAndel.getBeregningsperiodeFom(),redigerbarAndel.getBeregningsperiodeTom(), fastsatteVerdier);
     }
 
     @JsonCreator
-    public FastsettEndretBeregningsgrunnlagAndel(String andel, Long andelsnr, String arbeidsgiverId,
-                                                 String arbeidsforholdId, Boolean nyAndel,
-                                                 Boolean lagtTilAvSaksbehandler, Kode aktivitetStatus,
-                                                 LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom,
-                                                 Kode arbeidsforholdType, FastsatteVerdier fastsatteVerdier) {
-        super(andel, andelsnr, arbeidsgiverId, arbeidsforholdId, nyAndel, lagtTilAvSaksbehandler, aktivitetStatus,
-                beregningsperiodeFom, beregningsperiodeTom, arbeidsforholdType);
+    public FastsettEndretBeregningsgrunnlagAndel(Long andelsnr, String arbeidsgiverId, String arbeidsforholdId,
+                                                 Boolean nyAndel, Kode aktivitetStatus, Kode arbeidsforholdType,
+                                                 Boolean lagtTilAvSaksbehandler, LocalDate beregningsperiodeFom,
+                                                 LocalDate beregningsperiodeTom, FastsatteVerdier fastsatteVerdier) {
+        super(andelsnr, arbeidsgiverId, arbeidsforholdId, nyAndel, aktivitetStatus, arbeidsforholdType,
+                lagtTilAvSaksbehandler, beregningsperiodeFom, beregningsperiodeTom);
         this.fastsatteVerdier = fastsatteVerdier;
     }
 

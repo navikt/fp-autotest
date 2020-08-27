@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
@@ -16,12 +15,6 @@ public class VurderingAvOmsorgsvilkoret extends AksjonspunktBekreftelse {
 
     public VurderingAvOmsorgsvilkoret() {
         super();
-    }
-
-    @JsonCreator
-    public VurderingAvOmsorgsvilkoret(String avslagskode, boolean erVilkarOk) {
-        this.avslagskode = avslagskode;
-        this.erVilkarOk = erVilkarOk;
     }
 
     public String getAvslagskode() {

@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
@@ -27,26 +26,12 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
         super();
     }
 
-    public FordelBeregningsgrunnlagBekreftelse(@JsonProperty("endretBeregningsgrunnlagPerioder") List<FastsettBeregningsgrunnlagPeriodeDto> endretBeregningsgrunnlagPerioder) {
-        this.endretBeregningsgrunnlagPerioder = endretBeregningsgrunnlagPerioder;
-    }
-
     public List<FastsettBeregningsgrunnlagPeriodeDto> getEndretBeregningsgrunnlagPerioder() {
         return endretBeregningsgrunnlagPerioder;
     }
 
-    @Override
-    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        Beregningsgrunnlag beregningsgrunnlag = behandling.getBeregningsgrunnlag();
-        endretBeregningsgrunnlagPerioder = beregningsgrunnlag.getFaktaOmFordeling().getFordelBeregningsgrunnlag()
-                .getFordelBeregningsgrunnlagPerioder()
-                .stream()
-                .filter(FordelBeregningsgrunnlagPeriodeDto::isHarPeriodeAarsakGraderingEllerRefusjon)
-                .map(p -> {
-                    BeregningsgrunnlagPeriodeDto bgPeriode = beregningsgrunnlag
-                            .getBeregningsgrunnlagPeriode(p.getFom());
-                    return new FastsettBeregningsgrunnlagPeriodeDto(p, bgPeriode);
-                }).collect(Collectors.toList());
+    public void setEndretBeregningsgrunnlagPerioder(List<FastsettBeregningsgrunnlagPeriodeDto> endretBeregningsgrunnlagPerioder) {
+        this.endretBeregningsgrunnlagPerioder = endretBeregningsgrunnlagPerioder;
     }
 
     public FordelBeregningsgrunnlagBekreftelse settFastsattBeløpOgInntektskategori(LocalDate fom, int fastsattBeløp,
@@ -71,6 +56,20 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
                 .findFirst().get();
         andel.setFastsatteVerdier(new FastsatteVerdierDto(fastsattBeløp, refusjonPrÅr, inntektskategori));
         return this;
+    }
+
+    @Override
+    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
+        Beregningsgrunnlag beregningsgrunnlag = behandling.getBeregningsgrunnlag();
+        endretBeregningsgrunnlagPerioder = beregningsgrunnlag.getFaktaOmFordeling().getFordelBeregningsgrunnlag()
+                .getFordelBeregningsgrunnlagPerioder()
+                .stream()
+                .filter(FordelBeregningsgrunnlagPeriodeDto::isHarPeriodeAarsakGraderingEllerRefusjon)
+                .map(p -> {
+                    BeregningsgrunnlagPeriodeDto bgPeriode = beregningsgrunnlag
+                            .getBeregningsgrunnlagPeriode(p.getFom());
+                    return new FastsettBeregningsgrunnlagPeriodeDto(p, bgPeriode);
+                }).collect(Collectors.toList());
     }
 
     @Override

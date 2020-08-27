@@ -12,7 +12,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
 
-    private String begrunnelseForVarsel;
     private String fritekst;
     private String sendVarsel;
     private LocalDate frist;
@@ -23,16 +22,11 @@ public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
     }
 
     @JsonCreator
-    public VarselOmRevurderingBekreftelse(String begrunnelseForVarsel, String fritekst, String sendVarsel, LocalDate frist, String ventearsak) {
-        this.begrunnelseForVarsel = begrunnelseForVarsel;
+    public VarselOmRevurderingBekreftelse(String fritekst, String sendVarsel, LocalDate frist, String ventearsak) {
         this.fritekst = fritekst;
         this.sendVarsel = sendVarsel;
         this.frist = frist;
         this.ventearsak = ventearsak;
-    }
-
-    public String getBegrunnelseForVarsel() {
-        return begrunnelseForVarsel;
     }
 
     public String getFritekst() {
@@ -73,8 +67,7 @@ public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VarselOmRevurderingBekreftelse that = (VarselOmRevurderingBekreftelse) o;
-        return Objects.equals(begrunnelseForVarsel, that.begrunnelseForVarsel) &&
-                Objects.equals(fritekst, that.fritekst) &&
+        return Objects.equals(fritekst, that.fritekst) &&
                 Objects.equals(sendVarsel, that.sendVarsel) &&
                 Objects.equals(frist, that.frist) &&
                 Objects.equals(ventearsak, that.ventearsak);
@@ -82,14 +75,13 @@ public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
 
     @Override
     public int hashCode() {
-        return Objects.hash(begrunnelseForVarsel, fritekst, sendVarsel, frist, ventearsak);
+        return Objects.hash(fritekst, sendVarsel, frist, ventearsak);
     }
 
     @Override
     public String toString() {
         return "VarselOmRevurderingBekreftelse{" +
-                "begrunnelseForVarsel='" + begrunnelseForVarsel + '\'' +
-                ", fritekst='" + fritekst + '\'' +
+                "fritekst='" + fritekst + '\'' +
                 ", sendVarsel='" + sendVarsel + '\'' +
                 ", frist=" + frist +
                 ", ventearsak='" + ventearsak + '\'' +

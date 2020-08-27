@@ -13,7 +13,6 @@ public class VurderingAvForeldreansvarAndreLedd extends AksjonspunktBekreftelse 
 
     public VurderingAvForeldreansvarAndreLedd() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public Boolean getErVilkarOk() {

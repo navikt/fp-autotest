@@ -3,8 +3,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @BekreftelseKode(kode = "5006")
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -14,11 +12,6 @@ public class MannAdoptererAleneBekreftelse extends AksjonspunktBekreftelse {
 
     public MannAdoptererAleneBekreftelse() {
         super();
-    }
-
-    @JsonCreator
-    public MannAdoptererAleneBekreftelse(@JsonProperty("mannAdoptererAlene") boolean mannAdoptererAlene) {
-        this.mannAdoptererAlene = mannAdoptererAlene;
     }
 
     public boolean isMannAdoptererAlene() {
