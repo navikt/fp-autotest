@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 public class ForeslåVedtakBekreftelseUtenTotrinn extends VedtaksbrevOverstyringDto {
 
     public ForeslåVedtakBekreftelseUtenTotrinn() {
+        super();
     }
 
     public ForeslåVedtakBekreftelseUtenTotrinn(String begrunnelse, String overskrift, String fritekstBrev,
