@@ -1,0 +1,16 @@
+{
+  "modeller": [
+    {
+      "orgnummer": "910909088",
+      "navn": {
+        "navnelinje": [
+          "SHADY BIZZ"
+        ]
+      },
+      "organisasjonDetaljer": {
+        "registreringsDato": "now() - P2D",
+        "datoSistEndret": "now() - P2D"
+      }
+    }
+  ]
+}

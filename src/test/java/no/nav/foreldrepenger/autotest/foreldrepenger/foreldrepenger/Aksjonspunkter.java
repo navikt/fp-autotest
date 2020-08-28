@@ -28,7 +28,9 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaresignalerDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVilkaarForSykdomBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
@@ -306,4 +308,41 @@ public class Aksjonspunkter extends ForeldrepengerTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL);
     }
 
+    // Denne testen er avhengig av at fprisk kjører!
+    @Test
+    @DisplayName("5095 – VURDER_FARESIGNALER_KODE")
+    public void aksjonspunkt_VURDER_FARESIGNALER_KODE_5095() {
+        var testscenario = opprettTestscenario("522");
+        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørId, SøkersRolle.MOR);
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(
+                søknad.build(),
+                søkerAktørId,
+                søkerFnr,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+
+        var månedsinntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        var orgNummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(månedsinntekt, søkerFnr, fpStartdato, orgNummer);
+        fordel.sendInnInntektsmelding(
+                inntektsmelding,
+                søkerAktørId,
+                søkerFnr,
+                saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
+        vurderBeregnetInntektsAvvikBekreftelse.leggTilInntekt(800_000, 1);
+        saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
+
+        var vurderFaresignalerDto = saksbehandler.hentAksjonspunktbekreftelse(VurderFaresignalerDto.class);
+//        vurderFaresignalerDto.setHarInnvirketBehandlingen(true);
+//        vurderFaresignalerDto.setBegrunnelse("HELLO");
+//        saksbehandler.bekreftAksjonspunkt(vurderFaresignalerDto);
+    }
 }
