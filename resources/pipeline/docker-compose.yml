@@ -89,7 +89,7 @@ services:
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
       - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://fptilbake:8080/fptilbake/api"
-      - "FPRISK_RISIKOKLASSIFISERING_HENT_URL=https://fprisk:8080/fprisk/api/risikovurdering/hent"
+      - "FPRISK_RISIKOKLASSIFISERING_HENT_URL=http://fprisk:8080/fprisk/api/risikovurdering/hent"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
       - "LOADBALANCER_FQDN=localhost:8080"
@@ -173,7 +173,6 @@ services:
       - "ABAC_ATTRIBUTT_FAGSAK=no.nav.abac.attributter.foreldrepenger.fagsak"
       - "ABAC_ATTRIBUTT_VENTEFRIST=no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist"
       - "ABAC_ATTRIBUTT_BATCH=no.nav.abac.attributter.foreldrepenger.batch"
-      - "ABAC_ATTRIBUTT_DRIFT=no.nav.abac.attributter.foreldrepenger.drift"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -193,6 +192,7 @@ services:
     environment:
       - "LOADBALANCER_URL=http://localhost:8075"
       - "OPENIDCONNECT_USERNAME=fprisk-localhost"
+      - "AAREG_RS_URL=https://vtp:8063/rest/aareg-services/api/v1/arbeidstaker"
       - "BRREG_PROXY=https://vtp:8063/rest/brreg/proxy/not/implemented"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
