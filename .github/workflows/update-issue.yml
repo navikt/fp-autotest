@@ -26,6 +26,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
+          repository: ${{ github.event.client_payload.trigger }}
           issue-number: ${{ github.event.client_payload.issue-number }}
           body: /promote dev-fss q1
 
@@ -34,6 +35,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
+          repository: ${{ github.event.client_payload.trigger }}
           issue-number: ${{ github.event.client_payload.issue-number }}
           body: |
             Integrasjonstestene kjørt av fpsak-autotest feilet!
