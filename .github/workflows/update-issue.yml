@@ -19,7 +19,7 @@ jobs:
           issue-number: ${{ github.event.client_payload.issue-number }}
           body: |
             Alle testene gikk grønne!
-            Deployer ${{ github.repository }} til q1
+            Deployer ${{ github.event.client_payload.trigger }} til q1
 
       - name: Trigger deploy til q1
         if: steps.success.outcome == 'success'
@@ -41,7 +41,7 @@ jobs:
             Integrasjonstestene kjørt av fpsak-autotest feilet!
 
             Det er 4 kjente grunner til at testene feiler:
-            1) Det er en feil i ${{ github.repository }} som denne mergen har foresaket.
+            1) Det er en feil i ${{ github.event.client_payload.trigger }} som denne mergen har foresaket.
             2) Det er feil i en annen applikasjon i verdikjeden. Autotest bruker siste versjon av alle applikasjonene utenom den som trigger testene.
             3) Det er en feil i testene som må fikses.
             4) Det er en midlertidig feil med Github Action. Ofte kan dette løses med en rekjøring av testene.
@@ -50,6 +50,6 @@ jobs:
             * For å rekjøre testene finner du jobben (samme navn som applikasjonen), trykk inn på den, og deretter "Re-run jobs" oppe i høyre hjørne.
             * Ønsker du å se loggene for alle applikasjonene kan gå inn samme plass og laste ned artifaktet med navnet "logs".
 
-            På grunn av testfeil deployes IKKE ${{ github.repository }} automatisk til q1!
+            På grunn av testfeil deployes IKKE ${{ github.event.client_payload.trigger }} automatisk til q1!
 
             [1]: https://github.com/navikt/fpsak-autotest/actions
