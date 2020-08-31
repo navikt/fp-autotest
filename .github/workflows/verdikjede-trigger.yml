@@ -124,15 +124,15 @@ jobs:
             }
 
       - name: Notify slack
-        if: always()
+        if: always() && github.event_name != 'push'
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           event-type: notify-slack
           client-payload: |
             {
-            "trigger": "navikt/fp-sak",
-            "version": "4.0.0-2020.08.31.112018-de21a1a",
+            "trigger": "${{ github.event.client_payload.trigger }}",
+            "version": "${{ github.event.client_payload.version }}",
             "stack_started": "${{ env.STACK_STARTED }}",
             "test_outcome": "${{ env.TEST_OUTCOME }}",
             "test_resultat": "${{ env.TEST_RESULTAT }}"
