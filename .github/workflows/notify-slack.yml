@@ -7,7 +7,7 @@ env:
   TRIGGER:  ${{ github.event.client_payload.trigger }}
   VERSION: ${{ github.event.client_payload.version }}
   STACK_STARTED:  ${{ github.event.client_payload.stack_started }}
-  OUTCOME:  ${{ github.event.client_payload.outcome }}
+  TEST_OUTCOME:  ${{ github.event.client_payload.test_outcome }}
   TEST_RESULTAT: ${{ github.event.client_payload.test_resultat }}
 
 jobs:
@@ -17,62 +17,50 @@ jobs:
     steps:
 
       - name: Henter ut historie
-        if: env.TRIGGER != '' || env.VERSION != ''
+        id: slacknotify
         uses: actions/checkout@v2.3.2
         with:
           repository: ${{ env.TRIGGER }}
+          path: ${{ env.TRIGGER }}
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           fetch-depth: 5
 
       - name: Hent ut versjon fra forrige issue
-        if: env.TRIGGER != '' || env.VERSION != ''
+        if: always() && steps.slacknotify.outcome == 'success'
         shell: bash
         run: |
-          CURRENT_HASH=$(echo "$VERSION" | awk -F'-' '{print $3}')
-
-          curl -s "https://api.github.com/repos/$TRIGGER/issues?state=open&labels=deployment" \
-            -u "x-access-token:${{ secrets.GH_ACCESS_TOKEN }}" \
-            -H "Accept: application/vnd.github.everest-preview+json" \
-            -H "Content-Type: application/json" \
-            | sed '/'"${CURRENT_HASH}"'/,$!d' > temp.txt
-
-          PREVIOUS_HASH=$(grep -m2 '"title": "' temp.txt | tail -n1 | grep -m2 '"title": "' | cut -d '"' -f 4 | cut -d ' ' -f 3 | awk -F'-' '{print $3}')
-
+          CURRENT_HASH=$(echo "${{ env.VERSION }}" | awk -F'-' '{print $3}')
+          cd "${{ env.TRIGGER }}"
           git remote -v
           git fetch
-          echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" ${CURRENT_HASH}...${PREVIOUS_HASH})"
-
+          echo "::set-env name=DIFFERANSE::$(git log --pretty=format:"%s; author: %an" -n 1 ${CURRENT_HASH})"
 
       - name: Bygger opp slack melding
+        if: always()
         shell: bash
         run: |
-          if [ $STACK_STARTED == true ]; then
+          if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
-            if [ $TRIGGER == navikt/fp-sak ]; then
-              echo "Change title to FPSAK"
-              if [ $OUTCOME == success ]; then
+            if [ ${{ env.TRIGGER }} == navikt/fp-sak ] || [ ${{ env.TRIGGER }} == navikt/fp-abakus ] ; then
+              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+              if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
-                echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK er kjørt uten feil :rocket:"
-                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_TITLE::Autotestene er kjørt UTEN feil :rocket:"
                 echo "::set-env name=SLACK_COLOR::#37df1d"
               else
                 echo "Test failure!"
-                echo "::set-env name=SLACK_TITLE::Autotestene til FPSAK feilet :boom:"
-                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_TITLE::Autotestene feilet :boom:"
                 echo "::set-env name=SLACK_COLOR::#df1515"
               fi
-
             else
-              echo "Change title to verdikjede"
-              if [ $OUTCOME == success ]; then
+              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer:*%0A${{ env.DIFFERANSE }}"
+              if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
-                echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt uten feil :rocket:"
-                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt UTEN feil :rocket:"
                 echo "::set-env name=SLACK_COLOR::#37df1d"
               else
                 echo "Test failure!"
-                echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt med feil :boom:"
-                echo "::set-env name=SLACK_MESSAGE::*Trigger*: $TRIGGER, versjon: $VERSION%0A${TEST_RESULTAT}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*%0A$DIFFERANSE"
+                echo "::set-env name=SLACK_TITLE::Verdikjedetestene feilet :boom:"
                 echo "::set-env name=SLACK_COLOR::#df1515"
               fi
             fi
@@ -85,9 +73,10 @@ jobs:
           fi
 
       - name: Slack Notification
+        if: always()
         uses: rtCamp/action-slack-notify@v2.1.0
         env:
-          SLACK_CHANNEL: fpsak-autotest
+          SLACK_CHANNEL: fpsak-autotest-testing
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ${{ env.SLACK_TITLE }}
