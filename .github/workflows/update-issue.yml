@@ -22,7 +22,7 @@ jobs:
             Deployer ${{ github.event.client_payload.trigger }} til q1
 
       - name: Trigger deploy til q1
-        if: steps.success.outcome == 'success'
+        if: steps.success.outcome == 'success' && github.event.client_payload.trigger =! 'navikt/fp-abakus'
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
