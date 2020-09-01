@@ -43,11 +43,7 @@ jobs:
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
             if [ ${{ env.TRIGGER }} == navikt/fp-sak ] || [ ${{ env.TRIGGER }} == navikt/fp-abakus ] ; then
-              echo "::set-env name=SLACK_MESSAGE::
-                *Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A
-                *Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A
-                *Endringer*: ${{ env.DIFFERANSE }}%0A
-                *Action URL: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|url"
+              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*: ${{ env.DIFFERANSE }}%0A*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|url"
               if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
                 echo "::set-env name=SLACK_TITLE::Autotestene er kjørt UTEN feil :rocket:"
@@ -58,11 +54,7 @@ jobs:
                 echo "::set-env name=SLACK_COLOR::#df1515"
               fi
             else
-              echo "::set-env name=SLACK_MESSAGE::
-                *Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A
-                *Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A
-                *Endringer*: ${{ env.DIFFERANSE }}%0A
-                *Action URL: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|url"
+              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*: ${{ env.DIFFERANSE }}%0A*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|url"
               if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
                 echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt UTEN feil :rocket:"
@@ -76,10 +68,7 @@ jobs:
           else
             echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
             echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
-            echo "::set-env name=SLACK_MESSAGE::
-              *Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A
-              *Endringer*: ${{ env.DIFFERANSE }}%0A
-              *Action URL: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|url"
+            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A*Endringer*: ${{ env.DIFFERANSE }}%0A*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|url"
             echo "::set-env name=SLACK_COLOR::#e79a07"
           fi
 
