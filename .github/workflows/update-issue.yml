@@ -47,9 +47,9 @@ jobs:
             4) Det er en midlertidig feil med Github Action. Ofte kan dette løses med en rekjøring av testene.
 
             Ønsker du å sjekke loggene eller rekjøre testene kan du gå her: [GA-verdikjedetesten-log][1]
-            * For å rekjøre testene finner du jobben (samme navn som applikasjonen), trykk inn på den, og deretter "Re-run jobs" oppe i høyre hjørne.
+            * For å rekjøre testene trykke du på linken over og inne på denne trykker du på "Re-run jobs" oppe i høyre hjørne.
             * Ønsker du å se loggene for alle applikasjonene kan gå inn samme plass og laste ned artifaktet med navnet "logs".
 
             På grunn av testfeil deployes IKKE ${{ github.event.client_payload.trigger }} automatisk til q1!
 
-            [1]: https://github.com/navikt/fpsak-autotest/actions
+            [1]: https://github.com/navikt/fpsak-autotest/actions/runs/${{ github.event.client_payload.run_id }}

@@ -93,7 +93,8 @@ jobs:
             {
             "trigger": "${{ github.event.client_payload.trigger }}",
             "issue-number": "${{ github.event.client_payload.issue-number }}",
-            "success": "${{ env.TEST_OUTCOME }}"
+            "success": "${{ env.TEST_OUTCOME }}",
+            "run_id": "${{ github.run_id }}"
             }
 
       - name: Notify slack
