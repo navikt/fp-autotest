@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Test success
-        if: github.event.client_payload.success == 'true' && github.event.client_payload.issue-number != null
+        if: github.event.client_payload.success == 'success' && github.event.client_payload.issue-number != null
         id: success
         uses: peter-evans/create-or-update-comment@v1
         with:
