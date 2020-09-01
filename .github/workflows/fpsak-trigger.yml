@@ -65,16 +65,16 @@ jobs:
         shell: bash
         run: |
           mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak > >(tee test-result-log.txt)
-          echo "::set-env name=TEST_RESULTAT::$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)"
-          rm test-result-log.txt
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - name: Setter testresultat
-        if: always() && steps.tester.outcome != 'skipped' && steps.tester.outcome != 'cancelled'
+      - name: Henter testresultat og setter outcome
+        if: always() && env.STACK_STARTED == 'true' && steps.tester.outcome != 'skipped' && steps.tester.outcome != 'cancelled'
         shell: bash
         run: |
+          echo "::set-env name=TEST_RESULTAT::$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)"
+          rm test-result-log.txt
           if [ ${{ steps.tester.outcome }} == success ]; then
             echo "Test success!"
             echo ::set-env name=TEST_OUTCOME::success
@@ -97,7 +97,7 @@ jobs:
             }
 
       - name: Notify slack
-        if: always() && github.event_name != 'push'
+        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
@@ -108,7 +108,8 @@ jobs:
             "version": "${{ github.event.client_payload.version }}",
             "stack_started": "${{ env.STACK_STARTED }}",
             "test_outcome": "${{ env.TEST_OUTCOME }}",
-            "test_resultat": "${{ env.TEST_RESULTAT }}"
+            "test_resultat": "${{ env.TEST_RESULTAT }}",
+            "run_id": "${{ github.run_id }}"
             }
 
       - name: Generer testrapport

@@ -1,7 +1,7 @@
 name: Kjører Autotestene for verdikjeden PR
 
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths-ignore:
