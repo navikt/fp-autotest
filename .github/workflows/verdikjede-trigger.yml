@@ -1,7 +1,7 @@
 name: Kjører verdikjedetestene for verdikjeden
 
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths-ignore:
@@ -110,22 +110,21 @@ jobs:
             echo ::set-env name=TEST_OUTCOME::failure
           fi
 
-#      - name: Oppdaterer issue med testresultat
-#        if: always() && steps.tester.outcome != 'skipped' && steps.tester.outcome != 'cancelled' && github.event_name != 'push' && github.event.client_payload.issue-number != null
-#        uses: peter-evans/repository-dispatch@v1
-#        with:
-#          token: ${{ secrets.GH_ACCESS_TOKEN }}
-#          event-type: update-issue
-#          client-payload: |
-#            {
-#            "trigger": "${{ github.event.client_payload.trigger }}",
-#            "issue-number": "${{ github.event.client_payload.issue-number }}",
-#            "success": "${{ env.TEST_OUTCOME }}"
-#            }
-#        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
+      - name: Oppdaterer issue med testresultat
+        if: always() && steps.tester.outcome != 'skipped' && steps.tester.outcome != 'cancelled' && github.event_name != 'push' && github.event.client_payload.issue-number != null
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          event-type: update-issue
+          client-payload: |
+            {
+            "trigger": "${{ github.event.client_payload.trigger }}",
+            "issue-number": "${{ github.event.client_payload.issue-number }}",
+            "success": "${{ env.TEST_OUTCOME }}"
+            }
 
       - name: Notify slack
-        if: always()
+        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
