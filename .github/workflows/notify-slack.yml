@@ -46,7 +46,7 @@ jobs:
               echo "::set-env name=SLACK_MESSAGE::
                 *Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A
                 *Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A
-                *Endringer*: {{ env.DIFFERANSE }}%0A$
+                *Endringer*: ${{ env.DIFFERANSE }}%0A
                 *Action URL: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|url"
               if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
@@ -61,7 +61,7 @@ jobs:
               echo "::set-env name=SLACK_MESSAGE::
                 *Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A
                 *Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A
-                *Endringer*: {{ env.DIFFERANSE }}%0A$
+                *Endringer*: ${{ env.DIFFERANSE }}%0A
                 *Action URL: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|url"
               if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
@@ -78,7 +78,7 @@ jobs:
             echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
             echo "::set-env name=SLACK_MESSAGE::
               *Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A
-              *Endringer*: ${{ env.DIFFERANSE }} %0A
+              *Endringer*: ${{ env.DIFFERANSE }}%0A
               *Action URL: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|url"
             echo "::set-env name=SLACK_COLOR::#e79a07"
           fi
