@@ -30,6 +30,15 @@ jobs:
           issue-number: ${{ github.event.client_payload.issue-number }}
           body: /promote dev-fss q1
 
+      - name: Trigger deploy til teamforeldrepenger
+        if: steps.success.outcome == 'success' && github.event.client_payload.trigger != 'navikt/fp-abakus' && github.event.client_payload.trigger != 'navikt/fptilbake'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          repository: ${{ github.event.client_payload.trigger }}
+          issue-number: ${{ github.event.client_payload.issue-number }}
+          body: /promote dev-fss teamforeldrepenger
+
       - name: Test failure
         if: steps.success.outcome != 'success'
         uses: peter-evans/create-or-update-comment@v1
