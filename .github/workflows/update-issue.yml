@@ -19,7 +19,7 @@ jobs:
           issue-number: ${{ github.event.client_payload.issue-number }}
           body: |
             Alle testene gikk grønne!
-            Deployer ${{ github.event.client_payload.trigger }} til q1
+            Deployer ${{ github.event.client_payload.trigger }} til teamforeldrepenger
 
       - name: Trigger deploy til teamforeldrepenger
         if: steps.success.outcome == 'success' && github.event.client_payload.trigger != 'navikt/fp-abakus' && github.event.client_payload.trigger != 'navikt/fptilbake'
@@ -50,6 +50,6 @@ jobs:
             * For å rekjøre testene trykke du på linken over og inne på denne trykker du på "Re-run jobs" oppe i høyre hjørne.
             * Ønsker du å se loggene for alle applikasjonene kan gå inn samme plass og laste ned artifaktet med navnet "logs".
 
-            På grunn av testfeil deployes IKKE ${{ github.event.client_payload.trigger }} automatisk til q1!
+            På grunn av testfeil deployes IKKE ${{ github.event.client_payload.trigger }} automatisk til teamforeldrepenger!
 
             [1]: https://github.com/navikt/fpsak-autotest/actions/runs/${{ github.event.client_payload.run_id }}
