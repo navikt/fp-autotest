@@ -48,7 +48,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedFeilutbetalingBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
@@ -1163,18 +1163,18 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Refusjonskrav er sendt inn for sent og skal ikke tas med i beregning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
+        var vurderRefusjonBeregningsgrunnlagBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderRefusjonBeregningsgrunnlagBekreftelse.class);
+        vurderRefusjonBeregningsgrunnlagBekreftelse
+                .setFastsattRefusjonFomForAllePerioder(LocalDate.now().minusMonths(3))
+                .setBegrunnelse("Fordi autotest sier det!");
+        saksbehandler.bekreftAksjonspunkt(vurderRefusjonBeregningsgrunnlagBekreftelse);
+
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelseRevurdering = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelseRevurdering.innvilgManuellePerioder(
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering);
-
-        VurderTilbakekrevingVedFeilutbetalingBekreftelse vurderTilbakekrevingVedFeilutbetalingBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedFeilutbetalingBekreftelse.class);
-        vurderTilbakekrevingVedFeilutbetalingBekreftelse.setTilbakekrevFrasøker(false);
-        vurderTilbakekrevingVedFeilutbetalingBekreftelse.setBegrunnelse("AG ber om refusjon for sent til å få alt!");
-        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedFeilutbetalingBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         // AG sender inn ny korrigert IM med endring i refusjon mens behandlingen er hos beslutter. Behandlingen skal
         // rulles tilbake og behandles på nytt fra første AP i revurderingen.
@@ -1203,17 +1203,18 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Refusjonskrav er sendt inn for sent og skal ikke tas med i beregning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 
+        var vurderRefusjonBeregningsgrunnlagBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderRefusjonBeregningsgrunnlagBekreftelse.class);
+        vurderRefusjonBeregningsgrunnlagBekreftelse2
+                .setFastsattRefusjonFomForAllePerioder(LocalDate.now().minusMonths(3))
+                .setBegrunnelse("Fordi autotest sier det!");
+        saksbehandler.bekreftAksjonspunkt(vurderRefusjonBeregningsgrunnlagBekreftelse2);
+
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelseRevurdering2 = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelseRevurdering2.innvilgManuellePerioder(
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering2);
-
-        VurderTilbakekrevingVedFeilutbetalingBekreftelse vurderTilbakekrevingVedFeilutbetalingBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedFeilutbetalingBekreftelse.class);
-        vurderTilbakekrevingVedFeilutbetalingBekreftelse2.setTilbakekrevFrasøker(false);
-        vurderTilbakekrevingVedFeilutbetalingBekreftelse2.setBegrunnelse("AG ber om refusjon for sent til å få alt!");
-        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedFeilutbetalingBekreftelse2);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
 
