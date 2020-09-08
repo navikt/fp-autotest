@@ -100,6 +100,7 @@ public class AksjonspunktKoder {
     public static final String REGISTRER_PAPIRSØKNAD_FORELDREPENGER = new String("5040");
     public static final String REGISTRER_PAPIR_ENDRINGSØKNAD_FORELDREPENGER = new String("5057");
     public static final String VURDER_FAKTA_FOR_ATFL_SN = new String("5058");
+    public static final String VURDER_REFUSJON_BERGRUNN = new String("5059");
     public static final String FORDEL_BEREGNINGSGRUNNLAG = new String("5046");
 
     public static final String MANUELL_VURDERING_AV_SØKNADSFRIST_FORELDREPENGER = new String("5043");
