@@ -1,26 +1,14 @@
-name: Kjører verdikjedetestene for verdikjeden
+name: Kjører verdikjedetestene for fptilbake
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '**.md'
-      - '**.MD'
-      - '.gitignore'
-      - 'JenkinsfileAutotest'
-      - 'JenkinsfileAutotestNew'
-      - 'CODEOWNERS'
-      - '.github/workflows/build-pr.yml'
-      - 'lokalutvikling/*'
   repository_dispatch:
-    types: [fpsak-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fprisk-verdikjede]
+    types: [fptilbake-verdikjede]
   schedule:
     - cron:  '0 0 * * *'
 
 jobs:
   build:
-    name: Utfør verdikjede-test for ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+    name: Utfør verdikjedetestene for ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
     runs-on: ubuntu-latest
 
     steps:
@@ -86,12 +74,12 @@ jobs:
           echo Oppe!
           echo ::set-env name=STACK_STARTED::true
 
-      - name: Utfører verdikjedetestene
+      - name: Utfører verdikjedetestene for fptilbake
         if: always() && env.STACK_STARTED == 'true'
         id: tester
         shell: bash
         run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede > >(tee test-result-log.txt)
+          mvn test --batch-mode --settings .github/.m2/settings.xml -P fptilbake > >(tee test-result-log.txt)
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
@@ -123,46 +111,6 @@ jobs:
             "success": "${{ env.TEST_OUTCOME }}",
             "run_id": "${{ github.run_id }}"
             }
-
-      - name: Notify slack
-        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          event-type: notify-slack
-          client-payload: |
-            {
-            "trigger": "${{ github.event.client_payload.trigger }}",
-            "version": "${{ github.event.client_payload.version }}",
-            "stack_started": "${{ env.STACK_STARTED }}",
-            "test_outcome": "${{ env.TEST_OUTCOME }}",
-            "test_resultat": "${{ env.TEST_RESULTAT }}",
-            "run_id": "${{ github.run_id }}"
-            }
-
-      - name: Generer testrapport
-        if: always() && env.STACK_STARTED == 'true'
-        id: ghpages
-        shell: bash
-        run: |
-          git fetch origin gh-pages
-          mkdir gh-pages
-          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
-          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
-          resources/allure/set-environment-variables.sh ${{ github.event.client_payload.trigger }}
-          cp resources/allure/environment.properties target/allure-results
-          cp resources/allure/categories.json target/allure-results
-          cp -r gh-pages/verdikjede/history target/allure-results
-          mvn allure:report --batch-mode --file pom.xml
-          cp -a target/allure-report/. gh-pages/verdikjede/
-
-      - name: Deploy testrapport
-        if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.1.2
-        with:
-          build_dir: gh-pages
-        env:
-          GH_PAT: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'
