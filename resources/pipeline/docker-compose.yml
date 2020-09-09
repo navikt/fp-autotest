@@ -192,7 +192,6 @@ services:
     environment:
       - "LOADBALANCER_URL=http://localhost:8075"
       - "OPENIDCONNECT_USERNAME=fprisk-localhost"
-      - "AAREG_RS_URL=https://vtp:8063/rest/aareg-services/api/v1/arbeidstaker"
       - "BRREG_PROXY=https://vtp:8063/rest/brreg/proxy/not/implemented"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
