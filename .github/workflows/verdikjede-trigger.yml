@@ -8,11 +8,14 @@ on:
       - '**.md'
       - '**.MD'
       - '.gitignore'
-      - 'JenkinsfileAutotest'
-      - 'JenkinsfileAutotestNew'
       - 'CODEOWNERS'
       - '.github/workflows/build-pr.yml'
+      - '.github/workflows/fpsak-trigger.yml'
+      - '.github/workflows/fptilbake-trigger.yml'
+      - '.github/workflows/notify-slack.yml'
+      - '.github/workflows/update-issue.yml'
       - 'lokalutvikling/*'
+      - 'docs/*'
   repository_dispatch:
     types: [fpsak-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fprisk-verdikjede]
   schedule:
