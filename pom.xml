@@ -16,7 +16,7 @@
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
 
-        <vtp.versjon>1.0-2020.07.02.145041-a3e814b</vtp.versjon>
+        <vtp.versjon>1.0-2020.09.09.084110-84ce30f</vtp.versjon>
 
         <aspectj.version>1.9.6</aspectj.version>
 
@@ -34,18 +34,11 @@
                 <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
             </properties>
         </profile>
-    	<profile>
-            <id>spberegning</id>
-            <properties>
-                <testsTags>spberegning</testsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.spberegning.**</testPackage>
-            </properties>
-        </profile>
         <profile>
-            <id>fpoppdrag</id>
+            <id>fptilbake</id>
             <properties>
-                <testsTags>fpoppdrag</testsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.fpoppdrag.**</testPackage>
+                <testsTags>fptilbake, tilbakekreving</testsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.fptilbake.**</testPackage>
             </properties>
         </profile>
         <profile>
