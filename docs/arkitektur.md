@@ -22,7 +22,6 @@ Denne README-filen tar for seg hvordan FPSAK-AUTOTEST er strukturert og bygget o
 Tester kan tagges med annotations @Tag på metoder eller klasser for å vise hvilket område de tilhører
 
 Eksempler:
-	* spberegning
 	* fpsak
 	* test
 	* verdikjede
