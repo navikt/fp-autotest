@@ -17,7 +17,7 @@ on:
       - 'lokalutvikling/*'
       - 'docs/*'
   repository_dispatch:
-    types: [fpsak-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fprisk-verdikjede]
+    types: [fpsak-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fprisk-verdikjede, fpabonnent-verdikjede]
   schedule:
     - cron:  '0 0 * * *'
 
