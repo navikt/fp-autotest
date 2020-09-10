@@ -28,7 +28,7 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: ${{ github.event.client_payload.trigger }}
           issue-number: ${{ github.event.client_payload.issue-number }}
-          body: /promote dev-fss teamforeldrepenger
+          body: /promote dev-fss
 
       - name: Trigger deploy til teamforeldrepenger for fptilbake
         if: steps.success.outcome == 'success' && github.event.client_payload.trigger == 'navikt/fptilbake'
