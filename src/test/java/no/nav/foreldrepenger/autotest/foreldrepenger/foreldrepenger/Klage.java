@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelseUtenTotrinn;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravKa;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
@@ -68,9 +69,9 @@ public class Klage extends ForeldrepengerTestBase {
         // Mellomlager og tilbakestiller
         verifiserLikhet(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode,
                 "UTFO", "Vurdering av klage");
-        klagebehandler.mellomlagreOgGjennåpneKlage();
+        klagebehandler.mellomlagreKlage();
         verifiserLikhet(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode,
-                "OPPR", "Vurdering av klage");
+                "UTFO", "Vurdering av klage");
 
         VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse1 = klagebehandler
                 .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
@@ -200,12 +201,22 @@ public class Klage extends ForeldrepengerTestBase {
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
-        verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(),
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(bekreftelse);
+
+        klagebehandler.hentFagsak(sakId);
+        klagebehandler.velgKlageBehandling();
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
+        klagebehandler.ventTilAvsluttetBehandling();
+
+        klagebehandler.hentFagsak(sakId);
+        klagebehandler.velgKlageBehandling();
+        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
                 "KLAGE_YTELSESVEDTAK_STADFESTET");
-        verifiserKlageVurdering(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(),
+        verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(),
                 "STADFESTE_YTELSESVEDTAK");
-        verifiserBehandlingsstatus(beslutter.valgtBehandling.status.kode, "AVSLU");
+        verifiserBehandlingsstatus(klagebehandler.valgtBehandling.status.kode, "AVSLU");
     }
 
     @Test
@@ -253,8 +264,14 @@ public class Klage extends ForeldrepengerTestBase {
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.velgKlageBehandling();
-        beslutter.bekreftAksjonspunktMedDefaultVerdier(FatterVedtakBekreftelse.class);
-        beslutter.ventTilAvsluttetBehandling();
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(bekreftelse);
+
+        klagebehandler.hentFagsak(sakId);
+        klagebehandler.velgKlageBehandling();
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
+        klagebehandler.ventTilAvsluttetBehandling();
 
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
         verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer(),

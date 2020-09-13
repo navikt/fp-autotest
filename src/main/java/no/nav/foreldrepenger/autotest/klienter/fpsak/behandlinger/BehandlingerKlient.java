@@ -75,8 +75,7 @@ public class BehandlingerKlient extends FpsakKlient {
     private static final String BEHANDLING_INNSYN_URL = BEHANDLING_URL + "/innsyn";
     private static final String BEHANDLING_KLAGE_URL = BEHANDLING_URL + "/klage-v2";
     private static final String BEHANDLING_KLAGE_MELLOMLAGRE_URL = BEHANDLING_URL + "/klage/mellomlagre-klage";
-    private static final String BEHANDLING_KLAGE_MELLOMLAGRE_GJENNÅPNE_URL = BEHANDLING_URL
-            + "/klage/mellomlagre-gjennapne-klage";
+
     private static final String BEHANDLING_YTELSEFORDELING_URL = BEHANDLING_URL + "/ytelsefordeling";
 
     private static final String BEHANDLING_UTTAK = BEHANDLING_URL + "/uttak";
@@ -356,12 +355,6 @@ public class BehandlingerKlient extends FpsakKlient {
     @Step("Mellomlagrer klage")
     public void mellomlagre(KlageVurderingResultatAksjonspunktMellomlagringDto vurdering) {
         String url = hentRestRotUrl() + BEHANDLING_KLAGE_MELLOMLAGRE_URL;
-        postOgVerifiser(url, vurdering, StatusRange.STATUS_SUCCESS);
-    }
-
-    @Step("Mellomlagrer og gjennåpner klage")
-    public void mellomlagreGjennapne(KlageVurderingResultatAksjonspunktMellomlagringDto vurdering) {
-        String url = hentRestRotUrl() + BEHANDLING_KLAGE_MELLOMLAGRE_GJENNÅPNE_URL;
         postOgVerifiser(url, vurdering, StatusRange.STATUS_SUCCESS);
     }
 

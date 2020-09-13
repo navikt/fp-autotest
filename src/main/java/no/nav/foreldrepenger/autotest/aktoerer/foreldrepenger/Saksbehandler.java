@@ -768,8 +768,8 @@ public class Saksbehandler extends Aktoer {
         return getAnnenPartBehandling() != null;
     }
 
-    public void mellomlagreOgGjennåpneKlage() {
-        behandlingerKlient.mellomlagreGjennapne(
+    public void mellomlagreKlage() {
+        behandlingerKlient.mellomlagre(
                 new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling,
                         hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
         refreshBehandling();
