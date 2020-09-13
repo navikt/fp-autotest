@@ -143,12 +143,7 @@ public class Klage extends FpsakTestBase {
         klagebehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.velgKlageBehandling();
-        AksjonspunktBekreftelse bekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
-                .bekreftOpphevet("NYE_OPPLYSNINGER")
-                .fritekstBrev("Fritekst brev fra KA")
-                .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunkt(bekreftelse);
+
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
 
     }
@@ -219,12 +214,6 @@ public class Klage extends FpsakTestBase {
         klagebehandler.hentFagsak(sakId);
         klagebehandler.velgKlageBehandling();
 
-        VurderingAvKlageNkBekreftelse vurderingAvKlageNkBekreftelse1 = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class);
-        vurderingAvKlageNkBekreftelse1
-                .bekreftMedholdGunst("NYE_OPPLYSNINGER")
-                .fritekstBrev("Brev");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse1);
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
     }
 
@@ -282,7 +271,6 @@ public class Klage extends FpsakTestBase {
         klagebehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.velgKlageBehandling();
-        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_AVVIST");
     }
