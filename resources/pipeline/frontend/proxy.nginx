@@ -11,6 +11,12 @@ location  /fpoppdrag/api/ {
 }
 
 # Simple Proxy to backend
+location  /fptilbake/api/ {
+    access_by_lua_file oidc_protected.lua;
+    proxy_pass "${APP_URL_FPTILBAKE}/fptilbake/api/";
+}
+
+# Simple Proxy to backend
 location  /fpformidling/api/ {
     access_by_lua_file oidc_protected.lua;
     proxy_pass "${APP_URL_FPFORMIDLING}/fpformidling/api/";
