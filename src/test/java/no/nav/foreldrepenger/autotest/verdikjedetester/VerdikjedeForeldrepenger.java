@@ -1290,7 +1290,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
-        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().length == 2,
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().length, 2,
                 "Forventer at det er to perioder i tilkjent ytelse. En for fedrekvote og en for fellesperioden");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
@@ -1345,7 +1345,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.velgRevurderingBehandling();
 
         List<UttakResultatPeriode> avslåttePerioder = saksbehandler.hentAvslåtteUttaksperioder();
-        verifiser(avslåttePerioder.size() == 1,
+        verifiserLikhet(avslåttePerioder.size(), 1,
                 "Forventer at det er 1 avslåtte uttaksperioder (automatisk avslått)");
         verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(1).getPeriodeResultatÅrsak().kode
                         .equalsIgnoreCase("4084"),
@@ -1390,20 +1390,20 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         beslutter.ventTilFagsakLøpende();
 
         // verifisering i uttak
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
+        verifiserLikhet(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo(), 0,
                 "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp (dvs = 0)!");
-        verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 2,
+        verifiserLikhet(saksbehandler.hentAvslåtteUttaksperioder().size(), 2,
                 "Forventer at det er 2 avslåtte uttaksperioder");
 
         // verifisering i tilkjent ytelse
         BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger();
-        verifiser(tilkjentYtelsePerioder.getPerioder()[1].getDagsats() == 0,
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[1].getDagsats(), 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[3].getDagsats() == Math
-                        .ceil(tilkjentYtelsePerioder.getPerioder()[2].getDagsats() * 0.6),
-                "Siden perioden er avslått, forventes det 0 i dagsats.");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[5].getDagsats() == 0,
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[3].getDagsats(),
+                (int) Math.round(tilkjentYtelsePerioder.getPerioder()[2].getDagsats() * 0.6),
+                "Forventer at dagsatsen blir redusert fra 100% til 60% for 3 periode i tilkjent ytelse.");
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[5].getDagsats(), 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
