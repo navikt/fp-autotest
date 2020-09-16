@@ -330,17 +330,17 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
                 lagBGAndel(orgNr, 720_000, 720_000, 0, 720_000));
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
-                lagBGAndelForAktivitetStatus("SN", 35_138.19, 35_138.19));
+                lagBGAndelForAktivitetStatus("SN", 46428.43, 46428.43));
 
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
                 lagBGAndelMedFordelt(orgNr, 720_000, 500_000, 500_000, 500_000));
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
-                lagBGAndelMedFordelt("SN", 35_138.19, 235_138, 235_138));
+                lagBGAndelMedFordelt("SN", 46428.43, 235_138, 235_138));
 
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2),
                 lagBGAndel(orgNr, 720_000, 720_000, 0, 720_000));
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2),
-                lagBGAndelForAktivitetStatus("SN", 35_138.19, 35_138.19));
+                lagBGAndelForAktivitetStatus("SN", 46428.43, 46428.43));
     }
 
     @Test
