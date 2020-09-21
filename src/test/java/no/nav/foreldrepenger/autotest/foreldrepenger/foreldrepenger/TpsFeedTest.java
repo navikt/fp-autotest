@@ -62,7 +62,7 @@ public class TpsFeedTest extends ForeldrepengerTestBase {
         fødselshendelseDto.setFødselsdato(termindato.minusWeeks(4));
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        fordel.opprettTpsHendelse(fødselshendelseDto);
+        fordel.opprettHendelsePåKafka(fødselshendelseDto);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -100,7 +100,7 @@ public class TpsFeedTest extends ForeldrepengerTestBase {
         dødshendelseDto.setDoedsdato(LocalDate.now());
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        fordel.opprettTpsHendelse(dødshendelseDto);
+        fordel.opprettHendelsePåKafka(dødshendelseDto);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

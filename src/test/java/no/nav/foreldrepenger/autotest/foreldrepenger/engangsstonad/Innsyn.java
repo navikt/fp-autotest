@@ -47,7 +47,7 @@ public class Innsyn extends FpsakTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         saksbehandler.oprettBehandlingInnsyn(null);
-        saksbehandler.velgDokumentInnsynBehandling();
+        saksbehandler.ventPåOgVelgDokumentInnsynBehandling();
 
         VurderingAvInnsynBekreftelse vurderingAvInnsynBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class);
@@ -88,7 +88,7 @@ public class Innsyn extends FpsakTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         saksbehandler.oprettBehandlingInnsyn(null);
-        saksbehandler.velgDokumentInnsynBehandling();
+        saksbehandler.ventPåOgVelgDokumentInnsynBehandling();
 
         VurderingAvInnsynBekreftelse vurderingAvInnsynBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class);

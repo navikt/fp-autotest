@@ -59,7 +59,7 @@ public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var varselOmRevurderingBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class)
@@ -75,7 +75,7 @@ public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
-        beslutter.velgRevurderingBehandling();
+        beslutter.ventPåOgVelgRevurderingBehandling();
         FatterVedtakBekreftelse bekreftelse3 = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse3.godkjennAksjonspunkt(
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));

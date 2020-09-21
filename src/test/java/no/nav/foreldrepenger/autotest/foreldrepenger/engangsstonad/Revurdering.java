@@ -65,7 +65,7 @@ public class Revurdering extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         VarselOmRevurderingBekreftelse varselOmRevurderingBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);

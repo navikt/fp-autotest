@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Dette scriptet setter opp avhengighetene til enten fpformidling, fpoppdrag, fptilbake eller fprisk, slik at disse kan
-# kjøres utenfor i IDE.
+# Dette scriptet setter opp avhengighetene til enten fpformidling, fpoppdrag, fptilbake, fprisk eller fpabonnent
+# slik at disse kan kjøres utenfor i IDE.
 
 ARGUMENT=${1}
 
-if [[ $ARGUMENT == fpformidling ]] || [[ $ARGUMENT == fpoppdrag ]] || [[ $ARGUMENT == fptilbake ]] || [[ $ARGUMENT == fprisk ]]; then
+if [[ $ARGUMENT == fpformidling ]] || [[ $ARGUMENT == fpoppdrag ]] || [[ $ARGUMENT == fptilbake ]] || [[ $ARGUMENT == fprisk ]] || [[ $ARGUMENT == fpabonnent ]]; then
   sh ./setup-lokal-utvikling.sh $ARGUMENT
 
   if [ -f .env ]; then
@@ -20,5 +20,5 @@ if [[ $ARGUMENT == fpformidling ]] || [[ $ARGUMENT == fpoppdrag ]] || [[ $ARGUME
 elif [[ $ARGUMENT == down ]]; then
   docker-compose -f docker-compose-lokal/docker-compose.yml down
 else
-  echo "Argumentene som støttes er: fpformidling, fpoppdrag, fptilbake eller fprisk."
+  echo "Argumentene som støttes er: fpformidling, fpoppdrag, fptilbake, fprisk eller fpabonnent"
 fi

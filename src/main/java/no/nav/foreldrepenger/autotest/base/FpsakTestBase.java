@@ -47,7 +47,7 @@ public class FpsakTestBase extends TestScenarioTestBase {
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         if (beslutter.harRevurderingBehandling() && revurdering) {
-            beslutter.velgRevurderingBehandling();
+            beslutter.ventPåOgVelgRevurderingBehandling();
         }
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());

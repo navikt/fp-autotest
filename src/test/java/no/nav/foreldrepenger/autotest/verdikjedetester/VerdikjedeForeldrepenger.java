@@ -41,6 +41,7 @@ import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
@@ -72,6 +73,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
+import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
@@ -80,13 +84,13 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
-    @DisplayName("1: Mor automatisk førstegangssøknad termin, aleneomsorg og avvik i beregning")
+    @DisplayName("1: Mor automatisk førstegangssøknad termin (med fødselshendelse), aleneomsorg og avvik i beregning.")
     @Description("Mor førstegangssøknad før fødsel på termin. Mor har aleneomsorg og enerett. Sender inn IM med over " +
-                "25% avvik med delvis refusjon.")
+                "25% avvik med delvis refusjon. Etter behandlingen er ferdigbehandlet mottas en fødselshendelse.")
     public void testcase_mor_fødsel() {
         var testscenario = opprettTestscenario("501");
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var termindato = LocalDate.now().plusMonths(1);
+        var termindato = LocalDate.now().plusWeeks(1);
         var fpStartdato = termindato.minusWeeks(3);
         var fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
@@ -96,7 +100,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 uttaksperiode(FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
         var søknad = lagSøknadForeldrepengerTermin(termindato, søkerAktørId, SøkersRolle.MOR)
                 .medFordeling(fordeling)
-                .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett());
+                .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett())
+                .medMottattDato(termindato.minusWeeks(5));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(
                 søknad.build(),
@@ -137,9 +142,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         Saldoer saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo(), 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp (dvs = 0)!");
-        verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER).getSaldo() == 75,
+        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER).getSaldo(),  75,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER er 75 dager!");
         List<Integer> beregnetDagsats = regnUtForventetDagsatsForPeriode(List.of(månedsinntekt), List.of(100),
                 List.of(false));
@@ -148,12 +153,41 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at dagsatsen blir justert ut i fra årsinntekten og utbeatlinsggrad, og IKKE 6G fordi inntekten er under 6G!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(60),
                 "Forventer at halve summen utbetales til søker og halve summen til arbeisdgiver pga 60% refusjon!");
+
+        // Fødselshendelse
+        var fødselshendelseDto = new FødselshendelseDto();
+        fødselshendelseDto.setFnrMor(søkerFnr);
+        fødselshendelseDto.setFødselsdato(termindato.minusWeeks(1));
+        fødselshendelseDto.setEndringstype("OPPRETTET");
+        fordel.opprettHendelsePåKafka(fødselshendelseDto);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
+                        .equalsIgnoreCase("RE-HENDELSE-FØDSEL"),
+                "Foventer at revurderingen har årsakskode RE-HENDELSE-FØDSEL.");
+
+        var avklarFaktaAleneomsorgBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class);
+        avklarFaktaAleneomsorgBekreftelse2.bekreftBrukerHarAleneomsorg();
+        avklarFaktaAleneomsorgBekreftelse2.setBegrunnelse("Bekreftelse sendt fra Autotest.");
+        saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse2);
+        saksbehandler.ventTilAvsluttetBehandling();
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "FORELDREPENGER_ENDRET");
+
+        // Verifiser riktig justering av kontoer og uttak.
+        saldoer = saksbehandler.valgtBehandling.getSaldoer();
+        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo(), 5,
+                "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL har 5 dager igjen!");
+        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER).getSaldo(),  70,
+                "Forventer at saldoen for stønadskonton FORELDREPENGER er 70 dager!");
     }
 
     @Test
-    @DisplayName("2: Mor selvstendig næringsdrivende, varig endring")
+    @DisplayName("2: Mor selvstendig næringsdrivende, varig endring. Søker dør etter behandlingen er ferdigbehandlet.")
     @Description("Mor er selvstendig næringsdrivende og har ferdiglignet inntekt i mange år. Oppgir en næringsinntekt" +
-            "som avviker med mer enn 25% fra de tre siste ferdiglignede årene.")
+            "som avviker med mer enn 25% fra de tre siste ferdiglignede årene. Søker dør etter behandlingen er " +
+            "ferdigbehandlet.")
     public void morSelvstendigNæringsdrivendeTest() {
         var testscenario = opprettTestscenario("510");
         var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
@@ -227,6 +261,39 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
+
+        var dødshendelseDto = new DødshendelseDto();
+        dødshendelseDto.setFnr(søkerFnr);
+        dødshendelseDto.setDoedsdato(LocalDate.now().minusDays(1));
+        dødshendelseDto.setEndringstype("OPPRETTET");
+        fordel.opprettHendelsePåKafka(dødshendelseDto);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
+                        .equalsIgnoreCase("RE-HENDELSE-DØD-F"),
+                "Foventer at revurderingen har årsakskode RE-HENDELSE-DØD-F");
+
+        var fastsettUttaksperioderManueltBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
+        fastsettUttaksperioderManueltBekreftelse.avslåManuellePerioder();
+        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
+
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+
+        verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 3,
+                "Forventer at det er 3 avslåtte uttaksperioder");
+
+        BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
+                .getBeregningResultatForeldrepenger();
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[2].getDagsats(),0,
+                "Siden perioden er avslått pga død, forventes det 0 i dagsats.");
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[3].getDagsats(),0,
+                "Siden perioden er avslått pga død, forventes det 0 i dagsats.");
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[4].getDagsats(),0,
+                "Siden perioden er avslått pga død, forventes det 0 i dagsats.");
     }
 
     @Test
@@ -702,7 +769,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /* Mor: berørt sak */
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
         verifiser(saksbehandler.valgtBehandling.hentBehandlingsresultat().equalsIgnoreCase("FORELDREPENGER_ENDRET"),
                 "Foreldrepenger skal være endret pga annenpart har overlappende uttak!");
@@ -871,7 +938,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /* Mor: Berørt sak */
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
@@ -999,7 +1066,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(saksnummerMor);
-        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventPåOgVelgKlageBehandling();
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp
                 .setPåklagdVedtak(Integer.toString(klagebehandler.valgtBehandling.id - 1))
@@ -1019,14 +1086,14 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerMor);
-        beslutter.velgKlageBehandling();
+        beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         // * REVURDERING *//
         saksbehandler.opprettBehandlingRevurdering("ETTER_KLAGE");
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
                         .equalsIgnoreCase("ETTER_KLAGE"),
@@ -1155,7 +1222,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 saksnummerFar);
 
         // Revurdering / Berørt sak til far
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
@@ -1194,7 +1261,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerFar);
         verifiser(saksbehandler.behandlinger.size() == 2, "Fagsaken har mer enn én revurdering.");
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET);
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse2 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
@@ -1342,7 +1409,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /* FAR: Berørt behandling */
         saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         List<UttakResultatPeriode> avslåttePerioder = saksbehandler.hentAvslåtteUttaksperioder();
         verifiserLikhet(avslåttePerioder.size(), 1,
@@ -1452,6 +1519,122 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT",
                 "Forventer at behandlingen er avslått fordi søker ikke har rett på foreldrepenger.");
     }
+
+
+    @Test
+    @DisplayName("13: Mor søker på termin og får innvilget, men etter termin mottas det en dødfødselshendelse")
+    @Description("13: Mør søker på termin og blir automatisk behanldet (innvilget). En uke etter terminen mottas det" +
+            "en dødfødselshendelse hvor mor får avslag etter det 6 uken av mødrekvoten.")
+    public void morSøkerTerminFårInnvilgetOgSåKommerDetEnDødfødselEtterTermin() {
+        var testscenario = opprettTestscenario("55");
+        var søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+        var termindato = LocalDate.now().minusWeeks(2);
+        var fpStartdatoMor = termindato.minusWeeks(3);
+
+        var søknad = lagSøknadForeldrepengerTermin(termindato, søkerAktørIdent, SøkersRolle.MOR)
+                .medMottattDato(termindato.minusMonths(2));
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(
+                søknad.build(),
+                søkerAktørIdent,
+                søkerIdent,
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+
+        var månedsinntektMor = testscenario.getScenariodata().getInntektskomponentModell()
+                .getInntektsperioder().get(0).getBeløp();
+        var orgNummerMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                .getArbeidsgiverOrgnr();
+        var inntektsmeldingMor = lagInntektsmelding(
+                månedsinntektMor,
+                søkerIdent,
+                fpStartdatoMor,
+                orgNummerMor);
+        fordel.sendInnInntektsmelding(
+                inntektsmeldingMor,
+                søkerAktørIdent,
+                søkerIdent,
+                saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+
+        var saldoer = saksbehandler.valgtBehandling.getSaldoer();
+        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo(), 0,
+                "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
+        verifiserLikhet(saldoer.getStonadskontoer().get(MØDREKVOTE).getSaldo(), 0,
+                "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
+        verifiserLikhet(saldoer.getStonadskontoer().get(FELLESPERIODE).getSaldo(), 0,
+                "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
+
+        var dødfødselshendelseDto = new DødfødselhendelseDto();
+        var differanseFødselTermin = 7;
+        dødfødselshendelseDto.setDoedfoedselsdato(termindato.plusDays(differanseFødselTermin));
+        dødfødselshendelseDto.setEndringstype("OPPRETTET");
+        dødfødselshendelseDto.setFnr(søkerIdent);
+        fordel.opprettHendelsePåKafka(dødfødselshendelseDto);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
+                        .equalsIgnoreCase("RE-HENDELSE-DØDFØD"),
+                "Foventer at revurderingen har årsakskode RE_HENDELSE_DØDFØDSEL.");
+
+        var fastsettUttaksperioderManueltBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
+        fastsettUttaksperioderManueltBekreftelse.avslåManuellePerioderMedPeriodeResultatÅrsak(
+                new Kode("IKKE_OPPFYLT_AARSAK", "4072", "§14-9 sjuende ledd: Barnet er dødt"));
+        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
+
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+
+        var saldoerRevurdering = saksbehandler.valgtBehandling.getSaldoer();
+        verifiserLikhet(saldoerRevurdering.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo(), 0,
+                "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
+        verifiserLikhet(saldoerRevurdering.getStonadskontoer().get(MØDREKVOTE).getSaldo(), 45,
+                "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
+        verifiserLikhet(saldoerRevurdering.getStonadskontoer().get(FELLESPERIODE).getSaldo(), 75,
+                "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
+
+
+        var uttakResultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
+        var uttaksperiode_0 = uttakResultatPerioder.get(0);
+        var uttaksperiode_1 = uttakResultatPerioder.get(1);
+        verifiser(uttaksperiode_0.getPeriodeResultatType().kode.equalsIgnoreCase("INNVILGET"),
+                "Forventer at første periode er innvilget");
+        verifiser(uttaksperiode_0.getPeriodeType().kode.equalsIgnoreCase(FELLESPERIODE.name()),
+                "Forventer at første periode er FELLESPERIODE pga dødfødsel etter termin.");
+        verifiserLikhet(uttaksperiode_0.getFom(), uttaksperiode_1.getFom().minusDays(differanseFødselTermin),
+                "Verifiserer at antall dager etter termin fylles med fellesperioden.");
+
+
+        verifiser(uttaksperiode_1.getPeriodeResultatType().kode.equalsIgnoreCase("INNVILGET"),
+                "Forventer at andre periode er innvilget");
+        verifiser(uttaksperiode_1.getPeriodeType().kode.equalsIgnoreCase(FORELDREPENGER_FØR_FØDSEL.name()),
+                "Forventer at første periode er FORELDREPENGER_FØR_FØDSEL pga dødfødsel etter termin.");
+        verifiser(uttaksperiode_1.getAktiviteter().get(0).getTrekkdagerDesimaler().compareTo(BigDecimal.valueOf(3 * 5)) == 0,
+        "Verifiser at søker tar ut hele FORELDREPENGER_FØR_FØDSEL kvoten.");
+
+        var uttaksperiode_2 = uttakResultatPerioder.get(2);
+        verifiser(uttaksperiode_2.getPeriodeResultatType().kode.equalsIgnoreCase("INNVILGET"),
+                "Forventer at tredje periode er innvilget");
+        verifiser(uttaksperiode_2.getPeriodeType().kode.equalsIgnoreCase(MØDREKVOTE.name()),
+                "Forventer at første periode er MØDREKVTOEN pga dødfødsel etter termin.");
+        verifiser(uttaksperiode_2.getAktiviteter().get(0).getTrekkdagerDesimaler().compareTo(BigDecimal.valueOf(6 * 5)) == 0,
+                "Forventer at det tas ut 6 uker av den gjenværende delen av stønadsperioden.");
+
+        verifiserLikhet(saksbehandler.hentAvslåtteUttaksperioder().size(), 2,
+                "Forventer at det er 2 avslåtte uttaksperioder pga dødfødsel");
+        verifiser(uttakResultatPerioder.get(3).getPeriodeResultatÅrsak().kodeverk.equalsIgnoreCase("IKKE_OPPFYLT_AARSAK"),
+                "Perioden burde være avslått fordi det er mottatt dødfødselshendelse");
+        verifiser(uttakResultatPerioder.get(4).getPeriodeResultatÅrsak().kodeverk.equalsIgnoreCase("IKKE_OPPFYLT_AARSAK"),
+                "Perioden burde være avslått fordi det er mottatt dødfødselshendelse");
+    }
+
 
     private Long sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(TestscenarioDto testscenario,
             LocalDate fødselsdato,
