@@ -181,7 +181,7 @@ public class Fodsel extends FpsakTestBase {
         overstyrer.erLoggetInnMedRolle(Rolle.OVERSTYRER);
         overstyrer.hentFagsak(saksnummer);
         overstyrer.opprettBehandlingRevurdering("RE-PRSSL");
-        overstyrer.velgRevurderingBehandling();
+        overstyrer.ventPåOgVelgRevurderingBehandling();
 
         var varselOmRevurderingBekreftelse = overstyrer
                 .hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
@@ -199,7 +199,7 @@ public class Fodsel extends FpsakTestBase {
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
-        beslutter.velgRevurderingBehandling();
+        beslutter.ventPåOgVelgRevurderingBehandling();
 
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());

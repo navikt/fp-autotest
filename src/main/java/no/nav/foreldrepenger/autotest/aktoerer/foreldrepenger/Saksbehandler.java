@@ -165,15 +165,15 @@ public class Saksbehandler extends Aktoer {
         velgBehandling(getBehandling(behandlingstype));
     }
 
-    public void velgFørstegangsbehandling() {
+    public void ventPåOgVelgFørstegangsbehandling() {
         velgBehandling(kodeverk.BehandlingType.getKode("BT-002"));
     }
 
-    public void velgKlageBehandling() {
+    public void ventPåOgVelgKlageBehandling() {
         velgBehandling(kodeverk.BehandlingType.getKode("BT-003"));
     }
 
-    public void velgRevurderingBehandling() {
+    public void ventPåOgVelgRevurderingBehandling() {
         velgBehandling(kodeverk.BehandlingType.getKode("BT-004"));
     }
 
@@ -184,7 +184,7 @@ public class Saksbehandler extends Aktoer {
         velgBehandling(behandling);
     }
 
-    public void velgDokumentInnsynBehandling() {
+    public void ventPåOgVelgDokumentInnsynBehandling() {
         velgBehandling(kodeverk.BehandlingType.getKode("BT-006"));
     }
 

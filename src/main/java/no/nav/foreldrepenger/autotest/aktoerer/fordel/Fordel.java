@@ -27,7 +27,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.Saksnummer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.tpsFeed.TpsFeedKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
 import no.nav.foreldrepenger.autotest.util.ControllerHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -49,7 +49,7 @@ public class Fordel extends Aktoer {
     BehandlingerKlient behandlingerKlient;
     FagsakKlient fagsakKlient;
     HistorikkKlient historikkKlient;
-    TpsFeedKlient tpsFeedKlient;
+    PdlLeesahKlient pdlLeesahKlient;
 
     // Vtp Klienter
     JournalforingKlient journalpostKlient;
@@ -60,7 +60,7 @@ public class Fordel extends Aktoer {
         journalpostKlient = new JournalforingKlient(session);
         fagsakKlient = new FagsakKlient(session);
         historikkKlient = new HistorikkKlient(session);
-        tpsFeedKlient = new TpsFeedKlient(session);
+        pdlLeesahKlient = new PdlLeesahKlient(session);
     }
 
     /*
@@ -345,8 +345,7 @@ public class Fordel extends Aktoer {
     /*
      * Opretter en personhendelse
      */
-    @Step("Oppretter tps-hendelse")
-    public void opprettTpsHendelse(PersonhendelseDto personhendelseDto) {
-        tpsFeedKlient.leggTilHendelse(personhendelseDto);
+    public void opprettHendelsePåKafka(PersonhendelseDto personhendelseDto) {
+        pdlLeesahKlient.opprettHendelse(personhendelseDto);
     }
 }

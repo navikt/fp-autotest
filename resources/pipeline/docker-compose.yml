@@ -39,7 +39,7 @@ services:
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
-      - "CREATE_TOPICS=privat-foreldrepenger-fprisk-lokal,privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse"
+      - "CREATE_TOPICS=privat-foreldrepenger-fprisk-lokal,privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -106,6 +106,34 @@ services:
       - oracle
       - vtp
       - fpabakus
+  redis:
+    image: redis
+    container_name: redis
+    restart: on-failure
+    mem_limit: 64mb
+  fpfrontend:
+    image: $FPFRONTEND_IMAGE
+    container_name: fpfrontend
+    restart: on-failure
+    mem_limit: 64mb
+    environment:
+      - "TZ=Europe/Oslo"
+      - "APP_PORT=9000"
+      - "APP_URL_FPSAK=http://fpsak:8080"
+      - "APP_URL_FPOPPDRAG=http://fpoppdrag:8080"
+      - "APP_URL_FPFORMIDLING=http://fpformidling:8080"
+      - "APP_URL_FPTILBAKE=http://fptilbake:8080"
+      - "OIDC_HOST_URL=https://vtp:8063/rest/isso/oauth2"
+      - "OIDC_AGENTNAME=fpsak-localhost"
+      - "OIDC_PASSWORD=vtp"
+      - "REDIS_HOST=redis"
+    volumes:
+      - "./frontend/:/nginx"
+    ports:
+      - "9000:9000"
+    depends_on:
+      - fpsak
+      - redis
   fpformidling:
     image: $FPFORMIDLING_IMAGE
     container_name: fpformidling
@@ -198,31 +226,27 @@ services:
       - oracle
       - vtp
       - fpsak
-  redis:
-    image: redis
-    container_name: redis
+  fpabonnent:
+    image: $FPABONNENT_IMAGE
+    container_name: fpabonnent
     restart: on-failure
-    mem_limit: 64mb
-  fpfrontend:
-    image: $FPFRONTEND_IMAGE
-    container_name: fpfrontend
-    restart: on-failure
-    mem_limit: 64mb
+    mem_limit: 1gb
+    env_file:
+      - "fpabonnent_datasource.list"
+      - "common.env"
     environment:
-      - "TZ=Europe/Oslo"
-      - "APP_PORT=9000"
-      - "APP_URL_FPSAK=http://fpsak:8080"
-      - "APP_URL_FPOPPDRAG=http://fpoppdrag:8080"
-      - "APP_URL_FPFORMIDLING=http://fpformidling:8080"
-      - "APP_URL_FPTILBAKE=http://fptilbake:8080"
-      - "OIDC_HOST_URL=https://vtp:8063/rest/isso/oauth2"
-      - "OIDC_AGENTNAME=fpsak-localhost"
-      - "OIDC_PASSWORD=vtp"
-      - "REDIS_HOST=redis"
+      - "LOADBALANCER_URL=http://localhost:8065"
+      - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
+      - "OPENIDCONNECT_USERNAME=fpsak-localhost"
+      - "KAFKA_PDL_LEESAH_TOPIC=aapen-person-pdl-leesah-v1-vtp"
+      - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
+      - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
+      - "FPSAKHENDELSER_V1_URL=http://fpsak:8080/fpsak/api/hendelser/"
     volumes:
-      - "./frontend/:/nginx"
+      - "~/.modig:/var/run/secrets/naisd.io"
     ports:
-      - "9000:9000"
+      - "8065:8060"
     depends_on:
+      - oracle
+      - vtp
       - fpsak
-      - redis

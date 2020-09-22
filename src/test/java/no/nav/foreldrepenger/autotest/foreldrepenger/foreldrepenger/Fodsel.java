@@ -552,7 +552,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         fordel.sendInnPapirsøknadEndringForeldrepenger(testscenario, saksnummer);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var aksjonspunktBekreftelseEndringssøknad = saksbehandler
                 .aksjonspunktBekreftelse(PapirSoknadEndringForeldrepengerBekreftelse.class);

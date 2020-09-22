@@ -17,7 +17,7 @@ on:
       - 'lokalutvikling/*'
       - 'docs/*'
   repository_dispatch:
-    types: [fpsak-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fprisk-verdikjede]
+    types: [fpsak-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fprisk-verdikjede, fpabonnent-verdikjede]
   schedule:
     - cron:  '0 0 * * *'
 
@@ -52,7 +52,7 @@ jobs:
           echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          docker-compose up --quiet-pull --detach fpsak fpformidling fpoppdrag fptilbake fprisk
+          docker-compose up --quiet-pull --detach fpsak fpformidling fpoppdrag fptilbake fprisk fpabonnent
 
       - name: Venter på stacken og sjekker status
         shell: bash
@@ -86,6 +86,10 @@ jobs:
           echo
           echo "Tester om fprisk er oppe"
           timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8075/fprisk/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om fpabonnent er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8065/fpabonnent/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo ::set-env name=STACK_STARTED::true
 

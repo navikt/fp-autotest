@@ -70,7 +70,7 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
                 saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.velgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
         verifiser(saksbehandler.harRevurderingBehandling(), "Saken har ikke opprettet revurdering.");
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INGEN_ENDRING",

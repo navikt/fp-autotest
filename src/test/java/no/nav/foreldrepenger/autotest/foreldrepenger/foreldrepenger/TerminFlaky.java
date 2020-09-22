@@ -52,7 +52,7 @@ public class TerminFlaky extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.velgFørstegangsbehandling();
+        saksbehandler.ventPåOgVelgFørstegangsbehandling();
         debugLoggBehandling(saksbehandler.valgtBehandling);
         debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDTAK_FATTET);

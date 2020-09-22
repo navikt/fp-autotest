@@ -112,6 +112,10 @@ public class UttakResultatPeriode implements Serializable {
         return oppholdÅrsak;
     }
 
+    public Kode getPeriodeType() {
+        return periodeType;
+    }
+
     public void setPeriodeType(Kode periodeType) {
         this.periodeType = periodeType;
     }

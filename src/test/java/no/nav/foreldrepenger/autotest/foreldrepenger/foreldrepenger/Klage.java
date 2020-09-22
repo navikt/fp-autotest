@@ -51,7 +51,7 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.hentFagsak(sakId);
 
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
-        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventPåOgVelgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp.godkjennAlleFormkrav()
@@ -85,7 +85,7 @@ public class Klage extends ForeldrepengerTestBase {
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
-        beslutter.velgKlageBehandling();
+        beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
@@ -116,7 +116,7 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
-        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventPåOgVelgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp
@@ -166,7 +166,7 @@ public class Klage extends ForeldrepengerTestBase {
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
-        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventPåOgVelgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp
@@ -200,18 +200,18 @@ public class Klage extends ForeldrepengerTestBase {
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
-        beslutter.velgKlageBehandling();
+        beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(bekreftelse);
 
         klagebehandler.hentFagsak(sakId);
-        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventPåOgVelgKlageBehandling();
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
         klagebehandler.ventTilAvsluttetBehandling();
 
         klagebehandler.hentFagsak(sakId);
-        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventPåOgVelgKlageBehandling();
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
                 "KLAGE_YTELSESVEDTAK_STADFESTET");
         verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(),
@@ -232,7 +232,7 @@ public class Klage extends ForeldrepengerTestBase {
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
-        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventPåOgVelgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp.godkjennAlleFormkrav()
@@ -263,13 +263,13 @@ public class Klage extends ForeldrepengerTestBase {
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
-        beslutter.velgKlageBehandling();
+        beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(bekreftelse);
 
         klagebehandler.hentFagsak(sakId);
-        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventPåOgVelgKlageBehandling();
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
         klagebehandler.ventTilAvsluttetBehandling();
 
@@ -293,7 +293,7 @@ public class Klage extends ForeldrepengerTestBase {
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
         klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
-        klagebehandler.velgKlageBehandling();
+        klagebehandler.ventPåOgVelgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp.klageErIkkeKonkret()
@@ -303,7 +303,7 @@ public class Klage extends ForeldrepengerTestBase {
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
-        beslutter.velgKlageBehandling();
+        beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
@@ -337,7 +337,7 @@ public class Klage extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
-        saksbehandler.velgFørstegangsbehandling();
+        saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
 
