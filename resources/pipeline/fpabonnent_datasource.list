@@ -1,5 +1,5 @@
-APP_NAME=fpabonnent
-NAIS_APP_NAME=fpabonnent
+APP_NAME=FPABONNENT
+NAIS_APP_NAME=FPABONNENT
 DEFAULTDS_URL=jdbc:oracle:thin:@oracle:1521/xe
 DEFAULTDS_USERNAME=fpabonnent
 DEFAULTDS_PASSWORD=fpabonnent

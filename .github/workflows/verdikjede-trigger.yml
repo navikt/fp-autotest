@@ -87,6 +87,10 @@ jobs:
           echo "Tester om fprisk er oppe"
           timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8075/fprisk/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
+          echo
+          echo "Tester om fpabonnent er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8065/fpabonnent/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
           echo ::set-env name=STACK_STARTED::true
 
       - name: Utfører verdikjedetestene

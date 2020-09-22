@@ -237,7 +237,6 @@ services:
     environment:
       - "LOADBALANCER_URL=http://localhost:8065"
       - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
-      - "OPENIDCONNECT_USERNAME=fpsak-localhost"
       - "KAFKA_PDL_LEESAH_TOPIC=aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
@@ -245,7 +244,7 @@ services:
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
-      - "8065:8060"
+      - "8065:8080"
     depends_on:
       - oracle
       - vtp
