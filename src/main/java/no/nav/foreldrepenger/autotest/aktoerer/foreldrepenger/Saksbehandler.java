@@ -132,7 +132,7 @@ public class Saksbehandler extends Aktoer {
     @Step("Refresh fagsak")
     private void refreshFagsak() {
         Behandling behandling = valgtBehandling;
-        hentFagsak(valgtFagsak.saksnummer);
+        hentFagsak(valgtFagsak.getSaksnummer());
         if ((valgtBehandling == null) && (behandling != null)) {
             velgBehandling(behandling);
         }
@@ -156,7 +156,7 @@ public class Saksbehandler extends Aktoer {
         }
         valgtFagsak = fagsak;
 
-        behandlinger = hentAlleBehandlingerForFagsak(fagsak.saksnummer);
+        behandlinger = hentAlleBehandlingerForFagsak(fagsak.getSaksnummer());
         velgSisteBehandling();
     }
 
@@ -178,7 +178,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     public void velgSisteBehandling() {
-        var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer).stream()
+        var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.getSaksnummer()).stream()
                 .max(Comparator.comparing(b -> b.opprettet))
                 .orElseThrow();
         velgBehandling(behandling);
@@ -201,8 +201,8 @@ public class Saksbehandler extends Aktoer {
         valgtBehandling = behandlingerKlient.getBehandling(behandling.uuid);
         populateBehandling(valgtBehandling);
 
-        this.historikkInnslag = new Lazy<>(() -> historikkKlient.hentHistorikk(valgtFagsak.saksnummer));
-        this.annenPartBehandling = new Lazy<>(() -> behandlingerKlient.annenPartBehandling(valgtFagsak.saksnummer));
+        this.historikkInnslag = new Lazy<>(() -> historikkKlient.hentHistorikk(valgtFagsak.getSaksnummer()));
+        this.annenPartBehandling = new Lazy<>(() -> behandlingerKlient.annenPartBehandling(valgtFagsak.getSaksnummer()));
     }
 
     @Step("Populerer behandling")
@@ -567,7 +567,7 @@ public class Saksbehandler extends Aktoer {
      */
     public void opprettBehandling(Kode behandlingstype, Kode årsak) {
         opprettBehandling(behandlingstype, årsak, valgtFagsak);
-        hentFagsak(valgtFagsak.saksnummer);
+        hentFagsak(valgtFagsak.getSaksnummer());
     }
 
     public void opprettBehandlingRevurdering(String årsak) {
@@ -617,7 +617,7 @@ public class Saksbehandler extends Aktoer {
             behandlingsId = 0;
         }
         for (HistorikkInnslag innslag : getHistorikkInnslag()) {
-            if (innslag.getTypeKode().contains(type.getKode()) && (innslag.getBehandlingsid() == behandlingsId)) {
+            if (innslag.getTypeKode().contains(type.getKode()) && (innslag.getBehandlingId() == behandlingsId)) {
                 return true;
             }
         }
@@ -628,7 +628,7 @@ public class Saksbehandler extends Aktoer {
      */
 
     public boolean harFagsakstatus(Kode status) {
-        return valgtFagsak.hentStatus().equals(status);
+        return valgtFagsak.getStatus().equals(status);
     }
 
     protected void ventTilFagsakstatus(Kode status) {
@@ -685,7 +685,7 @@ public class Saksbehandler extends Aktoer {
             refreshBehandling();
             return harBehandlingsstatus(status);
         }, 60, "Behandlingsstatus var ikke " + status + " men var " + getBehandlingsstatus() + " i sak: "
-                + valgtFagsak.saksnummer);
+                + valgtFagsak.getSaksnummer());
     }
 
     public boolean harBehandlingsstatus(String status) {
@@ -750,7 +750,7 @@ public class Saksbehandler extends Aktoer {
     @Step("Oppretter behandling på gitt fagsak")
     private void opprettBehandling(Kode behandlingstype, Kode årsak, Fagsak fagsak) {
         behandlingerKlient.putBehandlinger(
-                new BehandlingNy(fagsak.saksnummer, behandlingstype.kode, årsak == null ? null : årsak.kode));
+                new BehandlingNy(fagsak.getSaksnummer(), behandlingstype.kode, årsak == null ? null : årsak.kode));
         velgFagsak(valgtFagsak); // Henter fagsaken på ny
     }
 

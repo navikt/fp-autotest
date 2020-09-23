@@ -14,7 +14,7 @@ public class BekreftedeAksjonspunkter {
 
     public BekreftedeAksjonspunkter(Fagsak fagsak, Behandling behandling,
             List<AksjonspunktBekreftelse> aksjonspunktBekreftelser) {
-        this(behandling.id, "" + fagsak.saksnummer, behandling.versjon, aksjonspunktBekreftelser);
+        this(behandling.id, "" + fagsak.getSaksnummer(), behandling.versjon, aksjonspunktBekreftelser);
     }
 
     public BekreftedeAksjonspunkter(int behandlingId, String saksnummer, int behandlingVersjon,

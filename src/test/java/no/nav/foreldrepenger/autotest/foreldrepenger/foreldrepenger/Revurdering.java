@@ -116,7 +116,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "OPPHØR", "Behandlingsresultat");
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getAvslagsarsak().kode, "1020", "Avslagsårsak");
         verifiserLikhet(beslutter.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
-        logger.info("Status på sak: {}", beslutter.valgtFagsak.hentStatus().kode);
+        logger.info("Status på sak: {}", beslutter.valgtFagsak.getStatus().kode);
     }
 
     @Test
@@ -174,7 +174,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK", "konsekvensForYtelsen");
         saksbehandler.hentFagsak(saksnummerE);
-        verifiser(saksbehandler.valgtFagsak.hentStatus().kode.equals("LOP"), "Status på fagsaken er ikke løpende.");
+        verifiser(saksbehandler.valgtFagsak.getStatus().kode.equals("LOP"), "Status på fagsaken er ikke løpende.");
 
     }
 
@@ -229,7 +229,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtFagsak.hentStatus().kode, "LOP", "Saken er ikke løpende.");
+        verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "LOP", "Saken er ikke løpende.");
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "FORELDREPENGER_ENDRET");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK");
@@ -313,7 +313,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtFagsak.hentStatus().kode, "LOP", "Saken er ikke løpende.");
+        verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "LOP", "Saken er ikke løpende.");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "FORELDREPENGER_ENDRET");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK");
@@ -389,7 +389,7 @@ public class Revurdering extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        verifiserLikhet(saksbehandler.valgtFagsak.hentStatus().kode, "LOP", "Saken er ikke løpende.");
+        verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "LOP", "Saken er ikke løpende.");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "FORELDREPENGER_ENDRET");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "ENDRING_I_UTTAK");

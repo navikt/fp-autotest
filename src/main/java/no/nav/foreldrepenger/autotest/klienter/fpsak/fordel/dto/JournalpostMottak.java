@@ -1,23 +1,27 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class JournalpostMottak {
     private static int inkrementForEksternReferanse = 0;
 
-    protected String saksnummer;
-    protected String journalpostId;
-    protected String forsendelseId;
-    protected String eksternReferanseId;
-    protected String behandlingstemaOffisiellKode;
-    protected String dokumentTypeIdOffisiellKode;
-    protected String forsendelseMottatt;
-    protected String payloadXml;
-    protected Integer payloadLength;
-    protected String dokumentKategoriOffisiellKode;
+    private String saksnummer;
+    private String journalpostId;
+    private String forsendelseId;
+    private String eksternReferanseId;
+    private String behandlingstemaOffisiellKode;
+    private String dokumentTypeIdOffisiellKode;
+    private String forsendelseMottatt;
+    private String payloadXml;
+    private Integer payloadLength;
+    private String dokumentKategoriOffisiellKode;
 
     public JournalpostMottak(String saksnummer, String journalpostId, LocalDate forsendelseMottatt,
             String behandlingstemaOffisiellKode) {
@@ -26,11 +30,58 @@ public class JournalpostMottak {
 
     public JournalpostMottak(String saksnummer, String journalpostId, String forsendelseMottatt,
             String behandlingstemaOffisiellKode) {
-        super();
         this.saksnummer = saksnummer;
         this.journalpostId = journalpostId;
         this.forsendelseMottatt = forsendelseMottatt;
         this.behandlingstemaOffisiellKode = behandlingstemaOffisiellKode;
+    }
+
+    @JsonCreator
+    public JournalpostMottak(String saksnummer, String journalpostId, String forsendelseId,
+                             String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode,
+                             String forsendelseMottatt, String payloadXml, Integer payloadLength,
+                             String dokumentKategoriOffisiellKode) {
+        this.saksnummer = saksnummer;
+        this.journalpostId = journalpostId;
+        this.forsendelseId = forsendelseId;
+        this.behandlingstemaOffisiellKode = behandlingstemaOffisiellKode;
+        this.dokumentTypeIdOffisiellKode = dokumentTypeIdOffisiellKode;
+        this.forsendelseMottatt = forsendelseMottatt;
+        this.payloadXml = payloadXml;
+        this.payloadLength = payloadLength;
+        this.dokumentKategoriOffisiellKode = dokumentKategoriOffisiellKode;
+    }
+
+    public String getSaksnummer() {
+        return saksnummer;
+    }
+
+    public String getJournalpostId() {
+        return journalpostId;
+    }
+
+    public String getForsendelseId() {
+        return forsendelseId;
+    }
+
+    public void setForsendelseId(String forsendelseId) {
+        this.forsendelseId = forsendelseId;
+    }
+
+    public String getBehandlingstemaOffisiellKode() {
+        return behandlingstemaOffisiellKode;
+    }
+
+    public String getForsendelseMottatt() {
+        return forsendelseMottatt;
+    }
+
+    public String getDokumentKategoriOffisiellKode() {
+        return dokumentKategoriOffisiellKode;
+    }
+
+    public void setDokumentKategoriOffisiellKode(String dokumentKategoriOffisiellKode) {
+        this.dokumentKategoriOffisiellKode = dokumentKategoriOffisiellKode;
     }
 
     public String getDokumentTypeIdOffisiellKode() {
@@ -57,12 +108,41 @@ public class JournalpostMottak {
         this.payloadLength = payloadLength;
     }
 
-    public void setForsendelseId(String forsendelseId) {
-        this.forsendelseId = forsendelseId;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JournalpostMottak that = (JournalpostMottak) o;
+        return Objects.equals(saksnummer, that.saksnummer) &&
+                Objects.equals(journalpostId, that.journalpostId) &&
+                Objects.equals(forsendelseId, that.forsendelseId) &&
+                Objects.equals(behandlingstemaOffisiellKode, that.behandlingstemaOffisiellKode) &&
+                Objects.equals(dokumentTypeIdOffisiellKode, that.dokumentTypeIdOffisiellKode) &&
+                Objects.equals(forsendelseMottatt, that.forsendelseMottatt) &&
+                Objects.equals(payloadXml, that.payloadXml) &&
+                Objects.equals(payloadLength, that.payloadLength) &&
+                Objects.equals(dokumentKategoriOffisiellKode, that.dokumentKategoriOffisiellKode);
     }
 
-    public void setDokumentKategoriOffisiellKode(String dokumentKategoriOffisiellKode) {
-        this.dokumentKategoriOffisiellKode = dokumentKategoriOffisiellKode;
+    @Override
+    public int hashCode() {
+        return Objects.hash(saksnummer, journalpostId, forsendelseId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode, forsendelseMottatt, payloadXml, payloadLength, dokumentKategoriOffisiellKode);
+    }
+
+    @Override
+    public String toString() {
+        return "JournalpostMottak{" +
+                "saksnummer='" + saksnummer + '\'' +
+                ", journalpostId='" + journalpostId + '\'' +
+                ", forsendelseId='" + forsendelseId + '\'' +
+                ", behandlingstemaOffisiellKode='" + behandlingstemaOffisiellKode + '\'' +
+                ", dokumentTypeIdOffisiellKode='" + dokumentTypeIdOffisiellKode + '\'' +
+                ", forsendelseMottatt='" + forsendelseMottatt + '\'' +
+                ", payloadXml='" + payloadXml + '\'' +
+                ", payloadLength=" + payloadLength +
+                ", dokumentKategoriOffisiellKode='" + dokumentKategoriOffisiellKode + '\'' +
+                '}';
     }
 
     public void setEksternReferanseId(String eksternReferanseId) {
