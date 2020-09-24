@@ -13,7 +13,7 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
-import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
+import no.nav.foreldrepenger.autotest.internal.klienter.fpsak.SerializationTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BeregningsaktivitetLagreDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BesteberegningFødendeKvinneAndelDto;

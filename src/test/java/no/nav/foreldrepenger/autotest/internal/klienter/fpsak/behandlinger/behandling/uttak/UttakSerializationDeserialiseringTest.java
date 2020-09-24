@@ -18,7 +18,7 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
-import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
+import no.nav.foreldrepenger.autotest.internal.klienter.fpsak.SerializationTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Arbeidsgiver;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.BehandlingMedUttaksperioderDto;
