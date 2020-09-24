@@ -1,18 +1,27 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak;
 
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Stonadskontoer {
-    protected Stønadskonto stonadskontotype;
-    protected int maxDager;
-    protected int saldo;
-    // protected List<AktivitetSaldoDto> aktivitetSaldoDtoList;
+    private final Stønadskonto stonadskontoType;
+    private final int maxDager;
+    private final int saldo;
 
-    public Stønadskonto getStonadskontotype() {
-        return this.stonadskontotype;
+    public Stonadskontoer(Stønadskonto stonadskontoType, int maxDager, int saldo) {
+        this.stonadskontoType = stonadskontoType;
+        this.maxDager = maxDager;
+        this.saldo = saldo;
+    }
+
+    public Stønadskonto getStonadskontoType() {
+        return this.stonadskontoType;
     }
 
     public int getMaxDager() {
@@ -21,6 +30,35 @@ public class Stonadskontoer {
 
     public int getSaldo() {
         return this.saldo;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stonadskontoType, maxDager, saldo);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Stonadskontoer other = Stonadskontoer.class.cast(obj);
+        return Objects.equals(this.saldo, other.saldo)
+                && Objects.equals(this.stonadskontoType, other.stonadskontoType)
+                && Objects.equals(this.maxDager, other.maxDager);
+
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [stonadskontotype=" + stonadskontoType + ", maxDager=" + maxDager
+                + ", saldo=" + saldo + "]";
     }
 
 }
