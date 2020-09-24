@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.dto.NewProsessTaskDto;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
@@ -260,5 +261,10 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         List<ProsessTaskListItemDto> prosesstasker = prosesstaskKlient.list(filter);
         return prosesstasker.stream().filter(p -> p.getTaskParametre().getBehandlingId() == ("" + behandling.id))
                 .collect(Collectors.toList());
+    }
+
+    //Batch trigger
+    public void startAutomatiskBehandlingBatch(){
+        prosesstaskKlient.create(new NewProsessTaskDto("batch.runner", "BFPT-003"));
     }
 }

@@ -143,13 +143,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
                 .leggTilInntekt(testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp() * 6, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
-        saksbehandler.harAksjonspunkt("5059");
-        var vurderRefusjonBeregningsgrunnlagBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderRefusjonBeregningsgrunnlagBekreftelse.class);
-        vurderRefusjonBeregningsgrunnlagBekreftelse
-                .setFastsattRefusjonFomForAllePerioder(LocalDate.now().minusMonths(3))
-                .setBegrunnelse("Fordi autotest sier det!");
-        saksbehandler.bekreftAksjonspunkt(vurderRefusjonBeregningsgrunnlagBekreftelse);
+
         saksbehandler.harAksjonspunkt("5084");
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
         vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingMedVarsel();
@@ -201,6 +195,60 @@ public class Tilbakekreving extends FptilbakeTestBase {
         fattVedtak.godkjennAksjonspunkt(5004);
         tbkbeslutter.behandleAksjonspunkt(fattVedtak);
         tbkbeslutter.ventTilAvsluttetBehandling();
+    }
+
+    @Test
+    @DisplayName("Oppretter en tilbakekreving automatisk etter negativ simulering på fpsak revurdering")
+    @Description("Heltautomatisert scenario. Beløp under et halvt rettsgebyr og blir plukket av auto-batch")
+    public void opprettOgBehandleTilbakekrevingAutomatisk() {
+        TestscenarioDto testscenario = opprettTestscenario("142");
+
+        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+
+        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR).medMottattDato(fpStartdato);
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer);
+
+        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventPåOgVelgFørstegangsbehandling();
+        saksbehandler.ventTilAvsluttetBehandling();
+        AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
+
+        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer, true);
+
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        var vurderBeregnetInntektsAvvikBekreftelse =
+                saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
+        vurderBeregnetInntektsAvvikBekreftelse
+                .leggTilInntekt(testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp() * 6, 1)
+                .setBegrunnelse("Begrunnelse");
+        saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
+
+        saksbehandler.harAksjonspunkt("5084");
+        var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+        var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(KontrollerRevuderingsbehandling.class);
+        saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+
+        tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        tbksaksbehandler.hentSisteBehandling(saksnummer);
+        tbksaksbehandler.ventTilBehandlingErPåVent();
+        verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"), "Behandling har feil vent årsak.");
+
+        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(),
+                saksbehandler.valgtBehandling.id, ytelseType, "NY");
+        kravgrunnlag.leggTilPeriodeMedSmåBeløp();
+        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
+
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
+        tbksaksbehandler.startAutomatiskBehandlingBatch();
+        tbksaksbehandler.ventTilAvsluttetBehandling();
     }
 
     private void lagOgSendInntektsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer){
