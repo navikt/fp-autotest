@@ -3,8 +3,6 @@ name: Kjører verdikjedetestene for fptilbake
 on:
   repository_dispatch:
     types: [fptilbake-verdikjede]
-  schedule:
-    - cron:  '0 0 * * *'
 
 jobs:
   build:
