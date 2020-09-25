@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +52,7 @@ public class KravgrunnlagDetaljert {
         this.ansvarligEnhet = "8020";
         this.bostedEnhet = "8020";
         this.behandlendeEnhet = "8020";
-        this.kontrollFelt = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss").format(new Date()); // 2019-10-22-18.59.28.484337
+        this.kontrollFelt = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSSSSS").format(new Date()); // 2019-10-22-18.59.28.484337
         this.saksBehId = "K231B433";
         this.referanse = behandlingId;
 
@@ -61,13 +63,23 @@ public class KravgrunnlagDetaljert {
         this.referanse = referanse;
     }
 
-    public void leggTilPeriode() {
+    public void leggTilPeriode(){
+        leggTilPeriode(PeriodeType.GENERISK);
+    }
+    public void leggTilPeriodeMedSmåBeløp() {
+        leggTilPeriode(PeriodeType.SMÅ_BELØP);
+        this.kontrollFelt = (LocalDateTime.now().minusMonths(3).withDayOfMonth(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd-hh.mm.ss.SSSSSS")));
+    }
+    public void leggTilPeriode(PeriodeType periodeType) {
         KravgrunnlagPeriode kravgrunnlagPeriode = new KravgrunnlagPeriode(
                 LocalDate.now().minusMonths(6).withDayOfMonth(1).toString(),
                 LocalDate.now().minusMonths(6).withDayOfMonth(LocalDate.now().minusMonths(6).lengthOfMonth())
                         .toString(),
                 BigDecimal.valueOf(412));
-        kravgrunnlagPeriode.leggTilPostering();
+        if (periodeType.equals(PeriodeType.SMÅ_BELØP)){
+            kravgrunnlagPeriode.leggTilPosteringMedLiteBeløp();
+        }
+        else { kravgrunnlagPeriode.leggTilPostering(); }
         this.perioder.add(kravgrunnlagPeriode);
     }
 
@@ -82,5 +94,10 @@ public class KravgrunnlagDetaljert {
                 BigDecimal.ZERO);
         kravgrunnlagPeriode.leggTilPosteringForEngangsstonad();
         this.perioder.add(kravgrunnlagPeriode);
+    }
+
+    public enum PeriodeType {
+        GENERISK,
+        SMÅ_BELØP
     }
 }

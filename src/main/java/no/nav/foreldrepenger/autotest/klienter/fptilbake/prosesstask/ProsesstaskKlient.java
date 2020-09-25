@@ -8,14 +8,16 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.Prosesstask
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsesstaskResultatDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.FptilbakeKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.dto.NewProsessTaskDto;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 import no.nav.foreldrepenger.autotest.util.http.rest.StatusRange;
 
 public class ProsesstaskKlient extends FptilbakeKlient {
 
-    private static String PROSESSTASK_URL = "/prosesstask";
-    private static String PROSESSTASK_LIST_URL = PROSESSTASK_URL + "/list";
-    private static String PROSESSTASK_LAUNCH_URL = PROSESSTASK_URL + "/launch";
+    private static final String PROSESSTASK_URL = "/prosesstask";
+    private static final String PROSESSTASK_LIST_URL = PROSESSTASK_URL + "/list";
+    private static final String PROSESSTASK_LAUNCH_URL = PROSESSTASK_URL + "/launch";
+    private static final String PROSESSTASK_CREATE_URL = PROSESSTASK_URL + "/create";
 
     public ProsesstaskKlient(HttpSession session) {
         super(session);
@@ -30,5 +32,10 @@ public class ProsesstaskKlient extends FptilbakeKlient {
     public ProsesstaskResultatDto launch(ProsesstaskDto prosessTask) {
         String url = hentRestRotUrl() + PROSESSTASK_LAUNCH_URL;
         return postOgHentJson(url, prosessTask, ProsesstaskResultatDto.class, StatusRange.STATUS_SUCCESS);
+    }
+
+    public void create(NewProsessTaskDto newProsessTask) {
+        String url = hentRestRotUrl() + PROSESSTASK_CREATE_URL;
+        postOgVerifiser(url, newProsessTask, StatusRange.STATUS_SUCCESS);
     }
 }

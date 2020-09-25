@@ -29,6 +29,9 @@ public class VurderTilbakekrevingVedNegativSimulering extends AksjonspunktBekref
         setVidereBehandling(VidereBehandling.TILBAKEKR_INFOTRYGD);
         setVarseltekst(varseltekst);
     }
+    public void setTilbakekrevingUtenVarsel(){
+        setVidereBehandling(VidereBehandling.TILBAKEKR_INFOTRYGD);
+    }
     public void setTilbakekrevingIgnorer(){
         setVidereBehandling(VidereBehandling.TILBAKEKR_IGNORER);
     }

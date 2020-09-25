@@ -13,6 +13,10 @@ public class Kravgrunnlag {
         this.kravGrunnlag.leggTilPeriode();
     }
 
+    public void leggTilPeriodeMedSmåBeløp() {
+        this.kravGrunnlag.leggTilPeriodeMedSmåBeløp();
+    }
+
     public void leggTilGeneriskPeriode(String ytelseType) {
         if (ytelseType.equals("ES")) {
             this.kravGrunnlag.leggTilPeriodeForEngangsstonad();

@@ -29,7 +29,7 @@ class ProsesstaskDtoSeraliseringDeserialiseringTest extends SerializationTestBas
     void ProsessTaskListItemDtoTest() {
         test(new ProsessTaskListItemDto(123,"taskType", "nesteKjøringEtter","gruppe",
                 "sekvens", "status", "sistKjørt", "sistFeilKode",
-                new TaskParametereDto("CALLID-123456789", "123456789", "123456789", "123456789")));
+                new TaskParametereDto("CALLID-123456789", "123456789", "123456789", "123456789","batch.runner")));
     }
 
     @Test
@@ -51,7 +51,7 @@ class ProsesstaskDtoSeraliseringDeserialiseringTest extends SerializationTestBas
 
     @Test
     void TaskParametereDtoTest() {
-        test(new TaskParametereDto("CALLID-123456789", "123456789", "123456789", "123456789"));
+        test(new TaskParametereDto("CALLID-123456789", "123456789", "123456789", "123456789","batch.runner"));
     }
 
 

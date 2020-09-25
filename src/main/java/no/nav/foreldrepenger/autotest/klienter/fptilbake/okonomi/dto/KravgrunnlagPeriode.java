@@ -58,4 +58,23 @@ public class KravgrunnlagPeriode {
                 BigDecimal.ZERO);
         this.posteringer.add(kravgrunnlagPeriodePostering);
     }
+
+    public void leggTilPosteringMedLiteBeløp(){
+        KravgrunnlagPeriodePostering kravgrunnlagPeriodePostering = new KravgrunnlagPeriodePostering(
+                "FPATORD", "YTEL",
+                BigDecimal.valueOf(1053),
+                BigDecimal.valueOf(537),
+                BigDecimal.valueOf(516),
+                BigDecimal.ZERO,
+                BigDecimal.valueOf(25.5221));
+        this.posteringer.add(kravgrunnlagPeriodePostering);
+        kravgrunnlagPeriodePostering = new KravgrunnlagPeriodePostering(
+                "KL_KODE_FEIL_KORTTID", "FEIL",
+                BigDecimal.ZERO,
+                BigDecimal.valueOf(516),
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.valueOf(25.5221));
+        this.posteringer.add(kravgrunnlagPeriodePostering);
+    }
 }
