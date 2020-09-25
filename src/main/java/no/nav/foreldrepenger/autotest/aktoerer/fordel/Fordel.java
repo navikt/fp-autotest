@@ -313,7 +313,7 @@ public class Fordel extends Aktoer {
 
         if ((saksnummer == null) || (saksnummer.longValue() == 0L)) {
             OpprettSak journalpost = new OpprettSak(journalpostId, behandlingstemaOffisiellKode, aktørId);
-            saksnummer = fordelKlient.fagsakOpprett(journalpost).saksnummer;
+            saksnummer = fordelKlient.fagsakOpprett(journalpost).getSaksnummer();
         }
 
         journalpostKlient.knyttSakTilJournalpost(journalpostId, saksnummer.toString());
