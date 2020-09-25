@@ -1,18 +1,15 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class TaskParametereDto {
-    @JsonIgnore
     protected String callId;
-    @JsonIgnore
     protected String fagsakId;
-    @JsonIgnore
     protected String behandlingId;
-    @JsonIgnore
     protected String aktoerId;
     @JsonProperty("batch.runner.name")
     protected String batchrunnername;
