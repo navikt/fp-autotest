@@ -22,6 +22,8 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ForeslåVedtak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultat;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.dto.NewProsessTaskDto;
@@ -116,6 +118,18 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             int behandlingId) {
         Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, ident, fpsakBehandlingId, ytelseType, "ENDR");
         okonomiKlient.putGrunnlag(kravgrunnlag, behandlingId);
+    }
+
+    public BeregningResultatPerioder hentResultat(UUID uuid){
+        BeregningResultatPerioder resultat = new BeregningResultatPerioder();
+        for (BeregningResultatPerioder beregningResultatPeriode : okonomiKlient.hentResultat(uuid).getBeregningResultatPerioderList()) {
+            resultat.addRenteBeløp(beregningResultatPeriode.getRenteBeløp());
+            resultat.addSkattBeløp(beregningResultatPeriode.getSkattBeløp());
+            resultat.addTilbakekrevingBeløp(beregningResultatPeriode.getTilbakekrevingBeløp());
+            resultat.addTilbakekrevingBeløpEtterSkatt(beregningResultatPeriode.getTilbakekrevingBeløpEtterSkatt());
+            resultat.addTilbakekrevingBeløpUtenRenter(beregningResultatPeriode.getTilbakekrevingBeløpUtenRenter());
+        }
+        return resultat;
     }
 
     // Aksjonspunkt actions
