@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderEktefellesBarnBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaVergeBekreftelse;
@@ -34,13 +33,13 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
-public class Tilbakekreving extends FptilbakeTestBase {
+public class TilbakekrevingES extends FptilbakeTestBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(Tilbakekreving.class);
+    private static final Logger logger = LoggerFactory.getLogger(TilbakekrevingES.class);
     private static final String ytelseType = "ES";
 
     @Test
-    @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
+    @DisplayName("1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() {
         TestscenarioDto testscenario = opprettTestscenario("55");
@@ -115,10 +114,12 @@ public class Tilbakekreving extends FptilbakeTestBase {
         fattVedtak.godkjennAksjonspunkt(5004);
         tbkbeslutter.behandleAksjonspunkt(fattVedtak);
         tbkbeslutter.ventTilAvsluttetBehandling();
+
+        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp() == 83140, "Forventet tilbakekrevingsbeløp er 83140, tilbakekrevingsbeløp i beregningsresultatet er noe annet");
     }
 
     @Test
-    @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling med verge")
+    @DisplayName("2. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling med verge")
     @Description("FPsak med søker under 18, kopierer verge fra FPSAK, fjerner i FPTILBAKE og legger til ny.")
     public void tilbakeKrevingMedVerge() {
         TestscenarioDto testscenario = opprettTestscenario("54");

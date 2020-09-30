@@ -31,7 +31,7 @@ public class ApVerge extends AksjonspunktBehandling {
         this.vergeType = "VOKSEN";
     }
     public void setVerge(String orgnummer){
-        this.navn = "JURISTENE ADVOKATER";
+        this.navn = "Sleip Advokat";
         this.organisasjonsnummer = orgnummer;
         this.vergeType = "ADVOKAT";
     }

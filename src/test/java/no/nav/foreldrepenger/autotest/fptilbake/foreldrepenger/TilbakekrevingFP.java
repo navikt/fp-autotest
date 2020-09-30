@@ -25,7 +25,6 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRevuderingsbehandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVerge;
@@ -39,13 +38,13 @@ import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
-public class Tilbakekreving extends FptilbakeTestBase {
+public class TilbakekrevingFP extends FptilbakeTestBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(Tilbakekreving.class);
+    private static final Logger logger = LoggerFactory.getLogger(TilbakekrevingFP.class);
     private static final String ytelseType = "FP";
 
     @Test
-    @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
+    @DisplayName("1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() {
 
@@ -114,7 +113,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     }
 
     @Test
-    @DisplayName("Oppretter en tilbakekreving automatisk etter negativ simulering på fpsak revurdering")
+    @DisplayName("2. Oppretter en tilbakekreving automatisk etter negativ simulering på fpsak revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving men med registrert advokat som verge/fullmektig")
     public void opprettTilbakekrevingAutomatisk() {
         TestscenarioDto testscenario = opprettTestscenario("142");
@@ -204,7 +203,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
     }
 
     @Test
-    @DisplayName("Oppretter en tilbakekreving automatisk etter negativ simulering på fpsak revurdering")
+    @DisplayName("3. Oppretter og behandler en tilbakekreving helt-automatisk")
     @Description("Heltautomatisert scenario. Beløp under et halvt rettsgebyr og blir plukket av auto-batch")
     public void opprettOgBehandleTilbakekrevingAutomatisk() {
         TestscenarioDto testscenario = opprettTestscenario("142");
@@ -238,6 +237,7 @@ public class Tilbakekreving extends FptilbakeTestBase {
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
         vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+        saksbehandler.harAksjonspunkt("5055");
         var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(KontrollerRevuderingsbehandling.class);
         saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);

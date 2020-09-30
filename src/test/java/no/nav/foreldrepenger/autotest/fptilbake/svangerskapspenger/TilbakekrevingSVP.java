@@ -32,12 +32,12 @@ import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
-public class Tilbakekreving extends FptilbakeTestBase {
+public class TilbakekrevingSVP extends FptilbakeTestBase {
 
     private static final String ytelseType = "SVP";
 
     @Test
-    @DisplayName("Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
+    @DisplayName("1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() {
         TestscenarioDto testscenario = opprettTestscenario("56");
