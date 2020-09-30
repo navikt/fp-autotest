@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-# Dette scriptet setter opp hele verdikjeden i Docker slik at du kan kjøre opp fpfrontend lokalt.
+# Dette scriptet setter opp hele verdikjeden i Docker utenom fpfrontend slik at du kan kjøre opp fpfrontend lokalt.
 
 ARGUMENT=${1}
 
