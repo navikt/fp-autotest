@@ -1,11 +1,14 @@
 # Lokalt oppsett
+## Krav til PC
+1. Trenger en datamaskin med 12GB RAM eller mer.
+
 ## Oppsett for foreldrepenger
 1. Gå til katalogen der du vil ha kodeprosjektene dine og kjør `git clone git@github.com:navikt/fpsak-autotest.git`
 2. Kjør `cd fpsak-autotest`
 3. Kjør `resources/keystore/make-dummy-keystore.sh`
 4. Legg til følgende i hosts-filen (på Mac/Linux: "/etc/hosts", på Windows: "C:\Windows\System32\drivers\etc\hosts"):
 ```
-127.0.0.1  fptilbake fpoppdrag fpformidling fpfrontend fpsak fpabakus vtp oracle postgres
+127.0.0.1  fptilbake fpoppdrag fpformidling fprisk fpabonennt fpfrontend fpsak fpabakus vtp oracle postgres
 ```
 
 NB. stegene over trenger du bare å gjøre en gang!
@@ -45,9 +48,9 @@ du hvilke applikasjoner du ønsker å kjøre utenfor docker-compose (og valgfrit
     ./setup-lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
       
     Options:                     
-    -m,--mock <applikasjon>     Her kan du velge å mocke ut spesifikke applikasjoner istedenfor å kjøre opp de"
-                                faktiske applikasjonen. En mock av applikasjonen i VTP blir dermed brukt."
-                                Applikasjonene som kan mockes ut er fptilbake, fpoppdrag, fpformidling og fprisk."
+    -m,--mock <applikasjon>     Her kan du velge å mocke ut spesifikke applikasjoner istedenfor å kjøre opp de
+                                faktiske applikasjonen. En mock av applikasjonen i VTP blir dermed brukt.
+                                Applikasjonene som kan mockes ut er fptilbake, fpoppdrag, fpformidling og fprisk.
 
 Etter at du har kjørt scriptet vil det lages en mappen: *lokal-utvikling/docker-compose-lokal*; gå inn i denne mappen.
 Denne mappen inneholder riktig konfigurasjonen for oppsettet i Docker Compose. Som standard så hentes den siste versjon 

@@ -3,13 +3,13 @@ Her er det listet flere eksempler på hvordan en kan bruke docker-compose for lo
 ønsker å kjøre opp applikasjonene i en IDE for å kunne debugge. Disse eksemplene dekker de fleste bruksområdene – skulle de ikke det,
 ta kontakt med ansvarlig.
 
-Rekkefølgen som en kjører opp applikasjonen er veldig viktig, og må tas hensyn til. Avhengighetene til hver applikasjon 
+Rekkefølgen som en kjører opp applikasjonene er veldig viktig, og må tas hensyn til. Avhengighetene til hver applikasjon 
 er listet under.
 
     <ingen avhengigheter>   <----   postgres, oracle og vtp
     postgres og vtp         <----   fpabakus
     oracle og fpabakus      <----   fpsak
-    fpsak                   <----   fpformidlding/fpoppdrag/fptilbake/fpfrontend
+    fpsak                   <----   fpformidlding/fpoppdrag/fptilbake/fpfrontend/fprisk/fpabonnent
 
 Eksemplene nedenfor kjører opp den MINSTE verdikjeden for hver. Dette gjøres fordi det er godt kjent at en del av PCene
 har dårlig specs og ikke tåler at hele verdikjeden blir kjørt opp. Den minste verdikjeden betyr at Docker setter bare opp de 
@@ -124,7 +124,7 @@ av. Her lages det ikke et script: Dette gjøres på den manuelle måten ettersom
 
 6) Kjør deretter opp FPSAK i ønsket IDE.
 
-7) Kjør opp avhengihgetene til FPFORMIDLING (ble gjort i steg 5 og 6)
+7) Kjør opp avhengighetene til FPFORMIDLING (ble gjort i steg 5 og 6)
 
 8) Kjør deretter opp FPFORMIDLING i ønsket IDE.
 

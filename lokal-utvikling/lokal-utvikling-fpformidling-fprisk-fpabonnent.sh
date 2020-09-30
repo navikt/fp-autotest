@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Dette scriptet setter opp avhengighetene til enten fpformidling, fprisk eller fpabonnent. Argumentet som blir valgt
-# konfigurer Docker til å kjøre med denne utenfor
+# Dette scriptet setter opp avhengighetene til enten fpformidling, fprisk eller fpabonnent. Bare ett argument kan velges.
+# Avhengig av applikasjonene du velger så vil dette scriptet mocke ut fpoppdrag, fptilbake, fpformidling og/elelr fprisk.
+# F.eks. velges fpformidling så mockes fpoppdrag, fptilbake og fprisk ut.
 
 ARGUMENT=${1}
 
