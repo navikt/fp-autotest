@@ -8,14 +8,13 @@ ARGUMENT=${1}
 if [[ $ARGUMENT == down ]]; then
   docker-compose -f docker-compose-lokal/docker-compose.yml down
 else
-  sh ./setup-lokal-utvikling.sh fpfrontend
+  sh ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk fpfrontend
 
   if [ -f .env ]; then
-    echo "Bruker eksisterende .env fil: $(pwd)/.env"
+    echo "Bruker applikasjonsversjonene som er definert i eksisterende .env fil: $(pwd)/.env"
   else
-    sh ./update-versions.sh
+    cp docker-compose-lokal/.env .env
   fi
-  cp .env docker-compose-lokal/.env
 
   docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps fpsak
   docker-compose -f docker-compose-lokal/docker-compose.yml up --detach fpsak
