@@ -82,17 +82,12 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     // Henter siste behandlingen fra fptilbake på gitt saksnummer.
     public void hentSisteBehandling(Long saksnummer) {
-        behandlingList = behandlingerKlient.hentAlleTbkBehandlinger(saksnummer);
-        valgtBehandling = null;
         this.saksnummer = String.valueOf(saksnummer);
 
-        if (behandlingList.isEmpty()) {
-            throw new RuntimeException("Finnes ingen behandlinger på saksnummer");
-        } else if (behandlingList.size() == 1) {
-            valgtBehandling = behandlingList.get(0);
-        } else {
-            valgtBehandling = behandlingList.get(behandlingList.size() - 1);
-        }
+        Vent.til(() -> !behandlingerKlient.hentAlleTbkBehandlinger(saksnummer).isEmpty(),
+                30, "Behandling ble ikke opprettet");
+        behandlingList = behandlingerKlient.hentAlleTbkBehandlinger(saksnummer);
+        valgtBehandling = behandlingList.get(behandlingList.size() - 1);
     }
 
     public boolean harBehandlingsstatus(String status) {
