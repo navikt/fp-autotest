@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-# Dette scriptet setter opp avhengighetene til fpsak, slik at fpsak kan kjøres utenfor i IDE.
+# Dette scriptet setter opp avhengighetene til fpsak, slik at fpsak kan kjøres utenfor i IDE. Dette scriptet mocker
+# ut fptilbake, fpoppdrag og fpformidling og spinner heller ikke opp fpabonnent. Ønskes du ikke dette må du gjøre det manuelt.
 
 ARGUMENT=${1}
 
 if [[ $ARGUMENT == down ]]; then
   docker-compose -f docker-compose-lokal/docker-compose.yml down
 else
-  sh ./setup-lokal-utvikling.sh fpsak
+  sh ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk fpsak
 
   if [ -f .env ]; then
-    echo "Bruker eksisterende .env fil: $(pwd)/.env"
+    echo "Bruker applikasjonsversjonene som er definert i eksisterende .env fil: $(pwd)/.env"
   else
-    sh ./update-versions.sh
+    cp docker-compose-lokal/.env .env
   fi
-  cp .env docker-compose-lokal/.env
 
   docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps oracle fpabakus
   docker-compose -f docker-compose-lokal/docker-compose.yml pull fpfrontend

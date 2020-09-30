@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
-# Ønsker du – som er funksjonell eller ikke-teknisk person – å kjøre gjennom tester kan du kjøre dette scriptet for å
-# få opp alt du trenger for å kjøre tester.
+# Dette scriptet setter opp hele verdikjeden i Docker utenom fpfrontend slik at du kan kjøre opp fpfrontend lokalt.
 
 ARGUMENT=${1}
 
@@ -11,12 +9,11 @@ else
   sh ./setup-lokal-utvikling.sh fpfrontend
 
   if [ -f .env ]; then
-    echo "Bruker eksisterende .env fil: $(pwd)/.env"
+    echo "Bruker applikasjonsversjonene som er definert i eksisterende .env fil: $(pwd)/.env"
   else
-    sh ./update-versions.sh
+    cp docker-compose-lokal/.env .env
   fi
-  cp .env docker-compose-lokal/.env
 
-  docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps fpsak
-  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach fpsak
+  docker-compose -f docker-compose-lokal/docker-compose.yml pull
+  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --scale fpfrontend=0
 fi

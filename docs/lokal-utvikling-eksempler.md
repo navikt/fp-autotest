@@ -3,13 +3,13 @@ Her er det listet flere eksempler på hvordan en kan bruke docker-compose for lo
 ønsker å kjøre opp applikasjonene i en IDE for å kunne debugge. Disse eksemplene dekker de fleste bruksområdene – skulle de ikke det,
 ta kontakt med ansvarlig.
 
-Rekkefølgen som en kjører opp applikasjonen er veldig viktig, og må tas hensyn til. Avhengighetene til hver applikasjon 
+Rekkefølgen som en kjører opp applikasjonene er veldig viktig, og må tas hensyn til. Avhengighetene til hver applikasjon 
 er listet under.
 
     <ingen avhengigheter>   <----   postgres, oracle og vtp
     postgres og vtp         <----   fpabakus
     oracle og fpabakus      <----   fpsak
-    fpsak                   <----   fpformidlding/fpoppdrag/fptilbake/fpfrontend
+    fpsak                   <----   fpformidlding/fpoppdrag/fptilbake/fpfrontend/fprisk/fpabonnent
 
 Eksemplene nedenfor kjører opp den MINSTE verdikjeden for hver. Dette gjøres fordi det er godt kjent at en del av PCene
 har dårlig specs og ikke tåler at hele verdikjeden blir kjørt opp. Den minste verdikjeden betyr at Docker setter bare opp de 
@@ -39,9 +39,9 @@ steg 3). Ønsker du å bruke en annen versjon enn den siste for noen av avhengig
 
 
 
-## Eksempel 2: FPFORMIDLING/FPOPPDRAG/FPTILBAKE kjørende i IDE
-La oss si at vi ønsker å kjøre FPFORMIDLING (denne guiden fungere også for FPOPPDRAG og FPTILBAKE) utenfor med minst mulig 
-applikasjoner. Både fpformidling, fpoppdrag og fptilbake har til felles at de kjøres etter fpsak og dette forenkler oppgjøringen 
+## Eksempel 2: FPFORMIDLING/FPABONNENT/FPRISK kjørende i IDE
+La oss si at vi ønsker å kjøre FPFORMIDLING (denne guiden fungere også for FPABONNENT og FPRISK) utenfor med minst mulig 
+applikasjoner. Både fpformidling, fpabonnent og fprisk har til felles at de kjøres etter fpsak og dette forenkler oppgjøringen 
 i Docker Compose. Her er det også laget et scripts som skal gjøre dette lettere.
 
 1) Kjør `cd fpsak-autotest/lokal-utvikling` for å komme inn i mappen _"lokal-utvikling"_.
@@ -50,10 +50,10 @@ steg 3). Ønsker du å bruke en annen versjon enn den siste for noen av avhengig
 
         ./update-versions.sh <APPLIKASJONSNAVN> <VERSION>
 
-3) Kjør scriptet `lokal-utvikling-formidling-oppdrag-tilbake-risk.sh`, som ligger i mappen _"fpsak-autotest/lokal-utvikling"_, med 
+3) Kjør scriptet `lokal-utvikling-fpformidling-fprisk-fpabonnent.sh`, som ligger i mappen _"fpsak-autotest/lokal-utvikling"_, med 
 argumentet "fpformidling".
-    1) For Mac skriv følgende i terminalen: `./lokal-utvikling-formidling-oppdrag-tilbake-risk.sh fpformidling`
-    2) For Windows skriv følgende i terminalen: `sh lokal-utvikling-formidling-oppdrag-tilbake-risk.sh fpformidling`
+    1) For Mac skriv følgende i terminalen: `./lokal-utvikling-fpformidling-fprisk-fpabonnent.sh fpformidling`
+    2) For Windows skriv følgende i terminalen: `sh lokal-utvikling-fpformidling-fprisk-fpabonnent.sh fpformidling`
 
 4) Kjør deretter opp _FPFORMIDLING_ i ønsket IDE.
 
@@ -92,7 +92,7 @@ opp først, mens FPABAKUS har avhengigheter til VTP og POSTGRES. I dette eksempe
 
 7) Kjøre deretter opp resten av verdikjeden. 
 
-    `docker-compose up --quiet-pull --detach --scale fpabakus=0 fpfrontend`
+    `docker-compose up --quiet-pull --detach --scale fpabakus=0`
 
 
 ## Eksempel 4: Mer enn 1 applikasjon utenfor Docker Compose (e.g. FPSAK og FPFORMIDLING)
@@ -120,7 +120,14 @@ av. Her lages det ikke et script: Dette gjøres på den manuelle måten ettersom
     
 5) Kjør opp avhengighetene til FPSAK:
 
-    `docker-compose up --quiet-pull --detach --scale fpsak=0 fpfrontend`
+    `docker-compose up --quiet-pull --detach --scale fpsak=0 fpsak`
 
 6) Kjør deretter opp FPSAK i ønsket IDE.
-7) Kjør deretter opp FPFORMIDLING i ønsket IDE.
+
+7) Kjør opp avhengighetene til FPFORMIDLING (ble gjort i steg 5 og 6)
+
+8) Kjør deretter opp FPFORMIDLING i ønsket IDE.
+
+9) Kjør opp resten av verdikjeden
+
+    `docker-compose up --quiet-pull --detach --scale fpsak=0 --scale fpformidling=0`
