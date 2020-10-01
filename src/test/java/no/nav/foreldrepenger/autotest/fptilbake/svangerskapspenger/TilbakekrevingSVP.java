@@ -14,8 +14,6 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SvangerskapspengerBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
@@ -24,11 +22,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
-import no.nav.vedtak.felles.xml.soeknad.svangerskapspenger.v1.Tilrettelegging;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -40,49 +34,58 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
     @DisplayName("1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     public void opprettTilbakekrevingManuelt() {
-        TestscenarioDto testscenario = opprettTestscenario("56");
-
-        String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
-
-        List<Inntektsperiode> inntektsperioder = testscenario.getScenariodata().getInntektskomponentModell()
-                .getInntektsperioder();
-        List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell()
-                .getArbeidsforhold();
-        String orgnr1 = arbeidsforhold.get(0).getArbeidsgiverOrgnr();
-        String orgnr2 = arbeidsforhold.get(1).getArbeidsgiverOrgnr();
-
-        Tilrettelegging forsteTilrettelegging = TilretteleggingsErketyper.helTilrettelegging(
-                LocalDate.now().minusWeeks(1),
-                LocalDate.now().plusWeeks(2),
-                ArbeidsforholdErketyper.virksomhet(orgnr1));
-        Tilrettelegging andreTilrettelegging2 = TilretteleggingsErketyper.helTilrettelegging(
+        var testscenario = opprettTestscenario("501");
+        var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        var orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                .getArbeidsgiverOrgnr();
+        var tilrettelegginsprosent = 0;
+        LocalDate termindato = LocalDate.now().plusMonths(3);
+        var tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
                 LocalDate.now(),
-                LocalDate.now().plusWeeks(3),
-                ArbeidsforholdErketyper.virksomhet(orgnr2));
-
-        SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR,
-                LocalDate.now().plusWeeks(4),
-                List.of(forsteTilrettelegging, andreTilrettelegging2));
-
+                LocalDate.now(),
+                ArbeidsforholdErketyper.virksomhet(orgNr));
+        var søknad = lagSvangerskapspengerSøknad(
+                søkerAktørId,
+                SøkersRolle.MOR,
+                termindato,
+                List.of(tilrettelegging));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
+        var saksnummer = fordel.sendInnSøknad(
+                søknad.build(),
+                søkerAktørId,
+                søkerFnr,
+                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor,
-                inntektsperioder.get(0).getBeløp(), orgnr1);
-        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor,
-                inntektsperioder.get(1).getBeløp(), orgnr2);
-        fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
+        var månedsinntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+                .getBeløp();
+        var orgNummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                .getArbeidsgiverOrgnr();
+        var inntektsmedling = lagSvangerskapspengerInntektsmelding(
+                søkerFnr,
+                månedsinntekt,
+                orgNummer);
+        fordel.sendInnInntektsmelding(
+                inntektsmedling,
+                søkerAktørId,
+                søkerFnr,
+                saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
+        AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+        avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
+        BekreftSvangerskapspengervilkår bekreftSvangerskapspengervilkår = saksbehandler
+                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+        bekreftSvangerskapspengervilkår
+                .godkjenn()
+                .setBegrunnelse("Godkjenner vilkår");
+        saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
-
-        saksbehandler.ventTilAvsluttetBehandling();
 
         // Her mangler hele SVP revurderingen!
 
@@ -121,5 +124,11 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
         fattVedtak.godkjennAksjonspunkt(5004);
         tbkbeslutter.behandleAksjonspunkt(fattVedtak);
         tbkbeslutter.ventTilAvsluttetBehandling();
+
+        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getRenteBeløp() == 0,"Forventet rentebeløp er 0, rente i beregningsresultat er noe annet");
+        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getSkattBeløp() == 412, "Forventet skattbeløp er 412, skatt i beregningsresultat er noe annet");
+        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp() == 1616, "Forventet tilbakekrevingsbeløp er 412, tilbakekrevingsbeløp i beregningsresultat er noe annet");
+        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløpEtterSkatt() == 1204, "Forventet tilbakekrevingsbeløp etter skatt er 412, tilbakekrevingsbeløp etter skatt i beregningsresultat er noe annet");
+        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløpUtenRenter() == 1616, "Forventet tilbakekrevingsbeløp uten renter er 412, tilbakekrevingsbeløp uten renter i beregningsresultat er noe annet");
     }
 }
