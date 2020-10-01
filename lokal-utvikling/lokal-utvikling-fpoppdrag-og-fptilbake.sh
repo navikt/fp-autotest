@@ -6,7 +6,7 @@ ARGUMENT=${1}
 if [[ $ARGUMENT == down ]]; then
   docker-compose -f docker-compose-lokal/docker-compose.yml down
 else
-  sh ./setup-lokal-utvikling.sh fpoppdrag fptilbake
+  sh ./setup-lokal-utvikling.sh fpoppdrag fptilbake fpfrontend
 
   if [ -f .env ]; then
     echo "Bruker applikasjonsversjonene som er definert i eksisterende .env fil: $(pwd)/.env"
