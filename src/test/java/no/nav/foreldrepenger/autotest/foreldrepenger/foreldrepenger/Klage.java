@@ -90,14 +90,14 @@ public class Klage extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(),
+        verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer().kode,
                 "UGUNST_MEDHOLD_I_KLAGE");
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
         verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(),
                 begrunnelse);
         verifiserFritekst( beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
                 fritekstBrev);
-        verifiserLikhet(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageMedholdArsak(),
+        verifiserLikhet(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageMedholdArsak().kode,
                 "ULIK_VURDERING", "Årsak");
 
     }
@@ -149,7 +149,7 @@ public class Klage extends ForeldrepengerTestBase {
 
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
                 "HJEMSENDE_UTEN_OPPHEVE");
-        verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(),
+        verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering().kode,
                 "HJEMSENDE_UTEN_Å_OPPHEVE");
     }
 
@@ -214,7 +214,7 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.ventPåOgVelgKlageBehandling();
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
                 "KLAGE_YTELSESVEDTAK_STADFESTET");
-        verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering(),
+        verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering().kode,
                 "STADFESTE_YTELSESVEDTAK");
         verifiserBehandlingsstatus(klagebehandler.valgtBehandling.status.kode, "AVSLU");
     }
@@ -274,9 +274,9 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.ventTilAvsluttetBehandling();
 
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
-        verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer(),
+        verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer().kode,
                 "DELVIS_MEDHOLD_I_KLAGE");
-        verifiserLikhet(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageMedholdArsak(),
+        verifiserLikhet(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageMedholdArsak().kode,
                 "ULIK_VURDERING");
     }
 

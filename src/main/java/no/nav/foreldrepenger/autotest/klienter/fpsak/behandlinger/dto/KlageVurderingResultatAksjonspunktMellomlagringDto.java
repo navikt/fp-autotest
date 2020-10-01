@@ -1,21 +1,26 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KlageVurderingResultat;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE, fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class KlageVurderingResultatAksjonspunktMellomlagringDto {
 
-    protected String kode;
-    protected String begrunnelse;
-    protected int behandlingId;
-    protected String fritekstTilBrev;
-    protected String klageMedholdArsak;
-    protected String klageVurdering;
-    protected String klageVurderingOmgjoer;
+    private String kode;
+    private String begrunnelse;
+    private int behandlingId;
+    private String fritekstTilBrev;
+    private Kode klageMedholdArsak;
+    private Kode klageVurdering;
+    private Kode klageVurderingOmgjoer;
 
     public KlageVurderingResultatAksjonspunktMellomlagringDto(String kode, String begrunnelse, int behandlingId,
-            String fritekstTilBrev, String klageMedholdArsak, String klageVurdering, String klageVurderingOmgjoer) {
+                                                              String fritekstTilBrev, Kode klageMedholdArsak,
+                                                              Kode klageVurdering, Kode klageVurderingOmgjoer) {
         super();
         this.kode = kode;
         this.begrunnelse = begrunnelse;
@@ -33,8 +38,6 @@ public class KlageVurderingResultatAksjonspunktMellomlagringDto {
     }
 
     public KlageVurderingResultatAksjonspunktMellomlagringDto(Behandling behandling, Aksjonspunkt aksjonspunkt) {
-        this(behandling.id, behandling.getKlagevurdering().getKlageVurderingResultatNFP(), aksjonspunkt); // lage for
-                                                                                                          // hvert av
-                                                                                                          // dem?
+        this(behandling.id, behandling.getKlagevurdering().getKlageVurderingResultatNFP(), aksjonspunkt); // lage for hvert av dem?
     }
 }

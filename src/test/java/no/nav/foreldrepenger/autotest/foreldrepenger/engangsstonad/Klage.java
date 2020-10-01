@@ -317,7 +317,7 @@ public class Klage extends FpsakTestBase {
         verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD",
                 "Behandlingsresultat");
         verifiserKlageVurderingOmgjoer(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP()
-                .getKlageVurderingOmgjoer(), "GUNST_MEDHOLD_I_KLAGE");
+                .getKlageVurderingOmgjoer().kode, "GUNST_MEDHOLD_I_KLAGE");
 
         beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
@@ -366,7 +366,7 @@ public class Klage extends FpsakTestBase {
         verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(),
                 begrunnelse2);
         verifiserKlageVurderingOmgjoer(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer(),
+                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer().kode,
                 "DELVIS_MEDHOLD_I_KLAGE");
     }
 

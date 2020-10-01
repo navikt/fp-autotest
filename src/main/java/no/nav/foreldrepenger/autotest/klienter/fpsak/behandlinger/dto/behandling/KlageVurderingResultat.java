@@ -1,26 +1,27 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
-import java.time.LocalDate;
-
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class KlageVurderingResultat {
-    protected String klageVurdering;
-    protected String begrunnelse;
-    protected String fritekstTilBrev;
-    protected String klageAvvistArsakNavn;
-    protected String klageMedholdArsak;
-    protected String klageMedholdArsakNavn;
-    protected String klageVurderingOmgjoer;
-    protected String klageVurdertAv;
-    protected LocalDate vedtaksdatoPaklagdBehandling;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
-    public String getKlageVurdering() {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE, fieldVisibility= JsonAutoDetect.Visibility.ANY)
+public class KlageVurderingResultat {
+    private Kode klageVurdering;
+    private String begrunnelse;
+    private String fritekstTilBrev;
+    private Kode klageMedholdArsak;
+    private String klageAvvistArsakNavn;
+    private Kode klageVurderingOmgjoer;
+    private String klageVurdertAv;
+    private Boolean godkjentAvMedunderskriver;
+
+    public Kode getKlageVurdering() {
         return klageVurdering;
     }
 
-    public void setKlageVurdering(String klageVurdering) {
+    public void setKlageVurdering(Kode klageVurdering) {
         this.klageVurdering = klageVurdering;
     }
 
@@ -40,6 +41,14 @@ public class KlageVurderingResultat {
         this.fritekstTilBrev = fritekstTilBrev;
     }
 
+    public Kode getKlageMedholdArsak() {
+        return klageMedholdArsak;
+    }
+
+    public void setKlageMedholdArsak(Kode klageMedholdArsak) {
+        this.klageMedholdArsak = klageMedholdArsak;
+    }
+
     public String getKlageAvvistArsakNavn() {
         return klageAvvistArsakNavn;
     }
@@ -48,27 +57,11 @@ public class KlageVurderingResultat {
         this.klageAvvistArsakNavn = klageAvvistArsakNavn;
     }
 
-    public String getKlageMedholdArsak() {
-        return klageMedholdArsak;
-    }
-
-    public void setKlageMedholdArsak(String klageMedholdArsak) {
-        this.klageMedholdArsak = klageMedholdArsak;
-    }
-
-    public String getKlageMedholdArsakNavn() {
-        return klageMedholdArsakNavn;
-    }
-
-    public void setKlageMedholdArsakNavn(String klageMedholdArsakNavn) {
-        this.klageMedholdArsakNavn = klageMedholdArsakNavn;
-    }
-
-    public String getKlageVurderingOmgjoer() {
+    public Kode getKlageVurderingOmgjoer() {
         return klageVurderingOmgjoer;
     }
 
-    public void setKlageVurderingOmgjoer(String klageVurderingOmgjoer) {
+    public void setKlageVurderingOmgjoer(Kode klageVurderingOmgjoer) {
         this.klageVurderingOmgjoer = klageVurderingOmgjoer;
     }
 
@@ -80,11 +73,11 @@ public class KlageVurderingResultat {
         this.klageVurdertAv = klageVurdertAv;
     }
 
-    public LocalDate getVedtaksdatoPaklagdBehandling() {
-        return vedtaksdatoPaklagdBehandling;
+    public Boolean getGodkjentAvMedunderskriver() {
+        return godkjentAvMedunderskriver;
     }
 
-    public void setVedtaksdatoPaklagdBehandling(LocalDate vedtaksdatoPaklagdBehandling) {
-        this.vedtaksdatoPaklagdBehandling = vedtaksdatoPaklagdBehandling;
+    public void setGodkjentAvMedunderskriver(Boolean godkjentAvMedunderskriver) {
+        this.godkjentAvMedunderskriver = godkjentAvMedunderskriver;
     }
 }
