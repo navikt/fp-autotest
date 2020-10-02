@@ -83,7 +83,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilBehandlingsstatus("UBEH");
         verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "UBEH", "Fagsakstatus sak mor");
         long saksnummerFar = sendInnSøknadFar(testscenario, fødselsdato, fpstartdatoFar);
         saksbehandler.hentFagsak(saksnummerFar);
