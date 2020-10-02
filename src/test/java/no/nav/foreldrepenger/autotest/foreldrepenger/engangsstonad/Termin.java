@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErket
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
@@ -66,32 +64,6 @@ public class Termin extends FpsakTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
 
-    }
-
-    @Disabled // Disabled til Kafka støtte for brev er i VTP
-    @Test
-    @DisplayName("Mor søker termin men mangler dokumentasjon")
-    @Description("Mor søker termin men mangler dokumentasjon og sender melding om manglende brev")
-    public void morSøkerTerminManglerDokumentasjon() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                SøkersRolle.MOR,
-                LocalDate.now().plusWeeks(3));
-
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
-
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.sendBrev("INNHEN", "Søker", "Trenger utstedt dato");
-        saksbehandler.settBehandlingPåVent(LocalDate.now().plusDays(2), "AVV_DOK");
-
-        // Todo mock brev
-        // verifiser(saksbehandler.harDokument(""), "Behandling har ikke dokument");
-
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
     }
 
     @Test

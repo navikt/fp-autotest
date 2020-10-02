@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErket
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -28,38 +27,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("foreldrepenger")
 public class Soknadsfrist extends FpsakTestBase {
-
-    @Test
-    @Disabled
-    @DisplayName("Mor søker for sent men får godkjent")
-    @Description("Mor søker for sent men får godkjent alikevel")
-    public void behandleFødselEngangstønadSøknadsfristGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("52");
-        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        LocalDate fødselsdato = LocalDate.now().minusMonths(7);
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
-
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
-
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummer);
-        var vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
-                .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
-        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
-
-        // Får rtesultat utvandret?
-
-        /*
-         * saksbehandler.hentAksjonspunktbekreftelse(
-         * AvklarBrukerHarGyldigPeriodeBekreftelse.class)
-         * .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM")
-         * ); saksbehandler.bekreftAksjonspunktBekreftelse(
-         * AvklarBrukerHarGyldigPeriodeBekreftelse.class);
-         */
-    }
 
     @Test
     @DisplayName("Behandle søknadsfrist og sent tilbake")
