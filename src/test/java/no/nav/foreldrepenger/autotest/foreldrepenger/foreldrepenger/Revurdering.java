@@ -98,7 +98,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         overstyrer.ventPåOgVelgRevurderingBehandling();
         OverstyrMedlemskapsvilkaaret overstyrMedlemskapsvilkaaret = new OverstyrMedlemskapsvilkaaret();
         overstyrMedlemskapsvilkaaret
-                .avvis(hentKodeverk().Avslagsårsak.get("FP_VK_2").getKode("1020" /* Søker er ikke medlem */))
+                .avvis(saksbehandler.hentKodeverk().Avslagsårsak.get("FP_VK_2").getKode("1020" /* Søker er ikke medlem */))
                 .setBegrunnelse("avvist");
         overstyrer.overstyr(overstyrMedlemskapsvilkaaret);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
@@ -485,15 +485,15 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler
-                .aksjonspunktBekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
+                .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
                 .bekreftHarIkkeGyldigGrunn();
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
-        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(VurderSoknadsfristForeldrepengerBekreftelse.class));
-        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(bekreftelse);
 
         saksbehandler.ventTilAvsluttetBehandling();
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() > 1, "Forventer avslåtte uttaksperioder");

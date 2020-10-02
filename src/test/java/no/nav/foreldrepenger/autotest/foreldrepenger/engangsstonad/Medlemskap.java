@@ -50,7 +50,7 @@ public class Medlemskap extends FpsakTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
-                .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                .setVurdering(saksbehandler.hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
                         saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(ab);
 

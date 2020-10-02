@@ -8,7 +8,6 @@ import no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger.Saksbehandler;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kodeverk;
 
 public class FpsakTestBase extends TestScenarioTestBase {
 
@@ -30,15 +29,8 @@ public class FpsakTestBase extends TestScenarioTestBase {
         klagebehandler = new Saksbehandler();
     }
 
-    protected Kodeverk hentKodeverk() {
-        if ((saksbehandler != null) && (saksbehandler.kodeverk != null)) {
-            return saksbehandler.kodeverk;
-        }
-        return null;
-    }
-
-    protected void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,
-            boolean revurdering) {
+    public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,
+                                                                                         boolean revurdering) {
         if (!revurdering) {
             saksbehandler.ventTilRisikoKlassefiseringsstatus(saksbehandler.valgtBehandling.uuid.toString(), "IKKE_HOY");
         }
@@ -57,5 +49,4 @@ public class FpsakTestBase extends TestScenarioTestBase {
             saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
         }
     }
-
 }
