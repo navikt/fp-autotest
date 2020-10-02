@@ -230,7 +230,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         // FAKTA OM MEDLEMSKAP
         var avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
-                .setVurdering(hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                .setVurdering(saksbehandler.hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
                         saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 

@@ -528,7 +528,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         PapirSoknadForeldrepengerBekreftelse aksjonspunktBekreftelse = saksbehandler
-                .aksjonspunktBekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
+                .hentAksjonspunktbekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
         FordelingDto fordeling = new FordelingDto();
         PermisjonPeriodeDto fpff = new PermisjonPeriodeDto(FORELDREPENGER_FØR_FØDSEL,
                 startDatoForeldrepenger, fødselsdato.minusDays(1));
@@ -555,7 +555,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var aksjonspunktBekreftelseEndringssøknad = saksbehandler
-                .aksjonspunktBekreftelse(PapirSoknadEndringForeldrepengerBekreftelse.class);
+                .hentAksjonspunktbekreftelse(PapirSoknadEndringForeldrepengerBekreftelse.class);
         FordelingDto fordelingEndringssøknad = new FordelingDto();
         // Legger til fellesperiode på slutten
         PermisjonPeriodeDto fellesperiode = new PermisjonPeriodeDto(FELLESPERIODE,
@@ -837,7 +837,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         // 20 uker fra erketype
         avklarFaktaUttakPerioder.delvisGodkjennPeriode(fødselsdato, fødselsdato.plusWeeks(20), fødselsdato,
                 fødselsdato.plusWeeks(20),
-                hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
+                saksbehandler.hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler

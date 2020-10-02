@@ -15,8 +15,8 @@ public class RisikovurderingKlient extends FpRiskKlient {
         super(session);
     }
 
-    public RisikovurderingResponse getRisikovurdering(String konsumentId) {
-        HentRisikovurderingDto request = new HentRisikovurderingDto(konsumentId);
+    public RisikovurderingResponse getRisikovurdering(String uuid) {
+        HentRisikovurderingDto request = new HentRisikovurderingDto(uuid);
         String url = hentRestRotUrl() + RISIKOVURDERING_HENT_URL;
         return postOgHentJson(url, request, RisikovurderingResponse.class, StatusRange.STATUS_SUCCESS);
     }

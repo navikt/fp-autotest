@@ -230,7 +230,7 @@ public class Fodsel extends FpsakTestBase {
         AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
         avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(
-                hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                saksbehandler.hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
                 saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 
@@ -275,7 +275,7 @@ public class Fodsel extends FpsakTestBase {
         AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
         avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(
-                hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
+                saksbehandler.hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
                 saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 

@@ -405,7 +405,7 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         PapirSoknadForeldrepengerBekreftelse aksjonspunktBekreftelseMor = saksbehandler
-                .aksjonspunktBekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
+                .hentAksjonspunktbekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
         FordelingDto fordeling = new FordelingDto();
         PermisjonPeriodeDto før = new PermisjonPeriodeDto(
                 FORELDREPENGER_FØR_FØDSEL, fpStartMor, fpStartMor.plusWeeks(3).minusDays(1));
@@ -623,7 +623,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         PapirSoknadForeldrepengerBekreftelse aksjonspunktBekreftelseFar = saksbehandler
-                .aksjonspunktBekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
+                .hentAksjonspunktbekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
         FordelingDto fordeling = new FordelingDto();
         PermisjonPeriodeDto fk = new PermisjonPeriodeDto(
                 FEDREKVOTE, fpStartFar, fpStartFar.plusWeeks(2));

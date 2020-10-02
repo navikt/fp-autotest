@@ -50,7 +50,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerBosattBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
@@ -84,6 +83,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilBehandlingsstatus("UBEH");
         verifiserLikhet(saksbehandler.valgtFagsak.getStatus().kode, "UBEH", "Fagsakstatus sak mor");
         long saksnummerFar = sendInnSøknadFar(testscenario, fødselsdato, fpstartdatoFar);
         saksbehandler.hentFagsak(saksnummerFar);
@@ -334,8 +334,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
         verifiser(saksbehandler.sakErKobletTilAnnenpart(), "Mor sin sak ikke koblet til far sin sak.");
         verifiser(saksbehandler.behandlinger.size() == 2, "Feil antall behandlinger hos mor");
-        Behandling sistebehandling = saksbehandler.behandlinger.get(1);
-        saksbehandler.velgBehandling(sistebehandling);
+        saksbehandler.velgSisteBehandling();
         int morDispMødrekvote = saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(MØDREKVOTE)
                 .getSaldo();
         int morDispFedrekvote = saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FEDREKVOTE)
