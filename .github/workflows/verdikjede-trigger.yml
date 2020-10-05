@@ -19,7 +19,7 @@ on:
   repository_dispatch:
     types: [fpsak-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fprisk-verdikjede, fpabonnent-verdikjede]
   schedule:
-    - cron:  '0 0 * * *'
+    - cron:  '30 5 * * *'
 
 jobs:
   build:
