@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v2.3.3
       - name: Set cache key
         run: |
-          echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
-          echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
+          echo "CACHE_KEY=$(expr $(date +%V) - 1 + 1)" >> $GITHUB_ENV
+          echo "PREVIOUS_CACHE_KEY=$(expr $(date +%V) - 1)" >> $GITHUB_ENV
       - uses: actions/cache@v2.1.1
         with:
           path: ~/.m2
@@ -30,7 +30,7 @@ jobs:
       - name: Setup fpsak og dens avhengigheter
         shell: bash
         run: |
-          echo ::set-env name=STACK_STARTED::false
+          echo "STACK_STARTED=false" >> $GITHUB_ENV
           echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
@@ -43,7 +43,7 @@ jobs:
       - name: Venter på stacken og sjekker status
         shell: bash
         run: |
-          echo ::set-env name=STACK_CREATED::true
+          echo "STACK_CREATED=true" >> $GITHUB_ENV
           docker ps -a
           echo
           echo "Tester om VTP er oppe"
@@ -57,7 +57,7 @@ jobs:
           echo "Tester om fp-sak er oppe"
           timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
-          echo ::set-env name=STACK_STARTED::true
+          echo "STACK_STARTED=true" >> $GITHUB_ENV
 
       - name: Utfører foreldrepengetestene for fpsak
         if: always() && env.STACK_STARTED == 'true'
@@ -73,14 +73,14 @@ jobs:
         if: always() && env.STACK_STARTED == 'true' && steps.tester.outcome != 'skipped' && steps.tester.outcome != 'cancelled'
         shell: bash
         run: |
-          echo "::set-env name=TEST_RESULTAT::$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)"
+          echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
           rm test-result-log.txt
           if [ ${{ steps.tester.outcome }} == success ]; then
             echo "Test success!"
-            echo ::set-env name=TEST_OUTCOME::success
+            echo "TEST_OUTCOME=success" >> $GITHUB_ENV
           else
             echo "Test failure!"
-            echo ::set-env name=TEST_OUTCOME::failure
+            echo "TEST_OUTCOME=failure" >> $GITHUB_ENV
           fi
 
       - name: Oppdaterer issue med testresultat
