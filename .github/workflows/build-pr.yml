@@ -24,8 +24,8 @@ jobs:
       - uses: actions/checkout@v2.3.3
       - name: Set cache key
         run: |
-          echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
-          echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
+          echo "CACHE_KEY=$(expr $(date +%V) - 1 + 1)" >> $GITHUB_ENV
+          echo "PREVIOUS_CACHE_KEY=$(expr $(date +%V) - 1)" >> $GITHUB_ENV
       - uses: actions/cache@v2.1.1
         with:
           path: ~/.m2
@@ -39,7 +39,7 @@ jobs:
       - name: Setup fpsak og dens avhengigheter
         shell: bash
         run: |
-          echo ::set-env name=STACK_STARTED::false
+          echo "STACK_STARTED=false" >> $GITHUB_ENV
           echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
@@ -52,7 +52,7 @@ jobs:
       - name: Venter på stacken og sjekker status
         shell: bash
         run: |
-          echo ::set-env name=STACK_CREATED::true
+          echo "STACK_CREATED=true" >> $GITHUB_ENV
           docker ps -a
           echo
           echo "Tester om VTP er oppe"
@@ -66,7 +66,7 @@ jobs:
           echo "Tester om fp-sak er oppe"
           timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
-          echo ::set-env name=STACK_STARTED::true
+          echo "STACK_STARTED=true" >> $GITHUB_ENV
 
       - name: Utfører autotestene for fpsak
         shell: bash
