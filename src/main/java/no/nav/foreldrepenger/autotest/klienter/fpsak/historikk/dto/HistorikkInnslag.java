@@ -19,6 +19,10 @@ public class HistorikkInnslag { ;
     protected Kode kjoenn;
     protected List<HistorikkinnslagDel> historikkinnslagDeler;
 
+    HistorikkInnslag(){
+        // for test
+    }
+
     public HistorikkInnslag(int behandlingId, Kode type, Kode aktoer, Kode kjoenn,
                             List<HistorikkinnslagDel> historikkinnslagDeler) {
         this.behandlingId = behandlingId;

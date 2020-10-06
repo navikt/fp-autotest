@@ -14,6 +14,10 @@ public class Fagsak {
     private long saksnummer;
     private Kode status;
 
+    Fagsak(){
+        // for test
+    }
+
     public Fagsak(long saksnummer, Kode status) {
         this.saksnummer = saksnummer;
         this.status = status;
