@@ -35,7 +35,7 @@ public class KravgrunnlagDetaljert {
     public KravgrunnlagDetaljert(Long saksnummer, String ident, String behandlingId, String ytelseType,
             String kravStatusKode) {
         this.vedtakId = saksnummer - 11111;
-        this.kravgrunnlagId = saksnummer - 11112;
+        this.kravgrunnlagId = 10000L + (long) (Math.random() * (9999999L - 10000L));
         this.kravStatusKode = kravStatusKode;
         if (ytelseType.equals("ES")) {
             this.fagOmrådeKode = "REFUTG";
