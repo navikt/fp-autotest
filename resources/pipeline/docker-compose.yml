@@ -163,7 +163,7 @@ services:
     image: $FPDOKGEN_IMAGE
     container_name: fpdokgen
     restart: on-failure
-    mem_limit: 256mb
+    mem_limit: 512mb
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
