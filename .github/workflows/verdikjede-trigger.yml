@@ -52,7 +52,7 @@ jobs:
           echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          docker-compose up --quiet-pull --detach fpsak fpformidling fpoppdrag fptilbake fprisk fpabonnent
+          docker-compose up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent
 
       - name: Venter på stacken og sjekker status
         shell: bash
