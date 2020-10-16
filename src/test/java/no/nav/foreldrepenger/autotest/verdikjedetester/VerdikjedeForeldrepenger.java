@@ -770,6 +770,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         /* Mor: berørt sak */
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
+
+        // TODO: Løs AP 5084 negativ simulering!
+
         saksbehandler.ventTilAvsluttetBehandling();
         verifiser(saksbehandler.valgtBehandling.hentBehandlingsresultat().equalsIgnoreCase("FORELDREPENGER_ENDRET"),
                 "Foreldrepenger skal være endret pga annenpart har overlappende uttak!");
@@ -1111,6 +1114,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class);
         saksbehandler.bekreftAksjonspunkt(kontrollerManueltOpprettetRevurdering);
 
+//        // TODO: Løs AP 5084 negativ simulering!
+//        var vurderTilbakekrevingVedNegativSimulering = saksbehandler
+//                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+//        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
+//        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
 
         BeregningsresultatPeriode[] beregningsresultatPeriodeRevurdering = saksbehandler.valgtBehandling
@@ -1243,6 +1252,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering);
 
+        // TODO: Sjekk negativ simulering AP. 5084.
+
         // AG sender inn ny korrigert IM med endring i refusjon mens behandlingen er hos beslutter. Behandlingen skal
         // rulles tilbake og behandles på nytt fra første AP i revurderingen.
         var inntektsmeldingEndringFar2 = lagInntektsmelding(
@@ -1282,6 +1293,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelseRevurdering2.innvilgManuellePerioder(
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering2);
+
+        // TODO: Løs AP negativ simulering 5084.
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
 

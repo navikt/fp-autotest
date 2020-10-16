@@ -142,9 +142,9 @@ services:
     environment:
       - "TZ=Europe/Oslo"
       - "FPSAK_REST_BASE_URL=http://fpsak:8080"
+      - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
       - "DOKDIST_REST_BASE_URL=https://vtp:8063/rest/dokdist/v1"
-      - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
       - "JOURNALPOST_REST_V1_URL=https://vtp:8063/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "LOADBALANCER_URL=http://localhost:8010"
       - "LOADBALANCER_FQDN=localhost:8010"

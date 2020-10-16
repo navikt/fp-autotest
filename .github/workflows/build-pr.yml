@@ -94,6 +94,6 @@ jobs:
         if: failure()
         shell: bash
         run: |
+          docker stats --no-stream
           docker system df -v
-          docker system df
           df -h
