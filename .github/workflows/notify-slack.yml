@@ -1,15 +1,16 @@
 name: notify-slack
 on:
-  repository_dispatch:
-    types: [notify-slack]
+  pull_request:
+    branches:
+      - master
 
 env:
-  TRIGGER:  ${{ github.event.client_payload.trigger }}
-  VERSION: ${{ github.event.client_payload.version }}
-  STACK_STARTED:  ${{ github.event.client_payload.stack_started }}
-  TEST_OUTCOME:  ${{ github.event.client_payload.test_outcome }}
-  TEST_RESULTAT: ${{ github.event.client_payload.test_resultat }}
-  RUN_ID: ${{ github.event.client_payload.run_id }}
+  TRIGGER: navikt/fp-sak
+  VERSION: 4.0.0-2020.10.19.142701-afe8aab
+  STACK_STARTED:  true
+  TEST_OUTCOME:  success
+  TEST_RESULTAT: hvem vet
+  RUN_ID: 315470758
 
 jobs:
   notify:
@@ -76,7 +77,7 @@ jobs:
         if: always()
         uses: rtCamp/action-slack-notify@v2.1.0
         env:
-          SLACK_CHANNEL: vtp-autotest-resultat
+          SLACK_CHANNEL: gatest
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ${{ env.SLACK_TITLE }}
