@@ -44,7 +44,8 @@ jobs:
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
             if [ ${{ env.TRIGGER }} == navikt/fp-sak ] || [ ${{ env.TRIGGER }} == navikt/fp-abakus ] ; then
-              echo "SLACK_MESSAGE=*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }} \\n *Resultat*: ${{ env.TEST_RESULTAT }}, \n Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport> '%0A' *Endringer*: ${{ env.DIFFERANSE }}%0A*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>" >> $GITHUB_ENV
+              echo "SLACK_MESSAGE=*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }} \\n *Resultat*: ${{ env.TEST_RESULTAT }},
+                    Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport> '%0A' *Endringer*: ${{ env.DIFFERANSE }}%0A*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>" >> $GITHUB_ENV
               if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
                 echo "SLACK_TITLE=Autotestene er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
