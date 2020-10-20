@@ -3,6 +3,7 @@ on:
   repository_dispatch:
     types: [notify-slack]
 
+
 env:
   TRIGGER:  ${{ github.event.client_payload.trigger }}
   VERSION: ${{ github.event.client_payload.version }}
@@ -43,33 +44,47 @@ jobs:
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
             if [ ${{ env.TRIGGER }} == navikt/fp-sak ] || [ ${{ env.TRIGGER }} == navikt/fp-abakus ] ; then
-              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>%0A*Endringer*: ${{ env.DIFFERANSE }}%0A*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>"
+              echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
+                echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
+                echo '*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>' >> $GITHUB_ENV
+                echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
+                echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
+              echo '\n' >> $GITHUB_ENV
               if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
-                echo "::set-env name=SLACK_TITLE::Autotestene er kjørt UTEN feil :rocket:"
-                echo "::set-env name=SLACK_COLOR::#37df1d"
+                echo "SLACK_TITLE=Autotestene er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
+                echo "SLACK_COLOR=#37df1d" >> $GITHUB_ENV
               else
                 echo "Test failure!"
-                echo "::set-env name=SLACK_TITLE::Autotestene feilet :boom:"
-                echo "::set-env name=SLACK_COLOR::#df1515"
+                echo "SLACK_TITLE=Autotestene feilet :boom:" >> $GITHUB_ENV
+                echo "SLACK_COLOR=#df1515" >> $GITHUB_ENV
               fi
             else
-              echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>%0A*Endringer*: ${{ env.DIFFERANSE }}%0A*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>"
+              echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
+                echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
+                echo '*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>' >> $GITHUB_ENV
+                echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
+                echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
+              echo '\n' >> $GITHUB_ENV
               if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
-                echo "::set-env name=SLACK_TITLE::Verdikjedetestene er kjørt UTEN feil :rocket:"
-                echo "::set-env name=SLACK_COLOR::#37df1d"
+                echo "SLACK_TITLE=Verdikjedetestene er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
+                echo "SLACK_COLOR=#37df1d" >> $GITHUB_ENV
               else
                 echo "Test failure!"
-                echo "::set-env name=SLACK_TITLE::Verdikjedetestene feilet :boom:"
-                echo "::set-env name=SLACK_COLOR::#df1515"
+                echo "SLACK_TITLE=Verdikjedetestene feilet :boom:" >> $GITHUB_ENV
+                echo "SLACK_COLOR=#df1515" >> $GITHUB_ENV
               fi
             fi
           else
             echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
-            echo "::set-env name=SLACK_TITLE::Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:"
-            echo "::set-env name=SLACK_MESSAGE::*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}%0A*Endringer*: ${{ env.DIFFERANSE }}%0A*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>"
-            echo "::set-env name=SLACK_COLOR::#e79a07"
+            echo "SLACK_TITLE=Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:" >> $GITHUB_ENV
+            echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
+              echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
+              echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
+              echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
+            echo '\n' >> $GITHUB_ENV
+            echo "SLACK_COLOR=#e79a07" >> $GITHUB_ENV
           fi
 
       - name: Slack Notification
