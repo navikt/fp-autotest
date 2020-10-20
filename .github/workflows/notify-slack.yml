@@ -46,6 +46,7 @@ jobs:
             if [ ${{ env.TRIGGER }} == navikt/fp-sak ] || [ ${{ env.TRIGGER }} == navikt/fp-abakus ] ; then
               echo "SLACK_MESSAGE<<'\n'" >> $GITHUB_ENV
               echo "Test '\n' Test \n \Test" >> $GITHUB_ENV
+              echo "Test '\n' Test \n \Test" >> $GITHUB_ENV
               echo "\n" >> $GITHUB_ENV
               if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
