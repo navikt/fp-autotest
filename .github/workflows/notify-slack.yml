@@ -1,16 +1,16 @@
 name: notify-slack
 on:
-  pull_request:
-    branches:
-      - master
+  repository_dispatch:
+    types: [notify-slack]
+
 
 env:
-  TRIGGER: navikt/fp-sak
-  VERSION: 4.0.0-2020.10.19.142701-afe8aab
-  STACK_STARTED:  true
-  TEST_OUTCOME:  success
-  TEST_RESULTAT: hvem vet
-  RUN_ID: 315470758
+  TRIGGER:  ${{ github.event.client_payload.trigger }}
+  VERSION: ${{ github.event.client_payload.version }}
+  STACK_STARTED:  ${{ github.event.client_payload.stack_started }}
+  TEST_OUTCOME:  ${{ github.event.client_payload.test_outcome }}
+  TEST_RESULTAT: ${{ github.event.client_payload.test_resultat }}
+  RUN_ID: ${{ github.event.client_payload.run_id }}
 
 jobs:
   notify:
@@ -61,10 +61,10 @@ jobs:
               fi
             else
               echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
-              echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
-              echo '*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>' >> $GITHUB_ENV
-              echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
-              echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
+                echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
+                echo '*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>' >> $GITHUB_ENV
+                echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
+                echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
               echo '\n' >> $GITHUB_ENV
               if [ ${{ env.TEST_OUTCOME }} == success ]; then
                 echo "Test success!"
@@ -79,10 +79,10 @@ jobs:
           else
             echo "Noe gikk galt. GHA fikk ikke opp verdikjeden"
             echo "SLACK_TITLE=Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:" >> $GITHUB_ENV
-            echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV >> $GITHUB_ENV
-            echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
-            echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
-            echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
+            echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
+              echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
+              echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
+              echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
             echo '\n' >> $GITHUB_ENV
             echo "SLACK_COLOR=#e79a07" >> $GITHUB_ENV
           fi
@@ -91,7 +91,7 @@ jobs:
         if: always()
         uses: rtCamp/action-slack-notify@v2.1.0
         env:
-          SLACK_CHANNEL: gatest
+          SLACK_CHANNEL: vtp-autotest-resultat
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
           SLACK_ICON: https://github.com/github.png?size=48
           SLACK_TITLE: ${{ env.SLACK_TITLE }}
