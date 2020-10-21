@@ -198,67 +198,6 @@ public class Førstegangsbehandling extends FpsakTestBase {
                 "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver!");
     }
 
-    // TODO: Finn ut om denne skal fjernes elle ei.
-    @Test
-    @Disabled("Samle denne testen og den over?")
-    @DisplayName("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
-    @Description("Mor søker SVP med tre arbeidsforhold - halv og halv tilrettelegging. Full refusjon")
-    public void mor_søker_svp_tre_arbeidsforhold_to_halv() {
-        final TestscenarioDto testscenario = opprettTestscenario("79");
-        final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
-
-        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell()
-                .getArbeidsforhold();
-        final String orgnr1 = arbeidsforhold.get(0).getArbeidsgiverOrgnr();
-        final String orgnr2 = arbeidsforhold.get(1).getArbeidsgiverOrgnr();
-        arbeidsforhold.get(2).getArbeidsgiverOrgnr();
-
-        LocalDate termindato = LocalDate.now().plusMonths(3);
-
-        final Tilrettelegging delvisTilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
-                termindato.minusMonths(3),
-                termindato.minusMonths(3),
-                ArbeidsforholdErketyper.virksomhet(orgnr1),
-                BigDecimal.valueOf(35));
-        final Tilrettelegging delvisTilrettelegging2 = TilretteleggingsErketyper.delvisTilrettelegging(
-                termindato.minusMonths(2),
-                termindato.minusMonths(2),
-                ArbeidsforholdErketyper.virksomhet(orgnr2),
-                BigDecimal.valueOf(15));
-
-        SvangerskapspengerBuilder søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR, termindato,
-                List.of(delvisTilrettelegging, delvisTilrettelegging2));
-
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-
-        final long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
-
-        // Inntektsmelding
-        InntektsmeldingBuilder inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, 20_833, orgnr1)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(20_833));
-        InntektsmeldingBuilder inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, 62_500, orgnr2)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(27_778));
-        fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
-
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
-        beslutter.hentFagsak(saksnummer);
-
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
-                .getDagsats(), 0, "AT jobber full deltid i sine arbeidsforhold");
-
-    }
-
     @Test
     @Disabled
     @DisplayName("mor_SVP_imFørSøknad")
@@ -297,18 +236,4 @@ public class Førstegangsbehandling extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
     }
-
-    @Test
-    @Disabled
-    @DisplayName("Papirsøknad for Svangerskapspenger")
-    public void morSøkerSvangersskapspengerMedPapirsøknad() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
-
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        fordel.sendInnPapirsøknadSvangerskapspenger(testscenario);
-
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-
-    }
-
 }

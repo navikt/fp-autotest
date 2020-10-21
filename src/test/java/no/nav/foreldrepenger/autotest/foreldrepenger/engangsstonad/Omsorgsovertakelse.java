@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -107,31 +106,6 @@ public class Omsorgsovertakelse extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
-    }
-
-    @Test
-    @Disabled("TODO hvorfor")
-    public void behenadleOmsorgsovertakelseMorOverstyrt() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        String søkerAktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
-                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
-
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class)
-                .setVilkårType(saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_5"));
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
-
-        var bekreftAvvist = saksbehandler.hentAksjonspunktbekreftelse(VurderingAvOmsorgsvilkoret.class)
-                .bekreftAvvist(saksbehandler.kodeverk.Avslagsårsak.get("FP_VK_33").getKode("1018"));
-        saksbehandler.bekreftAksjonspunkt(bekreftAvvist);
-
-        // TODO bør gå til beslutter
     }
 
     @Test
