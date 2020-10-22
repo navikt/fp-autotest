@@ -1300,14 +1300,17 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         BeregningsresultatPeriode[] perioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
-        verifiser(perioder.length == 3,
-                "Foventer at den berørte saken har 3 tilkjent ytelse peridoer, og ikke 2 som i førstegangsbehandling!");
+        verifiser(perioder.length == 4,
+                "Foventer at den berørte saken har 4 tilkjent ytelse perioder, faktisk antall var: " + perioder.length);
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[0], 0),
                 "Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[1], 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[1], 0),
                 "Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[2], 100),
                 "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[3], 100),
+                "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
+
     }
 
     @Test
