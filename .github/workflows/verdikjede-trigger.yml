@@ -17,7 +17,7 @@ on:
       - 'lokalutvikling/*'
       - 'docs/*'
   repository_dispatch:
-    types: [fpsak-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fprisk-verdikjede, fpabonnent-verdikjede]
+    types: [fpsak-verdikjede, fpabakus-verdikjede, fpformidling-verdikjede, fpabakus-verdikjede, fpoppdrag-verdikjede, fprisk-verdikjede, fpabonnent-verdikjede]
   schedule:
     - cron:  '30 5 * * *'
 
@@ -122,7 +122,14 @@ jobs:
           fi
 
       - name: Oppdaterer issue med testresultat
-        if: always() && steps.tester.outcome != 'skipped' && steps.tester.outcome != 'cancelled' && github.event_name != 'push' && github.event.client_payload.issue-number != null
+        if: |
+          always() &&
+          steps.tester.outcome != 'skipped' &&
+          steps.tester.outcome != 'cancelled' &&
+          github.event_name != 'push' &&
+          github.event.client_payload.issue-number != null &&
+          github.event.client_payload.trigger != 'navikt/fp-abakus' &&
+          github.event.client_payload.trigger != 'navikt/fp-sak'
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
