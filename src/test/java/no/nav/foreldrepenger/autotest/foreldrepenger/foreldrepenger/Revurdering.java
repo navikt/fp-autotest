@@ -539,8 +539,8 @@ public class Revurdering extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         var im = InntektsmeldingForeldrepengeErketyper
-                .makeInntektsmeldingFromTestscenario(testscenario, fødselsdato).get(0);
-        fordel.sendInnInntektsmelding(im, testscenario, saksnummer);
+                .makeInntektsmeldingFromTestscenario(testscenario, fødselsdato);
+        fordel.sendInnInntektsmeldinger(im, testscenario, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -564,7 +564,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         // Manuell behandling for å få endringssdato satt til første uttaksdag
         saksbehandler.opprettBehandlingRevurdering("RE-FRDLING");
         saksbehandler.velgSisteBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().isEmpty(),
                 "Forventer at alle uttaksperioder er innvilget");
     }
