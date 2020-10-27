@@ -16,7 +16,6 @@ import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandli
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -457,7 +456,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiser(allePerioderInnvilget, "Forventer at alle uttaksperioder er innvilget");
     }
 
-    @Disabled("TFP-2394")
     @Test
     @DisplayName("Fortsatt få avslag på avslåtte perioder pga søknadsfrist i neste revurdering")
     @Description("Fortsatt få avslag på avslåtte perioder pga søknadsfrist i neste revurdering. Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
@@ -515,7 +513,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() > 1, "Forventer avslåtte uttaksperioder");
     }
 
-    @Disabled("TFP-2394")
     @Test
     @DisplayName("Utsettelser og gradering fra førstegangsbehandling skal ikke gå til manuell behandling")
     @Description("Utsettelser og gradering fra førstegangsbehandling skal ikke gå til manuell behandling hvis innenfor søknadsfrist."
