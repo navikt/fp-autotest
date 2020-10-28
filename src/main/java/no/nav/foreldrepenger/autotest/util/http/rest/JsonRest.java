@@ -77,6 +77,15 @@ public abstract class JsonRest extends Rest {
         return json;
     }
 
+    protected <T> T postFormOgHentJson(String url, Map<String, String> query, Class<T> returnType) {
+        String content = UrlEncodeQuery(query, "");
+        HttpEntity entity = new StringEntity(content, ContentType.APPLICATION_FORM_URLENCODED);
+        Map<String, String> headers = Map.of("Content-Type", ContentType.APPLICATION_FORM_URLENCODED.getMimeType());
+        HttpResponse response = post(url, entity, headers);
+        String json = hentResponseBody(response);
+        return json.equals("") ? null : fromJson(json, returnType);
+    }
+
     /*
      * GET
      */
@@ -91,6 +100,11 @@ public abstract class JsonRest extends Rest {
     protected HttpResponse getJson(String url, Map<String, String> headers) {
         headers.put("Accept", ACCEPT_JSON_HEADER);
         return get(url, headers);
+    }
+
+    protected byte[] getByteArray(String url) {
+        HttpResponse response = getJson(url);
+        return HttpSession.readResponseByteArray(response);
     }
 
     protected <T> T getOgHentJson(String url, Class<T> returnType, StatusRange expectedStatusRange) {
@@ -117,14 +131,7 @@ public abstract class JsonRest extends Rest {
         return json.equals("") ? null : fromJson(returnType, json);
     }
 
-    protected <T> T postFormOgHentJson(String url, Map<String, String> query, Class<T> returnType) {
-        String content = UrlEncodeQuery(query, "");
-        HttpEntity entity = new StringEntity(content, ContentType.APPLICATION_FORM_URLENCODED);
-        Map<String, String> headers = Map.of("Content-Type", ContentType.APPLICATION_FORM_URLENCODED.getMimeType());
-        HttpResponse response = post(url, entity, headers);
-        String json = hentResponseBody(response);
-        return json.equals("") ? null : fromJson(json, returnType);
-    }
+
 
     /*
      * PUT

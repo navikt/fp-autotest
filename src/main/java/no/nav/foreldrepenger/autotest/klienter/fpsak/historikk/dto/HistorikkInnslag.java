@@ -13,11 +13,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class HistorikkInnslag {
 
-    protected int behandlingId;
-    protected Kode type;
-    protected Kode aktoer;
-    protected Kode kjoenn;
-    protected List<HistorikkinnslagDel> historikkinnslagDeler;
+    private int behandlingId;
+    private Kode type;
+    private Kode aktoer;
+    private Kode kjoenn;
+    private List<HistorikkInnslagDokumentLinkDto> dokumentLinks;
+    private List<HistorikkinnslagDel> historikkinnslagDeler;
 
     HistorikkInnslag(){
         // for test
@@ -29,6 +30,17 @@ public class HistorikkInnslag {
         this.type = type;
         this.aktoer = aktoer;
         this.kjoenn = kjoenn;
+        this.historikkinnslagDeler = historikkinnslagDeler;
+    }
+
+    public HistorikkInnslag(int behandlingId, Kode type, Kode aktoer, Kode kjoenn,
+                            List<HistorikkInnslagDokumentLinkDto> dokumentLinks,
+                            List<HistorikkinnslagDel> historikkinnslagDeler) {
+        this.behandlingId = behandlingId;
+        this.type = type;
+        this.aktoer = aktoer;
+        this.kjoenn = kjoenn;
+        this.dokumentLinks = dokumentLinks;
         this.historikkinnslagDeler = historikkinnslagDeler;
     }
 
@@ -51,6 +63,10 @@ public class HistorikkInnslag {
 
     public Kode getKjoenn() {
         return kjoenn;
+    }
+
+    public List<HistorikkInnslagDokumentLinkDto> getDokumentLinks() {
+        return dokumentLinks;
     }
 
     public List<HistorikkinnslagDel> getHistorikkinnslagDeler() {

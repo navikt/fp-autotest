@@ -10,6 +10,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import no.nav.foreldrepenger.autotest.internal.klienter.fpsak.SerializationTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Hendelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslagDokumentLinkDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagDel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
@@ -29,6 +30,7 @@ class HistorikkDtoSeraliseringDeserialiseringTest extends SerializationTestBase 
                 new Kode("BREV_BESTILT", "BREV_BESTILT"),
                 new Kode("","SBH", "Saksbehandler"),
                 new Kode("-", "M", "Mann"),
+                List.of(new HistorikkInnslagDokumentLinkDto("1", null, "1234567", "123456", true)),
                 List.of(new HistorikkinnslagDel(new Hendelse(new Kode("BT-004","Revurdering"))))));
     }
 
