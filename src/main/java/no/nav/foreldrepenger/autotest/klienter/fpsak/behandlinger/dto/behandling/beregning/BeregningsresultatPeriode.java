@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -10,7 +11,7 @@ public class BeregningsresultatPeriode {
     protected LocalDate fom;
     protected LocalDate tom;
     protected int dagsats;
-    protected BeregningsresultatPeriodeAndel[] andeler;
+    protected List<BeregningsresultatPeriodeAndel> andeler;
 
     public LocalDate getFom() {
         return fom;
@@ -24,7 +25,7 @@ public class BeregningsresultatPeriode {
         return dagsats;
     }
 
-    public BeregningsresultatPeriodeAndel[] getAndeler() {
+    public List<BeregningsresultatPeriodeAndel> getAndeler() {
         return andeler;
     }
 

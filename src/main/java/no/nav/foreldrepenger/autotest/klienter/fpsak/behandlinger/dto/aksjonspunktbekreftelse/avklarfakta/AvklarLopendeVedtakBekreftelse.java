@@ -12,7 +12,6 @@ public class AvklarLopendeVedtakBekreftelse extends AksjonspunktBekreftelse {
 
     public AvklarLopendeVedtakBekreftelse() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public AvklarLopendeVedtakBekreftelse bekreftGodkjent() {

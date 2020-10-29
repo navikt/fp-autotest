@@ -9,7 +9,6 @@ public class VurderVilkaarForSykdomBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    // TODO Stub
     public void setErMorForSykVedFodsel(boolean morForSykVEdFodsel) {
         this.erMorForSykVedFodsel = morForSykVEdFodsel;
     }

@@ -29,10 +29,13 @@ public class FpsakTestBase extends TestScenarioTestBase {
         klagebehandler = new Saksbehandler();
     }
 
+
+
+
     public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,
                                                                                          boolean revurdering) {
         if (!revurdering) {
-            saksbehandler.ventTilRisikoKlassefiseringsstatus(saksbehandler.valgtBehandling.uuid.toString(), "IKKE_HOY");
+            saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         }
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 

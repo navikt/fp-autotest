@@ -9,8 +9,6 @@ public class MiljoKonfigurasjon extends KonfigurasjonBase {
 
     private static final Logger logger = LoggerFactory.getLogger(MiljoKonfigurasjon.class);
 
-    public static String AUTOTEST_ENV = "AUTOTEST_ENV";
-
     public static String ENV_PROPERTY_LOCATION_FORMAT = "%s//%s.properties";
 
     public static String PROPERTY_FPSAK_HTTP_PROTOCOL = "autotest.fpsak.http.protocol";
@@ -32,12 +30,7 @@ public class MiljoKonfigurasjon extends KonfigurasjonBase {
     }
 
     public static String hentMiljø() {
-        String env = System.getenv(AUTOTEST_ENV);
-        if (null == env) {
-            env = System.getProperty(AUTOTEST_ENV);
-        }
-        logger.debug("Valgt env: {}", env);
-        return env == null ? "localhost" : env;
+        return "localhost";
     }
 
     public static void initProperties() {

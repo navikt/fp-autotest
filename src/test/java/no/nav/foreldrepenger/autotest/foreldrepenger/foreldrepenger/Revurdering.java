@@ -245,18 +245,18 @@ public class Revurdering extends ForeldrepengerTestBase {
         // Verifisering tilkjent ytelse
         BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger();
-        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().length, 6,"Feil antall perioder i tilkjentytesle.");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[0].getDagsats() > 0,
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().size(), 6,"Feil antall perioder i tilkjentytesle.");
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(0).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #1 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[1].getDagsats() > 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(1).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #2 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[2].getDagsats() > 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #3 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[3].getDagsats() > 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #4 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[4].getDagsats() == 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats() == 0,
                 "Siden perioden er usettelse så forventes det 0 i dagsats.");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[5].getDagsats() > 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(5).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #6 i tilkjent ytelse");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");

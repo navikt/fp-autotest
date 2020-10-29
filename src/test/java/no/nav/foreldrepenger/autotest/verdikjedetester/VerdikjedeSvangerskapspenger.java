@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -361,19 +360,18 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgNummer, 100),
                 "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver siden de ønsker full refusjon!");
-        BeregningsresultatPeriode[] beregningsresultatPerioder = saksbehandler.valgtBehandling
+        var beregningsresultatPerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger().getPerioder();
-        verifiser(beregningsresultatPerioder[0].getAndeler().length == 1,
-                "Forventer at det er bare e" +
-                        "n andel for første periode i tilkjent ytelse.");
-        verifiser(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder[0], "AT"),
+        verifiser(beregningsresultatPerioder.get(0).getAndeler().size() == 1,
+                "Forventer at det er bare en andel for første periode i tilkjent ytelse.");
+        verifiser(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(0), "AT"),
                 "Forventer aktivitetsstatus for første andel for første periode er AT.");
 
-        verifiser(beregningsresultatPerioder[1].getAndeler().length == 2,
+        verifiser(beregningsresultatPerioder.get(1).getAndeler().size() == 2,
                 "Forventer at det er bare en andel for første periode i tilkjent ytelse.");
-        verifiser(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder[1], "AT"),
+        verifiser(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(1), "AT"),
                 "Forventer aktivitetsstatus for første andel for andre periode er AT.");
-        verifiser(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder[1], "SN"),
+        verifiser(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(1), "SN"),
                 "Forventer aktivitetsstatus for andre andel for andre periode er SN.");
         List<BeregningsresultatPeriodeAndel> beregningsresultatPeriodeAndeler = saksbehandler
                 .hentBeregningsresultatPerioderMedAndelISN();

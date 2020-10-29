@@ -766,18 +766,18 @@ public class Fodsel extends ForeldrepengerTestBase {
         verifiserLikhet(andelerFørstePeriode.get(0).getAktivitetStatus().kode, "AT");
 
         // Assert refusjon
-        BeregningsresultatPeriode[] resultatPerioder = saksbehandler.valgtBehandling
+        List<BeregningsresultatPeriode> resultatPerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger().getPerioder();
-        assertThat(resultatPerioder.length).isEqualTo(5);
+        assertThat(resultatPerioder.size()).isEqualTo(5);
         BigDecimal forventetDagsats = BigDecimal.valueOf(overstyrtInntekt).divide(BigDecimal.valueOf(260),
                 RoundingMode.HALF_EVEN);
         // TODO (OL) Kommentert ut da feilet. CL.
-        assertThat(resultatPerioder[0].getAndeler()[0].getRefusjon()).isEqualTo(forventetDagsats.intValue());
-        assertThat(resultatPerioder[1].getAndeler()[0].getRefusjon()).isEqualTo(forventetDagsats.intValue());
+        assertThat(resultatPerioder.get(0).getAndeler().get(0).getRefusjon()).isEqualTo(forventetDagsats.intValue());
+        assertThat(resultatPerioder.get(1).getAndeler().get(0).getRefusjon()).isEqualTo(forventetDagsats.intValue());
         BigDecimal forventetRefusjon = BigDecimal.valueOf(endret_refusjon * 12).divide(BigDecimal.valueOf(260),
                 RoundingMode.HALF_EVEN);
-        assertThat(resultatPerioder[2].getAndeler()[0].getRefusjon()).isEqualTo(forventetRefusjon.intValue());
-        assertThat(resultatPerioder[3].getAndeler()[0].getRefusjon()).isEqualTo(forventetRefusjon.intValue());
+        assertThat(resultatPerioder.get(2).getAndeler().get(0).getRefusjon()).isEqualTo(forventetRefusjon.intValue());
+        assertThat(resultatPerioder.get(3).getAndeler().get(0).getRefusjon()).isEqualTo(forventetRefusjon.intValue());
 
         // Foreslå vedtak
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -1329,12 +1329,12 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Step("Verifiserer tilkjent ytelse")
     private void verifiserTilkjentYtelse(BeregningsresultatMedUttaksplan beregningResultatForeldrepenger,
             boolean medFullRefusjon) {
-        BeregningsresultatPeriode[] perioder = beregningResultatForeldrepenger.getPerioder();
+        List<BeregningsresultatPeriode> perioder = beregningResultatForeldrepenger.getPerioder();
         assertThat(beregningResultatForeldrepenger.isSokerErMor()).isTrue();
-        assertThat(perioder.length).isGreaterThan(0);
+        assertThat(perioder.size()).isGreaterThan(0);
         for (var periode : perioder) {
             assertThat(periode.getDagsats()).isGreaterThan(0);
-            BeregningsresultatPeriodeAndel[] andeler = periode.getAndeler();
+            List<BeregningsresultatPeriodeAndel> andeler = periode.getAndeler();
             for (var andel : andeler) {
                 String kode = andel.getAktivitetStatus().kode;
                 if (kode.equals("AT")) {

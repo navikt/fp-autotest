@@ -57,12 +57,6 @@ public class TerminFlaky extends ForeldrepengerTestBase {
         debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDTAK_FATTET);
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
-        // TODO (OL): Byttet verifisering på historikkinnslag til asynk venting. Feilet
-        // med at behandlingen ikke hadde historikkinnslag
-        // verifiser(saksbehandler.harHistorikkinnslag("Vedtak fattet"), "behandling har
-        // ikke historikkinslag 'Vedtak fattet'");
-        // verifiser(saksbehandler.harHistorikkinnslag(HistorikkInnslag.BREV_SENT),
-        // "behandling har ikke historikkinslag 'Brev sendt'");
     }
 
 }

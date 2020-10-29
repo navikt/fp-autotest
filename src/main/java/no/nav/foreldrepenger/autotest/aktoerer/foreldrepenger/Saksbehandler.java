@@ -423,16 +423,16 @@ public class Saksbehandler extends Aktoer {
      */
     public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelIArbeidsforhold(
             String organisasjonsnummer) {
-        return Arrays.stream(valgtBehandling.getBeregningResultatForeldrepenger().getPerioder())
-                .flatMap(beregningsresultatPeriode -> Arrays.stream(beregningsresultatPeriode.getAndeler()))
+        return valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().stream()
+                .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
                 .filter(andeler -> organisasjonsnummer.equalsIgnoreCase(andeler.getArbeidsgiverOrgnr()))
                 .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
                 .collect(Collectors.toList());
     }
 
     public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelISN() {
-        return Arrays.stream(valgtBehandling.getBeregningResultatForeldrepenger().getPerioder())
-                .flatMap(beregningsresultatPeriode -> Arrays.stream(beregningsresultatPeriode.getAndeler()))
+        return valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().stream()
+                .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
                 .filter(andeler -> andeler.getAktivitetStatus().kode.equalsIgnoreCase("SN"))
                 .collect(Collectors.toList());
     }
@@ -672,12 +672,12 @@ public class Saksbehandler extends Aktoer {
 
 
     /*
-     * Risikovurderingsklient – FLYTTET TIL FPRISK?
+     * Risikovurderingsklient
      */
     @Step("Venter til risikovurdering har status: {status}")
-    public void ventTilRisikoKlassefiseringsstatus(String uuid, String status) {
+    public void ventTilRisikoKlassefiseringsstatus(String status) {
         Vent.til(() -> {
-            RisikovurderingResponse response = getRisikovurdering(uuid);
+            RisikovurderingResponse response = getRisikovurdering(valgtBehandling.uuid.toString());
             return harRisikoKlassefiseringsstatus(status, response);
         }, 30, "Feilet. Fikk ikke riktig status");
     }
@@ -691,10 +691,9 @@ public class Saksbehandler extends Aktoer {
 
 
     /* VERIFISERINGER */
-    // TODO: Flytte dem en annen plass? Egen verifiserings-saksbehander?
     public boolean sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(BeregningsresultatPeriode beregningsresultatPeriode,
                                                                     String aktivitetskode) {
-        return Arrays.stream(beregningsresultatPeriode.getAndeler())
+        return beregningsresultatPeriode.getAndeler().stream()
                 .anyMatch(beregningsresultatPeriodeAndel -> beregningsresultatPeriodeAndel.getAktivitetStatus().kode
                         .equalsIgnoreCase(aktivitetskode));
     }
@@ -779,8 +778,7 @@ public class Saksbehandler extends Aktoer {
         var forventetUtbetaltDagsatsTilArbeidsgiver = Math.round(dagsats * prosentfaktor);
         List<Integer> utbetaltRefusjonForAndeler = new ArrayList<>();
         for (var andel : periode.getAndeler()) {
-            if ((andel.getArbeidsforholdId() != null)
-                    && andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID)) {
+            if ((andel.getArbeidsforholdId() != null) && andel.getArbeidsforholdId().equalsIgnoreCase(internArbeidsforholdID)) {
                 utbetaltRefusjonForAndeler.add(andel.getRefusjon());
             }
         }
