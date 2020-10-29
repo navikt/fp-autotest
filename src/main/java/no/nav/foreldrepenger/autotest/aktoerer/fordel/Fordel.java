@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostId;
@@ -107,10 +108,12 @@ public class Fordel extends Aktoer {
         logger.info("Sendt inn søknad på sak med saksnummer: {}", sakId);
 
         // Venter til ny behandling er opprettet
-        Vent.til(() ->
-                behandlingerKlient.alle(sakId).size() > antallBehandlingerFørSøknad &&
-                (behandlingerKlient.statusAsObject(behandlingerKlient.alle(sakId).get(0).uuid, null) == null),
-                60, "Ingen nye behandlinger!");
+        Vent.til(() -> {
+            List<Behandling> behandlinger = behandlingerKlient.alle(sakId);
+            int size = behandlinger.size();
+            return size > antallBehandlingerFørSøknad &&
+                            (behandlingerKlient.statusAsObject(behandlinger.get(size-1).uuid, null) == null);
+                }, 60, "Ingen nye behandlinger!");
 
         return sakId;
     }
