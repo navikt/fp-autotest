@@ -610,6 +610,19 @@ public class Saksbehandler extends Aktoer {
         return get(historikkInnslag);
     }
 
+    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkInnslag.Type type) {
+        ventTilHistorikkinnslag(type);
+        return historikkInnslag.get().stream()
+                .filter(h -> h.getType().kode.equalsIgnoreCase(type.getKode()))
+                .findFirst()
+                .orElseThrow();
+    }
+
+    public String hentDokumentIdFraHistorikkinnslag(HistorikkInnslag.Type type) {
+        HistorikkInnslag historikkInnslag = hentHistorikkinnslagAvType(type);
+        return historikkInnslag.getDokumentLinks().get(0).getDokumentId();
+    }
+
 
     /*
      * Vilkar

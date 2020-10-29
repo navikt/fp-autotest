@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
 import no.nav.foreldrepenger.autotest.util.ControllerHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -53,11 +54,13 @@ public class Fordel extends Aktoer {
 
     // Vtp Klienter
     JournalforingKlient journalpostKlient;
+    SafKlient safKlient;
 
     public Fordel() {
         fordelKlient = new FordelKlient(session);
         behandlingerKlient = new BehandlingerKlient(session);
         journalpostKlient = new JournalforingKlient(session);
+        safKlient = new SafKlient(session);
         fagsakKlient = new FagsakKlient(session);
         historikkKlient = new HistorikkKlient(session);
         pdlLeesahKlient = new PdlLeesahKlient(session);
@@ -226,8 +229,7 @@ public class Fordel extends Aktoer {
     }
 
     public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto scenario) {
-        Long saksnummer = sendInnInntektsmeldinger(inntektsmeldinger, scenario, null);
-        return saksnummer;
+        return sendInnInntektsmeldinger(inntektsmeldinger, scenario, null);
     }
 
     @Step("Sender inn innteksmeldinger")
@@ -326,7 +328,7 @@ public class Fordel extends Aktoer {
         journalpostMottak.setDokumentTypeIdOffisiellKode(dokumentTypeIdOffisiellKode);
         journalpostMottak.setForsendelseId(UUID.randomUUID().toString());
         journalpostMottak.setDokumentKategoriOffisiellKode(dokumentKategori);
-        if (dokumentTypeIdOffisiellKode == DokumenttypeId.INNTEKTSMELDING.getKode()) {
+        if (dokumentTypeIdOffisiellKode.equalsIgnoreCase(DokumenttypeId.INNTEKTSMELDING.getKode())) {
             journalpostMottak.setEksternReferanseId(journalpostMottak.lagUnikEksternReferanseId());
         }
 
@@ -341,6 +343,12 @@ public class Fordel extends Aktoer {
 
         return saksnummer;
     }
+
+    /* SAF */
+    public byte[] hentJournalførtDokument(String dokumentId, String variantFormat) {
+        return safKlient.hentDokumenter(null, dokumentId, variantFormat);
+    }
+
 
     /*
      * Opretter en personhendelse

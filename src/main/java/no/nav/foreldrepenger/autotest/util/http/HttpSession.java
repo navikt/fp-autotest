@@ -35,6 +35,20 @@ public interface HttpSession {
         }
     }
 
+    static byte[] readResponseByteArray(HttpResponse response) {
+        try {
+            HttpEntity entity = response.getEntity();
+            if (entity == null) {
+                return null;
+            }
+            return EntityUtils.toByteArray(entity);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
     HttpResponse execute(HttpUriRequest request, Map<String, String> headers);
 
     HttpResponse get(String url);

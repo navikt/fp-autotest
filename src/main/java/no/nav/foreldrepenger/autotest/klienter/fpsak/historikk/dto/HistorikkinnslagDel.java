@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class HistorikkinnslagDel {
 
-    protected Hendelse hendelse;
+    private Hendelse hendelse;
 
     public HistorikkinnslagDel(@JsonProperty("hendelse") Hendelse hendelse) {
         this.hendelse = hendelse;
