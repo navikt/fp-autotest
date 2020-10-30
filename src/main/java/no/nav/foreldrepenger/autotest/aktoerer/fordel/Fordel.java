@@ -91,33 +91,28 @@ public class Fordel extends Aktoer {
         String behandlingstemaOffisiellKode = finnBehandlingstemaKode(dokumenttypeId);
         String dokumentTypeIdOffisiellKode = dokumenttypeId.getKode();
         debugSenderInnDokument("Foreldrepengesøknad", xml);
-
-        // Henter ut hvor mange behandlinger det er på eksisterede saksnummer.
-        Integer antallBehandlingerFørSøknad;
-        if (saksnummer == null) {
-            antallBehandlingerFørSøknad = 0;
-        } else {
-            antallBehandlingerFørSøknad = behandlingerKlient.alle(saksnummer).size();
-        }
-        logger.info("antall behandlinger: {}", antallBehandlingerFørSøknad);
-
         long sakId = sendInnJournalpost(xml, mottattDato, journalpostId, behandlingstemaOffisiellKode,
                 dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
-
         journalpostModell.setSakId(String.valueOf(sakId));
         logger.info("Sendt inn søknad på sak med saksnummer: {}", sakId);
 
-        // Venter til ny behandling er opprettet
         Vent.til(() -> {
             List<Behandling> behandlinger = behandlingerKlient.alle(sakId);
-            int size = behandlinger.size();
-            return size > antallBehandlingerFørSøknad &&
-                            (behandlingerKlient.statusAsObject(behandlinger.get(size-1).uuid, null) == null);
-                }, 60, "Ingen nye behandlinger!");
+            // TODO: Gjøre denne asynkron
+            if (behandlinger.size() > 1) {
+                sleep(5000);
+            }
+            return !behandlinger.isEmpty()
+                    && (behandlingerKlient.statusAsObject(behandlinger.get(0).uuid, null) == null);
+        }, 60, "Saken hadde ingen behandlinger");
+
+        if (DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD.equals(dokumenttypeId)) {
+            // TODO: Vent.til fungerer ikke med endringssøknad. Venter ikke til behandlingen er opprettet
+            sleep(5000);
+        }
 
         return sakId;
     }
-
     private String finnBehandlingstemaKode(DokumenttypeId dokumenttypeId) {
         try {
             return ControllerHelper.translateSøknadDokumenttypeToBehandlingstema(dokumenttypeId).getKode();
