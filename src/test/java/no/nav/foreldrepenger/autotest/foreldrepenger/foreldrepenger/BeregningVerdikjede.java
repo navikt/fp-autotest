@@ -3,10 +3,10 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeSN;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeSN;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -452,7 +452,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
     @DisplayName("Uten inntektsmelding, med lønnsendring")
     @Description("Uten inntektsmelding, med lønnsendring")
     public void vurder_mottar_ytelse_vurder_lonnsendring() {
-        TestscenarioDto testscenario = opprettTestscenario("161"); //  TODO: To med samme tall. Velger første (alfabetisk)
+        TestscenarioDto testscenario = opprettTestscenario("161");
 
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();

@@ -264,9 +264,8 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
         var orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        var gjennomsnittFraTreSisteÅreneISigrun = (1_000_000 * 3) / 3; // TODO: HARDCODET! Bør hentes fra sigrun i
-                                                                       // scenario (gjennomsnittet at de tre siste
-                                                                       // årene)
+
+        var gjennomsnittFraTreSisteÅreneISigrun =  hentNæringsinntektFraSigrun(testscenario, 2018,false);
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(
                 false,
                 BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun).toBigInteger(),

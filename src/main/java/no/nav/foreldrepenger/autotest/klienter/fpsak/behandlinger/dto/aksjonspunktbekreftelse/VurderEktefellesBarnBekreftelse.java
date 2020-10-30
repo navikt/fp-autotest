@@ -7,7 +7,6 @@ public class VurderEktefellesBarnBekreftelse extends AksjonspunktBekreftelse {
 
     public VurderEktefellesBarnBekreftelse() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public VurderEktefellesBarnBekreftelse bekreftBarnErEktefellesBarn() {

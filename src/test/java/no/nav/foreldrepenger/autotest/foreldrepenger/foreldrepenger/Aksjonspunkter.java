@@ -3,12 +3,14 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.overføringsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -172,7 +174,7 @@ public class Aksjonspunkter extends ForeldrepengerTestBase {
                         fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE,
                         fødselsdato, fødselsdato.plusWeeks(10)),
-                FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER,
+                utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER,
                         fødselsdato.plusWeeks(10).plusDays(1), fødselsdato.plusWeeks(20).minusDays(1)),
                 uttaksperiode(FEDREKVOTE,
                         fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(30)));
@@ -216,9 +218,9 @@ public class Aksjonspunkter extends ForeldrepengerTestBase {
         LocalDate termindato = LocalDate.now().plusWeeks(2);
 
         Fordeling fordeling = FordelingErketyper.generiskFordeling(
-                FordelingErketyper.overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, MØDREKVOTE,
+                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, MØDREKVOTE,
                         termindato, termindato.plusWeeks(10)),
-                FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER,
+                utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER,
                         termindato.plusWeeks(10).plusDays(1), termindato.plusWeeks(20).minusDays(1)),
                 uttaksperiode(FEDREKVOTE,
                         termindato.plusWeeks(20), termindato.plusWeeks(30))
