@@ -7,8 +7,6 @@ public class ControllerHelper {
 
     public static Behandlingstema translateSøknadDokumenttypeToBehandlingstema(DokumenttypeId dokumenttypeId) throws Exception {
 
-        //TODO: refaktorer til switch.
-
         if (dokumenttypeId == DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER) {
             return Behandlingstema.FORELDREPENGER_FOEDSEL;
         } else if (dokumenttypeId == DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER) {

@@ -83,7 +83,7 @@ public class Fordel extends Aktoer {
 
         JournalpostModell journalpostModell = JournalpostModellGenerator
                 .lagJournalpostStrukturertDokument(xml == null ? "" : xml, fnr, dokumenttypeId);
-        if ((saksnummer != null) && (saksnummer.longValue() != 0L)) {
+        if ((saksnummer != null) && (saksnummer != 0L)) {
             journalpostModell.setSakId(saksnummer.toString());
         }
         String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
@@ -96,7 +96,6 @@ public class Fordel extends Aktoer {
         journalpostModell.setSakId(String.valueOf(sakId));
         logger.info("Sendt inn søknad på sak med saksnummer: {}", sakId);
 
-        // TODO: feiler, men sak og behandling er OK.
         Vent.til(() -> {
             List<Behandling> behandlinger = behandlingerKlient.alle(sakId);
             // TODO: Gjøre denne asynkron
@@ -108,14 +107,12 @@ public class Fordel extends Aktoer {
         }, 60, "Saken hadde ingen behandlinger");
 
         if (DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD.equals(dokumenttypeId)) {
-            // TODO: Vent.til fungerer ikke med endringssøknad. Venter ikke til behandlingen
-            // er opprettet
+            // TODO: Vent.til fungerer ikke med endringssøknad. Venter ikke til behandlingen er opprettet
             sleep(5000);
         }
 
         return sakId;
     }
-
     private String finnBehandlingstemaKode(DokumenttypeId dokumenttypeId) {
         try {
             return ControllerHelper.translateSøknadDokumenttypeToBehandlingstema(dokumenttypeId).getKode();
@@ -214,9 +211,8 @@ public class Fordel extends Aktoer {
                         .anyMatch(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode()));
             }, 40, "Saken har ikke mottatt inntektsmeldingen.\nHar historikk: " + historikkRef.get());
         } else {
-            Vent.til(() -> {
-                return fagsakKlient.søk("" + nyttSaksnummer).size() > 0;
-            }, 40, "Opprettet ikke fagsak for inntektsmelding");
+            Vent.til(() -> fagsakKlient.søk("" + nyttSaksnummer).size() > 0,
+                    40, "Opprettet ikke fagsak for inntektsmelding");
         }
 
         return nyttSaksnummer;
@@ -249,9 +245,8 @@ public class Fordel extends Aktoer {
         }
         final int gammelAntallIMF = gammelAntallIM;
         final long saksnummerF = saksnummer;
-        Vent.til(() -> {
-            return ((antallInntektsmeldingerMottatt(saksnummerF) - gammelAntallIMF) == inntektsmeldinger.size());
-        }, 20, "har ikke mottat alle inntektsmeldinger. Sak: " + saksnummer);
+        Vent.til(() -> (antallInntektsmeldingerMottatt(saksnummerF) - gammelAntallIMF) == inntektsmeldinger.size(),
+                20, "har ikke mottat alle inntektsmeldinger. Sak: " + saksnummer);
         return saksnummer;
     }
 
@@ -266,20 +261,6 @@ public class Fordel extends Aktoer {
             Long saksnummer) {
         return sendInnInntektsmeldinger(inntektsmeldinger, testscenario.getPersonopplysninger().getSøkerAktørIdent(),
                 testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
-    }
-
-    public String journalførInnektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto scenario,
-            Long saksnummer) {
-        String xml = inntektsmelding.createInntektesmeldingXML();
-        String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, aktørId,
-                DokumenttypeId.INNTEKTSMELDING);
-        String id = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
-        if (saksnummer != null) {
-            journalpostModell.setSakId(saksnummer.toString());
-            journalpostKlient.knyttSakTilJournalpost(id, "" + saksnummer);
-        }
-        return id;
     }
 
     @Step("Sender inn klage for bruker")
@@ -313,7 +294,7 @@ public class Fordel extends Aktoer {
             String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode,
             String dokumentKategori, String aktørId, Long saksnummer) {
 
-        if ((saksnummer == null) || (saksnummer.longValue() == 0L)) {
+        if ((saksnummer == null) || (saksnummer == 0L)) {
             OpprettSak journalpost = new OpprettSak(journalpostId, behandlingstemaOffisiellKode, aktørId);
             saksnummer = fordelKlient.fagsakOpprett(journalpost).getSaksnummer();
         }

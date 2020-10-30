@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -9,7 +10,7 @@ public class BeregningsresultatMedUttaksplan {
 
     protected boolean sokerErMor;
     protected LocalDate opphoersdato;
-    protected BeregningsresultatPeriode[] perioder;
+    protected List<BeregningsresultatPeriode> perioder;
 
     public boolean isSokerErMor() {
         return sokerErMor;
@@ -19,7 +20,7 @@ public class BeregningsresultatMedUttaksplan {
         return opphoersdato;
     }
 
-    public BeregningsresultatPeriode[] getPerioder() {
+    public List<BeregningsresultatPeriode> getPerioder() {
         return perioder;
     }
 

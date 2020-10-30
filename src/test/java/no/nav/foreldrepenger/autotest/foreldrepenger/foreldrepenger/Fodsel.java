@@ -5,14 +5,14 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.INGEN_STØNADSKONTO;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingPrivateArbeidsgiver;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepenger;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -766,18 +766,17 @@ public class Fodsel extends ForeldrepengerTestBase {
         verifiserLikhet(andelerFørstePeriode.get(0).getAktivitetStatus().kode, "AT");
 
         // Assert refusjon
-        BeregningsresultatPeriode[] resultatPerioder = saksbehandler.valgtBehandling
+        List<BeregningsresultatPeriode> resultatPerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger().getPerioder();
-        assertThat(resultatPerioder.length).isEqualTo(5);
+        assertThat(resultatPerioder.size()).isEqualTo(5);
         BigDecimal forventetDagsats = BigDecimal.valueOf(overstyrtInntekt).divide(BigDecimal.valueOf(260),
                 RoundingMode.HALF_EVEN);
-        // TODO (OL) Kommentert ut da feilet. CL.
-        assertThat(resultatPerioder[0].getAndeler()[0].getRefusjon()).isEqualTo(forventetDagsats.intValue());
-        assertThat(resultatPerioder[1].getAndeler()[0].getRefusjon()).isEqualTo(forventetDagsats.intValue());
+        assertThat(resultatPerioder.get(0).getAndeler().get(0).getRefusjon()).isEqualTo(forventetDagsats.intValue());
+        assertThat(resultatPerioder.get(1).getAndeler().get(0).getRefusjon()).isEqualTo(forventetDagsats.intValue());
         BigDecimal forventetRefusjon = BigDecimal.valueOf(endret_refusjon * 12).divide(BigDecimal.valueOf(260),
                 RoundingMode.HALF_EVEN);
-        assertThat(resultatPerioder[2].getAndeler()[0].getRefusjon()).isEqualTo(forventetRefusjon.intValue());
-        assertThat(resultatPerioder[3].getAndeler()[0].getRefusjon()).isEqualTo(forventetRefusjon.intValue());
+        assertThat(resultatPerioder.get(2).getAndeler().get(0).getRefusjon()).isEqualTo(forventetRefusjon.intValue());
+        assertThat(resultatPerioder.get(3).getAndeler().get(0).getRefusjon()).isEqualTo(forventetRefusjon.intValue());
 
         // Foreslå vedtak
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -1224,21 +1223,21 @@ public class Fodsel extends ForeldrepengerTestBase {
         Fordeling fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
         List<LukketPeriodeMedVedlegg> perioder = fordeling.getPerioder();
-        perioder.add(FordelingErketyper.uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødsel.minusDays(1)));
-        perioder.add(FordelingErketyper.uttaksperiode(MØDREKVOTE, fødsel, fødsel.plusWeeks(6).minusDays(1)));
-        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_BARN, fødsel.plusWeeks(6),
+        perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødsel.minusDays(1)));
+        perioder.add(uttaksperiode(MØDREKVOTE, fødsel, fødsel.plusWeeks(6).minusDays(1)));
+        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_BARN, fødsel.plusWeeks(6),
                 fødsel.plusWeeks(9).minusDays(1)));
-        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER, fødsel.plusWeeks(9),
+        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER, fødsel.plusWeeks(9),
                 fødsel.plusWeeks(12).minusDays(1)));
-        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.SYKDOM, fødsel.plusWeeks(12),
+        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.SYKDOM, fødsel.plusWeeks(12),
                 fødsel.plusWeeks(15).minusDays(1)));
-        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødsel.plusWeeks(15),
+        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødsel.plusWeeks(15),
                 fødsel.plusWeeks(16).minusDays(1)));
-        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.HV_OVELSE, fødsel.plusWeeks(16),
+        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.HV_OVELSE, fødsel.plusWeeks(16),
                 fødsel.plusWeeks(17).minusDays(1)));
-        perioder.add(FordelingErketyper.utsettelsesperiode(SøknadUtsettelseÅrsak.NAV_TILTAK, fødsel.plusWeeks(17),
+        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.NAV_TILTAK, fødsel.plusWeeks(17),
                 fødsel.plusWeeks(18).minusDays(1)));
-        perioder.add(FordelingErketyper.uttaksperiode(FELLESPERIODE, fødsel.plusWeeks(18),
+        perioder.add(uttaksperiode(FELLESPERIODE, fødsel.plusWeeks(18),
                 fødsel.plusWeeks(21).minusDays(1)));
 
         // sender inn søknad
@@ -1329,12 +1328,12 @@ public class Fodsel extends ForeldrepengerTestBase {
     @Step("Verifiserer tilkjent ytelse")
     private void verifiserTilkjentYtelse(BeregningsresultatMedUttaksplan beregningResultatForeldrepenger,
             boolean medFullRefusjon) {
-        BeregningsresultatPeriode[] perioder = beregningResultatForeldrepenger.getPerioder();
+        List<BeregningsresultatPeriode> perioder = beregningResultatForeldrepenger.getPerioder();
         assertThat(beregningResultatForeldrepenger.isSokerErMor()).isTrue();
-        assertThat(perioder.length).isGreaterThan(0);
+        assertThat(perioder.size()).isGreaterThan(0);
         for (var periode : perioder) {
             assertThat(periode.getDagsats()).isGreaterThan(0);
-            BeregningsresultatPeriodeAndel[] andeler = periode.getAndeler();
+            List<BeregningsresultatPeriodeAndel> andeler = periode.getAndeler();
             for (var andel : andeler) {
                 String kode = andel.getAktivitetStatus().kode;
                 if (kode.equals("AT")) {

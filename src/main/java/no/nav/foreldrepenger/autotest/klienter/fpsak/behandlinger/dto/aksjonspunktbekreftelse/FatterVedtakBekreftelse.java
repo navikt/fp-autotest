@@ -14,7 +14,6 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
 
     public FatterVedtakBekreftelse() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public void godkjennAksjonspunkter(List<Aksjonspunkt> aksjonspunkter) {

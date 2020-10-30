@@ -124,7 +124,7 @@ public class FaktaOmBeregningLagreDto {
         public Boolean skalBrukeBesteberegning;
 
         public YtelseForedeling() {
-            // TODO Auto-generated constructor stub
+            super();
         }
 
         public void leggTilYtelseAndeler(YtelseAndeler andel) {
@@ -142,7 +142,7 @@ public class FaktaOmBeregningLagreDto {
         public boolean nyAndel;
 
         public YtelseAndeler() {
-            // TODO Auto-generated constructor stub
+            super();
         }
 
         public YtelseAndeler(double fastsattBeløp, String inntektskategori) {

@@ -5,12 +5,12 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.fordelingEndringssøknadGradering;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 
@@ -245,18 +245,18 @@ public class Revurdering extends ForeldrepengerTestBase {
         // Verifisering tilkjent ytelse
         BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger();
-        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().length, 6,"Feil antall perioder i tilkjentytesle.");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[0].getDagsats() > 0,
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().size(), 6,"Feil antall perioder i tilkjentytesle.");
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(0).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #1 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[1].getDagsats() > 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(1).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #2 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[2].getDagsats() > 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #3 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[3].getDagsats() > 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #4 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[4].getDagsats() == 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats() == 0,
                 "Siden perioden er usettelse så forventes det 0 i dagsats.");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[5].getDagsats() > 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(5).getDagsats() > 0,
                 "Forventes en dagsats på større en null for periode #6 i tilkjent ytelse");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");

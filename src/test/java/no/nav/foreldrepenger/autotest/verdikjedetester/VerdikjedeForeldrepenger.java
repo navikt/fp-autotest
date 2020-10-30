@@ -8,18 +8,17 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak.ARBEID;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.overføringsperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerAdopsjon;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.overføringsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -62,7 +61,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
@@ -146,8 +144,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp (dvs = 0)!");
         verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER).getSaldo(),  75,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER er 75 dager!");
-        List<Integer> beregnetDagsats = regnUtForventetDagsatsForPeriode(List.of(månedsinntekt), List.of(100),
-                List.of(false));
+        List<Integer> beregnetDagsats = regnUtForventetDagsatsForPeriode(List.of(månedsinntekt), List.of(100), List.of(false));
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
                         .getDagsats() == beregnetDagsats.get(0),
                 "Forventer at dagsatsen blir justert ut i fra årsinntekten og utbeatlinsggrad, og IKKE 6G fordi inntekten er under 6G!");
@@ -194,7 +191,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
         var gjennomsnittFraTreSisteÅreneISigrun = hentNæringsinntektFraSigrun(testscenario, 2018,false);
-        BigInteger næringsnntekt = BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun * 1.80).toBigInteger(); // >25% avvik
+        var næringsnntekt = BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun * 1.80).toBigInteger(); // >25% avvik
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, næringsnntekt, true);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørId, SøkersRolle.MOR)
                 .medSpesiellOpptjening(opptjening)
@@ -288,11 +285,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger();
-        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[2].getDagsats(),0,
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats(),0,
                 "Siden perioden er avslått pga død, forventes det 0 i dagsats.");
-        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[3].getDagsats(),0,
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats(),0,
                 "Siden perioden er avslått pga død, forventes det 0 i dagsats.");
-        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[4].getDagsats(),0,
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats(),0,
                 "Siden perioden er avslått pga død, forventes det 0 i dagsats.");
     }
 
@@ -377,7 +374,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilRisikoKlassefiseringsstatus(saksbehandler.valgtBehandling.uuid.toString(), "IKKE_HOY");
+        saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*
@@ -496,7 +493,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilRisikoKlassefiseringsstatus(saksbehandler.valgtBehandling.uuid.toString(), "IKKE_HOY");
+        saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*
@@ -660,12 +657,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER er 0 dager!");
 
-        BeregningsresultatPeriode[] beregningsresultatPerioder = saksbehandler.valgtBehandling
+        var beregningsresultatPerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger().getPerioder();
-        verifiser(beregningsresultatPerioder.length == 3, "Forventer 3 forskjelige beregningsresultatsperioder!");
-        verifiser(beregningsresultatPerioder[0].getTom().isEqual(opphørsDatoForRefusjon),
+        verifiser(beregningsresultatPerioder.size() == 3, "Forventer 3 forskjelige beregningsresultatsperioder!");
+        verifiser(beregningsresultatPerioder.get(0).getTom().isEqual(opphørsDatoForRefusjon),
                 "Forventer at lengden på første peridoe har tom dato som matcher tom dato angitt i IM#2");
-        verifiser(beregningsresultatPerioder[1].getTom().isEqual(fpStartdatoFar.plusWeeks(40).minusDays(1)),
+        verifiser(beregningsresultatPerioder.get(1).getTom().isEqual(fpStartdatoFar.plusWeeks(40).minusDays(1)),
                 "Forventer den andre periden har en varighet på 40 uker.");
 
         List<BeregningsresultatPeriodeAndel> andelerForAT1 = saksbehandler
@@ -675,7 +672,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         List<Integer> forventetDagsatsForFørstePeriode = regnUtForventetDagsatsForPeriode(
                 List.of(månedsinntektFar1, månedsinntektFar2),
                 List.of(40, 100), List.of(true, true));
-        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[0]
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().get(0)
                         .getDagsats() == sumOfList(forventetDagsatsForFørstePeriode),
                 "Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel");
         verifiser(andelerForAT1.get(0).getTilSoker().equals(forventetDagsatsForFørstePeriode.get(0)),
@@ -686,7 +683,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         List<Integer> forventetDagsatsForAndrePeriode = regnUtForventetDagsatsForPeriode(
                 List.of(månedsinntektFar1, månedsinntektFar2),
                 List.of(40, 100), List.of(true, false));
-        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[1]
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().get(1)
                         .getDagsats() == sumOfList(forventetDagsatsForAndrePeriode),
                 "Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel");
         verifiser(andelerForAT1.get(1).getTilSoker().equals(forventetDagsatsForAndrePeriode.get(0)),
@@ -697,7 +694,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         List<Integer> forventetDagsatsForTredjePeriode = regnUtForventetDagsatsForPeriode(
                 List.of(månedsinntektFar1, månedsinntektFar2),
                 List.of(40, 0), List.of(true, false));
-        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[2]
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().get(2)
                         .getDagsats() == sumOfList(forventetDagsatsForTredjePeriode),
                 "Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel");
         verifiser(andelerForAT1.get(2).getTilSoker().equals(forventetDagsatsForTredjePeriode.get(0)),
@@ -723,7 +720,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilRisikoKlassefiseringsstatus(saksbehandler.valgtBehandling.uuid.toString(), "IKKE_HOY");
+        saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*
@@ -788,9 +785,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger();
-        verifiser(tilkjentYtelsePerioder.getPerioder()[2].getDagsats() == 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats() == 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
-        verifiser(tilkjentYtelsePerioder.getPerioder()[3].getDagsats() == 0,
+        verifiser(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats() == 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
 
         // TODO: Sjekk med simulering! Er ikke støtte for det for øyeblikket. Trenger å inkludere fpoppdrag.
@@ -987,7 +984,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.hentUttaksperiode(6).getPeriodeResultatÅrsak().kodeverk
                         .equalsIgnoreCase("IKKE_OPPFYLT_AARSAK"),
                 "Perioden burde være avslått fordi det er ingen stønadsdager igjen på stønadskontoen.");
-        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()[6].getDagsats() == 0,
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().get(6).getDagsats() == 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats i tilkjent ytelse");
     }
 
@@ -1015,23 +1012,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        // TODO: Her får en avventer dokumentasjon hvis en ikke sender inn IM. Her skal
-        // det ikke være behov for å sende inn IM.
-        var månedsinntektMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummerMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var inntektsmeldingMor = lagInntektsmelding(
-                månedsinntektMor,
-                identMor,
-                fpStartdatoMor,
-                orgNummerMor);
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingMor,
-                aktørIdMor,
-                identMor,
-                saksnummerMor);
-
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
 
@@ -1051,17 +1031,17 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT),
                 "Brev er bestillt i førstegangsbehandling");
-        BeregningsresultatPeriode[] beregningsresultatPeriodeFørstegangsbehandling = saksbehandler.valgtBehandling
+        var beregningsresultatPeriodeFørstegangsbehandling = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger().getPerioder();
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling.length == 4,
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling.size() == 4,
                 "Forventer 4 forskjelige beregningsresultatsperioder!");
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling[0].getDagsats() == 1_000,
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling.get(0).getDagsats() == 1_000,
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling[1].getDagsats() == 1_000,
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling.get(1).getDagsats() == 1_000,
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling[2].getDagsats() == 1_000,
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling.get(2).getDagsats() == 1_000,
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling[3].getDagsats() == 1_000,
+        verifiser(beregningsresultatPeriodeFørstegangsbehandling.get(3).getDagsats() == 1_000,
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
 
         // * KLAGE *//
@@ -1122,22 +1102,22 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
 
-        BeregningsresultatPeriode[] beregningsresultatPeriodeRevurdering = saksbehandler.valgtBehandling
+        var beregningsresultatPeriodeRevurdering = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger().getPerioder();
         List<Integer> forventetDagsats = regnUtForventetDagsatsForPeriode(List.of(30_000), List.of(100),
                 List.of(false));
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
                         .getDagsats() == forventetDagsats.get(0),
                 "Forventer at dagsatsen er kalkulert etter beløpet gitt i besteberegning!");
-        verifiser(beregningsresultatPeriodeRevurdering.length == 4,
+        verifiser(beregningsresultatPeriodeRevurdering.size() == 4,
                 "Forventer 3 forskjelige beregningsresultatsperioder!");
-        verifiser(beregningsresultatPeriodeRevurdering[0].getDagsats() == forventetDagsats.get(0),
+        verifiser(beregningsresultatPeriodeRevurdering.get(0).getDagsats() == forventetDagsats.get(0),
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeRevurdering[1].getDagsats() == forventetDagsats.get(0),
+        verifiser(beregningsresultatPeriodeRevurdering.get(1).getDagsats() == forventetDagsats.get(0),
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeRevurdering[2].getDagsats() == forventetDagsats.get(0),
+        verifiser(beregningsresultatPeriodeRevurdering.get(2).getDagsats() == forventetDagsats.get(0),
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeRevurdering[3].getDagsats() == forventetDagsats.get(0),
+        verifiser(beregningsresultatPeriodeRevurdering.get(3).getDagsats() == forventetDagsats.get(0),
                 "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
         verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode
                         .equalsIgnoreCase("ENDRING_I_BEREGNING"),
@@ -1211,7 +1191,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
-        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().length == 2,
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().size() == 2,
                 "Forventer at det er to perioder i tilkjent ytelse. En for fedrekvote og en for fellesperioden");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
@@ -1298,17 +1278,17 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
 
-        BeregningsresultatPeriode[] perioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
+        var perioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
-        verifiser(perioder.length == 4,
-                "Foventer at den berørte saken har 4 tilkjent ytelse perioder, faktisk antall var: " + perioder.length);
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[0], 0),
+        verifiser(perioder.size() == 4,
+                "Foventer at den berørte saken har 4 tilkjent ytelse perioder, faktisk antall var: " + perioder.size());
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0),
                 "Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[1], 0),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(1), 0),
                 "Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[2], 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(2), 100),
                 "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder[3], 100),
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(3), 100),
                 "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
 
     }
@@ -1373,7 +1353,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().length, 2,
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().size(), 2,
                 "Forventer at det er to perioder i tilkjent ytelse. En for fedrekvote og en for fellesperioden");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
@@ -1481,12 +1461,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         // verifisering i tilkjent ytelse
         BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger();
-        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[1].getDagsats(), 0,
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().get(1).getDagsats(), 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
-        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[3].getDagsats(),
-                (int) Math.round(tilkjentYtelsePerioder.getPerioder()[2].getDagsats() * 0.6),
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats(),
+                (int) Math.round(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats() * 0.6),
                 "Forventer at dagsatsen blir redusert fra 100% til 60% for 3 periode i tilkjent ytelse.");
-        verifiserLikhet(tilkjentYtelsePerioder.getPerioder()[5].getDagsats(), 0,
+        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().get(5).getDagsats(), 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");

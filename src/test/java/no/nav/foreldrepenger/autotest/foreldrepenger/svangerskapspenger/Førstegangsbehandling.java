@@ -95,16 +95,16 @@ public class Førstegangsbehandling extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
-        BeregningsresultatPeriode[] tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
+        List<BeregningsresultatPeriode> tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
-        verifiser(tilkjentYtelsePerioder.length == 2, "Forventer 2 perioder i tilkjent ytelse!");
-        verifiserLikhet(tilkjentYtelsePerioder[0].getFom(), LocalDate.now().minusWeeks(1));
-        verifiserLikhet(tilkjentYtelsePerioder[0].getTom(), LocalDate.now().minusDays(1));
-        verifiserLikhet(tilkjentYtelsePerioder[1].getFom(), LocalDate.now());
-        verifiserLikhet(tilkjentYtelsePerioder[1].getTom(), termindato.minusWeeks(3).minusDays(1));
-        verifiser(tilkjentYtelsePerioder[0].getAndeler().length == 1,
+        verifiser(tilkjentYtelsePerioder.size() == 2, "Forventer 2 perioder i tilkjent ytelse!");
+        verifiserLikhet(tilkjentYtelsePerioder.get(0).getFom(), LocalDate.now().minusWeeks(1));
+        verifiserLikhet(tilkjentYtelsePerioder.get(0).getTom(), LocalDate.now().minusDays(1));
+        verifiserLikhet(tilkjentYtelsePerioder.get(1).getFom(), LocalDate.now());
+        verifiserLikhet(tilkjentYtelsePerioder.get(1).getTom(), termindato.minusWeeks(3).minusDays(1));
+        verifiser(tilkjentYtelsePerioder.get(0).getAndeler().size() == 1,
                 "Forventer bare en andel i første periode fordi bare et AF skal tilrettelegges i perioden");
-        verifiser(tilkjentYtelsePerioder[1].getAndeler().length == 2,
+        verifiser(tilkjentYtelsePerioder.get(1).getAndeler().size() == 2,
                 "Forventer bare to andeler i andre periode fordi begge AFene skal tilrettelegges i perioden");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Foventer at hele den utbetalte dagsatsen går til søker!");
@@ -189,11 +189,11 @@ public class Førstegangsbehandling extends FpsakTestBase {
         assertThat(tredjePeriode.getDagsats()).isEqualTo(0);
 
         // Verifisering av Tilkjent ytelse
-        BeregningsresultatPeriode[] tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
+        List<BeregningsresultatPeriode> tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
-        verifiser(tilkjentYtelsePerioder.length == 1, "Forventer 1 perioder i tilkjent ytelse!");
-        verifiserLikhet(tilkjentYtelsePerioder[0].getFom(), termindato.minusMonths(2));
-        verifiserLikhet(tilkjentYtelsePerioder[0].getTom(), termindato.minusWeeks(3).minusDays(1));
+        verifiser(tilkjentYtelsePerioder.size() == 1, "Forventer 1 perioder i tilkjent ytelse!");
+        verifiserLikhet(tilkjentYtelsePerioder.get(0).getFom(), termindato.minusMonths(2));
+        verifiserLikhet(tilkjentYtelsePerioder.get(0).getTom(), termindato.minusWeeks(3).minusDays(1));
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(100),
                 "Foventer at hele den utbetalte dagsatsen går til arbeidsgiver!");
     }

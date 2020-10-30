@@ -8,17 +8,18 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.oppholdsperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.overføringsperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenario;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeFL;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.oppholdsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.overføringsperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -45,7 +46,6 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.perioder.UttaksperiodeBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
-import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
@@ -1078,10 +1078,10 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.ventTilAvsluttetBehandling();
         Fordeling fordelingEndring = generiskFordeling(
-                FordelingErketyper.graderingsperiodeFL(
+                graderingsperiodeFL(
                         FELLESPERIODE,
                         fødselsdato.plusWeeks(24), fødselsdato.plusWeeks(28), 30),
-                FordelingErketyper.uttaksperiode(FELLESPERIODE,
+                uttaksperiode(FELLESPERIODE,
                         fødselsdato.plusWeeks(28).plusDays(1), fødselsdato.plusWeeks(32).plusDays(1)));
         EndringssøknadBuilder søknadEndring = lagEndringssøknad(
                 testscenario.getPersonopplysninger().getSøkerAktørIdent(),

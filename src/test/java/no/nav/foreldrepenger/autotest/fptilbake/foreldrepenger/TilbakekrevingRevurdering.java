@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generi
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengeErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 
 import java.time.LocalDate;
 
@@ -21,7 +22,6 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EndringssøknadBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
@@ -62,8 +62,8 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
-        Fordeling fordeling = generiskFordeling(FordelingErketyper.uttaksperiode(FELLESPERIODE,
-                fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        Fordeling fordeling = generiskFordeling(
+                uttaksperiode(FELLESPERIODE,fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
         EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling,
                 saksnummer);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
