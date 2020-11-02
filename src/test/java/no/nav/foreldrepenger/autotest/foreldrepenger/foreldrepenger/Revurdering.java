@@ -486,14 +486,9 @@ public class Revurdering extends ForeldrepengerTestBase {
                 .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
                 .bekreftHarIkkeGyldigGrunn();
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.bekreftAksjonspunkt(bekreftelse);
+        foreslåOgFatteVedtakOgVentTilAvsluttet(saksnummer, false);
 
-        saksbehandler.ventTilAvsluttetBehandling();
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() > 1, "Forventer avslåtte uttaksperioder");
 
         var fordelingEndringssøknad = generiskFordeling(
@@ -509,6 +504,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         // Manuell behandling for å få endringssdato satt til første uttaksdag
         saksbehandler.opprettBehandlingRevurdering("RE-FRDLING");
         saksbehandler.velgSisteBehandling();
+        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
 
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() > 1, "Forventer avslåtte uttaksperioder");
     }

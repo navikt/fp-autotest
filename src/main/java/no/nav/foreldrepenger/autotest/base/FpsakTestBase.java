@@ -37,6 +37,14 @@ public class FpsakTestBase extends TestScenarioTestBase {
         if (!revurdering) {
             saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         }
+        foreslåOgFatteVedtakOgVentTilAvsluttet(saksnummer, revurdering);
+        if (saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT,
+                saksbehandler.valgtBehandling.id)) {
+            saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
+        }
+    }
+
+    public void foreslåOgFatteVedtakOgVentTilAvsluttet(long saksnummer, boolean revurdering) {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
@@ -44,12 +52,8 @@ public class FpsakTestBase extends TestScenarioTestBase {
         if (beslutter.harRevurderingBehandling() && revurdering) {
             beslutter.ventPåOgVelgRevurderingBehandling();
         }
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        if (saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT,
-                saksbehandler.valgtBehandling.id)) {
-            saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
-        }
     }
 }
