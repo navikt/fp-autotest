@@ -110,6 +110,7 @@ jobs:
             "stack_started": "${{ env.STACK_STARTED }}",
             "test_outcome": "${{ env.TEST_OUTCOME }}",
             "test_resultat": "${{ env.TEST_RESULTAT }}",
+            "test_suite": "fpsak",
             "run_id": "${{ github.run_id }}"
             }
 

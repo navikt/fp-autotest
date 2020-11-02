@@ -10,6 +10,7 @@ env:
   STACK_STARTED:  ${{ github.event.client_payload.stack_started }}
   TEST_OUTCOME:  ${{ github.event.client_payload.test_outcome }}
   TEST_RESULTAT: ${{ github.event.client_payload.test_resultat }}
+  TEST_SUITE: ${{ github.event.client_payload.test_suite }}
   RUN_ID: ${{ github.event.client_payload.run_id }}
 
 jobs:
@@ -43,7 +44,7 @@ jobs:
         run: |
           if [ ${{ env.STACK_STARTED }} == true ]; then
             echo "Stack up and running!"
-            if [ ${{ env.TRIGGER }} == navikt/fp-sak ] || [ ${{ env.TRIGGER }} == navikt/fp-abakus ] ; then
+            if [ ${{ env.TEST_SUITE }} != verdikjede ]; then
               echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
                 echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
                 echo '*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fpsak|Allure rapport>' >> $GITHUB_ENV
