@@ -469,7 +469,8 @@ public class Revurdering extends ForeldrepengerTestBase {
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(12).minusDays(1)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
                 .medFordeling(fordeling)
-                .medMottattDato(fødselsdato.plusWeeks(25));
+                //Ikke alle periodene skal avlås pga søknadsfrist
+                .medMottattDato(fødselsdato.plusWeeks(18));
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
@@ -497,7 +498,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() > 1, "Forventer avslåtte uttaksperioder");
 
         var fordelingEndringssøknad = generiskFordeling(
-                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(12).plusDays(1), fødselsdato.plusWeeks(12).plusWeeks(2)));
+                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(12).plusWeeks(2)));
         var søknadE = lagEndringssøknad(testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR,
                 fordelingEndringssøknad, saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
