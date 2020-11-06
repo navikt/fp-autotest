@@ -7,7 +7,7 @@
         "beløp": 30000,
         "arbeidsgiver": {
             "@type": "person",
-            "ident": "${aktor1}"
+            "ident": "${ident1}"
         },
         "type": "Lønnsinntekt",
         "fordel": "kontantytelse",
@@ -19,7 +19,7 @@
         "beløp": 30000,
         "arbeidsgiver": {
             "@type": "person",
-            "ident": "${aktor1}"
+            "ident": "${ident1}"
         },
         "type": "Lønnsinntekt",
         "fordel": "kontantytelse",
@@ -31,7 +31,7 @@
         "beløp": 30000,
         "arbeidsgiver": {
             "@type": "person",
-            "ident": "${aktor1}"
+            "ident": "${ident1}"
         },
         "type": "Lønnsinntekt",
         "fordel": "kontantytelse",
@@ -43,7 +43,7 @@
         "beløp": 30000,
         "arbeidsgiver": {
             "@type": "person",
-            "ident": "${aktor1}"
+            "ident": "${ident1}"
         },
         "type": "Lønnsinntekt",
         "fordel": "kontantytelse",
@@ -55,7 +55,7 @@
         "beløp": 30000,
         "arbeidsgiver": {
             "@type": "person",
-            "ident": "${aktor1}"
+            "ident": "${ident1}"
         },
         "type": "Lønnsinntekt",
         "fordel": "kontantytelse",
@@ -67,7 +67,7 @@
         "beløp": 30000,
         "arbeidsgiver": {
             "@type": "person",
-            "ident": "${aktor1}"
+            "ident": "${ident1}"
         },
         "type": "Lønnsinntekt",
         "fordel": "kontantytelse",
@@ -79,7 +79,7 @@
         "beløp": 30000,
         "arbeidsgiver": {
             "@type": "person",
-            "ident": "${aktor1}"
+            "ident": "${ident1}"
         },
         "type": "Lønnsinntekt",
         "fordel": "kontantytelse",
