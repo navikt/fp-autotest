@@ -622,9 +622,10 @@ public class Fodsel extends ForeldrepengerTestBase {
         // Lag privat arbeidsgiver
         TestscenarioDto arbeidsgiverScenario = opprettTestscenario("59");
         String arbeidsgiverFnr = arbeidsgiverScenario.getPersonopplysninger().getSøkerIdent();
+        String arbeidsgiverAktørId = arbeidsgiverScenario.getPersonopplysninger().getSøkerAktørIdent();
 
         // Lag testscenario
-        TestscenarioDto testscenario = opprettTestscenarioMedPrivatArbeidsgiver("152", arbeidsgiverFnr);
+        TestscenarioDto testscenario = opprettTestscenarioMedPrivatArbeidsgiver("152", arbeidsgiverAktørId);
 
         // Send inn søknad
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
@@ -698,9 +699,10 @@ public class Fodsel extends ForeldrepengerTestBase {
         // Lag privat arbeidsgiver
         TestscenarioDto arbeidsgiverScenario = opprettTestscenario("59");
         String arbeidsgiverFnr = arbeidsgiverScenario.getPersonopplysninger().getSøkerIdent();
+        String arbeidsgiverAktørId = arbeidsgiverScenario.getPersonopplysninger().getSøkerAktørIdent();
 
         // Lag testscenario
-        TestscenarioDto testscenario = opprettTestscenarioMedPrivatArbeidsgiver("152", arbeidsgiverFnr);
+        TestscenarioDto testscenario = opprettTestscenarioMedPrivatArbeidsgiver("152", arbeidsgiverAktørId);
 
         // Send inn søknad
         String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
