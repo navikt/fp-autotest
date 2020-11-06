@@ -18,8 +18,8 @@ public class TestscenarioKlient extends VTPKlient {
         super(session);
     }
 
-    public TestscenarioDto opprettTestscenarioMedAktorId(String key, Object testscenarioObject, String aktorId) {
-        String url = hentRestRotUrl() + TESTSCENARIO_I_AUTOTEST_POST_URL + "?aktor1=" + aktorId;
+    public TestscenarioDto opprettTestscenarioMedAktorId(String key, Object testscenarioObject, String aktorId, String ident) {
+        String url = hentRestRotUrl() + TESTSCENARIO_I_AUTOTEST_POST_URL + "?aktor1=" + aktorId + "&ident1=" + ident;
         TestscenarioDto testscenarioDto = postOgHentJson(url, testscenarioObject, TestscenarioDto.class, StatusRange.STATUS_SUCCESS);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
                 testscenarioDto.getPersonopplysninger().getSøkerIdent());
