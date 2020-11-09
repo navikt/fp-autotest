@@ -15,6 +15,7 @@ public class FaktaOmBeregningAndelDto {
     protected Kode aktivitetStatus;
     protected boolean lagtTilAvSaksbehandler;
     protected boolean fastsattAvSaksbehandler;
+    protected Kode kilde;
     protected List<Double> andelIArbeid;
 
     public int getAndelsnr() {
@@ -27,6 +28,10 @@ public class FaktaOmBeregningAndelDto {
 
     public Kode getInntektskategori() {
         return inntektskategori;
+    }
+
+    public Kode getKilde() {
+        return kilde;
     }
 
     public Kode getAktivitetStatus() {

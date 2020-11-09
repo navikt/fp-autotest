@@ -36,9 +36,9 @@ public class FastsettBeregningsgrunnlagAndelDto extends RedigerbarAndel {
                 andelDto.getArbeidsforholdType());
         forrigeArbeidsinntektPrÅr = andelDto.getFordeltPrAar() == null ? null : andelDto.getFordeltPrAar().intValue();
         forrigeInntektskategori = andelDto.getInntektskategori();
+        kilde = andelDto.getKilde();
         forrigeRefusjonPrÅr = andelDto.getRefusjonskravPrAar() == null ? null
                 : andelDto.getRefusjonskravPrAar().intValue();
-
     }
 
     public void setFastsatteVerdier(FastsatteVerdierDto fastsatteVerdier) {
