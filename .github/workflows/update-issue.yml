@@ -10,7 +10,9 @@ jobs:
 
     steps:
       - name: Test success
-        if: github.event.client_payload.success == 'success' && github.event.client_payload.issue-number != null
+        if: |
+          github.event.client_payload.success == 'success' &&
+          github.event.client_payload.issue-number != null
         id: success
         uses: peter-evans/create-or-update-comment@v1
         with:
@@ -22,7 +24,10 @@ jobs:
             Deployer ${{ github.event.client_payload.trigger }} til teamforeldrepenger
 
       - name: Trigger deploy til teamforeldrepenger
-        if: steps.success.outcome == 'success' && github.event.client_payload.trigger != 'navikt/fp-abakus' && github.event.client_payload.trigger != 'navikt/fptilbake'
+        if: |
+          steps.success.outcome == 'success' &&
+          github.event.client_payload.trigger != 'navikt/fp-abakus' &&
+          github.event.client_payload.trigger != 'navikt/fptilbake'
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
@@ -31,7 +36,9 @@ jobs:
           body: /promote dev-fss
 
       - name: Trigger deploy til teamforeldrepenger for fptilbake
-        if: steps.success.outcome == 'success' && github.event.client_payload.trigger == 'navikt/fptilbake'
+        if: |
+          steps.success.outcome == 'success' &&
+          github.event.client_payload.trigger == 'navikt/fptilbake'
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}

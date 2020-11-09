@@ -70,7 +70,10 @@ jobs:
           GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Henter testresultat og setter outcome
-        if: always() && env.STACK_STARTED == 'true' && steps.tester.outcome != 'skipped' && steps.tester.outcome != 'cancelled'
+        if: |
+          always() &&
+          env.STACK_STARTED == 'true' &&
+          steps.tester.outcome != 'cancelled'
         shell: bash
         run: |
           echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
@@ -84,7 +87,11 @@ jobs:
           fi
 
       - name: Oppdaterer issue med testresultat
-        if: always() && steps.tester.outcome != 'skipped' && steps.tester.outcome != 'cancelled' && github.event_name != 'push' && github.event.client_payload.issue-number != null
+        if: |
+          always() &&
+          steps.tester.outcome != 'skipped' &&
+          steps.tester.outcome != 'cancelled' &&
+          github.event.client_payload.issue-number != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
@@ -98,7 +105,12 @@ jobs:
             }
 
       - name: Notify slack
-        if: always() && github.event_name == 'repository_dispatch' && github.event.client_payload.trigger != null && github.event.client_payload.version != null
+        if: |
+          always() &&
+          steps.tester.outcome != 'cancelled' &&
+          github.event_name == 'repository_dispatch' &&
+          github.event.client_payload.trigger != null &&
+          github.event.client_payload.version != null
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
@@ -115,7 +127,11 @@ jobs:
             }
 
       - name: Generer testrapport
-        if: always() && env.STACK_STARTED == 'true'
+        if: |
+          always() &&
+          env.STACK_STARTED == 'true'
+          steps.tester.outcome != 'cancelled' &&
+          github.event_name == 'repository_dispatch' &&
         id: ghpages
         shell: bash
         run: |
