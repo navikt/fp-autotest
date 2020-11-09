@@ -13,6 +13,7 @@ class RedigerbarAndel {
     protected Boolean nyAndel;
     protected Boolean lagtTilAvSaksbehandler;
     protected Kode aktivitetStatus;
+    protected Kode kilde;
     protected Kode arbeidsforholdType;
     protected LocalDate beregningsperiodeFom;
     protected LocalDate beregningsperiodeTom;
@@ -71,6 +72,10 @@ class RedigerbarAndel {
 
     public void setLagtTilAvSaksbehandler(Boolean lagtTilAvSaksbehandler) {
         this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
+    }
+
+    public void setKilde(Kode kilde) {
+        this.kilde = kilde;
     }
 
     public String getArbeidsgiverId() {
