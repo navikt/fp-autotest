@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.util.http.rest;
 
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -41,6 +42,10 @@ public abstract class Rest {
     @Attachment(value = "HttpResponse", type = "application/json")
     protected String hentResponseBody(HttpResponse response) {
         return HttpSession.readResponse(response);
+    }
+
+    protected String hentRawResponse(HttpResponse response) {
+        return HttpSession.readRawResponse(response);
     }
 
     protected void ValidateResponse(HttpResponse response, StatusRange expectedRange) {
@@ -84,7 +89,7 @@ public abstract class Rest {
 
     public String UrlEncodeItem(String item) {
         try {
-            return URLEncoder.encode(item, "UTF-8");
+            return URLEncoder.encode(item, StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new RuntimeException("Unable to encode '" + item + "': " + e.getMessage());
         }

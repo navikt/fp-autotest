@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.util.http;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,15 @@ import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
 public interface HttpSession {
     static Map<String, String> createEmptyHeaders() {
         return new HashMap<>();
+    }
+
+    static String readRawResponse(HttpResponse response) {
+        try {
+            return EntityUtils.toString(response.getEntity());
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 
     static String readResponse(HttpResponse response) {

@@ -1,0 +1,9 @@
+APP_NAME=fpinfo
+NAIS_APP_NAME=fpinfo
+DEFAULTDS_URL=jdbc:oracle:thin:@oracle:1521/xe
+DEFAULTDS_USERNAME=fpinfo
+DEFAULTDS_PASSWORD=fpinfo
+
+FPINFOSCHEMA_URL=jdbc:oracle:thin:@oracle:1521/xe
+FPINFOSCHEMA_USERNAME=fpinfo_schema
+FPINFOSCHEMA_PASSWORD=fpinfo_schema

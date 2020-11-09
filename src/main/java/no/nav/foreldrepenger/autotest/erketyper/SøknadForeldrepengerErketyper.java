@@ -6,7 +6,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.vedtak.felles.xml.soeknad.felles.v3.UkjentForelder;
 
-public class SøknadForeldrepengeErketyper {
+public class SøknadForeldrepengerErketyper {
 
     public static ForeldrepengerBuilder lagSøknadForeldrepenger(LocalDate familiehendelse, String søkerAktørId,
             SøkersRolle søkersRolle) {

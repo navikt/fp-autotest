@@ -50,9 +50,9 @@ public class Fordel extends Aktoer {
     BehandlingerKlient behandlingerKlient;
     FagsakKlient fagsakKlient;
     HistorikkKlient historikkKlient;
-    PdlLeesahKlient pdlLeesahKlient;
 
     // Vtp Klienter
+    PdlLeesahKlient pdlLeesahKlient;
     JournalforingKlient journalpostKlient;
     SafKlient safKlient;
 

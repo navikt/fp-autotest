@@ -19,16 +19,6 @@ public class MedlemskapErketyper {
         return medlemskap;
     }
 
-    public static OppholdNorge oppholdNorge(LocalDate fom, LocalDate tom) {
-        OppholdNorge oppholdNorge = new OppholdNorge();
-        Periode periode = new Periode();
-        periode.setFom(fom);
-        periode.setTom(tom);
-
-        oppholdNorge.setPeriode(periode);
-        return oppholdNorge;
-    }
-
     public static Medlemskap medlemskapUtlandetForrige12mnd() {
         Medlemskap medlemskap = new Medlemskap();
         medlemskap.setINorgeVedFoedselstidspunkt(true);
@@ -38,7 +28,19 @@ public class MedlemskapErketyper {
         return medlemskap;
     }
 
-    public static OppholdUtlandet oppholdUtlandet(LocalDate fom, LocalDate tom) {
+
+    private static OppholdNorge oppholdNorge(LocalDate fom, LocalDate tom) {
+        OppholdNorge oppholdNorge = new OppholdNorge();
+        Periode periode = new Periode();
+        periode.setFom(fom);
+        periode.setTom(tom);
+
+        oppholdNorge.setPeriode(periode);
+        return oppholdNorge;
+    }
+
+
+    private static OppholdUtlandet oppholdUtlandet(LocalDate fom, LocalDate tom) {
         OppholdUtlandet oppholdUtlandet = new OppholdUtlandet();
         Land land = new Land();
         land.setKode("USA");

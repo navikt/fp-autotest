@@ -68,13 +68,16 @@ public class Saksbehandler extends Aktoer {
     private Lazy<List<HistorikkInnslag>> historikkInnslag;
     private Lazy<Behandling> annenPartBehandling;
 
-    private FagsakKlient fagsakKlient;
-    private BehandlingerKlient behandlingerKlient;
-    private KodeverkKlient kodeverkKlient;
-    private BrevKlient brevKlient;
-    private HistorikkKlient historikkKlient;
-    private ProsesstaskKlient prosesstaskKlient;
-    private RisikovurderingKlient risikovurderingKlient;
+    private final FagsakKlient fagsakKlient;
+    private final BehandlingerKlient behandlingerKlient;
+    private final KodeverkKlient kodeverkKlient;
+    private final BrevKlient brevKlient;
+    private final HistorikkKlient historikkKlient;
+    private final ProsesstaskKlient prosesstaskKlient;
+    private final RisikovurderingKlient risikovurderingKlient;
+
+    public no.nav.foreldrepenger.autotest.aktoerer.fprisk.Saksbehandler saksbehandlerFprisk;
+    public no.nav.foreldrepenger.autotest.aktoerer.fpsoknad_mottak.Saksbehandler saksbehandlerFpsoknadMottak;
 
 
     public Saksbehandler() {
@@ -86,6 +89,10 @@ public class Saksbehandler extends Aktoer {
         historikkKlient = new HistorikkKlient(session);
         prosesstaskKlient = new ProsesstaskKlient(session);
         risikovurderingKlient = new RisikovurderingKlient(session);
+        saksbehandlerFprisk = new no.nav.foreldrepenger.autotest.aktoerer.fprisk.Saksbehandler();
+        saksbehandlerFpsoknadMottak = new no.nav.foreldrepenger.autotest.aktoerer.fpsoknad_mottak.Saksbehandler();
+
+
     }
 
     public Saksbehandler(Rolle rolle) {
@@ -744,10 +751,7 @@ public class Saksbehandler extends Aktoer {
                 .sum() != forventetUtbetaltDagsatsTilArbeidsgiver) {
             return false;
         }
-        if (utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() != forventetUtbetaltDagsatsTilSøker) {
-            return false;
-        }
-        return true;
+        return utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() == forventetUtbetaltDagsatsTilSøker;
     }
 
     private String hentInternArbeidsforholdId(String orgnummer) {
@@ -782,10 +786,7 @@ public class Saksbehandler extends Aktoer {
                 utbetaltRefusjonForAndeler.add(andel.getRefusjon());
             }
         }
-        if (utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue)
-                .sum() != forventetUtbetaltDagsatsTilArbeidsgiver) {
-            return true;
-        }
-        return false;
+        return utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue)
+                .sum() != forventetUtbetaltDagsatsTilArbeidsgiver;
     }
 }
