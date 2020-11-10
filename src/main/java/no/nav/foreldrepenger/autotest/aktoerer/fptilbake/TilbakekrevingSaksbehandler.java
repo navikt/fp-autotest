@@ -274,6 +274,6 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     //Batch trigger
     public void startAutomatiskBehandlingBatch(){
-        prosesstaskKlient.create(new NewProsessTaskDto("batch.runner", "BFPT-003"));
+        prosesstaskKlient.create(new NewProsessTaskDto("batch.automatisk.saksbehandling"));
     }
 }
