@@ -121,7 +121,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         var vurderFaktaOmBeregningBekreftelse1 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse1
-                .leggTilMottarYtelse(Collections.emptyList())
+                .leggTilMottarYtelseFrilans(false)
                 .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse1);
 
@@ -142,17 +142,16 @@ public class Fodsel extends ForeldrepengerTestBase {
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
-                .leggTilMottarYtelse(Collections.emptyList())
+                .leggTilMottarYtelseFrilans(true)
                 .leggTilMaanedsinntektFL(25800)
                 .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-        // TODO: Hva gjøres her i praksis? Hvordan gjør saksbehandleren dette?
         vurderFaktaOmBeregningBekreftelse2
                 .fjernFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL.kode)
-                .leggTilMottarYtelse(Collections.emptyList())
+                .leggTilMottarYtelseFrilans(false)
                 .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 
