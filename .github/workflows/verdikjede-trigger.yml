@@ -210,9 +210,10 @@ jobs:
           path: container-logs
 
       - name: Sjekker storage
-        if: failure()
+        if: always()
         shell: bash
         run: |
           docker stats --no-stream
           docker system df -v
           df -h
+          free -m
