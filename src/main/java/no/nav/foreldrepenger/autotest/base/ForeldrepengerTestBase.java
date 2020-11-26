@@ -5,12 +5,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.autotest.aktoerer.fpsoknad_mottak.Selvbetjening;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.Inntektsår;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.SigrunModell;
 
 public class ForeldrepengerTestBase extends FpsakTestBase {
+
+    public final Selvbetjening selvbetjening = new Selvbetjening();
+
 
     protected Double hentNæringsinntektFraSigrun(TestscenarioDto testscenarioDto, Integer beregnFraOgMedÅr, Boolean annenPart) {
         Integer beregFraÅr = beregnFraOgMedÅr;
@@ -128,15 +132,14 @@ public class ForeldrepengerTestBase extends FpsakTestBase {
             }
 
             // version 1.3 file terminator
-            if (data[5] == 0x31 && data[6] == 0x2E && data[7] == 0x34 &&
+            // EOL
+            return data[5] == 0x31 && data[6] == 0x2E && data[7] == 0x34 &&
                     data[data.length - 6] == 0x25 && // %
                     data[data.length - 5] == 0x25 && // %
                     data[data.length - 4] == 0x45 && // E
                     data[data.length - 3] == 0x4F && // O
                     data[data.length - 2] == 0x46 && // F
-                    data[data.length - 1] == 0x0A) { // EOL
-                return true;
-            }
+                    data[data.length - 1] == 0x0A;
         }
         return false;
     }

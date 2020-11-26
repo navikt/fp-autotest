@@ -88,7 +88,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     public void testcase_mor_fødsel() {
         var testscenario = opprettTestscenario("501");
 
-//        var kvittering = saksbehandler.saksbehandlerFpsoknadMottak.sendInnSøknad(testscenario.getPersonopplysninger().getSøkerIdent(),
+//        var kvittering = selvbetjening.sendInnSøknad(testscenario.getPersonopplysninger().getSøkerIdent(),
 //                SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(LocalDate.now(), BrukerRolle.MOR).build());
 //        verifiser(kvittering.erVellykket(), "Innsending vellykket!");
 

@@ -76,9 +76,6 @@ public class Saksbehandler extends Aktoer {
     private final ProsesstaskKlient prosesstaskKlient;
     private final RisikovurderingKlient risikovurderingKlient;
 
-    public no.nav.foreldrepenger.autotest.aktoerer.fprisk.Saksbehandler saksbehandlerFprisk;
-    public no.nav.foreldrepenger.autotest.aktoerer.fpsoknad_mottak.Saksbehandler saksbehandlerFpsoknadMottak;
-
 
     public Saksbehandler() {
         super();
@@ -89,10 +86,6 @@ public class Saksbehandler extends Aktoer {
         historikkKlient = new HistorikkKlient(session);
         prosesstaskKlient = new ProsesstaskKlient(session);
         risikovurderingKlient = new RisikovurderingKlient(session);
-        saksbehandlerFprisk = new no.nav.foreldrepenger.autotest.aktoerer.fprisk.Saksbehandler();
-        saksbehandlerFpsoknadMottak = new no.nav.foreldrepenger.autotest.aktoerer.fpsoknad_mottak.Saksbehandler();
-
-
     }
 
     public Saksbehandler(Rolle rolle) {

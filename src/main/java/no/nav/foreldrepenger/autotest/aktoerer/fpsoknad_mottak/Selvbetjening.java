@@ -6,12 +6,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.dto.Kvitte
 import no.nav.foreldrepenger.autotest.klienter.vtp.oauth2.Oauth2Klient;
 import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
 
-public class Saksbehandler extends Aktoer {
+public class Selvbetjening extends Aktoer {
 
     private final MottakKlient mottakKlient;
     private final Oauth2Klient oauth2Klient;
 
-    public Saksbehandler() {
+    public Selvbetjening() {
         mottakKlient = new MottakKlient(session);
         oauth2Klient = new Oauth2Klient(session);
     }
