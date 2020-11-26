@@ -70,8 +70,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-import no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper;
-import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
@@ -90,9 +88,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     public void testcase_mor_fødsel() {
         var testscenario = opprettTestscenario("501");
 
-        var kvittering = selvbetjening.sendInnSøknad(testscenario.getPersonopplysninger().getSøkerIdent(),
-                SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(LocalDate.now(), BrukerRolle.MOR).build());
-        verifiser(kvittering.erVellykket(), "Innsending vellykket!");
+//        var kvittering = selvbetjening.sendInnSøknad(testscenario.getPersonopplysninger().getSøkerIdent(),
+//                SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(LocalDate.now(), BrukerRolle.MOR).build());
+//        verifiser(kvittering.erVellykket(), "Innsending vellykket!");
 
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var termindato = LocalDate.now().plusWeeks(1);
