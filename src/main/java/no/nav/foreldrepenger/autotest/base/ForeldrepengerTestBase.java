@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.autotest.aktoerer.fpsoknad_mottak.Selvbetjening;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.Inntektsår;
@@ -13,7 +12,7 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.SigrunModell;
 
 public class ForeldrepengerTestBase extends FpsakTestBase {
 
-    public final Selvbetjening selvbetjening = new Selvbetjening();
+
 
 
     protected Double hentNæringsinntektFraSigrun(TestscenarioDto testscenarioDto, Integer beregnFraOgMedÅr, Boolean annenPart) {
