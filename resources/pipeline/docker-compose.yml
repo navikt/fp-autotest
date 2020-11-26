@@ -5,14 +5,13 @@ services:
     container_name: audit.nais
     ports:
       - "6514:6514"
-    mem_limit: 32m
+    mem_limit: 16m
   oracle:
     image: $ORACLE_IMAGE
     container_name: oracle
     restart: on-failure
-    mem_limit: 1gb
-    mem_reservation: 512mb
-    shm_size: 2gb
+    mem_limit: 512mb
+    shm_size: 512mb
     volumes:
       - ./oracle-init:/docker-entrypoint-initdb.d/
     ports:
@@ -34,8 +33,7 @@ services:
     image: $VTP_IMAGE
     container_name: vtp
     restart: on-failure
-    mem_limit: 2gb
-    mem_reservation: 1gb
+    mem_limit: 1gb
     hostname: "vtp"
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
@@ -115,7 +113,7 @@ services:
     image: redis
     container_name: redis
     restart: on-failure
-    mem_limit: 64mb
+    mem_limit: 32mb
   fpfrontend:
     image: $FPFRONTEND_IMAGE
     container_name: fpfrontend
@@ -142,6 +140,7 @@ services:
     image: $FPFORDEL_IMAGE
     container_name: fpfordel
     restart: on-failure
+    mem_limit: 512mb
     environment:
       - "LOADBALANCER_URL=http://localhost:8090"
       - "LOADBALANCER_FQDN=localhost:8090"
@@ -172,6 +171,7 @@ services:
     image: $FPINFO_IMAGE
     container_name: fpinfo
     restart: on-failure
+    mem_limit: 512mb
     environment:
       - "LOADBALANCER_URL=http://localhost:8040"
       - "LOADBALANCER_FQDN=localhost:8040"
@@ -190,6 +190,7 @@ services:
     image: $FPSOKNAD_MOTTAK_IMAGE
     container_name: fpsoknad-mottak
     restart: on-failure
+    mem_limit: 512mb
     environment:
       - "LOADBALANCER_URL=http://localhost:9001"
       - "LOADBALANCER_FQDN=localhost:9001"
@@ -243,7 +244,7 @@ services:
     image: $FPDOKGEN_IMAGE
     container_name: fpdokgen
     restart: on-failure
-    mem_limit: 512mb
+    mem_limit: 256mb
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -324,7 +325,7 @@ services:
     image: $FPABONNENT_IMAGE
     container_name: fpabonnent
     restart: on-failure
-    mem_limit: 1gb
+    mem_limit: 512mb
     env_file:
       - "fpabonnent_datasource.list"
       - "common.env"
