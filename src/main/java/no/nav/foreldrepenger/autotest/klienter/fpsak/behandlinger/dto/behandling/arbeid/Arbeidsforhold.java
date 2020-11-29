@@ -11,6 +11,7 @@ public class Arbeidsforhold {
     protected String id = null;
     protected String navn = null;
     protected String arbeidsgiverIdentifikator = null;
+    protected String arbeidsgiverReferanse = null;
     protected String arbeidsforholdId = null;
     protected LocalDate fomDato = null;
     protected LocalDate tomDato = null;
@@ -75,6 +76,10 @@ public class Arbeidsforhold {
 
     public String getArbeidsgiverIdentifikator() {
         return arbeidsgiverIdentifikator;
+    }
+
+    public String getArbeidsgiverReferanse() {
+        return arbeidsgiverReferanse;
     }
 
     public String getArbeidsforholdId() {

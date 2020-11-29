@@ -16,7 +16,7 @@ public class UttakResultatPeriodeAktivitet implements Serializable {
     protected BigDecimal prosentArbeid = null;
     protected BigDecimal utbetalingsgrad = null;
     protected Kode uttakArbeidType = null;
-    protected Arbeidsgiver arbeidsgiver;
+    protected String arbeidsgiverReferanse;
 
     protected BigDecimal trekkdager;
     protected String arbeidsforholdId;
@@ -46,8 +46,8 @@ public class UttakResultatPeriodeAktivitet implements Serializable {
         this.stønadskontoType = stønadskontoType;
     }
 
-    public Arbeidsgiver getArbeidsgiver() {
-        return arbeidsgiver;
+    public String getArbeidsgiverReferanse() {
+        return arbeidsgiverReferanse;
     }
 
     public Kode getUttakArbeidType() {

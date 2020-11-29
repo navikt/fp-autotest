@@ -10,8 +10,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningsresultatPeriodeAndel {
 
-    protected String arbeidsgiverNavn;
-    protected String arbeidsgiverOrgnr;
+    protected String arbeidsgiverReferanse;
     protected Integer refusjon;
     protected Integer tilSoker;
     protected Uttak uttak;
@@ -21,12 +20,9 @@ public class BeregningsresultatPeriodeAndel {
     protected String arbeidsforholdId;
     protected Kode arbeidsforholdType;
 
-    public String getArbeidsgiverNavn() {
-        return arbeidsgiverNavn;
-    }
 
-    public String getArbeidsgiverOrgnr() {
-        return arbeidsgiverOrgnr;
+    public String getArbeidsgiverReferanse() {
+        return arbeidsgiverReferanse;
     }
 
     public Integer getRefusjon() {
