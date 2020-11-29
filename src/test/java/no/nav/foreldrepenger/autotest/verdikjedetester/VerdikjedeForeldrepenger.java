@@ -621,7 +621,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var tomGyldighetsperiode = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getAnsettelsesperiodeFom();
         avklarArbeidsforholdBekreftelse.bekreftArbeidsforholdErIkkeAktivt(
-                "91779493",
+                "991779493",
                 ansettelsesperiodeFom,
                 tomGyldighetsperiode.minusDays(1),
                 "Arbeidsforholdet skulle vært avsluttet");
