@@ -65,7 +65,8 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
         for (OpptjeningAktivitet opptjeningAktivitet : behandling.getOpptjening().getOpptjeningAktivitetList()) {
             opptjeningAktivitet.setOriginalFom(opptjeningAktivitet.getOpptjeningFom());
             opptjeningAktivitet.setOriginalTom(opptjeningAktivitet.getOpptjeningTom());
-            opptjeningAktivitet.setOppdragsgiverOrg(opptjeningAktivitet.getOppdragsgiverOrg());
+            opptjeningAktivitet.setOppdragsgiverOrg(opptjeningAktivitet.getArbeidsgiverReferanse());
+            opptjeningAktivitet.setArbeidsgiverReferanse(opptjeningAktivitet.getArbeidsgiverReferanse());
             opptjeningAktivitet.setArbeidsforholdRef(opptjeningAktivitet.getArbeidsforholdRef());
             opptjeningAktivitet.setAktivitetType(opptjeningAktivitet.getAktivitetType());
             opptjeningAktivitetList.add(opptjeningAktivitet);
