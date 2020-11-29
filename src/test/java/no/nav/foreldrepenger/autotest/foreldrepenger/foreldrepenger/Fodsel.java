@@ -20,7 +20,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -979,14 +978,11 @@ public class Fodsel extends ForeldrepengerTestBase {
             assertThat(periode.getPeriodeResultatÅrsak().kode).isNotEqualTo("-");
             assertThat(periode.getAktiviteter()).hasSize(2);
             for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-                assertThat(aktivitet.getArbeidsgiver().getVirksomhet()).isTrue();
-                assertThat(aktivitet.getArbeidsgiver().getAktørId()).isNull();
-                assertThat(aktivitet.getArbeidsgiver().getNavn()).isNotNull();
-                assertThat(aktivitet.getArbeidsgiver().getNavn()).isNotEmpty();
+                assertThat(aktivitet.getArbeidsgiverReferanse()).isNotNull();
                 assertThat(aktivitet.getUttakArbeidType().kode).isEqualTo("ORDINÆRT_ARBEID");
                 List<Arbeidsforhold> arbeidsforholdFraScenario = testscenario.getScenariodata()
                         .getArbeidsforholdModell().getArbeidsforhold();
-                assertThat(aktivitet.getArbeidsgiver().getIdentifikator()).isIn(
+                assertThat(aktivitet.getArbeidsgiverReferanse()).isIn(
                         arbeidsforholdFraScenario.get(0).getArbeidsgiverOrgnr(),
                         arbeidsforholdFraScenario.get(1).getArbeidsgiverOrgnr());
             }
@@ -1299,7 +1295,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     private UttakResultatPeriodeAktivitet finnAktivitetForArbeidsgiver(UttakResultatPeriode uttakResultatPeriode,
             String identifikator) {
         return uttakResultatPeriode.getAktiviteter().stream()
-                .filter(a -> a.getArbeidsgiver().getIdentifikator().equals(identifikator)).findFirst().get();
+                .filter(a -> a.getArbeidsgiverReferanse().equals(identifikator)).findFirst().get();
     }
 
     // TODO må ta inn fordeling som blir laget i søknad for å kunne verifisere

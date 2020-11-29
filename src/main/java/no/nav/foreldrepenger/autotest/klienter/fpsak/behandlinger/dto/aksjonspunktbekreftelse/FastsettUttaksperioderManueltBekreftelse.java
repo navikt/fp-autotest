@@ -245,7 +245,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
         periode.setBegrunnelse("Innvilger angitte aktiviteter og avslå resten");
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            if (organisasjonsnummere.contains(aktivitet.getArbeidsgiver().getIdentifikator())) {
+            if (organisasjonsnummere.contains(aktivitet.getArbeidsgiverReferanse())) {
                 innvilgAktivitetForPeriode(periode, aktivitet);
             } else {
                 avslåAktivitet(aktivitet);

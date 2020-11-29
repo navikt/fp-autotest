@@ -425,7 +425,7 @@ public class Saksbehandler extends Aktoer {
             String organisasjonsnummer) {
         return valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().stream()
                 .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
-                .filter(andeler -> organisasjonsnummer.equalsIgnoreCase(andeler.getArbeidsgiverOrgnr()))
+                .filter(andeler -> organisasjonsnummer.equalsIgnoreCase(andeler.getArbeidsgiverReferanse()))
                 .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
                 .collect(Collectors.toList());
     }
@@ -752,7 +752,7 @@ public class Saksbehandler extends Aktoer {
 
     private String hentInternArbeidsforholdId(String orgnummer) {
         return valgtBehandling.getInntektArbeidYtelse().getArbeidsforhold().stream()
-                .filter(arbeidsforhold -> arbeidsforhold.getArbeidsgiverIdentifikator().equalsIgnoreCase(orgnummer))
+                .filter(arbeidsforhold -> orgnummer.equalsIgnoreCase(arbeidsforhold.getArbeidsgiverReferanse()))
                 .map(Arbeidsforhold::getArbeidsforholdId)
                 .findFirst()
                 .orElseThrow();
