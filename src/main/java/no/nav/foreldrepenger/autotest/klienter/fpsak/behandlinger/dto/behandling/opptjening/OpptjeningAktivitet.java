@@ -13,6 +13,7 @@ public class OpptjeningAktivitet {
     protected String arbeidsforholdRef;
     protected String arbeidsgiver;
     protected String arbeidsgiverIdentifikator;
+    protected String arbeidsgiverReferanse;
     protected String begrunnelse;
 
     protected LocalDate originalFom;
@@ -30,6 +31,14 @@ public class OpptjeningAktivitet {
 
     public void setOppdragsgiverOrg(String oppdragsgiverOrg) {
         this.oppdragsgiverOrg = oppdragsgiverOrg;
+    }
+
+    public String getArbeidsgiverReferanse() {
+        return arbeidsgiverReferanse;
+    }
+
+    public void setArbeidsgiverReferanse(String arbeidsgiverReferanse) {
+        this.arbeidsgiverReferanse = arbeidsgiverReferanse;
     }
 
     public Kode getAktivitetType() {

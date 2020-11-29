@@ -67,7 +67,7 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
 
         // LØSER AKSJONSPUNKT 5080 //
         var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErBasertPåInntektsmelding("BEDRIFT AS", LocalDate.now().minusYears(3),
+                .bekreftArbeidsforholdErBasertPåInntektsmelding("910909088", LocalDate.now().minusYears(3),
                         LocalDate.now().plusYears(2), BigDecimal.valueOf(100));
         saksbehandler.bekreftAksjonspunkt(ab);
 

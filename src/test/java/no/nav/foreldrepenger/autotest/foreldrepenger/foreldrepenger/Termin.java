@@ -98,7 +98,7 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.gjenopptaBehandling();
 
         var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErAktivt("BEDRIFT AS", true);
+                .bekreftArbeidsforholdErAktivt("910909088", true);
         saksbehandler.bekreftAksjonspunkt(ab);
 
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);

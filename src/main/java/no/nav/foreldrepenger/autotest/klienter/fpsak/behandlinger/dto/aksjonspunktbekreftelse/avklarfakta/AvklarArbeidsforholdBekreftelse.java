@@ -29,10 +29,10 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         }
     }
 
-    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErAktivt(String navn, boolean fortsettUtenInntekt) {
-        Arbeidsforhold forhold = finnArbeidsforhold(navn);
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErAktivt(String orgnummer, boolean fortsettUtenInntekt) {
+        Arbeidsforhold forhold = finnArbeidsforhold(orgnummer);
         if (forhold == null) {
-            throw new RuntimeException("fant ikke arbeidsforhold: " + navn);
+            throw new RuntimeException("fant ikke arbeidsforhold: " + orgnummer);
         }
         bekreftArbeidsforholdErAktivt(forhold, fortsettUtenInntekt);
         return this;
@@ -68,7 +68,13 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         forhold.setBegrunnelse("Begrunnelse fra Autotest.");
     }
 
-    private Arbeidsforhold finnArbeidsforhold(String navn) {
+    private Arbeidsforhold finnArbeidsforhold(String orgnummer) {
+        return this.arbeidsforhold.stream()
+            .filter(a -> orgnummer.equalsIgnoreCase(a.getArbeidsgiverReferanse()))
+            .findFirst().orElse(null);
+    }
+
+    private Arbeidsforhold finnArbeidsforholdForNavn(String navn) {
         for (Arbeidsforhold arbeidsforhold : this.arbeidsforhold) {
             if (arbeidsforhold.getNavn().equals(navn)) {
                 return arbeidsforhold;
