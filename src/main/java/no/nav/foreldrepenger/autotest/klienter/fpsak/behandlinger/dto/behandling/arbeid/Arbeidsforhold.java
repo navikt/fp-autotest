@@ -75,7 +75,7 @@ public class Arbeidsforhold {
     }
 
     public String getArbeidsgiverIdentifikator() {
-        return arbeidsgiverIdentifikator;
+        return arbeidsgiverIdentifikator != null ? arbeidsgiverIdentifikator : arbeidsgiverReferanse;
     }
 
     public String getArbeidsgiverReferanse() {
