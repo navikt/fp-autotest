@@ -38,11 +38,11 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErIkkeAktivt(String navn, LocalDate startDato,
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErIkkeAktivt(String orgnummer, LocalDate startDato,
             LocalDate overstyrtTom, String begrunnelse) {
-        Arbeidsforhold forhold = finnArbeidsforhold(navn, startDato);
+        Arbeidsforhold forhold = finnArbeidsforhold(orgnummer, startDato);
         if (forhold == null) {
-            throw new RuntimeException("fant ikke arbeidsforhold: " + navn);
+            throw new RuntimeException("fant ikke arbeidsforhold: " + orgnummer);
         }
         forhold.setFortsettBehandlingUtenInntektsmelding(true);
         forhold.setOverstyrtTom(overstyrtTom);
@@ -78,13 +78,10 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
     }
 
     // Trenger og skille to arbeidsforhold i samme bedrift
-    private Arbeidsforhold finnArbeidsforhold(String navn, LocalDate startDato) {
-        for (Arbeidsforhold arbeidsforhold : this.arbeidsforhold) {
-            if (arbeidsforhold.getNavn().equals(navn) && arbeidsforhold.getFomDato().equals(startDato)) {
-                return arbeidsforhold;
-            }
-        }
-        return null;
+    private Arbeidsforhold finnArbeidsforhold(String orgnummer, LocalDate startDato) {
+        return this.arbeidsforhold.stream()
+            .filter(a -> orgnummer.equalsIgnoreCase(a.getArbeidsgiverReferanse()) && startDato.equals(a.getFomDato()))
+            .findFirst().orElse(null);
     }
 
     public AvklarArbeidsforholdBekreftelse leggTilArbeidsforhold(String navn, LocalDate startDato, LocalDate sluttDato,
