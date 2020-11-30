@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -39,7 +37,6 @@ public abstract class EgenNæring {
     private List<Virksomhetstype> virksomhetsTyper;
     private ÅpenPeriode periode;
     private boolean nærRelasjon;
-    @Valid
     private List<Regnskapsfører> regnskapsførere;
     private boolean erNyOpprettet;
     private boolean erVarigEndring;

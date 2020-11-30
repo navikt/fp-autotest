@@ -15,7 +15,6 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -48,12 +47,6 @@ public abstract class AbstractHttpSession implements HttpSession {
 
     public AbstractHttpSession() {
         this.context = HttpClientContext.create();
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setSocketTimeout(45_000)
-                .setConnectTimeout(45_000)
-                .build();
-        context.setRequestConfig(requestConfig);
-
         setCookies(new BasicCookieStore());
         this.redirectClient = opprettKlient(true);
         this.nonredirectClient = opprettKlient(false);

@@ -22,11 +22,8 @@ public class Opptjening {
 
     @Valid
     private List<UtenlandskArbeidsforhold> utenlandskArbeidsforhold;
-    @Valid
     private List<EgenNæring> egenNæring;
-    @Valid
     private List<AnnenOpptjening> annenOpptjening;
-    @Valid
     private Frilans frilans;
 
     @Builder

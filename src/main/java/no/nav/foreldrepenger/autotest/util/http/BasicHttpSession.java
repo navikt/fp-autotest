@@ -7,7 +7,7 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
 
 public class BasicHttpSession extends AbstractHttpSession {
-    private static final ThreadLocal<BasicHttpSession> sessions = ThreadLocal.withInitial(() -> new BasicHttpSession());
+    private static final ThreadLocal<BasicHttpSession> sessions = ThreadLocal.withInitial(BasicHttpSession::new);
 
     private static final CloseableHttpClient redirectClient = createKlient(true);
     private static final CloseableHttpClient nonRedirectClient = createKlient(false);
@@ -31,17 +31,17 @@ public class BasicHttpSession extends AbstractHttpSession {
         builder.setRetryHandler(new StandardHttpRequestRetryHandler());
 
         RequestConfig.Builder requestBuilder = RequestConfig.custom();
-        int connectTimeoutMillis = 5000;
-        requestBuilder = requestBuilder.setConnectTimeout(connectTimeoutMillis * 6);
-        requestBuilder = requestBuilder.setSocketTimeout(connectTimeoutMillis * 6);
+        int connectTimeoutMillis = 30_000;
+        requestBuilder = requestBuilder.setConnectTimeout(connectTimeoutMillis);
+        requestBuilder = requestBuilder.setSocketTimeout(connectTimeoutMillis);
 
-        builder = builder.setDefaultRequestConfig(requestBuilder.build());
+        builder.setDefaultRequestConfig(requestBuilder.build());
         builder.setKeepAliveStrategy(createKeepAliveStrategy(30));
 
         if (doRedirect) {
-            builder = builder.setRedirectStrategy(new LaxRedirectStrategy());
+            builder.setRedirectStrategy(new LaxRedirectStrategy());
         } else {
-            builder = builder.disableRedirectHandling();
+            builder.disableRedirectHandling();
         }
         return builder.build();
     }

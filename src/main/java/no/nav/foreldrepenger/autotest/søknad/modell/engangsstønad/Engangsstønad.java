@@ -26,7 +26,6 @@ public class Engangsstønad extends Ytelse {
 
     @Valid
     private Medlemsskap medlemsskap;
-    @Valid
     private AnnenForelder annenForelder;
     @Valid
     private RelasjonTilBarn relasjonTilBarn;

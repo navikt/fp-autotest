@@ -3,8 +3,6 @@ package no.nav.foreldrepenger.autotest.søknad.modell.felles.opptjening;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.neovisionaries.i18n.CountryCode;
@@ -25,7 +23,6 @@ public class UtenlandskOrganisasjon extends EgenNæring {
 
     private String orgName;
     @JsonAlias("arbeidsland")
-    @NotNull
     private final CountryCode registrertILand;
 
     @Builder

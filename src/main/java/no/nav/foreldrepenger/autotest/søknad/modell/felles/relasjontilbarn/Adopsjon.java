@@ -20,7 +20,7 @@ import lombok.ToString;
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Adopsjon extends RelasjonTilBarn {
 
-    @NotNull(message = "{ytelse.relasjontilbarn.adopsjon.omsorggsovertakelsesdato.notnull}")
+    @NotNull
     private final LocalDate omsorgsovertakelsesdato;
     private final boolean ektefellesBarn;
     private final LocalDate ankomstDato;

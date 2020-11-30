@@ -28,12 +28,12 @@ public class Svangerskapspenger extends Ytelse {
 
     @NotNull
     private LocalDate termindato;
-
     private LocalDate fødselsdato;
     @Valid
     private Medlemsskap medlemsskap;
     @Valid
     private Opptjening opptjening;
+    @Valid
     private List<Tilrettelegging> tilrettelegging;
 
     @JsonCreator

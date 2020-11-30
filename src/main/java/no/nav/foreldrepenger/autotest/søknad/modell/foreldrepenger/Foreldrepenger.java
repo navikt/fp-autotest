@@ -20,11 +20,9 @@ import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.Fo
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Foreldrepenger extends Ytelse {
 
-    @Valid
     private AnnenForelder annenForelder;
     @Valid
     private RelasjonTilBarn relasjonTilBarn;
-    @Valid
     private Rettigheter rettigheter;
     private Dekningsgrad dekningsgrad;
     @Valid
