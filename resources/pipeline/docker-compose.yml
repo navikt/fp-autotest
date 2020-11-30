@@ -5,14 +5,13 @@ services:
     container_name: audit.nais
     ports:
       - "6514:6514"
-    mem_limit: 32m
+    mem_limit: 16m
   oracle:
     image: $ORACLE_IMAGE
     container_name: oracle
     restart: on-failure
-    mem_limit: 1gb
-    mem_reservation: 512mb
-    shm_size: 2gb
+    mem_limit: 512mb
+    shm_size: 512mb
     volumes:
       - ./oracle-init:/docker-entrypoint-initdb.d/
     ports:
@@ -34,12 +33,15 @@ services:
     image: $VTP_IMAGE
     container_name: vtp
     restart: on-failure
-    mem_limit: 2gb
-    mem_reservation: 1gb
+    mem_limit: 1gb
+    hostname: "vtp"
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
-      - "CREATE_TOPICS=privat-foreldrepenger-fprisk-lokal,privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp"
+      - "CREATE_TOPICS=privat-foreldrepenger-fprisk-lokal,privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp,privat-foreldrepenger-historikk-fordeling,aapen-dok-journalfoering-v1-q1"
+      - "VTP_OAUTH2_ENABLE=true"
+      - "OAUTH2_SERVER_HOST=vtp"
+      - "OAUTH2_SERVER_PORT=1337"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -48,6 +50,7 @@ services:
       - "8636:8636"
       - "9093:9093"
       - "9092:9092"
+      - "1337:1337"
       - "8389:8389"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8060/rest/isReady"]
@@ -60,7 +63,6 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
-      - "TZ=Europe/Oslo"
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
       - "LOADBALANCER_URL=http://localhost:8015"
       - "LOADBALANCER_FQDN=localhost:8015"
@@ -90,6 +92,7 @@ services:
       - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://fptilbake:8080/fptilbake/api"
       - "FPRISK_RISIKOKLASSIFISERING_HENT_URL=http://fprisk:8080/fprisk/api/risikovurdering/hent"
+      - "FPFORDEL_BASE_URL=http://fpfordel:8080/fpfordel"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
       - "LOADBALANCER_FQDN=localhost:8080"
@@ -110,14 +113,13 @@ services:
     image: redis
     container_name: redis
     restart: on-failure
-    mem_limit: 64mb
+    mem_limit: 32mb
   fpfrontend:
     image: $FPFRONTEND_IMAGE
     container_name: fpfrontend
     restart: on-failure
     mem_limit: 64mb
     environment:
-      - "TZ=Europe/Oslo"
       - "APP_PORT=9000"
       - "APP_URL_FPSAK=http://fpsak:8080"
       - "APP_URL_FPOPPDRAG=http://fpoppdrag:8080"
@@ -134,13 +136,91 @@ services:
     depends_on:
       - fpsak
       - redis
+  fpfordel:
+    image: $FPFORDEL_IMAGE
+    container_name: fpfordel
+    restart: on-failure
+    mem_limit: 512mb
+    environment:
+      - "LOADBALANCER_URL=http://localhost:8090"
+      - "LOADBALANCER_FQDN=localhost:8090"
+      - "KAFKA_TOPICS_FORDELING=privat-foreldrepenger-historikk-fordeling"
+      - "KAFKA_TOPIC_JOURNAL_HENDELSE=aapen-dok-journalfoering-v1-q1"
+      - "FP_STATUSINFORMASJON_URL=http://fpinfo:8080/fpinfo/api/dokumentforsendelse/status"
+      - "FPSAK_JOURNALPOSTKNYTTNING_URL=http://fpsak:8080/fpsak/api/fordel/fagsak/knyttJournalpost"
+      - "FPSAK_MOTTAJOURNALPOST_URL=http://fpsak:8080/fpsak/api/fordel/journalpost"
+      - "FPSAK_OPPRETT_SAK_URL=http://fpsak:8080/fpsak/api/fordel/fagsak/opprett"
+      - "FPSAK_SAKSINFORMASJON_URL=http://fpsak:8080/fpsak/api/fordel/fagsak/informasjon"
+      - "FPSAK_VURDERFAGSYSTEM_URL=http://fpsak:8080/fpsak/api/fordel/vurderFagsystem"
+      - "TILBAKE_MOTTAJOURNALPOST_URL=http://fptilbake:8080/fptilbake/api/fordel/journalpost"
+      - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
+      - "SAF_BASE_URL=https://vtp:8063/rest/api/saf"
+      - "FPFORDEL_IT_FP_URL=http://vtp:8060/rest/dummy/saker"
+    env_file:
+      - "fpfordel_datasource.list"
+      - "common.env"
+    volumes:
+      - "~/.modig:/var/run/secrets/naisd.io"
+    ports:
+      - "8090:8080"
+    depends_on:
+      - oracle
+      - vtp
+      - fpsak
+  fpinfo:
+    image: $FPINFO_IMAGE
+    container_name: fpinfo
+    restart: on-failure
+    mem_limit: 512mb
+    environment:
+      - "LOADBALANCER_URL=http://localhost:8040"
+      - "LOADBALANCER_FQDN=localhost:8040"
+    env_file:
+      - "fpinfo_datasource.list"
+      - "common.env"
+    volumes:
+      - "~/.modig:/var/run/secrets/naisd.io"
+    ports:
+      - "8040:8080"
+    depends_on:
+      - oracle
+      - vtp
+      - fpsak
+  fpsoknad-mottak:
+    image: $FPSOKNAD_MOTTAK_IMAGE
+    container_name: fpsoknad-mottak
+    restart: on-failure
+    mem_limit: 512mb
+    environment:
+      - "LOADBALANCER_URL=http://localhost:9001"
+      - "LOADBALANCER_FQDN=localhost:9001"
+      - "AAREG_RS_URL=http://vtp:8060/rest/aareg-services/api"
+      - "SECURITYTOKENSERVICE_USERNAME=vtp"
+      - "SECURITYTOKENSERVICE_PASSWORD=vtp"
+      - "KAFKA_USERNAME=vtp"
+      - "KAFKA_PASSWORD=vtp"
+      - "PDL_GRAPHQL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
+      - "DKIF_BASE_URL=http://vtp:8060/rest/api"
+      - "FPINFO_BASE_URL=http://fpinfo:8080"
+      - "OPPSLAG_URL=http://vtp:8060/rest/dummy"
+      - "FPSOKNAD_MOTTAK=http://vtp:8060/rest/dummy"
+      - "FPFORDEL_BASE_URL=http://fpfordel:8080"
+      - "FPFORDEL_MAX=20"
+    env_file:
+      - "common.env"
+    volumes:
+      - "~/.modig:/var/run/secrets/naisd.io"
+    ports:
+      - "9001:9001"
+    depends_on:
+      - fpinfo
+      - fpfordel
   fpformidling:
     image: $FPFORMIDLING_IMAGE
     container_name: fpformidling
     restart: on-failure
     mem_limit: 512mb
     environment:
-      - "TZ=Europe/Oslo"
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
       - "FPSAK_REST_BASE_URL=http://fpsak:8080"
       - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
@@ -164,7 +244,7 @@ services:
     image: $FPDOKGEN_IMAGE
     container_name: fpdokgen
     restart: on-failure
-    mem_limit: 512mb
+    mem_limit: 256mb
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -245,7 +325,7 @@ services:
     image: $FPABONNENT_IMAGE
     container_name: fpabonnent
     restart: on-failure
-    mem_limit: 1gb
+    mem_limit: 512mb
     env_file:
       - "fpabonnent_datasource.list"
       - "common.env"
