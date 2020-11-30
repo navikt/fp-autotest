@@ -10,7 +10,7 @@
     <name>FPSAK :: AutoTest</name>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>15</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <revision>1.0.0</revision>
         <sha1/>
@@ -100,6 +100,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
+                        --enable-preview
                         -Dfile.encoding=UTF-8
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
@@ -152,6 +153,7 @@
                     <encoding>UTF-8</encoding>
                     <compilerArgs>
                         <arg>-parameters</arg>
+                        <arg>--enable-preview</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
