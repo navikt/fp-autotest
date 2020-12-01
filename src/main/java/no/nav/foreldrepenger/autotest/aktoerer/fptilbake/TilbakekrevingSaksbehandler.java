@@ -7,11 +7,16 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus; //denne, --
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;//-- og denne FPSAK import er OK. Ellers skal man generelt ikke blande fpsak og fptilbake
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto; //denne --
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerKlient;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.*;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprettRevurdering;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BrukerresponsDto;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.AksjonspunktBehandling;
@@ -22,7 +27,6 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ForeslåVedtak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultat;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskKlient;
@@ -36,9 +40,9 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     public Behandling valgtBehandling;
     public String saksnummer;
 
-    private BehandlingerKlient behandlingerKlient;
-    private OkonomiKlient okonomiKlient;
-    private ProsesstaskKlient prosesstaskKlient;
+    private final BehandlingerKlient behandlingerKlient;
+    private final OkonomiKlient okonomiKlient;
+    private final ProsesstaskKlient prosesstaskKlient;
 
     public TilbakekrevingSaksbehandler() {
         super();
@@ -228,13 +232,11 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     private void ventPåProsessering(Behandling behandling) {
-        Vent.til(() -> {
-            return verifiserProsesseringFerdig(behandling);
-        }, 90, () -> {
+        Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
             List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
             String prosessTaskList = "";
             for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
-                prosessTaskList += prosessTaskListItemDto.getTaskType() + " - " + prosessTaskListItemDto.getStatus()
+                prosessTaskList += prosessTaskListItemDto.taskType() + " - " + prosessTaskListItemDto.status()
                         + "\n";
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
@@ -264,11 +266,9 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
-        SokeFilterDto filter = new SokeFilterDto();
-        filter.setSisteKjoeretidspunktFraOgMed(LocalDateTime.now().minusMinutes(5));
-        filter.setSisteKjoeretidspunktTilOgMed(LocalDateTime.now());
+        SokeFilterDto filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
         List<ProsessTaskListItemDto> prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream().filter(p -> p.getTaskParametre().getBehandlingId() == ("" + behandling.id))
+        return prosesstasker.stream().filter(p -> p.taskParametre().behandlingId() == ("" + behandling.id))
                 .collect(Collectors.toList());
     }
 

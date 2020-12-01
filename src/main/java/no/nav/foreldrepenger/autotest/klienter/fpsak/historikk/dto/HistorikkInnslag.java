@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
 import java.util.List;
-import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,94 +10,13 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class HistorikkInnslag {
-
-    private int behandlingId;
-    private Kode type;
-    private Kode aktoer;
-    private Kode kjoenn;
-    private List<HistorikkInnslagDokumentLinkDto> dokumentLinks;
-    private List<HistorikkinnslagDel> historikkinnslagDeler;
-
-    HistorikkInnslag(){
-        // for test
-    }
-
-    public HistorikkInnslag(int behandlingId, Kode type, Kode aktoer, Kode kjoenn,
-                            List<HistorikkinnslagDel> historikkinnslagDeler) {
-        this.behandlingId = behandlingId;
-        this.type = type;
-        this.aktoer = aktoer;
-        this.kjoenn = kjoenn;
-        this.historikkinnslagDeler = historikkinnslagDeler;
-    }
-
-    public HistorikkInnslag(int behandlingId, Kode type, Kode aktoer, Kode kjoenn,
-                            List<HistorikkInnslagDokumentLinkDto> dokumentLinks,
-                            List<HistorikkinnslagDel> historikkinnslagDeler) {
-        this.behandlingId = behandlingId;
-        this.type = type;
-        this.aktoer = aktoer;
-        this.kjoenn = kjoenn;
-        this.dokumentLinks = dokumentLinks;
-        this.historikkinnslagDeler = historikkinnslagDeler;
-    }
-
-    public int getBehandlingId() {
-        return behandlingId;
-    }
+public record HistorikkInnslag(int behandlingId, Kode type, Kode aktoer, Kode kjoenn,
+                               List<HistorikkInnslagDokumentLinkDto> dokumentLinks,
+                               List<HistorikkinnslagDel> historikkinnslagDeler) {
 
     @JsonIgnore
     public String getTypeKode() {
         return type.kode;
-    }
-
-    public Kode getType() {
-        return type;
-    }
-
-    public Kode getAktoer() {
-        return aktoer;
-    }
-
-    public Kode getKjoenn() {
-        return kjoenn;
-    }
-
-    public List<HistorikkInnslagDokumentLinkDto> getDokumentLinks() {
-        return dokumentLinks;
-    }
-
-    public List<HistorikkinnslagDel> getHistorikkinnslagDeler() {
-        return historikkinnslagDeler;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HistorikkInnslag that = (HistorikkInnslag) o;
-        return behandlingId == that.behandlingId &&
-                Objects.equals(type, that.type) &&
-                Objects.equals(aktoer, that.aktoer) &&
-                Objects.equals(kjoenn, that.kjoenn) &&
-                Objects.equals(historikkinnslagDeler, that.historikkinnslagDeler);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(behandlingId, type, aktoer, kjoenn, historikkinnslagDeler);
-    }
-
-    @Override
-    public String toString() {
-        return "HistorikkInnslag{" +
-                "behandlingId=" + behandlingId +
-                ", type=" + type +
-                ", aktoer=" + aktoer +
-                ", kjoenn=" + kjoenn +
-                ", historikkinnslagDeler=" + historikkinnslagDeler +
-                '}';
     }
 
     public static final Type REVURD_OPPR = Type.REVURD_OPPR;

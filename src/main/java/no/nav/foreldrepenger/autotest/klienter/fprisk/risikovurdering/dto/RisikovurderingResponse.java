@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto;
 
-public class RisikovurderingResponse {
-    protected String risikoklasse;
-    protected String medlFaresignaler;
-    protected String iayFaresignaler;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-    public String getRisikoklasse() {
-        return this.risikoklasse;
-    }
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public record RisikovurderingResponse(String risikoklasse, String medlFaresignaler, String iayFaresignaler) {
+
 }

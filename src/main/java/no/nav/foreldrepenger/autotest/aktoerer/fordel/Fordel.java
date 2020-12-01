@@ -86,7 +86,7 @@ public class Fordel extends Aktoer {
         if ((saksnummer != null) && (saksnummer != 0L)) {
             journalpostModell.setSakId(saksnummer.toString());
         }
-        String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
+        String journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
 
         String behandlingstemaOffisiellKode = finnBehandlingstemaKode(dokumenttypeId);
         String dokumentTypeIdOffisiellKode = dokumenttypeId.getKode();
@@ -195,7 +195,7 @@ public class Fordel extends Aktoer {
 
         JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, fnr,
                 DokumenttypeId.INNTEKTSMELDING);
-        String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
+        String journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
 
         long nyttSaksnummer = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode,
                 dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, gammeltSaksnummer);
@@ -272,7 +272,7 @@ public class Fordel extends Aktoer {
 
         JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostUstrukturertDokument(
                 scenario.getPersonopplysninger().getSøkerIdent(), DokumenttypeId.KLAGEANKE);
-        String journalpostId = journalpostKlient.journalfør(journalpostModell).getJournalpostId();
+        String journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
 
         long sakId = sendInnJournalpost(xmlstring, journalpostId, behandlingstemaOffisiellKode,
                 dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
@@ -296,7 +296,7 @@ public class Fordel extends Aktoer {
 
         if ((saksnummer == null) || (saksnummer == 0L)) {
             OpprettSak journalpost = new OpprettSak(journalpostId, behandlingstemaOffisiellKode, aktørId);
-            saksnummer = fordelKlient.fagsakOpprett(journalpost).getSaksnummer();
+            saksnummer = fordelKlient.fagsakOpprett(journalpost).saksnummer();
         }
 
         journalpostKlient.knyttSakTilJournalpost(journalpostId, saksnummer.toString());

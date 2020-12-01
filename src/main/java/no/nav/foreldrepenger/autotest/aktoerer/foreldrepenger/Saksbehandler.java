@@ -42,8 +42,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.BehandlingMedUttaksperioderDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.brev.BrevKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.brev.dto.BestillBrev;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
@@ -71,7 +69,6 @@ public class Saksbehandler extends Aktoer {
     private final FagsakKlient fagsakKlient;
     private final BehandlingerKlient behandlingerKlient;
     private final KodeverkKlient kodeverkKlient;
-    private final BrevKlient brevKlient;
     private final HistorikkKlient historikkKlient;
     private final ProsesstaskKlient prosesstaskKlient;
     private final RisikovurderingKlient risikovurderingKlient;
@@ -82,7 +79,6 @@ public class Saksbehandler extends Aktoer {
         fagsakKlient = new FagsakKlient(session);
         behandlingerKlient = new BehandlingerKlient(session);
         kodeverkKlient = new KodeverkKlient(session);
-        brevKlient = new BrevKlient(session);
         historikkKlient = new HistorikkKlient(session);
         prosesstaskKlient = new ProsesstaskKlient(session);
         risikovurderingKlient = new RisikovurderingKlient(session);
@@ -118,7 +114,7 @@ public class Saksbehandler extends Aktoer {
         if (valgtFagsak == null) {
             throw new RuntimeException("Kan ikke velge fagsak. fagsak er null");
         }
-        behandlinger = hentAlleBehandlingerForFagsak(valgtFagsak.getSaksnummer());
+        behandlinger = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer());
         velgSisteBehandling();
     }
 
@@ -145,12 +141,12 @@ public class Saksbehandler extends Aktoer {
     }
 
     private boolean harFagsakstatus(Kode status) {
-        return valgtFagsak.getStatus().equals(status);
+        return valgtFagsak.status().equals(status);
     }
 
     @Step("Refresh fagsak")
     private void refreshFagsak() {
-        hentFagsak(valgtFagsak.getSaksnummer());
+        hentFagsak(valgtFagsak.saksnummer());
     }
 
     /*
@@ -162,7 +158,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     public void velgSisteBehandling() {
-        var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.getSaksnummer()).stream()
+        var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer()).stream()
                 .max(Comparator.comparing(b -> b.opprettet))
                 .orElseThrow();
         velgBehandling(behandling);
@@ -232,7 +228,7 @@ public class Saksbehandler extends Aktoer {
             refreshBehandling();
             return harBehandlingsstatus(status);
         }, 60, "Behandlingsstatus var ikke " + status + " men var " + getBehandlingsstatus() + " i sak: "
-                + valgtFagsak.getSaksnummer());
+                + valgtFagsak.saksnummer());
     }
 
     @Step("Refresh behandling")
@@ -260,8 +256,8 @@ public class Saksbehandler extends Aktoer {
         valgtBehandling = behandlingerKlient.getBehandling(behandling.uuid);
         populateBehandling(valgtBehandling);
 
-        this.historikkInnslag = new Lazy<>(() -> historikkKlient.hentHistorikk(valgtFagsak.getSaksnummer()));
-        this.annenPartBehandling = new Lazy<>(() -> behandlingerKlient.annenPartBehandling(valgtFagsak.getSaksnummer()));
+        this.historikkInnslag = new Lazy<>(() -> historikkKlient.hentHistorikk(valgtFagsak.saksnummer()));
+        this.annenPartBehandling = new Lazy<>(() -> behandlingerKlient.annenPartBehandling(valgtFagsak.saksnummer()));
     }
 
     private void ventPåProsessering(Behandling behandling) {
@@ -269,7 +265,7 @@ public class Saksbehandler extends Aktoer {
             List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
             String prosessTaskList = "";
             for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
-                prosessTaskList += prosessTaskListItemDto.getTaskType() + " - " + prosessTaskListItemDto.getStatus()
+                prosessTaskList += prosessTaskListItemDto.taskType() + " - " + prosessTaskListItemDto.status()
                         + "\n";
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
@@ -380,12 +376,12 @@ public class Saksbehandler extends Aktoer {
     @Step("Oppretter behandling på gitt fagsak")
     public void opprettBehandling(Kode behandlingstype, Kode årsak) {
         opprettBehandling(behandlingstype, årsak, valgtFagsak);
-        hentFagsak(valgtFagsak.getSaksnummer());
+        hentFagsak(valgtFagsak.saksnummer());
     }
 
     private void opprettBehandling(Kode behandlingstype, Kode årsak, Fagsak fagsak) {
         behandlingerKlient.putBehandlinger(
-                new BehandlingNy(fagsak.getSaksnummer(), behandlingstype.kode, årsak == null ? null : årsak.kode));
+                new BehandlingNy(fagsak.saksnummer(), behandlingstype.kode, årsak == null ? null : årsak.kode));
     }
 
     public void opprettBehandlingRevurdering(String årsak) {
@@ -568,17 +564,6 @@ public class Saksbehandler extends Aktoer {
     }
 
     /*
-     * Brev
-     */
-    @Step("Sender breev med malkode {brevmalKode} til mottaker {mottaker}")
-    public void sendBrev(String brevmalKode, String mottaker, String fritekst) {
-        brevKlient.bestill(new BestillBrev(valgtBehandling.id,
-                mottaker,
-                brevmalKode,
-                fritekst));
-    }
-
-    /*
      * Historikkinnslag
      */
     @Step("Venter på historikkinnslag {type}")
@@ -598,7 +583,7 @@ public class Saksbehandler extends Aktoer {
             behandlingsId = 0;
         }
         for (HistorikkInnslag innslag : getHistorikkInnslag()) {
-            if (innslag.getTypeKode().contains(type.getKode()) && (innslag.getBehandlingId() == behandlingsId)) {
+            if (innslag.getTypeKode().contains(type.getKode()) && (innslag.behandlingId() == behandlingsId)) {
                 return true;
             }
         }
@@ -613,14 +598,14 @@ public class Saksbehandler extends Aktoer {
     public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkInnslag.Type type) {
         ventTilHistorikkinnslag(type);
         return historikkInnslag.get().stream()
-                .filter(h -> h.getType().kode.equalsIgnoreCase(type.getKode()))
+                .filter(h -> h.type().kode.equalsIgnoreCase(type.getKode()))
                 .findFirst()
                 .orElseThrow();
     }
 
     public String hentDokumentIdFraHistorikkinnslag(HistorikkInnslag.Type type) {
         HistorikkInnslag historikkInnslag = hentHistorikkinnslagAvType(type);
-        return historikkInnslag.getDokumentLinks().get(0).getDokumentId();
+        return historikkInnslag.dokumentLinks().get(0).dokumentId();
     }
 
 
@@ -647,11 +632,9 @@ public class Saksbehandler extends Aktoer {
 
     @Step("Henter prosesstasker for behandling")
     private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
-        SokeFilterDto filter = new SokeFilterDto();
-        filter.setSisteKjoeretidspunktFraOgMed(LocalDateTime.now().minusMinutes(5));
-        filter.setSisteKjoeretidspunktTilOgMed(LocalDateTime.now());
+        SokeFilterDto filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
         List<ProsessTaskListItemDto> prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream().filter(p -> p.getTaskParametre().getBehandlingId() == ("" + behandling.id))
+        return prosesstasker.stream().filter(p -> p.taskParametre().behandlingId() == ("" + behandling.id))
                 .collect(Collectors.toList());
     }
 
@@ -686,7 +669,7 @@ public class Saksbehandler extends Aktoer {
         return risikovurderingKlient.getRisikovurdering(uuid);
     }
     private boolean harRisikoKlassefiseringsstatus(String status, RisikovurderingResponse responseDto) {
-        return responseDto.getRisikoklasse().equalsIgnoreCase(status);
+        return responseDto.risikoklasse().equalsIgnoreCase(status);
     }
 
 
