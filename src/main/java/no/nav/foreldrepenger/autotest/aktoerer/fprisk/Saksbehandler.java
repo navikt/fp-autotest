@@ -13,8 +13,8 @@ import no.nav.foreldrepenger.autotest.util.vent.Vent;
 public class Saksbehandler extends Aktoer {
     Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
 
-    private KafkaKlient kafkaKlient;
-    private RisikovurderingKlient risikovurderingKlient;
+    private final KafkaKlient kafkaKlient;
+    private final RisikovurderingKlient risikovurderingKlient;
 
     public Saksbehandler() {
         kafkaKlient = new KafkaKlient(session);
@@ -45,7 +45,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     public boolean harRisikoKlassefiseringsstatus(String status, RisikovurderingResponse responseDto) {
-        LOG.info("Har status: {} ", responseDto.getRisikoklasse());
-        return responseDto.getRisikoklasse().equalsIgnoreCase(status);
+        LOG.info("Har status: {} ", responseDto.risikoklasse());
+        return responseDto.risikoklasse().equalsIgnoreCase(status);
     }
 }

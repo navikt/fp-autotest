@@ -14,7 +14,7 @@ public class OverstyrAksjonspunkter {
 
     public OverstyrAksjonspunkter(Fagsak fagsak, Behandling behandling,
             List<AksjonspunktBekreftelse> aksjonspunktBekreftelser) {
-        this(behandling.id, "" + fagsak.getSaksnummer(), behandling.versjon, aksjonspunktBekreftelser);
+        this(behandling.id, "" + fagsak.saksnummer(), behandling.versjon, aksjonspunktBekreftelser);
     }
 
     public OverstyrAksjonspunkter(int behandlingId, String saksnummer, int behandlingVersjon,

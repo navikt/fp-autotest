@@ -7,17 +7,10 @@ public class ApFaktaFeilutbetalingAarsak {
 
     public void addGeneriskHendelser(String ytelseType) {
         switch (ytelseType) {
-            case "FP":
-                addGeneriskHendelserForeldrepenger();
-                break;
-            case "SVP":
-                addGeneriskHendelserSvangerskapspenger();
-                break;
-            case "ES":
-                addGeneriskHendelserEngangsstonad();
-                break;
-            default:
-                throw new IllegalArgumentException(ytelseType + " er ikke en gyldig ytelseType");
+            case "FP" -> addGeneriskHendelserForeldrepenger();
+            case "SVP" -> addGeneriskHendelserSvangerskapspenger();
+            case "ES" ->addGeneriskHendelserEngangsstonad();
+            default ->throw new IllegalArgumentException(ytelseType + " er ikke en gyldig ytelseType");
         }
         this.hendelseType.kodeverk = "HENDELSE_TYPE";
         this.hendelseUndertype.kodeverk = "HENDELSE_UNDERTYPE";
