@@ -12,9 +12,6 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.SigrunModell;
 
 public class ForeldrepengerTestBase extends FpsakTestBase {
 
-
-
-
     protected Double hentNæringsinntektFraSigrun(TestscenarioDto testscenarioDto, Integer beregnFraOgMedÅr, Boolean annenPart) {
         Integer beregFraÅr = beregnFraOgMedÅr;
 
