@@ -1286,17 +1286,28 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         var perioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
-        verifiser(perioder.size() == 4,
-                "Foventer at den berørte saken har 4 tilkjent ytelse perioder, faktisk antall var: " + perioder.size());
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0),
-                "Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(1), 0),
-                "Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(2), 100),
-                "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(3), 100),
-                "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
+        if (LocalDate.now().getDayOfMonth() == 1) {
+            verifiser(perioder.size() == 3,
+                    "Foventer at den berørte saken har 4 tilkjent ytelse perioder, faktisk antall var: " + perioder.size());
+            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0),
+                    "Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!");
+            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(1), 100),
+                    "Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!");
+            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(2), 100),
+                    "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
 
+        } else {
+            verifiser(perioder.size() == 4,
+                    "Foventer at den berørte saken har 4 tilkjent ytelse perioder, faktisk antall var: " + perioder.size());
+            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0),
+                    "Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!");
+            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(1), 0),
+                    "Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!");
+            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(2), 100),
+                    "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
+            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(3), 100),
+                    "Forventer at hele summen utbetales til AG i fjerde periode, og derfor ingenting til søker!");
+        }
     }
 
     @Test
