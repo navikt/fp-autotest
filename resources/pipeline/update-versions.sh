@@ -14,6 +14,7 @@ imageVersion () {
 }
 
 echo AUDIT_NAIS_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/k9-verdikjede/audit-nais-mock")" > .env
+echo OAUTH2_SERVER_IMAGE="docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.2.1" >> .env
 echo ORACLE_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpsak-autotest/oracle-flattened")" >> .env
 echo POSTGRES_IMAGE="postgres:12" >> .env
 echo VTP_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/vtp/vtp")" >> .env

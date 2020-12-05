@@ -1,5 +1,11 @@
 version: '2.4'
 services:
+#  oauth2-server:
+#    image: $OAUTH2_SERVER_IMAGE
+#    container_name: oauth2
+#    ports:
+#      - "1337:8080"
+#    hostname: host.docker.internal
   audit.nais:
     image: $AUDIT_NAIS_IMAGE
     container_name: audit.nais
@@ -39,9 +45,7 @@ services:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
       - "CREATE_TOPICS=privat-foreldrepenger-fprisk-lokal,privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp,privat-foreldrepenger-historikk-fordeling,aapen-dok-journalfoering-v1-q1"
-      - "VTP_OAUTH2_ENABLE=true"
-      - "OAUTH2_SERVER_HOST=vtp"
-      - "OAUTH2_SERVER_PORT=1337"
+      - "ISSO_OAUTH2_ISSUER=https://vtp.openam/issuer"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -199,6 +203,7 @@ services:
       - "SECURITYTOKENSERVICE_PASSWORD=vtp"
       - "KAFKA_USERNAME=vtp"
       - "KAFKA_PASSWORD=vtp"
+      - "LOGINSERVICE_IDPORTEN_DISCOVERY_URL=http://vtp:8060/rest/isso/oauth2/.well-known/openid-configuration"
       - "PDL_GRAPHQL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
       - "DKIF_BASE_URL=http://vtp:8060/rest/api"
       - "FPINFO_BASE_URL=http://fpinfo:8080"

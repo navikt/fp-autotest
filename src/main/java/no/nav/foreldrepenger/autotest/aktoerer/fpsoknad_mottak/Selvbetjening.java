@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.aktoerer.fpsoknad_mottak;
 
+import java.io.UnsupportedEncodingException;
+
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.MottakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.dto.Kvittering;
@@ -16,9 +18,9 @@ public class Selvbetjening extends Aktoer {
         oauth2Klient = new Oauth2Klient(session);
     }
 
-    public Kvittering sendInnSøknad(String fnr, Søknad søknad) {
-        var token = oauth2Klient.hentTokenForFnr(fnr);
-        return mottakKlient.sendSøknad(token, søknad);
+    public Kvittering sendInnSøknad(String fnr, Søknad søknad) throws UnsupportedEncodingException {
+        var token = oauth2Klient.hentTokenVtpForFnr(fnr);
+        return mottakKlient.sendSøknad(token.getIdToken(), søknad);
     }
 
 
