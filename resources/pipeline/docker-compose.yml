@@ -1,11 +1,5 @@
 version: '2.4'
 services:
-#  oauth2-server:
-#    image: $OAUTH2_SERVER_IMAGE
-#    container_name: oauth2
-#    ports:
-#      - "1337:8080"
-#    hostname: host.docker.internal
   audit.nais:
     image: $AUDIT_NAIS_IMAGE
     container_name: audit.nais
@@ -203,7 +197,6 @@ services:
       - "SECURITYTOKENSERVICE_PASSWORD=vtp"
       - "KAFKA_USERNAME=vtp"
       - "KAFKA_PASSWORD=vtp"
-      - "LOGINSERVICE_IDPORTEN_DISCOVERY_URL=http://vtp:8060/rest/isso/oauth2/.well-known/openid-configuration"
       - "PDL_GRAPHQL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
       - "DKIF_BASE_URL=http://vtp:8060/rest/api"
       - "FPINFO_BASE_URL=http://fpinfo:8080"

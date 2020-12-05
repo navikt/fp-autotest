@@ -18,7 +18,6 @@ import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.u
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -35,6 +34,7 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OverføringÅrsak;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
@@ -70,12 +70,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-import no.nav.foreldrepenger.autotest.søknad.erketyper.FordelingErketyper;
-import no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper;
-import no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper;
-import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
-import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType;
-import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
@@ -91,44 +85,46 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @DisplayName("1: Mor automatisk førstegangssøknad termin (med fødselshendelse), aleneomsorg og avvik i beregning.")
     @Description("Mor førstegangssøknad før fødsel på termin. Mor har aleneomsorg og enerett. Sender inn IM med over " +
                 "25% avvik med delvis refusjon. Etter behandlingen er ferdigbehandlet mottas en fødselshendelse.")
-    public void testcase_mor_fødsel() throws UnsupportedEncodingException {
+    public void testcase_mor_fødsel() {
         var testscenario = opprettTestscenario("501");
 
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var termindato = LocalDate.now().plusWeeks(1);
         var fpStartdato = termindato.minusWeeks(3);
-        var fordeling = FordelingErketyper.generiskFordeling(
-                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
-                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
-                UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, termindato.plusWeeks(15),
-                        termindato.plusWeeks(20).minusDays(1)),
-                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
 
-        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medFordeling(fordeling)
-                .medRettigheter(no.nav.foreldrepenger.autotest.søknad.erketyper.RettigheterErketyper.harAleneOmsorgOgEnerett())
-                .medMottatdato(termindato.minusWeeks(5));
-
-        var kvittering = selvbetjening.sendInnSøknad(søkerAktørId, søknad.build());
-        verifiser(kvittering.erVellykket(), "Innsending vellykket!");
-        var saksnummer = Long.valueOf(kvittering.getSaksNr());
-
-//        var fordeling = generiskFordeling(
-//                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
-//                uttaksperiode(FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
-//                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, termindato.plusWeeks(15),
+        // BYGGER OG SENDER SØKNAD TIL MOTTAK!
+//        var fordeling = FordelingErketyper.generiskFordeling(
+//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
+//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
+//                UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, termindato.plusWeeks(15),
 //                        termindato.plusWeeks(20).minusDays(1)),
-//                uttaksperiode(FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
-//        var søknad = lagSøknadForeldrepengerTermin(termindato, søkerAktørId, SøkersRolle.MOR)
+//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
+//
+//        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
 //                .medFordeling(fordeling)
-//                .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett())
-//                .medMottattDato(termindato.minusWeeks(5));
-//        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-//        long saksnummer = fordel.sendInnSøknad(
-//                søknad.build(),
-//                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-//                testscenario.getPersonopplysninger().getSøkerIdent(),
-//                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+//                .medRettigheter(no.nav.foreldrepenger.autotest.søknad.erketyper.RettigheterErketyper.harAleneOmsorgOgEnerett())
+//                .medMottatdato(termindato.minusWeeks(5));
+//
+//        var kvittering = selvbetjening.sendInnSøknad(søkerAktørId, søknad.build());
+//        verifiser(kvittering.erVellykket(), "Innsending vellykket!");
+//        var saksnummer = Long.valueOf(kvittering.getSaksNr());
+
+        var fordeling = generiskFordeling(
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
+                uttaksperiode(FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
+                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, termindato.plusWeeks(15),
+                        termindato.plusWeeks(20).minusDays(1)),
+                uttaksperiode(FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
+        var søknad = lagSøknadForeldrepengerTermin(termindato, søkerAktørId, SøkersRolle.MOR)
+                .medFordeling(fordeling)
+                .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett())
+                .medMottattDato(termindato.minusWeeks(5));
+        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        long saksnummer = fordel.sendInnSøknad(
+                søknad.build(),
+                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.getPersonopplysninger().getSøkerIdent(),
+                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         var månedsinntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
                 .getBeløp();
