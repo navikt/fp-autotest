@@ -17,4 +17,8 @@ public class AccessTokenResponseDTO {
 
     @JsonProperty("token_type")
     public String tokenType = "JWKS";
+
+    public String getIdToken() {
+        return idToken;
+    }
 }

@@ -17,8 +17,8 @@ public class Selvbetjening extends Aktoer {
     }
 
     public Kvittering sendInnSøknad(String fnr, Søknad søknad) {
-        var token = oauth2Klient.hentTokenForFnr(fnr);
-        return mottakKlient.sendSøknad(token, søknad);
+        var token = oauth2Klient.hentAccessTokenForBruker(fnr);
+        return mottakKlient.sendSøknad(token.getIdToken(), søknad);
     }
 
 

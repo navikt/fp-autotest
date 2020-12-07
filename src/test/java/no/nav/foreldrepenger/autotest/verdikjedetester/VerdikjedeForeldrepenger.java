@@ -88,13 +88,27 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     public void testcase_mor_fødsel() {
         var testscenario = opprettTestscenario("501");
 
-//        var kvittering = selvbetjening.sendInnSøknad(testscenario.getPersonopplysninger().getSøkerIdent(),
-//                SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(LocalDate.now(), BrukerRolle.MOR).build());
-//        verifiser(kvittering.erVellykket(), "Innsending vellykket!");
-
         var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
         var termindato = LocalDate.now().plusWeeks(1);
         var fpStartdato = termindato.minusWeeks(3);
+
+        // BYGGER OG SENDER SØKNAD TIL MOTTAK!
+//        var fordeling = FordelingErketyper.generiskFordeling(
+//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
+//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
+//                UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, termindato.plusWeeks(15),
+//                        termindato.plusWeeks(20).minusDays(1)),
+//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
+//
+//        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
+//                .medFordeling(fordeling)
+//                .medRettigheter(no.nav.foreldrepenger.autotest.søknad.erketyper.RettigheterErketyper.harAleneOmsorgOgEnerett())
+//                .medMottatdato(termindato.minusWeeks(5));
+//
+//        var kvittering = selvbetjening.sendInnSøknad(søkerAktørId, søknad.build());
+//        verifiser(kvittering.erVellykket(), "Innsending vellykket!");
+//        var saksnummer = Long.valueOf(kvittering.getSaksNr());
+
         var fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
                 uttaksperiode(FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
