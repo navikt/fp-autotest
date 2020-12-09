@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger.Saksbehandler;
+import no.nav.foreldrepenger.autotest.aktoerer.fptilbake.TilbakekrevingSaksbehandler;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
@@ -19,6 +20,7 @@ public class FpsakTestBase extends TestScenarioTestBase {
     protected Saksbehandler overstyrer;
     protected Saksbehandler beslutter;
     protected Saksbehandler klagebehandler;
+    protected TilbakekrevingSaksbehandler tbksaksbehandler;
 
     @BeforeEach
     public void setUp() {
@@ -27,6 +29,7 @@ public class FpsakTestBase extends TestScenarioTestBase {
         overstyrer = new Saksbehandler();
         beslutter = new Saksbehandler();
         klagebehandler = new Saksbehandler();
+        tbksaksbehandler = new TilbakekrevingSaksbehandler();
     }
 
 
