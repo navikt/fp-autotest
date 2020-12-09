@@ -33,7 +33,7 @@ public class Revurdering extends FpsakTestBase {
     public void manueltOpprettetRevurderingSendVarsel() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR, false);
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

@@ -49,7 +49,7 @@ public class Termin extends ForeldrepengerTestBase {
         TestscenarioDto testscenario = opprettTestscenario("55");
         LocalDate termindato = LocalDate.now().plusWeeks(3);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
-        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario,
@@ -79,10 +79,10 @@ public class Termin extends ForeldrepengerTestBase {
         TestscenarioDto testscenario = opprettTestscenario("55");
         LocalDate termindato = LocalDate.now().minusWeeks(1);
         LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
-        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+        String søkerIdent = testscenario.personopplysninger().søkerIdent();
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
         Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
@@ -104,13 +104,13 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 søkerIdent,
                 startDatoForeldrepenger,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 søkerIdent,
                 saksnummer);
 
@@ -136,10 +136,10 @@ public class Termin extends ForeldrepengerTestBase {
         LocalDate termindato = LocalDate.now().plusWeeks(6);
         LocalDate fpstartdato = termindato.minusWeeks(3);
         // 138 - 40%
-        String orgnr1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String orgnr1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
         // 200 - 60%
-        String orgnr2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
+        String orgnr2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getArbeidsgiverOrgnr();
         var fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)),
@@ -155,7 +155,7 @@ public class Termin extends ForeldrepengerTestBase {
                         termindato.plusWeeks(21).minusDays(1), orgnr1, 30));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR)
                 .medFordeling(fordeling);
         Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
@@ -204,14 +204,14 @@ public class Termin extends ForeldrepengerTestBase {
     @Description("Mor søker termin uten periode for foreldrepenger før fødsel. Skjæringstidspunkt skal være 3 uker før termindato.")
     public void morSokerTerminUtenFPFFperiode() {
         TestscenarioDto testscenario = opprettTestscenario("55");
-        testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        testscenario.personopplysninger().søkerAktørIdent();
         LocalDate termindato = LocalDate.now().plusWeeks(3);
 
         var fordeling = generiskFordeling(
                 uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1)));
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR)
                 .medFordeling(fordeling);
 
@@ -219,14 +219,14 @@ public class Termin extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.personopplysninger().søkerIdent(),
                 termindato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

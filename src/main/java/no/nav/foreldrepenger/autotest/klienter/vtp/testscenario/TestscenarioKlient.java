@@ -22,7 +22,7 @@ public class TestscenarioKlient extends VTPKlient {
         String url = hentRestRotUrl() + TESTSCENARIO_I_AUTOTEST_POST_URL + "?aktor1=" + aktorId + "&ident1=" + ident;
         TestscenarioDto testscenarioDto = postOgHentJson(url, testscenarioObject, TestscenarioDto.class, StatusRange.STATUS_SUCCESS);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
-                testscenarioDto.getPersonopplysninger().getSøkerIdent());
+                testscenarioDto.personopplysninger().søkerIdent());
         return testscenarioDto;
     }
 
@@ -30,7 +30,7 @@ public class TestscenarioKlient extends VTPKlient {
         String url = hentRestRotUrl() + TESTSCENARIO_I_AUTOTEST_POST_URL;
         TestscenarioDto testscenarioDto = postOgHentJson(url, testscenarioObject, TestscenarioDto.class, StatusRange.STATUS_SUCCESS);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
-                testscenarioDto.getPersonopplysninger().getSøkerIdent());
+                testscenarioDto.personopplysninger().søkerIdent());
         return testscenarioDto;
     }
 }

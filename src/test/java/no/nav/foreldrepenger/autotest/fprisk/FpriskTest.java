@@ -30,12 +30,12 @@ public class FpriskTest extends FpriskTestBase {
     public void sendRisikovurderingsforespørselOgVentPåResultat() {
         TestscenarioDto testscenario = opprettTestscenario("50");
 
-        String soekerAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String soekerAktoerId = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate skjæringstidspunkt = LocalDate.now();
         LocalDate opplysningsperiodefraOgMed = LocalDate.now();
         LocalDate opplysningsperiodeTilOgMed = LocalDate.now().plusMonths(1);
         String behandlingstema = BEHANDLINGSTEMA_FORELDREPENGER;
-        String annenPartAktørId = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
+        String annenPartAktørId = testscenario.personopplysninger().annenpartAktørIdent();
         String konsumentId = UUID.randomUUID().toString();
         RisikovurderingRequest kontraktFpriskMelding = new RisikovurderingRequest(soekerAktoerId, skjæringstidspunkt,
                 opplysningsperiodefraOgMed,

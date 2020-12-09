@@ -143,8 +143,8 @@ public class Fordel extends Aktoer {
 
     public long sendInnSøknad(Soeknad søknad, TestscenarioDto scenario, DokumenttypeId dokumenttypeId,
             Long saksnummer) {
-        String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
-        String fnr = scenario.getPersonopplysninger().getSøkerIdent();
+        String aktørId = scenario.personopplysninger().søkerAktørIdent();
+        String fnr = scenario.personopplysninger().søkerIdent();
         return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
     }
 
@@ -153,11 +153,11 @@ public class Fordel extends Aktoer {
         String aktørId;
         String fnr;
         if (annenPart) {
-            aktørId = scenario.getPersonopplysninger().getAnnenPartAktørIdent();
-            fnr = scenario.getPersonopplysninger().getAnnenpartIdent();
+            aktørId = scenario.personopplysninger().annenpartAktørIdent();
+            fnr = scenario.personopplysninger().annenpartIdent();
         } else {
-            aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
-            fnr = scenario.getPersonopplysninger().getSøkerIdent();
+            aktørId = scenario.personopplysninger().søkerAktørIdent();
+            fnr = scenario.personopplysninger().søkerIdent();
         }
 
         return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
@@ -220,8 +220,8 @@ public class Fordel extends Aktoer {
 
     public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, TestscenarioDto testscenario,
             Long saksnummer) {
-        return sendInnInntektsmelding(inntektsmelding, testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
+        return sendInnInntektsmelding(inntektsmelding, testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(), saksnummer);
     }
 
     public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto scenario) {
@@ -259,19 +259,19 @@ public class Fordel extends Aktoer {
 
     public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, TestscenarioDto testscenario,
             Long saksnummer) {
-        return sendInnInntektsmeldinger(inntektsmeldinger, testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(), saksnummer);
+        return sendInnInntektsmeldinger(inntektsmeldinger, testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(), saksnummer);
     }
 
     @Step("Sender inn klage for bruker")
     public long sendInnKlage(String xmlstring, TestscenarioDto scenario, Long saksnummer) {
-        String aktørId = scenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørId = scenario.personopplysninger().søkerAktørIdent();
         String behandlingstemaOffisiellKode = "ab0047";
         String dokumentKategori = Dokumentkategori.KLAGE_ANKE.getKode();
         String dokumentTypeIdOffisiellKode = DokumenttypeId.KLAGEANKE.getKode();
 
         JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostUstrukturertDokument(
-                scenario.getPersonopplysninger().getSøkerIdent(), DokumenttypeId.KLAGEANKE);
+                scenario.personopplysninger().søkerIdent(), DokumenttypeId.KLAGEANKE);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
 
         long sakId = sendInnJournalpost(xmlstring, journalpostId, behandlingstemaOffisiellKode,

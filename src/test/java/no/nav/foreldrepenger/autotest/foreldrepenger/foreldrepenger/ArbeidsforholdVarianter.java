@@ -46,16 +46,16 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
     public void utenArbeidsforholdMenMedInntektsmelding() {
         TestscenarioDto testscenario = opprettTestscenario("171");
 
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        String fnr = testscenario.personopplysninger().søkerIdent();
         List<Integer> inntekter = sorterteInntektsbeløp(testscenario);
 
         InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(inntekter.get(0), fnr, fpStartdato, "910909088")
@@ -92,8 +92,8 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
     public void morSøkerTerminUtenAktiviteterIAareg() {
         // SØKNAD //
         TestscenarioDto testscenario = opprettTestscenario("168");
-        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String annenPartAktørid = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
+        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        String annenPartAktørid = testscenario.personopplysninger().annenpartAktørIdent();
         LocalDate fødselsdato = LocalDate.now().plusDays(2);
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)

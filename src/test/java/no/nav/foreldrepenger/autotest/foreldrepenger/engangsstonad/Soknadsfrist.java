@@ -33,7 +33,7 @@ public class Soknadsfrist extends FpsakTestBase {
     @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist")
     public void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() {
         TestscenarioDto testscenario = opprettTestscenario("55");
-        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
 
@@ -78,7 +78,7 @@ public class Soknadsfrist extends FpsakTestBase {
     @Description("Behandle søknadsfrist og sent tilbake på grunn av fødsel - tester tilbakesending")
     public void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() {
         TestscenarioDto testscenario = opprettTestscenario("55");
-        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
 
