@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Familiehendelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.InnsynInfo;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KlageInfo;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerAktiviteskravPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerFaktaData;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Personopplysning;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
@@ -81,6 +82,8 @@ public class BehandlingerKlient extends FpsakKlient {
     private static final String BEHANDLING_UTTAK = BEHANDLING_URL + "/uttak";
     private static final String BEHANDLING_UTTAK_KONTROLLER_FAKTA_PERIODER_URL = BEHANDLING_UTTAK
             + "/kontroller-fakta-perioder";
+    private static final String BEHANDLING_UTTAK_KONTROLLER_AKTIVITETSKRAV_URL = BEHANDLING_UTTAK
+            + "/kontroller-aktivitetskrav";
     private static final String BEHANDLING_UTTAK_STONADSKONTOER_URL = BEHANDLING_UTTAK + "/stonadskontoer";
     private static final String BEHANDLING_UTTAK_STONADSKONTOER_GITT_UTTAKSPERIODER_URL = BEHANDLING_UTTAK
             + "/stonadskontoerGittUttaksperioder";
@@ -392,6 +395,16 @@ public class BehandlingerKlient extends FpsakKlient {
     public KontrollerFaktaData behandlingKontrollerFaktaPerioder(UUID behandlingUuid) {
         String url = createBehandlingGetUrl(BEHANDLING_UTTAK_KONTROLLER_FAKTA_PERIODER_URL, behandlingUuid);
         return getOgHentJson(url, KontrollerFaktaData.class, StatusRange.STATUS_SUCCESS);
+    }
+
+    /*
+     * hent kontroller fakta for behandling
+     */
+    @Step("Kontrollerer fakta for behandling")
+    public List<KontrollerAktiviteskravPeriode> behandlingKontrollerAktivitetskrav(UUID behandlingUuid) {
+        String url = createBehandlingGetUrl(BEHANDLING_UTTAK_KONTROLLER_AKTIVITETSKRAV_URL, behandlingUuid);
+        return getOgHentJson(url, hentObjectMapper().getTypeFactory().constructCollectionType(ArrayList.class,
+                KontrollerAktiviteskravPeriode.class), StatusRange.STATUS_SUCCESS);
     }
 
     /*

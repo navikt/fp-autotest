@@ -260,12 +260,12 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
                 return uttakPeriode;
             }
         }
-        throw new NullPointerException("Fant ikke periode for gitt FOM og TOM dato!");
+        throw new IllegalArgumentException("Fant ikke periode for gitt FOM og TOM dato! " + fra + " - " + til);
     }
 
     private void setTrekkdager(UttakResultatPeriodeAktivitet aktivitet, BigDecimal ordinæreTrekkdagerVedFulltUttak,
             BigDecimal utbetalignsgrad) {
-        BigDecimal utbetalingsprosentfaktor = utbetalignsgrad.divide(BigDecimal.valueOf(100));
+        BigDecimal utbetalingsprosentfaktor = utbetalignsgrad.divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
         aktivitet.setTrekkdagerDesimaler(ordinæreTrekkdagerVedFulltUttak
                 .multiply(utbetalingsprosentfaktor)
                 .setScale(1, RoundingMode.HALF_UP));

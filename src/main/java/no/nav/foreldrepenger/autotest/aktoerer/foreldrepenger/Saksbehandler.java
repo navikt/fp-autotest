@@ -337,6 +337,8 @@ public class Saksbehandler extends Aktoer {
 
             behandling.setKontrollerFaktaData(
                     new Lazy<>(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid)));
+            behandling.setKontrollerAktivitetskrav(
+                    new Lazy<>(() -> behandlingerKlient.behandlingKontrollerAktivitetskrav(behandling.uuid)));
             behandling.setMedlem(new Lazy<>(() -> behandlingerKlient.behandlingMedlemskap(behandling.uuid)));
 
             behandling

@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -44,6 +45,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
@@ -71,7 +73,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
@@ -383,7 +384,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor har løpende fagsak med hele mødrekvoten og deler av fellesperioden. Far søker resten av fellesperioden" +
             "og hele fedrekvoten med gradert uttak. Far har to arbeidsforhold i samme virksomhet, samme org.nr, men ulik" +
             "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge.")
-    public void fraSøkerForeldrepengerTest() {
+    @Disabled
+    public void farSøkerForeldrepengerTest() {
         TestscenarioDto testscenario = opprettTestscenario("560");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -447,6 +449,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 saksnummerFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
+
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
+
         FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         /*
@@ -558,11 +563,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Begrunnelse fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
-        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.innvilgManuellePerioder(
-                new Kode("INNVILGET", "2037", "§14-9, jf.§14-13: Innvilget fellesperiode til Far"));
-        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
@@ -654,21 +655,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         avklarFaktaAnnenForeldreHarRett.setBegrunnelse("Bare far har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.splitPeriode(
-                fpStartdatoFar,
-                fpStartdatoFar.plusWeeks(100).minusDays(1),
-                fpStartdatoFar.plusWeeks(40).minusDays(1));
-        fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
-                fpStartdatoFar,
-                fpStartdatoFar.plusWeeks(40).minusDays(1),
-                new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
-        fastsettUttaksperioderManueltBekreftelse.innvilgAktiviteterOgAvslåResten(
-                fpStartdatoFar.plusWeeks(40),
-                fpStartdatoFar.plusWeeks(100).minusDays(1),
-                List.of(orgNummerFar1));
-        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
@@ -790,6 +777,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         // Løser AP 5084 negativ simulering! Oppretter tilbakekreving og sjekk at den er opprette. Ikke løs det.
+
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
         vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
@@ -1204,11 +1192,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
 
-        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.innvilgManuellePerioder(
-                new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
-        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
@@ -1247,12 +1231,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setFastsattRefusjonFomForAllePerioder(LocalDate.now().minusMonths(3))
                 .setBegrunnelse("Fordi autotest sier det!");
         saksbehandler.bekreftAksjonspunkt(vurderRefusjonBeregningsgrunnlagBekreftelse);
-
-        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelseRevurdering = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelseRevurdering.innvilgManuellePerioder(
-                new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
-        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering);
 
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
@@ -1294,12 +1272,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setFastsattRefusjonFomForAllePerioder(LocalDate.now().minusMonths(3))
                 .setBegrunnelse("Fordi autotest sier det!");
         saksbehandler.bekreftAksjonspunkt(vurderRefusjonBeregningsgrunnlagBekreftelse2);
-
-        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelseRevurdering2 = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelseRevurdering2.innvilgManuellePerioder(
-                new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
-        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering2);
 
         var vurderTilbakekrevingVedNegativSimulering2 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
@@ -1386,11 +1358,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
 
-        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.innvilgManuellePerioder(
-                new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
-        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
@@ -1471,20 +1439,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 false,
                 true,
                 60);
-        var saldoer = saksbehandler
-                .hentSaldoerGittUttaksperioder(fastsettUttaksperioderManueltBekreftelseMor.getPerioder());
-        var disponibleFellesdager = saldoer.getStonadskontoer().get(FELLESPERIODE).getSaldo();
-        var sluttenAvFørstePeriode = Virkedager.minusVirkedager(fellesperiodeSluttFar, Math.abs(disponibleFellesdager));
-        fastsettUttaksperioderManueltBekreftelseMor.splitPeriode(
-                fellesperiodeSluttMor.plusDays(1),
-                fellesperiodeSluttFar,
-                sluttenAvFørstePeriode);
-        fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
-                fellesperiodeSluttMor.plusDays(1),
-                sluttenAvFørstePeriode,
-                new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
+        var startSistePeriode = fastsettUttaksperioderManueltBekreftelseMor.getPerioder()
+                .get(fastsettUttaksperioderManueltBekreftelseMor.getPerioder().size() - 1).getFom();
         fastsettUttaksperioderManueltBekreftelseMor.avslåPeriode(
-                sluttenAvFørstePeriode.plusDays(1),
+                startSistePeriode,
                 fellesperiodeSluttFar,
                 new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
