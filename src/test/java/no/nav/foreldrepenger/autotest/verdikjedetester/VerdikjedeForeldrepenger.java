@@ -49,6 +49,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
@@ -788,7 +789,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
-        // TODO: Løs AP 5084 negativ simulering!
+        // Løser AP 5084 negativ simulering! Oppretter tilbakekreving og sjekk at den er opprette. Ikke løs det.
+        var vurderTilbakekrevingVedNegativSimulering = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
 
         saksbehandler.ventTilAvsluttetBehandling();
         verifiser(saksbehandler.valgtBehandling.hentBehandlingsresultat().equalsIgnoreCase("FORELDREPENGER_ENDRET"),
@@ -810,8 +815,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats() == 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
 
-        // TODO: Sjekk med simulering! Er ikke støtte for det for øyeblikket. Trenger å inkludere fpoppdrag.
-
+        tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+        tbksaksbehandler.hentSisteBehandling(saksnummerMor);
+        tbksaksbehandler.ventTilBehandlingErPåVent();
+        verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"),
+                "Behandling har feil vent årsak.");
     }
 
     @Test
@@ -1114,12 +1122,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class);
         saksbehandler.bekreftAksjonspunkt(kontrollerManueltOpprettetRevurdering);
 
-//        // TODO: Løs AP 5084 negativ simulering!
-//        var vurderTilbakekrevingVedNegativSimulering = saksbehandler
-//                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-//        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
-//        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
 
         var beregningsresultatPeriodeRevurdering = saksbehandler.valgtBehandling
@@ -1252,7 +1254,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering);
 
-        // TODO: Sjekk negativ simulering AP. 5084.
+        var vurderTilbakekrevingVedNegativSimulering = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         // AG sender inn ny korrigert IM med endring i refusjon mens behandlingen er hos beslutter. Behandlingen skal
         // rulles tilbake og behandles på nytt fra første AP i revurderingen.
@@ -1294,7 +1301,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseRevurdering2);
 
-        // TODO: Løs AP negativ simulering 5084.
+        var vurderTilbakekrevingVedNegativSimulering2 = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+        vurderTilbakekrevingVedNegativSimulering2.setTilbakekrevingUtenVarsel();
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering2);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
 
