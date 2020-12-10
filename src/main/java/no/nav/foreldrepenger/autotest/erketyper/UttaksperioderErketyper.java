@@ -9,6 +9,8 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.MorsAktivitet;
+import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.MorsAktivitetsTyper;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Oppholdsaarsaker;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Overfoeringsaarsaker;
 import no.nav.vedtak.felles.xml.soeknad.kodeverk.v3.Utsettelsesaarsaker;
@@ -22,7 +24,19 @@ import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Uttaksperiode;
 public class UttaksperioderErketyper {
 
     public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom) {
-        return new UttaksperiodeBuilder(stønadskonto.getKode(), fom, tom).build();
+        return uttaksperiode(stønadskonto, fom, tom, null);
+    }
+
+    public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom, MorsAktivitet morsAktivitet) {
+        var builder = new UttaksperiodeBuilder(stønadskonto.getKode(), fom, tom);
+        var periode = builder.build();
+        if (morsAktivitet != null) {
+            var morsAktivitetsTyper = new MorsAktivitetsTyper();
+            morsAktivitetsTyper.setKode(morsAktivitet.name());
+            morsAktivitetsTyper.setKodeverk("MORS_AKTIVITET");
+            periode.setMorsAktivitetIPerioden(morsAktivitetsTyper);
+        }
+        return periode;
     }
 
     public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom,
@@ -67,9 +81,20 @@ public class UttaksperioderErketyper {
     }
 
     public static Utsettelsesperiode utsettelsesperiode(SøknadUtsettelseÅrsak utsettelseÅrsak, LocalDate fom, LocalDate tom) {
+        return utsettelsesperiode(utsettelseÅrsak, fom, tom, null);
+
+    }
+
+    public static Utsettelsesperiode utsettelsesperiode(SøknadUtsettelseÅrsak utsettelseÅrsak, LocalDate fom, LocalDate tom,
+                                                        no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.MorsAktivitet morsAktivitet) {
         Utsettelsesperiode utsettelsesperiode = new Utsettelsesperiode();
         utsettelsesperiode.setFom(fom);
         utsettelsesperiode.setTom(tom);
+        if (morsAktivitet != null) {
+            var morsAktivitetIPerioden = new MorsAktivitetsTyper();
+            morsAktivitetIPerioden.setKode(morsAktivitet.name());
+            utsettelsesperiode.setMorsAktivitetIPerioden(morsAktivitetIPerioden);
+        }
         Utsettelsesaarsaker årsaker = new Utsettelsesaarsaker();
         årsaker.setKode(utsettelseÅrsak.getKode());
         utsettelsesperiode.setAarsak(årsaker);

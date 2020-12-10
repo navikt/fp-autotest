@@ -61,6 +61,7 @@ public class Behandling {
     private Lazy<KlageInfo> klagevurdering;
     private Lazy<Saldoer> saldoer;
     private Lazy<Tilrettelegging> tilrettelegging;
+    private Lazy<List<KontrollerAktiviteskravPeriode>> kontrollerAktiviteskrav;
 
     public List<UttakResultatPeriode> hentUttaksperioder() {
         return getUttakResultatPerioder().getPerioderSøker().stream()
@@ -88,6 +89,10 @@ public class Behandling {
             return behandlingsresultat.avslagsarsak.kode;
         }
         return "Ingen avslagsårsak";
+    }
+
+    public List<KontrollerAktiviteskravPeriode> getKontrollerAktiviteskrav() {
+        return get(kontrollerAktiviteskrav);
     }
 
     @Override
@@ -192,6 +197,10 @@ public class Behandling {
 
     public void setKontrollerFaktaData(Lazy<KontrollerFaktaData> dKontrollerFaktaData) {
         this.kontrollerFaktaData = dKontrollerFaktaData;
+    }
+
+    public void setKontrollerAktivitetskrav(Lazy<List<KontrollerAktiviteskravPeriode>> data) {
+        this.kontrollerAktiviteskrav = data;
     }
 
     public Medlem getMedlem() {
