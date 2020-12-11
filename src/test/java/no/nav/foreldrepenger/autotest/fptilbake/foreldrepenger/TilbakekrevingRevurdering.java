@@ -45,9 +45,9 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
     public void opprettTilbakekrevingManuelt() {
         TestscenarioDto testscenario = opprettTestscenario("50");
 
-        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        String søkerIdent = testscenario.personopplysninger().søkerIdent();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
@@ -81,7 +81,7 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
         tbksaksbehandler.ventTilBehandlingErPåVent();
         verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"),
                 "Behandling har feil vent årsak.");
-        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(),
+        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
@@ -122,15 +122,15 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
 
     private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) {
         InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmelding,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
     }
 }

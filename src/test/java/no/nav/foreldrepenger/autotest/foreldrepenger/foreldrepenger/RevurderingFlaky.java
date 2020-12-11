@@ -30,13 +30,13 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
     public void revurderingViaInntektsmelding() {
         TestscenarioDto testscenario = opprettTestscenario("50");
 
-        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        String søkerIdent = testscenario.personopplysninger().søkerIdent();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        String arbeidsforholdId = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String arbeidsforholdId = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsforholdId();
-        String orgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String orgNr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
@@ -44,15 +44,15 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -65,8 +65,8 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

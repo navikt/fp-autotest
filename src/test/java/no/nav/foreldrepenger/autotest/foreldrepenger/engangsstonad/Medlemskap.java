@@ -38,9 +38,9 @@ public class Medlemskap extends FpsakTestBase {
         TestscenarioDto testscenario = opprettTestscenario("51");
 
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
@@ -81,9 +81,9 @@ public class Medlemskap extends FpsakTestBase {
     public void morSøkerFødselUregistrert() {
         TestscenarioDto testscenario = opprettTestscenario("120");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -105,9 +105,9 @@ public class Medlemskap extends FpsakTestBase {
     public void morSøkerFødselUtenlandsadresse() {
         TestscenarioDto testscenario = opprettTestscenario("121");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);

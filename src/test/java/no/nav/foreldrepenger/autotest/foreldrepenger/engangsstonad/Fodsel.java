@@ -42,9 +42,9 @@ public class Fodsel extends FpsakTestBase {
     public void morSøkerFødselGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -62,7 +62,7 @@ public class Fodsel extends FpsakTestBase {
     public void morSøkerFødselAvvist() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
                 LocalDate.now().minusDays(30L));
 
@@ -97,9 +97,9 @@ public class Fodsel extends FpsakTestBase {
     public void farSøkerFødselRegistrert() {
         TestscenarioDto testscenario = opprettTestscenario("60");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -119,7 +119,7 @@ public class Fodsel extends FpsakTestBase {
     public void morSøkerFødselOverstyrt() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
                 LocalDate.now().minusDays(30L));
 
@@ -165,9 +165,9 @@ public class Fodsel extends FpsakTestBase {
     public void morSøkerFødselBeregningOverstyrt() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
@@ -211,8 +211,8 @@ public class Fodsel extends FpsakTestBase {
     @Description("Mor søker fødsel med flere barn - happy case flere barn")
     public void morSøkerFødselFlereBarn() {
         TestscenarioDto testscenario = opprettTestscenario("53");
-        var aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var aktørID = testscenario.personopplysninger().søkerAktørIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato)
                 .medSoekersRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(2, fødselsdato));
 
@@ -255,8 +255,8 @@ public class Fodsel extends FpsakTestBase {
     @Description("Mor søker fødsel med verge - skal få aksjonspunkt om registrering av verge når man er under 18")
     public void morSøkerFødselMedVerge() {
         TestscenarioDto testscenario = opprettTestscenario("54");
-        var aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var aktørID = testscenario.personopplysninger().søkerAktørIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
@@ -269,7 +269,7 @@ public class Fodsel extends FpsakTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaVergeBekreftelse.class);
         avklarFaktaVergeBekreftelse.bekreftSøkerErKontaktperson()
                 .bekreftSøkerErIkkeUnderTvungenForvaltning()
-                .setVerge(testscenario.getPersonopplysninger().getAnnenpartIdent());
+                .setVerge(testscenario.personopplysninger().annenpartIdent());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaVergeBekreftelse);
 
         AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
@@ -295,7 +295,7 @@ public class Fodsel extends FpsakTestBase {
     @Description("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel. Behandlingen skal bli satt på vent")
     public void morSøkerUregistrertFødselMindreEnn14DagerEtter() {
         TestscenarioDto testscenario = opprettTestscenario("55");
-        String aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusWeeks(1);
 
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
@@ -315,9 +315,9 @@ public class Fodsel extends FpsakTestBase {
     public void medmorSøkerFødsel() {
         TestscenarioDto testscenario = opprettTestscenario("90");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MEDMOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,

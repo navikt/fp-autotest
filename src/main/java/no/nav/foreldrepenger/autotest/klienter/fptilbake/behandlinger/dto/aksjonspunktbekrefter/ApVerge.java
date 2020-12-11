@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjo
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
@@ -26,7 +27,7 @@ public class ApVerge extends AksjonspunktBehandling {
     }
 
     public void setVerge(TestscenarioDto person) {
-        this.fnr = person.getPersonopplysninger().getSøkerIdent();
+        this.fnr = person.personopplysninger().søkerIdent();
         this.navn = "VERGE PERSON";
         this.vergeType = "VOKSEN";
     }

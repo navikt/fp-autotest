@@ -18,7 +18,7 @@ public class InntektsmeldingForeldrepengeErketyper {
 
     public static List<InntektsmeldingBuilder> makeInntektsmeldingFromTestscenario(TestscenarioDto testscenario,
             LocalDate startDatoForeldrepenger) {
-        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
+        String søkerIdent = testscenario.personopplysninger().søkerIdent();
         return makeInntektsmeldingFromTestscenarioMedIdent(testscenario, søkerIdent, startDatoForeldrepenger, false);
     }
 
@@ -32,14 +32,14 @@ public class InntektsmeldingForeldrepengeErketyper {
         List<Inntektsperiode> inntektsperioder;
         List<Arbeidsforhold> arbeidsforholdEtterStartdatoFP;
         if (erAnnenpart) {
-            inntektsperioder = testscenario.getScenariodataAnnenpart().getInntektskomponentModell()
+            inntektsperioder = testscenario.scenariodataAnnenpartDto().getInntektskomponentModell()
                     .getInntektsperioderSplittMånedlig();
-            arbeidsforholdEtterStartdatoFP = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell()
+            arbeidsforholdEtterStartdatoFP = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell()
                     .getArbeidsforhold();
         } else {
-            inntektsperioder = testscenario.getScenariodata().getInntektskomponentModell()
+            inntektsperioder = testscenario.scenariodataDto().getInntektskomponentModell()
                     .getInntektsperioderSplittMånedlig();
-            arbeidsforholdEtterStartdatoFP = testscenario.getScenariodata().getArbeidsforholdModell()
+            arbeidsforholdEtterStartdatoFP = testscenario.scenariodataDto().getArbeidsforholdModell()
                     .getArbeidsforhold();
         }
         arbeidsforholdEtterStartdatoFP.stream()

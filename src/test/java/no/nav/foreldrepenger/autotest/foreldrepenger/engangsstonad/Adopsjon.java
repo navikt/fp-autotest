@@ -37,7 +37,7 @@ public class Adopsjon extends FpsakTestBase {
     public void morSøkerAdopsjonGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR, false);
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -71,7 +71,7 @@ public class Adopsjon extends FpsakTestBase {
     public void morSøkerAdopsjonAvvist() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR, false);
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -108,7 +108,7 @@ public class Adopsjon extends FpsakTestBase {
     public void morSøkerAdopsjonOverstyrt() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR, false);
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -153,7 +153,7 @@ public class Adopsjon extends FpsakTestBase {
     public void farSøkerAdopsjonGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.FAR, false);
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -191,7 +191,7 @@ public class Adopsjon extends FpsakTestBase {
     public void farSøkerAdopsjonAvvist() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.FAR, true);
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

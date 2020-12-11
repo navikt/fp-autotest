@@ -17,9 +17,9 @@ public class ForeldrepengerTestBase extends FpsakTestBase {
 
         SigrunModell sigrunModell;
         if (annenPart) {
-            sigrunModell = testscenarioDto.getScenariodataAnnenpart().getSigrunModell();
+            sigrunModell = testscenarioDto.scenariodataAnnenpartDto().getSigrunModell();
         } else {
-            sigrunModell = testscenarioDto.getScenariodata().getSigrunModell();
+            sigrunModell = testscenarioDto.scenariodataDto().getSigrunModell();
         }
 
         double gjennomsnittDeTreSisteÅrene = sigrunModell.getInntektsår().stream()
@@ -34,7 +34,7 @@ public class ForeldrepengerTestBase extends FpsakTestBase {
     }
 
     protected List<Integer> sorterteInntektsbeløp(TestscenarioDto testscenario) {
-        return testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioderSplittMånedlig().stream()
+        return testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioderSplittMånedlig().stream()
                 .map(Inntektsperiode::getBeløp)
                 .distinct()
                 .sorted(Comparator.reverseOrder())

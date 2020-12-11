@@ -35,7 +35,7 @@ public class Termin extends FpsakTestBase {
     public void morSøkerTerminGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
                 LocalDate.now().plusWeeks(3));
 
@@ -72,7 +72,7 @@ public class Termin extends FpsakTestBase {
     public void morSøkerTerminOvertyrt() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
                 LocalDate.now().plusWeeks(3));
 
@@ -121,7 +121,7 @@ public class Termin extends FpsakTestBase {
     public void farSøkerTermin() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.FAR,
                 LocalDate.now().plusWeeks(3));
 
@@ -149,7 +149,7 @@ public class Termin extends FpsakTestBase {
         // Opprett scenario og søknad
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
                 LocalDate.now().plusWeeks(3));
 
@@ -179,7 +179,7 @@ public class Termin extends FpsakTestBase {
     public void morSøkerTermin25DagerTilbakeITid() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
                 LocalDate.now().minusDays(26));
 

@@ -29,7 +29,7 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
     @Description("Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
     public void MorTredjelandsborgerSøkerEngangsStønadTest() {
         var testscenario = opprettTestscenario("505");
-        var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var termindato = LocalDate.now().plusWeeks(3);
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 søkerAktørId,

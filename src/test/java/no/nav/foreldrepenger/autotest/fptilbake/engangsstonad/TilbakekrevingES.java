@@ -44,7 +44,7 @@ public class TilbakekrevingES extends FptilbakeTestBase {
     public void opprettTilbakekrevingManuelt() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR, false);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
@@ -85,7 +85,7 @@ public class TilbakekrevingES extends FptilbakeTestBase {
         tbksaksbehandler.ventTilBehandlingErPåVent();
         verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"),
                 "Behandling har feil vent årsak.");
-        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(),
+        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode(ytelseType);
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
@@ -123,8 +123,8 @@ public class TilbakekrevingES extends FptilbakeTestBase {
     @Description("FPsak med søker under 18, kopierer verge fra FPSAK, fjerner i FPTILBAKE og legger til ny.")
     public void tilbakeKrevingMedVerge() {
         TestscenarioDto testscenario = opprettTestscenario("54");
-        var aktørID = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var aktørID = testscenario.personopplysninger().søkerAktørIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
@@ -137,7 +137,7 @@ public class TilbakekrevingES extends FptilbakeTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaVergeBekreftelse.class);
         avklarFaktaVergeBekreftelse.bekreftSøkerErKontaktperson()
                 .bekreftSøkerErIkkeUnderTvungenForvaltning()
-                .setVerge(testscenario.getPersonopplysninger().getAnnenpartIdent());
+                .setVerge(testscenario.personopplysninger().annenpartIdent());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaVergeBekreftelse);
 
         AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
@@ -161,7 +161,7 @@ public class TilbakekrevingES extends FptilbakeTestBase {
         verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"),
                 "Behandling har feil vent årsak.");
         verifiser(tbksaksbehandler.valgtBehandling.harVerge(), "Behandling har ikke verge men skulle hatt det");
-        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.getPersonopplysninger().getSøkerIdent(),
+        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode(ytelseType);
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);

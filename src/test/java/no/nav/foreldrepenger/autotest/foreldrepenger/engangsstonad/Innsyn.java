@@ -33,9 +33,9 @@ public class Innsyn extends FpsakTestBase {
     public void behandleInnsynMorGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
@@ -74,9 +74,9 @@ public class Innsyn extends FpsakTestBase {
     public void behandleInnsynMorAvvist() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,

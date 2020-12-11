@@ -85,7 +85,7 @@ public class Uttak extends ForeldrepengerTestBase {
     @Description("Mor førstegangssøknad på fødsel")
     public void testcase_mor_fødsel() {
         TestscenarioDto testscenario = opprettTestscenario("75");
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
 
         Fordeling fordeling = generiskFordeling(
@@ -94,26 +94,26 @@ public class Uttak extends ForeldrepengerTestBase {
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(
                 fødselsdato,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)
+                testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR)
                         .medFordeling(fordeling);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerMor = fordel.sendInnSøknad(
                 søknad.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.personopplysninger().søkerIdent(),
                 fpStartdatoMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 saksnummerMor);
     }
 
@@ -130,27 +130,27 @@ public class Uttak extends ForeldrepengerTestBase {
                 uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(8).minusDays(1)),
                 uttaksperiode(FEDREKVOTE, termindato.plusWeeks(8), termindato.plusWeeks(13).minusDays(1)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR)
                         .medFordeling(fordelingMor);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerMor = fordel.sendInnSøknad(
                 søknad.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.personopplysninger().søkerIdent(),
                 fpStartdatoMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr())
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr())
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(10_000));
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 saksnummerMor);
     }
 
@@ -161,20 +161,20 @@ public class Uttak extends ForeldrepengerTestBase {
 
         var termindato = LocalDate.now().plusWeeks(3);
         var startDatoForeldrepenger = termindato.minusWeeks(3);
-        testscenario.getPersonopplysninger().getFødselsdato();
+        testscenario.personopplysninger().fødselsdato();
 
-        var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
-        var søkerInntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder()
+        var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
+        var søkerIdent = testscenario.personopplysninger().søkerIdent();
+        var søkerInntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder()
                 .get(0).getBeløp();
-        var søkerOrgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold()
+        var søkerOrgNr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold()
                 .get(0).getArbeidsgiverOrgnr();
 
-        var annenPartAktørId = testscenario2.getPersonopplysninger().getSøkerAktørIdent();
-        var annenPartIdent = testscenario2.getPersonopplysninger().getSøkerIdent();
-        var annenPartInntekt = testscenario2.getScenariodata().getInntektskomponentModell().getInntektsperioder()
+        var annenPartAktørId = testscenario2.personopplysninger().søkerAktørIdent();
+        var annenPartIdent = testscenario2.personopplysninger().søkerIdent();
+        var annenPartInntekt = testscenario2.scenariodataDto().getInntektskomponentModell().getInntektsperioder()
                 .get(0).getBeløp();
-        var annenPartOrgNr = testscenario2.getScenariodata().getArbeidsforholdModell().getArbeidsforhold()
+        var annenPartOrgNr = testscenario2.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold()
                 .get(0).getArbeidsgiverOrgnr();
 
         var søknad = lagSøknadForeldrepengerTermin(termindato, søkerAktørId, SøkersRolle.MOR)
@@ -203,13 +203,13 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_stortinget() {
         TestscenarioDto testscenario = opprettTestscenario("418");
-        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
-        var søkerAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
-        var søkerInntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder()
+        var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
+        var søkerIdent = testscenario.personopplysninger().søkerIdent();
+        var søkerInntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder()
                 .get(0).getBeløp();
-        var søkerOrgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold()
+        var søkerOrgNr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold()
                 .get(0).getArbeidsgiverOrgnr();
 
         var fordeling = generiskFordeling(
@@ -229,13 +229,13 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_far_fødsel() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        var søkerAktørId = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        var søkerIdent = testscenario.getPersonopplysninger().getAnnenpartIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var søkerAktørId = testscenario.personopplysninger().annenpartAktørIdent();
+        var søkerIdent = testscenario.personopplysninger().annenpartIdent();
         var startDatoForeldrepenger = LocalDate.now().plusWeeks(3);
-        var søkerInntekt = testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder()
+        var søkerInntekt = testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder()
                 .get(0).getBeløp();
-        var søkerOrgNr = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold()
+        var søkerOrgNr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold()
                 .get(0).getArbeidsgiverOrgnr();
 
         Fordeling fordeling = generiskFordeling(
@@ -268,12 +268,12 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_søknadfrist_endringssøknad() {
         TestscenarioDto testscenario = opprettTestscenario("500");
-        var søkterAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        var søkterAktørId = testscenario.personopplysninger().søkerAktørIdent();
+        var søkerFnr = testscenario.personopplysninger().søkerIdent();
 
-        var inntektBeløp = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+        var inntektBeløp = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
                 .getBeløp();
-        var orgNummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        var orgNummer = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
 
         var familiehendelseDato = LocalDate.now().minusMonths(9);
@@ -296,15 +296,15 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_far_tidligsøktePerioder() {
         TestscenarioDto testscenario = opprettTestscenario("550");
-        var søkterAktørId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var søkerFnr = testscenario.getPersonopplysninger().getSøkerIdent();
+        var søkterAktørId = testscenario.personopplysninger().søkerAktørIdent();
+        var søkerFnr = testscenario.personopplysninger().søkerIdent();
 
-        var inntektBeløp = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+        var inntektBeløp = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
                 .getBeløp();
-        var orgNummer = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        var orgNummer = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
 
-        var familiehendelseDato = testscenario.getPersonopplysninger().getFødselsdato();
+        var familiehendelseDato = testscenario.personopplysninger().fødselsdato();
         var fpStartdato = familiehendelseDato;
 
         var fordeling = generiskFordeling(
@@ -326,8 +326,8 @@ public class Uttak extends ForeldrepengerTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(null,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
     }
 
@@ -335,9 +335,9 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_KOR1_refusjon_arbeidsforholdID() {
         TestscenarioDto testscenario = opprettTestscenario("202");
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        String fnrMor = testscenario.personopplysninger().søkerIdent();
 
         Fordeling fordelingMor = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
@@ -348,25 +348,25 @@ public class Uttak extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
 
         InntektsmeldingBuilder im = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrMor, fødselsdato.minusWeeks(3),
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
-        im.medArbeidsforholdId(testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        im.medArbeidsforholdId(testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsforholdId());
         im.medRefusjonsBelopPerMnd(BigDecimal.valueOf(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp()));
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp()));
         fordel.sendInnInntektsmelding(im, aktørIdMor, fnrMor, saksnummer);
 
         InntektsmeldingBuilder im2 = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrMor, fødselsdato.minusWeeks(3),
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
                         .getArbeidsgiverOrgnr());
-        im2.medArbeidsforholdId(testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
+        im2.medArbeidsforholdId(testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getArbeidsforholdId());
         im2.medRefusjonsBelopPerMnd(BigDecimal.valueOf(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp()));
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp()));
         fordel.sendInnInntektsmelding(im2, aktørIdMor, fnrMor, saksnummer);
 
     }
@@ -375,26 +375,26 @@ public class Uttak extends ForeldrepengerTestBase {
     public void testcase_mor_KOR_papirsøknad_gradering() {
         TestscenarioDto testscenario = opprettTestscenario("202");
 
-        var fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        var aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        var fnrMor = testscenario.personopplysninger().søkerIdent();
 
-        var org1 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        var org1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        var org2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
+        var org2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getArbeidsgiverOrgnr();
-        var org3 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(2)
+        var org3 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(2)
                 .getArbeidsgiverOrgnr();
-        testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsforholdId();
-        var arbeidsforholdID2 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
+        testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsforholdId();
+        var arbeidsforholdID2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
                 .getArbeidsforholdId();
-        var arbeidsforholdID3 = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(2)
+        var arbeidsforholdID3 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(2)
                 .getArbeidsforholdId();
-        var beløp1 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+        var beløp1 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
                 .getBeløp();
-        var beløp2 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1)
+        var beløp2 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(1)
                 .getBeløp();
-        var beløp3 = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(2)
+        var beløp3 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(2)
                 .getBeløp();
         var morStartDato = fødselsdato.minusWeeks(3);
 
@@ -416,13 +416,13 @@ public class Uttak extends ForeldrepengerTestBase {
         GraderingPeriodeDto gradering1 = new GraderingPeriodeDto(
                 FELLESPERIODE, fødselsdato.plusDays(42), fødselsdato.plusDays(120),
                 BigDecimal.valueOf(70),
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr(),
                 true, false, false);
 //        GraderingPeriodeDto gradering2 = new GraderingPeriodeDto(
 //                Stønadskonto.MØDREKVOTE, fødselsdato.plusDays(50), fødselsdato.plusDays(105),
 //                BigDecimal.valueOf(70),
-//                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr(),
+//                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsgiverOrgnr(),
 //                true, false, false, "ARBEIDSTAKER"
 //                );
         fordeling.permisjonsPerioder.add(før);
@@ -433,7 +433,7 @@ public class Uttak extends ForeldrepengerTestBase {
 
         InntektsmeldingBuilder im = lagInntektsmelding(
                 beløp1, fnrMor, morStartDato, org1)
-                        .medArbeidsforholdId(testscenario.getScenariodata().getArbeidsforholdModell()
+                        .medArbeidsforholdId(testscenario.scenariodataDto().getArbeidsforholdModell()
                                 .getArbeidsforhold().get(0).getArbeidsforholdId())
                         .medRefusjonsBelopPerMnd(BigDecimal.valueOf(beløp1))
                         .medRefusjonsOpphordato(LocalDate.now().minusDays(7));
@@ -454,11 +454,11 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_flere_arbeidsforhold_endring_i_fordeling() {
         TestscenarioDto testscenario = opprettTestscenario("165");
-        String fnr = testscenario.getPersonopplysninger().getSøkerIdent();
-        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        String fnr = testscenario.personopplysninger().søkerIdent();
+        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell()
+        List<Arbeidsforhold> arbeidsforhold = testscenario.scenariodataDto().getArbeidsforholdModell()
                 .getArbeidsforhold();
         Arbeidsforhold tilkommet = arbeidsforhold.get(0);
         String orgNr = tilkommet.getArbeidsgiverOrgnr();
@@ -497,11 +497,11 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_annenForelderHarRett() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
-        testscenario.getPersonopplysninger().getAnnenpartIdent();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        testscenario.personopplysninger().annenpartAktørIdent();
+        String fnrMor = testscenario.personopplysninger().søkerIdent();
+        testscenario.personopplysninger().annenpartIdent();
 
         Fordeling fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
@@ -513,9 +513,9 @@ public class Uttak extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(søknad.build(), aktørIdMor, fnrMor,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
         InntektsmeldingBuilder im = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrMor, fødselsdato.minusWeeks(3),
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(im, aktørIdMor, fnrMor, saksnummer);
 
@@ -524,9 +524,9 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_far_annenForelderHarRett() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
+        String aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
+        String fnrFar = testscenario.personopplysninger().annenpartIdent();
 
         Fordeling fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(15)));
@@ -538,10 +538,10 @@ public class Uttak extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(søknad.build(), aktørIdFar, fnrFar,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
         InntektsmeldingBuilder im = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(0)
                         .getBeløp(),
                 fnrFar, fødselsdato.plusWeeks(6),
-                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(im, aktørIdFar, fnrFar, saksnummer);
 
@@ -550,9 +550,9 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_overføring() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        String fnrMor = testscenario.personopplysninger().søkerIdent();
 
         Fordeling fordeling = generiskFordeling(
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
@@ -567,9 +567,9 @@ public class Uttak extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(søknad.build(), aktørIdMor, fnrMor,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
         InntektsmeldingBuilder im = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrMor, fødselsdato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(im, aktørIdMor, fnrMor, saksnummer);
     }
@@ -580,11 +580,11 @@ public class Uttak extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
 
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
-        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        String aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
+        String fnrMor = testscenario.personopplysninger().søkerIdent();
+        String fnrFar = testscenario.personopplysninger().annenpartIdent();
 
         Fordeling fordelingMor = generiskFordeling(
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)),
@@ -604,10 +604,10 @@ public class Uttak extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrMor,
                 fødselsdato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
@@ -641,11 +641,11 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelseFar);
         InntektsmeldingBuilder inntektsmeldingerFar = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(0)
                         .getBeløp(),
                 fnrFar,
                 fpStartFar,
-                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldingerFar,
@@ -657,21 +657,21 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_far_søker_ikke_om_uttak_7_uker_etter_fødsel() {
         TestscenarioDto testscenario = opprettTestscenario("86");
-        var aktørIdSøker = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        var fnrSøker = testscenario.getPersonopplysninger().getAnnenpartIdent();
-        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+        var aktørIdSøker = testscenario.personopplysninger().annenpartAktørIdent();
+        var fnrSøker = testscenario.personopplysninger().annenpartIdent();
+        var inntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
                 .getBeløp();
-        var orgNrSøker = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        var orgNrSøker = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
         var søkersRolle = SøkersRolle.FAR;
 
-        LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsDato = testscenario.personopplysninger().fødselsdato();
         LocalDate startDato = fødselsDato.plusMonths(10);
 
         Fordeling fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER, startDato, startDato.plusMonths(4)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsDato,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)
+                testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR)
                         .medFordeling(fordeling);
         Long saksnummer = fordel.sendInnSøknad(
                 søknad.build(), aktørIdSøker, fnrSøker, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
@@ -717,13 +717,13 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_søker_med_endringssøknad() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        var aktørIdSøker = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        var fnrSøker = testscenario.getPersonopplysninger().getSøkerIdent();
-        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+        var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
+        var fnrSøker = testscenario.personopplysninger().søkerIdent();
+        var inntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
                 .getBeløp();
-        var orgNrSøker = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        var orgNrSøker = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
         var søkersRolle = SøkersRolle.MOR;
 
@@ -763,13 +763,13 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_far_søker_med_endringssøknad() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        var aktørIdSøker = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        var fnrSøker = testscenario.getPersonopplysninger().getAnnenpartIdent();
-        var inntekt = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+        var aktørIdSøker = testscenario.personopplysninger().annenpartAktørIdent();
+        var fnrSøker = testscenario.personopplysninger().annenpartIdent();
+        var inntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
                 .getBeløp();
-        var orgNrSøker = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        var orgNrSøker = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdato = fødselsdato.plusWeeks(7);
         var søkersRolle = SøkersRolle.FAR;
 
@@ -806,12 +806,12 @@ public class Uttak extends ForeldrepengerTestBase {
     public void testcase_morOgfar_endringsøknad_overføringperioderFørstePeriodeTilFørstegangssøknad() {
         TestscenarioDto testscenario = opprettTestscenario("140");
 
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
-        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
+        String fnrMor = testscenario.personopplysninger().søkerIdent();
+        String fnrFar = testscenario.personopplysninger().annenpartIdent();
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        String aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
 
-        LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsDato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartMor = fødselsDato;
         LocalDate fpStartFar = fødselsDato.plusWeeks(8);
 
@@ -839,10 +839,10 @@ public class Uttak extends ForeldrepengerTestBase {
                 null);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrMor,
                 fpStartMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
@@ -866,11 +866,11 @@ public class Uttak extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
         InntektsmeldingBuilder inntektsmeldingerFar = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(0)
                         .getBeløp(),
                 fnrFar,
                 fpStartFar,
-                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldingerFar,
@@ -900,12 +900,12 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_morOgFar_toArbeidsforhold() {
         TestscenarioDto testscenario = opprettTestscenario("141");
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
-        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
+        String fnrMor = testscenario.personopplysninger().søkerIdent();
+        String fnrFar = testscenario.personopplysninger().annenpartIdent();
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        String aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
 
-        LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsDato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartMor = fødselsDato;
         LocalDate fpStartFar = fødselsDato.plusWeeks(12);
 
@@ -924,16 +924,16 @@ public class Uttak extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
         InntektsmeldingBuilder inntektsmeldingMorEn = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrMor,
                 fpStartMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         InntektsmeldingBuilder inntektsmeldingMorTo = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp(),
                 fnrMor,
                 fpStartMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(1)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
                         .getArbeidsgiverOrgnr());
         List<InntektsmeldingBuilder> inntektsmeldingBuilderListMor = new ArrayList<>();
         inntektsmeldingBuilderListMor.add(inntektsmeldingMorEn);
@@ -948,7 +948,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 uttaksperiode(FELLESPERIODE, fpStartFar, fpStartFar.plusWeeks(6).minusDays(1)),
                 graderingsperiodeArbeidstaker(FELLESPERIODE, fpStartFar.plusWeeks(6),
                         fpStartFar.plusWeeks(18).minusDays(1),
-                        testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                        testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                                 .getArbeidsgiverOrgnr(),
                         50));
         ForeldrepengerBuilder søknadFar = lagSøknadForeldrepengerFødsel(fødselsDato, aktørIdFar, SøkersRolle.FAR)
@@ -957,18 +957,18 @@ public class Uttak extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
 
         InntektsmeldingBuilder inntektsmeldingFarEn = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(0)
                         .getBeløp(),
                 fnrFar,
                 fpStartFar,
-                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         InntektsmeldingBuilder inntektsmeldingFarTo = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(1)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(1)
                         .getBeløp(),
                 fnrFar,
                 fpStartFar,
-                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(1)
+                testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
                         .getArbeidsgiverOrgnr());
         List<InntektsmeldingBuilder> inntektsmeldingBuilderListFar = new ArrayList<>();
         inntektsmeldingBuilderListFar.add(inntektsmeldingFarEn);
@@ -980,10 +980,10 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_gradering() {
         TestscenarioDto testscenario = opprettTestscenario("141");
-        String søkerIdent = testscenario.getPersonopplysninger().getSøkerIdent();
-        String søkerAktørIdent = testscenario.getPersonopplysninger().getSøkerAktørIdent();
+        String søkerIdent = testscenario.personopplysninger().søkerIdent();
+        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
 
-        LocalDate fødselsDato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsDato = testscenario.personopplysninger().fødselsdato();
         LocalDate foreldrepengerStartDato = fødselsDato.minusWeeks(3);
 
         Fordeling fordelingMor = generiskFordeling(
@@ -1010,7 +1010,7 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_mor_endringsSøknad_medGradering_FL_AAP() {
         TestscenarioDto testscenario = opprettTestscenario("30");
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStart = fødselsdato.minusWeeks(3);
         Opptjening opptjening = OpptjeningErketyper.medEgenNaeringOgFrilansOpptjening();
         Fordeling fordeling = generiskFordeling(
@@ -1019,22 +1019,22 @@ public class Uttak extends ForeldrepengerTestBase {
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(35).minusDays(1)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(
                 fødselsdato,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR)
                         .medFordeling(fordeling)
                         .medSpesiellOpptjening(opptjening);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerMor = fordel.sendInnSøknad(
                 søknad.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(
                 5_000,
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 fpStart,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummerMor);
 
@@ -1084,13 +1084,13 @@ public class Uttak extends ForeldrepengerTestBase {
                 uttaksperiode(FELLESPERIODE,
                         fødselsdato.plusWeeks(28).plusDays(1), fødselsdato.plusWeeks(32).plusDays(1)));
         EndringssøknadBuilder søknadEndring = lagEndringssøknad(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
                 fordelingEndring,
                 saksnummerMor);
         fordel.sendInnSøknad(søknadEndring.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummerMor);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -1130,12 +1130,12 @@ public class Uttak extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
 
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String fnrMor = testscenario.personopplysninger().søkerIdent();
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        String orgNrMor = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
 
-        LocalDate fødsel = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødsel = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartMor = fødsel.minusWeeks(4);
 
         Fordeling fordelingMor = generiskFordeling(
@@ -1164,10 +1164,10 @@ public class Uttak extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
                 fnrMor,
                 fpStartMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
@@ -1181,12 +1181,12 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_far_faktaOmUttak_søktForTidelig() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
-        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        String orgNrFar = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        String fnrFar = testscenario.personopplysninger().annenpartIdent();
+        String aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
+        String orgNrFar = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        LocalDate fødsel = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødsel = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartFar = fødsel.plusWeeks(2);
 
         Fordeling fordelingFar = generiskFordeling(
@@ -1202,7 +1202,7 @@ public class Uttak extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(
                 søknad.build(), aktørIdFar, fnrFar, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(0)
                         .getBeløp(),
                 fnrFar, fpStartFar, orgNrFar);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, aktørIdFar, fnrFar, saksnummer);
@@ -1212,11 +1212,11 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_far_faktaOmUttak_overLappendePerioder() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
-        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        String orgNrFar = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String fnrFar = testscenario.personopplysninger().annenpartIdent();
+        String aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
+        String orgNrFar = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        LocalDate fødsel = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødsel = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartFar = fødsel.plusWeeks(7);
 
         Fordeling fordelingFar = generiskFordeling(
@@ -1228,7 +1228,7 @@ public class Uttak extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(
                 søknad.build(), aktørIdFar, fnrFar, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(0)
                         .getBeløp(),
                 fnrFar, fpStartFar, orgNrFar);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, aktørIdFar, fnrFar, saksnummer);
@@ -1238,11 +1238,11 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_far_faktaOmUttak_uttakFørSTF() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
-        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        String orgNrFar = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String fnrFar = testscenario.personopplysninger().annenpartIdent();
+        String aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
+        String orgNrFar = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        LocalDate fødsel = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødsel = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartFar = fødsel.plusWeeks(7);
 
         Fordeling fordelingFar = generiskFordeling(
@@ -1254,7 +1254,7 @@ public class Uttak extends ForeldrepengerTestBase {
         long saksnummer = fordel.sendInnSøknad(
                 søknad.build(), aktørIdFar, fnrFar, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(0)
                         .getBeløp(),
                 fnrFar, fpStartFar.minusWeeks(1), orgNrFar);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, aktørIdFar, fnrFar, saksnummer);
@@ -1272,12 +1272,12 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_far_faktaOmUttak_overføringAvPerioder() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
-        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        String orgNrFar = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        String fnrFar = testscenario.personopplysninger().annenpartIdent();
+        String aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
+        String orgNrFar = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        LocalDate fødsel = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødsel = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartFar = fødsel.plusWeeks(7);
 
         Fordeling fordeling = generiskFordeling(
@@ -1297,7 +1297,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
 
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(0)
                         .getBeløp(),
                 fnrFar, fpStartFar, orgNrFar);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, aktørIdFar, fnrFar, saksnummer);
@@ -1307,19 +1307,19 @@ public class Uttak extends ForeldrepengerTestBase {
     @Test
     public void testcase_morOgFar_faktaOmUttak_farLagerHullPåMor() {
         TestscenarioDto testscenario = opprettTestscenario("140");
-        String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
-        String aktørIdMor = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        String fnrFar = testscenario.getPersonopplysninger().getAnnenpartIdent();
-        String aktørIdFar = testscenario.getPersonopplysninger().getAnnenPartAktørIdent();
-        Integer beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+        String fnrMor = testscenario.personopplysninger().søkerIdent();
+        String aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
+        String fnrFar = testscenario.personopplysninger().annenpartIdent();
+        String aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
+        Integer beløpMor = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
                 .getBeløp();
-        Integer beløpFar = testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder()
+        Integer beløpFar = testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder()
                 .get(0).getBeløp();
-        String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String orgNrMor = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        String orgNrFar = testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        String orgNrFar = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
-        LocalDate fødsel = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødsel = testscenario.personopplysninger().fødselsdato();
 
         Fordeling fordelingMor = generiskFordeling(
                 utsettelsesperiode(SøknadUtsettelseÅrsak.SYKDOM, fødsel, fødsel.plusWeeks(14).minusDays(1)),
@@ -1391,14 +1391,14 @@ public class Uttak extends ForeldrepengerTestBase {
         TestscenarioDto testscenario = opprettTestscenario("140");
 
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR,
-                testscenario.getPersonopplysninger().getFødselsdato());
+                testscenario.personopplysninger().fødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerMor = fordel.sendInnSøknad(
                 søknad.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD,
                 null);
 
@@ -1411,28 +1411,28 @@ public class Uttak extends ForeldrepengerTestBase {
         rettigheter.setHarAnnenForelderRett(false);
         rettigheter.setHarOmsorgForBarnetIPeriodene(true);
 
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartFar = fødselsdato.plusWeeks(12);
         generiskFordeling(
                 uttaksperiode(FORELDREPENGER, fpStartFar, fpStartFar.plusWeeks(15)));
         ForeldrepengerBuilder søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.FAR);
+                testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.FAR);
         fordel.sendInnSøknad(søknadFar.build(),
-                testscenario.getPersonopplysninger().getAnnenPartAktørIdent(),
-                testscenario.getPersonopplysninger().getAnnenpartIdent(),
+                testscenario.personopplysninger().annenpartAktørIdent(),
+                testscenario.personopplysninger().annenpartIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodataAnnenpart().getInntektskomponentModell().getInntektsperioder().get(0)
+                testscenario.scenariodataAnnenpartDto().getInntektskomponentModell().getInntektsperioder().get(0)
                         .getBeløp(),
-                testscenario.getPersonopplysninger().getAnnenpartIdent(),
+                testscenario.personopplysninger().annenpartIdent(),
                 fpStartFar,
-                testscenario.getScenariodataAnnenpart().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getAnnenPartAktørIdent(),
-                testscenario.getPersonopplysninger().getAnnenpartIdent(),
+                testscenario.personopplysninger().annenpartAktørIdent(),
+                testscenario.personopplysninger().annenpartIdent(),
                 saksnummerMor);
 
     }
@@ -1444,34 +1444,34 @@ public class Uttak extends ForeldrepengerTestBase {
         TestscenarioDto testscenario = opprettTestscenario("75");
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
 
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdatoMor = fødselsdato.minusWeeks(3);
         Fordeling fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(8).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(13).minusDays(1)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)
+                testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR)
                         .medFordeling(fordeling)
                         .medRelasjonTilBarnet(
                                 RelasjonTilBarnetErketyper.fødselMedTermin(1, fødselsdato, fødselsdato.plusWeeks(10)));
         long saksnummerMor = fordel.sendInnSøknad(
                 søknad.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.personopplysninger().søkerIdent(),
                 fpStartdatoMor,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 saksnummerMor);
     }
 
@@ -1489,25 +1489,25 @@ public class Uttak extends ForeldrepengerTestBase {
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusDays(36)));
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)
+                testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR)
                         .medFordeling(fordeling);
         long saksnummerMor = fordel.sendInnSøknad(
                 søknad.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 saksnummerMor);
 
         // Automatisk behandling av Fakta om fødsel siden det ikke er registert barn i
@@ -1526,7 +1526,7 @@ public class Uttak extends ForeldrepengerTestBase {
     public void testcase_mor_flyttingAvPerioder_fødsel_TFP_2070() {
         TestscenarioDto testscenario = opprettTestscenario("140");
 
-        LocalDate fødselsdato = testscenario.getPersonopplysninger().getFødselsdato();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate termindato = fødselsdato.plusDays(13);
         LocalDate fpStartdato = termindato;
 
@@ -1535,26 +1535,26 @@ public class Uttak extends ForeldrepengerTestBase {
                 uttaksperiode(FELLESPERIODE, termindato.plusDays(96), termindato.plusDays(96 + 90)));
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(fødselsdato,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(), SøkersRolle.MOR)
+                testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR)
                         .medFordeling(fordeling);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerMor = fordel.sendInnSøknad(
                 søknad.build(),
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER,
                 null);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                         .getArbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
-                testscenario.getPersonopplysninger().getSøkerIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
+                testscenario.personopplysninger().søkerIdent(),
                 saksnummerMor);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

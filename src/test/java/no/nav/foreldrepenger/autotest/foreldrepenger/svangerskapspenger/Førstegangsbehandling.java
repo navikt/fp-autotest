@@ -48,13 +48,13 @@ public class Førstegangsbehandling extends FpsakTestBase {
     public void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() {
 
         final TestscenarioDto testscenario = opprettTestscenario("504");
-        final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        final String morAktoerId = testscenario.personopplysninger().søkerAktørIdent();
+        final String fnrMor = testscenario.personopplysninger().søkerIdent();
         final LocalDate termindato = LocalDate.now().plusWeeks(4);
 
-        final List<Inntektsperiode> inntektsperioder = testscenario.getScenariodata().getInntektskomponentModell()
+        final List<Inntektsperiode> inntektsperioder = testscenario.scenariodataDto().getInntektskomponentModell()
                 .getInntektsperioder();
-        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell()
+        final List<Arbeidsforhold> arbeidsforhold = testscenario.scenariodataDto().getArbeidsforholdModell()
                 .getArbeidsforhold();
         final String orgnr1 = arbeidsforhold.get(0).getArbeidsgiverOrgnr();
         final String orgnr2 = arbeidsforhold.get(1).getArbeidsgiverOrgnr();
@@ -116,10 +116,10 @@ public class Førstegangsbehandling extends FpsakTestBase {
     public void mor_søker_svp_tre_arbeidsforhold_hel_halv_og_ingen_tilrettelegging() {
 
         final TestscenarioDto testscenario = opprettTestscenario("78");
-        final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        final String morAktoerId = testscenario.personopplysninger().søkerAktørIdent();
+        final String fnrMor = testscenario.personopplysninger().søkerIdent();
 
-        final List<Arbeidsforhold> arbeidsforhold = testscenario.getScenariodata().getArbeidsforholdModell()
+        final List<Arbeidsforhold> arbeidsforhold = testscenario.scenariodataDto().getArbeidsforholdModell()
                 .getArbeidsforhold();
         final String orgnr1 = arbeidsforhold.get(0).getArbeidsgiverOrgnr();
         final String orgnr2 = arbeidsforhold.get(1).getArbeidsgiverOrgnr();
@@ -208,12 +208,12 @@ public class Førstegangsbehandling extends FpsakTestBase {
         // TODO (OL) Utvide med videre funksjonalitet
 
         final TestscenarioDto testscenario = opprettTestscenario("50");
-        final String morAktoerId = testscenario.getPersonopplysninger().getSøkerAktørIdent();
-        final String fnrMor = testscenario.getPersonopplysninger().getSøkerIdent();
+        final String morAktoerId = testscenario.personopplysninger().søkerAktørIdent();
+        final String fnrMor = testscenario.personopplysninger().søkerIdent();
 
-        final int beløpMor = testscenario.getScenariodata().getInntektskomponentModell().getInntektsperioder().get(0)
+        final int beløpMor = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
                 .getBeløp();
-        final String orgNrMor = testscenario.getScenariodata().getArbeidsforholdModell().getArbeidsforhold().get(0)
+        final String orgNrMor = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
                 .getArbeidsgiverOrgnr();
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);

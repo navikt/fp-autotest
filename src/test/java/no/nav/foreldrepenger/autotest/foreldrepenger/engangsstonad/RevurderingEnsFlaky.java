@@ -27,7 +27,7 @@ public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
     public void manueltOpprettetRevurderingIkkeSendVarsel() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.getPersonopplysninger().getSøkerAktørIdent(),
+                testscenario.personopplysninger().søkerAktørIdent(),
                 SøkersRolle.MOR, false);
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
