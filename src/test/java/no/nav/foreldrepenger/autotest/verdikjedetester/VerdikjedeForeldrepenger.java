@@ -773,11 +773,13 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         // Løser AP 5084 negativ simulering! Oppretter tilbakekreving og sjekk at den er opprette. Ikke løs det.
+        if (forventerNegativSimuleringForBehandling(fpStartdatoFarEndret)) {
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler
+                    .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+            vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+            saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+        }
 
-        var vurderTilbakekrevingVedNegativSimulering = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
-        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
 
         saksbehandler.ventTilAvsluttetBehandling();
         verifiser(saksbehandler.valgtBehandling.hentBehandlingsresultat().equalsIgnoreCase("FORELDREPENGER_ENDRET"),
@@ -799,11 +801,21 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats() == 0,
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
 
-        tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        tbksaksbehandler.hentSisteBehandling(saksnummerMor);
-        tbksaksbehandler.ventTilBehandlingErPåVent();
-        verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"),
-                "Behandling har feil vent årsak.");
+        if (forventerNegativSimuleringForBehandling(fpStartdatoFarEndret)) {
+            tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
+            tbksaksbehandler.hentSisteBehandling(saksnummerMor);
+            tbksaksbehandler.ventTilBehandlingErPåVent();
+            verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"),
+                    "Behandling har feil vent årsak.");
+        }
+    }
+
+    // Hvis perioden som overføres er IKKE i samme måned som dagens dato ELLER
+    // Hvis perioden som overføres er i samme måned som dagens dato OG dagens dato er ETTER utbetalingsdagen
+    // (20. i alle måneder) så skal det resultere i negativ simulering.
+    private Boolean forventerNegativSimuleringForBehandling(LocalDate fpStartdatoFarEndret) {
+        return fpStartdatoFarEndret.getMonth() != LocalDate.now().getMonth() ||
+                (fpStartdatoFarEndret.getMonth() == LocalDate.now().getMonth() && LocalDate.now().getDayOfMonth() >= 20);
     }
 
     @Test
