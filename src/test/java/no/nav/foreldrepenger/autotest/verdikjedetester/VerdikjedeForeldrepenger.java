@@ -299,6 +299,13 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
 
+        if (saksbehandler.harAksjonspunkt("5084")) {
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
+                    hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+            vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
+            saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+        }
+
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
 
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 3,
