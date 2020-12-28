@@ -33,6 +33,7 @@ public class JsonKlient {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         // må nullstille disse siden autotest deler klasser med intern scenario modell i  vtp.
         // Får ikke skrudd av injectableValues i jackson på annen måte
