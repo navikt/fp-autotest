@@ -90,7 +90,7 @@ jobs:
 
       - name: Slack Notification
         if: always()
-        uses: rtCamp/action-slack-notify@v2.1.1
+        uses: rtCamp/action-slack-notify@v2.1.2
         env:
           SLACK_CHANNEL: vtp-autotest-resultat
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
