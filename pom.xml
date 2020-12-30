@@ -17,12 +17,9 @@
         <changelist>-SNAPSHOT</changelist>
 
         <vtp.versjon>1.0-2020.12.29.144056-a4157d5</vtp.versjon>
-
-        <aspectj.version>1.9.6</aspectj.version>
-
-        <jackson.version>2.12.0</jackson.version>
-
         <dokumentgenerator.version>1.0-20200327105749-73dec14</dokumentgenerator.version>
+        <aspectj.version>1.9.6</aspectj.version>
+        <jackson.version>2.12.0</jackson.version>
     </properties>
 
     <profiles>
@@ -182,12 +179,6 @@
              <version>5.7.0</version>
          </dependency>
 		<dependency>
-		    <groupId>org.junit.platform</groupId>
-		    <artifactId>junit-platform-launcher</artifactId>
-            <version>1.7.0</version>
-        </dependency>
-
-		<dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version>
@@ -201,13 +192,6 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-parameter-names</artifactId>
             <version>${jackson.version}</version>
-
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jdk8</artifactId>
-            <version>${jackson.version}</version>
-
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -262,13 +246,18 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
-            <version>2.32</version>
+            <version>3.0.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>2.1.6</version>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.4.0-b180830.0438</version>
         </dependency>
 
         <dependency>
