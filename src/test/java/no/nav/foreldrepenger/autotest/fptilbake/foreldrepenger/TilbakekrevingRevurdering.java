@@ -122,11 +122,11 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
 
     private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) {
         InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(
-                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                        .getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                        .arbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmelding,
                 testscenario.personopplysninger().søkerAktørIdent(),

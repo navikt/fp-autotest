@@ -139,7 +139,7 @@ public class TilbakekrevingFP extends FptilbakeTestBase {
         var vurderBeregnetInntektsAvvikBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
         vurderBeregnetInntektsAvvikBekreftelse
-                .leggTilInntekt(testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp() * 6, 1)
+                .leggTilInntekt(testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp() * 6, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
@@ -229,7 +229,7 @@ public class TilbakekrevingFP extends FptilbakeTestBase {
         var vurderBeregnetInntektsAvvikBekreftelse =
                 saksbehandler.hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
         vurderBeregnetInntektsAvvikBekreftelse
-                .leggTilInntekt(testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp() * 6, 1)
+                .leggTilInntekt(testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp() * 6, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
@@ -262,7 +262,7 @@ public class TilbakekrevingFP extends FptilbakeTestBase {
         lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer, false);
     }
     private void lagOgSendInntektsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer, Boolean redusert) {
-        Integer belop = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
+        Integer belop = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
         if (redusert){
             belop = BigInteger.valueOf(belop).divide(BigInteger.valueOf(2)).intValue();
         }
@@ -270,8 +270,8 @@ public class TilbakekrevingFP extends FptilbakeTestBase {
                 belop,
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                        .getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                        .arbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmelding,
                 testscenario.personopplysninger().søkerAktørIdent(),

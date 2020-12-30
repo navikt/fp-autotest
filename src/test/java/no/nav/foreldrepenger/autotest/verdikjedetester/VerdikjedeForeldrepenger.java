@@ -131,10 +131,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerIdent(),
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        var månedsinntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummer = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var søkerFnr = testscenario.personopplysninger().søkerIdent();
         var avvikendeMånedsinntekt = månedsinntekt * 1.3;
         var inntektsmeldinger = lagInntektsmelding((int) avvikendeMånedsinntekt, søkerFnr, fpStartdato, orgNummer)
@@ -413,8 +413,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
          */
         var identFar = testscenario.personopplysninger().søkerIdent();
         var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
-        var orgNummerFar = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var orgNummerFar = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var fordelingFar = generiskFordeling(
                 utsettelsesperiode(ARBEID, fpStartdatoFar, fpStartdatoFar.plusWeeks(3).minusDays(1)),
                 graderingsperiodeArbeidstaker(FELLESPERIODE,
@@ -437,13 +437,13 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektFar1 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
-        var arbeidsforholdIdFar1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsforholdId();
+        var månedsinntektFar1 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
+        var arbeidsforholdIdFar1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsforholdId();
         InntektsmeldingBuilder inntektsmeldingFar1 = lagInntektsmelding(månedsinntektFar1, identFar, fpStartdatoFar, orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar1)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar1));
-        var månedsinntektFar2 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(1).getBeløp();
-        var arbeidsforholdIdFar2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1).getArbeidsforholdId();
+        var månedsinntektFar2 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(1).beløp();
+        var arbeidsforholdIdFar2 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1).arbeidsforholdId();
         InntektsmeldingBuilder inntektsmeldingFar2 = lagInntektsmelding(månedsinntektFar2, identFar, fpStartdatoFar, orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar2)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar2));
@@ -543,8 +543,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FELLESPERIODE, fpStartdatoFar, fpStartdatoFar.plusWeeks(4).minusDays(1)),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar.plusWeeks(4), fpStartdatoFar.plusWeeks(19).minusDays(1)));
-        var frilansFom = testscenario.scenariodataDto().getInntektskomponentModell().getFrilansarbeidsforholdperioder()
-                .get(0).getFrilansFom();
+        var frilansFom = testscenario.scenariodataDto().inntektskomponentModell().frilansarbeidsforholdperioder()
+                .get(0).frilansFom();
         var opptjeningFar = OpptjeningErketyper.medFrilansOpptjening(frilansFom, fpStartdatoFar.minusDays(1));
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
                 .medFordeling(fordelingFar)
@@ -594,10 +594,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
         var aktørIdMor = testscenario.personopplysninger().annenpartAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
-        var orgNummerFar1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var stillingsprosent1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsavtaler().get(0).getStillingsprosent();
+        var orgNummerFar1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
+        var stillingsprosent1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsavtaler().get(0).stillingsprosent();
         var fpStartdatoFar = fødselsdato.plusWeeks(6);
         var fordelingFar = generiskFordeling(
                 graderingsperiodeArbeidstaker(FORELDREPENGER,
@@ -618,19 +618,19 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektFar1 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var arbeidsforholdIdFar1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsforholdId();
+        var månedsinntektFar1 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var arbeidsforholdIdFar1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsforholdId();
         InntektsmeldingBuilder inntektsmeldingFar1 = lagInntektsmelding(månedsinntektFar1, identFar, fpStartdatoFar, orgNummerFar1)
                 .medArbeidsforholdId(arbeidsforholdIdFar1)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar1));
-        var månedsinntektFar2 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(1)
-                .getBeløp();
-        var orgNummerFar2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdIdFar2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getArbeidsforholdId();
+        var månedsinntektFar2 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(1)
+                .beløp();
+        var orgNummerFar2 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdIdFar2 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1)
+                .arbeidsforholdId();
         var opphørsDatoForRefusjon = fpStartdatoFar.plusMonths(2).minusDays(1);
         InntektsmeldingBuilder inntektsmeldingFar2 = lagInntektsmelding(månedsinntektFar2, identFar, fpStartdatoFar, orgNummerFar2)
                 .medArbeidsforholdId(arbeidsforholdIdFar2)
@@ -649,10 +649,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         AvklarArbeidsforholdBekreftelse avklarArbeidsforholdBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        var ansettelsesperiodeFom = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(2)
-                .getAnsettelsesperiodeFom();
-        var tomGyldighetsperiode = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getAnsettelsesperiodeFom();
+        var ansettelsesperiodeFom = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(2)
+                .ansettelsesperiodeFom();
+        var tomGyldighetsperiode = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1)
+                .ansettelsesperiodeFom();
         avklarArbeidsforholdBekreftelse.bekreftArbeidsforholdErIkkeAktivt(
                 "991779493",
                 ansettelsesperiodeFom,
@@ -863,10 +863,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektMor = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummerMor = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var månedsinntektMor = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummerMor = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var inntektsmeldingMor = lagInntektsmelding(
                 månedsinntektMor,
                 identMor,
@@ -922,12 +922,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektFar = testscenario.scenariodataAnnenpartDto().getInntektskomponentModell()
-                .getInntektsperioder().get(0).getBeløp();
-        var orgNummerFar = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdIdFar = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold()
-                .get(0).getArbeidsforholdId();
+        var månedsinntektFar = testscenario.scenariodataAnnenpartDto().inntektskomponentModell()
+                .inntektsperioder().get(0).beløp();
+        var orgNummerFar = testscenario.scenariodataAnnenpartDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdIdFar = testscenario.scenariodataAnnenpartDto().arbeidsforholdModell().arbeidsforhold()
+                .get(0).arbeidsforholdId();
         var inntektsmeldingFar = lagInntektsmelding(
                 månedsinntektFar,
                 identFar,
@@ -1190,12 +1190,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektFar = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummerFar = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdIdFar = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsforholdId();
+        var månedsinntektFar = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummerFar = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdIdFar = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsforholdId();
         var inntektsmeldingFar = lagInntektsmelding(
                 månedsinntektFar,
                 identFar,
@@ -1356,12 +1356,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektFar = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummerFar = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdIdFar = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsforholdId();
+        var månedsinntektFar = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummerFar = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdIdFar = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsforholdId();
         var inntektsmeldingFar = lagInntektsmelding(
                 månedsinntektFar,
                 identFar,
@@ -1408,12 +1408,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektMor = testscenario.scenariodataAnnenpartDto().getInntektskomponentModell()
-                .getInntektsperioder().get(0).getBeløp();
-        var orgNummerMor = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdIdMor = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold()
-                .get(0).getArbeidsforholdId();
+        var månedsinntektMor = testscenario.scenariodataAnnenpartDto().inntektskomponentModell()
+                .inntektsperioder().get(0).beløp();
+        var orgNummerMor = testscenario.scenariodataAnnenpartDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdIdMor = testscenario.scenariodataAnnenpartDto().arbeidsforholdModell().arbeidsforhold()
+                .get(0).arbeidsforholdId();
         var inntektsmeldingMor = lagInntektsmelding(
                 månedsinntektMor,
                 identMor,
@@ -1577,10 +1577,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 søkerIdent,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektMor = testscenario.scenariodataDto().getInntektskomponentModell()
-                .getInntektsperioder().get(0).getBeløp();
-        var orgNummerMor = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var månedsinntektMor = testscenario.scenariodataDto().inntektskomponentModell()
+                .inntektsperioder().get(0).beløp();
+        var orgNummerMor = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var inntektsmeldingMor = lagInntektsmelding(
                 månedsinntektMor,
                 søkerIdent,
@@ -1691,10 +1691,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
-        var månedsinntektMor = testscenario.scenariodataAnnenpartDto().getInntektskomponentModell()
-                .getInntektsperioder().get(0).getBeløp();
-        var orgNummerMor = testscenario.scenariodataAnnenpartDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var månedsinntektMor = testscenario.scenariodataAnnenpartDto().inntektskomponentModell()
+                .inntektsperioder().get(0).beløp();
+        var orgNummerMor = testscenario.scenariodataAnnenpartDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var inntektsmeldingMor = lagInntektsmelding(
                 månedsinntektMor,
                 identMor,

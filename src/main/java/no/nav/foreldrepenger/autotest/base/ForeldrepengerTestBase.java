@@ -17,16 +17,16 @@ public class ForeldrepengerTestBase extends FpsakTestBase {
 
         SigrunModell sigrunModell;
         if (annenPart) {
-            sigrunModell = testscenarioDto.scenariodataAnnenpartDto().getSigrunModell();
+            sigrunModell = testscenarioDto.scenariodataAnnenpartDto().sigrunModell();
         } else {
-            sigrunModell = testscenarioDto.scenariodataDto().getSigrunModell();
+            sigrunModell = testscenarioDto.scenariodataDto().sigrunModell();
         }
 
-        double gjennomsnittDeTreSisteÅrene = sigrunModell.getInntektsår().stream()
-                .sorted(Comparator.comparing(Inntektsår::getÅr).reversed())
-                .filter(inntektsår -> Integer.valueOf(inntektsår.getÅr()) <= beregFraÅr)
-                .flatMap(inntektsår -> inntektsår.getOppføring().stream())
-                .mapToDouble(oppføring -> Double.valueOf(oppføring.getVerdi()))
+        double gjennomsnittDeTreSisteÅrene = sigrunModell.inntektsår().stream()
+                .sorted(Comparator.comparing(Inntektsår::år).reversed())
+                .filter(inntektsår -> Integer.parseInt(inntektsår.år()) <= beregFraÅr)
+                .flatMap(inntektsår -> inntektsår.oppføring().stream())
+                .mapToDouble(oppføring -> Double.parseDouble(oppføring.verdi()))
                 .limit(3)
                 .sum();
 
@@ -34,8 +34,8 @@ public class ForeldrepengerTestBase extends FpsakTestBase {
     }
 
     protected List<Integer> sorterteInntektsbeløp(TestscenarioDto testscenario) {
-        return testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioderSplittMånedlig().stream()
-                .map(Inntektsperiode::getBeløp)
+        return testscenario.scenariodataDto().inntektskomponentModell().getInntektsperioderSplittMånedlig().stream()
+                .map(Inntektsperiode::beløp)
                 .distinct()
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
