@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.ws.rs.core.UriBuilder;
-
 import org.apache.http.HttpResponse;
 
 import io.qameta.allure.Step;
+import jakarta.ws.rs.core.UriBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
