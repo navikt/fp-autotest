@@ -74,10 +74,10 @@ public class Revurdering extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -135,10 +135,10 @@ public class Revurdering extends ForeldrepengerTestBase {
         Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -197,10 +197,10 @@ public class Revurdering extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         var inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -272,8 +272,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         String søkerIdent = testscenario.personopplysninger().søkerIdent();
         LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        String orgnr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        String orgnr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -281,10 +281,10 @@ public class Revurdering extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -335,8 +335,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         var testscenario = opprettTestscenario("140");
         var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
         var fnrSøker = testscenario.personopplysninger().søkerIdent();
-        var inntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp();
-        var orgNrSøker = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var inntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
+        var orgNrSøker = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var fordeling = generiskFordeling(
@@ -348,8 +348,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
-        var arbeidsforholdId = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsforholdId();
+        var arbeidsforholdId = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsforholdId();
         var im = lagInntektsmelding(inntekt, fnrSøker, fpStartdato, orgNrSøker)
                 .medArbeidsforholdId(arbeidsforholdId);
         fordel.sendInnInntektsmelding(im, aktørIdSøker, fnrSøker, saksnummer);
@@ -522,7 +522,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         var testscenario = opprettTestscenario("56");
         var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
-        var orgnummer = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr();
+        var orgnummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr();
         var fordeling = generiskFordeling(
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                 graderingsperiodeArbeidstaker(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(12).minusDays(1),

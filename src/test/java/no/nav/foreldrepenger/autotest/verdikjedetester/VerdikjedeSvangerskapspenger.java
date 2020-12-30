@@ -37,8 +37,8 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         var testscenario = opprettTestscenario("501");
         var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var søkerFnr = testscenario.personopplysninger().søkerIdent();
-        var orgNr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var orgNr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var tilrettelegginsprosent = 0;
         LocalDate termindato = LocalDate.now().plusMonths(3);
         var tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
@@ -57,10 +57,10 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 søkerFnr,
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        var månedsinntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummer = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var inntektsmedling = lagSvangerskapspengerInntektsmelding(
                 søkerFnr,
                 månedsinntekt,
@@ -104,8 +104,8 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         var testscenario = opprettTestscenario("502");
         var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var søkerFnr = testscenario.personopplysninger().søkerIdent();
-        var orgNr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var orgNr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var tilrettelegginsprosent = 40;
         LocalDate termindato = LocalDate.now().plusMonths(3);
         var tilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
@@ -125,10 +125,10 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 søkerFnr,
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        var månedsinntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummer = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var inntektsmedling = lagSvangerskapspengerInntektsmelding(
                 søkerFnr,
                 månedsinntekt,
@@ -174,8 +174,8 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         var testscenario = opprettTestscenario("503");
         var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var søkerFnr = testscenario.personopplysninger().søkerIdent();
-        var orgNr1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var orgNr1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         LocalDate termindato = LocalDate.now().plusMonths(3);
         var tilrettelegginsprosent = 0;
         var tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
@@ -194,23 +194,23 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 søkerFnr,
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        var månedsinntekt1 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummer1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdId1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsforholdId();
+        var månedsinntekt1 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummer1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdId1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsforholdId();
         var inntektsmedling1 = lagSvangerskapspengerInntektsmelding(
                 søkerFnr,
                 månedsinntekt1,
                 orgNummer1)
                         .medArbeidsforholdId(arbeidsforholdId1);
-        var månedsinntekt2 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(1)
-                .getBeløp();
-        var orgNummer2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdId2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getArbeidsforholdId();
+        var månedsinntekt2 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(1)
+                .beløp();
+        var orgNummer2 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdId2 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1)
+                .arbeidsforholdId();
         var inntektsmedling2 = lagSvangerskapspengerInntektsmelding(
                 søkerFnr,
                 månedsinntekt2,
@@ -262,8 +262,8 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         var testscenario = opprettTestscenario("511");
         var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var søkerFnr = testscenario.personopplysninger().søkerIdent();
-        var orgNr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var orgNr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
 
         var gjennomsnittFraTreSisteÅreneISigrun =  hentNæringsinntektFraSigrun(testscenario, 2018,false);
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(
@@ -286,12 +286,12 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         var saksnummer1 = fordel.sendInnSøknad(søknad1.build(), søkerAktørId, søkerFnr,
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        var månedsinntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummer = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdId = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsforholdId();
+        var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdId = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsforholdId();
         var inntektsmedling = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt, orgNummer)
                 .medArbeidsforholdId(arbeidsforholdId)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt));
@@ -388,10 +388,10 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         var testscenario = opprettTestscenario("504");
         var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var søkerFnr = testscenario.personopplysninger().søkerIdent();
-        var orgNr1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var orgNr2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getArbeidsgiverOrgnr();
+        var orgNr1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
+        var orgNr2 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1)
+                .arbeidsgiverOrgnr();
         LocalDate termindato = LocalDate.now().plusMonths(3);
         var tilrettelegginsprosent = 0;
         var tilrettelegging1 = TilretteleggingsErketyper.ingenTilrettelegging(
@@ -414,21 +414,21 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 søkerFnr,
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        var månedsinntekt1 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummer1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdId1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsforholdId();
+        var månedsinntekt1 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummer1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdId1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsforholdId();
         var inntektsmedling1 = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt1, orgNummer1)
                 .medArbeidsforholdId(arbeidsforholdId1)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt1));
-        var månedsinntekt2 = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(1)
-                .getBeløp();
-        var orgNummer2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getArbeidsgiverOrgnr();
-        var arbeidsforholdId2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getArbeidsforholdId();
+        var månedsinntekt2 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(1)
+                .beløp();
+        var orgNummer2 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1)
+                .arbeidsgiverOrgnr();
+        var arbeidsforholdId2 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1)
+                .arbeidsforholdId();
         var inntektsmedling2 = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt2, orgNummer2)
                 .medArbeidsforholdId(arbeidsforholdId2)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt2));

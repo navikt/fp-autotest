@@ -104,10 +104,10 @@ public class Termin extends ForeldrepengerTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 søkerIdent,
                 startDatoForeldrepenger,
-                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -136,11 +136,11 @@ public class Termin extends ForeldrepengerTestBase {
         LocalDate termindato = LocalDate.now().plusWeeks(6);
         LocalDate fpstartdato = termindato.minusWeeks(3);
         // 138 - 40%
-        String orgnr1 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        String orgnr1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         // 200 - 60%
-        String orgnr2 = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(1)
-                .getArbeidsgiverOrgnr();
+        String orgnr2 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(1)
+                .arbeidsgiverOrgnr();
         var fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)),
                 uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)),
@@ -204,7 +204,6 @@ public class Termin extends ForeldrepengerTestBase {
     @Description("Mor søker termin uten periode for foreldrepenger før fødsel. Skjæringstidspunkt skal være 3 uker før termindato.")
     public void morSokerTerminUtenFPFFperiode() {
         TestscenarioDto testscenario = opprettTestscenario("55");
-        testscenario.personopplysninger().søkerAktørIdent();
         LocalDate termindato = LocalDate.now().plusWeeks(3);
 
         var fordeling = generiskFordeling(
@@ -219,10 +218,10 @@ public class Termin extends ForeldrepengerTestBase {
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 termindato,
-                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0).getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.personopplysninger().søkerAktørIdent(),

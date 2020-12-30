@@ -37,8 +37,8 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
         var testscenario = opprettTestscenario("501");
         var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var søkerFnr = testscenario.personopplysninger().søkerIdent();
-        var orgNr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var orgNr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var tilrettelegginsprosent = 0;
         LocalDate termindato = LocalDate.now().plusMonths(3);
         var tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
@@ -57,10 +57,10 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
                 søkerFnr,
                 DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
 
-        var månedsinntekt = testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0)
-                .getBeløp();
-        var orgNummer = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+                .beløp();
+        var orgNummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
         var inntektsmedling = lagSvangerskapspengerInntektsmelding(
                 søkerFnr,
                 månedsinntekt,

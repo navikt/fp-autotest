@@ -34,21 +34,21 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
         String søkerIdent = testscenario.personopplysninger().søkerIdent();
         LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        String arbeidsforholdId = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsforholdId();
-        String orgNr = testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                .getArbeidsgiverOrgnr();
+        String arbeidsforholdId = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsforholdId();
+        String orgNr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                .arbeidsgiverOrgnr();
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().getInntektskomponentModell().getInntektsperioder().get(0).getBeløp(),
+                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
-                testscenario.scenariodataDto().getArbeidsforholdModell().getArbeidsforhold().get(0)
-                        .getArbeidsgiverOrgnr());
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+                        .arbeidsgiverOrgnr());
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.personopplysninger().søkerAktørIdent(),
