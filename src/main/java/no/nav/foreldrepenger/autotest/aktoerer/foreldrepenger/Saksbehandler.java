@@ -501,7 +501,11 @@ public class Saksbehandler extends Aktoer {
     @Step("Sjekker om aksjonspunkt av gitt kode er på behandling")
     public boolean harAksjonspunkt(String kode) {
         debugLoggBehandling(valgtBehandling);
-        return hentAksjonspunkt(kode) != null;
+        try {
+            return hentAksjonspunkt(kode) != null;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /*
