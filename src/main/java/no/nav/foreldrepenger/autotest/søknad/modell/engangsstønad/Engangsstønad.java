@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.autotest.søknad.modell.engangsstønad;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -21,7 +20,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.relasjontilbarn.Rela
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @JsonPropertyOrder({ "medlemsskap", "relasjonTilBarn", "annenForelder" })
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Engangsstønad extends Ytelse {
 
     @Valid

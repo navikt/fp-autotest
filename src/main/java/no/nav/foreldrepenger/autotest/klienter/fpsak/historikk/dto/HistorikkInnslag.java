@@ -2,14 +2,12 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public record HistorikkInnslag(int behandlingId, Kode type, Kode aktoer, Kode kjoenn,
                                List<HistorikkInnslagDokumentLinkDto> dokumentLinks,
                                List<HistorikkinnslagDel> historikkinnslagDeler) {

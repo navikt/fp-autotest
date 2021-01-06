@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.søknad.modell.felles.relasjontilbarn;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import lombok.Builder;
@@ -14,7 +13,6 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Omsorgsovertakelse extends RelasjonTilBarn {
 
     private final LocalDate omsorgsovertakelsesdato;

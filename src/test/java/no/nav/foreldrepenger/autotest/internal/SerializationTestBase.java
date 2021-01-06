@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.internal.klienter.fpsak;
+package no.nav.foreldrepenger.autotest.internal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
+import no.nav.foreldrepenger.autotest.util.http.rest.JacksonObjectMapper;
 
 public class SerializationTestBase {
 
@@ -19,7 +19,7 @@ public class SerializationTestBase {
 
     @BeforeAll
     public static void beforeAll() {
-        mapper = JsonKlient.getObjectMapper();
+        mapper = JacksonObjectMapper.getObjectMapper();
     }
 
     protected static void test(Object obj) {
@@ -35,11 +35,11 @@ public class SerializationTestBase {
             if (log) {
                 LOG.info("{}", obj);
             }
-            String serialized = serialize(obj);
+            var serialized = serialize(obj);
             if (log) {
                 LOG.info("Serialized as {}", serialized);
             }
-            Object deserialized = mapper.readValue(serialized, obj.getClass());
+            var deserialized = mapper.readValue(serialized, obj.getClass());
             if (log) {
                 LOG.info("{}", deserialized);
             }

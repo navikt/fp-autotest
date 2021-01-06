@@ -4,13 +4,11 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Saldoer {
 
     private final LocalDate maksDatoUttak;
@@ -46,7 +44,7 @@ public class Saldoer {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Saldoer other = Saldoer.class.cast(obj);
+        Saldoer other = (Saldoer) obj;
         return Objects.equals(this.stonadskontoer, other.stonadskontoer)
                 && Objects.equals(this.maksDatoUttak, other.maksDatoUttak);
 

@@ -5,7 +5,6 @@ import static java.util.Collections.emptyList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,7 +16,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.ÅpenPeriode;
 @Data
 @ToString(exclude = "vedlegg")
 @EqualsAndHashCode(exclude = "vedlegg")
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class AnnenOpptjening {
 
     private final AnnenOpptjeningType type;

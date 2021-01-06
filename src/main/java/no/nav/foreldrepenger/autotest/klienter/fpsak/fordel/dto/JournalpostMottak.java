@@ -3,22 +3,20 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class JournalpostMottak {
     private static int inkrementForEksternReferanse = 0;
 
-    private String saksnummer;
-    private String journalpostId;
+    private final String saksnummer;
+    private final String journalpostId;
     private String forsendelseId;
     private String eksternReferanseId;
-    private String behandlingstemaOffisiellKode;
+    private final String behandlingstemaOffisiellKode;
     private String dokumentTypeIdOffisiellKode;
-    private String forsendelseMottatt;
+    private final String forsendelseMottatt;
     private String payloadXml;
     private Integer payloadLength;
     private String dokumentKategoriOffisiellKode;

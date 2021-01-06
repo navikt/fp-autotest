@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +13,6 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true, exclude = { "morsAktivitetsType", "virksomhetsnummer" })
 @EqualsAndHashCode(callSuper = true, exclude = { "morsAktivitetsType", "virksomhetsnummer" })
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UtsettelsesPeriode extends LukketPeriodeMedVedlegg {
 
     private final UtsettelsesÅrsak årsak;

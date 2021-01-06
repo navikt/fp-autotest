@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,7 +27,6 @@ import lombok.NoArgsConstructor;
         @Type(value = ValgfrittVedlegg.class, name = "valgfritt"),
         @Type(value = PåkrevdVedlegg.class, name = "påkrevd")
 })
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public abstract class Vedlegg {
 
     private static final Logger LOG = LoggerFactory.getLogger(Vedlegg.class);

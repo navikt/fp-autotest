@@ -1,10 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.TaskParametereDto;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class NewProsessTaskDto {
 
     protected String taskType;

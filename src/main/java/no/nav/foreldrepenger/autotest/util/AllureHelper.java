@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
+import no.nav.foreldrepenger.autotest.util.http.rest.JacksonObjectMapper;
 
 public class AllureHelper {
 
@@ -22,7 +22,7 @@ public class AllureHelper {
     @Step("Informasjon om behandling:")
     public static void debugLoggBehandling(Behandling behandling) {
         String json = toJson(behandling);
-        skriverUtJson(json);
+        debugJson(json);
     }
 
     @Step("Informasjon om behandlinger: ")
@@ -69,7 +69,7 @@ public class AllureHelper {
     @Step("{aksjonspunkt}")
     public static void debugAksjonspunktbekreftelse(AksjonspunktBekreftelse aksjonspunkt) {
         String json = toJson(aksjonspunkt);
-        skriverUtJson(json);
+        debugJson(json);
     }
 
     @Step("Informasjon om aksjonspunktbekreftelser:")
@@ -79,18 +79,18 @@ public class AllureHelper {
         }
     }
 
+    @Attachment(value = "Json", type = "application/json")
+    public static String debugJson(String json) {
+        return json;
+    }
+
     @Attachment(value = "XmlDokument", type = "application/xml")
     private static String skriverUtXmlRequest(String xml) {
         return xml;
     }
 
-    @Attachment(value = "Json", type = "application/xml")
-    private static String skriverUtJson(String json) {
-        return json;
-    }
-
     private static ObjectMapper hentObjectMapper() {
-        return JsonKlient.getObjectMapper();
+        return JacksonObjectMapper.getObjectMapper();
     }
 
     private static String toJson(Object object) {

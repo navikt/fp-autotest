@@ -14,7 +14,7 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import no.nav.foreldrepenger.vtp.testmodell.identer.LokalIdentIndeks;
 import no.nav.foreldrepenger.vtp.testmodell.util.VariabelContainer;
 
-public class JsonKlient {
+public class JacksonObjectMapper {
 
     private static final ObjectMapper mapper;
 

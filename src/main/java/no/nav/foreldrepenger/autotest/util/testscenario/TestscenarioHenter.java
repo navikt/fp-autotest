@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
+import no.nav.foreldrepenger.autotest.util.http.rest.JacksonObjectMapper;
 
 public class TestscenarioHenter {
 
@@ -30,7 +30,7 @@ public class TestscenarioHenter {
     private static final String ORGANISASJON_JSON_FIL_NAVN = "organisasjon.json";
     private static final String VARS_JSON_FIL_NAVN = "vars.json";
 
-    private static final ObjectMapper mapper = JsonKlient.getObjectMapper();
+    private static final ObjectMapper mapper = JacksonObjectMapper.getObjectMapper();
     private final Map<String, Object> scenarioObjects = new TreeMap<>();
 
     private static TestscenarioHenter testscenarioHenter;
@@ -93,7 +93,7 @@ public class TestscenarioHenter {
             String navnPåMappe;
             while((navnPåMappe = r.readLine()) != null) {
                 if (navnPåMappe.startsWith(scenarioNummer + "-")) {
-                    return Optional.ofNullable(navnPåMappe);
+                    return Optional.of(navnPåMappe);
                 }
             }
             return Optional.ofNullable(henterNavnPåScenarioMappeFraJARressurs(scenarioNummer));

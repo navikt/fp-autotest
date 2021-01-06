@@ -12,12 +12,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.qameta.allure.Attachment;
+import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 
 public abstract class JsonRest extends Rest {
 
-    private static String ACCEPT_JSON_HEADER = "application/json";
+    private static final String ACCEPT_JSON_HEADER = "application/json";
 
     public JsonRest(HttpSession session) {
         super(session);
@@ -59,7 +59,7 @@ public abstract class JsonRest extends Rest {
     protected <T> T postOgHentJson(String url, Object requestData, Map<String, String> headers, JavaType returnType,
             StatusRange expectedStatusRange) {
         String json = postOgVerifiser(url, requestData, headers, expectedStatusRange);
-        return json.equals("") ? null : fromJson(returnType, json);
+        return json.equals("") ? null : fromJson(json, returnType);
     }
 
     protected String postOgVerifiser(String url, Object requestData, StatusRange expectedStatusRange) {
@@ -93,18 +93,13 @@ public abstract class JsonRest extends Rest {
         return getJson(url, new HashMap<>());
     }
 
-    protected HttpResponse getJson(String url, Map<String, String> headers, Map<String, String> data) {
-        return getJson(url + UrlEncodeQuery(data), headers);
+    protected HttpResponse getJson(String url, Map<String, String> headers, Map<String, String> params) {
+        return getJson(UrlEncodeQuery(url, params), headers);
     }
 
     protected HttpResponse getJson(String url, Map<String, String> headers) {
         headers.put("Accept", ACCEPT_JSON_HEADER);
         return get(url, headers);
-    }
-
-    protected byte[] getByteArray(String url) {
-        HttpResponse response = getJson(url);
-        return HttpSession.readResponseByteArray(response);
     }
 
     protected <T> T getOgHentJson(String url, Class<T> returnType, StatusRange expectedStatusRange) {
@@ -128,10 +123,13 @@ public abstract class JsonRest extends Rest {
         HttpResponse response = getJson(url, headers);
         String json = hentResponseBody(response);
         ValidateResponse(response, expectedStatusRange, url + "\n\n" + json);
-        return json.equals("") ? null : fromJson(returnType, json);
+        return json.equals("") ? null : fromJson(json, returnType);
     }
 
-
+    protected byte[] getOgHentByteArray(String url) {
+        HttpResponse response = getJson(url);
+        return HttpSession.readResponseByteArray(response);
+    }
 
     /*
      * PUT
@@ -148,9 +146,9 @@ public abstract class JsonRest extends Rest {
         return response;
     }
 
-    protected StringEntity hentJsonPostEntity(String json) {
+    private StringEntity hentJsonPostEntity(String json) {
         try {
-            return new StringEntity(logJsonSomAttachment(json), ContentType.APPLICATION_JSON);
+            return new StringEntity(AllureHelper.debugJson(json), ContentType.APPLICATION_JSON);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return null;
@@ -158,12 +156,7 @@ public abstract class JsonRest extends Rest {
     }
 
     protected ObjectMapper hentObjectMapper() {
-        return JsonKlient.getObjectMapper();
-    }
-
-    @Attachment(value = "HttpRequest", type = "application/json")
-    private String logJsonSomAttachment(String json) {
-        return json;
+        return JacksonObjectMapper.getObjectMapper();
     }
 
     private String toJson(Object object) {
@@ -182,7 +175,7 @@ public abstract class JsonRest extends Rest {
         }
     }
 
-    private <T> T fromJson(JavaType returnType, String json) {
+    private <T> T fromJson(String json, JavaType returnType) {
         try {
             return hentObjectMapper().readValue(json, returnType);
         } catch (JsonProcessingException e) {

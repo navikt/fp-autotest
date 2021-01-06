@@ -7,14 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.http.HeaderElement;
-import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -36,14 +33,12 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractHttpSession implements HttpSession {
+    private final Logger log = LoggerFactory.getLogger("autotest.log");
 
     private final CloseableHttpClient redirectClient;
     private final CloseableHttpClient nonredirectClient;
-    protected CloseableHttpClient client;
-    protected HttpClientContext context;
-    protected CookieStore cookies;
-
-    private final Logger log = LoggerFactory.getLogger("autotest.log");
+    private CloseableHttpClient client;
+    private final HttpClientContext context;
 
     public AbstractHttpSession() {
         this.context = HttpClientContext.create();
@@ -52,6 +47,8 @@ public abstract class AbstractHttpSession implements HttpSession {
         this.nonredirectClient = opprettKlient(false);
         this.client = this.redirectClient;
     }
+
+    protected abstract CloseableHttpClient opprettKlient(boolean doRedirect);
 
     @Override
     public HttpResponse execute(HttpUriRequest request, Map<String, String> headers) {
@@ -70,20 +67,18 @@ public abstract class AbstractHttpSession implements HttpSession {
 
     @Override
     public HttpResponse get(String url, Map<String, String> headers) {
-        HttpGet request = new HttpGet(url);
-
-        HttpResponse response = execute(request, headers);
-
+        var request = new HttpGet(url);
+        var response = execute(request, headers);
         log.info("GET[{}]: [{}]", url, response.getStatusLine().getStatusCode());
         return response;
     }
 
     @Override
     public HttpResponse post(String url, HttpEntity entity, Map<String, String> headers) {
-        HttpPost request = new HttpPost(url);
+        var request = new HttpPost(url);
         request.setEntity(entity);
 
-        HttpResponse response = execute(request, headers);
+        var response = execute(request, headers);
         try {
             log.info("POST[{}]: [{}] med content\n\t[{}]\n\tHeaders: {}",
                     url,
@@ -99,27 +94,26 @@ public abstract class AbstractHttpSession implements HttpSession {
 
     @Override
     public HttpResponse put(String url, HttpEntity entity, Map<String, String> headers) {
-        HttpPut request = new HttpPut(url);
+        var request = new HttpPut(url);
         request.setEntity(entity);
         return execute(request, headers);
     }
 
     @Override
     public HttpResponse delete(String url, Map<String, String> headers) {
-        HttpDelete request = new HttpDelete(url);
+        var request = new HttpDelete(url);
         return execute(request, headers);
     }
+
 
     @Override
     public void setRedirect(boolean doRedirect) {
         client = doRedirect ? redirectClient : nonredirectClient;
     }
 
-    protected abstract CloseableHttpClient opprettKlient(boolean doRedirect);
-
     @Override
     public void setUserCredentials(String username, String password) {
-        CredentialsProvider provider = new BasicCredentialsProvider();
+        var provider = new BasicCredentialsProvider();
         provider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
         context.setCredentialsProvider(provider);
     }
@@ -136,7 +130,7 @@ public abstract class AbstractHttpSession implements HttpSession {
 
     @Override
     public void leggTilCookie(String name, String value, String domain, String path) {
-        BasicClientCookie cookie = new BasicClientCookie(name, value);
+        var cookie = new BasicClientCookie(name, value);
         cookie.setDomain(domain);
         cookie.setPath(path);
         leggTilCookie(cookie);
@@ -153,19 +147,18 @@ public abstract class AbstractHttpSession implements HttpSession {
     }
 
     protected static ConnectionKeepAliveStrategy createKeepAliveStrategy(int seconds) {
-        ConnectionKeepAliveStrategy myStrategy = (response, context) -> {
-            HeaderElementIterator it = new BasicHeaderElementIterator(response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+        return (response, context1) -> {
+            var it = new BasicHeaderElementIterator(response.headerIterator(HTTP.CONN_KEEP_ALIVE));
             while (it.hasNext()) {
-                HeaderElement he = it.nextElement();
-                String param = he.getName();
-                String value = he.getValue();
+                var he = it.nextElement();
+                var param = he.getName();
+                var value = he.getValue();
                 if ((value != null) && param.equalsIgnoreCase("timeout")) {
                     return Long.parseLong(value) * 1000;
                 }
             }
             return seconds * 1000;
         };
-        return myStrategy;
     }
 
 }

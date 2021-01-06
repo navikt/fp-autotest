@@ -2,10 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
 @BekreftelseKode(kode = "5095")
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class VurderFaresignalerDto extends AksjonspunktBekreftelse{
 
     private Boolean harInnvirketBehandlingen;

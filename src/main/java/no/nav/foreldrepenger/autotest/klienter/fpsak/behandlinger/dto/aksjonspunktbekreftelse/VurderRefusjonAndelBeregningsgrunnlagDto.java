@@ -2,16 +2,14 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class VurderRefusjonAndelBeregningsgrunnlagDto {
 
-    private String arbeidsgiverOrgnr;
+    private final String arbeidsgiverOrgnr;
     private String arbeidsgiverAktoerId;
-    private String internArbeidsforholdRef;
+    private final String internArbeidsforholdRef;
     private LocalDate fastsattRefusjonFom;
 
     public VurderRefusjonAndelBeregningsgrunnlagDto(String arbeidsgiverOrgnr,

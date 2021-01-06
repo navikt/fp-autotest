@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import lombok.Data;
@@ -18,7 +17,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.svangerskapspenger.tilrette
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class HelTilrettelegging extends Tilrettelegging {
 
     @NotNull

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.neovisionaries.i18n.CountryCode;
 
 import lombok.Builder;
@@ -17,7 +16,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.ÅpenPeriode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UtenlandskOrganisasjon extends EgenNæring {
 
 

@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -35,7 +34,6 @@ import lombok.ToString;
         @Type(value = OppholdsPeriode.class, name = "opphold"),
         @Type(value = UtsettelsesPeriode.class, name = "utsettelse")
 })
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public abstract class LukketPeriodeMedVedlegg implements Comparable<LukketPeriodeMedVedlegg> {
 
     @NotNull
