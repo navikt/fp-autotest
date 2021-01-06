@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.autotest.util.http.HttpSession;
 public abstract class JsonRest extends Rest {
 
     private static final String ACCEPT_JSON_HEADER = "application/json";
+    private static final ObjectMapper mapper = JacksonObjectMapper.getObjectMapper();
 
     public JsonRest(HttpSession session) {
         super(session);
@@ -156,12 +157,12 @@ public abstract class JsonRest extends Rest {
     }
 
     protected ObjectMapper hentObjectMapper() {
-        return JacksonObjectMapper.getObjectMapper();
+        return mapper;
     }
 
     private String toJson(Object object) {
         try {
-            return hentObjectMapper().writeValueAsString(object);
+            return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -169,7 +170,7 @@ public abstract class JsonRest extends Rest {
 
     public <T> T fromJson(String json, Class<T> returnType) {
         try {
-            return hentObjectMapper().readValue(json, returnType);
+            return mapper.readValue(json, returnType);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -177,7 +178,7 @@ public abstract class JsonRest extends Rest {
 
     private <T> T fromJson(String json, JavaType returnType) {
         try {
-            return hentObjectMapper().readValue(json, returnType);
+            return mapper.readValue(json, returnType);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

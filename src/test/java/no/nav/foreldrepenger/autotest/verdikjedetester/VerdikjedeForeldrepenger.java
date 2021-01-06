@@ -97,23 +97,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var termindato = LocalDate.now().plusWeeks(1);
         var fpStartdato = termindato.minusWeeks(3);
 
-        // BYGGER OG SENDER SØKNAD TIL MOTTAK!
-//        var fordeling = FordelingErketyper.generiskFordeling(
-//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
-//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
-//                UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, termindato.plusWeeks(15),
-//                        termindato.plusWeeks(20).minusDays(1)),
-//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
-//
-//        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-//                .medFordeling(fordeling)
-//                .medRettigheter(no.nav.foreldrepenger.autotest.søknad.erketyper.RettigheterErketyper.harAleneOmsorgOgEnerett())
-//                .medMottatdato(termindato.minusWeeks(5));
-//
-//        var kvittering = selvbetjening.sendInnSøknad(søkerAktørId, søknad.build());
-//        verifiser(kvittering.erVellykket(), "Innsending vellykket!");
-//        var saksnummer = Long.valueOf(kvittering.getSaksNr());
-
         var fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
                 uttaksperiode(FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
@@ -144,6 +127,38 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerAktørIdent(),
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
+
+
+//        // BYGGER OG SENDER SØKNAD TIL MOTTAK!
+//        var fordeling = FordelingErketyper.generiskFordeling(
+//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
+//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
+//                UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, termindato.plusWeeks(15),
+//                        termindato.plusWeeks(20).minusDays(1)),
+//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
+//
+//        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
+//                .medFordeling(fordeling)
+//                .medRettigheter(no.nav.foreldrepenger.autotest.søknad.erketyper.RettigheterErketyper.harAleneOmsorgOgEnerett())
+//                .medMottatdato(termindato.minusWeeks(5));
+//
+//        var kvittering = selvbetjening.sendInnSøknad(søkerAktørId, søknad.build());
+//        verifiser(kvittering.erVellykket(), "Innsending feilet!");
+//        var saksnummer = Long.valueOf(kvittering.getSaksNr());
+//
+//        // BYGGER OG SENDER IM TIL JOURNALFØRING OG TRIGGER JOURNALFØRINGHENDEELSE!
+//        var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
+//                .beløp();
+//        var orgNummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+//                .arbeidsgiverOrgnr();
+//        var søkerFnr = testscenario.personopplysninger().søkerIdent();
+//        var avvikendeMånedsinntekt = månedsinntekt * 1.3;
+//        var inntektsmeldinger = lagInntektsmelding((int) avvikendeMånedsinntekt, søkerFnr, fpStartdato, orgNummer)
+//                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
+//
+//        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldinger,
+//                testscenario.personopplysninger().søkerIdent(),
+//                saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

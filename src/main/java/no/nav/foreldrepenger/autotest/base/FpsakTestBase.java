@@ -6,6 +6,7 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger.Saksbehandler;
 import no.nav.foreldrepenger.autotest.aktoerer.fptilbake.TilbakekrevingSaksbehandler;
+import no.nav.foreldrepenger.autotest.aktoerer.inntektsmelding.Inntektsmelding;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
@@ -21,6 +22,7 @@ public class FpsakTestBase extends TestScenarioTestBase {
     protected Saksbehandler beslutter;
     protected Saksbehandler klagebehandler;
     protected TilbakekrevingSaksbehandler tbksaksbehandler;
+    protected Inntektsmelding inntektsmelding;
 
     @BeforeEach
     public void setUp() {
@@ -30,6 +32,7 @@ public class FpsakTestBase extends TestScenarioTestBase {
         beslutter = new Saksbehandler();
         klagebehandler = new Saksbehandler();
         tbksaksbehandler = new TilbakekrevingSaksbehandler();
+        inntektsmelding = new Inntektsmelding();
     }
 
 

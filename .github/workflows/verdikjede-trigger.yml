@@ -52,7 +52,7 @@ jobs:
           echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           cd ../pipeline
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          docker-compose up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent
+          docker-compose up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpsoknad-mottak fpinfo fpfordel
 
       - name: Venter på stacken og sjekker status
         shell: bash
@@ -65,7 +65,7 @@ jobs:
           echo Oppe!
           echo
           echo "Tester om fpabakus er oppe"
-          timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
+          timeout 180 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
           echo "Tester om fpsak er oppe"
@@ -97,6 +97,13 @@ jobs:
           echo Oppe!
           echo "STACK_STARTED=true" >> $GITHUB_ENV
 
+      - name: Sjekker storage
+        if: always()
+        shell: bash
+        run: |
+          docker stats --no-stream
+          free -m
+
       - name: Utfører verdikjedetestene
         if: always() && env.STACK_STARTED == 'true'
         id: tester
@@ -108,6 +115,13 @@ jobs:
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - name: Sjekker storage
+        if: always()
+        shell: bash
+        run: |
+          docker stats --no-stream
+          free -m
 
       - name: Henter testresultat og setter outcome
         if: |
