@@ -197,7 +197,6 @@ services:
       - "DKIF_BASE_URL=http://vtp:8060/rest/api"
       - "FPINFO_BASE_URL=http://fpinfo:8080"
       - "OPPSLAG_URL=http://vtp:8060/rest/dummy"
-      - "FPSOKNAD_MOTTAK=http://vtp:8060/rest/dummy"
       - "FPFORDEL_BASE_URL=http://fpfordel:8080"
       - "FPFORDEL_MAX=20"
     env_file:
