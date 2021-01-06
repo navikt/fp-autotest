@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.neovisionaries.i18n.CountryCode;
@@ -22,7 +21,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.ÅpenPeriode;
 @Data
 @ToString(exclude = "vedlegg")
 @EqualsAndHashCode(exclude = "vedlegg")
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UtenlandskArbeidsforhold {
 
     private final CountryCode land;

@@ -2,13 +2,11 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Stonadskontoer {
     private final Stønadskonto stonadskontoType;
     private final int maxDager;
@@ -48,7 +46,7 @@ public class Stonadskontoer {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Stonadskontoer other = Stonadskontoer.class.cast(obj);
+        Stonadskontoer other = (Stonadskontoer) obj;
         return Objects.equals(this.saldo, other.saldo)
                 && Objects.equals(this.stonadskontoType, other.stonadskontoType)
                 && Objects.equals(this.maxDager, other.maxDager);

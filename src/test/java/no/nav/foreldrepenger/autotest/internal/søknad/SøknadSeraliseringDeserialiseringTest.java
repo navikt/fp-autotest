@@ -20,7 +20,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.autotest.internal.klienter.fpsak.SerializationTestBase;
+import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.MedlemsskapErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper;

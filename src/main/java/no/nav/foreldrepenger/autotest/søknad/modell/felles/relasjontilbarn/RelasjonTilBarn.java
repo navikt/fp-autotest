@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -25,7 +24,6 @@ import lombok.NoArgsConstructor;
         @Type(value = FremtidigFødsel.class, name = "termin"),
         @Type(value = Omsorgsovertakelse.class, name = "omsorgsovertakelse")
 })
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public abstract class RelasjonTilBarn {
 
     public abstract LocalDate relasjonsDato();

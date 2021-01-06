@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,7 +15,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.Fo
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Foreldrepenger extends Ytelse {
 
     private AnnenForelder annenForelder;

@@ -16,8 +16,7 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
 
 public class SecureHttpsSession extends AbstractHttpSession {
-    private static final ThreadLocal<SecureHttpsSession> sessions = ThreadLocal
-            .withInitial(() -> new SecureHttpsSession());
+    private static final ThreadLocal<SecureHttpsSession> sessions = ThreadLocal.withInitial(SecureHttpsSession::new);
 
     private static final CloseableHttpClient redirectClient = getKlient(true);
     private static final CloseableHttpClient nonRedirectClient = getKlient(false);
@@ -62,9 +61,9 @@ public class SecureHttpsSession extends AbstractHttpSession {
         builder.setMaxConnTotal(200);
 
         if (doRedirect) {
-            builder = builder.setRedirectStrategy(new LaxRedirectStrategy());
+            builder.setRedirectStrategy(new LaxRedirectStrategy());
         } else {
-            builder = builder.disableRedirectHandling();
+            builder.disableRedirectHandling();
         }
 
         builder.setKeepAliveStrategy(createKeepAliveStrategy(30));

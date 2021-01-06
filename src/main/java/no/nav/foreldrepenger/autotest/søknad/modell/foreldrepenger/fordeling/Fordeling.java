@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,7 +17,6 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Fordeling {
 
     private final boolean erAnnenForelderInformert;

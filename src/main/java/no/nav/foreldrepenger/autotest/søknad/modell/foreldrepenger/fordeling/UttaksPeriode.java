@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -30,7 +29,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.ProsentAndel;
 @JsonSubTypes({
         @Type(value = GradertUttaksPeriode.class, name = "gradert")
 })
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UttaksPeriode extends LukketPeriodeMedVedlegg {
     private StønadskontoType uttaksperiodeType;
     private boolean ønskerSamtidigUttak;

@@ -14,7 +14,7 @@ public class SafKlient extends VTPKlient {
 
     public byte[] hentDokumenter(String journalpostid, String dokumentId, String variantFormat) {
         String url = hentRestRotUrl() + String.format(HENT_DOKUMENT, journalpostid, dokumentId, variantFormat);
-        return getByteArray(url);
+        return getOgHentByteArray(url);
     }
 
 }

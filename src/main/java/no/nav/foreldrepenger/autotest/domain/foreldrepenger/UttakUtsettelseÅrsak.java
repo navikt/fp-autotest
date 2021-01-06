@@ -1,10 +1,7 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Arrays;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Brukes i uttaksresultat
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public enum UttakUtsettelseÅrsak implements Serializable {
+public enum UttakUtsettelseÅrsak {
 
     ARBEID("ARBEID"),
     FERIE("FERIE"),
@@ -26,21 +22,7 @@ public enum UttakUtsettelseÅrsak implements Serializable {
     UDEFINERT("-"),
     ;
 
-    private static final Map<String, UttakUtsettelseÅrsak> KODER = new LinkedHashMap<>();
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
-    }
-
-    private String kode;
-
-    UttakUtsettelseÅrsak() {
-
-    }
+    private final String kode;
 
     UttakUtsettelseÅrsak(String kode) {
         this.kode = kode;
@@ -48,23 +30,13 @@ public enum UttakUtsettelseÅrsak implements Serializable {
 
     @JsonCreator
     public static UttakUtsettelseÅrsak fraKode(@JsonProperty("kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent Utsettelseårsak: " + kode);
-        }
-        return ad;
+        return Arrays.stream(UttakUtsettelseÅrsak.values())
+                .filter(value -> value.getKode().equalsIgnoreCase(kode))
+                .findFirst()
+                .orElse(UttakUtsettelseÅrsak.UDEFINERT);
     }
 
-    @JsonProperty
     public String getKode() {
         return kode;
-    }
-
-    @Override
-    public String toString() {
-        return getKode();
     }
 }

@@ -44,10 +44,6 @@ public abstract class Rest {
         return HttpSession.readResponse(response);
     }
 
-    protected String hentRawResponse(HttpResponse response) {
-        return HttpSession.readRawResponse(response);
-    }
-
     protected void ValidateResponse(HttpResponse response, StatusRange expectedRange) {
         ValidateResponse(response, expectedRange, "");
     }
@@ -67,15 +63,15 @@ public abstract class Rest {
     /*
      * URL ENCODING
      */
-    public String UrlCompose(String url, Map<String, String> data) {
+    public String UrlEncodeQuery(String url, Map<String, String> data) {
         return url + UrlEncodeQuery(data);
     }
 
-    public String UrlEncodeQuery(Map<String, String> data) {
+    private String UrlEncodeQuery(Map<String, String> data) {
         return UrlEncodeQuery(data, "?");
     }
 
-    public String UrlEncodeQuery(Map<String, String> data, String prefix) {
+    protected String UrlEncodeQuery(Map<String, String> data, String prefix) {
         StringBuilder query = new StringBuilder(prefix);
         for (Map.Entry<String, String> item : data.entrySet()) {
             if ((item.getValue() != null) && !item.getKey().isEmpty() && !item.getValue().isEmpty()) {
@@ -87,7 +83,7 @@ public abstract class Rest {
         return query.substring(0, query.length() - 1);
     }
 
-    public String UrlEncodeItem(String item) {
+    private String UrlEncodeItem(String item) {
         try {
             return URLEncoder.encode(item, StandardCharsets.UTF_8);
         } catch (Exception e) {

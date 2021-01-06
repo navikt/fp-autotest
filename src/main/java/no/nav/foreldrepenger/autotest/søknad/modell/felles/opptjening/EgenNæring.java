@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -29,7 +28,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.ÅpenPeriode;
         @Type(value = NorskOrganisasjon.class, name = "norsk"),
         @Type(value = UtenlandskOrganisasjon.class, name = "utenlandsk")
 })
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @ToString(exclude = "vedlegg")
 @EqualsAndHashCode(exclude = "vedlegg")
 public abstract class EgenNæring {

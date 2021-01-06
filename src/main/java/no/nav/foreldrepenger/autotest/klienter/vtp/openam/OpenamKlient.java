@@ -26,7 +26,8 @@ public class OpenamKlient extends VTPKlient {
 
     String fetchToken(String rolle) {
         String url = hentRotUrl() + "/rest/isso/oauth2/access_token";
-        Map<String, String> formData = Map.of("code", rolle);
+        Map<String, String> formData = Map.of("code", rolle,
+                "test","test");
         AccessTokenResponseDTO result = postFormOgHentJson(url, formData, AccessTokenResponseDTO.class);
         return result.idToken;
     }

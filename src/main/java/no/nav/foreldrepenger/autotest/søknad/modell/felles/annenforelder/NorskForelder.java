@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,7 +14,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 @Data
 @ToString(callSuper = true, exclude = "navn")
 @EqualsAndHashCode(callSuper = true, exclude = { "navn" })
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public final class NorskForelder extends AnnenForelder {
 
     private final Fødselsnummer fnr;

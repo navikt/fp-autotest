@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,7 +20,6 @@ import lombok.ToString;
 @Builder
 @ToString(exclude = "arbeidSiste12")
 @EqualsAndHashCode(exclude = "arbeidSiste12")
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.ANY, setterVisibility = JsonAutoDetect.Visibility.ANY, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class TidligereOppholdsInformasjon {
 
     private final ArbeidsInformasjon arbeidSiste12;

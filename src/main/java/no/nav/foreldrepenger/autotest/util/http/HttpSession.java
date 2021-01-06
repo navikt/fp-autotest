@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.autotest.util.http;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -12,30 +10,25 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.util.EntityUtils;
 
-import no.nav.foreldrepenger.autotest.util.http.rest.JsonKlient;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import no.nav.foreldrepenger.autotest.util.http.rest.JacksonObjectMapper;
 
 public interface HttpSession {
+
+    ObjectMapper mapper = JacksonObjectMapper.getObjectMapper();
+
     static Map<String, String> createEmptyHeaders() {
         return new HashMap<>();
     }
 
-    static String readRawResponse(HttpResponse response) {
-        try {
-            return EntityUtils.toString(response.getEntity());
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-
-    }
-
     static String readResponse(HttpResponse response) {
         try {
-            HttpEntity entity = response.getEntity();
+            var entity = response.getEntity();
             if (entity == null) {
                 return "";
             }
-            final var mapper = JsonKlient.getObjectMapper();
-            final var content = EntityUtils.toString(entity, "UTF-8");
+            var content = EntityUtils.toString(entity, "UTF-8");
             if (content.isEmpty()) {
                 return "";
             }
@@ -47,7 +40,7 @@ public interface HttpSession {
 
     static byte[] readResponseByteArray(HttpResponse response) {
         try {
-            HttpEntity entity = response.getEntity();
+            var entity = response.getEntity();
             if (entity == null) {
                 return null;
             }
@@ -56,6 +49,22 @@ public interface HttpSession {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    default void applyHeaders(HttpUriRequest request, Map<String, String> headers) {
+        for (String headerKey : headers.keySet()) {
+            request.addHeader(headerKey, headers.get(headerKey));
+        }
+
+        // Hack for missing cookies in header (Client refuses to set cookies from one domain to another)
+        var cookies = new StringBuilder();
+        var cookieStore = hentCookieStore();
+        var cookiesList = cookieStore.getCookies();
+
+        for (Cookie cookie : cookiesList) {
+            cookies.append(String.format("%s=%s; ", cookie.getName(), cookie.getValue()));
+        }
+        request.addHeader("Cookie", cookies.toString());
     }
 
 
@@ -72,23 +81,6 @@ public interface HttpSession {
     HttpResponse delete(String url, Map<String, String> headers);
 
     void setRedirect(boolean doRedirect);
-
-    default void applyHeaders(HttpUriRequest request, Map<String, String> headers) {
-        for (String headerKey : headers.keySet()) {
-            request.addHeader(headerKey, headers.get(headerKey));
-        }
-
-        // Hack for missing cookies in header (Client refuses to set cookies from one
-        // domain to another)
-        StringBuilder cookies = new StringBuilder();
-        CookieStore cookieStore = hentCookieStore();
-        List<Cookie> cookiesList = cookieStore.getCookies();
-
-        for (Cookie cookie : cookiesList) {
-            cookies.append(String.format("%s=%s; ", cookie.getName(), cookie.getValue()));
-        }
-        request.addHeader("Cookie", cookies.toString());
-    }
 
     void setUserCredentials(String username, String password);
 
