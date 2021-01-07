@@ -1,30 +1,30 @@
 # Simple Proxy to backend
 location  /fpsak/api/ {
     access_by_lua_file oidc_protected.lua;
-    proxy_pass "http://fpsak:8080/fpsak/api/";
+    proxy_pass "${APP_URL_FPSAK}/fpsak/api/";
 }
 
 # Simple Proxy to backend
 location  /fpoppdrag/api/ {
     access_by_lua_file oidc_protected.lua;
-    proxy_pass "http://fpoppdrag:8080/fpoppdrag/api/";
+    proxy_pass "${APP_URL_FPOPPDRAG}/fpoppdrag/api/";
 }
 
 # Simple Proxy to backend
 location  /fptilbake/api/ {
     access_by_lua_file oidc_protected.lua;
-    proxy_pass "http://fptilbake:8080/fptilbake/api/";
+    proxy_pass "${APP_URL_FPTILBAKE}/fptilbake/api/";
 }
 
 # Simple Proxy to backend
 location  /fpformidling/api/ {
     access_by_lua_file oidc_protected.lua;
-    proxy_pass "http://fpformidling:8080/fpformidling/api/";
+    proxy_pass "${APP_URL_FPFORMIDLING}/fpformidling/api/";
 }
 
 # Simple Proxy to backend middlertidig fix frem til bedre løsning kommer på plass.
 location  /fpsak/oppgaveredirect {
     access_by_lua_file oidc_protected.lua;
-    proxy_pass          "http://fpsak:8080/fpsak/oppgaveredirect";
+    proxy_pass          "${APP_URL_FPSAK}/fpsak/oppgaveredirect";
     proxy_redirect      "~*/fpsak/#/(.+)$" "$app_baseurl/fpsak/$1";
 }
