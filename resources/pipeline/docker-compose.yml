@@ -38,7 +38,7 @@ services:
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
-      - "CREATE_TOPICS=privat-foreldrepenger-fprisk-lokal,privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp,privat-foreldrepenger-historikk-fordeling,aapen-dok-journalfoering-v1-q1"
+      - "CREATE_TOPICS=privat-foreldrepenger-fprisk-lokal,privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp,privat-foreldrepenger-historikk-fordeling,aapen-dok-journalfoering-v1-q1,privat-permittering-lonnskomp-vedtak-vtp"
       - "ISSO_OAUTH2_ISSUER=https://vtp.openam/issuer"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
@@ -64,6 +64,7 @@ services:
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
       - "LOADBALANCER_URL=http://localhost:8015"
       - "LOADBALANCER_FQDN=localhost:8015"
+      - "KAFKA_LONNSKOMPENSASJON_TOPIC=privat-permittering-lonnskomp-vedtak-vtp"
     env_file:
       - "fpabakus_datasource.list"
       - "common.env"
