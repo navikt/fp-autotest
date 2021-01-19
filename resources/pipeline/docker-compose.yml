@@ -150,7 +150,9 @@ services:
       - "FPTILBAKE_BASE_URL=http://fptilbake:8080"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "SAF_BASE_URL=https://vtp:8063/rest/api/saf"
+      - "PDL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
       - "FPFORDEL_IT_FP_URL=http://vtp:8060/rest/dummy/saker"
+      - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.mottak.hendelse.test.VtpKafkaAvroSerde"
     env_file:
       - "fpfordel_datasource.list"
       - "common.env"
@@ -197,8 +199,7 @@ services:
       - "PDL_GRAPHQL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
       - "DKIF_BASE_URL=http://vtp:8060/rest/api"
       - "FPINFO_BASE_URL=http://fpinfo:8080"
-      - "OPPSLAG_URL=http://vtp:8060/rest/dummy"
-      - "FPSOKNAD_MOTTAK=http://vtp:8060/rest/dummy"
+      - "OPPSLAG_URL=http://vtp:8060/rest/dummy/oppslag"
       - "FPFORDEL_BASE_URL=http://fpfordel:8080"
       - "FPFORDEL_MAX=20"
     env_file:

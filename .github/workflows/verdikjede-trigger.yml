@@ -65,7 +65,7 @@ jobs:
           echo Oppe!
           echo
           echo "Tester om fpabakus er oppe"
-          timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
+          timeout 180 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
           echo "Tester om fpsak er oppe"
@@ -97,17 +97,29 @@ jobs:
           echo Oppe!
           echo "STACK_STARTED=true" >> $GITHUB_ENV
 
+      - name: Sjekker minneforbruk
+        if: always()
+        shell: bash
+        run: |
+          docker stats --no-stream
+          free -m
+
       - name: Utfører verdikjedetestene
         if: always() && env.STACK_STARTED == 'true'
         id: tester
         shell: bash
         run: |
           mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede > >(tee test-result-log.txt)
-          docker stats --no-stream
-          free -m
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - name: Sjekker minneforbruk
+        if: always()
+        shell: bash
+        run: |
+          docker stats --no-stream
+          free -m
 
       - name: Henter testresultat og setter outcome
         if: |
@@ -211,8 +223,8 @@ jobs:
           name: logs
           path: container-logs
 
-      - name: Sjekker storage
-        if: always()
+      - name: Sjekker minneforbruk og storage
+        if: failure()
         shell: bash
         run: |
           docker stats --no-stream

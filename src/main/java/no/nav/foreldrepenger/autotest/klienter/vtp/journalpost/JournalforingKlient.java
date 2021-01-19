@@ -10,19 +10,23 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
 public class JournalforingKlient extends VTPKlient {
 
     private static final String JOURNALFØRING_URL = "/journalforing";
-    private static final String JOURNALFØR_FORELDREPENGER_SØKNAD_URL_FORMAT = JOURNALFØRING_URL
-            + "/foreldrepengesoknadxml/fnr/%s/dokumenttypeid/%s";
-    private static final String KNYTT_SAK_TIL_JOURNALPOST = JOURNALFØRING_URL
-            + "/knyttsaktiljournalpost/journalpostid/%s/saksnummer/%s";
+    private static final String JOURNALFØR_JOURNALPOST = JOURNALFØRING_URL + "/journalfor";
+    private static final String JOURNALFØR_FORELDREPENGER_SØKNAD_URL_FORMAT = JOURNALFØRING_URL + "/journalfor/fnr/%s/dokumenttypeid/%s";
+    private static final String KNYTT_SAK_TIL_JOURNALPOST = JOURNALFØRING_URL + "/knyttsaktiljournalpost/journalpostid/%s/saksnummer/%s";
 
     public JournalforingKlient(HttpSession session) {
         super(session);
     }
 
     @Step("Journalfører sak i VTP")
+    public JournalpostIdDto journalførR(JournalpostModell journalpostModell) {
+        String url = hentRestRotUrl() + JOURNALFØR_JOURNALPOST;
+        return postOgHentJson(url, journalpostModell, JournalpostIdDto.class, StatusRange.STATUS_SUCCESS);
+    }
+
+    @Step("Journalfører sak i VTP")
     public JournalpostIdDto journalfør(JournalpostModell journalpostModell) {
-        String url = hentRestRotUrl()
-                + String.format(JOURNALFØR_FORELDREPENGER_SØKNAD_URL_FORMAT, journalpostModell.getAvsenderFnr(),
+        String url = hentRestRotUrl() + String.format(JOURNALFØR_FORELDREPENGER_SØKNAD_URL_FORMAT, journalpostModell.getAvsenderFnr(),
                         journalpostModell.getDokumentModellList().get(0).getDokumentType().getKode());
         return postOgHentJson(url, journalpostModell.getDokumentModellList().get(0).getInnhold(),
                 JournalpostIdDto.class, StatusRange.STATUS_SUCCESS);
