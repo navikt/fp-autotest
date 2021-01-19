@@ -12,3 +12,9 @@ tester:
 
 pom:
   - pom.xml
+
+docs:
+  - docs/*
+  - README.md
+  - LICENSE.md
+  - CODEOWNERS

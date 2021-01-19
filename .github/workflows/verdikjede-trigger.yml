@@ -34,7 +34,7 @@ jobs:
           echo "PREVIOUS_CACHE_KEY=$(expr $(date +%V) - 1)" >> $GITHUB_ENV
       - uses: actions/cache@v2
         with:
-          path: ../.m2
+          path: ~/.github/.m2
           key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
           restore-keys: |
             ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
