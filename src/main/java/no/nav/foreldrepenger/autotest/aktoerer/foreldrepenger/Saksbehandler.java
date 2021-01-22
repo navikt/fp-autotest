@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingKlient;
+import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingResponse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
@@ -42,14 +42,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.BehandlingMedUttaksperioderDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.KodeverkKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.KodeverkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kodeverk;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
@@ -66,22 +66,22 @@ public class Saksbehandler extends Aktoer {
     private Lazy<List<HistorikkInnslag>> historikkInnslag;
     private Lazy<Behandling> annenPartBehandling;
 
-    private final FagsakKlient fagsakKlient;
-    private final BehandlingerKlient behandlingerKlient;
-    private final KodeverkKlient kodeverkKlient;
-    private final HistorikkKlient historikkKlient;
-    private final ProsesstaskKlient prosesstaskKlient;
-    private final RisikovurderingKlient risikovurderingKlient;
+    private final FagsakJerseyKlient fagsakKlient;
+    private final BehandlingerJerseyKlient behandlingerKlient;
+    private final KodeverkJerseyKlient kodeverkKlient;
+    private final HistorikkJerseyKlient historikkKlient;
+    private final ProsesstaskJerseyKlient prosesstaskKlient;
+    private final RisikovurderingJerseyKlient risikovurderingKlient;
 
 
     public Saksbehandler() {
         super();
-        fagsakKlient = new FagsakKlient(session);
-        behandlingerKlient = new BehandlingerKlient(session);
-        kodeverkKlient = new KodeverkKlient(session);
-        historikkKlient = new HistorikkKlient(session);
-        prosesstaskKlient = new ProsesstaskKlient(session);
-        risikovurderingKlient = new RisikovurderingKlient(session);
+        fagsakKlient = new FagsakJerseyKlient();
+        behandlingerKlient = new BehandlingerJerseyKlient();
+        kodeverkKlient = new KodeverkJerseyKlient();
+        historikkKlient = new HistorikkJerseyKlient();
+        prosesstaskKlient = new ProsesstaskJerseyKlient();
+        risikovurderingKlient = new RisikovurderingJerseyKlient();
     }
 
     public Saksbehandler(Rolle rolle) {
@@ -273,11 +273,11 @@ public class Saksbehandler extends Aktoer {
     }
 
     private boolean verifiserProsesseringFerdig(Behandling behandling) {
-        AsyncPollingStatus status = behandlingerKlient.statusAsObject(behandling.uuid, null);
+        var status = behandlingerKlient.statusAsObject(behandling.uuid);
 
-        if ((status == null) || (status.getStatusCode() == null)) {
+        if ((status == null) || (status.getStatus() == null)) {
             return true;
-        } else if (status.getStatusCode() == 418) {
+        } else if (status.getStatus().getHttpStatus() == 418) {
             if (status.getStatus() != AsyncPollingStatus.Status.DELAYED) {
                 AllureHelper.debugFritekst("Prosesstask feilet i behandlingsverifisering: " + status.getMessage());
                 throw new IllegalStateException("Prosesstask i vrang tilstand: " + status.getMessage());
@@ -529,8 +529,7 @@ public class Saksbehandler extends Aktoer {
     @Step("Bekrefter aksjonspunktbekreftelser")
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
         debugAksjonspunktbekreftelser(bekreftelser);
-        BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtFagsak, valgtBehandling,
-                bekreftelser);
+        BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
     }

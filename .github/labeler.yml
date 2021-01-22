@@ -2,7 +2,7 @@ github-action:
   - .github/**/*
 
 lokal-utvikling:
-  - lokal-utvikling/*
+  - lokal-utvikling/**/*
 
 testrammeverk:
   - src/main/java/**/*
@@ -14,7 +14,7 @@ pom:
   - pom.xml
 
 docs:
-  - docs/*
+  - docs/**/*
   - README.md
   - LICENSE.md
   - CODEOWNERS

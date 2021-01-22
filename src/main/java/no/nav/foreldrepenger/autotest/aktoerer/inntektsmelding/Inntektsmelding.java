@@ -6,12 +6,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.kafka.KafkaKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.kafka.KafkaJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -28,18 +28,18 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
 public class Inntektsmelding extends Aktoer {
 
-    FagsakKlient fagsakKlient;
-    HistorikkKlient historikkKlient;
-    JournalforingKlient journalpostKlient;
-    KafkaKlient kafkaKlient;
-    SafKlient safKlient;
+    FagsakJerseyKlient fagsakKlient;
+    HistorikkJerseyKlient historikkKlient;
+    JournalforingJerseyKlient journalpostKlient;
+    KafkaJerseyKlient kafkaKlient;
+    SafJerseyKlient safKlient;
 
     public Inntektsmelding() {
-        fagsakKlient = new FagsakKlient(session);
-        historikkKlient = new HistorikkKlient(session);
-        journalpostKlient = new JournalforingKlient(session);
-        kafkaKlient = new KafkaKlient(session);
-        safKlient = new SafKlient(session);
+        fagsakKlient = new FagsakJerseyKlient();
+        historikkKlient = new HistorikkJerseyKlient();
+        journalpostKlient = new JournalforingJerseyKlient();
+        kafkaKlient = new KafkaJerseyKlient();
+        safKlient = new SafJerseyKlient();
     }
 
     public void sendInnInnteksmeldingFpfordel(InntektsmeldingBuilder inntektsmelding, String fnr) {
