@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengegrunnlag;
 import org.apache.http.HttpResponse;
 
 import io.qameta.allure.Step;
@@ -61,6 +62,7 @@ public class BehandlingerKlient extends FpsakKlient {
     private static final String BEHANDLING_PERSONOPPLYSNINGER_URL = BEHANDLING_URL + "/person/personopplysninger";
     private static final String BEHANDLING_VERGE_URL = BEHANDLING_URL + "/person/verge";
     private static final String BEHANDLING_PERSON_MEDLEMSKAP = BEHANDLING_URL + "/person/medlemskap-v2";
+    private static final String BEHANDLING_FERIEPENGEGRUNNLAG = BEHANDLING_URL + "/feriepengegrunnlag";
     private static final String BEHANDLING_ENGANGSSTØNAD_URL = BEHANDLING_URL + "/beregningsresultat/engangsstonad";
     private static final String BEHANDLING_FORELDREPENGER_URL = BEHANDLING_URL + "/beregningsresultat/foreldrepenger";
     private static final String BEHANDLING_BEREGNINGSGRUNNALG_URL = BEHANDLING_URL + "/beregningsgrunnlag";
@@ -235,6 +237,16 @@ public class BehandlingerKlient extends FpsakKlient {
         String url = createBehandlingGetUrl(BEHANDLING_PERSON_MEDLEMSKAP, behandlingUuid);
         return getOgHentJson(url, Medlem.class, StatusRange.STATUS_SUCCESS);
     }
+
+    /*
+     * Hent feriepengegrunnlag for behandling
+     */
+    @Step("Henter medlemskap for behandling")
+    public Feriepengegrunnlag hentFeriepengegrunnlag(UUID behandlingUuid) {
+        String url = createBehandlingGetUrl(BEHANDLING_FERIEPENGEGRUNNLAG, behandlingUuid);
+        return getOgHentJson(url, Feriepengegrunnlag.class, StatusRange.STATUS_SUCCESS);
+    }
+
 
     /*
      * Hent beregningsgrunnlag for behandling

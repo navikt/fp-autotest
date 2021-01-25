@@ -24,6 +24,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengegrunnlag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.FeriepengegrunnlagAndel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -189,6 +191,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at dagsatsen blir justert ut i fra årsinntekten og utbeatlinsggrad, og IKKE 6G fordi inntekten er under 6G!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(60),
                 "Forventer at halve summen utbetales til søker og halve summen til arbeisdgiver pga 60% refusjon!");
+        Feriepengegrunnlag feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        verifiser(feriepenger.getAndeler().stream().anyMatch(fpa -> fpa.getErBrukerMottaker() && fpa.getÅrsbeløp().compareTo(BigDecimal.ZERO) > 0),
+                "Forventer at det finnes feriepengeandel der søker er mottaker");
+        verifiser(feriepenger.getAndeler().stream().anyMatch(fpa -> !fpa.getErBrukerMottaker() && fpa.getÅrsbeløp().compareTo(BigDecimal.ZERO) > 0),
+                "Forventer at det finnes feriepengeandel der arbeidsgiver er mottaker");
 
         // Fødselshendelse
         var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, søkerFnr,
@@ -216,6 +223,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL har 5 dager igjen!");
         verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER).getSaldo(),  70,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER er 70 dager!");
+
+        Feriepengegrunnlag feriepengerRevurdering = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        verifiserLikhet(feriepenger, feriepengerRevurdering,
+                "Forventer at feriepengene er like mellom behandlinger");
+
     }
 
     @Test
@@ -296,6 +308,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
+        Feriepengegrunnlag feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        verifiser(feriepenger == null,
+                "Forventer at det ikke finnes feriepengeandeler");
 
         var dødshendelseDto = new DødshendelseDto("OPPRETTET", null, søkerFnr,
                 LocalDate.now().minusDays(1));
@@ -334,6 +349,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Siden perioden er avslått pga død, forventes det 0 i dagsats.");
         verifiserLikhet(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats(),0,
                 "Siden perioden er avslått pga død, forventes det 0 i dagsats.");
+        Feriepengegrunnlag feriepengerRevurdering = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        verifiser(feriepengerRevurdering == null,
+                "Forventer at det ikke finnes feriepengeandeler");
     }
 
     @Test
@@ -397,6 +415,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
+        Feriepengegrunnlag feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        verifiser(feriepenger.getAndeler().stream().allMatch(fpa -> fpa.getErBrukerMottaker() && fpa.getÅrsbeløp().compareTo(BigDecimal.ZERO) > 0),
+                "Forventer at det kun finnes feriepengeandel der søker er mottaker");
 
     }
 
@@ -417,7 +438,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
+//        saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*
@@ -526,6 +547,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at saldoen for stønadskonton FEDREKVOTE er brukt opp!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(100),
                 "Forventer at hele summen utbetales til arbeidsgiver, og derfor ingenting til søker!");
+        Feriepengegrunnlag feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        verifiser(feriepenger == null, "Forventer at det ikke finnes feriepenger");
+
     }
 
     @Test
@@ -595,6 +619,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
+        Feriepengegrunnlag feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        verifiser(feriepenger == null, "Forventer at det ikke finnes feriepenger");
     }
 
     @Test

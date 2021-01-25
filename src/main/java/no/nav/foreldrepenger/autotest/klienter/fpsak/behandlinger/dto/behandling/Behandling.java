@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengegrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.medlem.Medlem;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.Opptjening;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilrettelegging;
@@ -58,6 +59,7 @@ public class Behandling {
     private Lazy<InntektArbeidYtelse> inntektArbeidYtelse;
     private Lazy<KontrollerFaktaData> kontrollerFaktaData;
     private Lazy<Medlem> medlem;
+    private Lazy<Feriepengegrunnlag> feriepengegrunnlag;
     private Lazy<KlageInfo> klagevurdering;
     private Lazy<Saldoer> saldoer;
     private Lazy<Tilrettelegging> tilrettelegging;
@@ -209,6 +211,14 @@ public class Behandling {
 
     public void setMedlem(Lazy<Medlem> dMedlem) {
         this.medlem = dMedlem;
+    }
+
+    public void setFeriepengegrunnlag(Lazy<Feriepengegrunnlag> feriepengegrunnlag) {
+        this.feriepengegrunnlag = feriepengegrunnlag;
+    }
+
+    public Feriepengegrunnlag getFeriepengegrunnlag() {
+        return get(feriepengegrunnlag);
     }
 
     public KlageInfo getKlagevurdering() {
