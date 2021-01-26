@@ -44,7 +44,7 @@ public class Behandling {
     public Boolean behandlingHenlagt;
     public Boolean behandlingPaaVent;
     public Behandlingsresultat behandlingsresultat;
-    public List<BehandlingÅrsak> behandlingArsaker;
+    public List<BehandlingÅrsak> behandlingÅrsaker;
 
     private Lazy<List<Vilkar>> vilkar;
     private Lazy<List<Aksjonspunkt>> aksjonspunkter;
@@ -108,8 +108,8 @@ public class Behandling {
         return sb.toString();
     }
 
-    public List<BehandlingÅrsak> getBehandlingArsaker() {
-        return behandlingArsaker;
+    public List<BehandlingÅrsak> getBehandlingÅrsaker() {
+        return behandlingÅrsaker;
     }
 
     public List<Vilkar> getVilkar() {
