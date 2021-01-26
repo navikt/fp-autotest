@@ -107,9 +107,9 @@
                             junit.jupiter.extensions.autodetection.enabled = true
                             junit.jupiter.execution.parallel.enabled = true
                             junit.jupiter.execution.parallel.mode.default = concurrent
-                            junit.jupiter.execution.parallel.mode.classes.default = same_thread
-                            junit.jupiter.execution.parallel.config.strategy = fixed
-                            junit.jupiter.execution.parallel.config.fixed.parallelism = 4
+                            junit.jupiter.execution.parallel.mode.classes.default = concurrent
+                            junit.jupiter.execution.parallel.config.strategy = custom
+                            junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.junit.CustomStrategy
                         </configurationParameters>
                     </properties>
                     <includes>
@@ -282,6 +282,11 @@
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
             <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>1.7.0</version>
         </dependency>
 
     </dependencies>

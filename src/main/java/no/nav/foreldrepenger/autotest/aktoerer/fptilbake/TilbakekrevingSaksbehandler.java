@@ -32,6 +32,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnla
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.dto.NewProsessTaskDto;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
+import no.nav.foreldrepenger.autotest.util.junit.FpsakTestBaseKlientInstansiererExtension;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
 public class TilbakekrevingSaksbehandler extends Aktoer {
@@ -40,15 +41,12 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     public Behandling valgtBehandling;
     public String saksnummer;
 
-    private final BehandlingerJerseyKlient behandlingerKlient;
-    private final OkonomiJerseyKlient okonomiKlient;
-    private final ProsesstaskJerseyKlient prosesstaskKlient;
+    private final BehandlingerJerseyKlient behandlingerKlient = FpsakTestBaseKlientInstansiererExtension.behandlingerKlientFptilbake;
+    private final ProsesstaskJerseyKlient prosesstaskKlient = FpsakTestBaseKlientInstansiererExtension.prosesstaskKlientFptilbake;
+    private final OkonomiJerseyKlient okonomiKlient = FpsakTestBaseKlientInstansiererExtension.okonomiKlient;
 
     public TilbakekrevingSaksbehandler() {
         super();
-        behandlingerKlient = new BehandlingerJerseyKlient();
-        okonomiKlient = new OkonomiJerseyKlient();
-        prosesstaskKlient = new ProsesstaskJerseyKlient();
     }
 
     // Behandlinger actions
@@ -233,11 +231,12 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     private void ventPåProsessering(Behandling behandling) {
         Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
-            List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
-            String prosessTaskList = "";
-            for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
-                prosessTaskList += prosessTaskListItemDto.taskType() + " - " + prosessTaskListItemDto.status()
-                        + "\n";
+            var prosessTaskList = new StringBuilder();
+            for (ProsessTaskListItemDto prosessTaskListItemDto : hentProsesstaskerForBehandling(behandling)) {
+                prosessTaskList
+                        .append(prosessTaskListItemDto.taskType())
+                        .append(" - ")
+                        .append(prosessTaskListItemDto.status()).append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
         });

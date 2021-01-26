@@ -53,6 +53,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskJers
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
+import no.nav.foreldrepenger.autotest.util.junit.FpsakTestBaseKlientInstansiererExtension;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
@@ -66,28 +67,13 @@ public class Saksbehandler extends Aktoer {
     private Lazy<List<HistorikkInnslag>> historikkInnslag;
     private Lazy<Behandling> annenPartBehandling;
 
-    private final FagsakJerseyKlient fagsakKlient;
-    private final BehandlingerJerseyKlient behandlingerKlient;
-    private final KodeverkJerseyKlient kodeverkKlient;
-    private final HistorikkJerseyKlient historikkKlient;
-    private final ProsesstaskJerseyKlient prosesstaskKlient;
-    private final RisikovurderingJerseyKlient risikovurderingKlient;
+    private final FagsakJerseyKlient fagsakKlient = FpsakTestBaseKlientInstansiererExtension.fagsakKlient;
+    private final BehandlingerJerseyKlient behandlingerKlient = FpsakTestBaseKlientInstansiererExtension.behandlingerKlient;
+    private final KodeverkJerseyKlient kodeverkKlient = FpsakTestBaseKlientInstansiererExtension.kodeverkKlient;
+    private final HistorikkJerseyKlient historikkKlient = FpsakTestBaseKlientInstansiererExtension.historikkKlient;
+    private final ProsesstaskJerseyKlient prosesstaskKlient = FpsakTestBaseKlientInstansiererExtension.prosesstaskKlient;
+    private final RisikovurderingJerseyKlient risikovurderingKlient = FpsakTestBaseKlientInstansiererExtension.risikovurderingKlient;
 
-
-    public Saksbehandler() {
-        super();
-        fagsakKlient = new FagsakJerseyKlient();
-        behandlingerKlient = new BehandlingerJerseyKlient();
-        kodeverkKlient = new KodeverkJerseyKlient();
-        historikkKlient = new HistorikkJerseyKlient();
-        prosesstaskKlient = new ProsesstaskJerseyKlient();
-        risikovurderingKlient = new RisikovurderingJerseyKlient();
-    }
-
-    public Saksbehandler(Rolle rolle) {
-        this();
-        erLoggetInnMedRolle(rolle);
-    }
 
     @Override
     public void erLoggetInnMedRolle(Rolle rolle) {
@@ -262,11 +248,12 @@ public class Saksbehandler extends Aktoer {
 
     private void ventPåProsessering(Behandling behandling) {
         Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
-            List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
-            String prosessTaskList = "";
-            for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
-                prosessTaskList += prosessTaskListItemDto.taskType() + " - " + prosessTaskListItemDto.status()
-                        + "\n";
+            var prosessTaskList = new StringBuilder();
+            for (ProsessTaskListItemDto prosessTaskListItemDto : hentProsesstaskerForBehandling(behandling)) {
+                prosessTaskList
+                        .append(prosessTaskListItemDto.taskType())
+                        .append(" - ")
+                        .append(prosessTaskListItemDto.status()).append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
         });

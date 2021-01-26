@@ -10,8 +10,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.kafka.KafkaJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafJerseyKlient;
+import no.nav.foreldrepenger.autotest.util.junit.FpsakTestBaseKlientInstansiererExtension;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -28,19 +27,9 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
 public class Inntektsmelding extends Aktoer {
 
-    FagsakJerseyKlient fagsakKlient;
-    HistorikkJerseyKlient historikkKlient;
-    JournalforingJerseyKlient journalpostKlient;
-    KafkaJerseyKlient kafkaKlient;
-    SafJerseyKlient safKlient;
-
-    public Inntektsmelding() {
-        fagsakKlient = new FagsakJerseyKlient();
-        historikkKlient = new HistorikkJerseyKlient();
-        journalpostKlient = new JournalforingJerseyKlient();
-        kafkaKlient = new KafkaJerseyKlient();
-        safKlient = new SafJerseyKlient();
-    }
+    FagsakJerseyKlient fagsakKlient = FpsakTestBaseKlientInstansiererExtension.fagsakKlient;
+    HistorikkJerseyKlient historikkKlient = FpsakTestBaseKlientInstansiererExtension.historikkKlient;
+    JournalforingJerseyKlient journalpostKlient = FpsakTestBaseKlientInstansiererExtension.journalpostKlient;
 
     public void sendInnInnteksmeldingFpfordel(InntektsmeldingBuilder inntektsmelding, String fnr) {
         sendInnInnteksmeldingFpfordel(List.of(inntektsmelding), fnr, null);

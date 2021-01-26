@@ -30,6 +30,7 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJers
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.ControllerHelper;
+import no.nav.foreldrepenger.autotest.util.junit.FpsakTestBaseKlientInstansiererExtension;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
@@ -43,28 +44,14 @@ public class Fordel extends Aktoer {
 
     private static final Logger logger = LoggerFactory.getLogger(Fordel.class);
 
-    /*
-     * Klienter
-     */
-    FordelJerseyKlient fordelKlient;
-    BehandlingerJerseyKlient behandlingerKlient;
-    FagsakJerseyKlient fagsakKlient;
-    HistorikkJerseyKlient historikkKlient;
-
-    // Vtp Klienter
-    PdlLeesahJerseyKlient pdlLeesahKlient;
-    JournalforingJerseyKlient journalpostKlient;
-    SafJerseyKlient safKlient;
-
-    public Fordel() {
-        fordelKlient = new FordelJerseyKlient();
-        behandlingerKlient = new BehandlingerJerseyKlient();
-        journalpostKlient = new JournalforingJerseyKlient();
-        safKlient = new SafJerseyKlient();
-        fagsakKlient = new FagsakJerseyKlient();
-        historikkKlient = new HistorikkJerseyKlient();
-        pdlLeesahKlient = new PdlLeesahJerseyKlient();
-    }
+    /** Klienter */
+    FordelJerseyKlient fordelKlient = FpsakTestBaseKlientInstansiererExtension.fordelKlient;
+    BehandlingerJerseyKlient behandlingerKlient = FpsakTestBaseKlientInstansiererExtension.behandlingerKlient;
+    FagsakJerseyKlient fagsakKlient = FpsakTestBaseKlientInstansiererExtension.fagsakKlient;
+    HistorikkJerseyKlient historikkKlient = FpsakTestBaseKlientInstansiererExtension.historikkKlient;
+    PdlLeesahJerseyKlient pdlLeesahKlient = FpsakTestBaseKlientInstansiererExtension.pdlLeesahKlient;
+    JournalforingJerseyKlient journalpostKlient = FpsakTestBaseKlientInstansiererExtension.journalpostKlient;
+    SafJerseyKlient safKlient = FpsakTestBaseKlientInstansiererExtension.safKlient;
 
     /*
      * Sender inn søkand og returnerer saksinformasjon

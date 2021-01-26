@@ -30,8 +30,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -75,7 +73,7 @@ import no.nav.vedtak.felles.xml.soeknad.foreldrepenger.v3.Opptjening;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
 
-@Execution(ExecutionMode.CONCURRENT)
+
 @Tag("utvikling")
 @Tag("foreldrepenger")
 public class Uttak extends ForeldrepengerTestBase {

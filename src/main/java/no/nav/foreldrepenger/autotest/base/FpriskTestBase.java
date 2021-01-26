@@ -8,16 +8,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.aktoerer.fprisk.Saksbehandler;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.AktørId;
-import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioJerseyKlient;
 
 public class FpriskTestBase extends TestScenarioTestBase {
 
     protected Saksbehandler saksbehandler;
-    protected TestscenarioJerseyKlient testscenarioKlient;
 
     public FpriskTestBase() {
         saksbehandler = new Saksbehandler();
-        testscenarioKlient = new TestscenarioJerseyKlient();
     }
 
     public static class RequestWrapper {

@@ -2,14 +2,11 @@ package no.nav.foreldrepenger.autotest.aktoerer;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.vtp.openam.OpenamJerseyKlient;
+import no.nav.foreldrepenger.autotest.util.junit.FpsakTestBaseKlientInstansiererExtension;
 
-public class Aktoer {
+public abstract class Aktoer {
 
-    public OpenamJerseyKlient openamJerseyKlient;
-
-    public Aktoer() {
-        openamJerseyKlient = new OpenamJerseyKlient();
-    }
+    public OpenamJerseyKlient openamJerseyKlient = FpsakTestBaseKlientInstansiererExtension.openamJerseyKlient;
 
     public void erLoggetInnUtenRolle() {
         erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

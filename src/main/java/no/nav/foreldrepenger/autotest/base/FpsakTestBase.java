@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.base;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
@@ -10,7 +11,9 @@ import no.nav.foreldrepenger.autotest.aktoerer.inntektsmelding.Inntektsmelding;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.util.junit.FpsakTestBaseKlientInstansiererExtension;
 
+@ExtendWith({FpsakTestBaseKlientInstansiererExtension.class})
 public class FpsakTestBase extends TestScenarioTestBase {
 
     /*
@@ -34,7 +37,6 @@ public class FpsakTestBase extends TestScenarioTestBase {
         tbksaksbehandler = new TilbakekrevingSaksbehandler();
         inntektsmelding = new Inntektsmelding();
     }
-
 
 
 

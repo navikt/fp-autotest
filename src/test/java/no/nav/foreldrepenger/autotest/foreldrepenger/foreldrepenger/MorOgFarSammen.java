@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
@@ -12,11 +10,9 @@ import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepe
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenarioMedIdent;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.oppholdsperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandlingsliste;
 
 import java.time.LocalDate;
@@ -25,8 +21,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +48,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 
-@Execution(ExecutionMode.CONCURRENT)
+
 @Tag("fpsak")
 @Tag("foreldrepenger")
 @Tag("fluoritt")
