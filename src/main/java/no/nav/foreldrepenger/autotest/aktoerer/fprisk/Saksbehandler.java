@@ -5,28 +5,24 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingKlient;
+import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingResponse;
-import no.nav.foreldrepenger.autotest.klienter.vtp.kafka.KafkaKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.kafka.KafkaJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
 public class Saksbehandler extends Aktoer {
     Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
 
-    private final KafkaKlient kafkaKlient;
-    private final RisikovurderingKlient risikovurderingKlient;
+    private final KafkaJerseyKlient kafkaKlient;
+    private final RisikovurderingJerseyKlient risikovurderingKlient;
 
     public Saksbehandler() {
-        kafkaKlient = new KafkaKlient(session);
-        risikovurderingKlient = new RisikovurderingKlient(session);
+        kafkaKlient = new KafkaJerseyKlient();
+        risikovurderingKlient = new RisikovurderingJerseyKlient();
     }
 
-    public String getKafkaTopics() {
-        return kafkaKlient.getKafkaTopics();
-    }
-
-    public String sendMessageToKafkaTopic(String topic, Object messageObject) {
-        return kafkaKlient.putMessageOnKafkaTopic(topic, messageObject);
+    public void sendMessageToKafkaTopic(String topic, Object messageObject) {
+        kafkaKlient.putMessageOnKafkaTopic(topic, messageObject);
     }
 
     public RisikovurderingResponse getRisikovurdering(String konsumentId) {

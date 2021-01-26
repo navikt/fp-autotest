@@ -1,22 +1,14 @@
 package no.nav.foreldrepenger.autotest.aktoerer;
 
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.klienter.vtp.openam.OpenamKlient;
-import no.nav.foreldrepenger.autotest.util.http.BasicHttpSession;
-import no.nav.foreldrepenger.autotest.util.http.HttpSession;
-import no.nav.foreldrepenger.autotest.util.http.SecureHttpsSession;
-import no.nav.foreldrepenger.autotest.util.konfigurasjon.MiljoKonfigurasjon;
+import no.nav.foreldrepenger.autotest.klienter.vtp.openam.OpenamJerseyKlient;
 
 public class Aktoer {
 
-    public HttpSession session;
+    public OpenamJerseyKlient openamJerseyKlient;
 
     public Aktoer() {
-        if (MiljoKonfigurasjon.getRootUrl().startsWith("https")) {
-            session = SecureHttpsSession.session();
-        } else {
-            session = BasicHttpSession.session();
-        }
+        openamJerseyKlient = new OpenamJerseyKlient();
     }
 
     public void erLoggetInnUtenRolle() {
@@ -25,8 +17,7 @@ public class Aktoer {
 
     @Step("Logger inn med rolle: {rolle}")
     public void erLoggetInnMedRolle(Rolle rolle) {
-        OpenamKlient klient = new OpenamKlient(session);
-        klient.logInnMedRolle(rolle.getKode());
+        openamJerseyKlient.logInnMedRolle(rolle.getKode());
     }
 
     public enum Rolle {
@@ -40,7 +31,7 @@ public class Aktoer {
 
         String kode;
 
-        private Rolle(String kode) {
+        Rolle(String kode) {
             this.kode = kode;
         }
 

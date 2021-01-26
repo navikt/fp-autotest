@@ -19,7 +19,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import no.nav.foreldrepenger.autotest.util.http.rest.JacksonObjectMapper;
+import no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper;
+
 
 public class TestscenarioHenter {
 

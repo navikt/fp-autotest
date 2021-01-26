@@ -15,20 +15,20 @@ import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.SøknadBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostId;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostKnyttning;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostMottak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.OpprettSak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.Saksnummer;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.ControllerHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -46,24 +46,24 @@ public class Fordel extends Aktoer {
     /*
      * Klienter
      */
-    FordelKlient fordelKlient;
-    BehandlingerKlient behandlingerKlient;
-    FagsakKlient fagsakKlient;
-    HistorikkKlient historikkKlient;
+    FordelJerseyKlient fordelKlient;
+    BehandlingerJerseyKlient behandlingerKlient;
+    FagsakJerseyKlient fagsakKlient;
+    HistorikkJerseyKlient historikkKlient;
 
     // Vtp Klienter
-    PdlLeesahKlient pdlLeesahKlient;
-    JournalforingKlient journalpostKlient;
-    SafKlient safKlient;
+    PdlLeesahJerseyKlient pdlLeesahKlient;
+    JournalforingJerseyKlient journalpostKlient;
+    SafJerseyKlient safKlient;
 
     public Fordel() {
-        fordelKlient = new FordelKlient(session);
-        behandlingerKlient = new BehandlingerKlient(session);
-        journalpostKlient = new JournalforingKlient(session);
-        safKlient = new SafKlient(session);
-        fagsakKlient = new FagsakKlient(session);
-        historikkKlient = new HistorikkKlient(session);
-        pdlLeesahKlient = new PdlLeesahKlient(session);
+        fordelKlient = new FordelJerseyKlient();
+        behandlingerKlient = new BehandlingerJerseyKlient();
+        journalpostKlient = new JournalforingJerseyKlient();
+        safKlient = new SafJerseyKlient();
+        fagsakKlient = new FagsakJerseyKlient();
+        historikkKlient = new HistorikkJerseyKlient();
+        pdlLeesahKlient = new PdlLeesahJerseyKlient();
     }
 
     /*
@@ -103,7 +103,7 @@ public class Fordel extends Aktoer {
                 sleep(5000);
             }
             return !behandlinger.isEmpty()
-                    && (behandlingerKlient.statusAsObject(behandlinger.get(0).uuid, null) == null);
+                    && (behandlingerKlient.statusAsObject(behandlinger.get(0).uuid) == null);
         }, 60, "Saken hadde ingen behandlinger");
 
         if (DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD.equals(dokumenttypeId)) {

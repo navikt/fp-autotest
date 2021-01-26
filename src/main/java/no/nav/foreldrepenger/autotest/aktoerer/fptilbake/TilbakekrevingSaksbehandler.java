@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
@@ -26,10 +26,10 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ForeslåVedtak;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.dto.NewProsessTaskDto;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
@@ -40,15 +40,15 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     public Behandling valgtBehandling;
     public String saksnummer;
 
-    private final BehandlingerKlient behandlingerKlient;
-    private final OkonomiKlient okonomiKlient;
-    private final ProsesstaskKlient prosesstaskKlient;
+    private final BehandlingerJerseyKlient behandlingerKlient;
+    private final OkonomiJerseyKlient okonomiKlient;
+    private final ProsesstaskJerseyKlient prosesstaskKlient;
 
     public TilbakekrevingSaksbehandler() {
         super();
-        behandlingerKlient = new BehandlingerKlient(session);
-        okonomiKlient = new OkonomiKlient(session);
-        prosesstaskKlient = new ProsesstaskKlient(session);
+        behandlingerKlient = new BehandlingerJerseyKlient();
+        okonomiKlient = new OkonomiJerseyKlient();
+        prosesstaskKlient = new ProsesstaskJerseyKlient();
     }
 
     // Behandlinger actions
@@ -246,9 +246,9 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     private boolean verifiserProsesseringFerdig(Behandling behandling) {
         AsyncPollingStatus status = behandlingerKlient.hentStatus(behandling.id);
 
-        if ((status == null) || (status.getStatusCode() == null)) {
+        if ((status == null) || (status.getStatus() == null)) {
             return true;
-        } else if (status.getStatusCode() == 418) {
+        } else if (status.getStatus().getHttpStatus() == 418) {
             if (status.getStatus() != AsyncPollingStatus.Status.DELAYED) {
                 AllureHelper.debugFritekst("Prosesstask feilet i behandlingsverifisering: " + status.getMessage());
                 throw new IllegalStateException("Prosesstask i vrang tilstand: " + status.getMessage());

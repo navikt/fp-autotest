@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.fpsoknad_mottak.Selvbetjening;
-import no.nav.foreldrepenger.autotest.util.konfigurasjon.MiljoKonfigurasjon;
 import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioHenter;
 
 public abstract class TestBase {
@@ -29,7 +28,6 @@ public abstract class TestBase {
      */
     @BeforeAll
     protected static void setUpAll() {
-        MiljoKonfigurasjon.initProperties();
         testscenarioHenter = new TestscenarioHenter();
         selvbetjening = new Selvbetjening();
     }

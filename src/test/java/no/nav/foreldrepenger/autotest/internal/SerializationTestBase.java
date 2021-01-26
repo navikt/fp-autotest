@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.autotest.util.http.rest.JacksonObjectMapper;
+import no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper;
+
 
 public class SerializationTestBase {
 
