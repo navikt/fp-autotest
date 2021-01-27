@@ -197,7 +197,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
+        verifiser(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode
                         .equalsIgnoreCase("RE-HENDELSE-FØDSEL"),
                 "Foventer at revurderingen har årsakskode RE-HENDELSE-FØDSEL.");
 
@@ -303,7 +303,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
+        verifiser(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode
                         .equalsIgnoreCase("RE-HENDELSE-DØD-F"),
                 "Foventer at revurderingen har årsakskode RE-HENDELSE-DØD-F");
 
@@ -1132,7 +1132,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.opprettBehandlingRevurdering("ETTER_KLAGE");
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
-        verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
+        verifiser(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode
                         .equalsIgnoreCase("ETTER_KLAGE"),
                 "Foventer at revurderingen har årsakskode ETTER_KLAGE.");
 
@@ -1627,7 +1627,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        verifiser(saksbehandler.valgtBehandling.getBehandlingArsaker().get(0).getBehandlingArsakType().kode
+        verifiser(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode
                         .equalsIgnoreCase("RE-HENDELSE-DØDFØD"),
                 "Foventer at revurderingen har årsakskode RE_HENDELSE_DØDFØDSEL.");
 
