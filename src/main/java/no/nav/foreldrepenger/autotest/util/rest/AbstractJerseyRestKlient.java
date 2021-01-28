@@ -18,17 +18,13 @@ import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache.connector.ApacheHttpClientBuilderConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public abstract class AbstractJerseyRestKlient {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractJerseyRestKlient.class);
     protected final Client client;
-    private final ObjectMapper objectMapper;
 
     protected AbstractJerseyRestKlient() {
         this(mapper, Set.of());
@@ -54,12 +50,7 @@ public abstract class AbstractJerseyRestKlient {
                 .setRetryHandler(new HttpRequestRetryHandler())
                 .setConnectionManager(connectionManager()));
 
-        filters.forEach(f -> {
-            LOG.info("Registrer filter {}", f.getClass());
-            cfg.register(f);
-        });
-
-        this.objectMapper = mapper;
+        filters.forEach(cfg::register);
         client = ClientBuilder.newClient(cfg);
     }
 
@@ -67,9 +58,5 @@ public abstract class AbstractJerseyRestKlient {
         return Optional.ofNullable(mapper)
                 .map(m -> new JacksonJaxbJsonProvider(m, DEFAULT_ANNOTATIONS))
                 .orElse(new JacksonJaxbJsonProvider());
-    }
-
-    protected ObjectMapper getObjectMapper() {
-        return objectMapper;
     }
 }
