@@ -29,7 +29,7 @@ public class Oauth2JerseyKlient extends VTPJerseyKlient {
         return client.target(BaseUriProvider.VTP_ROOT)
                 .path(TOKEN_ENDPOINT)
                 .request()
-                .post(Entity.form(new MultivaluedHashMap(Map.of(
+                .post(Entity.form(new MultivaluedHashMap<>(Map.of(
                         "grant_type", "client_credentials",
                         "scope", "openid",
                         "code", fnr))),

@@ -41,10 +41,10 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
             Kode inntektskategori, int andelsnr) {
         FastsettBeregningsgrunnlagPeriodeDto periode = endretBeregningsgrunnlagPerioder.stream()
                 .filter(p -> p.fom.isEqual(fom))
-                .findFirst().get();
+                .findFirst().orElseThrow();
         FastsettBeregningsgrunnlagAndelDto andel = periode.andeler.stream()
                 .filter(a -> a.getAndelsnr() == andelsnr)
-                .findFirst().get();
+                .findFirst().orElseThrow();
         andel.setFastsatteVerdier(new FastsatteVerdierDto(fastsattBeløp, inntektskategori));
         return this;
     }
@@ -53,10 +53,10 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
             int fastsattBeløp, int refusjonPrÅr, Kode inntektskategori, int andelsnr) {
         FastsettBeregningsgrunnlagPeriodeDto periode = endretBeregningsgrunnlagPerioder.stream()
                 .filter(p -> p.fom.isEqual(fom))
-                .findFirst().get();
+                .findFirst().orElseThrow();
         FastsettBeregningsgrunnlagAndelDto andel = periode.andeler.stream()
                 .filter(a -> a.getAndelsnr() == andelsnr)
-                .findFirst().get();
+                .findFirst().orElseThrow();
         andel.setFastsatteVerdier(new FastsatteVerdierDto(fastsattBeløp, refusjonPrÅr, inntektskategori));
         return this;
     }

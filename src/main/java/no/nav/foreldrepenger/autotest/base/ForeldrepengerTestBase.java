@@ -13,8 +13,6 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.SigrunModell;
 public class ForeldrepengerTestBase extends FpsakTestBase {
 
     protected Double hentNæringsinntektFraSigrun(TestscenarioDto testscenarioDto, Integer beregnFraOgMedÅr, Boolean annenPart) {
-        Integer beregFraÅr = beregnFraOgMedÅr;
-
         SigrunModell sigrunModell;
         if (annenPart) {
             sigrunModell = testscenarioDto.scenariodataAnnenpartDto().sigrunModell();
@@ -24,7 +22,7 @@ public class ForeldrepengerTestBase extends FpsakTestBase {
 
         double gjennomsnittDeTreSisteÅrene = sigrunModell.inntektsår().stream()
                 .sorted(Comparator.comparing(Inntektsår::år).reversed())
-                .filter(inntektsår -> Integer.parseInt(inntektsår.år()) <= beregFraÅr)
+                .filter(inntektsår -> Integer.parseInt(inntektsår.år()) <= beregnFraOgMedÅr)
                 .flatMap(inntektsår -> inntektsår.oppføring().stream())
                 .mapToDouble(oppføring -> Double.parseDouble(oppføring.verdi()))
                 .limit(3)

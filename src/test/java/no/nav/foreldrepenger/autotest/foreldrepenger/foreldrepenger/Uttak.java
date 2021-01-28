@@ -669,7 +669,7 @@ public class Uttak extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsDato,
                 testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR)
                         .medFordeling(fordeling);
-        Long saksnummer = fordel.sendInnSøknad(
+        long saksnummer = fordel.sendInnSøknad(
                 søknad.build(), aktørIdSøker, fnrSøker, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
 
         InntektsmeldingBuilder im = lagInntektsmelding(inntekt, fnrSøker, startDato, orgNrSøker);
@@ -729,7 +729,7 @@ public class Uttak extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
                 .medFordeling(fordeling);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
         InntektsmeldingBuilder im = lagInntektsmelding(
                 inntekt, fnrSøker, fpStartdato, orgNrSøker);
@@ -748,7 +748,7 @@ public class Uttak extends ForeldrepengerTestBase {
         EndringssøknadBuilder søknadE = lagEndringssøknad(aktørIdSøker, søkersRolle, fordelingEndring,
                 saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker,
+        long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -774,7 +774,7 @@ public class Uttak extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, søkersRolle)
                 .medFordeling(fordeling);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), aktørIdSøker, fnrSøker,
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), aktørIdSøker, fnrSøker,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null);
         InntektsmeldingBuilder im = lagInntektsmelding(
                 inntekt, fnrSøker, fpStartdato, orgNrSøker);
@@ -790,7 +790,7 @@ public class Uttak extends ForeldrepengerTestBase {
         EndringssøknadBuilder søknadE = lagEndringssøknad(aktørIdSøker, søkersRolle, fordelingEndring,
                 saksnummer);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        Long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker,
+        long saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);

@@ -9,7 +9,7 @@ public enum DekningsgradDto {
     @JsonProperty("80_PROSENT")
     AATI("80");
 
-    private String value;
+    private final String value;
 
     DekningsgradDto(String value) {
         this.value = value;

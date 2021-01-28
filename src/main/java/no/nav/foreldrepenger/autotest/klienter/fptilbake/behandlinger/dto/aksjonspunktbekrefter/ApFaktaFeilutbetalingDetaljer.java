@@ -4,10 +4,10 @@ import java.time.LocalDate;
 
 public class ApFaktaFeilutbetalingDetaljer {
 
-    protected LocalDate fom;
-    protected LocalDate tom;
+    protected final LocalDate fom;
+    protected final LocalDate tom;
 
-    protected ApFaktaFeilutbetalingAarsak årsak = new ApFaktaFeilutbetalingAarsak();
+    protected final ApFaktaFeilutbetalingAarsak årsak = new ApFaktaFeilutbetalingAarsak();
 
     public ApFaktaFeilutbetalingDetaljer(LocalDate fom, LocalDate tom) {
         this.fom = fom;

@@ -24,9 +24,7 @@ class FastsettEndretBeregningsgrunnlag {
         Optional<FastsettEndretBeregningsgrunnlagPeriode> eksisterendePeriode = endretBeregningsgrunnlagPerioder
                 .stream()
                 .filter(p -> p.fom.isEqual(periode.getBeregningsgrunnlagPeriodeFom())).findFirst();
-        if (eksisterendePeriode.isPresent()) {
-            eksisterendePeriode.get().leggTilAndel(andel, fastsatteVerdier);
-        }
+        eksisterendePeriode.ifPresent(eperiode -> eperiode.leggTilAndel(andel, fastsatteVerdier));
         endretBeregningsgrunnlagPerioder.add(new FastsettEndretBeregningsgrunnlagPeriode(andel, fastsatteVerdier,
                 periode.getBeregningsgrunnlagPeriodeFom(), periode.getBeregningsgrunnlagPeriodeTom()));
     }

@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak.FEDREKVOTE_ANNEN_FORELDER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
@@ -12,11 +10,9 @@ import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepe
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.makeInntektsmeldingFromTestscenarioMedIdent;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.oppholdsperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandlingsliste;
 
 import java.time.LocalDate;

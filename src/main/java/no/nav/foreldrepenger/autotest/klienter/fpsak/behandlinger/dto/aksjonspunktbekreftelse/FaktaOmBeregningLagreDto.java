@@ -134,7 +134,7 @@ public class FaktaOmBeregningLagreDto {
 
     }
 
-    public class YtelseAndeler {
+    public static class YtelseAndeler {
         public int andelsnr;
         public double fastsattBeløp;
         public String inntektskategori;

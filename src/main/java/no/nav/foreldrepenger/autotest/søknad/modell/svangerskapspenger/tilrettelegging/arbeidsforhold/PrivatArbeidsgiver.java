@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode()
 public class PrivatArbeidsgiver extends Arbeidsforhold {
 
     @NotNull

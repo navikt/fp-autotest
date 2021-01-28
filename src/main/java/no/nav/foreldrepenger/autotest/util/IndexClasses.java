@@ -38,8 +38,8 @@ public class IndexClasses {
 
     private static final ConcurrentMap<URI, IndexClasses> INDEXES = new ConcurrentHashMap<>();
 
-    private URI scanLocation;
-    private String jandexIndexFileName;
+    private final URI scanLocation;
+    private final String jandexIndexFileName;
 
     private IndexClasses(URI location) {
         this(location, "jandex.idx");
@@ -79,8 +79,7 @@ public class IndexClasses {
                     }
                 });
             }
-            Index index = indexer.complete();
-            return index;
+            return indexer.complete();
         } catch (IOException e) {
             throw new IllegalStateException("Fikk ikke lest path " + location + ", kan ikke scanne klasser", e);
         }
@@ -148,7 +147,7 @@ public class IndexClasses {
     @SuppressWarnings("unchecked")
     public <C> List<Class<C>> getSubClassesWithAnnotation(Class<C> klasse, Class<?> annotationClass) {
         List<Class<?>> classesWithAnnotation = getClassesWithAnnotation(annotationClass);
-        return classesWithAnnotation.stream().filter(c -> klasse.isAssignableFrom(c)).map(c -> (Class<C>) c)
+        return classesWithAnnotation.stream().filter(klasse::isAssignableFrom).map(c -> (Class<C>) c)
                 .collect(Collectors.toList());
     }
 
@@ -173,7 +172,7 @@ public class IndexClasses {
     }
 
     public static IndexClasses getIndexFor(final URI location) {
-        return INDEXES.computeIfAbsent(location, uri -> new IndexClasses(uri));
+        return INDEXES.computeIfAbsent(location, IndexClasses::new);
     }
 
     public static IndexClasses getIndexFor(final URI location, final String jandexIdxFileName) {

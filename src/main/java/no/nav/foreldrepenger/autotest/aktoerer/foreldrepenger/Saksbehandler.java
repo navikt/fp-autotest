@@ -262,11 +262,12 @@ public class Saksbehandler extends Aktoer {
 
     private void ventPåProsessering(Behandling behandling) {
         Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
-            List<ProsessTaskListItemDto> prosessTasker = hentProsesstaskerForBehandling(behandling);
-            String prosessTaskList = "";
-            for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
-                prosessTaskList += prosessTaskListItemDto.taskType() + " - " + prosessTaskListItemDto.status()
-                        + "\n";
+            var prosessTaskList = new StringBuilder();
+            for (ProsessTaskListItemDto prosessTaskListItemDto : hentProsesstaskerForBehandling(behandling)) {
+                prosessTaskList
+                        .append(prosessTaskListItemDto.taskType())
+                        .append(" - ")
+                        .append(prosessTaskListItemDto.status()).append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
         });
@@ -639,7 +640,7 @@ public class Saksbehandler extends Aktoer {
     private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
         SokeFilterDto filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
         List<ProsessTaskListItemDto> prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream().filter(p -> p.taskParametre().behandlingId() == ("" + behandling.id))
+        return prosesstasker.stream().filter(p -> p.taskParametre().behandlingId().equalsIgnoreCase("" + behandling.id))
                 .collect(Collectors.toList());
     }
 

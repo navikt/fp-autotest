@@ -84,7 +84,7 @@ public class Termin extends ForeldrepengerTestBase {
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -158,7 +158,7 @@ public class Termin extends ForeldrepengerTestBase {
         String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR)
                 .medFordeling(fordeling);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         List<InntektsmeldingBuilder> inntektsmeldinger = makeInntektsmeldingFromTestscenario(testscenario, fpstartdato);
@@ -214,7 +214,7 @@ public class Termin extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR)
                 .medFordeling(fordeling);
 
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(

@@ -71,7 +71,7 @@ public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBe
         return this;
     }
 
-    protected class OmsorgovertakelseBarn {
+    protected static class OmsorgovertakelseBarn {
         protected LocalDate fodselsdato;
         protected String opplysningsKilde;
         protected int nummer;
@@ -83,7 +83,7 @@ public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBe
         }
     }
 
-    protected class OmsorgovertakelseForelder {
+    protected static class OmsorgovertakelseForelder {
         protected int id;
         protected LocalDate dodsdato;
         protected boolean erMor;
