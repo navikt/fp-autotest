@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -29,7 +28,6 @@ public final class NorskForelder extends AnnenForelder {
     public boolean hasId() {
         return Optional.ofNullable(fnr)
                 .map(Fødselsnummer::getFnr)
-                .filter(Objects::nonNull)
                 .isPresent();
     }
 }

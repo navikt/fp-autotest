@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AktørId {
 
     @JsonProperty(value = "aktørId")
-    private String aktørId; // NOSONAR
+    private final String aktørId; // NOSONAR
 
     @JsonCreator
     public AktørId(@JsonProperty(value = "aktørId", required = true, index = 1) String aktørId) {

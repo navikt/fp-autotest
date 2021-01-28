@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class BehandlingNy {
     protected Long saksnummer;
     protected String behandlingType;
-    protected String behandlingArsakType = null;
+    protected String behandlingArsakType;
     protected Boolean nyBehandlingEtterKlage = null;
 
     public BehandlingNy(Long saksnummer, String behandlingType, String behandlingArsakType) {

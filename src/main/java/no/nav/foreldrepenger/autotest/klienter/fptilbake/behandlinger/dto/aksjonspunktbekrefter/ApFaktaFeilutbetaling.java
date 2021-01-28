@@ -9,8 +9,8 @@ import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
 @AksjonspunktKode(kode = "7003", fagsystem = Fagsystem.FPTILBAKE)
 public class ApFaktaFeilutbetaling extends AksjonspunktBehandling {
 
-    protected String begrunnelse;
-    protected List<ApFaktaFeilutbetalingDetaljer> feilutbetalingFakta = new ArrayList<>();
+    protected final String begrunnelse;
+    protected final List<ApFaktaFeilutbetalingDetaljer> feilutbetalingFakta = new ArrayList<>();
 
     public ApFaktaFeilutbetaling() {
         this.kode = "7003";

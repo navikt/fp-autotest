@@ -34,12 +34,11 @@ public class FpriskTest extends FpriskTestBase {
         LocalDate skjæringstidspunkt = LocalDate.now();
         LocalDate opplysningsperiodefraOgMed = LocalDate.now();
         LocalDate opplysningsperiodeTilOgMed = LocalDate.now().plusMonths(1);
-        String behandlingstema = BEHANDLINGSTEMA_FORELDREPENGER;
         String annenPartAktørId = testscenario.personopplysninger().annenpartAktørIdent();
         String konsumentId = UUID.randomUUID().toString();
         RisikovurderingRequest kontraktFpriskMelding = new RisikovurderingRequest(soekerAktoerId, skjæringstidspunkt,
                 opplysningsperiodefraOgMed,
-                opplysningsperiodeTilOgMed, behandlingstema, annenPartAktørId, konsumentId);
+                opplysningsperiodeTilOgMed, BEHANDLINGSTEMA_FORELDREPENGER, annenPartAktørId, konsumentId);
 
         saksbehandler.sendMessageToKafkaTopic(FPRISK_TOPIC_URL,
                 new RequestWrapper(UUID.randomUUID().toString(), kontraktFpriskMelding));

@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjo
 
 public class ApFaktaFeilutbetalingAarsak {
 
-    protected ApFaktaFeilutbetalingAarsakHendelseTyper hendelseType = new ApFaktaFeilutbetalingAarsakHendelseTyper();
-    protected ApFaktaFeilutbetalingAarsakHendelseTyper hendelseUndertype = new ApFaktaFeilutbetalingAarsakHendelseTyper();
+    protected final ApFaktaFeilutbetalingAarsakHendelseTyper hendelseType = new ApFaktaFeilutbetalingAarsakHendelseTyper();
+    protected final ApFaktaFeilutbetalingAarsakHendelseTyper hendelseUndertype = new ApFaktaFeilutbetalingAarsakHendelseTyper();
 
     public void addGeneriskHendelser(String ytelseType) {
         switch (ytelseType) {

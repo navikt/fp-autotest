@@ -5,7 +5,7 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.openam.OpenamJerseyKlient;
 
 public class Aktoer {
 
-    public OpenamJerseyKlient openamJerseyKlient;
+    public final OpenamJerseyKlient openamJerseyKlient;
 
     public Aktoer() {
         openamJerseyKlient = new OpenamJerseyKlient();
@@ -29,7 +29,7 @@ public class Aktoer {
         KLAGEBEHANDLER("klageb"),
         VEILEDER("veil");
 
-        String kode;
+        final String kode;
 
         Rolle(String kode) {
             this.kode = kode;

@@ -148,7 +148,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .getBeregningsgrunnlagPeriode(0)
                 .getBeregningsgrunnlagPrStatusOgAndel()
                 .stream().filter(a -> a.getAndelsnr() == 1)
-                .findFirst().get();
+                .findFirst().orElseThrow();
         double totaltBg = aapAndel.getBeregnetPrAar();
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
@@ -195,7 +195,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .getBeregningsgrunnlagPeriode(0)
                 .getBeregningsgrunnlagPrStatusOgAndel()
                 .stream().filter(a -> a.getAndelsnr() == 1)
-                .findFirst().get();
+                .findFirst().orElseThrow();
         double totaltBg = aapAndel.getBeregnetPrAar();
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
@@ -614,7 +614,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         }
     }
 
-    private class BGAndelHelper {
+    private static class BGAndelHelper {
         public String aktivitetstatus;
         private double bruttoPrÅr;
         private double beregnetPrÅr;
@@ -624,7 +624,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         private String arbeidsgiverId;
     }
 
-    private class BortfaltnaturalytelseHelper {
+    private static class BortfaltnaturalytelseHelper {
         private BigDecimal beløpPrMnd;
         private BigDecimal beløpPrÅr;
         private LocalDate fom;

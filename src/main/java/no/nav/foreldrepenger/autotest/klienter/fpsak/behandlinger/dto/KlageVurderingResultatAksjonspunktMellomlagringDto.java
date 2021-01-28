@@ -10,13 +10,13 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE, fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class KlageVurderingResultatAksjonspunktMellomlagringDto {
 
-    private String kode;
-    private String begrunnelse;
-    private int behandlingId;
-    private String fritekstTilBrev;
-    private Kode klageMedholdArsak;
-    private Kode klageVurdering;
-    private Kode klageVurderingOmgjoer;
+    private final String kode;
+    private final String begrunnelse;
+    private final int behandlingId;
+    private final String fritekstTilBrev;
+    private final Kode klageMedholdArsak;
+    private final Kode klageVurdering;
+    private final Kode klageVurderingOmgjoer;
 
     public KlageVurderingResultatAksjonspunktMellomlagringDto(String kode, String begrunnelse, int behandlingId,
                                                               String fritekstTilBrev, Kode klageMedholdArsak,

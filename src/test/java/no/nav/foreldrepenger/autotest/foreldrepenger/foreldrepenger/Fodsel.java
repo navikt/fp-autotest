@@ -1300,7 +1300,7 @@ public class Fodsel extends ForeldrepengerTestBase {
     private UttakResultatPeriodeAktivitet finnAktivitetForArbeidsgiver(UttakResultatPeriode uttakResultatPeriode,
             String identifikator) {
         return uttakResultatPeriode.getAktiviteter().stream()
-                .filter(a -> a.getArbeidsgiverReferanse().equals(identifikator)).findFirst().get();
+                .filter(a -> a.getArbeidsgiverReferanse().equals(identifikator)).findFirst().orElseThrow();
     }
 
     // TODO må ta inn fordeling som blir laget i søknad for å kunne verifisere

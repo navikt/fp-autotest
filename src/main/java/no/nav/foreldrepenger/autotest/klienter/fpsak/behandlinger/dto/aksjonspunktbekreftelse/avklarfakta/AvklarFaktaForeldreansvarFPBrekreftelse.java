@@ -47,7 +47,7 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
         }
     }
 
-    public class OmsorgovertakelseForelder {
+    public static class OmsorgovertakelseForelder {
         public int id;
         public LocalDate dodsdato;
         public boolean erMor;
@@ -70,7 +70,7 @@ public class AvklarFaktaForeldreansvarFPBrekreftelse extends AksjonspunktBekreft
         }
     }
 
-    public class OmsorgovertakelseBarn {
+    public static class OmsorgovertakelseBarn {
         public LocalDate fodselsdato;
         public String opplysningsKilde;
         public int nummer;
