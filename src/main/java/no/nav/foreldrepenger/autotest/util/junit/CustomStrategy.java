@@ -14,7 +14,7 @@ class CustomStrategy implements ParallelExecutionConfiguration, ParallelExecutio
 
     @Override
     public int getMinimumRunnable() {
-        return 4;
+        return 2;
     }
 
     @Override
@@ -24,7 +24,7 @@ class CustomStrategy implements ParallelExecutionConfiguration, ParallelExecutio
 
     @Override
     public int getCorePoolSize() {
-        return 4;
+        return 2;
     }
 
     @Override
