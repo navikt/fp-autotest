@@ -1,21 +1,21 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FEDREKVOTE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FLERBARNSDAGER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak.ARBEID;
-import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.overføringsperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper.medEgenNaeringOpptjening;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.overføringsperiode;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesÅrsak.ARBEID;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
@@ -33,13 +33,8 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OverføringÅrsak;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
-import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
-import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
-import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
@@ -71,12 +66,24 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.søknad.erketyper.FordelingErketyper;
+import no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper;
+import no.nav.foreldrepenger.autotest.søknad.erketyper.RelasjonTilBarnErketyper;
+import no.nav.foreldrepenger.autotest.søknad.erketyper.RettigheterErketyper;
+import no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper;
+import no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper;
+import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
+import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
+import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.NorskForelder;
+import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.UkjentForelder;
+import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.Overføringsårsak;
+import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType;
+import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("verdikjede")
@@ -88,28 +95,27 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "25% avvik med delvis refusjon. Etter behandlingen er ferdigbehandlet mottas en fødselshendelse.")
     public void testcase_mor_fødsel() {
         var testscenario = opprettTestscenario("501");
-
-        var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
+        var identSøker = testscenario.personopplysninger().søkerIdent();
         var termindato = LocalDate.now().plusWeeks(1);
         var fpStartdato = termindato.minusWeeks(3);
 
-        var fordeling = generiskFordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
-                uttaksperiode(FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
-                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, termindato.plusWeeks(15),
+        // BYGGER OG SENDER SØKNAD TIL MOTTAK!
+        var fordeling = FordelingErketyper.generiskFordeling(
+                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
+                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
+                UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, termindato.plusWeeks(15),
                         termindato.plusWeeks(20).minusDays(1)),
-                uttaksperiode(FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
-        var søknad = lagSøknadForeldrepengerTermin(termindato, søkerAktørId, SøkersRolle.MOR)
+                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
+
+        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
                 .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett())
-                .medMottattDato(termindato.minusWeeks(5));
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(
-                søknad.build(),
-                testscenario.personopplysninger().søkerAktørIdent(),
-                testscenario.personopplysninger().søkerIdent(),
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
+                .medMottatdato(termindato.minusWeeks(5));
+        var saksnummer = selvbetjening.sendInnSøknad(identSøker, søknad.build());
 
+
+        // BYGGER OG SENDER IM TIL JOURNALFØRING OG TRIGGER JOURNALFØRINGHENDEELSE!
         var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
         var orgNummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
@@ -118,66 +124,32 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var avvikendeMånedsinntekt = månedsinntekt * 1.3;
         var inntektsmeldinger = lagInntektsmelding((int) avvikendeMånedsinntekt, søkerFnr, fpStartdato, orgNummer)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.personopplysninger().søkerAktørIdent(),
+
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldinger,
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
-
-
-//        // BYGGER OG SENDER SØKNAD TIL MOTTAK!
-//        var fordeling = FordelingErketyper.generiskFordeling(
-//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
-//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
-//                UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, termindato.plusWeeks(15),
-//                        termindato.plusWeeks(20).minusDays(1)),
-//                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
-//
-//        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-//                .medFordeling(fordeling)
-//                .medRettigheter(no.nav.foreldrepenger.autotest.søknad.erketyper.RettigheterErketyper.harAleneOmsorgOgEnerett())
-//                .medMottatdato(termindato.minusWeeks(5));
-//
-//        var kvittering = selvbetjening.sendInnSøknad(søkerAktørId, søknad.build());
-//        verifiser(kvittering.erVellykket(), "Innsending feilet!");
-//        var saksnummer = Long.valueOf(kvittering.getSaksNr());
-//
-//        // BYGGER OG SENDER IM TIL JOURNALFØRING OG TRIGGER JOURNALFØRINGHENDEELSE!
-//        var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
-//                .beløp();
-//        var orgNummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
-//                .arbeidsgiverOrgnr();
-//        var søkerFnr = testscenario.personopplysninger().søkerIdent();
-//        var avvikendeMånedsinntekt = månedsinntekt * 1.3;
-//        var inntektsmeldinger = lagInntektsmelding((int) avvikendeMånedsinntekt, søkerFnr, fpStartdato, orgNummer)
-//                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
-//
-//        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldinger,
-//                testscenario.personopplysninger().søkerIdent(),
-//                saksnummer);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class);
-        vurderBeregnetInntektsAvvikBekreftelse
+                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
                 .leggTilInntekt(månedsinntekt * 12, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         var avklarFaktaAleneomsorgBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class);
-        avklarFaktaAleneomsorgBekreftelse.bekreftBrukerHarAleneomsorg();
-        avklarFaktaAleneomsorgBekreftelse.setBegrunnelse("Bekreftelse sendt fra Autotest.");
+                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
+                .bekreftBrukerHarAleneomsorg()
+                .setBegrunnelse("Bekreftelse sendt fra Autotest.");
         saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         Saldoer saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo(), 0,
+        verifiserLikhet(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo(), 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp (dvs = 0)!");
-        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER).getSaldo(),  75,
+        verifiserLikhet(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo(),  75,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER er 75 dager!");
         List<Integer> beregnetDagsats = regnUtForventetDagsatsForPeriode(List.of(månedsinntekt), List.of(100), List.of(false));
         verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
@@ -198,9 +170,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Foventer at revurderingen har årsakskode RE-HENDELSE-FØDSEL.");
 
         var avklarFaktaAleneomsorgBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class);
-        avklarFaktaAleneomsorgBekreftelse2.bekreftBrukerHarAleneomsorg();
-        avklarFaktaAleneomsorgBekreftelse2.setBegrunnelse("Bekreftelse sendt fra Autotest.");
+                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
+                .bekreftBrukerHarAleneomsorg()
+                .setBegrunnelse("Bekreftelse sendt fra Autotest.");
         saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse2);
 
         saksbehandler.ventTilAvsluttetBehandling();
@@ -208,9 +180,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         // Verifiser riktig justering av kontoer og uttak.
         saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo(), 5,
+        verifiserLikhet(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo(), 5,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL har 5 dager igjen!");
-        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER).getSaldo(),  70,
+        verifiserLikhet(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo(),  70,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER er 70 dager!");
     }
 
@@ -222,50 +194,42 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     public void morSelvstendigNæringsdrivendeTest() {
         var testscenario = opprettTestscenario("510");
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
-        var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
-        var søkerFnr = testscenario.personopplysninger().søkerIdent();
+        var identSøker = testscenario.personopplysninger().søkerIdent();
         var gjennomsnittFraTreSisteÅreneISigrun = hentNæringsinntektFraSigrun(testscenario, 2018,false);
         var næringsnntekt = BigDecimal.valueOf(gjennomsnittFraTreSisteÅreneISigrun * 1.80).toBigInteger(); // >25% avvik
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, næringsnntekt, true);
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørId, SøkersRolle.MOR)
-                .medSpesiellOpptjening(opptjening)
-                .medMottattDato(fødselsdato.plusWeeks(2));
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(
-                søknad.build(),
-                søkerAktørId,
-                søkerFnr,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
+                .medOpptjening(opptjening)
+                .medMottatdato(fødselsdato.plusWeeks(2));
+        var saksnummer = selvbetjening.sendInnSøknad(identSøker, søknad.build());
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
-        VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
-        vurderPerioderOpptjeningBekreftelse.godkjennAllOpptjening();
-        vurderPerioderOpptjeningBekreftelse.setBegrunnelse("Opptjening godkjent av Autotest.");
+        var vurderPerioderOpptjeningBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
+                .godkjennAllOpptjening()
+                .setBegrunnelse("Opptjening godkjent av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
         // Verifiser at aksjonspunkt 5042 ikke blir oprettet uten varig endring
-        VurderVarigEndringEllerNyoppstartetSNBekreftelse vurderVarigEndringEllerNyoppstartetSNBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class);
-        vurderVarigEndringEllerNyoppstartetSNBekreftelse
+        var vurderVarigEndringEllerNyoppstartetSNBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class)
                 .setErVarigEndretNaering(false)
                 .setBegrunnelse("Ingen endring");
         saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse);
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () ->
+        var runtimeException = assertThrows(RuntimeException.class, () ->
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_SELVSTENDIG_NÆRINGSDRIVENDE));
         verifiser(runtimeException.getMessage().equalsIgnoreCase("Fant ikke aksjonspunkt med kode 5042"),
                 "Har uventet aksjonspunkt: 5042");
 
-        VurderVarigEndringEllerNyoppstartetSNBekreftelse vurderVarigEndringEllerNyoppstartetSNBekreftelse1 =
-                saksbehandler.hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class);
-        vurderVarigEndringEllerNyoppstartetSNBekreftelse1
+        var vurderVarigEndringEllerNyoppstartetSNBekreftelse1 = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class)
                 .setErVarigEndretNaering(true)
                 .setBegrunnelse("Vurder varig endring for selvstendig næringsdrivende begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse1);
-        FastsettBruttoBeregningsgrunnlagSNBekreftelse fastsettBruttoBeregningsgrunnlagSNBekreftelse =
-                saksbehandler.hentAksjonspunktbekreftelse(FastsettBruttoBeregningsgrunnlagSNBekreftelse.class);
-        fastsettBruttoBeregningsgrunnlagSNBekreftelse
+        var fastsettBruttoBeregningsgrunnlagSNBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(FastsettBruttoBeregningsgrunnlagSNBekreftelse.class)
                 .setBruttoBeregningsgrunnlag(næringsnntekt.intValue())
                 .setBegrunnelse("Grunnlag begrunnelse");
         saksbehandler.bekreftAksjonspunkt(fastsettBruttoBeregningsgrunnlagSNBekreftelse);
@@ -282,18 +246,18 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at søker får utbetaling med status SN!");
         verifiser(beregningAktivitetStatus.size() == 1, "Forventer bare en periode med aktivitetstatus lik SN");
 
-        Saldoer saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+        var saldoer = saksbehandler.valgtBehandling.getSaldoer();
+        verifiser(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
-        verifiser(saldoer.getStonadskontoer().get(MØDREKVOTE).getSaldo() == 0,
+        verifiser(saldoer.getStonadskontoer().get(Stønadskonto.MØDREKVOTE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
-        verifiser(saldoer.getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
+        verifiser(saldoer.getStonadskontoer().get(Stønadskonto.FELLESPERIODE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
 
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
 
-        var dødshendelseDto = new DødshendelseDto("OPPRETTET", null, søkerFnr,
+        var dødshendelseDto = new DødshendelseDto("OPPRETTET", null, identSøker,
                 LocalDate.now().minusDays(1));
         fordel.opprettHendelsePåKafka(dødshendelseDto);
 
@@ -304,8 +268,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Foventer at revurderingen har årsakskode RE-HENDELSE-DØD-F");
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.avslåManuellePerioder();
+                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+                .avslåManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
@@ -322,8 +286,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 3,
                 "Forventer at det er 3 avslåtte uttaksperioder");
 
-        BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
-                .getBeregningResultatForeldrepenger();
+        var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
         verifiserLikhet(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats(),0,
                 "Siden perioden er avslått pga død, forventes det 0 i dagsats.");
         verifiserLikhet(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats(),0,
@@ -342,50 +305,45 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
-        PapirSoknadForeldrepengerBekreftelse papirSoknadForeldrepengerBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
         var termindato = LocalDate.now().plusWeeks(6);
         var fpStartdatoMor = termindato.minusWeeks(3);
         var fpMottatDato = termindato.minusWeeks(6);
-        FordelingDto fordelingDtoMor = new FordelingDto();
-        PermisjonPeriodeDto foreldrepengerFørFødsel = new PermisjonPeriodeDto(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor,
+        var fordelingDtoMor = new FordelingDto();
+        var foreldrepengerFørFødsel = new PermisjonPeriodeDto(Stønadskonto.FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor,
                 termindato.minusDays(1));
-        PermisjonPeriodeDto mødrekvote = new PermisjonPeriodeDto(MØDREKVOTE, termindato,
+        var mødrekvote = new PermisjonPeriodeDto(Stønadskonto.MØDREKVOTE, termindato,
                 termindato.plusWeeks(20).minusDays(1));
         fordelingDtoMor.permisjonsPerioder.add(foreldrepengerFørFødsel);
         fordelingDtoMor.permisjonsPerioder.add(mødrekvote);
-        papirSoknadForeldrepengerBekreftelse.morSøkerTermin(
-                fordelingDtoMor,
-                termindato,
-                fpMottatDato,
-                DekningsgradDto.AATI);
+        var papirSoknadForeldrepengerBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(PapirSoknadForeldrepengerBekreftelse.class)
+                .morSøkerTermin(fordelingDtoMor, termindato, fpMottatDato, DekningsgradDto.AATI);
         saksbehandler.bekreftAksjonspunkt(papirSoknadForeldrepengerBekreftelse);
 
-        AvklarArbeidsforholdBekreftelse avklarArbeidsforholdBekreftelse = saksbehandler
+        var avklarArbeidsforholdBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
-        avklarFaktaTerminBekreftelse.setUtstedtdato(termindato.minusWeeks(10));
-        avklarFaktaTerminBekreftelse.setBegrunnelse("Begrunnelse fra autotest");
+        var avklarFaktaTerminBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class)
+                .setUtstedtdato(termindato.minusWeeks(10))
+                .setBegrunnelse("Begrunnelse fra autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
         verifiser(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"),
                 "Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +
                         "er forut for permisjonen på skjæringstidspunktet!");
 
-        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-        vurderFaktaOmBeregningBekreftelse
+        var vurderFaktaOmBeregningBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilAndelerYtelse(10000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"))
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
-        FastsettUttaksperioderManueltBekreftelse fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.avslåManuellePerioderMedPeriodeResultatÅrsak(
-                new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
+        var fastsettUttaksperioderManueltBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+                .avslåManuellePerioderMedPeriodeResultatÅrsak(
+                        new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, false);
@@ -423,7 +381,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
          * arbeidsforholdID og refusjon på begge.
          */
         var identFar = testscenario.personopplysninger().søkerIdent();
-        var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
         var orgNummerFar = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
                 .arbeidsgiverOrgnr();
         var fordelingFar = generiskFordeling(
@@ -438,15 +395,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                         fpStartdatoFar.plusWeeks(49).minusDays(1),
                         orgNummerFar,
                         50));
-        var søknadFar = lagSøknadForeldrepengerFødsel(
-                fødselsdato, aktørIdFar, SøkersRolle.FAR)
-                        .medAnnenForelder(testscenario.personopplysninger().annenpartAktørIdent())
+        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
+                        .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartAktørIdent()))
                         .medFordeling(fordelingFar);
-        var saksnummerFar = fordel.sendInnSøknad(
-                søknadFar.build(),
-                aktørIdFar,
-                identFar,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar1 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
         var arbeidsforholdIdFar1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsforholdId();
@@ -458,9 +410,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         InntektsmeldingBuilder inntektsmeldingFar2 = lagInntektsmelding(månedsinntektFar2, identFar, fpStartdatoFar, orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar2)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar2));
-        fordel.sendInnInntektsmeldinger(
-                List.of(inntektsmeldingFar1, inntektsmeldingFar2),
-                aktørIdFar,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(List.of(inntektsmeldingFar1, inntektsmeldingFar2),
                 identFar,
                 saksnummerFar);
 
@@ -493,7 +443,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar.plusWeeks(11),
                 fpStartdatoFar.plusWeeks(19).minusDays(1),
                 new Kode("INNVILGET_AARSAK", "2031", "§14-12, jf. §14-16: Gradering av kvote/overført kvote"),
-                FEDREKVOTE);
+                Stønadskonto.FEDREKVOTE);
         overstyringUttak.splitPeriode(
                 fpStartdatoFar.plusWeeks(19),
                 fpStartdatoFar.plusWeeks(49).minusDays(1),
@@ -514,11 +464,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         Saldoer saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        verifiser(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+        verifiser(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
-        verifiser(saldoer.getStonadskontoer().get(MØDREKVOTE).getSaldo() == 0,
+        verifiser(saldoer.getStonadskontoer().get(Stønadskonto.MØDREKVOTE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
-        verifiser(saldoer.getStonadskontoer().get(FEDREKVOTE).getSaldo() == 0,
+        verifiser(saldoer.getStonadskontoer().get(Stønadskonto.FEDREKVOTE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FEDREKVOTE er brukt opp!");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(100),
                 "Forventer at hele summen utbetales til arbeidsgiver, og derfor ingenting til søker!");
@@ -550,21 +500,17 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
          * fedrekvoten
          */
         var identFar = testscenario.personopplysninger().søkerIdent();
-        var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FELLESPERIODE, fpStartdatoFar, fpStartdatoFar.plusWeeks(4).minusDays(1)),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar.plusWeeks(4), fpStartdatoFar.plusWeeks(19).minusDays(1)));
         var frilansFom = testscenario.scenariodataDto().inntektskomponentModell().frilansarbeidsforholdperioder()
                 .get(0).frilansFom();
         var opptjeningFar = OpptjeningErketyper.medFrilansOpptjening(frilansFom, fpStartdatoFar.minusDays(1));
-        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
+        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
+                .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
                 .medFordeling(fordelingFar)
-                .medSpesiellOpptjening(opptjeningFar);
-        var saksnummerFar = fordel.sendInnSøknad(
-                søknadFar.build(),
-                aktørIdFar,
-                identFar,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                .medOpptjening(opptjeningFar);
+        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
         VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler
@@ -602,8 +548,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     public void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var testscenario = opprettTestscenario("570");
         var identFar = testscenario.personopplysninger().søkerIdent();
-        var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
-        var aktørIdMor = testscenario.personopplysninger().annenpartAktørIdent();
+        var identMor = testscenario.personopplysninger().annenpartIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
         var orgNummerFar1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
                 .arbeidsgiverOrgnr();
@@ -616,18 +561,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                         fpStartdatoFar.plusWeeks(100).minusDays(1),
                         orgNummerFar1,
                         stillingsprosent1));
-        var søknadFar = lagSøknadForeldrepengerFødsel(
-                fødselsdato, aktørIdFar, SøkersRolle.FAR)
+        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                         .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
                         .medFordeling(fordelingFar)
-                        .medAnnenForelder(aktørIdMor);
-
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummerFar = fordel.sendInnSøknad(
-                søknadFar.build(),
-                aktørIdFar,
-                identFar,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                        .medAnnenForelder(lagNorskAnnenforeldre(identMor));
+        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar1 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
@@ -647,9 +585,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medArbeidsforholdId(arbeidsforholdIdFar2)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar2))
                 .medRefusjonsOpphordato(opphørsDatoForRefusjon);
-        fordel.sendInnInntektsmeldinger(
-                List.of(inntektsmeldingFar1, inntektsmeldingFar2),
-                aktørIdFar,
+
+        inntektsmelding.sendInnInnteksmeldingFpfordel(List.of(inntektsmeldingFar1, inntektsmeldingFar2),
                 identFar,
                 saksnummerFar);
 
@@ -671,10 +608,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Arbeidsforholdet skulle vært avsluttet");
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
-        AvklarFaktaAnnenForeldreHarRett avklarFaktaAnnenForeldreHarRett = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class);
-        avklarFaktaAnnenForeldreHarRett.setAnnenforelderHarRett(false);
-        avklarFaktaAnnenForeldreHarRett.setBegrunnelse("Bare far har rett!");
+        var avklarFaktaAnnenForeldreHarRett = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .setAnnenforelderHarRett(false)
+                .setBegrunnelse("Bare far har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
@@ -684,7 +621,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         /* VERIFISERINGER */
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER).getSaldo() == 0,
+        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER er 0 dager!");
 
         var beregningsresultatPerioder = saksbehandler.valgtBehandling
@@ -758,22 +695,17 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
          * uker av mødrekvoten.
          */
         var identFar = testscenario.personopplysninger().søkerIdent();
-        var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
         var fpStartdatoFarEndret = fødselsdato.plusWeeks(4);
         var fordelingFar = generiskFordeling(
-                overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, MØDREKVOTE, fpStartdatoFarEndret,
+                overføringsperiode(Overføringsårsak.SYKDOM_ANNEN_FORELDER, MØDREKVOTE, fpStartdatoFarEndret,
                         fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFarOrdinær, fpStartdatoFarOrdinær.plusWeeks(15).minusDays(1)));
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
+        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(fordelingFar)
-                .medAnnenForelder(testscenario.personopplysninger().annenpartAktørIdent())
-                .medMottattDato(fødselsdato.plusWeeks(6));
-        var saksnummerFar = fordel.sendInnSøknad(
-                søknadFar.build(),
-                aktørIdFar,
-                identFar,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartAktørIdent()))
+                .medMottatdato(fødselsdato.plusWeeks(6));
+        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
         AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder avklarFaktaUttakPerioder = saksbehandler
@@ -854,7 +786,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var identMor = testscenario.personopplysninger().søkerIdent();
-        var aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fpStartdatoFar = fødselsdato.plusWeeks(31);
@@ -863,16 +794,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fpStartdatoFar.minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fpStartdatoFar, fpStartdatoFar.plusWeeks(17).minusDays(1), true, false));
-        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
+        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordelingMor)
-                .medRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(2, fødselsdato))
-                .medMottattDato(fpStartdatoMor.minusWeeks(3));
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummerMor = fordel.sendInnSøknad(
-                søknadMor.build(),
-                aktørIdMor,
-                identMor,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                .medRelasjonTilBarn(RelasjonTilBarnErketyper.fødsel(2, fødselsdato))
+                .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
+                .medMottatdato(fpStartdatoMor.minusWeeks(3));
+        var saksnummerMor = selvbetjening.sendInnSøknad(identMor, søknadMor.build());
 
         var månedsinntektMor = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
@@ -883,9 +810,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 fpStartdatoMor,
                 orgNummerMor);
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingMor,
-                aktørIdMor,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
                 identMor,
                 saksnummerMor);
 
@@ -894,13 +819,13 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         Saldoer saldoerFørstgangsbehandling = saksbehandler.valgtBehandling.getSaldoer();
-        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
-        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(MØDREKVOTE).getSaldo() == 0,
+        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(Stønadskonto.MØDREKVOTE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
-        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
+        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(Stønadskonto.FELLESPERIODE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
-        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(FLERBARNSDAGER).getSaldo() == 0,
+        verifiser(saldoerFørstgangsbehandling.getStonadskontoer().get(Stønadskonto.FLERBARNSDAGER).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FLERBARNSDAGER er brukt opp!");
 
         /*
@@ -908,9 +833,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
          * også samtidig uttak.
          */
         var identFar = testscenario.personopplysninger().annenpartIdent();
-        var aktørIdFar = testscenario.personopplysninger().annenpartAktørIdent();
         var gjennomsnittFraTreSisteÅreneISigrun = hentNæringsinntektFraSigrun(testscenario, 2018,true);
-        var opptjeningFar = OpptjeningErketyper.medEgenNaeringOpptjening(
+        var opptjeningFar = medEgenNaeringOpptjening(
                 LocalDate.now().minusYears(4),
                 fpStartdatoFar,
                 false,
@@ -922,16 +846,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar.plusWeeks(4), fpStartdatoFar.plusWeeks(17).minusDays(1),
                         false,true),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar.plusWeeks(17), fpStartdatoFar.plusWeeks(19).minusDays(1)));
-        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
+        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(fordelingFar)
-                .medSpesiellOpptjening(opptjeningFar)
-                .medRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(2, fødselsdato))
-                .medAnnenForelder(aktørIdMor);
-        var saksnummerFar = fordel.sendInnSøknad(
-                søknadFar.build(),
-                aktørIdFar,
-                identFar,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                .medOpptjening(opptjeningFar)
+                .medRelasjonTilBarn(RelasjonTilBarnErketyper.fødsel(2, fødselsdato))
+                .medAnnenForelder(lagNorskAnnenforeldre(identMor));
+        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar = testscenario.scenariodataAnnenpartDto().inntektskomponentModell()
                 .inntektsperioder().get(0).beløp();
@@ -945,9 +865,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar);
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingFar,
-                aktørIdFar,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingFar,
                 identFar,
                 saksnummerFar);
 
@@ -1018,15 +936,15 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
 
         Saldoer saldoerBerørtSak = saksbehandler.valgtBehandling.getSaldoer();
-        verifiser(saldoerBerørtSak.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
-        verifiser(saldoerBerørtSak.getStonadskontoer().get(MØDREKVOTE).getSaldo() == 0,
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(Stønadskonto.MØDREKVOTE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
-        verifiser(saldoerBerørtSak.getStonadskontoer().get(FEDREKVOTE).getSaldo() == 0,
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(Stønadskonto.FEDREKVOTE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FEDREKVOTE er brukt opp!");
-        verifiser(saldoerBerørtSak.getStonadskontoer().get(FELLESPERIODE).getSaldo() == 0,
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(Stønadskonto.FELLESPERIODE).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
-        verifiser(saldoerBerørtSak.getStonadskontoer().get(FLERBARNSDAGER).getSaldo() == 0,
+        verifiser(saldoerBerørtSak.getStonadskontoer().get(Stønadskonto.FLERBARNSDAGER).getSaldo() == 0,
                 "Forventer at saldoen for stønadskonton FLERBARNSDAGER er brukt opp!");
 
         verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() == 1,
@@ -1043,9 +961,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor søker med dagpenger som grunnlag. Kvalifiserer til automatisk besteberegning." +
             "Beregning etter etter §14-7, 3. ledd gir høyere inntekt enn beregning etter §14-7, 1. ledd")
     public void MorSøkerMedDagpengerTest() {
-        TestscenarioDto testscenario = opprettTestscenario("521");
+        var testscenario = opprettTestscenario("521");
         var identMor = testscenario.personopplysninger().søkerIdent();
-        var aktørIdMor = testscenario.personopplysninger().søkerAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fordelingMor = generiskFordeling(
@@ -1053,14 +970,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(31).minusDays(1)));
 
-        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
-                .medFordeling(fordelingMor);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummerMor = fordel.sendInnSøknad(
-                søknadMor.build(),
-                aktørIdMor,
-                identMor,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medFordeling(fordelingMor)
+                .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()));
+        var saksnummerMor = selvbetjening.sendInnSøknad(identMor, søknadMor.build());
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
@@ -1088,23 +1001,16 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /* FAR */
         var identFar = testscenario.personopplysninger().søkerIdent();
-        var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
         var omsorgsovertakelsedatoe = LocalDate.now().minusMonths(4);
         var fpStartdatoFar = omsorgsovertakelsedatoe;
-        var fellesperiodeStartFar = fpStartdatoFar.plusWeeks(15);
-        var fellesperiodeSluttFar = fellesperiodeStartFar.plusWeeks(16).minusDays(1);
+        var fpSluttdatoFar = fpStartdatoFar.plusWeeks(46).minusDays(1);
         var fordelingFar = generiskFordeling(
-                uttaksperiode(FEDREKVOTE, fpStartdatoFar, fellesperiodeStartFar.minusDays(1)),
-                uttaksperiode(FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar));
-        var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, aktørIdFar, SøkersRolle.FAR, false)
+                uttaksperiode(FORELDREPENGER, fpStartdatoFar, fpSluttdatoFar));
+        var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, BrukerRolle.FAR, false)
                 .medFordeling(fordelingFar)
-                .medMottattDato(fpStartdatoFar.minusWeeks(3));
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummerFar = fordel.sendInnSøknad(
-                søknadFar.build(),
-                aktørIdFar,
-                identFar,
-                DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER);
+                .medAnnenForelder(new UkjentForelder())
+                .medMottatdato(fpStartdatoFar.minusWeeks(3));
+        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
@@ -1118,25 +1024,27 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar);
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingFar,
-                aktørIdFar,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingFar,
                 identFar,
                 saksnummerFar);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
-        AvklarFaktaAdopsjonsdokumentasjonBekreftelse avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
-        avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBegrunnelse("Adopsjon behandlet av Autotest.");
+        var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
+        var avklarFaktaAleneomsorgBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
+                .bekreftBrukerHarAleneomsorg()
+                .setBegrunnelse("Bekreftelse sendt fra Autotest.");
+        saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
+        saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
-        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().size() == 2,
+        verifiser(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().size() == 1,
                 "Forventer at det er to perioder i tilkjent ytelse. En for fedrekvote og en for fellesperioden");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
@@ -1149,9 +1057,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar/2));
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingEndringFar,
-                aktørIdFar,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingEndringFar,
                 identFar,
                 saksnummerFar);
 
@@ -1187,9 +1093,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar));
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingEndringFar2,
-                aktørIdFar,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingEndringFar2,
                 identFar,
                 saksnummerFar);
 
@@ -1222,26 +1126,22 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var perioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
         if (LocalDate.now().getDayOfMonth() == 1) {
-            verifiser(perioder.size() == 3,
-                    "Foventer at den berørte saken har 4 tilkjent ytelse perioder, faktisk antall var: " + perioder.size());
+            verifiser(perioder.size() == 2,
+                    "Foventer at den berørte saken har 2 tilkjent ytelse perioder, faktisk antall var: " + perioder.size());
             verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0),
                     "Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!");
             verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(1), 100),
                     "Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!");
-            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(2), 100),
-                    "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
 
         } else {
-            verifiser(perioder.size() == 4,
-                    "Foventer at den berørte saken har 4 tilkjent ytelse perioder, faktisk antall var: " + perioder.size());
+            verifiser(perioder.size() == 3,
+                    "Foventer at den berørte saken har 3 tilkjent ytelse perioder, faktisk antall var: " + perioder.size());
             verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0),
                     "Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!");
             verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(1), 0),
                     "Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!");
             verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(2), 100),
                     "Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!");
-            verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(3), 100),
-                    "Forventer at hele summen utbetales til AG i fjerde periode, og derfor ingenting til søker!");
         }
     }
 
@@ -1255,7 +1155,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /* FAR */
         var identFar = testscenario.personopplysninger().søkerIdent();
-        var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
+        var identMor = testscenario.personopplysninger().annenpartIdent();
         var omsorgsovertakelsedatoe = LocalDate.now().minusWeeks(4);
         var fpStartdatoFar = omsorgsovertakelsedatoe;
         var fellesperiodeStartFar = fpStartdatoFar.plusWeeks(15);
@@ -1263,14 +1163,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar, fellesperiodeStartFar.minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fellesperiodeStartFar, fellesperiodeSluttFar));
-        var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, aktørIdFar, SøkersRolle.FAR, false)
-                .medFordeling(fordelingFar);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummerFar = fordel.sendInnSøknad(
-                søknadFar.build(),
-                aktørIdFar,
-                identFar,
-                DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER);
+        var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, BrukerRolle.FAR, false)
+                .medFordeling(fordelingFar)
+                .medAnnenForelder(lagNorskAnnenforeldre(identMor));
+        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
@@ -1284,18 +1180,22 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar);
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingFar,
-                aktørIdFar,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingFar,
                 identFar,
                 saksnummerFar);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
-        AvklarFaktaAdopsjonsdokumentasjonBekreftelse avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
-        avklarFaktaAdopsjonsdokumentasjonBekreftelseFar.setBegrunnelse("Adopsjon behandlet av Autotest.");
+        var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .setBegrunnelse("Adopsjon behandlet av Autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
+
+        var avklarFaktaAnnenForeldreHarRett = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .setAnnenforelderHarRett(true)
+                .setBegrunnelse("Både far og mor har rett!");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
 
@@ -1307,22 +1207,16 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
 
         /* MOR */
-        var identMor = testscenario.personopplysninger().annenpartIdent();
-        var aktørIdMor = testscenario.personopplysninger().annenpartAktørIdent();
         var fpStartdatoMor = fpStartdatoFar.plusWeeks(7);
         var fellesperiodeStartMor = fpStartdatoMor.plusWeeks(4);
         var fellesperiodeSluttMor = fellesperiodeStartMor.plusWeeks(9).minusDays(1);
         var fordelingMor = generiskFordeling(
                 uttaksperiode(MØDREKVOTE, fpStartdatoMor, fellesperiodeStartMor.minusDays(1), false, false),
                 uttaksperiode(FELLESPERIODE, fellesperiodeStartMor, fellesperiodeSluttMor, false, true, 40));
-        var søknadMor = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, aktørIdMor, SøkersRolle.MOR, false)
+        var søknadMor = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, BrukerRolle.MOR, false)
                 .medFordeling(fordelingMor)
-                .medAnnenForelder(aktørIdFar);
-        var saksnummerMor = fordel.sendInnSøknad(
-                søknadMor.build(),
-                aktørIdMor,
-                identMor,
-                DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER);
+                .medAnnenForelder(lagNorskAnnenforeldre(identFar));
+        var saksnummerMor = selvbetjening.sendInnSøknad(identMor, søknadMor.build());
 
         var månedsinntektMor = testscenario.scenariodataAnnenpartDto().inntektskomponentModell()
                 .inntektsperioder().get(0).beløp();
@@ -1336,9 +1230,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoMor,
                 orgNummerMor)
                 .medArbeidsforholdId(arbeidsforholdIdMor);
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingMor,
-                aktørIdMor,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
                 identMor,
                 saksnummerMor);
 
@@ -1389,7 +1281,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
         var saldoer = saksbehandler
                 .hentSaldoerGittUttaksperioder(fastsettUttaksperioderManueltBekreftelseMor.getPerioder());
-        var disponibleFellesdager = saldoer.getStonadskontoer().get(FELLESPERIODE).getSaldo();
+        var disponibleFellesdager = saldoer.getStonadskontoer().get(Stønadskonto.FELLESPERIODE).getSaldo();
         var sisteDagMedFellesperiode = Virkedager.plusVirkedager(fomSistePeriode.plusDays(1), Math.abs(disponibleFellesdager));
         fastsettUttaksperioderManueltBekreftelseMor.splitPeriode(
                 fomSistePeriode,
@@ -1409,7 +1301,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         beslutter.ventTilFagsakLøpende();
 
         // verifisering i uttak
-        verifiserLikhet(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo(), 0,
+        verifiserLikhet(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(Stønadskonto.FELLESPERIODE).getSaldo(), 0,
                 "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp (dvs = 0)!");
         verifiserLikhet(saksbehandler.hentAvslåtteUttaksperioder().size(), 2,
                 "Forventer at det er 2 avslåtte uttaksperioder");
@@ -1430,21 +1322,16 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("12: Mor søker fødsel og mottar sykepenger som er under 1/2 G")
-    @Description("12: Mor søker fødsel og mottar sykepenger som er under 1/2 G. Har ingen inntektskilder. Hun har " +
-            "for lite inntekt og har dermed ikke rett til foreldrepenger – beregning avvist søknadden.")
+    @Description("12: Mor søker fødsel og mottar sykepenger som er under 1/2 G. Har ingen inntektskilder. " +
+            "Hun har for lite inntekt og har dermed ikke rett til foreldrepenger – beregning avvist søknadden.")
     public void morSøkerFødselMottarForLite() {
         var testscenario = opprettTestscenario("70");
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(
-                søknad.build(),
-                søkerAktørIdent,
-                søkerIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()));
+        var saksnummer = selvbetjening.sendInnSøknad(søkerIdent, søknad.build());
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -1479,19 +1366,14 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
             "en dødfødselshendelse hvor mor får avslag etter det 6 uken av mødrekvoten.")
     public void morSøkerTerminFårInnvilgetOgSåKommerDetEnDødfødselEtterTermin() {
         var testscenario = opprettTestscenario("55");
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
         var termindato = LocalDate.now().minusWeeks(2);
         var fpStartdatoMor = termindato.minusWeeks(3);
 
-        var søknad = lagSøknadForeldrepengerTermin(termindato, søkerAktørIdent, SøkersRolle.MOR)
-                .medMottattDato(termindato.minusMonths(2));
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(
-                søknad.build(),
-                søkerAktørIdent,
-                søkerIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+        var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
+                .medMottatdato(termindato.minusMonths(2));
+        var saksnummer = selvbetjening.sendInnSøknad(søkerIdent, søknad.build());
 
         var månedsinntektMor = testscenario.scenariodataDto().inntektskomponentModell()
                 .inntektsperioder().get(0).beløp();
@@ -1502,9 +1384,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 søkerIdent,
                 fpStartdatoMor,
                 orgNummerMor);
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingMor,
-                søkerAktørIdent,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
                 søkerIdent,
                 saksnummer);
 
@@ -1514,11 +1394,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        verifiserLikhet(saldoer.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo(), 0,
+        verifiserLikhet(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo(), 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
-        verifiserLikhet(saldoer.getStonadskontoer().get(MØDREKVOTE).getSaldo(), 0,
+        verifiserLikhet(saldoer.getStonadskontoer().get(Stønadskonto.MØDREKVOTE).getSaldo(), 0,
                 "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
-        verifiserLikhet(saldoer.getStonadskontoer().get(FELLESPERIODE).getSaldo(), 0,
+        verifiserLikhet(saldoer.getStonadskontoer().get(Stønadskonto.FELLESPERIODE).getSaldo(), 0,
                 "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
 
         var differanseFødselTermin = 7;
@@ -1543,11 +1423,11 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
 
         var saldoerRevurdering = saksbehandler.valgtBehandling.getSaldoer();
-        verifiserLikhet(saldoerRevurdering.getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo(), 0,
+        verifiserLikhet(saldoerRevurdering.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo(), 0,
                 "Forventer at saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL er brukt opp!");
-        verifiserLikhet(saldoerRevurdering.getStonadskontoer().get(MØDREKVOTE).getSaldo(), 45,
+        verifiserLikhet(saldoerRevurdering.getStonadskontoer().get(Stønadskonto.MØDREKVOTE).getSaldo(), 45,
                 "Forventer at saldoen for stønadskonton MØDREKVOTE er brukt opp!");
-        verifiserLikhet(saldoerRevurdering.getStonadskontoer().get(FELLESPERIODE).getSaldo(), 75,
+        verifiserLikhet(saldoerRevurdering.getStonadskontoer().get(Stønadskonto.FELLESPERIODE).getSaldo(), 75,
                 "Forventer at saldoen for stønadskonton FELLESPERIODE er brukt opp!");
 
 
@@ -1592,20 +1472,15 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
             LocalDate fpStartdatoFar) {
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var identMor = testscenario.personopplysninger().annenpartIdent();
-        var aktørIdMor = testscenario.personopplysninger().annenpartAktørIdent();
         var fordelingMor = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fpStartdatoFar.minusDays(1)));
-        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdMor, SøkersRolle.MOR)
+        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().søkerIdent()))
                 .medFordeling(fordelingMor)
-                .medMottattDato(fpStartdatoMor.minusWeeks(4));
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        var saksnummerMor = fordel.sendInnSøknad(
-                søknadMor.build(),
-                aktørIdMor,
-                identMor,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                .medMottatdato(fpStartdatoMor.minusWeeks(4));
+        var saksnummerMor = selvbetjening.sendInnSøknad(identMor, søknadMor.build());
 
         var månedsinntektMor = testscenario.scenariodataAnnenpartDto().inntektskomponentModell()
                 .inntektsperioder().get(0).beløp();
@@ -1616,13 +1491,15 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 fpStartdatoMor,
                 orgNummerMor);
-        fordel.sendInnInntektsmelding(
-                inntektsmeldingMor,
-                aktørIdMor,
+        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
                 identMor,
                 saksnummerMor);
 
         return saksnummerMor;
+    }
+
+    private NorskForelder lagNorskAnnenforeldre(String indent) {
+        return new NorskForelder(new Fødselsnummer(indent), "");
     }
 
 }

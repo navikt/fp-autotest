@@ -12,13 +12,12 @@ public class Fødselsnummer {
     @JsonValue
     private final String fnr;
 
-    @JsonCreator
-    public Fødselsnummer(@JsonProperty("fnr") String fnr) {
+    public Fødselsnummer(String fnr) {
         this.fnr = fnr;
     }
 
-    public static Fødselsnummer valueOf(String fnr) {
+    @JsonCreator
+    public static Fødselsnummer valueOf(@JsonProperty("fnr") String fnr) {
         return new Fødselsnummer(fnr);
     }
-
 }

@@ -37,6 +37,4 @@ public class SøknadEngangsstønadErketyper {
         return lagEngangsstønad(brukerRolle)
                 .medRelasjonTilBarn(RelasjonTilBarnErketyper.omsorgsovertakelse(omsorgsovertakelsedato, årsak));
     }
-
-
 }

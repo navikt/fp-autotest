@@ -51,13 +51,19 @@ public abstract class SøknadBuilder<B extends SøknadBuilder> {
     }
 
     protected Søknad build() {
+        if (søknadKladd.getBegrunnelseForSenSøknad() == null) {
+            søknadKladd.setBegrunnelseForSenSøknad(null);
+        }
+        if (søknadKladd.getTilleggsopplysninger() == null) {
+            søknadKladd.setTilleggsopplysninger("");
+        }
         if (søknadKladd.getMottattdato() == null) {
             søknadKladd.setMottattdato(LocalDate.now());
         }
         if (søknadKladd.getVedlegg() == null) {
             søknadKladd.setVedlegg(Collections.emptyList());
         }
-        return this.søknadKladd;
+        return søknadKladd;
     }
 
 }

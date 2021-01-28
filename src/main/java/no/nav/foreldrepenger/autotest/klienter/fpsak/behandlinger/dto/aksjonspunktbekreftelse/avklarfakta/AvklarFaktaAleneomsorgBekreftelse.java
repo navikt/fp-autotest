@@ -12,12 +12,14 @@ public class AvklarFaktaAleneomsorgBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    public void bekreftBrukerHarAleneomsorg() {
+    public AvklarFaktaAleneomsorgBekreftelse bekreftBrukerHarAleneomsorg() {
         this.aleneomsorg = true;
+        return this;
     }
 
-    public void bekreftBrukerHarIkkeAleneomsorg() {
+    public AvklarFaktaAleneomsorgBekreftelse bekreftBrukerHarIkkeAleneomsorg() {
         this.aleneomsorg = false;
+        return this;
     }
 
 }

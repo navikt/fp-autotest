@@ -15,7 +15,8 @@
 				"@type": "ref",
 				"fom": "now() - P1Y",
 				"adresseType": "BOSTEDSADRESSE",
-				"land": "NOR"
+				"land": "NOR",
+				"matrikkelId": "000000002"
 			}
 		],
 		"personstatus": [
@@ -61,6 +62,16 @@
 			"til": {
 				"@type": "annenPart",
 				"ident": "${for2}"
+			}
+		}
+	],
+
+	"familierelasjonerBarn": [
+		{
+			"rolle": "MORA",
+			"til": {
+				"@type": "søker",
+				"ident": "${for1}"
 			}
 		}
 	]
