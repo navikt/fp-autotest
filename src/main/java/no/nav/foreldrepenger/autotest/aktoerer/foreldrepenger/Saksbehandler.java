@@ -691,7 +691,7 @@ public class Saksbehandler extends Aktoer {
         var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
             if (opptjening.getAktivitetType().kode.equalsIgnoreCase(aktivitet) &&
-                    !opptjening.getOpptjeningTom().isBefore(skjaeringstidspunkt)) {
+                    !opptjening.getOpptjeningTom().isBefore(skjaeringstidspunkt.minusDays(1))) {
                 return true;
             }
         }
