@@ -24,7 +24,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -44,18 +43,14 @@ import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
@@ -1044,9 +1039,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("9: Mor søker med dagpenger som grunnlag, klager, får medhold og revurderes.")
-    @Description("Mor søker med dagpenger som grunnlag. Bruker ikke besteberegning. Søker klager på dette. Mor får" +
-            "medhold og revurderes. I revurderingen brukes besteberegning og sbh oppgir en verdi høyere månedsinntekt.")
+    @DisplayName("9: Mor søker med dagpenger som grunnlag, besteberegnes automatisk")
+    @Description("Mor søker med dagpenger som grunnlag. Kvalifiserer til automatisk besteberegning." +
+            "Beregning etter etter §14-7, 3. ledd gir høyere inntekt enn beregning etter §14-7, 1. ledd")
     public void MorSøkerMedDagpengerTest() {
         TestscenarioDto testscenario = opprettTestscenario("521");
         var identMor = testscenario.personopplysninger().søkerIdent();
@@ -1080,58 +1075,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Brev er bestillt i førstegangsbehandling");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
-
-        // * KLAGE *//
-        fordel.sendInnKlage(null, testscenario, saksnummerMor);
-
-        klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
-        klagebehandler.hentFagsak(saksnummerMor);
-        klagebehandler.ventPåOgVelgKlageBehandling();
-        KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
-        klageFormkravNfp
-                .setPåklagdVedtak(Integer.toString(klagebehandler.valgtBehandling.id - 1))
-                .godkjennAlleFormkrav()
-                .setBegrunnelse("Godkjenner alle formkrav");
-        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
-
-        VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
-        vurderingAvKlageNfpBekreftelse
-                .bekreftMedholdGunst("PROSESSUELL_FEIL")
-                .fritekstBrev("Fritekst brev fra nfp")
-                .setBegrunnelse("Slik er det bare!");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
-        beslutter.hentFagsak(saksnummerMor);
-        beslutter.ventPåOgVelgKlageBehandling();
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-
-        // * REVURDERING *//
-        saksbehandler.opprettBehandlingRevurdering("ETTER_KLAGE");
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
-
-        verifiser(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode
-                        .equalsIgnoreCase("ETTER_KLAGE"),
-                "Foventer at revurderingen har årsakskode ETTER_KLAGE.");
-
-        saksbehandler.bekreftAksjonspunktbekreftelserer(
-                saksbehandler.hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class),
-                saksbehandler.hentAksjonspunktbekreftelse(ForeslåVedtakManueltBekreftelse.class));
-
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
-                "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
-        verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode
-                        .equalsIgnoreCase("INGEN_ENDRING"),
-                "Foventer at konsekvens for ytelse er satt til ENDRING_I_BEREGNING.");
-        verifiser(!saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT,
-                        saksbehandler.valgtBehandling.id),
-                "Forventer at det ikke sendes et nytt vedtaksbrev i revurderingen");
-
     }
 
     @Test
