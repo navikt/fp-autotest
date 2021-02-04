@@ -16,7 +16,7 @@
 						"meldekort": [
 							{
 								"fom": "now() - P5M",
-								"tom": "now() - P5W1D",
+								"tom": "now() - P4W",
 								"dagsats": 1000,
 								"beløp": 21667,
 								"utbetalingsgrad": 100
