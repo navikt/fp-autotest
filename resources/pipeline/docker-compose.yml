@@ -51,7 +51,7 @@ services:
       - "1337:1337"
       - "8389:8389"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8060/rest/isReady"]
+      test: ["CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8060/rest/isReady"]
       interval: 15s
       timeout: 5s
       retries: 5
