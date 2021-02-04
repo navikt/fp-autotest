@@ -18,7 +18,6 @@ public class MottakJerseyKlient extends FpsoknadMottakJerseyKlient {
         super();
     }
 
-    // TODO sjekk om det fungerer.
     public Kvittering sendSøknad(String token, Søknad søknad) {
         return client.target(base)
                 .path(MOTTAK_SEND_PATH)

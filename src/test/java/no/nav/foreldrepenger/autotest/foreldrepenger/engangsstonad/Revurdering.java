@@ -38,7 +38,7 @@ public class Revurdering extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

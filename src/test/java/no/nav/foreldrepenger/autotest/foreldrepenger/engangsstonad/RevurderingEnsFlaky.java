@@ -32,7 +32,7 @@ public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

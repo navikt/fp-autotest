@@ -36,7 +36,7 @@ public class TerminFlaky extends ForeldrepengerTestBase {
 
         fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
                 testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),

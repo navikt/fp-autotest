@@ -7,13 +7,13 @@ public class ControllerHelper {
 
     public static Behandlingstema translateSøknadDokumenttypeToBehandlingstema(DokumenttypeId dokumenttypeId) throws Exception {
 
-        if (dokumenttypeId == DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER) {
+        if (dokumenttypeId == DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL) {
             return Behandlingstema.FORELDREPENGER_FOEDSEL;
-        } else if (dokumenttypeId == DokumenttypeId.ADOPSJONSSOKNAD_FORELDREPENGER) {
+        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_FORELDREPENGER_ADOPSJON) {
             return Behandlingstema.FORELDREPENGER_ADOPSJON;
-        } else if (dokumenttypeId == DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD) {
+        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL) {
             return Behandlingstema.ENGANGSSTONAD_FOEDSEL;
-        } else if (dokumenttypeId == DokumenttypeId.ADOPSJONSSOKNAD_ENGANGSSTONAD) {
+        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON) {
             return Behandlingstema.ENGANGSSTONAD_ADOPSJON;
         } else if (dokumenttypeId == DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD) {
             return Behandlingstema.FORELDREPENGER;

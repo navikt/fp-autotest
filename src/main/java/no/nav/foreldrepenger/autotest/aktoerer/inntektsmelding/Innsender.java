@@ -6,13 +6,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.kafka.KafkaJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
+import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostBruker;
@@ -26,20 +29,25 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalposttyp
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalstatus;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
-public class Inntektsmelding extends Aktoer {
+public class Innsender extends Aktoer {
 
     FagsakJerseyKlient fagsakKlient;
+    BehandlingerJerseyKlient behandlingerKlient;
     HistorikkJerseyKlient historikkKlient;
+
     JournalforingJerseyKlient journalpostKlient;
     KafkaJerseyKlient kafkaKlient;
     SafJerseyKlient safKlient;
+    PdlLeesahJerseyKlient pdlLeesahKlient;
 
-    public Inntektsmelding() {
+    public Innsender() {
         fagsakKlient = new FagsakJerseyKlient();
+        behandlingerKlient = new BehandlingerJerseyKlient();
         historikkKlient = new HistorikkJerseyKlient();
         journalpostKlient = new JournalforingJerseyKlient();
         kafkaKlient = new KafkaJerseyKlient();
         safKlient = new SafJerseyKlient();
+        pdlLeesahKlient = new PdlLeesahJerseyKlient();
     }
 
     public void sendInnInnteksmeldingFpfordel(InntektsmeldingBuilder inntektsmelding, String fnr) {
@@ -64,24 +72,46 @@ public class Inntektsmelding extends Aktoer {
     private void journalførInnteksmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String fnr) {
         for (InntektsmeldingBuilder inntektsmelding : inntektsmeldinger) {
             var xml = inntektsmelding.createInntektesmeldingXML();
-            var journalpostModell = lagJournalpostInntektsmelding(xml, fnr, DokumenttypeId.INNTEKTSMELDING);
+            var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml,
+                    "ALTINN", null, DokumenttypeId.INNTEKTSMELDING);
             journalpostKlient.journalførR(journalpostModell);
         }
     }
 
+    public Long sendInnPapirsøknad(String fnr, DokumenttypeId dokumenttypeId) {
+        var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null,
+                "SKAN_IM", "skanIkkeUnik.pdf", dokumenttypeId);
+        journalpostKlient.journalførR(journalpostModell);
+        erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+        return ventTilFagsakOgBehandlingErOpprettet(fnr);
+    }
 
-    private JournalpostModell lagJournalpostInntektsmelding(String innhold, String fnr, DokumenttypeId dokumenttypeId) {
+    public Long sendInnKlage(String fnr) {
+        var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null,
+                "SKAN_IM", "klage.pdf", DokumenttypeId.KLAGE_DOKUMENT);
+        journalpostKlient.journalførR(journalpostModell);
+        return null;
+    }
+
+    private JournalpostModell lagJournalpost(String fnr, String tittel, String innhold, String mottakskanal,
+                                             String eksternReferanseId, DokumenttypeId dokumenttypeId) {
         JournalpostModell journalpostModell = new JournalpostModell();
-        journalpostModell.setTittel("Inntektsmelding");
+        journalpostModell.setTittel(tittel);
         journalpostModell.setJournalStatus(Journalstatus.MIDLERTIDIG_JOURNALFØRT);
         journalpostModell.setMottattDato(LocalDateTime.now());
-        journalpostModell.setMottakskanal("ALTINN");
+        journalpostModell.setMottakskanal(mottakskanal);
         journalpostModell.setArkivtema(Arkivtema.FOR);
         journalpostModell.setAvsenderFnr(fnr);
+        journalpostModell.setEksternReferanseId(eksternReferanseId);
         journalpostModell.setSakId("");
         journalpostModell.setBruker(new JournalpostBruker(fnr, BrukerType.FNR));
         journalpostModell.setJournalposttype(Journalposttyper.INNGAAENDE_DOKUMENT);
+        journalpostModell.getDokumentModellList().add(lagDokumentModell(innhold, dokumenttypeId));
 
+        return journalpostModell;
+    }
+
+    private DokumentModell lagDokumentModell(String innhold, DokumenttypeId dokumenttypeId) {
         DokumentModell dokumentModell = new DokumentModell();
         dokumentModell.setInnhold(innhold);
         dokumentModell.setDokumentType(dokumenttypeId);
@@ -95,9 +125,7 @@ public class Inntektsmelding extends Aktoer {
         dokumentModell.getDokumentVariantInnholdListe().add(new DokumentVariantInnhold(
                 Arkivfiltype.PDF, Variantformat.ARKIV, new byte[0]
         ));
-        journalpostModell.getDokumentModellList().add(dokumentModell);
-
-        return journalpostModell;
+        return dokumentModell;
     }
 
     private Integer hentAntallHistorikkInnslagAvTypenVedleggMottatt(Long saksnummer) {
@@ -121,8 +149,28 @@ public class Inntektsmelding extends Aktoer {
             }, 40, String.format("Forventet at det ble mottatt %d ny(e) innteksmeldinge(r), men det ble mottatt %d!",
                     antallNyeInntektsmeldinger, antallIM.get() - antallGamleInntekstmeldinger));
         } else {
-            Vent.til(() -> fagsakKlient.søk("" + fnr).size() > 0,
-                    40, "Opprettet ikke fagsak for inntektsmelding");
+            ventTilFagsakOgBehandlingErOpprettet(fnr);
         }
+    }
+
+    private Long ventTilFagsakOgBehandlingErOpprettet(String fnr) {
+        Vent.til(() -> fagsakKlient.søk(fnr).size() > 0, 20,
+                "Opprettet ikke fagsak for inntektsmelding");
+        var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();
+
+        Vent.til(() -> {
+            var behandlinger = behandlingerKlient.alle(saksnummer);
+            return !behandlinger.isEmpty()
+                    && (behandlingerKlient.statusAsObject(behandlinger.get(0).uuid) == null);
+        }, 20, "Saken hadde ingen behandlinger");
+
+        return saksnummer;
+    }
+
+    /*
+     * Opretter en personhendelse
+     */
+    public void opprettHendelsePåKafka(PersonhendelseDto personhendelseDto) {
+        pdlLeesahKlient.opprettHendelse(personhendelseDto);
     }
 }

@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
-
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
@@ -13,12 +11,13 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLovligOppholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadEngangsstønadErketyper;
+import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
+import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
+import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.NorskForelder;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("verdikjede")
@@ -29,17 +28,10 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
     @Description("Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
     public void MorTredjelandsborgerSøkerEngangsStønadTest() {
         var testscenario = opprettTestscenario("505");
-        var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var termindato = LocalDate.now().plusWeeks(3);
-        EngangstønadBuilder søknad = lagEngangstønadTermin(
-                søkerAktørId,
-                SøkersRolle.MOR,
-                termindato);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummer = fordel.sendInnSøknad(
-                søknad.build(),
-                testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+        var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato)
+                .medAnnenForelder(new NorskForelder(new Fødselsnummer(testscenario.personopplysninger().annenpartIdent()), ""));
+        var saksnummer = selvbetjening.sendInnSøknad(testscenario.personopplysninger().søkerIdent(), søknad.build());
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

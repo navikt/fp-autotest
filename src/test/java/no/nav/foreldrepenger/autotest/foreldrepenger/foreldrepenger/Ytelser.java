@@ -45,7 +45,7 @@ public class Ytelser extends ForeldrepengerTestBase {
                 søknad.build(),
                 søkerAktørIdent,
                 søkerIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -95,7 +95,7 @@ public class Ytelser extends ForeldrepengerTestBase {
                 søknad.build(),
                 søkerAktørIdent,
                 søkerIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
                 testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),

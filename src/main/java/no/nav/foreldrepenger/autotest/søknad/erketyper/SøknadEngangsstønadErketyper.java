@@ -19,8 +19,7 @@ public class SøknadEngangsstønadErketyper {
                 .medRelasjonTilBarn(RelasjonTilBarnErketyper.fødsel(1, familiehendelse));
     }
 
-    public static EngangsstønadBuilder lagEngangstønadTermin(BrukerRolle brukerRolle,
-                                                             LocalDate familiehendelse) {
+    public static EngangsstønadBuilder lagEngangstønadTermin(BrukerRolle brukerRolle, LocalDate familiehendelse) {
         return lagEngangsstønad(brukerRolle)
                 .medRelasjonTilBarn(RelasjonTilBarnErketyper.termin(1, familiehendelse));
     }

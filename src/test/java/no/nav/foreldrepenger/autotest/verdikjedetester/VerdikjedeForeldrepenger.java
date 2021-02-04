@@ -84,6 +84,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("verdikjede")
@@ -125,7 +126,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var inntektsmeldinger = lagInntektsmelding((int) avvikendeMånedsinntekt, søkerFnr, fpStartdato, orgNummer)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
 
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldinger,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldinger,
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
 
@@ -161,7 +162,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         // Fødselshendelse
         var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, søkerFnr,
                 null, null, termindato.minusWeeks(1));
-        fordel.opprettHendelsePåKafka(fødselshendelseDto);
+        innsender.opprettHendelsePåKafka(fødselshendelseDto);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -259,7 +260,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         var dødshendelseDto = new DødshendelseDto("OPPRETTET", null, identSøker,
                 LocalDate.now().minusDays(1));
-        fordel.opprettHendelsePåKafka(dødshendelseDto);
+        innsender.opprettHendelsePåKafka(dødshendelseDto);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -300,11 +301,10 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor søker fullt uttak, men søker mer enn det hun har rett til.")
     public void morSykepengerKunYtelseTest() {
         var testscenario = opprettTestscenario("520");
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        long saksnummerMor = fordel.sendInnPapirsøknadForeldrepenger(testscenario, false);
+        var saksnummer = innsender.sendInnPapirsøknad(testscenario.personopplysninger().søkerIdent(), DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
-        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.hentFagsak(saksnummer);
         var termindato = LocalDate.now().plusWeeks(6);
         var fpStartdatoMor = termindato.minusWeeks(3);
         var fpMottatDato = termindato.minusWeeks(6);
@@ -335,8 +335,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                         "er forut for permisjonen på skjæringstidspunktet!");
 
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilAndelerYtelse(10000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"))
+                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+        vurderFaktaOmBeregningBekreftelse.leggTilAndelerYtelse(10000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"))
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
@@ -346,7 +346,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                         new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
@@ -410,7 +410,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         InntektsmeldingBuilder inntektsmeldingFar2 = lagInntektsmelding(månedsinntektFar2, identFar, fpStartdatoFar, orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar2)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar2));
-        inntektsmelding.sendInnInnteksmeldingFpfordel(List.of(inntektsmeldingFar1, inntektsmeldingFar2),
+        innsender.sendInnInnteksmeldingFpfordel(List.of(inntektsmeldingFar1, inntektsmeldingFar2),
                 identFar,
                 saksnummerFar);
 
@@ -586,7 +586,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar2))
                 .medRefusjonsOpphordato(opphørsDatoForRefusjon);
 
-        inntektsmelding.sendInnInnteksmeldingFpfordel(List.of(inntektsmeldingFar1, inntektsmeldingFar2),
+        innsender.sendInnInnteksmeldingFpfordel(List.of(inntektsmeldingFar1, inntektsmeldingFar2),
                 identFar,
                 saksnummerFar);
 
@@ -700,7 +700,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 overføringsperiode(Overføringsårsak.SYKDOM_ANNEN_FORELDER, MØDREKVOTE, fpStartdatoFarEndret,
                         fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFarOrdinær, fpStartdatoFarOrdinær.plusWeeks(15).minusDays(1)));
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(fordelingFar)
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartAktørIdent()))
@@ -810,7 +809,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 fpStartdatoMor,
                 orgNummerMor);
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
                 identMor,
                 saksnummerMor);
 
@@ -865,7 +864,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar);
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingFar,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldingFar,
                 identFar,
                 saksnummerFar);
 
@@ -1024,7 +1023,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar);
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingFar,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldingFar,
                 identFar,
                 saksnummerFar);
 
@@ -1057,7 +1056,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar/2));
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingEndringFar,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldingEndringFar,
                 identFar,
                 saksnummerFar);
 
@@ -1093,7 +1092,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntektFar));
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingEndringFar2,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldingEndringFar2,
                 identFar,
                 saksnummerFar);
 
@@ -1180,7 +1179,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoFar,
                 orgNummerFar)
                 .medArbeidsforholdId(arbeidsforholdIdFar);
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingFar,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldingFar,
                 identFar,
                 saksnummerFar);
 
@@ -1230,7 +1229,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 fpStartdatoMor,
                 orgNummerMor)
                 .medArbeidsforholdId(arbeidsforholdIdMor);
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
                 identMor,
                 saksnummerMor);
 
@@ -1384,7 +1383,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 søkerIdent,
                 fpStartdatoMor,
                 orgNummerMor);
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
                 søkerIdent,
                 saksnummer);
 
@@ -1404,7 +1403,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var differanseFødselTermin = 7;
         var dødfødselshendelseDto = new DødfødselhendelseDto("OPPRETTET", null, søkerIdent,
                 termindato.plusDays(differanseFødselTermin));
-        fordel.opprettHendelsePåKafka(dødfødselshendelseDto);
+        innsender.opprettHendelsePåKafka(dødfødselshendelseDto);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -1491,7 +1490,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 fpStartdatoMor,
                 orgNummerMor);
-        inntektsmelding.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
+        innsender.sendInnInnteksmeldingFpfordel(inntektsmeldingMor,
                 identMor,
                 saksnummerMor);
 

@@ -109,7 +109,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     @Step("Hent fagsak {saksnummer}")
-    private void hentFagsak(String saksnummer) {
+    public void hentFagsak(String saksnummer) {
         valgtFagsak = fagsakKlient.getFagsak(saksnummer);
         if (valgtFagsak == null) {
             throw new RuntimeException("Kan ikke velge fagsak. fagsak er null");
@@ -262,14 +262,15 @@ public class Saksbehandler extends Aktoer {
 
     private void ventPåProsessering(Behandling behandling) {
         Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
+            var prosessTasker = hentProsesstaskerForBehandling(behandling);
             var prosessTaskList = new StringBuilder();
-            for (ProsessTaskListItemDto prosessTaskListItemDto : hentProsesstaskerForBehandling(behandling)) {
-                prosessTaskList
-                        .append(prosessTaskListItemDto.taskType())
+            for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
+                prosessTaskList.append(prosessTaskListItemDto.taskType())
                         .append(" - ")
-                        .append(prosessTaskListItemDto.status()).append("\n");
+                        .append(prosessTaskListItemDto.status())
+                        .append("\n");
             }
-            return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
+            return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList.toString();
         });
     }
 
