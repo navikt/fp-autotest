@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -1072,31 +1073,13 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("DAGPENGER"),
                 "Forventer at det er registert en opptjeningsaktivitet med aktivitettype DAGPENGER med " +
                         "opptjening frem til skjæringstidspunktet for opptjening.");
-
-        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-        vurderFaktaOmBeregningBekreftelse
-                .fordelEtterBesteBeregningForDagpenger(false)
-                .setBegrunnelse("Bruker IKKE besteberegning!");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
-
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, false);
+        saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 
         verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT),
                 "Brev er bestillt i førstegangsbehandling");
-        var beregningsresultatPeriodeFørstegangsbehandling = saksbehandler.valgtBehandling
-                .getBeregningResultatForeldrepenger().getPerioder();
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling.size() == 4,
-                "Forventer 4 forskjelige beregningsresultatsperioder!");
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling.get(0).getDagsats() == 1_000,
-                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling.get(1).getDagsats() == 1_000,
-                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling.get(2).getDagsats() == 1_000,
-                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeFørstegangsbehandling.get(3).getDagsats() == 1_000,
-                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
+                "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
 
         // * KLAGE *//
         fordel.sendInnKlage(null, testscenario, saksnummerMor);
@@ -1136,39 +1119,14 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                         .equalsIgnoreCase("ETTER_KLAGE"),
                 "Foventer at revurderingen har årsakskode ETTER_KLAGE.");
 
-        VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-        vurderFaktaOmBeregningBekreftelse2
-                .fordelEtterBesteBeregningForDagpenger(true)
-                .leggTilBesteBeregningAndeler(30_000.0, saksbehandler.kodeverk.Inntektskategori.getKode("DAGPENGER"))
-                .setBegrunnelse("Legger til en beste beregning andel periode som gjør at vi bruker besteberegning!");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
+        saksbehandler.bekreftAksjonspunktbekreftelserer(
+                saksbehandler.hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class),
+                saksbehandler.hentAksjonspunktbekreftelse(ForeslåVedtakManueltBekreftelse.class));
 
-        KontrollerManueltOpprettetRevurdering kontrollerManueltOpprettetRevurdering = saksbehandler
-                .hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class);
-        saksbehandler.bekreftAksjonspunkt(kontrollerManueltOpprettetRevurdering);
-
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
-
-        var beregningsresultatPeriodeRevurdering = saksbehandler.valgtBehandling
-                .getBeregningResultatForeldrepenger().getPerioder();
-        List<Integer> forventetDagsats = regnUtForventetDagsatsForPeriode(List.of(30_000), List.of(100),
-                List.of(false));
-        verifiser(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0)
-                        .getDagsats() == forventetDagsats.get(0),
-                "Forventer at dagsatsen er kalkulert etter beløpet gitt i besteberegning!");
-        verifiser(beregningsresultatPeriodeRevurdering.size() == 4,
-                "Forventer 3 forskjelige beregningsresultatsperioder!");
-        verifiser(beregningsresultatPeriodeRevurdering.get(0).getDagsats() == forventetDagsats.get(0),
-                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeRevurdering.get(1).getDagsats() == forventetDagsats.get(0),
-                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeRevurdering.get(2).getDagsats() == forventetDagsats.get(0),
-                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
-        verifiser(beregningsresultatPeriodeRevurdering.get(3).getDagsats() == forventetDagsats.get(0),
-                "Forventer at dagsatsen er satt til dagsatsen for dagpengene.");
+        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
+                "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
         verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode
-                        .equalsIgnoreCase("ENDRING_I_BEREGNING"),
+                        .equalsIgnoreCase("INGEN_ENDRING"),
                 "Foventer at konsekvens for ytelse er satt til ENDRING_I_BEREGNING.");
         verifiser(!saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT,
                         saksbehandler.valgtBehandling.id),
