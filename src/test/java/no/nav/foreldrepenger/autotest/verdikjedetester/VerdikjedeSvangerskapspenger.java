@@ -9,8 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -25,7 +23,7 @@ import no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadSvangerskapspenge
 import no.nav.foreldrepenger.autotest.søknad.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
 
-@Execution(ExecutionMode.CONCURRENT)
+
 @Tag("verdikjede")
 public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
