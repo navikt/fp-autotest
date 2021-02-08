@@ -8,6 +8,8 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.client.ClientProperties;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
@@ -29,6 +31,7 @@ public class FagsakJerseyKlient extends FpsakJerseyKlient {
                 .path(STATUS_URL)
                 .queryParam("saksnummer", saksnummer)
                 .queryParam("gruppe", gruppe)
+                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE)
                 .request()
                 .get(Status.class);
     }

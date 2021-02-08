@@ -1,8 +1,13 @@
 package no.nav.foreldrepenger.autotest.aktoerer.inntektsmelding;
 
+import static java.lang.Thread.sleep;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
@@ -30,6 +35,8 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalstatus;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
 public class Innsender extends Aktoer {
+
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     FagsakJerseyKlient fagsakKlient;
     BehandlingerJerseyKlient behandlingerKlient;
@@ -75,6 +82,15 @@ public class Innsender extends Aktoer {
             var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml,
                     "ALTINN", null, DokumenttypeId.INNTEKTSMELDING);
             journalpostKlient.journalførR(journalpostModell);
+            LOG.info("Sender inn IM for søker: {}", fnr);
+            // TODO: Ønsker ikke å gjøre dette. Bare får test!
+            try {
+                sleep(4000);
+            } catch (InterruptedException e) {
+                LOG.info("Noe gikk galt ved Thread.sleep() etter innsending av inntekstmelding");
+                e.printStackTrace();
+            }
+
         }
     }
 

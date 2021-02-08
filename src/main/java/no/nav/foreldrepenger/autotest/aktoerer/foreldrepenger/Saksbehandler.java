@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
@@ -57,6 +60,9 @@ import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
 public class Saksbehandler extends Aktoer {
+
+    Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
+
 
     public Fagsak valgtFagsak;
     public Behandling valgtBehandling;
@@ -451,6 +457,9 @@ public class Saksbehandler extends Aktoer {
         try {
             kodeverk = kodeverkKlient.getKodeverk();
         } catch (Exception e) {
+            LOG.info(e.toString());
+            LOG.info(e.getStackTrace().toString());
+            e.printStackTrace();
             throw new RuntimeException("Kunne ikke hente kodeverk: " + e.getMessage());
         }
     }

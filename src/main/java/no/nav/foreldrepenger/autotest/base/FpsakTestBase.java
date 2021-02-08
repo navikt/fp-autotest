@@ -26,6 +26,7 @@ public class FpsakTestBase extends TestScenarioTestBase {
 
     @BeforeEach
     public void setUp() {
+        log.info("Setup fpsakTestBase");
         fordel = new Fordel();
         saksbehandler = new Saksbehandler();
         overstyrer = new Saksbehandler();

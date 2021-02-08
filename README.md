@@ -11,7 +11,7 @@ For denne verdikjeden kjøres det et sett med verdikjedetester for ytelsene enga
 Alle disse testene befinner seg under "fpsak-autotest/test/verdikjedetester" og er ellers tagget med taggen "_verdikjede_".
  
 Disse verdikjedetestene blir trigget av alle prosjektene/applikasjonene som er nevnt i listen under ved endring på master (med unntak av fp-sak og fp-abakus).
-
+ 
 ### Status
 | Prosjekt        | Status                                                                 |
 |:----------------|:-----------------------------------------------------------------------|

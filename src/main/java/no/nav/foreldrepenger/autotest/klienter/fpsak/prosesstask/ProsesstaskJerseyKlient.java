@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask;
 import static javax.ws.rs.client.Entity.json;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
@@ -24,11 +25,12 @@ public class ProsesstaskJerseyKlient extends FpsakJerseyKlient {
     }
 
     public List<ProsessTaskListItemDto> list(SokeFilterDto sokeFilter) {
-        return client.target(base)
+        return Optional.ofNullable(client.target(base)
                 .path(PROSESSTASK_LIST_URL)
                 .request()
                 .post(json(sokeFilter), Response.class)
-                .readEntity(new GenericType<>() {});
+                .readEntity(new GenericType<List<ProsessTaskListItemDto>>() {}))
+                .orElse(List.of());
     }
 
     public ProsesstaskResultatDto launch(ProsesstaskDto prosessTask) {

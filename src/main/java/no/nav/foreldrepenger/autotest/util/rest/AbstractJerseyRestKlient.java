@@ -17,6 +17,7 @@ import javax.ws.rs.client.ClientRequestFilter;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache.connector.ApacheHttpClientBuilderConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,13 +44,14 @@ public abstract class AbstractJerseyRestKlient {
         var cfg = new ClientConfig();
         cfg.register(jacksonProvider(mapper));
         cfg.connectorProvider(new ApacheConnectorProvider());
-        cfg.register((ApacheHttpClientBuilderConfigurator) (b) ->
+        cfg.register((ApacheHttpClientBuilderConfigurator) b ->
                 b.setDefaultHeaders(defaultHeaders())
                 .setKeepAliveStrategy(createKeepAliveStrategy(30))
                 .setDefaultRequestConfig(defaultRequestConfig())
                 .setRetryHandler(new HttpRequestRetryHandler())
                 .setConnectionManager(connectionManager()));
-
+        cfg.register(new HeaderLoggingFilter());
+        cfg.property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         filters.forEach(cfg::register);
         client = ClientBuilder.newClient(cfg);
     }

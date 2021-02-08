@@ -9,8 +9,6 @@ import java.util.UUID;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.client.ClientProperties;
-
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
@@ -141,7 +139,6 @@ public class BehandlingerJerseyKlient extends FptilbakeJerseyKlient {
                 .path(BEHANDLINGER_STATUS_URL)
                 .queryParam(UUID, behandlingUuid)
                 .request(APPLICATION_JSON_TYPE)
-                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE)
                 .get(Response.class);
         if (StatusRange.STATUS_REDIRECT.inRange(response.getStatus())) {
             return null;
