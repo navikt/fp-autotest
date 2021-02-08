@@ -609,7 +609,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .arbeidsgiverOrgnr();
         var stillingsprosent1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
                 .arbeidsavtaler().get(0).stillingsprosent();
-        var fpStartdatoFar = fødselsdato.plusWeeks(6);
+        var fpStartdatoFar = Virkedager.helgejustertTilMandag(fødselsdato.plusWeeks(6));
         var fordelingFar = generiskFordeling(
                 graderingsperiodeArbeidstaker(FORELDREPENGER,
                         fpStartdatoFar,
