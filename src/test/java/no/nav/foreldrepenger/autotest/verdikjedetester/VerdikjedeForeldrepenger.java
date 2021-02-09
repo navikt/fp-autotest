@@ -47,6 +47,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRealitetsbehandlingEllerKlage;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
@@ -1432,10 +1434,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("12: Mor søker fødsel og mottar sykepenger som er under 1/2 G")
-    @Description("12: Mor søker fødsel og mottar sykepenger som er under 1/2 G. Har ingen inntektskilder. Hun har " +
-            "for lite inntekt og har dermed ikke rett til foreldrepenger – beregning avvist søknadden.")
-    public void morSøkerFødselMottarForLite() {
+    @DisplayName("12: Mor søker fødsel og mottar sykepenger uten inntektskilder, får avslag, klager og får medhold.")
+    @Description("12: Mor søker fødsel og mottar sykepenger som er over 1/2 G. Har ingen inntektskilder. Saksbehandler" +
+            "skriver inn sykepengebeløp som er under 1/2 G som vil før til at søker ikke har rett på foreldrepenger." +
+            "Søker får avslag, klager og får medhold. Saksbehandler legger inn korrekt beløp som er over 1/2G og søker" +
+            "får innvilget foreldrepenger.")
+    public void morSøkerFødselOgFårAvslagSøkerKlagerOgFårMedholdOgInnvilgetFP() {
         var testscenario = opprettTestscenario("70");
         var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
@@ -1506,6 +1510,9 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgSisteBehandling();
 
+        verifiserLikhet(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode,
+                "RE-KLAG-M-INNTK");
+
         var avklarArbeidsforholdBekreftelse2 = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse2);
@@ -1519,8 +1526,13 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .leggTilAndelerYtelse(10_000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"));
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerRealitetsbehandlingEllerKlage.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
 
+        verifiserInneholder(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen(), new Kode("ENDRING_I_BEREGNING"));
+        verifiserInneholder(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen(), new Kode("ENDRING_I_UTTAK"));
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
     }
 
 

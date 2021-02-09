@@ -30,7 +30,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        perioder = new ArrayList<>(behandling.hentUttaksperioder());
+        perioder = behandling.hentUttaksperioder();
         innvilgManuellePerioder();
     }
 
