@@ -6,21 +6,17 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 public abstract class TestScenarioTestBase extends TestBase {
 
-    protected TestscenarioJerseyKlient testscenarioKlient;
-
-    public TestScenarioTestBase() {
-        testscenarioKlient = new TestscenarioJerseyKlient();
-    }
+    private final TestscenarioJerseyKlient testscenarioKlient = new TestscenarioJerseyKlient();
 
     @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
     protected TestscenarioDto opprettTestscenarioMedPrivatArbeidsgiver(String id, String aktorId, String ident) {
-        Object testscenarioObject = testscenarioHenter.hentScenario(id);
+        Object testscenarioObject = TESTSCENARIO_HENTER.hentScenario(id);
         return testscenarioKlient.opprettTestscenarioMedAktorId(id, testscenarioObject, aktorId, ident);
     }
 
     @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
     protected TestscenarioDto opprettTestscenario(String id) {
-        Object testscenarioObject = testscenarioHenter.hentScenario(id);
+        Object testscenarioObject = TESTSCENARIO_HENTER.hentScenario(id);
         return testscenarioKlient.opprettTestscenario(id, testscenarioObject);
     }
 }
