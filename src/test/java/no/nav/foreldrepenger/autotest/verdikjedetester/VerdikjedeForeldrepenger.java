@@ -43,7 +43,9 @@ import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
@@ -51,6 +53,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
@@ -1470,6 +1473,54 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.vilkårStatus(VilkarTypeKoder.BEREGNINGSGRUNNLAGVILKÅR).kode, "IKKE_OPPFYLT");
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT",
                 "Forventer at behandlingen er avslått fordi søker ikke har rett på foreldrepenger.");
+
+        fordel.sendInnKlage(null, testscenario, saksnummer);
+        klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.ventPåOgVelgKlageBehandling();
+
+        var klageFormkravNfp = klagebehandler
+                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+                .godkjennAlleFormkrav()
+                .setBegrunnelse("Super duper klage!");
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
+
+        var vurderingAvKlageNfpBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse.class)
+                .bekreftMedholdGunst("PROSESSUELL_FEIL")
+                .fritekstBrev("Fritektst til brev fra klagebehandler.")
+                .setBegrunnelse("Fordi");
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
+
+
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
+        beslutter.hentFagsak(saksnummer);
+        beslutter.ventPåOgVelgKlageBehandling();
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
+
+        // Saksbehandler oppretter ny revudering manuelt etter søker har fått medhold i klage.
+        saksbehandler.opprettBehandlingRevurdering("RE-KLAG-M-INNTK");
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.velgSisteBehandling();
+
+        var avklarArbeidsforholdBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse2);
+
+        verifiser(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"),
+                "Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +
+                        "er forut for permisjonen på skjæringstidspunktet!");
+
+        var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .leggTilAndelerYtelse(10_000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"));
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
+
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+
     }
 
 
