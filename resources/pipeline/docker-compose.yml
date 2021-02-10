@@ -95,6 +95,7 @@ services:
       - "FPFORDEL_BASE_URL=http://fpfordel:8080/fpfordel"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "PDL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
+      - "SAF_BASE_URL=http://vtp:8060/rest/api/saf"
       - "LOADBALANCER_URL=http://localhost:8080"
       - "LOADBALANCER_FQDN=localhost:8080"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
