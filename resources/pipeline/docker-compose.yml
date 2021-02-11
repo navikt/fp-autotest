@@ -338,6 +338,7 @@ services:
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
       - "FPSAKHENDELSER_V1_URL=http://fpsak:8080/fpsak/api/hendelser/"
+      - "PDL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
