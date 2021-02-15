@@ -14,9 +14,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
@@ -61,9 +58,6 @@ import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
 public class Saksbehandler extends Aktoer {
 
-    Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
-
-
     public Fagsak valgtFagsak;
     public Behandling valgtBehandling;
     public List<Behandling> behandlinger;
@@ -80,31 +74,15 @@ public class Saksbehandler extends Aktoer {
     private final RisikovurderingJerseyKlient risikovurderingKlient;
 
 
-    public Saksbehandler() {
-        super();
-        fagsakKlient = new FagsakJerseyKlient();
-        behandlingerKlient = new BehandlingerJerseyKlient();
-        kodeverkKlient = new KodeverkJerseyKlient();
-        historikkKlient = new HistorikkJerseyKlient();
-        prosesstaskKlient = new ProsesstaskJerseyKlient();
-        risikovurderingKlient = new RisikovurderingJerseyKlient();
-    }
-
     public Saksbehandler(Rolle rolle) {
-        this();
-        erLoggetInnMedRolle(rolle);
-    }
-
-    @Override
-    public void erLoggetInnMedRolle(Rolle rolle) {
-        super.erLoggetInnMedRolle(rolle);
-        refreshKodeverk();
-    }
-
-    @Override
-    public void erLoggetInnUtenRolle() {
-        super.erLoggetInnUtenRolle();
-        refreshKodeverk();
+        super(rolle);
+        fagsakKlient = new FagsakJerseyKlient(cookieRequestFilter);
+        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
+        kodeverkKlient = new KodeverkJerseyKlient(cookieRequestFilter);
+        historikkKlient = new HistorikkJerseyKlient(cookieRequestFilter);
+        prosesstaskKlient = new ProsesstaskJerseyKlient(cookieRequestFilter);
+        risikovurderingKlient = new RisikovurderingJerseyKlient(cookieRequestFilter);
+        hentKodeverk();
     }
 
     /*
@@ -166,7 +144,7 @@ public class Saksbehandler extends Aktoer {
     public void velgSisteBehandling() {
         var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer()).stream()
                 .max(Comparator.comparing(b -> b.opprettet))
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Fant ingen behandlinger for saksnummer " + valgtFagsak.saksnummer()));
         velgBehandling(behandling);
     }
 
@@ -190,12 +168,16 @@ public class Saksbehandler extends Aktoer {
         ventPåOgVelgBehandling(kodeverk.BehandlingType.getKode("BT-006"));
     }
 
+    @Step("Venter på at fagsak får behandlingstype: {behandlingstype.kode}")
     private void ventPåOgVelgBehandling(Kode behandlingstype) {
         ventTilSakHarBehandling(behandlingstype);
-        velgBehandling(getBehandling(behandlingstype));
+        behandlinger.stream()
+                .filter(b -> b.type.kode.equals(behandlingstype.kode))
+                .findFirst()
+                .ifPresent(this::velgBehandling);
     }
 
-    @Step("Venter på at fagsak får behandlingstype: {behandlingType}")
+
     private void ventTilSakHarBehandling(Kode behandlingType) {
         if (harBehandling(behandlingType)) {
             return;
@@ -211,15 +193,6 @@ public class Saksbehandler extends Aktoer {
             }
         }
         return false;
-    }
-
-    private Behandling getBehandling(Kode behandlingstype) {
-        for (Behandling behandling : behandlinger) {
-            if (behandling.type.kode.equals(behandlingstype.kode)) {
-                return behandling;
-            }
-        }
-        return null;
     }
 
     /*
@@ -448,22 +421,10 @@ public class Saksbehandler extends Aktoer {
      */
     public Kodeverk hentKodeverk() {
         if (kodeverk == null) {
-            refreshKodeverk();
+            kodeverk = kodeverkKlient.getKodeverk();
         }
         return kodeverk;
     }
-
-    public void refreshKodeverk() {
-        try {
-            kodeverk = kodeverkKlient.getKodeverk();
-        } catch (Exception e) {
-            LOG.info(e.toString());
-            LOG.info(e.getStackTrace().toString());
-            e.printStackTrace();
-            throw new RuntimeException("Kunne ikke hente kodeverk: " + e.getMessage());
-        }
-    }
-
 
     @Step("Henter ut unike aktivitetstatuser i beregning")
     public Set<Kode> hentUnikeBeregningAktivitetStatus() {
@@ -616,12 +577,12 @@ public class Saksbehandler extends Aktoer {
         return historikkInnslag.get().stream()
                 .filter(h -> h.type().kode.equalsIgnoreCase(type.getKode()))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Finner ikke historikkinnslag av typen " + type.getKode()));
     }
 
     public String hentDokumentIdFraHistorikkinnslag(HistorikkInnslag.Type type) {
-        HistorikkInnslag historikkInnslag = hentHistorikkinnslagAvType(type);
-        return historikkInnslag.dokumentLinks().get(0).dokumentId();
+        var innslag = hentHistorikkinnslagAvType(type);
+        return innslag.dokumentLinks().get(0).dokumentId();
     }
 
 
@@ -751,7 +712,7 @@ public class Saksbehandler extends Aktoer {
                 .filter(arbeidsforhold -> orgnummer.equalsIgnoreCase(arbeidsforhold.getArbeidsgiverReferanse()))
                 .map(Arbeidsforhold::getArbeidsforholdId)
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Fant ingen interne arbeidforhold med orgnummer " + orgnummer));
     }
 
     public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(String orgnummer,

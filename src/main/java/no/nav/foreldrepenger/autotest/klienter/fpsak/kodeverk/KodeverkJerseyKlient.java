@@ -2,11 +2,9 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk;
 
 import java.util.List;
 
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
@@ -16,33 +14,22 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kodeverk.KodeL
 
 public class KodeverkJerseyKlient extends FpsakJerseyKlient {
 
-    Logger LOG = LoggerFactory.getLogger(KodeverkJerseyKlient.class);
-
     private static final String KODEVERK_URL = "/kodeverk";
     private static final String KODEVERK_BEHANDLENDE_ENHETER_URL = KODEVERK_URL + "/behandlende-enheter";
     private static final String KODEVERK_HENLEGG_ÅRSAKER = KODEVERK_URL + "/henlegg/arsaker";
     private static final String KODEVERK_HENLEGG_ÅRSAKER_KLAGE = KODEVERK_HENLEGG_ÅRSAKER + "/klage";
     private static final String KODEVERK_HENLEGG_ÅRSAKER_INNSYN = KODEVERK_HENLEGG_ÅRSAKER + "/innsyn";
 
-    private Kodeverk kodeverk = null;
-
-    public KodeverkJerseyKlient() {
-        super();
+    public KodeverkJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 
     @Step("Henter kodeverk for FPSAK")
     public Kodeverk getKodeverk() {
-        if (kodeverk == null) {
-            var response = client.target(base)
-                    .path(KODEVERK_URL)
-                    .request()
-                    .get();
-            LOG.info("Status: {}", response.getStatus());
-            LOG.info("Location: {}", response.getLocation() != null ? response.getLocation() : "");
-
-            kodeverk = response.readEntity(Kodeverk.class);
-        }
-        return kodeverk;
+        return client.target(base)
+                .path(KODEVERK_URL)
+                .request()
+                .get(Kodeverk.class);
     }
 
     public List<BehandlendeEnhet> behandlendeEnheter() {

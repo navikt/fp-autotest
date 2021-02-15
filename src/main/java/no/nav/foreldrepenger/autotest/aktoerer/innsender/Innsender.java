@@ -1,13 +1,11 @@
-package no.nav.foreldrepenger.autotest.aktoerer.inntektsmelding;
+package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
 import static java.lang.Thread.sleep;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
@@ -15,10 +13,11 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJe
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.MottakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.kafka.KafkaJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.oauth2.AzureAdJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafJerseyKlient;
+import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
@@ -36,24 +35,26 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
 public class Innsender extends Aktoer {
 
-    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private final FagsakJerseyKlient fagsakKlient;
+    private final BehandlingerJerseyKlient behandlingerKlient;
+    private final HistorikkJerseyKlient historikkKlient;
 
-    FagsakJerseyKlient fagsakKlient;
-    BehandlingerJerseyKlient behandlingerKlient;
-    HistorikkJerseyKlient historikkKlient;
+    private final MottakJerseyKlient mottakKlient;
 
-    JournalforingJerseyKlient journalpostKlient;
-    KafkaJerseyKlient kafkaKlient;
-    SafJerseyKlient safKlient;
-    PdlLeesahJerseyKlient pdlLeesahKlient;
+    private final AzureAdJerseyKlient oauth2Klient;
+    private final JournalforingJerseyKlient journalpostKlient;
+    private final PdlLeesahJerseyKlient pdlLeesahKlient;
 
-    public Innsender() {
-        fagsakKlient = new FagsakJerseyKlient();
-        behandlingerKlient = new BehandlingerJerseyKlient();
-        historikkKlient = new HistorikkJerseyKlient();
+    public Innsender(Rolle rolle) {
+        super(rolle);
+        fagsakKlient = new FagsakJerseyKlient(cookieRequestFilter);
+        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
+        historikkKlient = new HistorikkJerseyKlient(cookieRequestFilter);
+
+        mottakKlient = new MottakJerseyKlient();
+
+        oauth2Klient = new AzureAdJerseyKlient();
         journalpostKlient = new JournalforingJerseyKlient();
-        kafkaKlient = new KafkaJerseyKlient();
-        safKlient = new SafJerseyKlient();
         pdlLeesahKlient = new PdlLeesahJerseyKlient();
     }
 
@@ -92,6 +93,15 @@ public class Innsender extends Aktoer {
             }
 
         }
+    }
+
+    public Long sendInnSøknad(String fnr, Søknad søknad) {
+        var token = oauth2Klient.hentAccessTokenForBruker(fnr);
+        var kvittering = mottakKlient.sendSøknad(token, søknad);
+        assertTrue(kvittering.erVellykket(), "Innsending av søknad til fpsoknad-mottak feilet!");
+        var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);
+        LOG.info("Sendt inn søknad til mottak og sak er opprettet på saksnummer: {}", saksnummer);
+        return saksnummer;
     }
 
     public Long sendInnPapirsøknad(String fnr, DokumenttypeId dokumenttypeId) {
@@ -170,15 +180,17 @@ public class Innsender extends Aktoer {
     }
 
     private Long ventTilFagsakOgBehandlingErOpprettet(String fnr) {
-        Vent.til(() -> fagsakKlient.søk(fnr).size() > 0, 20,
+        LOG.info("Venter på opprettet fagsak for {}", fnr);
+        Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 20,
                 "Opprettet ikke fagsak for inntektsmelding");
         var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();
 
+        LOG.info("Venter på opprettet behandling for {}", fnr);
         Vent.til(() -> {
             var behandlinger = behandlingerKlient.alle(saksnummer);
             return !behandlinger.isEmpty()
                     && (behandlingerKlient.statusAsObject(behandlinger.get(0).uuid) == null);
-        }, 20, "Saken hadde ingen behandlinger");
+        }, 60, "Saken hadde ingen behandlinger");
 
         return saksnummer;
     }

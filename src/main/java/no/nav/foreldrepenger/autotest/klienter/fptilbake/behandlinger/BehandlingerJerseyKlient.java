@@ -6,6 +6,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -44,8 +45,8 @@ public class BehandlingerJerseyKlient extends FptilbakeJerseyKlient {
 
     private static final String FEILUTBETALING_FAKTA_URL = "/behandlingfakta/hent-fakta/feilutbetaling";
 
-    public BehandlingerJerseyKlient() {
-        super();
+    public BehandlingerJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 
     @Step("Oppretter ny tilbakekreving")

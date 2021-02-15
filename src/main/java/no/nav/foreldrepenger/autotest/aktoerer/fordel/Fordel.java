@@ -56,13 +56,15 @@ public class Fordel extends Aktoer {
     JournalforingJerseyKlient journalpostKlient;
     SafJerseyKlient safKlient;
 
-    public Fordel() {
-        fordelKlient = new FordelJerseyKlient();
-        behandlingerKlient = new BehandlingerJerseyKlient();
+    public Fordel(Rolle rolle) {
+        super(rolle);
+        fordelKlient = new FordelJerseyKlient(cookieRequestFilter);
+        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
+        fagsakKlient = new FagsakJerseyKlient(cookieRequestFilter);
+        historikkKlient = new HistorikkJerseyKlient(cookieRequestFilter);
+
         journalpostKlient = new JournalforingJerseyKlient();
         safKlient = new SafJerseyKlient();
-        fagsakKlient = new FagsakJerseyKlient();
-        historikkKlient = new HistorikkJerseyKlient();
         pdlLeesahKlient = new PdlLeesahJerseyKlient();
     }
 

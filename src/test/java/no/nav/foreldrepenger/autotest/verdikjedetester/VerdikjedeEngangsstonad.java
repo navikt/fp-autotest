@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLovligOppholdBekreftelse;
@@ -28,9 +27,8 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato)
                 .medAnnenForelder(new NorskForelder(new Fødselsnummer(testscenario.personopplysninger().annenpartIdent()), ""));
-        var saksnummer = selvbetjening.sendInnSøknad(testscenario.personopplysninger().søkerIdent(), søknad.build());
+        var saksnummer = innsender.sendInnSøknad(testscenario.personopplysninger().søkerIdent(), søknad.build());
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);

@@ -12,7 +12,7 @@ import javax.ws.rs.core.NewCookie;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.openam.dto.AccessTokenResponseDTO;
-import no.nav.foreldrepenger.autotest.util.rest.OpenAmRequestFilter;
+import no.nav.foreldrepenger.autotest.util.rest.CookieRequestFilter;
 
 public class OpenamJerseyKlient extends VTPJerseyKlient {
 
@@ -24,18 +24,18 @@ public class OpenamJerseyKlient extends VTPJerseyKlient {
         super();
     }
 
-    public void logInnMedRolle(String rolle) {
-        loginBypass(rolle);
+    public void logInnMedRolle(String rolle, CookieRequestFilter filter) {
+        loginBypass(rolle, filter);
     }
 
-    private void loginBypass(String rolle) {
+    private void loginBypass(String rolle, CookieRequestFilter filter) {
         var cookie = loginCookies.computeIfAbsent(rolle, this::createCookieNew);
-        OpenAmRequestFilter.getInstance().leggTilClientCookie(cookie);
+        filter.leggTilClientCookie(cookie);
     }
 
     private Cookie createCookieNew(String rolle) {
         var token = fetchToken(rolle);
-        var newCookie = new NewCookie("ID_token", token, "/", "", "", 3600, false);
+        var newCookie = new NewCookie("ID_token", token, "/", "", "", 60, false);
         return newCookie.toCookie();
     }
 

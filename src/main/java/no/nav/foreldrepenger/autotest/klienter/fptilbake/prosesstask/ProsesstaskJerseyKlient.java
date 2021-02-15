@@ -4,6 +4,7 @@ import static javax.ws.rs.client.Entity.json;
 
 import java.util.List;
 
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -21,8 +22,8 @@ public class ProsesstaskJerseyKlient extends FptilbakeJerseyKlient {
     private static final String PROSESSTASK_LAUNCH_URL = PROSESSTASK_URL + "/launch";
     private static final String PROSESSTASK_CREATE_URL = PROSESSTASK_URL + "/create";
 
-    public ProsesstaskJerseyKlient() {
-        super();
+    public ProsesstaskJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 
     public List<ProsessTaskListItemDto> list(SokeFilterDto sokeFilter) {

@@ -1,23 +1,32 @@
 package no.nav.foreldrepenger.autotest.aktoerer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.vtp.openam.OpenamJerseyKlient;
+import no.nav.foreldrepenger.autotest.util.rest.CookieRequestFilter;
 
 public class Aktoer {
 
+    protected static final Logger LOG = LoggerFactory.getLogger(Aktoer.class);
+
+    public final CookieRequestFilter cookieRequestFilter;
     public final OpenamJerseyKlient openamJerseyKlient;
 
     public Aktoer() {
         openamJerseyKlient = new OpenamJerseyKlient();
+        cookieRequestFilter = new CookieRequestFilter();
     }
 
-    public void erLoggetInnUtenRolle() {
-        erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
+    public Aktoer(Rolle rolle) {
+        this();
+        erLoggetInnMedRolle(rolle);
     }
 
     @Step("Logger inn med rolle: {rolle}")
     public void erLoggetInnMedRolle(Rolle rolle) {
-        openamJerseyKlient.logInnMedRolle(rolle.getKode());
+        openamJerseyKlient.logInnMedRolle(rolle.getKode(), cookieRequestFilter);
     }
 
     public enum Rolle {

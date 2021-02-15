@@ -4,30 +4,16 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.aktoerer.fpsoknad_mottak.Selvbetjening;
 import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioHenter;
 
 public abstract class TestBase {
 
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
     protected static final TestscenarioHenter TESTSCENARIO_HENTER = new TestscenarioHenter();
-    protected static Selvbetjening selvbetjening;
-
-    // Logger for testruns
-    protected Logger log;
-
-    public TestBase() {
-        log = LoggerFactory.getLogger(this.getClass());
-    }
-
-    @BeforeEach
-    protected void setUpAll() {
-        selvbetjening = new Selvbetjening();
-    }
 
     /*
      * Verifisering

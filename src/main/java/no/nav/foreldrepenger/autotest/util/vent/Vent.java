@@ -1,12 +1,18 @@
 package no.nav.foreldrepenger.autotest.util.vent;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Supplier;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Step;
 
 public class Vent {
+
+    protected static final Logger LOG = LoggerFactory.getLogger(Vent.class);
 
     public static void til(Supplier<Boolean> supplier, int timeoutInSeconds, String failReason) {
         til(supplier, timeoutInSeconds, () -> failReason);
@@ -31,5 +37,7 @@ public class Vent {
                         e);
             }
         }
+        var between = Duration.between(start, LocalDateTime.now());
+        LOG.info("Ventet i {} sekunder", between.getSeconds());
     }
 }

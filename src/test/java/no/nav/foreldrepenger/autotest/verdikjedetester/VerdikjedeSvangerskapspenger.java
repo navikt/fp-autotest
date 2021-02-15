@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
@@ -45,7 +44,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging));
-        var saksnummer = selvbetjening.sendInnSøknad(søkerFnr, søknad.build());
+        var saksnummer = innsender.sendInnSøknad(søkerFnr, søknad.build());
 
 
         var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
@@ -58,7 +57,6 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 orgNummer);
         innsender.sendInnInnteksmeldingFpfordel(inntektsmedling, søkerFnr, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
@@ -103,7 +101,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging));
-        var saksnummer = selvbetjening.sendInnSøknad(søkerFnr, søknad.build());
+        var saksnummer = innsender.sendInnSøknad(søkerFnr, søknad.build());
 
         var månedsinntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
@@ -115,7 +113,6 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 orgNummer);
         innsender.sendInnInnteksmeldingFpfordel(inntektsmedling, søkerFnr, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
@@ -161,7 +158,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging));
-        var saksnummer = selvbetjening.sendInnSøknad(søkerFnr, søknad.build());
+        var saksnummer = innsender.sendInnSøknad(søkerFnr, søknad.build());
 
         var månedsinntekt1 = scenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
         var orgNummer1 = scenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr();
@@ -178,7 +175,6 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 søkerFnr,
                 saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
@@ -234,7 +230,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 termindato,
                 List.of(tilrettelegging1))
                 .medOpptjening(opptjening);
-        var saksnummer1 = selvbetjening.sendInnSøknad(søkerFnr, søknad1.build());
+        var saksnummer1 = innsender.sendInnSøknad(søkerFnr, søknad1.build());
 
 
         var månedsinntekt = scenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
@@ -245,7 +241,6 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt));
         innsender.sendInnInnteksmeldingFpfordel(List.of(inntektsmedling), søkerFnr, saksnummer1);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer1);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
@@ -278,7 +273,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 termindato,
                 List.of(tilrettelegging2))
                 .medOpptjening(opptjening);
-        var saksnummer2 = selvbetjening.sendInnSøknad(søkerFnr, søknad2.build());
+        var saksnummer2 = innsender.sendInnSøknad(søkerFnr, søknad2.build());
 
         saksbehandler.hentFagsak(saksnummer2);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -341,7 +336,7 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging1, tilrettelegging2));
-        var saksnummer = selvbetjening.sendInnSøknad(søkerFnr, søknad.build());
+        var saksnummer = innsender.sendInnSøknad(søkerFnr, søknad.build());
 
         var månedsinntekt1 = scenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
         var orgNummer1 = scenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr();
@@ -360,7 +355,6 @@ public class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 søkerFnr,
                 saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);

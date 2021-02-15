@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk;
 import java.util.List;
 import java.util.Optional;
 
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -14,8 +15,8 @@ public class HistorikkJerseyKlient extends FpsakJerseyKlient {
 
     private static final String HISTORIKK_URL_FORMAT = "/historikk";
 
-    public HistorikkJerseyKlient() {
-        super();
+    public HistorikkJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 
     @Step("Henter liste av historiske innslag")

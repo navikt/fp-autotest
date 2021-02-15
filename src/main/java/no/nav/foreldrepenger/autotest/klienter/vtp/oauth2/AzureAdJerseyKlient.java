@@ -10,14 +10,14 @@ import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.openam.dto.AccessTokenResponseDTO;
 
-public class Oauth2JerseyKlient extends VTPJerseyKlient {
+public class AzureAdJerseyKlient extends VTPJerseyKlient {
 
     private static final Map<String, String> tokens = new ConcurrentHashMap<>();
 
     private static final String AZURE_AD = "/rest/AzureAd";
     private static final String TOKEN_ENDPOINT = AZURE_AD + "/aadb2c/oauth2/v2.0/token";
 
-    public Oauth2JerseyKlient() {
+    public AzureAdJerseyKlient() {
         super();
     }
 

@@ -2,14 +2,16 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak;
 
 import java.net.URI;
 
-import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.util.rest.AbstractJerseyOpenAMRestKlient;
+import javax.ws.rs.client.ClientRequestFilter;
 
-public abstract class FpsakJerseyKlient extends AbstractJerseyOpenAMRestKlient {
+import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
+import no.nav.foreldrepenger.autotest.util.rest.AbstractJerseyRestKlient;
+
+public abstract class FpsakJerseyKlient extends AbstractJerseyRestKlient {
 
     protected URI base = BaseUriProvider.FPSAK_BASE;
 
-    public FpsakJerseyKlient() {
-        super();
+    public FpsakJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 }

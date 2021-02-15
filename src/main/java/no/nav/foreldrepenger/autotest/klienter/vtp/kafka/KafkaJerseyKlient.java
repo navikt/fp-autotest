@@ -18,7 +18,7 @@ public class KafkaJerseyKlient extends VTPJerseyKlient {
     public void putMessageOnKafkaTopic(String topicName, Object messageObject) {
         client.target(base)
                 .path(KAFKA_SEND_URL)
-                .resolveTemplate("topic", Optional.ofNullable(topicName).orElseThrow())
+                .resolveTemplate("topic", Optional.ofNullable(topicName).orElseThrow(() -> new RuntimeException("Topic er null!")))
                 .request()
                 .post(json(messageObject), String.class);
     }

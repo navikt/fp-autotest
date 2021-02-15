@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -85,8 +86,8 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     private static final String BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL = BEHANDLING_SVANGERSKAPSPENGER + "/tilrettelegging";
 
 
-    public BehandlingerJerseyKlient() {
-        super();
+    public BehandlingerJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 
     @Step("Henter behandlingsdata")

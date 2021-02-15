@@ -44,11 +44,11 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     private final OkonomiJerseyKlient okonomiKlient;
     private final ProsesstaskJerseyKlient prosesstaskKlient;
 
-    public TilbakekrevingSaksbehandler() {
-        super();
-        behandlingerKlient = new BehandlingerJerseyKlient();
-        okonomiKlient = new OkonomiJerseyKlient();
-        prosesstaskKlient = new ProsesstaskJerseyKlient();
+    public TilbakekrevingSaksbehandler(Rolle rolle) {
+        super(rolle);
+        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
+        okonomiKlient = new OkonomiJerseyKlient(cookieRequestFilter);
+        prosesstaskKlient = new ProsesstaskJerseyKlient(cookieRequestFilter);
     }
 
     // Behandlinger actions

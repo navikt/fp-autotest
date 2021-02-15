@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
@@ -111,7 +110,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett())
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
                 .medMottatdato(termindato.minusWeeks(5));
-        var saksnummer = selvbetjening.sendInnSøknad(identSøker, søknad.build());
+        var saksnummer = innsender.sendInnSøknad(identSøker, søknad.build());
 
 
         // BYGGER OG SENDER IM TIL JOURNALFØRING OG TRIGGER JOURNALFØRINGHENDEELSE!
@@ -128,7 +127,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
@@ -201,9 +199,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
                 .medOpptjening(opptjening)
                 .medMottatdato(fødselsdato.plusWeeks(2));
-        var saksnummer = selvbetjening.sendInnSøknad(identSøker, søknad.build());
+        var saksnummer = innsender.sendInnSøknad(identSøker, søknad.build());
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         var vurderPerioderOpptjeningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
@@ -301,7 +298,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var testscenario = opprettTestscenario("520");
         var saksnummer = innsender.sendInnPapirsøknad(testscenario.personopplysninger().søkerIdent(), DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         var termindato = LocalDate.now().plusWeeks(6);
         var fpStartdatoMor = termindato.minusWeeks(3);
@@ -367,7 +363,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(testscenario,
                 fødselsdato, fpStartdatoMor, fpStartdatoFar);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         saksbehandler.ventTilAvsluttetBehandling();
@@ -396,7 +391,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                         .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartAktørIdent()))
                         .medFordeling(fordelingFar);
-        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
+        var saksnummerFar = innsender.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar1 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
         var arbeidsforholdIdFar1 = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsforholdId();
@@ -422,7 +417,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
          * skal fedrekvoten reduseres med 8 uker. (trenger også en split).
          * Bruker overstyrer ettersom uttaket er automatisk innvilget
          */
-        overstyrer.erLoggetInnMedRolle(Aktoer.Rolle.OVERSTYRER);
         overstyrer.hentFagsak(saksnummerFar);
         overstyrer.velgSisteBehandling();
         var overstyringUttak = new OverstyrUttaksperioder();
@@ -487,7 +481,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(testscenario,
                 fødselsdato, fpStartdatoMor, fpStartdatoFar);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         saksbehandler.ventTilAvsluttetBehandling();
@@ -508,7 +501,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
                 .medFordeling(fordelingFar)
                 .medOpptjening(opptjeningFar);
-        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
+        var saksnummerFar = innsender.sendInnSøknad(identFar, søknadFar.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
         VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler
@@ -563,7 +556,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                         .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
                         .medFordeling(fordelingFar)
                         .medAnnenForelder(lagNorskAnnenforeldre(identMor));
-        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
+        var saksnummerFar = innsender.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar1 = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
@@ -588,7 +581,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 saksnummerFar);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD);
         saksbehandler.gjenopptaBehandling();
@@ -683,7 +675,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(testscenario,
                 fødselsdato, fpStartdatoMor, fpStartdatoFarOrdinær);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         saksbehandler.ventTilAvsluttetBehandling();
@@ -702,7 +693,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medFordeling(fordelingFar)
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartAktørIdent()))
                 .medMottatdato(fødselsdato.plusWeeks(6));
-        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
+        var saksnummerFar = innsender.sendInnSøknad(identFar, søknadFar.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
         AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder avklarFaktaUttakPerioder = saksbehandler
@@ -757,7 +748,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Siden perioden er avslått, forventes det 0 i dagsats.");
 
         if (forventerNegativSimuleringForBehandling(fpStartdatoFarEndret)) {
-            tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
             tbksaksbehandler.hentSisteBehandling(saksnummerMor);
             tbksaksbehandler.ventTilBehandlingErPåVent();
             verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"),
@@ -796,7 +786,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medRelasjonTilBarn(RelasjonTilBarnErketyper.fødsel(2, fødselsdato))
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
                 .medMottatdato(fpStartdatoMor.minusWeeks(3));
-        var saksnummerMor = selvbetjening.sendInnSøknad(identMor, søknadMor.build());
+        var saksnummerMor = innsender.sendInnSøknad(identMor, søknadMor.build());
 
         var månedsinntektMor = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
@@ -811,7 +801,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identMor,
                 saksnummerMor);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
@@ -848,7 +837,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medOpptjening(opptjeningFar)
                 .medRelasjonTilBarn(RelasjonTilBarnErketyper.fødsel(2, fødselsdato))
                 .medAnnenForelder(lagNorskAnnenforeldre(identMor));
-        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
+        var saksnummerFar = innsender.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar = testscenario.scenariodataAnnenpartDto().inntektskomponentModell()
                 .inntektsperioder().get(0).beløp();
@@ -970,9 +959,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()));
-        var saksnummerMor = selvbetjening.sendInnSøknad(identMor, søknadMor.build());
+        var saksnummerMor = innsender.sendInnSøknad(identMor, søknadMor.build());
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
 
         verifiser(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("DAGPENGER"),
@@ -1007,7 +995,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medFordeling(fordelingFar)
                 .medAnnenForelder(new UkjentForelder())
                 .medMottatdato(fpStartdatoFar.minusWeeks(3));
-        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
+        var saksnummerFar = innsender.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
@@ -1025,7 +1013,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 saksnummerFar);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
@@ -1163,7 +1150,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, BrukerRolle.FAR, false)
                 .medFordeling(fordelingFar)
                 .medAnnenForelder(lagNorskAnnenforeldre(identMor));
-        var saksnummerFar = selvbetjening.sendInnSøknad(identFar, søknadFar.build());
+        var saksnummerFar = innsender.sendInnSøknad(identFar, søknadFar.build());
 
         var månedsinntektFar = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
                 .beløp();
@@ -1181,7 +1168,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 identFar,
                 saksnummerFar);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
@@ -1213,7 +1199,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var søknadMor = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, BrukerRolle.MOR, false)
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(lagNorskAnnenforeldre(identFar));
-        var saksnummerMor = selvbetjening.sendInnSøknad(identMor, søknadMor.build());
+        var saksnummerMor = innsender.sendInnSøknad(identMor, søknadMor.build());
 
         var månedsinntektMor = testscenario.scenariodataAnnenpartDto().inntektskomponentModell()
                 .inntektsperioder().get(0).beløp();
@@ -1328,9 +1314,8 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()));
-        var saksnummer = selvbetjening.sendInnSøknad(søkerIdent, søknad.build());
+        var saksnummer = innsender.sendInnSøknad(søkerIdent, søknad.build());
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         var avklarArbeidsforholdBekreftelse = saksbehandler
@@ -1370,7 +1355,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
                 .medMottatdato(termindato.minusMonths(2));
-        var saksnummer = selvbetjening.sendInnSøknad(søkerIdent, søknad.build());
+        var saksnummer = innsender.sendInnSøknad(søkerIdent, søknad.build());
 
         var månedsinntektMor = testscenario.scenariodataDto().inntektskomponentModell()
                 .inntektsperioder().get(0).beløp();
@@ -1385,7 +1370,6 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 søkerIdent,
                 saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
@@ -1477,7 +1461,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().søkerIdent()))
                 .medFordeling(fordelingMor)
                 .medMottatdato(fpStartdatoMor.minusWeeks(4));
-        var saksnummerMor = selvbetjening.sendInnSøknad(identMor, søknadMor.build());
+        var saksnummerMor = innsender.sendInnSøknad(identMor, søknadMor.build());
 
         var månedsinntektMor = testscenario.scenariodataAnnenpartDto().inntektskomponentModell()
                 .inntektsperioder().get(0).beløp();
