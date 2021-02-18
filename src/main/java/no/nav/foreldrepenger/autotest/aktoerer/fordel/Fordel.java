@@ -56,13 +56,15 @@ public class Fordel extends Aktoer {
     JournalforingJerseyKlient journalpostKlient;
     SafJerseyKlient safKlient;
 
-    public Fordel() {
-        fordelKlient = new FordelJerseyKlient();
-        behandlingerKlient = new BehandlingerJerseyKlient();
+    public Fordel(Rolle rolle) {
+        super(rolle);
+        fordelKlient = new FordelJerseyKlient(cookieRequestFilter);
+        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
+        fagsakKlient = new FagsakJerseyKlient(cookieRequestFilter);
+        historikkKlient = new HistorikkJerseyKlient(cookieRequestFilter);
+
         journalpostKlient = new JournalforingJerseyKlient();
         safKlient = new SafJerseyKlient();
-        fagsakKlient = new FagsakJerseyKlient();
-        historikkKlient = new HistorikkJerseyKlient();
         pdlLeesahKlient = new PdlLeesahJerseyKlient();
     }
 
@@ -168,7 +170,7 @@ public class Fordel extends Aktoer {
      */
     @Step("Sender inn papirsøknad foreldrepenger")
     public long sendInnPapirsøknadForeldrepenger(TestscenarioDto testscenario, boolean erAnnenPart) {
-        return sendInnSøknad(null, testscenario, DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER, null, erAnnenPart);
+        return sendInnSøknad(null, testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL, null, erAnnenPart);
     }
 
     @Step("Sender inn endringssøknad på papir")
@@ -268,10 +270,10 @@ public class Fordel extends Aktoer {
         String aktørId = scenario.personopplysninger().søkerAktørIdent();
         String behandlingstemaOffisiellKode = "ab0047";
         String dokumentKategori = Dokumentkategori.KLAGE_ANKE.getKode();
-        String dokumentTypeIdOffisiellKode = DokumenttypeId.KLAGEANKE.getKode();
+        String dokumentTypeIdOffisiellKode = DokumenttypeId.KLAGE_DOKUMENT.getKode();
 
         JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostUstrukturertDokument(
-                scenario.personopplysninger().søkerIdent(), DokumenttypeId.KLAGEANKE);
+                scenario.personopplysninger().søkerIdent(), DokumenttypeId.KLAGE_DOKUMENT);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
 
         long sakId = sendInnJournalpost(xmlstring, journalpostId, behandlingstemaOffisiellKode,

@@ -12,8 +12,9 @@ public class AvklarFaktaAnnenForeldreHarRett extends AksjonspunktBekreftelse {
         super();
     }
 
-    public void setAnnenforelderHarRett(boolean annenforelderHarRett) {
+    public AvklarFaktaAnnenForeldreHarRett setAnnenforelderHarRett(boolean annenforelderHarRett) {
         this.annenforelderHarRett = annenforelderHarRett;
+        return this;
     }
 
 }

@@ -74,31 +74,15 @@ public class Saksbehandler extends Aktoer {
     private final RisikovurderingJerseyKlient risikovurderingKlient;
 
 
-    public Saksbehandler() {
-        super();
-        fagsakKlient = new FagsakJerseyKlient();
-        behandlingerKlient = new BehandlingerJerseyKlient();
-        kodeverkKlient = new KodeverkJerseyKlient();
-        historikkKlient = new HistorikkJerseyKlient();
-        prosesstaskKlient = new ProsesstaskJerseyKlient();
-        risikovurderingKlient = new RisikovurderingJerseyKlient();
-    }
-
     public Saksbehandler(Rolle rolle) {
-        this();
-        erLoggetInnMedRolle(rolle);
-    }
-
-    @Override
-    public void erLoggetInnMedRolle(Rolle rolle) {
-        super.erLoggetInnMedRolle(rolle);
-        refreshKodeverk();
-    }
-
-    @Override
-    public void erLoggetInnUtenRolle() {
-        super.erLoggetInnUtenRolle();
-        refreshKodeverk();
+        super(rolle);
+        fagsakKlient = new FagsakJerseyKlient(cookieRequestFilter);
+        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
+        kodeverkKlient = new KodeverkJerseyKlient(cookieRequestFilter);
+        historikkKlient = new HistorikkJerseyKlient(cookieRequestFilter);
+        prosesstaskKlient = new ProsesstaskJerseyKlient(cookieRequestFilter);
+        risikovurderingKlient = new RisikovurderingJerseyKlient(cookieRequestFilter);
+        hentKodeverk();
     }
 
     /*
@@ -109,7 +93,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     @Step("Hent fagsak {saksnummer}")
-    private void hentFagsak(String saksnummer) {
+    public void hentFagsak(String saksnummer) {
         valgtFagsak = fagsakKlient.getFagsak(saksnummer);
         if (valgtFagsak == null) {
             throw new RuntimeException("Kan ikke velge fagsak. fagsak er null");
@@ -160,7 +144,7 @@ public class Saksbehandler extends Aktoer {
     public void velgSisteBehandling() {
         var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer()).stream()
                 .max(Comparator.comparing(b -> b.opprettet))
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Fant ingen behandlinger for saksnummer " + valgtFagsak.saksnummer()));
         velgBehandling(behandling);
     }
 
@@ -184,12 +168,16 @@ public class Saksbehandler extends Aktoer {
         ventPåOgVelgBehandling(kodeverk.BehandlingType.getKode("BT-006"));
     }
 
+    @Step("Venter på at fagsak får behandlingstype: {behandlingstype.kode}")
     private void ventPåOgVelgBehandling(Kode behandlingstype) {
         ventTilSakHarBehandling(behandlingstype);
-        velgBehandling(getBehandling(behandlingstype));
+        behandlinger.stream()
+                .filter(b -> b.type.kode.equals(behandlingstype.kode))
+                .findFirst()
+                .ifPresent(this::velgBehandling);
     }
 
-    @Step("Venter på at fagsak får behandlingstype: {behandlingType}")
+
     private void ventTilSakHarBehandling(Kode behandlingType) {
         if (harBehandling(behandlingType)) {
             return;
@@ -205,15 +193,6 @@ public class Saksbehandler extends Aktoer {
             }
         }
         return false;
-    }
-
-    private Behandling getBehandling(Kode behandlingstype) {
-        for (Behandling behandling : behandlinger) {
-            if (behandling.type.kode.equals(behandlingstype.kode)) {
-                return behandling;
-            }
-        }
-        return null;
     }
 
     /*
@@ -262,14 +241,15 @@ public class Saksbehandler extends Aktoer {
 
     private void ventPåProsessering(Behandling behandling) {
         Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
+            var prosessTasker = hentProsesstaskerForBehandling(behandling);
             var prosessTaskList = new StringBuilder();
-            for (ProsessTaskListItemDto prosessTaskListItemDto : hentProsesstaskerForBehandling(behandling)) {
-                prosessTaskList
-                        .append(prosessTaskListItemDto.taskType())
+            for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
+                prosessTaskList.append(prosessTaskListItemDto.taskType())
                         .append(" - ")
-                        .append(prosessTaskListItemDto.status()).append("\n");
+                        .append(prosessTaskListItemDto.status())
+                        .append("\n");
             }
-            return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
+            return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList.toString();
         });
     }
 
@@ -441,19 +421,10 @@ public class Saksbehandler extends Aktoer {
      */
     public Kodeverk hentKodeverk() {
         if (kodeverk == null) {
-            refreshKodeverk();
+            kodeverk = kodeverkKlient.getKodeverk();
         }
         return kodeverk;
     }
-
-    public void refreshKodeverk() {
-        try {
-            kodeverk = kodeverkKlient.getKodeverk();
-        } catch (Exception e) {
-            throw new RuntimeException("Kunne ikke hente kodeverk: " + e.getMessage());
-        }
-    }
-
 
     @Step("Henter ut unike aktivitetstatuser i beregning")
     public Set<Kode> hentUnikeBeregningAktivitetStatus() {
@@ -606,12 +577,12 @@ public class Saksbehandler extends Aktoer {
         return historikkInnslag.get().stream()
                 .filter(h -> h.type().kode.equalsIgnoreCase(type.getKode()))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Finner ikke historikkinnslag av typen " + type.getKode()));
     }
 
     public String hentDokumentIdFraHistorikkinnslag(HistorikkInnslag.Type type) {
-        HistorikkInnslag historikkInnslag = hentHistorikkinnslagAvType(type);
-        return historikkInnslag.dokumentLinks().get(0).dokumentId();
+        var innslag = hentHistorikkinnslagAvType(type);
+        return innslag.dokumentLinks().get(0).dokumentId();
     }
 
 
@@ -741,7 +712,7 @@ public class Saksbehandler extends Aktoer {
                 .filter(arbeidsforhold -> orgnummer.equalsIgnoreCase(arbeidsforhold.getArbeidsgiverReferanse()))
                 .map(Arbeidsforhold::getArbeidsforholdId)
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Fant ingen interne arbeidforhold med orgnummer " + orgnummer));
     }
 
     public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(String orgnummer,

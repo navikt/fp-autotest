@@ -4,6 +4,7 @@ import static javax.ws.rs.client.Entity.json;
 
 import java.util.List;
 
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,8 +21,8 @@ public class FagsakJerseyKlient extends FpsakJerseyKlient {
     private static final String STATUS_URL = FAGSAK_URL + "/status";
     private static final String FAGSAK_SØK_URL = FAGSAK_URL + "/sok";
 
-    public FagsakJerseyKlient() {
-        super();
+    public FagsakJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 
     public Status status(int saksnummer, int gruppe) {

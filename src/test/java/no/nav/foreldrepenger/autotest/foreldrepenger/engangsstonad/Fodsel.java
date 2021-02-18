@@ -47,7 +47,7 @@ public class Fodsel extends FpsakTestBase {
                 testscenario.personopplysninger().fødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -68,7 +68,7 @@ public class Fodsel extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -102,7 +102,7 @@ public class Fodsel extends FpsakTestBase {
                 testscenario.personopplysninger().fødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -125,7 +125,7 @@ public class Fodsel extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -170,7 +170,7 @@ public class Fodsel extends FpsakTestBase {
                 testscenario.personopplysninger().fødselsdato());
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -218,7 +218,7 @@ public class Fodsel extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -260,7 +260,7 @@ public class Fodsel extends FpsakTestBase {
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -301,7 +301,7 @@ public class Fodsel extends FpsakTestBase {
         EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -321,7 +321,7 @@ public class Fodsel extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

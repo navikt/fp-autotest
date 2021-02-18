@@ -39,7 +39,7 @@ public class Soknadsfrist extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
@@ -84,7 +84,7 @@ public class Soknadsfrist extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);

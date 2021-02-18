@@ -12,14 +12,8 @@ import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioHenter;
 
 public abstract class TestBase {
 
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
     protected static final TestscenarioHenter TESTSCENARIO_HENTER = new TestscenarioHenter();
-
-    // Logger for testruns
-    protected Logger log;
-
-    public TestBase() {
-        log = LoggerFactory.getLogger(this.getClass());
-    }
 
     /*
      * Verifisering

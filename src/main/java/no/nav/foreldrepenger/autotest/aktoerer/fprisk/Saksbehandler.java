@@ -16,9 +16,10 @@ public class Saksbehandler extends Aktoer {
     private final KafkaJerseyKlient kafkaKlient;
     private final RisikovurderingJerseyKlient risikovurderingKlient;
 
-    public Saksbehandler() {
+    public Saksbehandler(Rolle rolle) {
+        super(rolle);
         kafkaKlient = new KafkaJerseyKlient();
-        risikovurderingKlient = new RisikovurderingJerseyKlient();
+        risikovurderingKlient = new RisikovurderingJerseyKlient(cookieRequestFilter);
     }
 
     public void sendMessageToKafkaTopic(String topic, Object messageObject) {

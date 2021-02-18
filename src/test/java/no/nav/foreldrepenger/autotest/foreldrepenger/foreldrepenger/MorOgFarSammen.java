@@ -143,7 +143,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummerMor = fordel.sendInnSøknad(søknadMor.build(), morAktørId, morIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
         var inntektsmeldingerMor = makeInntektsmeldingFromTestscenario(testscenario, fpstartdatoMor);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
@@ -160,7 +160,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 .medFordeling(fordelingFar)
                 .medAnnenForelder(morAktørId);
         var saksnummerFar = fordel.sendInnSøknad(søknadFar.build(), farAktørId, farIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
         var inntektsmeldingerFar = makeInntektsmeldingFromTestscenarioMedIdent(testscenario, farIdent,
                 fødselsdato.plusWeeks(12), true);
@@ -193,7 +193,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 .medAnnenForelder(farAktørId);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerMor = fordel.sendInnSøknad(søknadMor.build(), morAktørId, morIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         List<InntektsmeldingBuilder> inntektsmeldingerMor = makeInntektsmeldingFromTestscenario(testscenario, fpstartdatoMor);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
         saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
@@ -213,7 +213,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 .medAnnenForelder(morAktørId);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerFar = fordel.sendInnSøknad(søknadFar.build(), farAktørId, farIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         List<InntektsmeldingBuilder> inntektsmeldingerFar = makeInntektsmeldingFromTestscenarioMedIdent(testscenario,
                 farIdent, fpStartdatoFar, true);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerFar, farAktørId, farIdent, saksnummerFar);
@@ -522,7 +522,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 .medAnnenForelder(annenPartAktørid);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         return fordel.sendInnSøknad(søknad.build(), søkerAktørid, søkerIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
 
     @Step("Send inn søknad mor med aksjonspunkt")
@@ -540,7 +540,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 .medAnnenForelder(annenPartAktørid);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         return fordel.sendInnSøknad(søknad.build(), søkerAktørid, søkerIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
 
     @Step("Send inn inntektsmelding mor")
@@ -583,7 +583,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 .medAnnenForelder(annenPartAktørid);
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         return fordel.sendInnSøknad(søknad.build(), søkerAktørid, søkerIdent,
-                DokumenttypeId.FOEDSELSSOKNAD_FORELDREPENGER);
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
 
     @Step("Send inn inntektsmelding far")

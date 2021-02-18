@@ -11,14 +11,13 @@ import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
 
 public class MottakJerseyKlient extends FpsoknadMottakJerseyKlient {
 
-    private static final String MOTTAK_PATH="/mottak";
+    private static final String MOTTAK_PATH= "/mottak";
     private static final String MOTTAK_SEND_PATH = MOTTAK_PATH + "/send";
 
     public MottakJerseyKlient() {
         super();
     }
 
-    // TODO sjekk om det fungerer.
     public Kvittering sendSøknad(String token, Søknad søknad) {
         return client.target(base)
                 .path(MOTTAK_SEND_PATH)

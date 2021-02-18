@@ -4,6 +4,8 @@ import static javax.ws.rs.client.Entity.json;
 
 import java.util.UUID;
 
+import javax.ws.rs.client.ClientRequestFilter;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.FptilbakeJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultat;
@@ -14,8 +16,8 @@ public class OkonomiJerseyKlient extends FptilbakeJerseyKlient {
     private static final String GRUNNLAG_URL = "/grunnlag?";
     private static final String BEREGNING_RESULTAT_URL = "/beregning/resultat";
 
-    public OkonomiJerseyKlient() {
-        super();
+    public OkonomiJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 
     @Step

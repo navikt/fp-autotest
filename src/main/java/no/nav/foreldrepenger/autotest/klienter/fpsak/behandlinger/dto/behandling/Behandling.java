@@ -246,4 +246,8 @@ public class Behandling {
     public static <V> V get(Lazy<V> o) {
         return o == null ? null : o.get();
     }
+
+    public LocalDateTime getOpprettet() {
+        return opprettet;
+    }
 }

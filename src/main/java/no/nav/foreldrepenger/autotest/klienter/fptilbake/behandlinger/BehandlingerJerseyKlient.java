@@ -6,10 +6,9 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-
-import org.glassfish.jersey.client.ClientProperties;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
@@ -46,8 +45,8 @@ public class BehandlingerJerseyKlient extends FptilbakeJerseyKlient {
 
     private static final String FEILUTBETALING_FAKTA_URL = "/behandlingfakta/hent-fakta/feilutbetaling";
 
-    public BehandlingerJerseyKlient() {
-        super();
+    public BehandlingerJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 
     @Step("Oppretter ny tilbakekreving")
@@ -141,7 +140,6 @@ public class BehandlingerJerseyKlient extends FptilbakeJerseyKlient {
                 .path(BEHANDLINGER_STATUS_URL)
                 .queryParam(UUID, behandlingUuid)
                 .request(APPLICATION_JSON_TYPE)
-                .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE)
                 .get(Response.class);
         if (StatusRange.STATUS_REDIRECT.inRange(response.getStatus())) {
             return null;

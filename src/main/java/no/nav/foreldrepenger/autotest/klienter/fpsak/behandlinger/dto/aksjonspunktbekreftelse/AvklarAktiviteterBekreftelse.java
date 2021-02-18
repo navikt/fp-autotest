@@ -21,25 +21,29 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
     public AvklarAktiviteterBekreftelse setSkalBrukes(boolean skalBrukes, String orgnr) {
         BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
                 .filter(a -> a.oppdragsgiverOrg.equals(orgnr))
-                .findFirst().orElseThrow();
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Fant ingen beregningsaktivitet med orgnummer " + orgnr));
         vurdering.skalBrukes = skalBrukes;
         return this;
     }
 
     public AvklarAktiviteterBekreftelse godkjennOpptjeningsAktivitet(String opptjeningsAktivitetType) {
-        BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
-                .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
-                .findFirst().orElseThrow();
+        var vurdering = hentBeregningsaktivitetMedOpptjenignsaktivitetstype(opptjeningsAktivitetType);
         vurdering.skalBrukes = true;
         return this;
     }
 
     public AvklarAktiviteterBekreftelse avvisOpptjeningsAktivitet(String opptjeningsAktivitetType) {
-        BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
-                .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
-                .findFirst().orElseThrow();
+        var vurdering = hentBeregningsaktivitetMedOpptjenignsaktivitetstype(opptjeningsAktivitetType);
         vurdering.skalBrukes = false;
         return this;
+    }
+
+    private BeregningsaktivitetLagreDto hentBeregningsaktivitetMedOpptjenignsaktivitetstype(String opptjeningsAktivitetType) {
+        return beregningsaktivitetLagreDtoList.stream()
+                    .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Fant ikke beregningsaktivitet med opptjeningsaktivetetstype " + opptjeningsAktivitetType));
     }
 
     @Override

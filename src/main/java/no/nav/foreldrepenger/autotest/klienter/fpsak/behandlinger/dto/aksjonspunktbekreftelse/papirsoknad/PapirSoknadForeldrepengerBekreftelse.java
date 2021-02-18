@@ -56,13 +56,14 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
 
     protected boolean annenForelderInformert = true;
 
-    public void morSøkerFødsel(FordelingDto fordeling, LocalDate fødselsdato, LocalDate mottattDato) {
+    public PapirSoknadForeldrepengerBekreftelse morSøkerFødsel(FordelingDto fordeling, LocalDate fødselsdato, LocalDate mottattDato) {
         this.tidsromPermisjon = fordeling;
         this.foedselsDato = Collections.singletonList(fødselsdato);
         this.mottattDato = mottattDato;
+        return this;
     }
 
-    public void morSøkerTermin(FordelingDto fordeling, LocalDate termindato, LocalDate mottattDato,
+    public PapirSoknadForeldrepengerBekreftelse morSøkerTermin(FordelingDto fordeling, LocalDate termindato, LocalDate mottattDato,
             DekningsgradDto dekningsgrad) {
         this.tidsromPermisjon = fordeling;
         this.erBarnetFodt = false;
@@ -70,5 +71,6 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
         this.foedselsDato = null;
         this.mottattDato = mottattDato;
         this.dekningsgrad = dekningsgrad;
+        return this;
     }
 }

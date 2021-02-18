@@ -31,11 +31,11 @@ public class OpptjeningErketyper {
 
     public static Opptjening medEgenNaeringOpptjening(Boolean erNyIArbeidslivet, BigInteger næringsInntekt,
                                                       Boolean varigEndretNæring) {
-        return medEgenNæringOpptjening(LocalDate.now().minusYears(4), LocalDate.now(), erNyIArbeidslivet,
+        return medEgenNaeringOpptjening(LocalDate.now().minusYears(4), LocalDate.now(), erNyIArbeidslivet,
                 næringsInntekt, varigEndretNæring);
     }
 
-    public static Opptjening medEgenNæringOpptjening(LocalDate fom, LocalDate tom, Boolean erNyIArbeidslivet,
+    public static Opptjening medEgenNaeringOpptjening(LocalDate fom, LocalDate tom, Boolean erNyIArbeidslivet,
                                                      Number næringsInntekt, Boolean varigEndretNæring) {
         var norskOrganisasjon = lagNorskOrganisasjon(fom, tom, erNyIArbeidslivet, næringsInntekt, varigEndretNæring);
         return Opptjening.builder()
@@ -81,10 +81,10 @@ public class OpptjeningErketyper {
                 .erVarigEndring(varigEndretNæring)
                 .erNyIArbeidslivet(erNyIArbeidslivet)
                 .næringsinntektBrutto(næringsInntekt.longValue())
-                .endringsDato(varigEndretNæring ? null : LocalDate.now().minusWeeks(1))
+                .endringsDato(varigEndretNæring ? LocalDate.now().minusWeeks(1) : null)
                 .oppstartsDato(LocalDate.now().minusYears(4))
                 .beskrivelseEndring("Endringsbeskrivelse")
-                .stillingsprosent(new ProsentAndel(Double.valueOf(100)))
+                .stillingsprosent(new ProsentAndel(100.0))
                 .orgName("Navnet Organisasjon")
                 .orgNummer("910909088")
                 .build();

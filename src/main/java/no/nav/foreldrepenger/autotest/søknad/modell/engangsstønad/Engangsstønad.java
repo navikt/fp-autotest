@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.autotest.søknad.modell.engangsstønad;
 
 import javax.validation.Valid;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.Data;
@@ -28,10 +26,4 @@ public class Engangsstønad extends Ytelse {
     @Valid
     private RelasjonTilBarn relasjonTilBarn;
 
-    @JsonCreator
-    public Engangsstønad(@JsonProperty("medlemsskap") Medlemsskap medlemsskap,
-            @JsonProperty("relasjonTilBarn") RelasjonTilBarn relasjonTilBarn) {
-        this.medlemsskap = medlemsskap;
-        this.relasjonTilBarn = relasjonTilBarn;
-    }
 }

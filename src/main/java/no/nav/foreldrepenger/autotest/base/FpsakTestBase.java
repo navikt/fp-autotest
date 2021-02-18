@@ -6,7 +6,7 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger.Saksbehandler;
 import no.nav.foreldrepenger.autotest.aktoerer.fptilbake.TilbakekrevingSaksbehandler;
-import no.nav.foreldrepenger.autotest.aktoerer.inntektsmelding.Inntektsmelding;
+import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
@@ -16,26 +16,24 @@ public class FpsakTestBase extends TestScenarioTestBase {
     /*
      * Aktører
      */
+    protected Innsender innsender;
     protected Fordel fordel;
     protected Saksbehandler saksbehandler;
     protected Saksbehandler overstyrer;
     protected Saksbehandler beslutter;
     protected Saksbehandler klagebehandler;
     protected TilbakekrevingSaksbehandler tbksaksbehandler;
-    protected Inntektsmelding inntektsmelding;
 
     @BeforeEach
     public void setUp() {
-        fordel = new Fordel();
-        saksbehandler = new Saksbehandler();
-        overstyrer = new Saksbehandler();
-        beslutter = new Saksbehandler();
-        klagebehandler = new Saksbehandler();
-        tbksaksbehandler = new TilbakekrevingSaksbehandler();
-        inntektsmelding = new Inntektsmelding();
+        innsender = new Innsender(Aktoer.Rolle.SAKSBEHANDLER);
+        fordel = new Fordel(Aktoer.Rolle.SAKSBEHANDLER);
+        saksbehandler = new Saksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
+        overstyrer = new Saksbehandler(Aktoer.Rolle.OVERSTYRER);
+        beslutter = new Saksbehandler(Aktoer.Rolle.BESLUTTER);
+        klagebehandler = new Saksbehandler(Aktoer.Rolle.KLAGEBEHANDLER);
+        tbksaksbehandler = new TilbakekrevingSaksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
     }
-
-
 
 
     public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,

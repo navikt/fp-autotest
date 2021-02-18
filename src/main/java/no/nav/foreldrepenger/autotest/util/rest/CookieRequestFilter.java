@@ -5,17 +5,7 @@ import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 
-/** Denne klassen lager en singleton instance per thread */
-public class OpenAmRequestFilter implements ClientRequestFilter {
-
-    private static final ThreadLocal<OpenAmRequestFilter> _threadLocal = ThreadLocal.withInitial(OpenAmRequestFilter::new);
-
-    private OpenAmRequestFilter() {
-    }
-
-    public static OpenAmRequestFilter getInstance() {
-        return _threadLocal.get();
-    }
+public class CookieRequestFilter implements ClientRequestFilter {
 
     private Cookie cookie;
 

@@ -20,7 +20,7 @@ public class PdlLeesahJerseyKlient extends VTPJerseyKlient {
 
     @Step("Legger til hendelse på PDL topic")
     public void opprettHendelse(PersonhendelseDto personhendelseDto) {
-        LOG.info("Legger til hendelse av type: " + personhendelseDto.getType() + " i PDL ");
+        LOG.info("Legger til hendelse av type: {} i PDL", personhendelseDto.getType());
         client.target(base)
                 .path(PDL_LEESAH)
                 .request()

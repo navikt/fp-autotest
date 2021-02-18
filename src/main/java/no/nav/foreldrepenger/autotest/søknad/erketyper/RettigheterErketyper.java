@@ -15,6 +15,7 @@ public class RettigheterErketyper {
                 null);
     }
 
+    // NB! Default verdi hvis annenpart er "ukjent foreldre"!
     public static Rettigheter harAleneOmsorgOgEnerett() {
         return new Rettigheter(
                 false,

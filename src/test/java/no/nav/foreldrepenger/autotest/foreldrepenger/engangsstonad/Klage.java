@@ -39,7 +39,7 @@ public class Klage extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage NFP
@@ -88,7 +88,7 @@ public class Klage extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
@@ -159,7 +159,7 @@ public class Klage extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
@@ -228,7 +228,7 @@ public class Klage extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
@@ -286,7 +286,7 @@ public class Klage extends FpsakTestBase {
 
         fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.FOEDSELSSOKNAD_ENGANGSSTONAD);
+                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP

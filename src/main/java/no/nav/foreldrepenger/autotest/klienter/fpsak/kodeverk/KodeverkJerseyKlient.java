@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk;
 
 import java.util.List;
 
+import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -19,8 +20,8 @@ public class KodeverkJerseyKlient extends FpsakJerseyKlient {
     private static final String KODEVERK_HENLEGG_ÅRSAKER_KLAGE = KODEVERK_HENLEGG_ÅRSAKER + "/klage";
     private static final String KODEVERK_HENLEGG_ÅRSAKER_INNSYN = KODEVERK_HENLEGG_ÅRSAKER + "/innsyn";
 
-    public KodeverkJerseyKlient() {
-        super();
+    public KodeverkJerseyKlient(ClientRequestFilter filter) {
+        super(filter);
     }
 
     @Step("Henter kodeverk for FPSAK")

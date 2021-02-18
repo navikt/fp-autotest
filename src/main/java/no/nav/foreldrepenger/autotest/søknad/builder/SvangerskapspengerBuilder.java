@@ -59,7 +59,12 @@ public class SvangerskapspengerBuilder extends SøknadBuilder<Svangerskapspenger
 
     @Override
     public Søknad build() {
+        if (this.svangerskapspengerKladd.getOpptjening() == null) {
+            this.medOpptjening(new Opptjening());
+        }
+
         this.medYtelse(this.svangerskapspengerKladd);
+
         return super.build();
     }
 }
