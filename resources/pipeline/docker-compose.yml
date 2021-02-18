@@ -5,7 +5,7 @@ services:
     container_name: audit.nais
     ports:
       - "6514:6514"
-    mem_limit: 6m
+    mem_limit: 16m
   oracle:
     image: $ORACLE_IMAGE
     container_name: oracle
