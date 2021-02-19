@@ -35,14 +35,19 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRealitetsbehandlingEllerKlage;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
@@ -85,13 +90,13 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 
 @Tag("verdikjede")
-public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
+class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("1: Mor automatisk førstegangssøknad termin (med fødselshendelse), aleneomsorg og avvik i beregning.")
     @Description("Mor førstegangssøknad før fødsel på termin. Mor har aleneomsorg og enerett. Sender inn IM med over " +
                 "25% avvik med delvis refusjon. Etter behandlingen er ferdigbehandlet mottas en fødselshendelse.")
-    public void testcase_mor_fødsel() {
+    void testcase_mor_fødsel() {
         var testscenario = opprettTestscenario("501");
         var identSøker = testscenario.personopplysninger().søkerIdent();
         var termindato = LocalDate.now().plusWeeks(1);
@@ -188,7 +193,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor er selvstendig næringsdrivende og har ferdiglignet inntekt i mange år. Oppgir en næringsinntekt" +
             "som avviker med mer enn 25% fra de tre siste ferdiglignede årene. Søker dør etter behandlingen er " +
             "ferdigbehandlet.")
-    public void morSelvstendigNæringsdrivendeTest() {
+    void morSelvstendigNæringsdrivendeTest() {
         var testscenario = opprettTestscenario("510");
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
         var identSøker = testscenario.personopplysninger().søkerIdent();
@@ -294,7 +299,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Test
     @DisplayName("3: Mor, sykepenger, kun ytelse, papirsøknad")
     @Description("Mor søker fullt uttak, men søker mer enn det hun har rett til.")
-    public void morSykepengerKunYtelseTest() {
+    void morSykepengerKunYtelseTest() {
         var testscenario = opprettTestscenario("520");
         var saksnummer = innsender.sendInnPapirsøknad(testscenario.personopplysninger().søkerIdent(), DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -353,7 +358,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor har løpende fagsak med hele mødrekvoten og deler av fellesperioden. Far søker resten av fellesperioden" +
             "og hele fedrekvoten med gradert uttak. Far har to arbeidsforhold i samme virksomhet, samme org.nr, men ulik" +
             "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge.")
-    public void farSøkerForeldrepengerTest() {
+    void farSøkerForeldrepengerTest() {
         TestscenarioDto testscenario = opprettTestscenario("560");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -471,7 +476,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor søker hele mødrekvoten og deler av fellesperiode, happy case. Far søker etter føsdsel og søker" +
             "noe av fellesperioden og hele fedrekvoten. Opplyser at han er frilanser og har frilanserinntekt frem til" +
             "skjæringstidspunktet.")
-    public void farSøkerSomFrilanser() {
+    void farSøkerSomFrilanser() {
         TestscenarioDto testscenario = opprettTestscenario("561");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -536,7 +541,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
             "avsluttet, men er ikke det. Søker en graderingsperiode i en av virksomheten og gjennopptar full " +
             "deltidsstilling: I dette arbeidsforholdet vil AG ha full refusjon i hele perioden. I det andre vil AG " +
             "bare ha refusjon i to måneder.")
-    public void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
+    void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var testscenario = opprettTestscenario("570");
         var identFar = testscenario.personopplysninger().søkerIdent();
         var identMor = testscenario.personopplysninger().annenpartIdent();
@@ -665,7 +670,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor har løpende sak hvor hun har søkt om hele mødrekvoten og deler av fellesperioden. Mor blir syk 4" +
             "uker inn i mødrekvoten og far søker om overføring av resten. Far søker ikke overføring av fellesperioden." +
             "Far får innvilget mødrevkoten og mor sin sak blir berørt og automatisk revurdert.")
-    public void FarTestMorSyk() {
+    void FarTestMorSyk() {
         TestscenarioDto testscenario = opprettTestscenario("562");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -768,7 +773,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Mor føder tvillinger og søker om hele mødrekvoten og fellesperioden, inkludert utvidelse. Far søker " +
             "samtidig uttak av fellesperioden fra da mor starter utvidelsen av fellesperioden. Søker deretter samtidig " +
             "av fedrekvoten, frem til mor er ferdig med fellesperioden, og deretter søker resten av fedrekvoten.")
-    public void MorSøkerFor2BarnHvorHunFårBerørtSakPgaFar() {
+    void MorSøkerFor2BarnHvorHunFårBerørtSakPgaFar() {
         TestscenarioDto testscenario = opprettTestscenario("512");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -946,7 +951,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @DisplayName("9: Mor søker med dagpenger som grunnlag, besteberegnes automatisk")
     @Description("Mor søker med dagpenger som grunnlag. Kvalifiserer til automatisk besteberegning." +
             "Beregning etter etter §14-7, 3. ledd gir høyere inntekt enn beregning etter §14-7, 1. ledd")
-    public void MorSøkerMedDagpengerTest() {
+    void MorSøkerMedDagpengerTest() {
         var testscenario = opprettTestscenario("521");
         var identMor = testscenario.personopplysninger().søkerIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
@@ -981,7 +986,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
             "Mens behandlingen er hos beslutter sender AG en ny korrigert IM. Behandlingen rulles tilbake. På den " +
             "siste IM som AG sender ber AG om full refusjon, men kommer for sent til å få alt. AG får refusjon for" +
             "den inneværende måneden og tre måneder tilbake i tid; tiden før dette skal gå til søker.")
-    public void FarSøkerAdopsjon() {
+    void FarSøkerAdopsjon() {
         TestscenarioDto testscenario = opprettTestscenario("563");
 
         /* FAR */
@@ -1134,7 +1139,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Far søker adopsjon hvor han søker hele fedrekvoten og fellesperioden. Mor søker noe av mødrekvoten midt " +
             "i fars periode med fullt uttak. Deretter søker mor 9 uker av fellesperioden med samtidig uttak. Far får " +
             "berørt sak hvor han får avkortet fellesperidoen på slutten og redusert perioder hvor mor søker samtidig uttak")
-    public void FarSøkerAdopsjonOgMorMødrekvoteMidtIFarsOgDeretterSamtidigUttakAvFellesperidoe() {
+    void FarSøkerAdopsjonOgMorMødrekvoteMidtIFarsOgDeretterSamtidigUttakAvFellesperidoe() {
         TestscenarioDto testscenario = opprettTestscenario("563");
 
         /* FAR */
@@ -1304,10 +1309,12 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("12: Mor søker fødsel og mottar sykepenger som er under 1/2 G")
-    @Description("12: Mor søker fødsel og mottar sykepenger som er under 1/2 G. Har ingen inntektskilder. " +
-            "Hun har for lite inntekt og har dermed ikke rett til foreldrepenger – beregning avvist søknadden.")
-    public void morSøkerFødselMottarForLite() {
+    @DisplayName("12: Mor søker fødsel og mottar sykepenger uten inntektskilder, får avslag, klager og får medhold.")
+    @Description("12: Mor søker fødsel og mottar sykepenger som er over 1/2 G. Har ingen inntektskilder. Saksbehandler" +
+            "skriver inn sykepengebeløp som er under 1/2 G som vil før til at søker ikke har rett på foreldrepenger." +
+            "Søker får avslag, klager og får medhold. Saksbehandler legger inn korrekt beløp som er over 1/2G og søker" +
+            "får innvilget foreldrepenger.")
+    void morSøkerFødselMottarForLite() {
         var testscenario = opprettTestscenario("70");
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
@@ -1339,6 +1346,60 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.vilkårStatus(VilkarTypeKoder.BEREGNINGSGRUNNLAGVILKÅR).kode, "IKKE_OPPFYLT");
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT",
                 "Forventer at behandlingen er avslått fordi søker ikke har rett på foreldrepenger.");
+
+        innsender.sendInnKlage(søkerIdent);
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.ventPåOgVelgKlageBehandling();
+
+        var klageFormkravNfp = klagebehandler
+                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+                .godkjennAlleFormkrav()
+                .setBegrunnelse("Super duper klage!");
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
+
+        var vurderingAvKlageNfpBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse.class)
+                .bekreftMedholdGunst("PROSESSUELL_FEIL")
+                .fritekstBrev("Fritektst til brev fra klagebehandler.")
+                .setBegrunnelse("Fordi");
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
+
+
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummer);
+        beslutter.ventPåOgVelgKlageBehandling();
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
+
+        // Saksbehandler oppretter ny revudering manuelt etter søker har fått medhold i klage.
+        saksbehandler.opprettBehandlingRevurdering("RE-KLAG-M-INNTK");
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.velgSisteBehandling();
+
+        verifiserLikhet(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode,
+                "RE-KLAG-M-INNTK");
+
+        var avklarArbeidsforholdBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse2);
+
+        verifiser(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"),
+                "Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +
+                        "er forut for permisjonen på skjæringstidspunktet!");
+
+        var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .leggTilAndelerYtelse(10_000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"));
+        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
+
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerRealitetsbehandlingEllerKlage.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+
+        verifiserInneholder(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen(), new Kode("ENDRING_I_BEREGNING"));
+        verifiserInneholder(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen(), new Kode("ENDRING_I_UTTAK"));
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
     }
 
 
@@ -1346,7 +1407,7 @@ public class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @DisplayName("13: Mor søker på termin og får innvilget, men etter termin mottas det en dødfødselshendelse")
     @Description("13: Mør søker på termin og blir automatisk behanldet (innvilget). En uke etter terminen mottas det" +
             "en dødfødselshendelse hvor mor får avslag etter det 6 uken av mødrekvoten.")
-    public void morSøkerTerminFårInnvilgetOgSåKommerDetEnDødfødselEtterTermin() {
+    void morSøkerTerminFårInnvilgetOgSåKommerDetEnDødfødselEtterTermin() {
         var testscenario = opprettTestscenario("55");
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
         var termindato = LocalDate.now().minusWeeks(2);

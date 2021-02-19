@@ -30,7 +30,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        perioder = new ArrayList<>(behandling.hentUttaksperioder());
+        perioder = behandling.hentUttaksperioder();
         innvilgManuellePerioder();
     }
 
@@ -198,7 +198,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         Boolean samtidigUttak = periode.getSamtidigUttak();
         BigDecimal ordinæreTrekkdagerVedFulltUttak = BigDecimal.valueOf(
                 Virkedager.beregnAntallVirkedager(periode.getFom(), periode.getTom()));
-        if (samtidigUttak) {
+        if (Boolean.TRUE.equals(samtidigUttak)) {
             if (periode.getSamtidigUttaksprosent() == null) {
                 throw new NullPointerException("Samtidig uttaksprosent er ikke satt!");
             }
@@ -262,7 +262,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     private void innvilgAktiviteterOgAvslåResten(UttakResultatPeriode periode,
                                                  List<String> organisasjonsnummere,
                                                  Kode periodeResultatÅrsak) {
-        if ((organisasjonsnummere == null) || (organisasjonsnummere.size() == 0)) {
+        if (organisasjonsnummere == null || organisasjonsnummere.isEmpty()) {
             throw new IllegalArgumentException("Bruk avslåPeriode() istedenfor!");
         }
         periode.setPeriodeResultatType(new Kode("PERIODE_RESULTAT_TYPE", "INNVILGET", "Innvilget"));
