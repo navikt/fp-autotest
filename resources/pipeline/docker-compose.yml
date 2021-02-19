@@ -244,6 +244,8 @@ services:
     container_name: fpdokgen
     restart: on-failure
     mem_limit: 256mb
+    environment:
+      - "SPRING_PROFILES_ACTIVE=dev"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
