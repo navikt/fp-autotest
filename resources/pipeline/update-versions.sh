@@ -16,9 +16,9 @@ imageVersion () {
 echo AUDIT_NAIS_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/k9-verdikjede/audit-nais-mock")" > .env
 echo ORACLE_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpsak-autotest/oracle-flattened")" >> .env
 echo POSTGRES_IMAGE="postgres:12" >> .env
-echo VTP_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/vtp/vtp")" >> .env
+echo VTP_IMAGE="$(imageVersion "ghcr.io/navikt/vtp"")" >> .env
 echo FPABAKUS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-abakus")" >> .env
-echo FPSAK_IMAGE="$(imageVersion "ghcr.io/navikt/vtp")" >> .env
+echo FPSAK_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-sak/fpsak")" >> .env
 echo FPFORDEL_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpfordel/fpfordel")" >> .env
 echo FPINFO_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpinfo/fpinfo")" >> .env
 echo FPSOKNAD_MOTTAK_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpsoknad-mottak/fpsoknad-mottak")" >> .env
