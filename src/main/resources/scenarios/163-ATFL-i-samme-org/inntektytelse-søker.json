@@ -14,14 +14,6 @@
 				"fordel": "kontantytelse",
 				"beskrivelse": "testbeskrivelsesomfungererennsålenge"
 			}
-		],
-		"frilansarbeidsforholdperioder": [
-			{
-				"frilansFom":"2018-01-01",
-				"frilansTom":"now()",
-				"orgnr":"910909088",
-				"stillingsprosent":"25"
-			}
 		]
 	},
 	"aareg": {

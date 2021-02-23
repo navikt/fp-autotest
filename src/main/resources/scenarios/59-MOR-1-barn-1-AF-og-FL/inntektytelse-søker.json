@@ -19,14 +19,6 @@
 				"fordel": "kontantytelse",
 				"beskrivelse": "fastloenn"
 			}
-		],
-		"frilansarbeidsforholdperioder": [
-			{
-				"frilansFom":"now() - P1Y",
-				"frilansTom":"now() - P1M",
-				"orgnr":"973861778",
-				"stillingsprosent":"25"
-			}
 		]
 	},
 	"aareg": {
