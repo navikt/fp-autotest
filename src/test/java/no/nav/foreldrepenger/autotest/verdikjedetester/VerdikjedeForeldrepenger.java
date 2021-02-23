@@ -32,11 +32,13 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AnkeVurderingResultatBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravKa;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
@@ -298,7 +300,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("3: Mor, sykepenger, kun ytelse, papirsøknad")
-    @Description("Mor søker fullt uttak, men søker mer enn det hun har rett til.")
+    @Description("Mor søker fullt uttak, men søker mer enn det hun har rett til. Klager på førstegangsbehandlingen og " +
+            "vedtaket stadfestes. Søker anker stadfestelsen og saksbehanlder oppretter en ankebehandling. Bruker får " +
+            "omgjøring i anke")
     void morSykepengerKunYtelseTest() {
         var testscenario = opprettTestscenario("520");
         var saksnummer = innsender.sendInnPapirsøknad(testscenario.personopplysninger().søkerIdent(), DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
@@ -351,6 +355,68 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
 
+        innsender.sendInnKlage(testscenario.personopplysninger().søkerIdent());
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.ventPåOgVelgKlageBehandling();
+        var klageFormkravNfp = klagebehandler
+                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+                .godkjennAlleFormkrav()
+                .setBegrunnelse("Super duper klage!");
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
+
+        var vurderingAvKlageNfpBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse.class)
+                .bekreftStadfestet()
+                .fritekstBrev("Fritektst til brev fra klagebehandler.")
+                .setBegrunnelse("Fordi");
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
+
+        var klageFormkravKa = klagebehandler
+                .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
+                .godkjennAlleFormkrav()
+                .setBegrunnelse("Super duper klage!");
+        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
+
+        var vurderingAvKlageNkBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageBekreftelse.VurderingAvKlageNkBekreftelse.class)
+                .bekreftStadfestet()
+                .fritekstBrev("Fritektst til brev fra klagebehandler.")
+                .setBegrunnelse("Fordi");
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
+
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummer);
+        beslutter.ventPåOgVelgKlageBehandling();
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
+
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
+        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_YTELSESVEDTAK_STADFESTET");
+
+        // ANKE
+        innsender.sendInnKlage(testscenario.personopplysninger().søkerIdent());
+        klagebehandler.opprettBehandling(klagebehandler.kodeverk.BehandlingType.getKode("BT-008"), null);
+
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.ventPåOgVelgAnkeBehandling();
+        var ankeVurderingResultatBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(AnkeVurderingResultatBekreftelse.class)
+                .omgjørTilGunst()
+                .setBegrunnelse("Super duper anke!");
+        klagebehandler.bekreftAksjonspunkt(ankeVurderingResultatBekreftelse);
+
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummer);
+        beslutter.ventPåOgVelgAnkeBehandling();
+        var fatterVedtakBekreftelseAnke = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelseAnke.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelseAnke);
+
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
+        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "ANKE_OMGJOER");
     }
 
     @Test

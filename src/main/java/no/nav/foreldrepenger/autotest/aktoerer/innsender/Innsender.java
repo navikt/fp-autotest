@@ -114,7 +114,7 @@ public class Innsender extends Aktoer {
 
     public Long sendInnKlage(String fnr) {
         var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null,
-                "SKAN_IM", "klage.pdf", DokumenttypeId.KLAGE_DOKUMENT);
+                "SKAN_IM", null, DokumenttypeId.KLAGE_DOKUMENT);
         journalpostKlient.journalførR(journalpostModell);
         return null;
     }
@@ -180,18 +180,18 @@ public class Innsender extends Aktoer {
     }
 
     private Long ventTilFagsakOgBehandlingErOpprettet(String fnr) {
-        LOG.info("Venter på opprettet fagsak for {}", fnr);
+        LOG.info("Venter på oppretting av fagsak og behandling for fnr {}", fnr);
         Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 20,
-                "Opprettet ikke fagsak for inntektsmelding");
+                "Fagsak for bruker " + fnr + " har ikke blitt opprettet!");
         var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();
 
-        LOG.info("Venter på opprettet behandling for {}", fnr);
         Vent.til(() -> {
             var behandlinger = behandlingerKlient.alle(saksnummer);
             return !behandlinger.isEmpty()
                     && (behandlingerKlient.statusAsObject(behandlinger.get(0).uuid) == null);
-        }, 60, "Saken hadde ingen behandlinger");
+        }, 60, "Saken [" + saksnummer +"] hadde ingen behandlinger");
 
+        LOG.info("Fagsag og behandling opprettet på saksnummer {}", saksnummer);
         return saksnummer;
     }
 
