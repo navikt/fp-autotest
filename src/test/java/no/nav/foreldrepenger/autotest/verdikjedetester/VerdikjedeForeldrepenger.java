@@ -37,6 +37,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravKa;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
@@ -350,6 +351,49 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
+
+        innsender.sendInnKlage(testscenario.personopplysninger().søkerIdent());
+
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.ventPåOgVelgKlageBehandling();
+        var klageFormkravNfp = klagebehandler
+                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+                .godkjennAlleFormkrav()
+                .setBegrunnelse("Super duper klage!");
+        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
+
+        var vurderingAvKlageNfpBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse.class)
+                .bekreftStadfestet()
+                .fritekstBrev("Fritektst til brev fra klagebehandler.")
+                .setBegrunnelse("Fordi");
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
+
+        var klageFormkravKa = klagebehandler
+                .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
+                .godkjennAlleFormkrav()
+                .setBegrunnelse("Super duper klage!");
+        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
+
+        var vurderingAvKlageNkBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(VurderingAvKlageBekreftelse.VurderingAvKlageNkBekreftelse.class)
+                .bekreftStadfestet()
+                .fritekstBrev("Fritektst til brev fra klagebehandler.")
+                .setBegrunnelse("Fordi");
+        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
+
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummer);
+        beslutter.ventPåOgVelgKlageBehandling();
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
+
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
+
+        // ANKE
+        innsender.sendInnKlage(testscenario.personopplysninger().søkerIdent());
 
     }
 
