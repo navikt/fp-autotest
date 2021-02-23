@@ -15,13 +15,20 @@ Disse verdikjedetestene blir trigget av alle prosjektene/applikasjonene som er n
 ### Status
 | Prosjekt        | Status                                                                 |
 |:----------------|:-----------------------------------------------------------------------|
+| vtp             | [![](https://github.com/navikt/vtp/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/vtp/actions?query=workflow%3A%22Bygg+og+deploy%22) |
+| fp-abakus       | [![](https://github.com/navikt/fp-abakus/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-abakus/actions?query=workflow%3A%22Bygg+og+deploy%22) |
 | fp-sak          | [![](https://github.com/navikt/fp-sak/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-sak/actions?query=workflow%3A%22Bygg+og+deploy%22) [![Promote](https://github.com/navikt/fp-sak/workflows/Promote/badge.svg)](https://github.com/navikt/fp-sak/actions?query=workflow%3APromote) |
+| fp-fordel       | [![](https://github.com/navikt/fpfordel/actions/workflows/build-and-deploy-master.yml/badge.svg)](https://github.com/navikt/fpfordel/actions/workflows/build-and-deploy-master.yml) |
+| fp-info         | [![](https://github.com/navikt/fpinfo/actions/workflows/build-and-deploy-master.yml/badge.svg)](https://github.com/navikt/fpinfo/actions/workflows/build-and-deploy-master.yml) |
+| fpsoknad-mottak | [![](https://github.com/navikt/fpsoknad-mottak/actions/workflows/build.yml/badge.svg)](https://github.com/navikt/fpsoknad-mottak/actions/workflows/build.yml) |
+| fpdokgen        | [![](https://github.com/navikt/fp-dokgen/actions/workflows/build.yml/badge.svg)](https://github.com/navikt/fp-dokgen/actions/workflows/build.yml) |
 | fp-formidling   | [![](https://github.com/navikt/fp-formidling/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-formidling/actions?query=workflow%3A%22Bygg+og+deploy%22) [![Promote](https://github.com/navikt/fp-formidling/workflows/Promote/badge.svg)](https://github.com/navikt/fp-formidling/actions?query=workflow%3APromote) |
 | fpoppdrag       | [![](https://github.com/navikt/fpoppdrag/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fpoppdrag/actions?query=workflow%3A%22Bygg+og+deploy%22) [![Promote](https://github.com/navikt/fpoppdrag/workflows/Promote/badge.svg)](https://github.com/navikt/fpoppdrag/actions?query=workflow%3APromote) |
 | fptilbake       | [![](https://github.com/navikt/fptilbake/workflows/Bygg%20og%20deploy%20Fptilbake/badge.svg)](https://github.com/navikt/fptilbake/actions?query=workflow%3A%22Bygg+og+deploy+Fptilbake%22) [![Promote](https://github.com/navikt/fptilbake/workflows/Promote/badge.svg)](https://github.com/navikt/fptilbake/actions?query=workflow%3APromote) |
 | fp-risk         | [![](https://github.com/navikt/fp-risk/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-risk/actions?query=workflow%3A%22Bygg+og+deploy%22) [![Promote](https://github.com/navikt/fp-risk/workflows/Promote/badge.svg)](https://github.com/navikt/fp-risk/actions?query=workflow%3APromote) |
-| fp-abakus       | [![](https://github.com/navikt/fp-abakus/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-abakus/actions?query=workflow%3A%22Bygg+og+deploy%22) |
-| vtp             | [![](https://github.com/navikt/vtp/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/vtp/actions?query=workflow%3A%22Bygg+og+deploy%22) |
+| fpabonnent         | [![](https://github.com/navikt/fpabonnent/actions/workflows/build-and-deploy-master.yml/badge.svg)](https://github.com/navikt/fpabonnent/actions/workflows/build-and-deploy-master.yml) |
+
+
 
 ## Fpsak spesifikke tester [![](https://github.com/navikt/fpsak-autotest/workflows/Kjører%20autotestene%20for%20fpsak/badge.svg)](https://github.com/navikt/fpsak-autotest/actions?query=workflow%3A%22Kjører+autotestene+for+fpsak%22)
 Fpsak spesifikke tester er tagget med taggen "_fpsak_" og tester fpsak med fokus på forskjellige ytelser og komponenter i fpsak.
