@@ -19,29 +19,5 @@
 				"stillingsprosent":"100"
 			}
 		]
-	},
-	"aareg": {
-		"arbeidsforhold": [
-			{
-				"arbeidsforholdId": "ARB001-001",
-
-				"ansettelsesperiodeFom": "now() - P2Y",
-				"ansettelsesperiodeTom": "now()",
-				"arbeidsforholdstype": "frilanserOppdragstakerHonorarPersonerMm",
-				"arbeidsgiverOrgnr": "973861778",
-
-
-				"arbeidsavtaler" : [
-					{
-						"fomGyldighetsperiode": "now() - P2Y",
-						"sisteLønnsendringsdato": "now()",
-						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "40",
-						"stillingsprosent" : 100,
-						"beregnetAntallTimerPerUke": "40"
-					}
-				]
-			}
-		]
 	}
 }
