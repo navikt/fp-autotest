@@ -43,12 +43,26 @@
 						"beregnetAntallTimerPerUke": "40"
 					}
 				]
+			},
+			{
+				"arbeidsforholdId": "ARB001-002",
+				"ansettelsesperiodeFom": "2018-01-01",
+				"ansettelsesperiodeTom": "now()",
+				"arbeidsforholdstype": "frilanserOppdragstakerHonorarPersonerMm",
+				"arbeidsgiverOrgnr": "910909088",
+
+
+				"arbeidsavtaler" : [
+					{
+						"fomGyldighetsperiode": "2018-01-01",
+						"sisteLønnsendringsdato": "now()",
+						"avlønningstype": "fastlønn",
+						"avtaltArbeidstimerPerUke": "10",
+						"stillingsprosent" : 25,
+						"beregnetAntallTimerPerUke": "10"
+					}
+				]
 			}
-		]
-	},
-	"sigrun": {
-		"inntektsår": [
-			
 		]
 	}
  }
