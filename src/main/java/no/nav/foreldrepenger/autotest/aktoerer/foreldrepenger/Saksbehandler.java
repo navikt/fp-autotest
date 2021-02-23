@@ -160,6 +160,10 @@ public class Saksbehandler extends Aktoer {
         ventPåOgVelgBehandling(kodeverk.BehandlingType.getKode("BT-004"));
     }
 
+    public void ventPåOgVelgAnkeBehandling() {
+        ventPåOgVelgBehandling(kodeverk.BehandlingType.getKode("BT-008"));
+    }
+
     public boolean harRevurderingBehandling() {
         return harBehandling(kodeverk.BehandlingType.getKode("BT-004"));
     }

@@ -32,6 +32,7 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AnkeVurderingResultatBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
@@ -299,7 +300,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("3: Mor, sykepenger, kun ytelse, papirsøknad")
-    @Description("Mor søker fullt uttak, men søker mer enn det hun har rett til.")
+    @Description("Mor søker fullt uttak, men søker mer enn det hun har rett til. Klager på førstegangsbehandlingen og " +
+            "vedtaket stadfestes. Søker anker stadfestelsen og saksbehanlder oppretter en ankebehandling. Bruker får " +
+            "omgjøring i anke")
     void morSykepengerKunYtelseTest() {
         var testscenario = opprettTestscenario("520");
         var saksnummer = innsender.sendInnPapirsøknad(testscenario.personopplysninger().søkerIdent(), DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
@@ -353,7 +356,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
 
         innsender.sendInnKlage(testscenario.personopplysninger().søkerIdent());
-
         klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
         var klageFormkravNfp = klagebehandler
@@ -391,10 +393,30 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         klagebehandler.hentFagsak(saksnummer);
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
+        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_YTELSESVEDTAK_STADFESTET");
 
         // ANKE
         innsender.sendInnKlage(testscenario.personopplysninger().søkerIdent());
+        klagebehandler.opprettBehandling(klagebehandler.kodeverk.BehandlingType.getKode("BT-008"), null);
 
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.ventPåOgVelgAnkeBehandling();
+        var ankeVurderingResultatBekreftelse = klagebehandler
+                .hentAksjonspunktbekreftelse(AnkeVurderingResultatBekreftelse.class)
+                .omgjørTilGunst()
+                .setBegrunnelse("Super duper anke!");
+        klagebehandler.bekreftAksjonspunkt(ankeVurderingResultatBekreftelse);
+
+        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummer);
+        beslutter.ventPåOgVelgAnkeBehandling();
+        var fatterVedtakBekreftelseAnke = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        fatterVedtakBekreftelseAnke.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelseAnke);
+
+        klagebehandler.hentFagsak(saksnummer);
+        klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
+        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "ANKE_OMGJOER");
     }
 
     @Test
