@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
@@ -45,9 +43,7 @@ public class Klage extends ForeldrepengerTestBase {
         long saksnummer = opprettForstegangsbehandling(testscenario);
 
         // Motta og behandle klage NFP
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
@@ -83,7 +79,6 @@ public class Klage extends ForeldrepengerTestBase {
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -111,9 +106,7 @@ public class Klage extends ForeldrepengerTestBase {
         long saksnummer = opprettForstegangsbehandling(testscenario);
 
         // Motta og behandle klage NFP
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
         klagebehandler.ventPåOgVelgKlageBehandling();
@@ -162,9 +155,7 @@ public class Klage extends ForeldrepengerTestBase {
         long saksnummer = opprettForstegangsbehandling(testscenario);
 
         // Motta og behandle klage NFP
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
@@ -198,7 +189,6 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -228,9 +218,7 @@ public class Klage extends ForeldrepengerTestBase {
         long saksnummer = opprettForstegangsbehandling(testscenario);
 
         // Motta og behandle klage NFP
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
@@ -261,7 +249,6 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -289,9 +276,7 @@ public class Klage extends ForeldrepengerTestBase {
         long saksnummer = opprettForstegangsbehandling(testscenario);
 
         // Motta og behandle klage NFP
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Aktoer.Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
@@ -301,7 +286,6 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -319,7 +303,6 @@ public class Klage extends ForeldrepengerTestBase {
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
@@ -334,7 +317,6 @@ public class Klage extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();

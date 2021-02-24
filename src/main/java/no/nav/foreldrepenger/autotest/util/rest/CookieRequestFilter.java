@@ -14,7 +14,7 @@ public class CookieRequestFilter implements ClientRequestFilter {
         ctx.getHeaders().add(HttpHeaders.COOKIE, cookie);
     }
 
-    public void leggTilClientCookie(Cookie cookie) {
+    public void setCookie(Cookie cookie) {
         this.cookie = cookie;
     }
 }

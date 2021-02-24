@@ -71,7 +71,6 @@ public class Innsender extends Aktoer {
     }
 
     public void sendInnInnteksmeldingFpfordel(List<InntektsmeldingBuilder> inntektsmeldinger, String fnr, Long saksnummer) {
-        erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var antallGamleInntekstmeldinger = hentAntallHistorikkInnslagAvTypenVedleggMottatt(saksnummer);
         journalførInnteksmeldinger(inntektsmeldinger, fnr);
         ventTilInntekstmeldingErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallGamleInntekstmeldinger);
@@ -108,7 +107,6 @@ public class Innsender extends Aktoer {
         var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null,
                 "SKAN_IM", "skanIkkeUnik.pdf", dokumenttypeId);
         journalpostKlient.journalførR(journalpostModell);
-        erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         return ventTilFagsakOgBehandlingErOpprettet(fnr);
     }
 
