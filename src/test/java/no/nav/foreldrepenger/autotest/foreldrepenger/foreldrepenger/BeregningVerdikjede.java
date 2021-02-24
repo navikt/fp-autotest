@@ -24,7 +24,6 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
@@ -69,7 +68,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -95,7 +93,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
@@ -128,7 +125,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         int inntektPerMåned = 30_000;
@@ -140,7 +136,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato, orgNr)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned));
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         // FORDEL BEREGNINGSGRUNNLAG //
@@ -170,7 +165,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         int inntektPerMåned = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
@@ -181,7 +175,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 orgNr)
                         .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned));
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         // AVKLAR AKTIVITETER //
@@ -214,11 +207,9 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         // FAKTA OM FØDSEL: Avklar om søker har mottatt støtte
@@ -248,7 +239,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         // FATTE VEDTAK //
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         Aksjonspunkt apLopendeVedtak = beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE);
         Aksjonspunkt apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
@@ -293,13 +283,11 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medFordeling(fordeling)
                 .medSpesiellOpptjening(opptjening);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato, orgNr)
                 .medRefusjonsBelopPerMnd(refusjon);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
         debugLoggBehandling(saksbehandler.valgtBehandling);
@@ -317,7 +305,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         // FATTE VEDTAK //
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         Aksjonspunkt apFordelBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.FORDEL_BEREGNINGSGRUNNLAG);
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -352,7 +339,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         LocalDate fødselsdato = LocalDate.now().minusMonths(4);
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         int inntektPerMåned = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
@@ -365,7 +351,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         InntektsmeldingBuilder inntektsmeldingBuilder2 = lagInntektsmelding(inntektPerMåned, fnr, fpStartdato,orgNr)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(29_000));
         fordel.sendInnInntektsmeldinger(List.of(inntektsmeldingBuilder, inntektsmeldingBuilder2), testscenario, saksnummer);
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         // FAKTA OM FØDSEL
@@ -397,7 +382,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         // FATTE VEDTAK //
-        beslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(List.of(
@@ -425,9 +409,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medSpesiellOpptjening(opptjening);
 
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
@@ -457,10 +439,8 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         // Gjenoppta autopunkter
@@ -488,7 +468,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         LocalDate fødselsdato = LocalDate.now().minusDays(2);
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -503,7 +482,6 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(inntektPerMåned2));
         fordel.sendInnInntektsmeldinger(List.of(inntektsmeldingBuilder, inntektsmeldingBuilder2) , testscenario, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");

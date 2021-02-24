@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
@@ -34,7 +33,6 @@ public class TerminFlaky extends ForeldrepengerTestBase {
         String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
 
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
@@ -49,7 +47,6 @@ public class TerminFlaky extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();

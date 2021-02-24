@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.erketyper.ArbeidsforholdErketyper;
@@ -50,7 +49,6 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
                 SøkersRolle.MOR,
                 termindato,
                 List.of(tilrettelegging));
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnSøknad(
                 søknad.build(),
                 søkerAktørId,
@@ -71,7 +69,6 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
                 søkerFnr,
                 saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
@@ -89,7 +86,6 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
 
         // Her mangler hele SVP revurderingen!
 
-        tbksaksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
         tbksaksbehandler.hentSisteBehandling(saksnummer);
         tbksaksbehandler.ventTilBehandlingErPåVent();
@@ -114,7 +110,6 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
         tbksaksbehandler.behandleAksjonspunkt(tbksaksbehandler.hentAksjonspunktbehandling(5004));
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5005);
 
-        tbkbeslutter.erLoggetInnMedRolle(Aktoer.Rolle.BESLUTTER);
         tbkbeslutter.hentSisteBehandling(saksnummer);
         tbkbeslutter.ventTilBehandlingHarAktivtAksjonspunkt(5005);
 

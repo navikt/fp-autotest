@@ -30,7 +30,7 @@ public class OpenamJerseyKlient extends VTPJerseyKlient {
 
     private void loginBypass(String rolle, CookieRequestFilter filter) {
         var cookie = loginCookies.computeIfAbsent(rolle, this::createCookieNew);
-        filter.leggTilClientCookie(cookie);
+        filter.setCookie(cookie);
     }
 
     private Cookie createCookieNew(String rolle) {

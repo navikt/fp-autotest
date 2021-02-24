@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EndringssøknadBuilder;
@@ -69,7 +68,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -84,7 +82,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
@@ -92,7 +89,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
         saksbehandler.opprettBehandlingRevurdering("RE-MDL");
 
-        overstyrer.erLoggetInnMedRolle(Rolle.OVERSTYRER);
         overstyrer.hentFagsak(saksnummer);
         overstyrer.ventPåOgVelgRevurderingBehandling();
         OverstyrMedlemskapsvilkaaret overstyrMedlemskapsvilkaaret = new OverstyrMedlemskapsvilkaaret();
@@ -104,7 +100,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.toString(), "OPPHØR", "Behandlingsresultat");
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgRevurderingBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -131,7 +126,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         LocalDate fpStartdato = fødselsdato.minusWeeks(3);
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
@@ -145,7 +139,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
@@ -160,11 +153,9 @@ public class Revurdering extends ForeldrepengerTestBase {
         Fordeling fordeling = generiskFordeling(
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
         EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -192,7 +183,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         Fordeling opprinneligFordeling = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medFordeling(opprinneligFordeling);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -206,7 +196,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerAktørIdent(),
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -220,11 +209,9 @@ public class Revurdering extends ForeldrepengerTestBase {
                 SøknadUtsettelseÅrsak.ARBEID, utsettelseFom, utsettelseTom);
         EndringssøknadBuilder endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
                 fordelingUtsettelseEndring, saksnummer);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -276,7 +263,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 .arbeidsgiverOrgnr();
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -290,7 +276,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerAktørIdent(),
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -304,11 +289,9 @@ public class Revurdering extends ForeldrepengerTestBase {
                 orgnr, 40);
         EndringssøknadBuilder endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
                 fordelingGradering, saksnummer);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -345,7 +328,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
                 .medFordeling(fordeling);
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         var arbeidsforholdId = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
@@ -354,7 +336,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 .medArbeidsforholdId(arbeidsforholdId);
         fordel.sendInnInntektsmelding(im, aktørIdSøker, fnrSøker, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
@@ -363,11 +344,9 @@ public class Revurdering extends ForeldrepengerTestBase {
                         fødselsdato.plusWeeks(10).minusDays(1)));
 
         var søknadE = lagEndringssøknad(aktørIdSøker, SøkersRolle.MOR, fordelingEndring, saksnummer);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
@@ -379,7 +358,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         // Behandle totrinnskontroll
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerE);
         beslutter.ventPåOgVelgRevurderingBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -420,7 +398,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
                 .medFordeling(fordeling)
                 .medMottattDato(fødselsdato.plusWeeks(9));
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -428,7 +405,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 .makeInntektsmeldingFromTestscenario(testscenario, fpStartdato).get(0);
         fordel.sendInnInntektsmelding(im, testscenario, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
@@ -437,7 +413,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(14).minusDays(1)));
         var søknadE = lagEndringssøknad(aktørIdSøker, SøkersRolle.MOR, fordelingEndringssøknad, saksnummer)
                 .medMottattDato(fødselsdato.plusWeeks(10));
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.velgSisteBehandling();
@@ -471,7 +446,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 .medFordeling(fordeling)
                 //Ikke alle periodene skal avlås pga søknadsfrist
                 .medMottattDato(fødselsdato.plusWeeks(18));
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -479,8 +453,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 .makeInntektsmeldingFromTestscenario(testscenario, fpStartdato).get(0);
         fordel.sendInnInntektsmelding(im, testscenario, saksnummer);
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler
@@ -501,7 +473,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(12).plusWeeks(2)));
         var søknadE = lagEndringssøknad(testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR,
                 fordelingEndringssøknad, saksnummer);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.velgSisteBehandling();
@@ -532,7 +503,6 @@ public class Revurdering extends ForeldrepengerTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
                 .medFordeling(fordeling)
                 .medMottattDato(fødselsdato);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -540,7 +510,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 .makeInntektsmeldingFromTestscenario(testscenario, fødselsdato);
         fordel.sendInnInntektsmeldinger(im, testscenario, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
@@ -551,7 +520,6 @@ public class Revurdering extends ForeldrepengerTestBase {
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15).plusDays(1), fødselsdato.plusWeeks(16)));
         var søknadE = lagEndringssøknad(testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR,
                 fordelingEndringssøknad, saksnummer);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.velgSisteBehandling();

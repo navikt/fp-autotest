@@ -11,7 +11,6 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
@@ -39,11 +38,9 @@ public class Termin extends FpsakTestBase {
                 SøkersRolle.MOR,
                 LocalDate.now().plusWeeks(3));
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
@@ -55,7 +52,6 @@ public class Termin extends FpsakTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -76,11 +72,9 @@ public class Termin extends FpsakTestBase {
                 SøkersRolle.MOR,
                 LocalDate.now().plusWeeks(3));
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
@@ -90,7 +84,6 @@ public class Termin extends FpsakTestBase {
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        overstyrer.erLoggetInnMedRolle(Rolle.OVERSTYRER);
         overstyrer.hentFagsak(saksnummer);
 
         OverstyrFodselsvilkaaret overstyr = new OverstyrFodselsvilkaaret();
@@ -101,7 +94,6 @@ public class Termin extends FpsakTestBase {
         verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -125,11 +117,9 @@ public class Termin extends FpsakTestBase {
                 SøkersRolle.FAR,
                 LocalDate.now().plusWeeks(3));
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
@@ -154,11 +144,9 @@ public class Termin extends FpsakTestBase {
                 LocalDate.now().plusWeeks(3));
 
         // Send inn søknad
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         saksbehandler.settBehandlingPåVent(LocalDate.now(), "AVV_DOK");
@@ -183,11 +171,9 @@ public class Termin extends FpsakTestBase {
                 SøkersRolle.MOR,
                 LocalDate.now().minusDays(26));
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
@@ -198,7 +184,6 @@ public class Termin extends FpsakTestBase {
 
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
 
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);

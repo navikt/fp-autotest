@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
@@ -37,15 +36,12 @@ public class Klage extends FpsakTestBase {
                 SøkersRolle.MOR,
                 testscenario.personopplysninger().fødselsdato());
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage NFP
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
         klagebehandler.ventPåOgVelgKlageBehandling();
@@ -66,7 +62,6 @@ public class Klage extends FpsakTestBase {
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD");
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -86,15 +81,12 @@ public class Klage extends FpsakTestBase {
                 SøkersRolle.MOR,
                 testscenario.personopplysninger().fødselsdato());
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
         klagebehandler.ventPåOgVelgKlageBehandling();
@@ -133,13 +125,11 @@ public class Klage extends FpsakTestBase {
         verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
                 "KLAGE_YTELSESVEDTAK_OPPHEVET");
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
-        klagebehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
@@ -157,15 +147,12 @@ public class Klage extends FpsakTestBase {
                 SøkersRolle.MOR,
                 testscenario.personopplysninger().fødselsdato());
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
         klagebehandler.ventPåOgVelgKlageBehandling();
@@ -202,14 +189,12 @@ public class Klage extends FpsakTestBase {
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
-        klagebehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
@@ -226,15 +211,12 @@ public class Klage extends FpsakTestBase {
                 SøkersRolle.MOR,
                 testscenario.personopplysninger().fødselsdato());
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
@@ -260,14 +242,12 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
-        klagebehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
@@ -284,15 +264,12 @@ public class Klage extends FpsakTestBase {
                 SøkersRolle.MOR,
                 testscenario.personopplysninger().fødselsdato());
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
 
         klagebehandler.ventPåOgVelgKlageBehandling();
@@ -319,7 +296,6 @@ public class Klage extends FpsakTestBase {
         verifiserKlageVurderingOmgjoer(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP()
                 .getKlageVurderingOmgjoer().kode, "GUNST_MEDHOLD_I_KLAGE");
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
 
@@ -331,7 +307,6 @@ public class Klage extends FpsakTestBase {
                 .setBegrunnelse("Avvist av beslutter");
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
-        klagebehandler.erLoggetInnMedRolle(Rolle.KLAGEBEHANDLER);
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
         verifiserFritekst(
@@ -352,7 +327,6 @@ public class Klage extends FpsakTestBase {
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -373,7 +347,6 @@ public class Klage extends FpsakTestBase {
     @Step("Oppretter førstegangsvedtak")
     private void opprettForstegangssoknadVedtak(long saksnummer) {
         // Opprette førstegangssøknad engangsstønad
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         verifiserBehandlingsresultat(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
 

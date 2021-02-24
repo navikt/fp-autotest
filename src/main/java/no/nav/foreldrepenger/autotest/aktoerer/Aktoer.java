@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.aktoerer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.vtp.openam.OpenamJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.rest.CookieRequestFilter;
 
@@ -21,11 +20,6 @@ public class Aktoer {
 
     public Aktoer(Rolle rolle) {
         this();
-        erLoggetInnMedRolle(rolle);
-    }
-
-    @Step("Logger inn med rolle: {rolle}")
-    public void erLoggetInnMedRolle(Rolle rolle) {
         openamJerseyKlient.logInnMedRolle(rolle.getKode(), cookieRequestFilter);
     }
 

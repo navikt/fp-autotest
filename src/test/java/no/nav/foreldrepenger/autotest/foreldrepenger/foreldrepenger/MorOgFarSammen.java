@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer.Rolle;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EndringssøknadBuilder;
@@ -75,9 +74,7 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         long saksnummerMor = sendInnSøknadMorMedAksjonspunkt(testscenario, fødselsdato);
         List<InntektsmeldingBuilder> inntektsmeldingerMor = makeInntektsmeldingFromTestscenario(testscenario, fpstartdatoMor);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         verifiserLikhet(saksbehandler.valgtFagsak.status().kode, "UBEH", "Fagsakstatus sak mor");
         long saksnummerFar = sendInnSøknadFar(testscenario, fødselsdato, fpstartdatoFar);
@@ -94,7 +91,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 .innvilgManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerMor);
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
@@ -107,7 +103,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         List<InntektsmeldingBuilder> inntektsmeldingerFar = makeInntektsmeldingFromTestscenarioMedIdent(testscenario,
                 farIdent, fpstartdatoFar, true);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerFar, farAktørId, farIdent, saksnummerFar);
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
         verifiser(saksbehandler.sakErKobletTilAnnenpart(), "Saken er ikke koblet til en annen behandling");
         saksbehandler.ventTilAvsluttetBehandling();
@@ -141,13 +136,11 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(farAktørId);
 
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         var saksnummerMor = fordel.sendInnSøknad(søknadMor.build(), morAktørId, morIdent,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
         var inntektsmeldingerMor = makeInntektsmeldingFromTestscenario(testscenario, fpstartdatoMor);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
@@ -191,12 +184,10 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, morAktørId, SøkersRolle.MOR)
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(farAktørId);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerMor = fordel.sendInnSøknad(søknadMor.build(), morAktørId, morIdent,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         List<InntektsmeldingBuilder> inntektsmeldingerMor = makeInntektsmeldingFromTestscenario(testscenario, fpstartdatoMor);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandling();
         debugFritekst("Ferdig med første behandling mor");
@@ -211,13 +202,11 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, farAktørId, SøkersRolle.FAR)
                 .medFordeling(fordelingFar)
                 .medAnnenForelder(morAktørId);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         long saksnummerFar = fordel.sendInnSøknad(søknadFar.build(), farAktørId, farIdent,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         List<InntektsmeldingBuilder> inntektsmeldingerFar = makeInntektsmeldingFromTestscenarioMedIdent(testscenario,
                 farIdent, fpStartdatoFar, true);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerFar, farAktørId, farIdent, saksnummerFar);
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventTilAvsluttetBehandling();
         debugFritekst("Ferdig med første behandling til far");
@@ -261,7 +250,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         sendInnEndringssøknadforMor(testscenario, saksnummerMor);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
@@ -272,7 +260,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
 
         beslutter.hentFagsak(saksnummerMor);
         beslutter.ventPåOgVelgRevurderingBehandling();
@@ -296,7 +283,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         sendInnEndringssøknadforMor(testscenario, saksnummerMor);
 
-        overstyrer.erLoggetInnMedRolle(Rolle.OVERSTYRER);
         overstyrer.hentFagsak(saksnummerMor);
         overstyrer.ventPåOgVelgRevurderingBehandling();
 
@@ -312,7 +298,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummerMor);
         beslutter.ventPåOgVelgRevurderingBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -334,7 +319,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         long saksnummerFar = behandleSøknadForFarUtenOverlapp(testscenario, LocalDate.now().minusMonths(4));
         sendInnEndringssøknadforMorMedEndretUttak(testscenario, saksnummerMor);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummerMor);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -349,7 +333,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
 
         beslutter.hentFagsak(saksnummerMor);
         beslutter.ventPåOgVelgRevurderingBehandling();
@@ -390,7 +373,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     private long behandleSøknadForMorUregistrert(TestscenarioDto testscenario, LocalDate fødselsdato) {
         long saksnummer = sendInnSøknadOgInntektMor(testscenario, fødselsdato);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
@@ -400,7 +382,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
 
         beslutter.hentFagsak(saksnummer);
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -414,7 +395,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     private long behandleSøknadForMorUtenOverlapp(TestscenarioDto testscenario, LocalDate fødselsdato) {
         long saksnummer = sendInnSøknadOgInntektMor(testscenario, fødselsdato);
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
@@ -429,7 +409,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
@@ -443,7 +422,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     private long behandleSøknadForFarUtenOverlapp(TestscenarioDto testscenario, LocalDate fødselsdato) {
         long saksnummer = sendInnSøknadOgInntektFar(testscenario, fødselsdato, fødselsdato.plusWeeks(10).plusDays(1));
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
 
         verifiser(saksbehandler.sakErKobletTilAnnenpart(), "Saken er ikke koblet til en annen behandling");
@@ -459,7 +437,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.erLoggetInnMedRolle(Rolle.BESLUTTER);
         beslutter.hentFagsak(saksnummer);
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
@@ -476,7 +453,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         LocalDate fødselsdato = LocalDate.now().minusMonths(4);
         Fordeling fordeling = FordelingErketyper.fordelingMorHappyCase(fødselsdato);
         EndringssøknadBuilder søknad = lagEndringssøknad(søkerAktørid, SøkersRolle.MOR, fordeling, saksnummerMor);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknad.build(), søkerAktørid, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD,
                 saksnummerMor);
     }
@@ -488,7 +464,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         LocalDate fødselsdato = LocalDate.now().minusMonths(4);
         Fordeling fordeling = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
         EndringssøknadBuilder søknad = lagEndringssøknad(søkerAktørid, SøkersRolle.MOR, fordeling, saksnummerMor);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         fordel.sendInnSøknad(søknad.build(), søkerAktørid, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD,
                 saksnummerMor);
     }
@@ -497,7 +472,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
     private long behandleSøknadForFarSattPåVent(TestscenarioDto testscenario, LocalDate fødselsdato) {
         long saksnummer = sendInnSøknadOgInntektFar(testscenario, fødselsdato, fødselsdato.plusWeeks(10).plusDays(1));
 
-        saksbehandler.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         verifiser(saksbehandler.valgtBehandling.erSattPåVent(),
                 "Behandling ble ikke satt på vent selv om far har søkt for tidlig");
@@ -520,7 +494,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørid, SøkersRolle.MOR)
                 .medFordeling(FordelingErketyper.fordelingMorHappyCase(fødselsdato))
                 .medAnnenForelder(annenPartAktørid);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         return fordel.sendInnSøknad(søknad.build(), søkerAktørid, søkerIdent,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
@@ -538,7 +511,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørid, SøkersRolle.MOR)
                 .medFordeling(fordeling)
                 .medAnnenForelder(annenPartAktørid);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         return fordel.sendInnSøknad(søknad.build(), søkerAktørid, søkerIdent,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
@@ -581,7 +553,6 @@ public class MorOgFarSammen extends ForeldrepengerTestBase {
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørid, SøkersRolle.FAR)
                 .medFordeling(fordeling)
                 .medAnnenForelder(annenPartAktørid);
-        fordel.erLoggetInnMedRolle(Rolle.SAKSBEHANDLER);
         return fordel.sendInnSøknad(søknad.build(), søkerAktørid, søkerIdent,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }

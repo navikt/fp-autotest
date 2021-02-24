@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
@@ -40,7 +39,6 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
                 .arbeidsgiverOrgnr();
 
         ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
@@ -54,7 +52,6 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
                 testscenario.personopplysninger().søkerAktørIdent(),
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         saksbehandler.ventTilAvsluttetBehandling();
@@ -62,13 +59,11 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
         debugFritekst("Ferdig med første behandling");
 
         // Inntektsmelding - ingen endring
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         fordel.sendInnInntektsmelding(
                 inntektsmeldinger,
                 testscenario.personopplysninger().søkerAktørIdent(),
                 testscenario.personopplysninger().søkerIdent(),
                 saksnummer);
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         verifiser(saksbehandler.harRevurderingBehandling(), "Saken har ikke opprettet revurdering.");
@@ -83,10 +78,8 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
         // Inntektsmelding - endring i inntekt
         InntektsmeldingBuilder inntektsmeldingBuilder = lagInntektsmelding(50000, søkerIdent, fpStartdato, orgNr)
                 .medArbeidsforholdId(arbeidsforholdId);
-        fordel.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, søkerAktørIdent, søkerIdent, saksnummer);
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
 

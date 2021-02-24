@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.FpriskTestBase;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
@@ -43,7 +42,6 @@ public class FpriskTest extends FpriskTestBase {
         saksbehandler.sendMessageToKafkaTopic(FPRISK_TOPIC_URL,
                 new RequestWrapper(UUID.randomUUID().toString(), kontraktFpriskMelding));
 
-        saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
         saksbehandler.ventTilRisikoKlassefiseringsstatus(konsumentId, "IKKE_HOY");
 
     }
