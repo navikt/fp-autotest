@@ -1,14 +1,9 @@
 package no.nav.foreldrepenger.autotest.aktoerer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.autotest.klienter.vtp.openam.OpenamJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.rest.CookieRequestFilter;
 
 public class Aktoer {
-
-    protected static final Logger LOG = LoggerFactory.getLogger(Aktoer.class);
 
     public final CookieRequestFilter cookieRequestFilter;
     public final OpenamJerseyKlient openamJerseyKlient;

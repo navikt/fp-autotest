@@ -1,11 +1,13 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
-import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
@@ -34,6 +36,8 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalstatus;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
 public class Innsender extends Aktoer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Innsender.class);
 
     private final FagsakJerseyKlient fagsakKlient;
     private final BehandlingerJerseyKlient behandlingerKlient;
@@ -74,47 +78,43 @@ public class Innsender extends Aktoer {
         var antallGamleInntekstmeldinger = hentAntallHistorikkInnslagAvTypenVedleggMottatt(saksnummer);
         journalførInnteksmeldinger(inntektsmeldinger, fnr);
         ventTilInntekstmeldingErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallGamleInntekstmeldinger);
+        LOG.info("Innsending av inntektsmelding(er) er vellykket!");
     }
 
     private void journalførInnteksmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String fnr) {
         for (InntektsmeldingBuilder inntektsmelding : inntektsmeldinger) {
+            LOG.info("Sender inn IM for søker: {}", fnr);
             var xml = inntektsmelding.createInntektesmeldingXML();
             var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml,
                     "ALTINN", null, DokumenttypeId.INNTEKTSMELDING);
             journalpostKlient.journalførR(journalpostModell);
-            LOG.info("Sender inn IM for søker: {}", fnr);
-            // TODO: Ønsker ikke å gjøre dette. Bare får test!
-            try {
-                sleep(4000);
-            } catch (InterruptedException e) {
-                LOG.info("Noe gikk galt ved Thread.sleep() etter innsending av inntekstmelding");
-                e.printStackTrace();
-            }
-
         }
     }
 
     public Long sendInnSøknad(String fnr, Søknad søknad) {
+        LOG.info("Sender inn søknadd for bruker {}", fnr);
         var token = oauth2Klient.hentAccessTokenForBruker(fnr);
         var kvittering = mottakKlient.sendSøknad(token, søknad);
         assertTrue(kvittering.erVellykket(), "Innsending av søknad til fpsoknad-mottak feilet!");
         var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);
-        LOG.info("Sendt inn søknad til mottak og sak er opprettet på saksnummer: {}", saksnummer);
+        LOG.info("Innsending av søknad er vellykket!");
         return saksnummer;
     }
 
     public Long sendInnPapirsøknad(String fnr, DokumenttypeId dokumenttypeId) {
+        LOG.info("Sender inn papirsøknadd for bruker {}", fnr);
         var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null,
                 "SKAN_IM", "skanIkkeUnik.pdf", dokumenttypeId);
         journalpostKlient.journalførR(journalpostModell);
-        return ventTilFagsakOgBehandlingErOpprettet(fnr);
+        var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);
+        LOG.info("Innsending av papirsøknad er vellykket!");
+        return saksnummer;
     }
 
-    public Long sendInnKlage(String fnr) {
+    public void sendInnKlage(String fnr) {
         var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null,
                 "SKAN_IM", null, DokumenttypeId.KLAGE_DOKUMENT);
         journalpostKlient.journalførR(journalpostModell);
-        return null;
     }
 
     private JournalpostModell lagJournalpost(String fnr, String tittel, String innhold, String mottakskanal,
@@ -131,7 +131,6 @@ public class Innsender extends Aktoer {
         journalpostModell.setBruker(new JournalpostBruker(fnr, BrukerType.FNR));
         journalpostModell.setJournalposttype(Journalposttyper.INNGAAENDE_DOKUMENT);
         journalpostModell.getDokumentModellList().add(lagDokumentModell(innhold, dokumenttypeId));
-
         return journalpostModell;
     }
 
