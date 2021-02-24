@@ -16,8 +16,8 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerBosattBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaPersonstatusBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
@@ -46,6 +46,11 @@ public class Medlemskap extends FpsakTestBase {
         logger.info("Opprettet sak med saksnummer: {}", saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarBrukerBosattBekreftelse.class);
+
+        var bosatt = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerBosattBekreftelse.class);
+        bosatt.getBekreftedePerioder().forEach(p -> p.setBosattVurdering(false));
+        saksbehandler.bekreftAksjonspunkt(bosatt);
         var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
                 .setVurdering(saksbehandler.hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
                         saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
@@ -83,13 +88,14 @@ public class Medlemskap extends FpsakTestBase {
                 DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaPersonstatusBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaPersonstatusBekreftelse.class)
-                .bekreftHenleggBehandling();
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaPersonstatusBekreftelse);
+        var bosatt = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerBosattBekreftelse.class);
+        bosatt.getBekreftedePerioder().forEach(p -> p.setBosattVurdering(false));
+        saksbehandler.bekreftAksjonspunkt(bosatt);
 
-        verifiser(saksbehandler.valgtBehandling.erHenlagt(),
-                "Behandlingen ble ikke henlagt etter bekreftet ugyldig status");
+        saksbehandler.hentFagsak(saksnummer);
+
+        verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getAvslagsarsak().kode.equals("1025"),
+                "Avklart som ikke bosatt skal gi avslag med VM 1025");
     }
 
     @Test
