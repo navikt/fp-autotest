@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderEktefellesBarnBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerBosattBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaVergeBekreftelse;
@@ -83,7 +84,7 @@ public class TilbakekrevingES extends FptilbakeTestBase {
         Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode(ytelseType);
-        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
+        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 
         var vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);
@@ -138,6 +139,9 @@ public class TilbakekrevingES extends FptilbakeTestBase {
                 saksbehandler.hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
                 saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
+        var bosatt = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerBosattBekreftelse.class);
+        bosatt.getBekreftedePerioder().forEach(p -> p.setBosattVurdering(true));
+        saksbehandler.bekreftAksjonspunkt(bosatt);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
@@ -154,7 +158,7 @@ public class TilbakekrevingES extends FptilbakeTestBase {
         Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode(ytelseType);
-        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
+        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 
         tbksaksbehandler.fjernVerge();
