@@ -23,7 +23,7 @@ class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("1: Mor er tredjelandsborger og søker engangsstønad")
-    @Description(".isZero();Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
+    @Description("Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
     void MorTredjelandsborgerSøkerEngangsStønadTest() {
         var testscenario = opprettTestscenario("505");
         var termindato = LocalDate.now().plusWeeks(3);
