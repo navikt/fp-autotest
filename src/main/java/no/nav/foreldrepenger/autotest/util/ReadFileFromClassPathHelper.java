@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.util;
 
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -13,7 +12,7 @@ public final class ReadFileFromClassPathHelper {
     public static String hent(String filsti) {
         Objects.requireNonNull(filsti, "Må oppgi en filsti det skal hentes fra");
 
-        InputStream inputStream = ReadFileFromClassPathHelper.class.getClassLoader().getResourceAsStream(filsti);
+        var inputStream = ReadFileFromClassPathHelper.class.getClassLoader().getResourceAsStream(filsti);
         if (inputStream == null) {
             throw new IllegalArgumentException("Finner ikke fil på classpath '" + filsti + "'.");
         }

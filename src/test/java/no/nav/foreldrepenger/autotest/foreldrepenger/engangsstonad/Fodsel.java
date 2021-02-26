@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -81,7 +82,7 @@ public class Fodsel extends FpsakTestBase {
 
         // verifiser at statusen er avvist
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
-        verifiser(saksbehandler.valgtBehandling.hentAvslagsarsak().equalsIgnoreCase("1026"),
+        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), "1026", "Avslagsarsak",
                 "Forventer at behandlingen er avslått fordi fødselsdato er ikke oppgitt eller registrert!");
     }
 
@@ -101,7 +102,7 @@ public class Fodsel extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
-        verifiser(saksbehandler.valgtBehandling.hentAvslagsarsak().equalsIgnoreCase("1003"),
+        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), "1003", "Behandlingstatus",
                 "Forventer at behandlingen er avslått fordi søker er far!");
     }
 
@@ -135,7 +136,7 @@ public class Fodsel extends FpsakTestBase {
         overstyrer.overstyr(overstyr);
 
         verifiserLikhet(overstyrer.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
-        verifiser(overstyrer.valgtBehandling.hentAvslagsarsak().equalsIgnoreCase("1003" /* Søker er far */),
+        verifiserLikhet(overstyrer.valgtBehandling.hentAvslagsarsak(), "1003", "Avslagsarsak",
                 "Forventer at behandlingen er avslått med avslagskode: Søker er far!");
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
@@ -228,10 +229,8 @@ public class Fodsel extends FpsakTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET", "Behandlingstatus");
         Beregningsresultat beregningResultatEngangsstonad = beslutter.valgtBehandling.getBeregningResultatEngangsstonad();
-        verifiser(beregningResultatEngangsstonad.getBeregnetTilkjentYtelse() > 0,
-                "Forventer beregnet tilkjent ytelse over 0");
-        verifiser(beregningResultatEngangsstonad.getAntallBarn() == 2,
-                "Forventer beregningen har basert seg på 2 barn");
+        assertThat(beregningResultatEngangsstonad.getBeregnetTilkjentYtelse()).as("Beregnet tilkjent ytelse").isPositive();
+        assertThat(beregningResultatEngangsstonad.getAntallBarn()).as("Antall barn").isEqualTo(2);
     }
 
     @Test
@@ -288,7 +287,7 @@ public class Fodsel extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "behandling er ikke satt på vent");
+        assertThat(saksbehandler.valgtBehandling.erSattPåVent()).as("behandling er ikke satt på vent").isTrue();
     }
 
     @Test
@@ -308,7 +307,7 @@ public class Fodsel extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
-        verifiser(saksbehandler.valgtBehandling.hentAvslagsarsak().equalsIgnoreCase("1002" /* Søker er medmor */),
+        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(),"1002" /* Søker er medmor */, "Avslagsårsak",
                 "Forventer at behandlingen er avslått med avslagskode: Søker er medmor!");
     }
 

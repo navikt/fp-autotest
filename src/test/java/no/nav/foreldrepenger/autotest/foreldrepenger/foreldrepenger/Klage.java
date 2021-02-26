@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -292,8 +293,9 @@ public class Klage extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_AVVIST");
-        verifiserInneholder(beslutter.valgtBehandling.getKlagevurdering().getKlageFormkravResultatNFP().getAvvistArsaker(),
-                new Kode("KLAGE_AVVIST_AARSAK", "IKKE_KONKRET"));
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageFormkravResultatNFP().getAvvistArsaker())
+                .as("Årsak for avvisning")
+                .contains(new Kode("IKKE_KONKRET"));
     }
 
     @Step("Klage: oppretter førstegangsbehandling")

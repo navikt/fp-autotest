@@ -6,9 +6,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
@@ -36,8 +33,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalstatus;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
 public class Innsender extends Aktoer {
-
-    private static final Logger LOG = LoggerFactory.getLogger(Innsender.class);
 
     private final FagsakJerseyKlient fagsakKlient;
     private final BehandlingerJerseyKlient behandlingerKlient;

@@ -90,7 +90,7 @@ public class Adopsjon extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
-        verifiser(beslutter.valgtBehandling.hentAvslagsarsak().equalsIgnoreCase("1004" /* Barn over 15 år */),
+        verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(), "1004", "Avslagsårsak",
                 "Forventer at behandlingen er avslått med avslagskode: Barn over 15 år!");
     }
 
@@ -131,7 +131,7 @@ public class Adopsjon extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
-        verifiser(beslutter.valgtBehandling.hentAvslagsarsak().equalsIgnoreCase("1004" /* Barn over 15 år */),
+        verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(), "1004", "Avslagsårsak",
                 "Forventer at behandlingen er avslått med avslagskode: Barn over 15 år!");
     }
 

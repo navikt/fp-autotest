@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
@@ -17,12 +19,12 @@ import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.NorskForelder;
 
 @Tag("verdikjede")
-public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
+class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("1: Mor er tredjelandsborger og søker engangsstønad")
-    @Description("Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
-    public void MorTredjelandsborgerSøkerEngangsStønadTest() {
+    @Description(".isZero();Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
+    void MorTredjelandsborgerSøkerEngangsStønadTest() {
         var testscenario = opprettTestscenario("505");
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato)
@@ -30,25 +32,29 @@ public class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
         var saksnummer = innsender.sendInnSøknad(testscenario.personopplysninger().søkerIdent(), søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
+        var avklarFaktaTerminBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
         avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        AvklarLovligOppholdBekreftelse avklarLovligOppholdBekreftelse = saksbehandler
+        var avklarLovligOppholdBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarLovligOppholdBekreftelse.class);
         avklarLovligOppholdBekreftelse.bekreftBrukerHarLovligOpphold();
         saksbehandler.bekreftAksjonspunkt(avklarLovligOppholdBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
-        verifiser(saksbehandler.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse() > 0,
-                "Forventer at det utbetales mer enn 0 kr.");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo("INNVILGET");
+        assertThat(saksbehandler.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse())
+                .as("Beregnet tilkjent ytelse")
+                .isPositive();
 
         var dokumentId = saksbehandler.hentDokumentIdFraHistorikkinnslag(HistorikkInnslag.Type.BREV_SENT);
         var pdf = fordel.hentJournalførtDokument(dokumentId, "ARKIV");
-        verifiser(is_pdf(pdf), "Sjekker om byte array er av typen PDF");
-
+        assertThat(is_pdf(pdf))
+                .as("Sjekker om byte array er av typen PDF")
+                .isTrue();
     }
 }

@@ -1,8 +1,7 @@
 package no.nav.foreldrepenger.autotest.base;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +21,22 @@ public abstract class TestBase {
         verifiserLikhet(verdiGjeldende, verdiForventet, "Object");
     }
 
-    @Step("Verifiserer likhet på {verdiNavn} mellom gjeldene {verdiGjeldende} og forventet {verdiForventet}")
     protected void verifiserLikhet(Object verdiGjeldende, Object verdiForventet, String verdiNavn) {
-        verifiser(verdiGjeldende.equals(verdiForventet),
-                String.format("%s har uventet verdi. forventet %s, var %s", verdiNavn, verdiForventet, verdiGjeldende));
+        verifiserLikhet(verdiGjeldende, verdiForventet, verdiNavn, "");
     }
 
-    @Step("Verifiserer at {listeGjeldende} inneholder {verdiForventet}")
-    protected void verifiserInneholder(List<?> listeGjeldende, Object verdiForventet) {
-        verifiser(listeGjeldende.stream().anyMatch(it -> it.equals(verdiForventet)), String
-                .format("%s inneholder ikke forventet verdi. forventet å finne %s", listeGjeldende, verdiForventet));
+    @Step("Verifiserer likhet på {verdiNavn} mellom gjeldene {verdiGjeldende} og forventet {verdiForventet}")
+    protected static void verifiserLikhet(Object verdiGjeldende, Object verdiForventet, String verdiNavn, String tilleggsinfo) {
+        var stringBuilder = new StringBuilder(String.format("%s har uventet verdi", verdiNavn));
+        if (!tilleggsinfo.isBlank()) {
+            stringBuilder.append(". ");
+            stringBuilder.append(tilleggsinfo);
+        }
+        assertThat(verdiGjeldende)
+                .as(stringBuilder.toString())
+                .isEqualTo(verdiForventet);
     }
+
 
     protected void verifiser(boolean statement, String message) {
         if (!statement) {
