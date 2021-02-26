@@ -8,7 +8,10 @@ import no.nav.foreldrepenger.autotest.søknad.modell.svangerskapspenger.tilrette
 import no.nav.foreldrepenger.autotest.søknad.modell.svangerskapspenger.tilrettelegging.IngenTilrettelegging;
 import no.nav.foreldrepenger.autotest.søknad.modell.svangerskapspenger.tilrettelegging.arbeidsforhold.Arbeidsforhold;
 
-public class TilretteleggingsErketyper {
+public final class TilretteleggingsErketyper {
+
+    private TilretteleggingsErketyper() {
+    }
 
     public static HelTilrettelegging helTilrettelegging(LocalDate behovForTilretteleggingFom,
                                                         LocalDate tilrettelagtArbeidFom,

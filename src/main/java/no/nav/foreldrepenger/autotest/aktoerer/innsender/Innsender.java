@@ -57,9 +57,10 @@ public class Innsender extends Aktoer {
         pdlLeesahKlient = new PdlLeesahJerseyKlient();
     }
 
-    public void sendInnInnteksmeldingFpfordel(InntektsmeldingBuilder inntektsmelding, String fnr) {
-        sendInnInnteksmeldingFpfordel(List.of(inntektsmelding), fnr, null);
+    public void sendInnInnteksmeldingFpfordel(String fnr, Long saksnummer, InntektsmeldingBuilder... inntektsmelding) {
+        sendInnInnteksmeldingFpfordel(List.of(inntektsmelding), fnr, saksnummer);
     }
+    
 
     public void sendInnInnteksmeldingFpfordel(List<InntektsmeldingBuilder> inntektsmelding, String fnr) {
         sendInnInnteksmeldingFpfordel(inntektsmelding, fnr, null);

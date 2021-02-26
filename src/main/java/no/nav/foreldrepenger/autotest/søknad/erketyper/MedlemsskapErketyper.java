@@ -10,7 +10,10 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.medlemskap.ArbeidsIn
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.medlemskap.Medlemsskap;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.medlemskap.Utenlandsopphold;
 
-public class MedlemsskapErketyper {
+public final class MedlemsskapErketyper {
+
+    private MedlemsskapErketyper() {
+    }
 
     public static Medlemsskap medlemsskapNorge() {
         return Medlemsskap.builder()

@@ -12,7 +12,10 @@ import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.Fordeling;
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.LukketPeriodeMedVedlegg;
 
-public class FordelingErketyper {
+public final class FordelingErketyper {
+
+    private FordelingErketyper() {
+    }
 
     public static Fordeling fordelingHappyCase(LocalDate familehendelseDato, BrukerRolle søkerRolle) {
         if (søkerRolle == BrukerRolle.MOR) {

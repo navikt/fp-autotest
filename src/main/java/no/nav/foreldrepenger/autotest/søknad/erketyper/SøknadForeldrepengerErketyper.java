@@ -8,7 +8,10 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.Ukjent
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.opptjening.Opptjening;
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.Dekningsgrad;
 
-public class SøknadForeldrepengerErketyper {
+public final class SøknadForeldrepengerErketyper {
+
+    private SøknadForeldrepengerErketyper() {
+    }
 
     private static ForeldrepengerBuilder lagSøknadForeldrepenger(LocalDate familiehendelse, BrukerRolle brukerRolle) {
         return new ForeldrepengerBuilder(brukerRolle)

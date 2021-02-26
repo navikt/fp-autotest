@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadEngangsstønadErk
 import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
 import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.NorskForelder;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 
 @Tag("verdikjede")
 class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
@@ -25,11 +26,11 @@ class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
     @DisplayName("1: Mor er tredjelandsborger og søker engangsstønad")
     @Description("Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
     void MorTredjelandsborgerSøkerEngangsStønadTest() {
-        var testscenario = opprettTestscenario("505");
+        var familie = new Familie("505");
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato)
-                .medAnnenForelder(new NorskForelder(new Fødselsnummer(testscenario.personopplysninger().annenpartIdent()), ""));
-        var saksnummer = innsender.sendInnSøknad(testscenario.personopplysninger().søkerIdent(), søknad.build());
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()));
+        var saksnummer = familie.mor().søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaTerminBekreftelse = saksbehandler
@@ -56,5 +57,9 @@ class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
         assertThat(is_pdf(pdf))
                 .as("Sjekker om byte array er av typen PDF")
                 .isTrue();
+    }
+
+    private NorskForelder lagNorskAnnenforeldre(String indent) {
+        return new NorskForelder(new Fødselsnummer(indent), "");
     }
 }

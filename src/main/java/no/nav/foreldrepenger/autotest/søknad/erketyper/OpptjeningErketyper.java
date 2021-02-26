@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.søknad.erketyper;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,7 +15,10 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.opptjening.Utenlands
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.opptjening.Virksomhetstype;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.ÅpenPeriode;
 
-public class OpptjeningErketyper {
+public final class OpptjeningErketyper {
+
+    private OpptjeningErketyper() {
+    }
 
     public static Opptjening medFrilansOpptjening() {
         return medFrilansOpptjening(LocalDate.now().minusYears(2), LocalDate.now());
@@ -29,7 +31,7 @@ public class OpptjeningErketyper {
                 .build();
     }
 
-    public static Opptjening medEgenNaeringOpptjening(Boolean erNyIArbeidslivet, BigInteger næringsInntekt,
+    public static Opptjening medEgenNaeringOpptjening(Boolean erNyIArbeidslivet, double næringsInntekt,
                                                       Boolean varigEndretNæring) {
         return medEgenNaeringOpptjening(LocalDate.now().minusYears(4), LocalDate.now(), erNyIArbeidslivet,
                 næringsInntekt, varigEndretNæring);

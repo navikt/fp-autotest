@@ -14,7 +14,10 @@ import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.Ut
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UttaksPeriode;
 
-public class UttaksperioderErketyper {
+public final class UttaksperioderErketyper {
+
+    private UttaksperioderErketyper() {
+    }
 
     public static UttaksPeriode uttaksperiode(StønadskontoType stønadskontoType, LocalDate fom, LocalDate tom) {
         return UttaksPeriode.builder()
