@@ -85,6 +85,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
 
 
 @Tag("verdikjede")
@@ -597,8 +598,11 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FELLESPERIODE, fpStartdatoFar, fpStartdatoFar.plusWeeks(4).minusDays(1)),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar.plusWeeks(4), fpStartdatoFar.plusWeeks(19).minusDays(1)));
-        var frilansFom = testscenario.scenariodataDto().inntektskomponentModell().frilansarbeidsforholdperioder()
-                .get(0).frilansFom();
+        var frilansFom = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().stream()
+                .filter(a -> a.arbeidsforholdstype().equals(Arbeidsforholdstype.FRILANSER_OPPDRAGSTAKER_MED_MER))
+                .findFirst()
+                .orElseThrow()
+                .ansettelsesperiodeFom();
         var opptjeningFar = OpptjeningErketyper.medFrilansOpptjening(frilansFom, fpStartdatoFar.minusDays(1));
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medAnnenForelder(lagNorskAnnenforeldre(testscenario.personopplysninger().annenpartIdent()))
