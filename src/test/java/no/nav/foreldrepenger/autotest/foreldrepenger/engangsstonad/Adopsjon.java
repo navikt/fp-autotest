@@ -14,6 +14,8 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.MannAdoptererAleneBekreftelse;
@@ -57,7 +59,7 @@ public class Adopsjon extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
     }
 
     @Test
@@ -89,8 +91,8 @@ public class Adopsjon extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
-        verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(), "1004", "Avslagsårsak",
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.BARN_OVER_15_ÅR, "Avslagsårsak",
                 "Forventer at behandlingen er avslått med avslagskode: Barn over 15 år!");
     }
 
@@ -118,11 +120,11 @@ public class Adopsjon extends FpsakTestBase {
         overstyrer.hentFagsak(saksnummer);
 
         OverstyrAdopsjonsvilkaaret overstyr = new OverstyrAdopsjonsvilkaaret();
-        overstyr.avvis(overstyrer.kodeverk.Avslagsårsak.get("FP_VK_4").getKode("1004" /* Barn over 15 år */));
+        overstyr.avvis(Avslagsårsak.BARN_OVER_15_ÅR);
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        verifiserLikhet(overstyrer.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
+        verifiserLikhet(overstyrer.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
@@ -130,8 +132,8 @@ public class Adopsjon extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
-        verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(), "1004", "Avslagsårsak",
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.BARN_OVER_15_ÅR, "Avslagsårsak",
                 "Forventer at behandlingen er avslått med avslagskode: Barn over 15 år!");
     }
 
@@ -166,7 +168,7 @@ public class Adopsjon extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
 
     }
 
@@ -195,7 +197,7 @@ public class Adopsjon extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunktbekreftelserer(bekreftelse1, bekreftelse2, bekreftelse3);
 
         verifiserLikhet(saksbehandler.vilkårStatus("FP_VK_4").kode, "IKKE_OPPFYLT", "Vilkårstatus for adopsjon");
-        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), "1005",
+        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.EKTEFELLES_SAMBOERS_BARN,
                 "Avslagsårsak (Ektefelles/samboers barn)");
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -207,6 +209,6 @@ public class Adopsjon extends FpsakTestBase {
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "AVSLÅTT", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
     }
 }

@@ -28,6 +28,9 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -45,7 +48,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -97,7 +100,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU");
 
         // Verifiser at beregning er gjort riktig
@@ -221,8 +224,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         // FAKTA OM MEDLEMSKAP
         var avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
-                .setVurdering(saksbehandler.hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
-                        saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
+                .setVurdering(MedlemskapManuellVurderingType.MEDLEM, saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
 
         // FAKTA OM BEREGNING: Vurder besteberegning og fastsett månedsinntekt fra
@@ -230,7 +232,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
-                .leggTilAndelerYtelse(10000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"))
+                .leggTilAndelerYtelse(10000.0, Inntektskategori.ARBEIDSTAKER)
                 .settSkalHaBesteberegningForKunYtelse(true)
                 .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
@@ -289,7 +291,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .medRefusjonsBelopPerMnd(refusjon);
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.VEDLEGG_MOTTATT);
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
         // FORDEL BEREGNINGSGRUNNLAG //
@@ -484,7 +486,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
 
     }
 
@@ -506,11 +508,9 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
     private void verifiserAndelerIPeriode(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
             BGAndelHelper BGAndelHelper) {
-        if (beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndel().stream()
-                .noneMatch(a -> matchAndel(BGAndelHelper, a))) {
-            throw new AssertionError("Finnes ingen andeler med detaljer " + BGAndelHelper.aktivitetstatus + " orgnr: "
-                    + BGAndelHelper.arbeidsgiverId);
-        }
+        assertThat(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndel().stream()
+                .noneMatch(a -> matchAndel(BGAndelHelper, a)))
+                .isFalse();
         beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndel().forEach(andel -> {
             if (matchAndel(BGAndelHelper, andel)) {
                 assertAndeler(andel, BGAndelHelper);

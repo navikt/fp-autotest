@@ -14,6 +14,9 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
@@ -58,7 +61,7 @@ public class Termin extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
 
     }
 
@@ -87,11 +90,11 @@ public class Termin extends FpsakTestBase {
         overstyrer.hentFagsak(saksnummer);
 
         OverstyrFodselsvilkaaret overstyr = new OverstyrFodselsvilkaaret();
-        overstyr.avvis(overstyrer.kodeverk.Avslagsårsak.get("FP_VK_1").getKode("1003" /* Søker er far */));
+        overstyr.avvis(Avslagsårsak.SØKER_ER_FAR);
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
+        verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
@@ -100,7 +103,7 @@ public class Termin extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_FØDSELSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
     }
 
     public void behandleTerminMorUtenTerminbekreftelse() {
@@ -129,7 +132,7 @@ public class Termin extends FpsakTestBase {
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
     }
 
     @Test
@@ -149,14 +152,13 @@ public class Termin extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        saksbehandler.settBehandlingPåVent(LocalDate.now(), "AVV_DOK");
+        saksbehandler.settBehandlingPåVent(LocalDate.now(), Venteårsak.AVV_DOK);
         verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er ikke satt på vent");
 
         saksbehandler.gjenopptaBehandling();
         verifiser(!saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er satt på vent");
 
-        saksbehandler
-                .henleggBehandling(saksbehandler.kodeverk.BehandlingResultatType.getKode("HENLAGT_SØKNAD_TRUKKET"));
+        saksbehandler.henleggBehandling(BehandlingResultatType.HENLAGT_SØKNAD_TRUKKET);
         verifiser(saksbehandler.valgtBehandling.erHenlagt(), "Behandlingen ble uventet ikke henlagt");
         verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU", "behandlingsstatus");
     }
@@ -182,7 +184,7 @@ public class Termin extends FpsakTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
 
         beslutter.hentFagsak(saksnummer);
 

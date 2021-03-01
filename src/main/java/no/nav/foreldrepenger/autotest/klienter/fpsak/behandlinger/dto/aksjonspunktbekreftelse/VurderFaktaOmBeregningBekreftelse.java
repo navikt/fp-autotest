@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
@@ -60,7 +61,7 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilAndelerYtelse(double beløp, Kode inntektskategori) {
+    public VurderFaktaOmBeregningBekreftelse leggTilAndelerYtelse(double beløp, Inntektskategori inntektskategori) {
         fakta.leggTilAndelerYtelse(beløp, inntektskategori);
         return this;
     }

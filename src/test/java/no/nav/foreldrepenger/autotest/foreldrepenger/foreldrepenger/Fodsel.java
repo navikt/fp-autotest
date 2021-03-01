@@ -37,8 +37,10 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
@@ -66,7 +68,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
@@ -111,7 +113,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmelding(inntektsmeldingBuilder, testscenario, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDLEGG_MOTTATT);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.VEDLEGG_MOTTATT);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         var vurderFaktaOmBeregningBekreftelse1 = saksbehandler
@@ -166,7 +168,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         verifiserUttak(2, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
@@ -227,7 +229,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         verifiserUttak(2, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
@@ -273,7 +275,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
     }
@@ -311,7 +313,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         verifiserUttak(2, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -344,7 +346,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         verifiserUttak(1, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -384,7 +386,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         verifiserUttak(2, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -423,7 +425,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         AvklarFaktaUttakBekreftelse avklarFaktaUttakBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         avklarFaktaUttakBekreftelse.godkjennPeriode(startDatoForeldrepenger, startDatoForeldrepenger.plusWeeks(2),
-                saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
+                UttakPeriodeVurderingType.PERIODE_KAN_IKKE_AVKLARES);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
@@ -445,9 +447,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiser(beslutter.harHistorikkinnslagForBehandling(HistorikkInnslag.VEDTAK_FATTET),
+        verifiser(beslutter.harHistorikkinnslagForBehandling(HistorikkinnslagType.VEDTAK_FATTET),
                 "behandling har ikke historikkinslag 'Vedtak fattet'");
-        beslutter.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
+        beslutter.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_BESTILT);
 
     }
 
@@ -477,7 +479,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         verifiserUttak(1, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
 
@@ -517,7 +519,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
 
         // verifiserer uttak
         List<UttakResultatPeriode> perioder = saksbehandler.valgtBehandling.hentUttaksperioder();
@@ -540,7 +542,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         aksjonspunktBekreftelseEndringssøknad.setFordeling(fordelingEndringssøknad);
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelseEndringssøknad);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "FORELDREPENGER_ENDRET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.FORELDREPENGER_ENDRET);
 
         // verifiserer uttak
         List<UttakResultatPeriode> perioderEtterEndringssøknad = saksbehandler.valgtBehandling.hentUttaksperioder();
@@ -655,7 +657,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -758,7 +760,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
 
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
     }
@@ -803,8 +805,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         // 20 uker fra erketype
         avklarFaktaUttakPerioder.delvisGodkjennPeriode(fødselsdato, fødselsdato.plusWeeks(20), fødselsdato,
-                fødselsdato.plusWeeks(20),
-                saksbehandler.hentKodeverk().UttakPeriodeVurderingType.getKode("PERIODE_KAN_IKKE_AVKLARES"));
+                fødselsdato.plusWeeks(20), UttakPeriodeVurderingType.PERIODE_KAN_IKKE_AVKLARES);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
@@ -821,7 +822,7 @@ public class Fodsel extends ForeldrepengerTestBase {
                 beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
 
         // verifiserer uttak
         List<UttakResultatPeriode> uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
@@ -877,7 +878,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
     }
 
     @Test
@@ -1007,7 +1008,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(MØDREKVOTE).getSaldo() >= 0,
                 "Mødrekvote skal ikke være i minus");
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
     }
 
     @Test
@@ -1083,7 +1084,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER).getSaldo() >= 0,
                 "Foreldrepenger skal ikke være i minus.");
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
     }
 
     @Test
@@ -1126,7 +1127,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
     }
 
     @Test

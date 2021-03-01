@@ -16,6 +16,8 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
@@ -56,8 +58,7 @@ public class Ytelser extends ForeldrepengerTestBase {
 
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-        vurderFaktaOmBeregningBekreftelse
-                .leggTilAndelerYtelse(10000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"));
+        vurderFaktaOmBeregningBekreftelse.leggTilAndelerYtelse(10000.0, Inntektskategori.ARBEIDSTAKER);
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -68,7 +69,7 @@ public class Ytelser extends ForeldrepengerTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
 
         saksbehandler.ventTilFagsakLøpende();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET",
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET,
                 "Forventer at behandlingen er innvilget og søker får støtte om foreldrepenger.");
         verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
                 "Forventer at hele summen utbetales til søker!");
@@ -123,7 +124,7 @@ public class Ytelser extends ForeldrepengerTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         saksbehandler.ventTilFagsakLøpende();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
 
     }
 }

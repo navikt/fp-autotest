@@ -244,7 +244,7 @@ public class TilbakekrevingFP extends FptilbakeTestBase {
         verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp() == 0, "Forventet tilbakekrevingsbeløp er 0, tilbakekrevingsbeløp i beregningsresultatet er noe annet");
     }
 
-    private void lagOgSendInntektsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer){
+    private void lagOgSendInntektsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) {
         lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer, false);
     }
     private void lagOgSendInntektsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer, Boolean redusert) {

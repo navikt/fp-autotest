@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnsynResultatType;
 
 @BekreftelseKode(kode = "5037")
 public class VurderingAvInnsynBekreftelse extends AksjonspunktBekreftelse {
@@ -25,8 +25,8 @@ public class VurderingAvInnsynBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderingAvInnsynBekreftelse setInnsynResultatType(Kode innsynResultatType) {
-        this.innsynResultatType = innsynResultatType.kode;
+    public VurderingAvInnsynBekreftelse setInnsynResultatType(InnsynResultatType innsynResultatType) {
+        this.innsynResultatType = innsynResultatType.getKode();
         return this;
     }
 

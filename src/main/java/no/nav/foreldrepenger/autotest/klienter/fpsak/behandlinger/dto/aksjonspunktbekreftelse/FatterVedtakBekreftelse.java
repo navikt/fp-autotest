@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.util.ArrayList;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 
 @BekreftelseKode(kode = "5016")
@@ -35,9 +35,9 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public FatterVedtakBekreftelse avvisAksjonspunkt(Aksjonspunkt aksjonspunkt, Kode kode) {
+    public FatterVedtakBekreftelse avvisAksjonspunkt(Aksjonspunkt aksjonspunkt, VurderÅrsak kode) {
         List<String> årsaker = new ArrayList<>();
-        årsaker.add(kode.kode);
+        årsaker.add(kode.getKode());
         avvisAksjonspunkt(aksjonspunkt, årsaker);
         return this;
     }

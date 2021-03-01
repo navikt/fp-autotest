@@ -14,6 +14,9 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerBosattBekreftelse;
@@ -52,18 +55,17 @@ public class Medlemskap extends FpsakTestBase {
         bosatt.getBekreftedePerioder().forEach(p -> p.setBosattVurdering(false));
         saksbehandler.bekreftAksjonspunkt(bosatt);
         var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
-                .setVurdering(saksbehandler.hentKodeverk().MedlemskapManuellVurderingType.getKode("MEDLEM"),
-                        saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
+                .setVurdering(MedlemskapManuellVurderingType.MEDLEM, saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(ab);
 
         overstyrer.hentFagsak(saksnummer);
 
         OverstyrMedlemskapsvilkaaret overstyr = new OverstyrMedlemskapsvilkaaret();
-        overstyr.avvis(overstyrer.kodeverk.Avslagsårsak.get("FP_VK_2").getKode("1020" /* Søker er ikke medlem" */));
+        overstyr.avvis(Avslagsårsak.SØKER_ER_IKKE_MEDLEM);
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
+        verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
@@ -72,7 +74,7 @@ public class Medlemskap extends FpsakTestBase {
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_MEDLEMSKAPSVILKÅRET));
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
     }
 
     @Test
@@ -94,7 +96,7 @@ public class Medlemskap extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        verifiser(saksbehandler.valgtBehandling.behandlingsresultat.getAvslagsarsak().kode.equals("1025"),
+        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.SØKER_ER_IKKE_BOSATT,
                 "Avklart som ikke bosatt skal gi avslag med VM 1025");
     }
 
@@ -112,6 +114,6 @@ public class Medlemskap extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET", "Behandlingstatus");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
     }
 }

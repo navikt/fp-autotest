@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.OpprettSak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.Saksnummer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafJerseyKlient;
@@ -210,7 +211,7 @@ public class Fordel extends Aktoer {
             Vent.til(() -> {
                 historikkRef.set(historikkKlient.hentHistorikk(saksnummerF));
                 return historikkRef.get().stream()
-                        .anyMatch(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode()));
+                        .anyMatch(h -> HistorikkinnslagType.VEDLEGG_MOTTATT.equals(h.type()));
             }, 40, "Saken har ikke mottatt inntektsmeldingen.\nHar historikk: " + historikkRef.get());
         } else {
             Vent.til(() -> fagsakKlient.søk("" + nyttSaksnummer).size() > 0,
@@ -256,7 +257,7 @@ public class Fordel extends Aktoer {
     private int antallInntektsmeldingerMottatt(long saksnummer) {
         List<HistorikkInnslag> historikk = historikkKlient.hentHistorikk(saksnummer);
         return (int) historikk.stream()
-                .filter(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode()))
+                .filter(h -> HistorikkinnslagType.VEDLEGG_MOTTATT.equals(h.type()))
                 .count();
     }
 

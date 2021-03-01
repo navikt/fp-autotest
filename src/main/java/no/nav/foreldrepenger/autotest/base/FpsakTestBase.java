@@ -9,9 +9,9 @@ import no.nav.foreldrepenger.autotest.aktoerer.fptilbake.TilbakekrevingSaksbehan
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 
-public class FpsakTestBase extends TestScenarioTestBase {
+public abstract class FpsakTestBase extends TestScenarioTestBase {
 
     /*
      * Aktører
@@ -23,6 +23,7 @@ public class FpsakTestBase extends TestScenarioTestBase {
     protected Saksbehandler beslutter;
     protected Saksbehandler klagebehandler;
     protected TilbakekrevingSaksbehandler tbksaksbehandler;
+
 
     @BeforeEach
     public void setUp() {
@@ -50,9 +51,9 @@ public class FpsakTestBase extends TestScenarioTestBase {
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        if (saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT,
+        if (saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT,
                 saksbehandler.valgtBehandling.id)) {
-            saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_SENDT);
+            saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_SENT);
         }
     }
 }

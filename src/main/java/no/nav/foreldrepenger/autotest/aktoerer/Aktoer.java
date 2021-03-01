@@ -13,14 +13,10 @@ public class Aktoer {
     protected final CookieRequestFilter cookieRequestFilter;
     private final OpenamJerseyKlient openamJerseyKlient;
 
-    public Aktoer() {
-        openamJerseyKlient = new OpenamJerseyKlient();
-        cookieRequestFilter = new CookieRequestFilter();
-    }
-
     public Aktoer(Rolle rolle) {
-        this();
-        openamJerseyKlient.logInnMedRolle(rolle.getKode(), cookieRequestFilter);
+        openamJerseyKlient = new OpenamJerseyKlient();
+        var cookie = openamJerseyKlient.logInnMedRolle(rolle.getKode());
+        cookieRequestFilter = new CookieRequestFilter(cookie);
     }
 
     public enum Rolle {

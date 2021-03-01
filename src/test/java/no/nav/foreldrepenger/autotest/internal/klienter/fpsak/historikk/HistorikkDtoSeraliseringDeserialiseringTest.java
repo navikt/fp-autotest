@@ -12,6 +12,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Hendelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslagDokumentLinkDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagDel;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @Execution(ExecutionMode.SAME_THREAD)
@@ -27,7 +28,7 @@ class HistorikkDtoSeraliseringDeserialiseringTest extends SerializationTestBase 
     @Test
     void HistorikkInnslagTest() {
         test(new HistorikkInnslag(123456789,
-                new Kode("BREV_BESTILT", "BREV_BESTILT"),
+                HistorikkinnslagType.BREV_BESTILT,
                 new Kode("","SBH", "Saksbehandler"),
                 new Kode("-", "M", "Mann"),
                 List.of(new HistorikkInnslagDokumentLinkDto("1", null, "1234567", "123456", true)),

@@ -5,7 +5,7 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 public class ControllerHelper {
 
-    public static Behandlingstema translateSøknadDokumenttypeToBehandlingstema(DokumenttypeId dokumenttypeId) throws Exception {
+    public static Behandlingstema translateSøknadDokumenttypeToBehandlingstema(DokumenttypeId dokumenttypeId) {
 
         if (dokumenttypeId == DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL) {
             return Behandlingstema.FORELDREPENGER_FOEDSEL;
@@ -20,7 +20,7 @@ public class ControllerHelper {
         } else if (dokumenttypeId == DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER){
             return Behandlingstema.SVANGERSKAPSPENGER;
         } else {
-            throw new Exception("Kunne ikke matche på dokumenttype.");
+            throw new RuntimeException("Kunne ikke matche på dokumenttype.");
         }
     }
 }

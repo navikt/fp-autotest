@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VarselOmRevurderingBekreftelse;
@@ -50,11 +52,11 @@ public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingsresultat");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingsresultat");
 
         saksbehandler.ventTilAvsluttetBehandling();
 
-        saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
+        saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_FEIL_ELLER_ENDRET_FAKTA);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var varselOmRevurderingBekreftelse = saksbehandler
@@ -77,6 +79,6 @@ public class RevurderingEnsFlaky extends ForeldrepengerTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         beslutter.ventTilAvsluttetBehandling();
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingsresultat");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingsresultat");
     }
 }

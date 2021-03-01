@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -11,7 +12,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.MottakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.oauth2.AzureAdJerseyKlient;
@@ -60,21 +61,11 @@ public class Innsender extends Aktoer {
     public void sendInnInnteksmeldingFpfordel(String fnr, Long saksnummer, InntektsmeldingBuilder... inntektsmelding) {
         sendInnInnteksmeldingFpfordel(List.of(inntektsmelding), fnr, saksnummer);
     }
-    
-
-    public void sendInnInnteksmeldingFpfordel(List<InntektsmeldingBuilder> inntektsmelding, String fnr) {
-        sendInnInnteksmeldingFpfordel(inntektsmelding, fnr, null);
-    }
-
-    public void sendInnInnteksmeldingFpfordel(InntektsmeldingBuilder inntektsmelding, String fnr, Long saksnummer) {
-        sendInnInnteksmeldingFpfordel(List.of(inntektsmelding), fnr, saksnummer);
-    }
 
     public void sendInnInnteksmeldingFpfordel(List<InntektsmeldingBuilder> inntektsmeldinger, String fnr, Long saksnummer) {
         var antallGamleInntekstmeldinger = hentAntallHistorikkInnslagAvTypenVedleggMottatt(saksnummer);
         journalførInnteksmeldinger(inntektsmeldinger, fnr);
         ventTilInntekstmeldingErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallGamleInntekstmeldinger);
-        LOG.info("Innsending av inntektsmelding(er) er vellykket!");
     }
 
     private void journalførInnteksmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String fnr) {
@@ -152,7 +143,7 @@ public class Innsender extends Aktoer {
             return 0;
         }
         return (int) historikkKlient.hentHistorikk(saksnummer).stream()
-                .filter(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equalsIgnoreCase(h.getTypeKode()))
+                .filter(h -> HistorikkinnslagType.VEDLEGG_MOTTATT.equals(h.type()))
                 .count();
     }
 
@@ -160,31 +151,42 @@ public class Innsender extends Aktoer {
                                                  Integer antallNyeInntektsmeldinger,
                                                  Integer antallGamleInntekstmeldinger) {
         if (saksnummer != null) {
-            var forventetAntallNyeInnteksmeldinger = antallGamleInntekstmeldinger + antallNyeInntektsmeldinger;
+            var start = LocalDateTime.now();
+            var forventetAntallInnteksmeldinger = antallGamleInntekstmeldinger + antallNyeInntektsmeldinger;
             AtomicReference<Integer> antallIM = new AtomicReference<>(antallGamleInntekstmeldinger);
             Vent.til(() -> {
                 antallIM.set(hentAntallHistorikkInnslagAvTypenVedleggMottatt(saksnummer));
-                return antallIM.get() == forventetAntallNyeInnteksmeldinger;
-            }, 40, String.format("Forventet at det ble mottatt %d ny(e) innteksmeldinge(r), men det ble mottatt %d!",
-                    antallNyeInntektsmeldinger, antallIM.get() - antallGamleInntekstmeldinger));
+                return antallIM.get() == forventetAntallInnteksmeldinger;
+            }, 60, String.format("Forventet at det ble mottatt %d ny(e) innteksmeldinge(r), men det ble mottatt %d!" +
+                            "på saksnummer %s", antallNyeInntektsmeldinger, antallIM.get() - antallGamleInntekstmeldinger, saksnummer));
+            var slutt = LocalDateTime.now();
+            var seconds = Duration.between(start, slutt).getSeconds();
+            LOG.info("Forventet antall inntektsmeldinger mottatt etter {} sekunder", seconds);
         } else {
             ventTilFagsakOgBehandlingErOpprettet(fnr);
         }
     }
 
     private Long ventTilFagsakOgBehandlingErOpprettet(String fnr) {
-        LOG.info("Venter på oppretting av fagsak og behandling for fnr {}", fnr);
-        Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 20,
+        LOG.info("Venter på at fagsak og behandling opprettes på fnr {}", fnr);
+
+        var start1 = LocalDateTime.now();
+        Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 30,
                 "Fagsak for bruker " + fnr + " har ikke blitt opprettet!");
         var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();
+        var slutt1 = LocalDateTime.now();
 
         Vent.til(() -> {
             var behandlinger = behandlingerKlient.alle(saksnummer);
-            return !behandlinger.isEmpty()
-                    && (behandlingerKlient.statusAsObject(behandlinger.get(0).uuid) == null);
-        }, 60, "Saken [" + saksnummer +"] hadde ingen behandlinger");
+            var behandlingStartet = historikkKlient.hentHistorikk(saksnummer).stream()
+                    .anyMatch(h -> HistorikkinnslagType.BEH_STARTET.equals(h.type()));
+            return !behandlinger.isEmpty() && behandlingStartet;
+        }, 30, "Ingen behandlinger er opprettet på saksnummer " + saksnummer + "etter 30 skun");
+        var slutt2 = LocalDateTime.now();
 
-        LOG.info("Fagsag og behandling opprettet på saksnummer {}", saksnummer);
+        var seconds1 = Duration.between(start1, slutt1).getSeconds();
+        var seconds2 = Duration.between(slutt1, slutt2).getSeconds();
+        LOG.info("Fagsag og behandling opprettet på saksnummer {} etter {} og {} sekunder", saksnummer, seconds1, seconds2);
         return saksnummer;
     }
 

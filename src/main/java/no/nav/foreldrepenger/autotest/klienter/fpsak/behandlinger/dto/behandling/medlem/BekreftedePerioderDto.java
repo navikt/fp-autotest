@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BekreftedePerioderDto {
@@ -17,11 +17,11 @@ public class BekreftedePerioderDto {
     protected Boolean oppholdsrettVurdering;
     protected Boolean lovligOppholdVurdering;
     protected LocalDate fodselsdato;
-    protected Kode medlemskapManuellVurderingType;
+    protected MedlemskapManuellVurderingType medlemskapManuellVurderingType;
     protected String omsorgsovertakelseDato;
     protected String begrunnelse;
 
-    public void setMedlemskapManuellVurderingType(Kode medlemskapManuellVurderingType) {
+    public void setMedlemskapManuellVurderingType(MedlemskapManuellVurderingType medlemskapManuellVurderingType) {
         this.medlemskapManuellVurderingType = medlemskapManuellVurderingType;
     }
 

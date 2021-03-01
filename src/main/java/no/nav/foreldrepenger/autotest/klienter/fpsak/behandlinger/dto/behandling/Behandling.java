@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
@@ -30,7 +33,7 @@ public class Behandling {
     public UUID uuid;
     public int versjon;
     public long fagsakId;
-    public Kode type;
+    public BehandlingType type;
     public Kode status;
 
     public LocalDate skjaringstidspunkt;
@@ -80,15 +83,12 @@ public class Behandling {
         return behandlingHenlagt;
     }
 
-    public String hentBehandlingsresultat() {
-        return behandlingsresultat.toString();
+    public BehandlingResultatType hentBehandlingsresultat() {
+        return behandlingsresultat.getType();
     }
 
-    public String hentAvslagsarsak() {
-        if ((null != behandlingsresultat) && (null != behandlingsresultat.avslagsarsak)) {
-            return behandlingsresultat.avslagsarsak.kode;
-        }
-        return "Ingen avslagsårsak";
+    public Avslagsårsak hentAvslagsarsak() {
+        return behandlingsresultat.getAvslagsarsak();
     }
 
     public List<KontrollerAktiviteskravPeriode> getKontrollerAktiviteskrav() {
@@ -101,9 +101,9 @@ public class Behandling {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("{Behandlingsid: %s}\n", this.id));
         sb.append(String.format("{Behandlingsstatus: %s}\n", this.status.kode));
-        sb.append(String.format("{Behandlingstype: %s}", this.type.kode));
-        if ((this.behandlingsresultat != null) && (this.behandlingsresultat.avslagsarsak != null)) {
-            sb.append(String.format("{Årsak avslag: %s}\n", this.behandlingsresultat.avslagsarsak.kode));
+        sb.append(String.format("{Behandlingstype: %s}", this.type.getKode()));
+        if ((this.behandlingsresultat != null) && (this.behandlingsresultat.getAvslagsarsak() != null)) {
+            sb.append(String.format("{Årsak avslag: %s}\n", this.behandlingsresultat.getAvslagsarsak().getKode()));
         }
         return sb.toString();
     }

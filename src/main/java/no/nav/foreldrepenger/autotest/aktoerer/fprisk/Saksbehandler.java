@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.autotest.aktoerer.fprisk;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
@@ -11,7 +8,6 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.kafka.KafkaJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
 public class Saksbehandler extends Aktoer {
-    Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
 
     private final KafkaJerseyKlient kafkaKlient;
     private final RisikovurderingJerseyKlient risikovurderingKlient;

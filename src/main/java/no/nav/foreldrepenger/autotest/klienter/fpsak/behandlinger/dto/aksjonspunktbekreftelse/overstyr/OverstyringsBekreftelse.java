@@ -1,7 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+
 
 public abstract class OverstyringsBekreftelse extends AksjonspunktBekreftelse {
 
@@ -22,8 +23,8 @@ public abstract class OverstyringsBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public OverstyringsBekreftelse avvis(Kode årsak) {
-        overstyr(false, årsak.kode);
+    public OverstyringsBekreftelse avvis(Avslagsårsak årsak) {
+        overstyr(false, årsak.getKode());
         return this;
     }
 }
