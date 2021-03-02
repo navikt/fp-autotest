@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnla
 
 public class OkonomiJerseyKlient extends FptilbakeJerseyKlient {
 
-    private static final String GRUNNLAG_URL = "/grunnlag?";
+    private static final String GRUNNLAG_URL = "/grunnlag";
     private static final String BEREGNING_RESULTAT_URL = "/beregning/resultat";
 
     public OkonomiJerseyKlient(ClientRequestFilter filter) {

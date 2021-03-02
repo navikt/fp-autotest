@@ -94,7 +94,7 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
         Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
-        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
+        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 
         var vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);

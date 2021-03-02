@@ -31,6 +31,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningRe
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.dto.NewProsessTaskDto;
+import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 
@@ -43,12 +44,14 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     private final BehandlingerJerseyKlient behandlingerKlient;
     private final OkonomiJerseyKlient okonomiKlient;
     private final ProsesstaskJerseyKlient prosesstaskKlient;
+    private final VTPTilbakekrevingJerseyKlient vtpTilbakekrevingJerseyKlient;
 
     public TilbakekrevingSaksbehandler(Rolle rolle) {
         super(rolle);
         behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
         okonomiKlient = new OkonomiJerseyKlient(cookieRequestFilter);
         prosesstaskKlient = new ProsesstaskJerseyKlient(cookieRequestFilter);
+        vtpTilbakekrevingJerseyKlient = new VTPTilbakekrevingJerseyKlient();
     }
 
     // Behandlinger actions
@@ -106,10 +109,11 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     // Økonomi actions
     public void sendNyttKravgrunnlag(Long saksnummer, String ident, int fpsakBehandlingId, String ytelseType) {
         Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, ident, fpsakBehandlingId, ytelseType, "NY");
-        sendNyttKravgrunnlag(kravgrunnlag);
+        sendNyttKravgrunnlag(kravgrunnlag, saksnummer, fpsakBehandlingId);
     }
 
-    public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag) {
+    public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag, Long saksnummer, int fpsakBehandlingId) {
+        vtpTilbakekrevingJerseyKlient.oppdaterTilbakekrevingKonsistens(saksnummer, fpsakBehandlingId);
         okonomiKlient.putGrunnlag(kravgrunnlag, valgtBehandling.id);
     }
 

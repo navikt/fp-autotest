@@ -12,8 +12,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
@@ -35,7 +33,6 @@ import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 @Tag("fptilbake")
 public class TilbakekrevingRevurdering extends FptilbakeTestBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(TilbakekrevingRevurdering.class);
     private static final String ytelseType = "FP";
 
     @Test
@@ -78,7 +75,7 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
         Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
-        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag);
+        tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 
         var vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);
@@ -107,6 +104,10 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
         tbksaksbehandler.opprettTilbakekrevingRevurdering(saksnummer, saksbehandler.valgtBehandling.uuid,
                 tbksaksbehandler.valgtBehandling.id, ytelseType, RevurderingArsak.RE_FORELDELSE);
         tbksaksbehandler.hentSisteBehandling(saksnummer);
+        tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
+        vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);
+        vurderFakta.addGeneriskVurdering(ytelseType);
+        tbksaksbehandler.behandleAksjonspunkt(vurderFakta);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5003);
 
         // mangler resten av revurderingsbehandlingen med aksjonpunkt for foreldelse
