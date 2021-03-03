@@ -9,7 +9,10 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.relasjontilbarn.Fød
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.relasjontilbarn.OmsorgsOvertakelsesÅrsak;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.relasjontilbarn.Omsorgsovertakelse;
 
-public class RelasjonTilBarnErketyper {
+public final class RelasjonTilBarnErketyper {
+
+    private RelasjonTilBarnErketyper() {
+    }
 
     public static Fødsel fødsel(int antallBarn, LocalDate fødselsdato) {
         return Fødsel.builder()

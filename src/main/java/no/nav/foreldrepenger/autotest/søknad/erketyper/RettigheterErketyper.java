@@ -5,7 +5,10 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.Rettigheter;
 
-public class RettigheterErketyper {
+public final class RettigheterErketyper {
+
+    private RettigheterErketyper() {
+    }
 
     public static Rettigheter beggeForeldreRettIkkeAleneomsorg() {
         return new Rettigheter(

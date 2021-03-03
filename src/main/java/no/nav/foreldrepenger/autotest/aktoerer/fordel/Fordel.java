@@ -255,7 +255,8 @@ public class Fordel extends Aktoer {
     @Step("Henter antall innteksmeldingerMottatt for saksnummer [{saksnummer}]")
     private int antallInntektsmeldingerMottatt(long saksnummer) {
         List<HistorikkInnslag> historikk = historikkKlient.hentHistorikk(saksnummer);
-        return (int) historikk.stream().filter(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode()))
+        return (int) historikk.stream()
+                .filter(h -> HistorikkInnslag.VEDLEGG_MOTTATT.getKode().equals(h.getTypeKode()))
                 .count();
     }
 

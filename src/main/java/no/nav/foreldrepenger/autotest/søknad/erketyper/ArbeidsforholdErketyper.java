@@ -5,7 +5,10 @@ import no.nav.foreldrepenger.autotest.søknad.modell.svangerskapspenger.tilrette
 import no.nav.foreldrepenger.autotest.søknad.modell.svangerskapspenger.tilrettelegging.arbeidsforhold.SelvstendigNæringsdrivende;
 import no.nav.foreldrepenger.autotest.søknad.modell.svangerskapspenger.tilrettelegging.arbeidsforhold.Virksomhet;
 
-public class ArbeidsforholdErketyper {
+public final class ArbeidsforholdErketyper {
+
+    private ArbeidsforholdErketyper() {
+    }
 
     public static Virksomhet virksomhet(String orgnummer) {
         return new Virksomhet(orgnummer);

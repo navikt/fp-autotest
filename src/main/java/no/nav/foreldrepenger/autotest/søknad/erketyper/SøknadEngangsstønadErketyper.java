@@ -6,7 +6,10 @@ import no.nav.foreldrepenger.autotest.søknad.builder.EngangsstønadBuilder;
 import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.relasjontilbarn.OmsorgsOvertakelsesÅrsak;
 
-public class SøknadEngangsstønadErketyper {
+public final class SøknadEngangsstønadErketyper {
+
+    private SøknadEngangsstønadErketyper() {
+    }
 
     private static EngangsstønadBuilder lagEngangsstønad(BrukerRolle brukerRolle) {
         return new EngangsstønadBuilder(brukerRolle)
