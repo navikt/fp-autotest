@@ -29,31 +29,6 @@ public abstract class Søker {
         return fødselsnummer;
     }
 
-    public int månedsinntekt() {
-        guardFlereArbeidsgivere();
-        return inntektYtelseModell.inntektskomponentModell().inntektsperioder().stream()
-                .max(Comparator.comparing(Inntektsperiode::tom))
-                .map(Inntektsperiode::beløp)
-                .orElse(0);
-    }
-
-
-    public int månedsinntekt(String orgnummer) {
-        return inntektYtelseModell.inntektskomponentModell().inntektsperioder().stream()
-                .filter(inntektsperiode -> orgnummer.equalsIgnoreCase(inntektsperiode.orgnr()))
-                .max(Comparator.comparing(Inntektsperiode::tom))
-                .map(Inntektsperiode::beløp)
-                .orElse(0);
-    }
-
-    public List<Inntektsperiode> inntektsperioder() {
-        return inntektYtelseModell.inntektskomponentModell().inntektsperioder();
-    }
-
-    public double næringsinntekt(int beregnFraOgMedÅr) {
-        return hentNæringsinntekt(inntektYtelseModell.sigrunModell(), beregnFraOgMedÅr);
-    }
-
     public LocalDate annsettelsesFomFrilans() {
         return hentAnsettelsesFomForFrilans(inntektYtelseModell.arbeidsforholdModell());
     }
@@ -73,6 +48,32 @@ public abstract class Søker {
                         a.arbeidsforholdstype(), a.arbeidsavtaler().get(0).stillingsprosent(),
                         new Arbeidsgiver(a.arbeidsgiverOrgnr(), this)))
                 .collect(Collectors.toList());
+    }
+
+    // Todo: Brukes bare i tifeller hvor inntektskomponenten består av flere innektsperioder fra samme organisasjon, men forksjellig arbeidsforhold.
+    public List<Inntektsperiode> inntektsperioder() {
+        return inntektYtelseModell.inntektskomponentModell().inntektsperioder();
+    }
+
+    public int månedsinntekt() {
+        guardFlereArbeidsgivere();
+        return inntektYtelseModell.inntektskomponentModell().inntektsperioder().stream()
+                .max(Comparator.comparing(Inntektsperiode::tom))
+                .map(Inntektsperiode::beløp)
+                .orElse(0);
+    }
+
+
+    public int månedsinntekt(String orgnummer) {
+        return inntektYtelseModell.inntektskomponentModell().inntektsperioder().stream()
+                .filter(inntektsperiode -> orgnummer.equalsIgnoreCase(inntektsperiode.orgnr()))
+                .max(Comparator.comparing(Inntektsperiode::tom))
+                .map(Inntektsperiode::beløp)
+                .orElse(0);
+    }
+
+    public double næringsinntekt(int beregnFraOgMedÅr) {
+        return hentNæringsinntekt(inntektYtelseModell.sigrunModell(), beregnFraOgMedÅr);
     }
 
     public long søk(Søknad søknad) {
