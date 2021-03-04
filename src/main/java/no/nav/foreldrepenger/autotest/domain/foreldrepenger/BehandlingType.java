@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum BehandlingType implements Kode {
+public enum BehandlingType {
 
     FØRSTEGANGSSØKNAD("BT-002"),
     KLAGE("BT-003"),
@@ -28,10 +28,9 @@ public enum BehandlingType implements Kode {
         return Arrays.stream(BehandlingType.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet behandlingtype %s.", kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet behandlingtype " + kode));
     }
 
-    @Override
     public String getKode() {
         return kode;
     }

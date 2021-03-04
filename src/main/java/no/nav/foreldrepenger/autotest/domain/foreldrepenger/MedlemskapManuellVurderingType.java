@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum MedlemskapManuellVurderingType implements Kode {
+public enum MedlemskapManuellVurderingType {
 
     MEDLEM("MEDLEM"),
     UNNTAK("UNNTAK"),
@@ -27,10 +27,9 @@ public enum MedlemskapManuellVurderingType implements Kode {
         return Arrays.stream(MedlemskapManuellVurderingType.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet MedlemskapManuellVurderingType %s.", kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet MedlemskapManuellVurderingType " + kode));
     }
 
-    @Override
     public String getKode() {
         return kode;
     }

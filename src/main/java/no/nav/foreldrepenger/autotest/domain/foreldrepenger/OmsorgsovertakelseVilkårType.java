@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum OmsorgsovertakelseVilkårType implements Kode {
+public enum OmsorgsovertakelseVilkårType {
 
     OMSORGSVILKÅRET("FP_VK_5"),
     FORELDREANSVARSVILKÅRET_2_LEDD("FP_VK_8"),
@@ -26,10 +26,9 @@ public enum OmsorgsovertakelseVilkårType implements Kode {
         return Arrays.stream(OmsorgsovertakelseVilkårType.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet OmsorgsovertakelseVilkårType %s.", kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet OmsorgsovertakelseVilkårType " + kode));
     }
 
-    @Override
     public String getKode() {
         return kode;
     }

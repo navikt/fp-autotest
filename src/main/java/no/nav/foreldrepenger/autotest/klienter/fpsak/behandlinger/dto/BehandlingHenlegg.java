@@ -7,12 +7,12 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingHenlegg extends BehandlingIdPost {
 
-    protected BehandlingResultatType årsakKode;
+    protected String årsakKode;
     protected String begrunnelse;
 
     public BehandlingHenlegg(int behandlingId, int behandlingVersjon, BehandlingResultatType årsakKode, String begrunnelse) {
         super(behandlingId, behandlingVersjon);
-        this.årsakKode = årsakKode;
+        this.årsakKode = årsakKode.getKode();
         this.begrunnelse = begrunnelse;
     }
 }

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum UttakPeriodeVurderingType implements Kode {
+public enum UttakPeriodeVurderingType {
 
     PERIODE_OK,
     PERIODE_OK_ENDRET,
@@ -32,11 +32,9 @@ public enum UttakPeriodeVurderingType implements Kode {
         return Arrays.stream(UttakPeriodeVurderingType.values())
                 .filter(value -> value.name().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet UttakPeriodeVurderingType %s.", kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet UttakPeriodeVurderingType " + kode));
     }
 
-
-    @Override
     public String getKode() {
         return kode;
     }

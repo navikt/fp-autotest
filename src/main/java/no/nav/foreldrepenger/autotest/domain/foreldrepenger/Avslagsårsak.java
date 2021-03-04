@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum Avslagsårsak implements Kode {
+public enum Avslagsårsak {
     SØKT_FOR_TIDLIG("1001"),
     SØKER_ER_MEDMOR("1002"),
     SØKER_ER_FAR("1003"),
@@ -65,10 +65,9 @@ public enum Avslagsårsak implements Kode {
         return Arrays.stream(Avslagsårsak.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet avslagsårsak %s.", kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet avslagsårsak " + kode));
     }
 
-    @Override
     public String getKode() {
         return kode;
     }

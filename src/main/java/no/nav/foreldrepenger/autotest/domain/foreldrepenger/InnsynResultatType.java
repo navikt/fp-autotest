@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum InnsynResultatType implements Kode {
+public enum InnsynResultatType {
 
     INNVILGET("INNV"),
     DELVIS_INNVILGET("DELV"),
@@ -26,10 +26,9 @@ public enum InnsynResultatType implements Kode {
         return Arrays.stream(InnsynResultatType.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet InnsynResultatType %s.", kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet InnsynResultatType " + kode));
     }
 
-    @Override
     public String getKode() {
         return kode;
     }

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum VurderÅrsak implements Kode {
+public enum VurderÅrsak {
     FEIL_FAKTA,
     FEIL_LOV,
     FEIL_REGEL,
@@ -31,11 +31,9 @@ public enum VurderÅrsak implements Kode {
         return Arrays.stream(VurderÅrsak.values())
                 .filter(value -> value.name().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet VurderÅrsak %s.", kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet VurderÅrsak " + kode));
     }
 
-
-    @Override
     public String getKode() {
         return kode;
     }

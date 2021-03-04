@@ -6,11 +6,10 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum HistorikkinnslagType implements Kode {
+public enum HistorikkinnslagType {
 
     BREV_SENT,
     BREV_BESTILT,
@@ -79,10 +78,9 @@ public enum HistorikkinnslagType implements Kode {
         return Arrays.stream(HistorikkinnslagType.values())
                 .filter(value -> value.name().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet HistorikkinnslagType %s.", kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet HistorikkinnslagType " + kode));
     }
 
-    @Override
     public String getKode() {
         return kode;
     }
