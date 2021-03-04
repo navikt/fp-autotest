@@ -488,6 +488,22 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
     }
 
+    // @Test for å kunne teste automatisk besteberegning
+    public void skal_teste_automatisk_besteberegning() {
+        TestscenarioDto testscenario = opprettTestscenario("173");
+        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
+        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+
+        saksbehandler.hentFagsak(saksnummer);
+
+        // FORESLÅ VEDTAK //
+        saksbehandler.ventTilAvsluttetBehandling();
+    }
+
+
     private void verifiserAndelerIPeriode(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
             BGAndelHelper BGAndelHelper) {
         if (beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndel().stream()
