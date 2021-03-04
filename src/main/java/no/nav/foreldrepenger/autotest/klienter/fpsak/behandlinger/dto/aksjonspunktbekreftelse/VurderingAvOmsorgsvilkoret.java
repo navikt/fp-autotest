@@ -5,7 +5,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 @BekreftelseKode(kode = "5011")
 public class VurderingAvOmsorgsvilkoret extends AksjonspunktBekreftelse {
 
-    protected Avslagsårsak avslagskode;
+    protected String avslagskode;
     protected boolean erVilkarOk;
 
     public VurderingAvOmsorgsvilkoret() {
@@ -19,7 +19,7 @@ public class VurderingAvOmsorgsvilkoret extends AksjonspunktBekreftelse {
 
     public VurderingAvOmsorgsvilkoret bekreftAvvist(Avslagsårsak kode) {
         erVilkarOk = false;
-        avslagskode = kode;
+        avslagskode = kode.getKode();
         return this;
     }
 
