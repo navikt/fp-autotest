@@ -1,7 +1,7 @@
 name: Kjører verdikjedetestene for verdikjeden
 
 on:
-  pull_request:
+  pull:
     branches:
       - master
     paths-ignore:
