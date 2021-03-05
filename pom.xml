@@ -93,14 +93,6 @@
                         -Dfile.encoding=UTF-8
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
-                    <properties>
-                        <configurationParameters>
-                            junit.jupiter.execution.parallel.enabled = true
-                            junit.jupiter.execution.parallel.mode.default = concurrent
-                            junit.jupiter.execution.parallel.config.strategy = fixed
-                            junit.jupiter.execution.parallel.config.fixed.parallelism = 4
-                        </configurationParameters>
-                    </properties>
                     <includes>
                         <include>${testPackage}</include>
                     </includes>

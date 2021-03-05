@@ -30,8 +30,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
@@ -93,7 +91,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 
-@Execution(ExecutionMode.CONCURRENT)
 @Tag("verdikjede")
 class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
