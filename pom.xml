@@ -97,8 +97,8 @@
                         <configurationParameters>
                             junit.jupiter.execution.parallel.enabled = true
                             junit.jupiter.execution.parallel.mode.default = concurrent
-                            junit.jupiter.execution.parallel.config.strategy = fixed
-                            junit.jupiter.execution.parallel.config.fixed.parallelism = 4
+                            junit.jupiter.execution.parallel.config.strategy = custom
+                            junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.jupiter.CutstomExecutionStrategy
                         </configurationParameters>
                     </properties>
                     <includes>
@@ -197,6 +197,11 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>1.7.1</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
