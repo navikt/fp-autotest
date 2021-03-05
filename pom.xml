@@ -98,7 +98,7 @@
                             junit.jupiter.execution.parallel.enabled = true
                             junit.jupiter.execution.parallel.mode.default = concurrent
                             junit.jupiter.execution.parallel.config.strategy = custom
-                            junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.parallell.CutstomExecutionStrategy
+                            junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.jupiter.CutstomExecutionStrategy
                         </configurationParameters>
                     </properties>
                     <includes>

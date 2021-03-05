@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.util.parallell;
+package no.nav.foreldrepenger.autotest.util.jupiter;
 
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfiguration;
