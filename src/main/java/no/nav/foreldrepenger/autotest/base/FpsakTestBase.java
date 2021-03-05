@@ -44,7 +44,7 @@ public abstract class FpsakTestBase extends TestScenarioTestBase {
         }
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.hentFagsak(saksnummer);
+         beslutter.hentFagsak(saksnummer);
         if (beslutter.harRevurderingBehandling() && revurdering) {
             beslutter.ventPåOgVelgRevurderingBehandling();
         }

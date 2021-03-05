@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -593,9 +594,10 @@ public class Saksbehandler extends Aktoer {
 
     @Step("Henter prosesstasker for behandling")
     private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
-        SokeFilterDto filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
-        List<ProsessTaskListItemDto> prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream().filter(p -> p.taskParametre().behandlingId().equalsIgnoreCase("" + behandling.id))
+        var filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
+        var prosesstasker = prosesstaskKlient.list(filter);
+        return prosesstasker.stream()
+                .filter(p -> Objects.equals("" + behandling.id, p.taskParametre().behandlingId()))
                 .collect(Collectors.toList());
     }
 

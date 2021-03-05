@@ -1516,9 +1516,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgSisteBehandling();
 
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().getKode())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
                 .as("Behandlingsårsakstype")
-                .isEqualTo("RE-KLAG-M-INNTK");
+                .isEqualTo(BehandlingÅrsakType.RE_KLAGE_MED_END_INNTEKT);
 
         var avklarArbeidsforholdBekreftelse2 = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
@@ -1597,9 +1597,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().getKode())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
                 .as("Behandlingsårsak revurdering")
-                .isEqualTo("RE-HENDELSE-DØDFØD");
+                .isEqualTo(BehandlingÅrsakType.RE_HENDELSE_DØDFØDSEL);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
