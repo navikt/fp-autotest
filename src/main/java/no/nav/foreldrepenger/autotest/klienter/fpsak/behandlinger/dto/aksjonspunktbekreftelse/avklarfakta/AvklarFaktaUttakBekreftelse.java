@@ -5,13 +5,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerFaktaPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakDokumentasjon;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftelse {
 
@@ -38,30 +38,30 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
     }
 
     public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til) {
-        return godkjennPeriode(fra, til, new Kode("UTTAK_PERIODE_VURDERING_TYPE", "PERIODE_OK"), true);
+        return godkjennPeriode(fra, til, UttakPeriodeVurderingType.PERIODE_OK, true);
     }
 
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode godkjenningskode) {
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, UttakPeriodeVurderingType godkjenningskode) {
         return godkjennPeriode(fra, til, godkjenningskode, false);
     }
 
     public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, boolean dokumenterPeriode) {
-        return godkjennPeriode(fra, til, new Kode("UTTAK_PERIODE_VURDERING_TYPE", "PERIODE_OK"), dokumenterPeriode);
+        return godkjennPeriode(fra, til, UttakPeriodeVurderingType.PERIODE_OK, dokumenterPeriode);
     }
 
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(KontrollerFaktaPeriode faktaPeriode, Kode godkjenningskode) {
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(KontrollerFaktaPeriode faktaPeriode, UttakPeriodeVurderingType godkjenningskode) {
         godkjennPeriode(faktaPeriode.getFom(), faktaPeriode.getTom(), godkjenningskode, true);
         return this;
     }
 
     public AvklarFaktaUttakBekreftelse delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra,
-            LocalDate godkjentTil, Kode godkjenningskode) {
+            LocalDate godkjentTil, UttakPeriodeVurderingType godkjenningskode) {
         delvisGodkjennPeriode(fra, til, godkjentFra, godkjentTil, godkjenningskode, false);
         return this;
     }
 
     public AvklarFaktaUttakBekreftelse delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra,
-            LocalDate godkjentTil, Kode godkjenningskode, boolean dokumenterPeriode) {
+            LocalDate godkjentTil, UttakPeriodeVurderingType godkjenningskode, boolean dokumenterPeriode) {
         BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
 
         periode.bekreftetPeriode.setBekreftet(true);
@@ -76,7 +76,7 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         return this;
     }
 
-    private AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, Kode godkjenningskode,
+    private AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, UttakPeriodeVurderingType godkjenningskode,
             boolean dokumenterPeriode) {
         BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
 

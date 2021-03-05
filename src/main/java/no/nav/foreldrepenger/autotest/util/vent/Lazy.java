@@ -14,7 +14,7 @@ public class Lazy<V> {
         this.supplier = supplier;
     }
 
-    public synchronized V get() {
+    public V get() {
         if (result == null) {
             result = supplier.get();
         }

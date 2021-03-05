@@ -14,9 +14,11 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnsynResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvInnsynBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -41,7 +43,7 @@ public class Innsyn extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
 
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.ventPåOgVelgDokumentInnsynBehandling();
@@ -50,7 +52,7 @@ public class Innsyn extends FpsakTestBase {
                 .hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class);
         vurderingAvInnsynBekreftelse.setMottattDato(LocalDate.now())
                 .setMottattDato(LocalDate.now())
-                .setInnsynResultatType(saksbehandler.kodeverk.InnsynResultatType.getKode("INNV"))
+                .setInnsynResultatType(InnsynResultatType.INNVILGET)
                 .skalSetteSakPåVent(false)
                 .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunkt(vurderingAvInnsynBekreftelse);
@@ -60,8 +62,8 @@ public class Innsyn extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         AllureHelper.debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNSYN_INNVILGET");
-        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT),
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNSYN_INNVILGET);
+        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT),
                 "Brev er ikke bestilt etter innsyn er godkjent");
     }
 
@@ -80,7 +82,7 @@ public class Innsyn extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
 
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.ventPåOgVelgDokumentInnsynBehandling();
@@ -88,16 +90,16 @@ public class Innsyn extends FpsakTestBase {
         VurderingAvInnsynBekreftelse vurderingAvInnsynBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class);
         vurderingAvInnsynBekreftelse.setMottattDato(LocalDate.now())
-                .setInnsynResultatType(saksbehandler.kodeverk.InnsynResultatType.getKode("AVVIST"))
+                .setInnsynResultatType(InnsynResultatType.AVVIST)
                 .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunkt(vurderingAvInnsynBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNSYN_AVVIST",
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNSYN_AVVIST,
                 "Behandlingstatus");
-        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT),
+        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT),
                 "Brev er ikke bestilt etter innsyn er godkjent");
     }
 }

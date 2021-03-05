@@ -11,6 +11,8 @@ import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravKa;
@@ -61,13 +63,13 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD");
+        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_MEDHOLD);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_MEDHOLD);
 
     }
 
@@ -104,8 +106,8 @@ public class Klage extends FpsakTestBase {
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
-                "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
+                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme klagebehandler.
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -122,8 +124,8 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
-                "KLAGE_YTELSESVEDTAK_OPPHEVET");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
+                BehandlingResultatType.KLAGE_YTELSESVEDTAK_OPPHEVET);
 
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
@@ -170,8 +172,8 @@ public class Klage extends FpsakTestBase {
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
-                "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
+                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme klagebehandler.
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -231,8 +233,8 @@ public class Klage extends FpsakTestBase {
                 .bekreftStadfestet()
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
-                "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
+                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // Behandle klage - KA
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -251,7 +253,7 @@ public class Klage extends FpsakTestBase {
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_AVVIST");
+        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_AVVIST);
     }
 
     @Test
@@ -291,7 +293,7 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD",
+        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_MEDHOLD,
                 "Behandlingsresultat");
         verifiserKlageVurderingOmgjoer(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP()
                 .getKlageVurderingOmgjoer().kode, "GUNST_MEDHOLD_I_KLAGE");
@@ -302,8 +304,7 @@ public class Klage extends FpsakTestBase {
         FatterVedtakBekreftelse fatterVedtakBekreftelse = beslutter
                 .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtakBekreftelse
-                .avvisAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP),
-                        beslutter.kodeverk.VurderÅrsak.getKode("FEIL_REGEL"))
+                .avvisAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP), VurderÅrsak.FEIL_REGEL)
                 .setBegrunnelse("Avvist av beslutter");
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
@@ -333,7 +334,7 @@ public class Klage extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserBehandlingsresultat(beslutter.valgtBehandling.hentBehandlingsresultat(), "KLAGE_MEDHOLD");
+        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_MEDHOLD);
         verifiserFritekst(
                 beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
                 fritekstbrev2);
@@ -348,17 +349,9 @@ public class Klage extends FpsakTestBase {
     private void opprettForstegangssoknadVedtak(long saksnummer) {
         // Opprette førstegangssøknad engangsstønad
         saksbehandler.hentFagsak(saksnummer);
-        verifiserBehandlingsresultat(saksbehandler.valgtBehandling.hentBehandlingsresultat(), "INNVILGET");
+        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
 
         saksbehandler.ventTilAvsluttetBehandling();
-    }
-
-    private void verifiserBehandlingsresultat(String verdiFaktisk, String verdiForventet) {
-        verifiserLikhet(verdiFaktisk, verdiForventet, "Behandlingsresultat");
-    }
-
-    private void verifiserBehandlingsstatus(String verdiFaktisk, String verdiForventet) {
-        verifiserLikhet(verdiFaktisk, verdiForventet, "Behandlingsstatus");
     }
 
     private void verifiserFritekst(String verdiFaktisk, String verdiForventet) {

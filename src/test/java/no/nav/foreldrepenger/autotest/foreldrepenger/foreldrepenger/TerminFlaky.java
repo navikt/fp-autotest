@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
@@ -52,8 +52,8 @@ public class TerminFlaky extends ForeldrepengerTestBase {
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         debugLoggBehandling(saksbehandler.valgtBehandling);
         debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.VEDTAK_FATTET);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BREV_BESTILT);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.VEDTAK_FATTET);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_BESTILT);
     }
 
 }

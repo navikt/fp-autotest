@@ -7,14 +7,15 @@ import javax.ws.rs.core.HttpHeaders;
 
 public class CookieRequestFilter implements ClientRequestFilter {
 
-    private Cookie cookie;
+    private final Cookie cookie;
+
+    public CookieRequestFilter(Cookie cookie) {
+        this.cookie = cookie;
+    }
 
     @Override
     public void filter(ClientRequestContext ctx) {
         ctx.getHeaders().add(HttpHeaders.COOKIE, cookie);
     }
 
-    public void setCookie(Cookie cookie) {
-        this.cookie = cookie;
-    }
 }

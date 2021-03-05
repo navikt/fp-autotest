@@ -10,9 +10,12 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.ArbeidsforholdErketyper;
@@ -22,7 +25,7 @@ import no.nav.foreldrepenger.autotest.søknad.erketyper.TilretteleggingsErketype
 import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 
-
+@Execution(ExecutionMode.CONCURRENT)
 @Tag("verdikjede")
 class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
 
@@ -67,7 +70,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         int beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats())
@@ -105,6 +108,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 søkerFnr,
                 månedsinntekt,
                 orgnummer);
+        log.info("morSøkerDelvisTilretteleggingMedInntektOver6GTest");
         arbeidsforholdMor.arbeidsgiver().sendInntektsmeldinger(saksnummer, inntektsmedling);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -123,7 +127,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats())
@@ -188,7 +192,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var årsinntekt = Double.valueOf(månedsinntekt1) * 12;
         var utbetalingProsentFaktor = (double) (100 - tilrettelegginsprosent) / 100;
@@ -257,7 +261,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer1, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats())
@@ -380,7 +384,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var beregnetDagsats = regnUtForventetDagsats(månedsinntekt1 + månedsinntekt2, tilrettelegginsprosent);
         var beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag()

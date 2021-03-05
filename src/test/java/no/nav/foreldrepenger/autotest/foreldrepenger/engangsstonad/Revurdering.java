@@ -12,13 +12,16 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VarselOmRevurderingBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderEktefellesBarnBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
@@ -57,22 +60,21 @@ public class Revurdering extends FpsakTestBase {
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingsresultat");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingsresultat");
 
         saksbehandler.ventTilAvsluttetBehandling();
 
-        saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
+        saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_FEIL_ELLER_ENDRET_FAKTA);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         VarselOmRevurderingBekreftelse varselOmRevurderingBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
-        varselOmRevurderingBekreftelse.bekreftSendVarsel(saksbehandler.kodeverk.Venteårsak.getKode("UTV_FRIST"),
-                "Send brev");
+        varselOmRevurderingBekreftelse.bekreftSendVarsel(Venteårsak.UTV_FRIST, "Send brev");
         saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 
-        saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.REVURD_OPPR);
-        saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT);
-        saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BEH_VENT);
+        saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.REVURD_OPPR);
+        saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT);
+        saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BEH_VENT);
 
         verifiser(saksbehandler.valgtBehandling.erSattPåVent(),
                 "Behandlingen er ikke satt på vent etter varsel for revurdering");

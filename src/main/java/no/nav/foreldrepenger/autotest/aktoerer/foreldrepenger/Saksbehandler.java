@@ -11,11 +11,17 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingResponse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
@@ -46,9 +52,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.KodeverkJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kodeverk;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
@@ -61,14 +66,12 @@ public class Saksbehandler extends Aktoer {
     public Fagsak valgtFagsak;
     public Behandling valgtBehandling;
     public List<Behandling> behandlinger;
-    public Kodeverk kodeverk;
 
     private Lazy<List<HistorikkInnslag>> historikkInnslag;
     private Lazy<Behandling> annenPartBehandling;
 
     private final FagsakJerseyKlient fagsakKlient;
     private final BehandlingerJerseyKlient behandlingerKlient;
-    private final KodeverkJerseyKlient kodeverkKlient;
     private final HistorikkJerseyKlient historikkKlient;
     private final ProsesstaskJerseyKlient prosesstaskKlient;
     private final RisikovurderingJerseyKlient risikovurderingKlient;
@@ -78,11 +81,9 @@ public class Saksbehandler extends Aktoer {
         super(rolle);
         fagsakKlient = new FagsakJerseyKlient(cookieRequestFilter);
         behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
-        kodeverkKlient = new KodeverkJerseyKlient(cookieRequestFilter);
         historikkKlient = new HistorikkJerseyKlient(cookieRequestFilter);
         prosesstaskKlient = new ProsesstaskJerseyKlient(cookieRequestFilter);
         risikovurderingKlient = new RisikovurderingJerseyKlient(cookieRequestFilter);
-        hentKodeverk();
     }
 
     /*
@@ -103,18 +104,14 @@ public class Saksbehandler extends Aktoer {
     }
 
     public void ventTilFagsakAvsluttet() {
-        ventTilFagsakstatus("AVSLU");
+        ventTilFagsakstatus(FagsakStatus.AVSLUTTET);
     }
 
     public void ventTilFagsakLøpende() {
-        ventTilFagsakstatus("LOP");
+        ventTilFagsakstatus(FagsakStatus.LØPENDE);
     }
 
-    private void ventTilFagsakstatus(String status) {
-        ventTilFagsakstatus(kodeverk.FagsakStatus.getKode(status));
-    }
-
-    private void ventTilFagsakstatus(Kode status) {
+    private void ventTilFagsakstatus(FagsakStatus status) {
         if (harFagsakstatus(status)) {
             return;
         }
@@ -124,7 +121,7 @@ public class Saksbehandler extends Aktoer {
         }, 10, "Fagsak har ikke status " + status);
     }
 
-    private boolean harFagsakstatus(Kode status) {
+    private boolean harFagsakstatus(FagsakStatus status) {
         return valgtFagsak.status().equals(status);
     }
 
@@ -149,50 +146,50 @@ public class Saksbehandler extends Aktoer {
     }
 
     public void ventPåOgVelgFørstegangsbehandling() {
-        ventPåOgVelgBehandling(kodeverk.BehandlingType.getKode("BT-002"));
+        ventPåOgVelgBehandling(BehandlingType.FØRSTEGANGSSØKNAD);
     }
 
     public void ventPåOgVelgKlageBehandling() {
-        ventPåOgVelgBehandling(kodeverk.BehandlingType.getKode("BT-003"));
+        ventPåOgVelgBehandling(BehandlingType.KLAGE);
     }
 
     public void ventPåOgVelgRevurderingBehandling() {
-        ventPåOgVelgBehandling(kodeverk.BehandlingType.getKode("BT-004"));
+        ventPåOgVelgBehandling(BehandlingType.REVURDERING);
     }
 
     public void ventPåOgVelgAnkeBehandling() {
-        ventPåOgVelgBehandling(kodeverk.BehandlingType.getKode("BT-008"));
+        ventPåOgVelgBehandling(BehandlingType.ANKE);
     }
 
     public boolean harRevurderingBehandling() {
-        return harBehandling(kodeverk.BehandlingType.getKode("BT-004"));
+        return harBehandling(BehandlingType.REVURDERING);
     }
 
     public void ventPåOgVelgDokumentInnsynBehandling() {
-        ventPåOgVelgBehandling(kodeverk.BehandlingType.getKode("BT-006"));
+        ventPåOgVelgBehandling(BehandlingType.INNSYN);
     }
 
     @Step("Venter på at fagsak får behandlingstype: {behandlingstype.kode}")
-    private void ventPåOgVelgBehandling(Kode behandlingstype) {
+    private void ventPåOgVelgBehandling(BehandlingType behandlingstype) {
         ventTilSakHarBehandling(behandlingstype);
-        behandlinger.stream()
-                .filter(b -> b.type.kode.equals(behandlingstype.kode))
-                .findFirst()
-                .ifPresent(this::velgBehandling);
+        var behandling = behandlinger.stream()
+                .filter(b -> b.type.equals(behandlingstype))
+                .findFirst();
+        behandling.ifPresent(this::velgBehandling);
     }
 
 
-    private void ventTilSakHarBehandling(Kode behandlingType) {
+    private void ventTilSakHarBehandling(BehandlingType behandlingType) {
         if (harBehandling(behandlingType)) {
             return;
         }
         Vent.til(() -> harBehandling(behandlingType), 30, "Saken har ikke fått behandling av type: " + behandlingType);
     }
 
-    private boolean harBehandling(Kode behandlingType) {
+    private boolean harBehandling(BehandlingType behandlingType) {
         refreshFagsak();
         for (Behandling behandling : behandlinger) {
-            if (behandling.type.kode.equals(behandlingType.kode)) {
+            if (behandling.type.equals(behandlingType)) {
                 return true;
             }
         }
@@ -291,9 +288,9 @@ public class Saksbehandler extends Aktoer {
          * BT-006 ae0042 Dokumentinnsyn
          */
 
-        if (behandling.type.kode.equalsIgnoreCase("BT-006") /* Dokumentinnsyn */) {
+        if (behandling.type.equals(BehandlingType.INNSYN)) {
             // Gjør ingenting
-        } else if (behandling.type.kode.equalsIgnoreCase("BT-003" /* Klage */)) {
+        } else if (behandling.type.equals(BehandlingType.KLAGE)) {
             behandling.setKlagevurdering(new Lazy<>(() -> behandlingerKlient.klage(behandling.uuid)));
         } else {
             // FIXME: Forespørslene her burde konsultere resultat for valgtbehandling for å
@@ -335,13 +332,9 @@ public class Saksbehandler extends Aktoer {
      * Henlegg behandling eller sett på vent
      */
     @Step("Setter behandling på vent")
-    protected void settBehandlingPåVent(LocalDate frist, Kode årsak) {
+    public void settBehandlingPåVent(LocalDate frist, Venteårsak årsak) {
         behandlingerKlient.settPaVent(new BehandlingPaVent(valgtBehandling, frist, årsak));
         refreshBehandling();
-    }
-
-    public void settBehandlingPåVent(LocalDate frist, String årsak) {
-        settBehandlingPåVent(frist, kodeverk.Venteårsak.getKode(årsak));
     }
 
     @Step("Gjenopptar Behandling")
@@ -351,9 +344,8 @@ public class Saksbehandler extends Aktoer {
     }
 
     @Step("Henlegger behandling")
-    public void henleggBehandling(Kode årsak) {
-        behandlingerKlient
-                .henlegg(new BehandlingHenlegg(valgtBehandling.id, valgtBehandling.versjon, årsak.kode, "Henlagt"));
+    public void henleggBehandling(BehandlingResultatType årsak) {
+        behandlingerKlient.henlegg(new BehandlingHenlegg(valgtBehandling.id, valgtBehandling.versjon, årsak, "Henlagt"));
         refreshBehandling();
     }
 
@@ -361,22 +353,21 @@ public class Saksbehandler extends Aktoer {
      * Opretter behandling på nåværende fagsak
      */
     @Step("Oppretter behandling på gitt fagsak")
-    public void opprettBehandling(Kode behandlingstype, Kode årsak) {
+    public void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak) {
         opprettBehandling(behandlingstype, årsak, valgtFagsak);
         hentFagsak(valgtFagsak.saksnummer());
     }
 
-    private void opprettBehandling(Kode behandlingstype, Kode årsak, Fagsak fagsak) {
-        behandlingerKlient.putBehandlinger(
-                new BehandlingNy(fagsak.saksnummer(), behandlingstype.kode, årsak == null ? null : årsak.kode));
+    private void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak, Fagsak fagsak) {
+        behandlingerKlient.putBehandlinger(new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak));
     }
 
-    public void opprettBehandlingRevurdering(String årsak) {
-        opprettBehandling(kodeverk.BehandlingType.getKode("BT-004"), kodeverk.BehandlingÅrsakType.getKode(årsak));
+    public void opprettBehandlingRevurdering(BehandlingÅrsakType årsak) {
+        opprettBehandling(BehandlingType.REVURDERING, årsak);
     }
 
-    public void oprettBehandlingInnsyn(Kode årsak) {
-        opprettBehandling(kodeverk.BehandlingType.getKode("BT-006"), årsak);
+    public void oprettBehandlingInnsyn(BehandlingÅrsakType årsak) {
+        opprettBehandling(BehandlingType.INNSYN, årsak);
     }
 
     /*
@@ -418,16 +409,6 @@ public class Saksbehandler extends Aktoer {
                 .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
                 .filter(andeler -> andeler.getAktivitetStatus().kode.equalsIgnoreCase("SN"))
                 .collect(Collectors.toList());
-    }
-
-    /*
-     * Henting av kodeverk
-     */
-    public Kodeverk hentKodeverk() {
-        if (kodeverk == null) {
-            kodeverk = kodeverkKlient.getKodeverk();
-        }
-        return kodeverk;
     }
 
     @Step("Henter ut unike aktivitetstatuser i beregning")
@@ -548,23 +529,23 @@ public class Saksbehandler extends Aktoer {
      * Historikkinnslag
      */
     @Step("Venter på historikkinnslag {type}")
-    public void ventTilHistorikkinnslag(HistorikkInnslag.Type type) {
+    public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
         Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.id),
                 60, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
                         + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
 
     }
 
-    public boolean harHistorikkinnslagForBehandling(HistorikkInnslag.Type type) {
+    public boolean harHistorikkinnslagForBehandling(HistorikkinnslagType type) {
         return harHistorikkinnslagForBehandling(type, valgtBehandling.id);
     }
 
-    public boolean harHistorikkinnslagForBehandling(HistorikkInnslag.Type type, int behandlingsId) {
-        if (type == HistorikkInnslag.VEDLEGG_MOTTATT) {
+    public boolean harHistorikkinnslagForBehandling(HistorikkinnslagType type, int behandlingsId) {
+        if (type == HistorikkinnslagType.VEDLEGG_MOTTATT) {
             behandlingsId = 0;
         }
         for (HistorikkInnslag innslag : getHistorikkInnslag()) {
-            if (innslag.getTypeKode().contains(type.getKode()) && (innslag.behandlingId() == behandlingsId)) {
+            if (innslag.type().equals(type) && (innslag.behandlingId() == behandlingsId)) {
                 return true;
             }
         }
@@ -576,15 +557,15 @@ public class Saksbehandler extends Aktoer {
         return get(historikkInnslag);
     }
 
-    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkInnslag.Type type) {
+    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkinnslagType type) {
         ventTilHistorikkinnslag(type);
         return historikkInnslag.get().stream()
-                .filter(h -> h.type().kode.equalsIgnoreCase(type.getKode()))
+                .filter(h -> h.type().equals(type))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Finner ikke historikkinnslag av typen " + type.getKode()));
     }
 
-    public String hentDokumentIdFraHistorikkinnslag(HistorikkInnslag.Type type) {
+    public String hentDokumentIdFraHistorikkinnslag(HistorikkinnslagType type) {
         var innslag = hentHistorikkinnslagAvType(type);
         return innslag.dokumentLinks().get(0).dokumentId();
     }
@@ -613,9 +594,10 @@ public class Saksbehandler extends Aktoer {
 
     @Step("Henter prosesstasker for behandling")
     private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
-        SokeFilterDto filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
-        List<ProsessTaskListItemDto> prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream().filter(p -> p.taskParametre().behandlingId().equalsIgnoreCase("" + behandling.id))
+        var filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
+        var prosesstasker = prosesstaskKlient.list(filter);
+        return prosesstasker.stream()
+                .filter(p -> Objects.equals("" + behandling.id, p.taskParametre().behandlingId()))
                 .collect(Collectors.toList());
     }
 
@@ -643,7 +625,7 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             RisikovurderingResponse response = getRisikovurdering(valgtBehandling.uuid.toString());
             return harRisikoKlassefiseringsstatus(status, response);
-        }, 30, "Feilet. Fikk ikke riktig status");
+        }, 45, "Feilet. Fikk ikke riktig status");
     }
 
     private RisikovurderingResponse getRisikovurdering(String uuid) {

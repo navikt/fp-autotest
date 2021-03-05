@@ -7,29 +7,8 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.Inntektsår;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.sigrun.SigrunModell;
 
 public class ForeldrepengerTestBase extends FpsakTestBase {
-
-    protected Double hentNæringsinntektFraSigrun(TestscenarioDto testscenarioDto, Integer beregnFraOgMedÅr, Boolean annenPart) {
-        SigrunModell sigrunModell;
-        if (annenPart) {
-            sigrunModell = testscenarioDto.scenariodataAnnenpartDto().sigrunModell();
-        } else {
-            sigrunModell = testscenarioDto.scenariodataDto().sigrunModell();
-        }
-
-        double gjennomsnittDeTreSisteÅrene = sigrunModell.inntektsår().stream()
-                .sorted(Comparator.comparing(Inntektsår::år).reversed())
-                .filter(inntektsår -> Integer.parseInt(inntektsår.år()) <= beregnFraOgMedÅr)
-                .flatMap(inntektsår -> inntektsår.oppføring().stream())
-                .mapToDouble(oppføring -> Double.parseDouble(oppføring.verdi()))
-                .limit(3)
-                .sum();
-
-        return gjennomsnittDeTreSisteÅrene/3;
-    }
 
     protected List<Integer> sorterteInntektsbeløp(TestscenarioDto testscenario) {
         return testscenario.scenariodataDto().inntektskomponentModell().getInntektsperioderSplittMånedlig().stream()

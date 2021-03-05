@@ -4,14 +4,16 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Behandlingsresultat {
 
     protected Integer id;
-    protected Kode type;
-    protected Kode avslagsarsak;
+    protected BehandlingResultatType type;
+    protected Avslagsårsak avslagsarsak;
     protected Kode rettenTil;
     protected List<Kode> konsekvenserForYtelsen;
     protected String avslagsarsakFritekst;
@@ -21,14 +23,18 @@ public class Behandlingsresultat {
 
     @Override
     public String toString() {
-        return type.kode;
+        return type.name();
+    }
+
+    public BehandlingResultatType getType() {
+        return type;
     }
 
     public List<Kode> getKonsekvenserForYtelsen() {
         return konsekvenserForYtelsen;
     }
 
-    public Kode getAvslagsarsak() {
+    public Avslagsårsak getAvslagsarsak() {
         return avslagsarsak;
     }
 

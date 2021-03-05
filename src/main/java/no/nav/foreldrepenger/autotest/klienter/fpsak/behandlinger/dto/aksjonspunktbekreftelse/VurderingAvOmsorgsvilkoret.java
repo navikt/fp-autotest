@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 
 @BekreftelseKode(kode = "5011")
 public class VurderingAvOmsorgsvilkoret extends AksjonspunktBekreftelse {
@@ -17,9 +17,9 @@ public class VurderingAvOmsorgsvilkoret extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderingAvOmsorgsvilkoret bekreftAvvist(Kode kode) {
+    public VurderingAvOmsorgsvilkoret bekreftAvvist(Avslagsårsak kode) {
         erVilkarOk = false;
-        avslagskode = kode.kode;
+        avslagskode = kode.getKode();
         return this;
     }
 

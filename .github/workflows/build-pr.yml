@@ -69,6 +69,14 @@ jobs:
           echo Oppe!
           echo "STACK_STARTED=true" >> $GITHUB_ENV
 
+      - name: Kjører enhetstester for autotest
+        shell: bash
+        run: |
+          mvn clean install --settings .github/.m2/settings.xml
+        env:
+          GITHUB_USERNAME: x-access-token
+          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+
       - name: Utfører autotestene for fpsak
         shell: bash
         run: |

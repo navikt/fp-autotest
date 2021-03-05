@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Arbeidsgiver;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakDokumentasjon;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
@@ -22,7 +23,7 @@ public class KontrollerFaktaPeriode {
     protected SøknadUtsettelseÅrsak utsettelseÅrsak;
     protected Kode overføringÅrsak;
     protected OppholdÅrsak oppholdÅrsak;
-    protected Kode resultat;
+    protected UttakPeriodeVurderingType resultat;
     protected List<UttakDokumentasjon> dokumentertePerioder;
     protected BigDecimal arbeidstidsprosent;
     protected String begrunnelse;
@@ -65,11 +66,11 @@ public class KontrollerFaktaPeriode {
         this.bekreftet = bekreftet;
     }
 
-    public Kode getResultat() {
+    public UttakPeriodeVurderingType getResultat() {
         return resultat;
     }
 
-    public void setResultat(Kode resultat) {
+    public void setResultat(UttakPeriodeVurderingType resultat) {
         this.resultat = resultat;
     }
 

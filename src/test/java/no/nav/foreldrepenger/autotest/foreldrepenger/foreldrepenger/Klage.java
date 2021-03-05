@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelseUtenTotrinn;
@@ -88,7 +89,7 @@ public class Klage extends ForeldrepengerTestBase {
 
         verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer().kode,
                 "UGUNST_MEDHOLD_I_KLAGE");
-        verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.KLAGE_MEDHOLD);
         verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(),
                 begrunnelse);
         verifiserFritekst( beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
@@ -125,8 +126,8 @@ public class Klage extends ForeldrepengerTestBase {
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
-                "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
+                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // KA
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -141,8 +142,8 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
         klagebehandler.ventTilAvsluttetBehandling();
 
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
-                "HJEMSENDE_UTEN_OPPHEVE");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
+                BehandlingResultatType.HJEMSENDE_UTEN_OPPHEVE);
         verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering().kode,
                 "HJEMSENDE_UTEN_Å_OPPHEVE");
     }
@@ -173,8 +174,8 @@ public class Klage extends ForeldrepengerTestBase {
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
-                "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
+                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // KA
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -203,11 +204,11 @@ public class Klage extends ForeldrepengerTestBase {
 
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
-                "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
+                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
         verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering().kode,
                 "STADFESTE_YTELSESVEDTAK");
-        verifiserBehandlingsstatus(klagebehandler.valgtBehandling.status.kode, "AVSLU");
+        verifiserLikhet(klagebehandler.valgtBehandling.status.kode, "AVSLU");
     }
 
     @Test
@@ -233,8 +234,8 @@ public class Klage extends ForeldrepengerTestBase {
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserBehandlingsresultat(klagebehandler.valgtBehandling.behandlingsresultat.toString(),
-                "KLAGE_YTELSESVEDTAK_STADFESTET");
+        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
+                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // KA
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -261,7 +262,7 @@ public class Klage extends ForeldrepengerTestBase {
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
         klagebehandler.ventTilAvsluttetBehandling();
 
-        verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_MEDHOLD");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.KLAGE_MEDHOLD);
         verifiserKlageVurderingOmgjoer(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer().kode,
                 "DELVIS_MEDHOLD_I_KLAGE");
         verifiserLikhet(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageMedholdArsak().kode,
@@ -292,7 +293,7 @@ public class Klage extends ForeldrepengerTestBase {
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        verifiserBehandlingsresultat(beslutter.valgtBehandling.behandlingsresultat.toString(), "KLAGE_AVVIST");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.KLAGE_AVVIST);
         assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageFormkravResultatNFP().getAvvistArsaker())
                 .as("Årsak for avvisning")
                 .contains(new Kode("IKKE_KONKRET"));
@@ -334,14 +335,6 @@ public class Klage extends ForeldrepengerTestBase {
 
     private void verifiserKlageVurderingOmgjoer(String verdiFaktisk, String verdiForventet) {
         verifiserLikhet(verdiFaktisk, verdiForventet, "KlageVurderingOmgjoer");
-    }
-
-    private void verifiserBehandlingsstatus(String verdiFaktisk, String verdiForventet) {
-        verifiserLikhet(verdiFaktisk, verdiForventet, "Behandlingsstatus");
-    }
-
-    private void verifiserBehandlingsresultat(String verdiFaktisk, String verdiForventet) {
-        verifiserLikhet(verdiFaktisk, verdiForventet, "Behandlingsresultat");
     }
 
     private void verifiserKlageVurdering(String verdiFaktisk, String verdiForventet) {

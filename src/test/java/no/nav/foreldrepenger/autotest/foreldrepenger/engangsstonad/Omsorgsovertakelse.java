@@ -1,6 +1,10 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.FORELDREANSVARSVILKÅRET_2_LEDD;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.OMSORGSVILKÅRET;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -10,9 +14,10 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -21,7 +26,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaOmsorgOgForeldreansvarBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
@@ -36,15 +40,15 @@ public class Omsorgsovertakelse extends FpsakTestBase {
         String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
 
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
-                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
+                ANDRE_FORELDER_DØD);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+                SØKNAD_ENGANGSSTØNAD_ADOPSJON);
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
         avklarFaktaOmsorgOgForeldreansvarBekreftelse
-                .setVilkårType(saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_5"));
+                .setVilkårType(OMSORGSVILKÅRET);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
         VurderingAvOmsorgsvilkoret vurderingAvOmsorgsvilkoret = saksbehandler
@@ -61,7 +65,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
     }
 
     @Test
@@ -72,21 +76,21 @@ public class Omsorgsovertakelse extends FpsakTestBase {
         String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
 
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
-                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
+                ANDRE_FORELDER_DØD);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+                SØKNAD_ENGANGSSTØNAD_ADOPSJON);
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
         avklarFaktaOmsorgOgForeldreansvarBekreftelse
-                .setVilkårType(saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_5"));
+                .setVilkårType(OMSORGSVILKÅRET);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
         VurderingAvOmsorgsvilkoret vurderingAvOmsorgsvilkoret = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderingAvOmsorgsvilkoret.class);
         vurderingAvOmsorgsvilkoret
-                .bekreftAvvist(saksbehandler.kodeverk.Avslagsårsak.get("FP_VK_5").getKode("1009" /* Mor ikke død */));
+                .bekreftAvvist(Avslagsårsak.MOR_IKKE_DØD);
         saksbehandler.bekreftAksjonspunkt(vurderingAvOmsorgsvilkoret);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -98,7 +102,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "AVSLÅTT", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
     }
 
     @Test
@@ -107,17 +111,17 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     public void farSøkerOmsorgsovertakelseGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
-        RelasjonTilBarnetErketyper.omsorgsovertakelse(OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
+        RelasjonTilBarnetErketyper.omsorgsovertakelse(ANDRE_FORELDER_DØD);
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
-                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
+                ANDRE_FORELDER_DØD);
         long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+                SØKNAD_ENGANGSSTØNAD_ADOPSJON);
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
         avklarFaktaOmsorgOgForeldreansvarBekreftelse
-                .setVilkårType(saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_5"));
+                .setVilkårType(OMSORGSVILKÅRET);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
         VurderingAvOmsorgsvilkoret vurderingAvOmsorgsvilkoret = saksbehandler
@@ -134,7 +138,7 @@ public class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
     }
 
     @Test
@@ -143,16 +147,14 @@ public class Omsorgsovertakelse extends FpsakTestBase {
     public void farSøkerForeldreansvarGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
-        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
-                OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR, ANDRE_FORELDER_DØD);
+        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, SØKNAD_ENGANGSSTØNAD_ADOPSJON);
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
         avklarFaktaOmsorgOgForeldreansvarBekreftelse
-                .setVilkårType(saksbehandler.kodeverk.OmsorgsovertakelseVilkårType.getKode("FP_VK_8"));
+                .setVilkårType(FORELDREANSVARSVILKÅRET_2_LEDD);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
         var vurderingAvForeldreansvarAndreLedd = saksbehandler
@@ -169,6 +171,6 @@ public class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_FORELDREANSVARSVILKÅRET_2_LEDD));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.toString(), "INNVILGET", "Behandlingstatus");
+        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
     }
 }

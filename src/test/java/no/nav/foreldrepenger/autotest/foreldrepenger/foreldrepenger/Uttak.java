@@ -43,7 +43,9 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.perioder.GraderingBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.perioder.UttaksperiodeBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
@@ -64,7 +66,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.GraderingPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
@@ -649,7 +650,7 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        saksbehandler.opprettBehandlingRevurdering("RE-FRDLING");
+        saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
 
         Fordeling endringsFordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER, startDato, startDato.plusWeeks(2).plusDays(1)));
@@ -1262,14 +1263,12 @@ public class Uttak extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerMor);
 
-        Kode godkjenningskode = saksbehandler.kodeverk.UttakPeriodeVurderingType.getKode("PERIODE_OK");
-
         var aksjonspunktbekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         List<KontrollerFaktaPeriode> faktaUttakPerioderList = saksbehandler.valgtBehandling
                 .getKontrollerFaktaPerioderManuell();
         var avklarFaktaUttakBekreftelse = aksjonspunktbekreftelse.godkjennPeriode(faktaUttakPerioderList.get(0),
-                godkjenningskode);
+                UttakPeriodeVurderingType.PERIODE_OK);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -1302,7 +1301,7 @@ public class Uttak extends ForeldrepengerTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class);
         List<KontrollerFaktaPeriode> faktaUttakPerioderListFar = saksbehandler.valgtBehandling
                 .getKontrollerFaktaPerioderManuell();
-        aksjonspunktbekreftelse1.godkjennPeriode(faktaUttakPerioderListFar.get(0), godkjenningskode);
+        aksjonspunktbekreftelse1.godkjennPeriode(faktaUttakPerioderListFar.get(0), UttakPeriodeVurderingType.PERIODE_OK);
         saksbehandler.bekreftAksjonspunkt(aksjonspunktbekreftelse1);
 
     }

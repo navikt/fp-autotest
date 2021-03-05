@@ -2,15 +2,15 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingÅrsak {
 
-    protected Kode behandlingArsakType;
+    protected BehandlingÅrsakType behandlingArsakType;
     protected boolean manueltOpprettet;
 
-    public Kode getBehandlingArsakType() {
+    public BehandlingÅrsakType getBehandlingArsakType() {
         return behandlingArsakType;
     }
 

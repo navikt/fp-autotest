@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_DØD_FORELDER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper.medEgenNaeringOpptjening;
@@ -28,9 +30,15 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AnkeVurderingResultatBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
@@ -64,7 +72,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper;
@@ -85,7 +93,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 
-
+@Execution(ExecutionMode.CONCURRENT)
 @Tag("verdikjede")
 class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
@@ -138,7 +146,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
         assertThat(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo())
@@ -163,9 +171,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode)
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
                 .as("Årsakskode til revuderingen")
-                .isEqualTo("RE-HENDELSE-FØDSEL");
+                .isEqualTo(RE_HENDELSE_FØDSEL);
 
         var avklarFaktaAleneomsorgBekreftelse2 = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
@@ -176,7 +184,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("FORELDREPENGER_ENDRET");
+                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
 
         // Verifiser riktig justering av kontoer og uttak.
         saldoer = saksbehandler.valgtBehandling.getSaldoer();
@@ -243,7 +251,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
         assertThat(beregningAktivitetStatus)
@@ -273,9 +281,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode)
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
                 .as("Behandlingsårsakstype")
-                .isEqualTo("RE-HENDELSE-DØD-F");
+                .isEqualTo(RE_HENDELSE_DØD_FORELDER);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
@@ -352,7 +360,8 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-        vurderFaktaOmBeregningBekreftelse.leggTilAndelerYtelse(10000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"))
+        vurderFaktaOmBeregningBekreftelse
+                .leggTilAndelerYtelse(10000.0, Inntektskategori.ARBEIDSTAKER)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
@@ -366,7 +375,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
@@ -411,11 +420,11 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
         assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("KLAGE_YTELSESVEDTAK_STADFESTET");
+                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // ANKE
         mor.sendInnKlage();
-        klagebehandler.opprettBehandling(klagebehandler.kodeverk.BehandlingType.getKode("BT-008"), null);
+        klagebehandler.opprettBehandling(BehandlingType.ANKE, null);
         klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgAnkeBehandling();
         var ankeVurderingResultatBekreftelse = klagebehandler
@@ -435,7 +444,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
         assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("ANKE_OMGJOER");
+                .isEqualTo(BehandlingResultatType.ANKE_OMGJOER);
     }
 
     @Test
@@ -542,7 +551,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
         assertThat(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo())
@@ -565,6 +574,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
             "noe av fellesperioden og hele fedrekvoten. Opplyser at han er frilanser og har frilanserinntekt frem til" +
             "skjæringstidspunktet.")
     void farSøkerSomFrilanser() {
+        log.info("farSøkerSomFrilanser");
         var familie = new Familie("561");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -621,7 +631,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
@@ -699,7 +709,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         /* VERIFISERINGER */
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER")
                 .isZero();
@@ -814,7 +824,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         /* Mor: berørt sak */
         saksbehandler.hentFagsak(saksnummerMor);
@@ -832,7 +842,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Foreldrepenger skal være endret pga annenpart har overlappende uttak!")
-                .isEqualTo("FORELDREPENGER_ENDRET");
+                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
                 .as("Forventer at det er 2 avslåtte uttaksperioder")
                 .isEqualTo(2);
@@ -907,7 +917,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         var saldoerFørstgangsbehandling = saksbehandler.valgtBehandling.getSaldoer();
         assertThat(saldoerFørstgangsbehandling.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL")
@@ -962,7 +972,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode)
                 .as("Forventer at far får kombinert satus i beregning (da AT og SN)")
                 .isEqualTo("AT_SN");
@@ -1067,7 +1077,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     void MorSøkerMedDagpengerTest() {
         var familie = new Familie("521");
         var mor = familie.mor();
-        var identMor = mor.fødselsnummer();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fordelingMor = generiskFordeling(
@@ -1078,6 +1087,8 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()));
+        //TODO: Fjern denne etter debugging er ferdig.
+        log.info("Sender inn søknadd for MorSøkerMedDagpengerTest");
         var saksnummerMor = mor.søk(søknadMor.build());
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -1088,9 +1099,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        assertThat(saksbehandler.harHistorikkinnslagForBehandling(HistorikkInnslag.BREV_BESTILT))
+        assertThat(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT))
                 .as("Brev er bestillt i førstegangsbehandling")
                 .isTrue();
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
@@ -1149,7 +1160,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         assertThat(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().size())
                 .as("Forventer at det er to perioder i tilkjent ytelse. En for fedrekvote og en for fellesperioden")
@@ -1206,7 +1217,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         assertThat(saksbehandler.behandlinger.size())
                 .as("Antall behandlinger")
                 .isEqualTo(2);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkInnslag.BEHANDLINGEN_ER_FLYTTET);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.SPOLT_TILBAKE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
@@ -1309,7 +1320,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         assertThat(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().size())
                 .as("Beregningsresultatforeldrepenge perioder")
                 .isEqualTo(2);
@@ -1347,7 +1358,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         /* FAR: Berørt behandling */
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1460,7 +1471,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilAndelerYtelse(4000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"));
+                .leggTilAndelerYtelse(4000.0, Inntektskategori.ARBEIDSTAKER);
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
@@ -1473,7 +1484,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .isEqualTo("IKKE_OPPFYLT");
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("AVSLÅTT");
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
 
         mor.sendInnKlage();
         klagebehandler.hentFagsak(saksnummer);
@@ -1501,13 +1512,13 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
         // Saksbehandler oppretter ny revudering manuelt etter søker har fått medhold i klage.
-        saksbehandler.opprettBehandlingRevurdering("RE-KLAG-M-INNTK");
+        saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_KLAGE_MED_END_INNTEKT);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgSisteBehandling();
 
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode)
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
                 .as("Behandlingsårsakstype")
-                .isEqualTo("RE-KLAG-M-INNTK");
+                .isEqualTo(BehandlingÅrsakType.RE_KLAGE_MED_END_INNTEKT);
 
         var avklarArbeidsforholdBekreftelse2 = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
@@ -1520,7 +1531,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilAndelerYtelse(10_000.0, saksbehandler.kodeverk.Inntektskategori.getKode("ARBEIDSTAKER"));
+                .leggTilAndelerYtelse(10_000.0, Inntektskategori.ARBEIDSTAKER);
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerRealitetsbehandlingEllerKlage.class);
@@ -1533,7 +1544,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .contains(new Kode("ENDRING_I_BEREGNING"), new Kode("ENDRING_I_UTTAK"));
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
     }
 
@@ -1565,7 +1576,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
         assertThat(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo())
@@ -1586,9 +1597,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType().kode)
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
                 .as("Behandlingsårsak revurdering")
-                .isEqualTo("RE-HENDELSE-DØDFØD");
+                .isEqualTo(BehandlingÅrsakType.RE_HENDELSE_DØDFØDSEL);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);

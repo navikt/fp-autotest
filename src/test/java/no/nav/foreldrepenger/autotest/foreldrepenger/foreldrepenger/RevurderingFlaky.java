@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -68,7 +69,7 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         verifiser(saksbehandler.harRevurderingBehandling(), "Saken har ikke opprettet revurdering.");
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(), "INGEN_ENDRING",
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INGEN_ENDRING,
                 "Behandlingsresultat");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
                 "INGEN_ENDRING", "konsekvensForYtelsen");
@@ -113,7 +114,7 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
          * saksbehandler.erLoggetInnMedRolle(Aktoer.Rolle.SAKSBEHANDLER);
          * saksbehandler.hentFagsak(saksnummer);
          * saksbehandler.velgBehandling(saksbehandler.behandlinger.get(2));
-         * verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.toString(),
+         * verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(),
          * "FORELDREPENGER_ENDRET", "Behandlingsresultat");
          * verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.
          * getKonsekvenserForYtelsen().get(0).kode, "ENDRING_I_BEREGNING",
