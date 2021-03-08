@@ -49,7 +49,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
@@ -152,9 +151,9 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
-                lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().kode, totaltBg, totaltBg, 0));
+                lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().getKode(), totaltBg, totaltBg, 0));
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
-                lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().kode, totaltBg, 0, 0));
+                lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().getKode(), totaltBg, 0, 0));
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
                 lagBGAndelMedFordelt(orgNr, 0, totaltBg, totaltBg, inntektPerMåned * 12));
     }
@@ -197,7 +196,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         Beregningsgrunnlag beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
-                lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().kode, (int) totaltBg, 0, 0));
+                lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().getKode(), (int) totaltBg, 0, 0));
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
                 lagBGAndelMedFordelt(orgNr, 0, (int) totaltBg, totaltBg, inntektPerMåned * 12));
     }
@@ -299,8 +298,8 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class);
         fordelBeregningsgrunnlagBekreftelse
                 .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingFom, 500_000, 500_000,
-                        new Kode("ARBEIDSTAKER"), 1)
-                .settFastsattBeløpOgInntektskategori(graderingFom, 235_138, new Kode("SELVSTENDIG_NÆRINGSDRIVENDE"), 2);
+                        Inntektskategori.ARBEIDSTAKER, 1)
+                .settFastsattBeløpOgInntektskategori(graderingFom, 235_138, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2);
         saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
 
         // FORESLÅ VEDTAK //
@@ -525,7 +524,7 @@ public class BeregningVerdikjede extends ForeldrepengerTestBase {
 
     private boolean andelTilhørerAktivitetMedStatus(BGAndelHelper bgAndelHelper,
             BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        return andel.getAktivitetStatus().kode.equals(bgAndelHelper.aktivitetstatus);
+        return andel.getAktivitetStatus().getKode().equals(bgAndelHelper.aktivitetstatus);
     }
 
     private void assertAndeler(BeregningsgrunnlagPrStatusOgAndelDto andel, BGAndelHelper BGAndelHelper) {

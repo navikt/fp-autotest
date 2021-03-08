@@ -7,7 +7,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record HistorikkInnslag(int behandlingId, HistorikkinnslagType type, Kode aktoer, Kode kjoenn,
+public record HistorikkInnslag(int behandlingId,
+                               HistorikkinnslagType type,
+                               Kode aktoer,
+                               Kode kjoenn,
                                List<HistorikkInnslagDokumentLinkDto> dokumentLinks,
                                List<HistorikkinnslagDel> historikkinnslagDeler) {
 }

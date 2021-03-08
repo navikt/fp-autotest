@@ -35,7 +35,7 @@ class FastsettEndretBeregningsgrunnlagPeriode {
                     true, true, andel.getAktivitetStatus(),
                     andel.getBeregningsperiodeFom(),
                     andel.getBeregningsperiodeTom(),
-                    andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsforholdType());
+                    andel.getArbeidsforholdType());
             andeler.add(new FastsettEndretBeregningsgrunnlagAndel(andelInfo, fastsatteVerdier));
         } else {
             RedigerbarAndel andelInfo = new RedigerbarAndel("Andelsinfo", andel.getAndelsnr(),
@@ -43,7 +43,7 @@ class FastsettEndretBeregningsgrunnlagPeriode {
                     false, false,
                     andel.getAktivitetStatus(), andel.getBeregningsperiodeFom(),
                     andel.getBeregningsperiodeTom(),
-                    andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsforholdType());
+                    andel.getArbeidsforholdType());
             andeler.add(new FastsettEndretBeregningsgrunnlagAndel(andelInfo, fastsatteVerdier));
         }
     }

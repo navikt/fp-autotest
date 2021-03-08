@@ -60,7 +60,7 @@ public enum BehandlingResultatType {
     @JsonCreator
     public static BehandlingResultatType fraKode(String kode) {
         return Arrays.stream(BehandlingResultatType.values())
-                .filter(value -> value.name().equalsIgnoreCase(kode))
+                .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
                 .orElseThrow(() -> new UnexpectedInputException("Ikke støttet behandlingresultattype " + kode));
     }

@@ -37,6 +37,7 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
@@ -126,13 +127,13 @@ public class Fodsel extends ForeldrepengerTestBase {
         // Verifiser Beregningsgrunnlag
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);// ikke sikker
                                                                                                           // på denne
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode, "AT_FL");
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0), AktivitetStatus.KOMBINERT_AT_FL);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 1);
         List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
         verifiserLikhet(andeler.size(), 2);
-        verifiserLikhet(andeler.get(0).getAktivitetStatus().kode, "AT");
-        verifiserLikhet(andeler.get(1).getAktivitetStatus().kode, "FL");
+        verifiserLikhet(andeler.get(0).getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER);
+        verifiserLikhet(andeler.get(1).getAktivitetStatus(), AktivitetStatus.FRILANSER);
 
         // Legg til og fjern ytelser for å se tilbakehopp og opprettelse av akjsonspunkter
         verifiser(saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS),
@@ -633,12 +634,12 @@ public class Fodsel extends ForeldrepengerTestBase {
         // Verifiser Beregningsgrunnlag
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);// ikke sikker
                                                                                                           // på denne
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode, "AT");
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0), AktivitetStatus.ARBEIDSTAKER);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 1);
         List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
         verifiserLikhet(andeler.size(), 1);
-        verifiserLikhet(andeler.get(0).getAktivitetStatus().kode, "AT");
+        verifiserLikhet(andeler.get(0).getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER);
 
         // Bekreft inntekt i beregning
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
@@ -711,13 +712,13 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         // Verifiser Beregningsgrunnlag
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode, "AT");
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0), AktivitetStatus.ARBEIDSTAKER);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 1);
         List<BeregningsgrunnlagPrStatusOgAndelDto> andelerFørstePeriode = saksbehandler.valgtBehandling
                 .getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
         verifiserLikhet(andelerFørstePeriode.size(), 1);
-        verifiserLikhet(andelerFørstePeriode.get(0).getAktivitetStatus().kode, "AT");
+        verifiserLikhet(andelerFørstePeriode.get(0).getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER);
 
         // Bekreft inntekt i beregning
         VurderBeregnetInntektsAvvikBekreftelse vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
@@ -731,12 +732,12 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         // Verifiser Beregningsgrunnlag
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0).kode, "AT");
+        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0), AktivitetStatus.ARBEIDSTAKER);
         verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 2);
         andelerFørstePeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
         verifiserLikhet(andelerFørstePeriode.size(), 1);
-        verifiserLikhet(andelerFørstePeriode.get(0).getAktivitetStatus().kode, "AT");
+        verifiserLikhet(andelerFørstePeriode.get(0).getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER);
 
         // Assert refusjon
         List<BeregningsresultatPeriode> resultatPerioder = saksbehandler.valgtBehandling

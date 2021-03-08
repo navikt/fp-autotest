@@ -4,16 +4,19 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningsgrunnlagPrStatusOgAndelDto {
 
     protected LocalDate beregningsgrunnlagTom;
     protected LocalDate beregningsgrunnlagFom;
-    protected Kode aktivitetStatus;
+    protected AktivitetStatus aktivitetStatus;
     protected LocalDate beregningsperiodeFom;
     protected LocalDate beregningsperiodeTom;
+    protected OpptjeningAktivitetType arbeidsforholdType;
     protected double beregnetPrAar;
     protected double overstyrtPrAar;
     protected double bruttoPrAar;
@@ -25,13 +28,13 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     protected boolean lonnsendringIBeregningsperioden;
     protected int andelsnr;
     protected double besteberegningPrAar;
-    protected Kode inntektskategori;
+    protected Inntektskategori inntektskategori;
     protected BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
     protected boolean fastsattAvSaksbehandler;
     protected double bortfaltNaturalytelse;
     protected double dagsats;
 
-    public Kode getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 
@@ -41,6 +44,10 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
 
     public int getAndelsnr() {
         return andelsnr;
+    }
+
+    public OpptjeningAktivitetType getArbeidsforholdType() {
+        return arbeidsforholdType;
     }
 
     public double getBeregnetPrAar() {

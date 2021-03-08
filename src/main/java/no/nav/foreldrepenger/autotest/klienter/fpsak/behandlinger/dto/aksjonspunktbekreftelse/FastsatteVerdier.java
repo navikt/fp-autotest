@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 
 public class FastsatteVerdier {
 
     protected Integer refusjon;
     protected Integer fastsattBeløp;
-    protected Kode inntektskategori;
+    protected Inntektskategori inntektskategori;
 
-    public FastsatteVerdier(Integer refusjon, Integer fastsattBeløp, Kode inntektskategori) {
+    public FastsatteVerdier(Integer refusjon, Integer fastsattBeløp, Inntektskategori inntektskategori) {
         this.refusjon = refusjon;
         this.fastsattBeløp = fastsattBeløp;
         this.inntektskategori = inntektskategori;
@@ -30,11 +30,11 @@ public class FastsatteVerdier {
         this.fastsattBeløp = fastsattBeløp;
     }
 
-    public Kode getInntektskategori() {
+    public Inntektskategori getInntektskategori() {
         return inntektskategori;
     }
 
-    public void setInntektskategori(Kode inntektskategori) {
+    public void setInntektskategori(Inntektskategori inntektskategori) {
         this.inntektskategori = inntektskategori;
     }
 }

@@ -5,27 +5,30 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Beregningsgrunnlag {
 
-    protected List<Kode> aktivitetStatus;
-    protected List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
-    protected FaktaOmBeregningDto faktaOmBeregning;
-    protected FaktaOmFordelingDto faktaOmFordeling;
-    protected long halvG;
-    protected String ledetekstAvkortet;
-    protected String ledetekstBrutto;
-    protected String ledetekstRedusert;
-    protected SammenligningsgrunnlagDto sammenligningsgrunnlag;
-    protected LocalDate skjaeringstidspunktBeregning;
+    private LocalDate skjaeringstidspunktBeregning;
+    private LocalDate skjæringstidspunkt;
+    private List<AktivitetStatus> aktivitetStatus;
+    private List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
+    private SammenligningsgrunnlagDto sammenligningsgrunnlag;
+    private List<SammenligningsgrunnlagDto> sammenligningsgrunnlagPrStatus;
+    private Double halvG;
+    private FaktaOmBeregningDto faktaOmBeregning;
+    private List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;
+    private FaktaOmFordelingDto faktaOmFordeling;
+    private String ledetekstAvkortet;
+    private String ledetekstBrutto;
+    private String ledetekstRedusert;
 
     public int antallAktivitetStatus() {
         return aktivitetStatus.size();
     }
 
-    public Kode getAktivitetStatus(int index) {
+    public AktivitetStatus getAktivitetStatus(int index) {
         return aktivitetStatus.get(index);
     }
 
@@ -58,7 +61,7 @@ public class Beregningsgrunnlag {
         return faktaOmFordeling;
     }
 
-    public long getHalvG() {
+    public Double getHalvG() {
         return halvG;
     }
 }

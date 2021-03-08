@@ -21,8 +21,8 @@ class HistorikkDtoSeraliseringDeserialiseringTest extends SerializationTestBase 
 
     @Test
     void HendelseTest() {
-        test(new Hendelse(new Kode("BT-004","Revurdering")));
-        test(new Hendelse(new Kode("BT-004","Revurdering", "revurdering")));
+        test(new Hendelse(new Kode("BREV_SENT", "Brev sendt")));
+        test(new Hendelse(new Kode("BEH_STARTET", "Behandling startet")));
     }
 
     @Test
@@ -32,12 +32,12 @@ class HistorikkDtoSeraliseringDeserialiseringTest extends SerializationTestBase 
                 new Kode("","SBH", "Saksbehandler"),
                 new Kode("-", "M", "Mann"),
                 List.of(new HistorikkInnslagDokumentLinkDto("1", null, "1234567", "123456", true)),
-                List.of(new HistorikkinnslagDel(new Hendelse(new Kode("BT-004","Revurdering"))))));
+                List.of(new HistorikkinnslagDel(new Hendelse(new Kode("BREV_SENT", "Brev sendt"))))));
     }
 
     @Test
     void HistorikkinnslagDelTest() {
-        test(new HistorikkinnslagDel(new Hendelse(new Kode("BT-004","Revurdering"))));
+        test(new HistorikkinnslagDel(new Hendelse(new Kode("BREV_SENT", "Brev sendt"))));
     }
 
 

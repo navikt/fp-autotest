@@ -64,7 +64,7 @@ public enum Venteårsak {
     @JsonCreator
     public static Venteårsak fraKode(String kode) {
         return Arrays.stream(Venteårsak.values())
-                .filter(value -> value.name().equalsIgnoreCase(kode))
+                .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
                 .orElseThrow(() -> new UnexpectedInputException("Ikke støttet Venteårsak " + kode));
     }

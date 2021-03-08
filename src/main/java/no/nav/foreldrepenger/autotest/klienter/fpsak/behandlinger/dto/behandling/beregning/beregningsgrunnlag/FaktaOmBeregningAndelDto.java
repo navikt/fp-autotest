@@ -1,24 +1,28 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AndelKilde;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FaktaOmBeregningAndelDto {
 
-    protected int andelsnr;
-    protected BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
-    protected Kode inntektskategori;
-    protected Kode aktivitetStatus;
-    protected boolean lagtTilAvSaksbehandler;
-    protected boolean fastsattAvSaksbehandler;
-    protected Kode kilde;
-    protected List<Double> andelIArbeid;
+    private Long andelsnr;
+    private BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
+    private Inntektskategori inntektskategori;
+    private AktivitetStatus aktivitetStatus;
+    private AndelKilde kilde;
+    private final Boolean lagtTilAvSaksbehandler = false;
+    private final Boolean fastsattAvSaksbehandler = false;
+    private final List<BigDecimal> andelIArbeid = new ArrayList();
 
-    public int getAndelsnr() {
+    public Long getAndelsnr() {
         return andelsnr;
     }
 
@@ -26,27 +30,27 @@ public class FaktaOmBeregningAndelDto {
         return arbeidsforhold;
     }
 
-    public Kode getInntektskategori() {
+    public Inntektskategori getInntektskategori() {
         return inntektskategori;
     }
 
-    public Kode getKilde() {
-        return kilde;
-    }
-
-    public Kode getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 
-    public boolean isLagtTilAvSaksbehandler() {
+    public AndelKilde getKilde() {
+        return kilde;
+    }
+
+    public Boolean getLagtTilAvSaksbehandler() {
         return lagtTilAvSaksbehandler;
     }
 
-    public boolean isFastsattAvSaksbehandler() {
+    public Boolean getFastsattAvSaksbehandler() {
         return fastsattAvSaksbehandler;
     }
 
-    public List<Double> getAndelIArbeid() {
+    public List<BigDecimal> getAndelIArbeid() {
         return andelIArbeid;
     }
 }
