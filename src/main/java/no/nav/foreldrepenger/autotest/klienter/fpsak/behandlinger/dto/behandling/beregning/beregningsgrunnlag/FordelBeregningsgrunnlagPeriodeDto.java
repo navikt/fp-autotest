@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FordelBeregningsgrunnlagPeriodeDto {
 
+    protected List<FordelBeregningsgrunnlagAndelDto> fordelBeregningsgrunnlagAndeler = new ArrayList<>();
     protected LocalDate fom;
     protected LocalDate tom;
-    protected List<FordelBeregningsgrunnlagAndelDto> fordelBeregningsgrunnlagAndeler = new ArrayList<>();
     protected boolean harPeriodeAarsakGraderingEllerRefusjon = false;
     protected boolean skalKunneEndreRefusjon = false;
 

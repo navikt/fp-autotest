@@ -29,7 +29,7 @@ public enum VurderÅrsak {
     @JsonCreator
     public static VurderÅrsak fraKode(String kode) {
         return Arrays.stream(VurderÅrsak.values())
-                .filter(value -> value.name().equalsIgnoreCase(kode))
+                .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
                 .orElseThrow(() -> new UnexpectedInputException("Ikke støttet VurderÅrsak " + kode));
     }

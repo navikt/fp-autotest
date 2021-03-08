@@ -30,7 +30,7 @@ public enum UttakPeriodeVurderingType {
     @JsonCreator
     public static UttakPeriodeVurderingType fraKode(String kode) {
         return Arrays.stream(UttakPeriodeVurderingType.values())
-                .filter(value -> value.name().equalsIgnoreCase(kode))
+                .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
                 .orElseThrow(() -> new UnexpectedInputException("Ikke støttet UttakPeriodeVurderingType " + kode));
     }

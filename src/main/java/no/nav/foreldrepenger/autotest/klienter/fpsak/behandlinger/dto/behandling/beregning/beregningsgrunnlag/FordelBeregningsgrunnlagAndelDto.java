@@ -4,23 +4,18 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
 
-    protected BigDecimal fordelingForrigeBehandlingPrAar;
-    protected BigDecimal refusjonskravPrAar = BigDecimal.ZERO;
-    protected BigDecimal fordeltPrAar;
-    protected BigDecimal belopFraInntektsmeldingPrAar;
-    protected BigDecimal fastsattForrigePrAar;
-    protected BigDecimal refusjonskravFraInntektsmeldingPrAar;
-    protected boolean nyttArbeidsforhold;
-    protected Kode arbeidsforholdType;
-
-    public Kode getArbeidsforholdType() {
-        return arbeidsforholdType;
-    }
+    private BigDecimal fordelingForrigeBehandlingPrAar;
+    private BigDecimal refusjonskravPrAar;
+    private BigDecimal fordeltPrAar;
+    private BigDecimal belopFraInntektsmeldingPrAar;
+    private BigDecimal refusjonskravFraInntektsmeldingPrAar;
+    private boolean nyttArbeidsforhold;
+    private OpptjeningAktivitetType arbeidsforholdType;
 
     public BigDecimal getFordelingForrigeBehandlingPrAar() {
         return fordelingForrigeBehandlingPrAar;
@@ -38,15 +33,15 @@ public class FordelBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto {
         return belopFraInntektsmeldingPrAar;
     }
 
-    public BigDecimal getFastsattForrigePrAar() {
-        return fastsattForrigePrAar;
-    }
-
     public BigDecimal getRefusjonskravFraInntektsmeldingPrAar() {
         return refusjonskravFraInntektsmeldingPrAar;
     }
 
     public boolean isNyttArbeidsforhold() {
         return nyttArbeidsforhold;
+    }
+
+    public OpptjeningAktivitetType getArbeidsforholdType() {
+        return arbeidsforholdType;
     }
 }

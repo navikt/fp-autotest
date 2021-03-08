@@ -2,7 +2,9 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AndelKilde;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 
 class RedigerbarAndel {
 
@@ -11,17 +13,16 @@ class RedigerbarAndel {
     protected String arbeidsgiverId;
     protected String arbeidsforholdId;
     protected Boolean nyAndel;
+    protected AndelKilde kilde;
+    protected AktivitetStatus aktivitetStatus;
+    protected OpptjeningAktivitetType arbeidsforholdType;
     protected Boolean lagtTilAvSaksbehandler;
-    protected Kode aktivitetStatus;
-    protected Kode kilde;
-    protected Kode arbeidsforholdType;
     protected LocalDate beregningsperiodeFom;
     protected LocalDate beregningsperiodeTom;
 
     public RedigerbarAndel(String andel, int andelsnr, String arbeidsgiverId, String arbeidsforholdId, Boolean nyAndel,
-            Boolean lagtTilAvSaksbehandler,
-            Kode aktivitetStatus, LocalDate beregningsperiodeFom, LocalDate beregningsperiodeTom,
-            Kode arbeidsforholdType) {
+                           Boolean lagtTilAvSaksbehandler, AktivitetStatus aktivitetStatus, LocalDate beregningsperiodeFom,
+                           LocalDate beregningsperiodeTom, OpptjeningAktivitetType arbeidsforholdType) {
         this.andel = andel;
         this.andelsnr = andelsnr;
         this.arbeidsgiverId = arbeidsgiverId;
@@ -74,7 +75,7 @@ class RedigerbarAndel {
         this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
     }
 
-    public void setKilde(Kode kilde) {
+    public void setKilde(AndelKilde kilde) {
         this.kilde = kilde;
     }
 

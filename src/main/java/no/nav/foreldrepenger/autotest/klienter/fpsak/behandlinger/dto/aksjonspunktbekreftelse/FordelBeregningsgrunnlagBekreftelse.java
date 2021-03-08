@@ -6,12 +6,10 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.FordelBeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @BekreftelseKode(kode = "5046")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -25,40 +23,39 @@ public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        Beregningsgrunnlag beregningsgrunnlag = behandling.getBeregningsgrunnlag();
+        var beregningsgrunnlag = behandling.getBeregningsgrunnlag();
         endretBeregningsgrunnlagPerioder = beregningsgrunnlag.getFaktaOmFordeling().getFordelBeregningsgrunnlag()
-                .getFordelBeregningsgrunnlagPerioder()
-                .stream()
+                .getFordelBeregningsgrunnlagPerioder().stream()
                 .filter(FordelBeregningsgrunnlagPeriodeDto::isHarPeriodeAarsakGraderingEllerRefusjon)
                 .map(p -> {
-                    BeregningsgrunnlagPeriodeDto bgPeriode = beregningsgrunnlag
-                            .getBeregningsgrunnlagPeriode(p.getFom());
+                    var bgPeriode = beregningsgrunnlag.getBeregningsgrunnlagPeriode(p.getFom());
                     return new FastsettBeregningsgrunnlagPeriodeDto(p, bgPeriode);
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
     }
 
     public FordelBeregningsgrunnlagBekreftelse settFastsattBeløpOgInntektskategori(LocalDate fom, int fastsattBeløp,
-            Kode inntektskategori, int andelsnr) {
-        FastsettBeregningsgrunnlagPeriodeDto periode = endretBeregningsgrunnlagPerioder.stream()
-                .filter(p -> p.fom.isEqual(fom))
-                .findFirst().orElseThrow();
-        FastsettBeregningsgrunnlagAndelDto andel = periode.andeler.stream()
-                .filter(a -> a.getAndelsnr() == andelsnr)
-                .findFirst().orElseThrow();
+                                                                                   Inntektskategori inntektskategori,
+                                                                                   int andelsnr) {
+        FastsettBeregningsgrunnlagAndelDto andel = getFastsettBeregningsgrunnlagAndelDto(fom, andelsnr);
         andel.setFastsatteVerdier(new FastsatteVerdierDto(fastsattBeløp, inntektskategori));
         return this;
     }
 
     public FordelBeregningsgrunnlagBekreftelse settFastsattBeløpOgInntektskategoriMedRefusjon(LocalDate fom,
-            int fastsattBeløp, int refusjonPrÅr, Kode inntektskategori, int andelsnr) {
+            int fastsattBeløp, int refusjonPrÅr, Inntektskategori inntektskategori, int andelsnr) {
+        FastsettBeregningsgrunnlagAndelDto andel = getFastsettBeregningsgrunnlagAndelDto(fom, andelsnr);
+        andel.setFastsatteVerdier(new FastsatteVerdierDto(fastsattBeløp, refusjonPrÅr, inntektskategori));
+        return this;
+    }
+
+    private FastsettBeregningsgrunnlagAndelDto getFastsettBeregningsgrunnlagAndelDto(LocalDate fom, int andelsnr) {
         FastsettBeregningsgrunnlagPeriodeDto periode = endretBeregningsgrunnlagPerioder.stream()
                 .filter(p -> p.fom.isEqual(fom))
                 .findFirst().orElseThrow();
-        FastsettBeregningsgrunnlagAndelDto andel = periode.andeler.stream()
+        return periode.andeler.stream()
                 .filter(a -> a.getAndelsnr() == andelsnr)
                 .findFirst().orElseThrow();
-        andel.setFastsatteVerdier(new FastsatteVerdierDto(fastsattBeløp, refusjonPrÅr, inntektskategori));
-        return this;
     }
 
 }

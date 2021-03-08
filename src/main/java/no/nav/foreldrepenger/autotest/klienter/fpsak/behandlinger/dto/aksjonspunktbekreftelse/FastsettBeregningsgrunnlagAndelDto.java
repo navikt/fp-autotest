@@ -1,44 +1,35 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import java.time.LocalDate;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.FordelBeregningsgrunnlagAndelDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.RedigerbarAndelDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FastsettBeregningsgrunnlagAndelDto extends RedigerbarAndel {
+public class FastsettBeregningsgrunnlagAndelDto extends RedigerbarAndelDto {
 
-    protected FastsatteVerdierDto fastsatteVerdier;
-    protected Kode forrigeInntektskategori;
-    protected Integer forrigeRefusjonPrÅr;
-    protected Integer forrigeArbeidsinntektPrÅr;
+    private FastsatteVerdierDto fastsatteVerdier;
+    private final Inntektskategori forrigeInntektskategori;
+    private final Integer forrigeRefusjonPrÅr;
+    private final Integer forrigeArbeidsinntektPrÅr;
 
-    public FastsettBeregningsgrunnlagAndelDto(String andel, int andelsnr, String arbeidsforholdId,
-            String arbeidsgiverId, Boolean nyAndel,
-            Boolean lagtTilAvSaksbehandler, Kode aktivitetStatus, LocalDate beregningsperiodeFom,
-            LocalDate beregningsperiodeTom, Kode arbeidsforholdType) {
-        super(andel, andelsnr, arbeidsgiverId, arbeidsforholdId, nyAndel, lagtTilAvSaksbehandler, aktivitetStatus,
-                beregningsperiodeFom, beregningsperiodeTom, arbeidsforholdType);
-    }
-
-    public FastsettBeregningsgrunnlagAndelDto(FordelBeregningsgrunnlagAndelDto andelDto,
-            BeregningsgrunnlagPrStatusOgAndelDto bgAndelDto) {
-        super("", andelDto.getAndelsnr(),
+    public FastsettBeregningsgrunnlagAndelDto(FordelBeregningsgrunnlagAndelDto andelDto, BeregningsgrunnlagPrStatusOgAndelDto bgAndelDto) {
+        super(andelDto.getAndelsnr(),
                 andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsgiverId(),
                 andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsforholdId(),
-                false, andelDto.isLagtTilAvSaksbehandler(),
+                false,
+                andelDto.getKilde(),
                 andelDto.getAktivitetStatus(),
+                andelDto.getArbeidsforholdType(),
+                andelDto.getLagtTilAvSaksbehandler(),
                 bgAndelDto.getBeregningsperiodeFom(),
-                bgAndelDto.getBeregningsperiodeTom(),
-                andelDto.getArbeidsforholdType());
-        forrigeArbeidsinntektPrÅr = andelDto.getFordeltPrAar() == null ? null : andelDto.getFordeltPrAar().intValue();
-        forrigeInntektskategori = andelDto.getInntektskategori();
-        kilde = andelDto.getKilde();
-        forrigeRefusjonPrÅr = andelDto.getRefusjonskravPrAar() == null ? null
-                : andelDto.getRefusjonskravPrAar().intValue();
+                bgAndelDto.getBeregningsperiodeTom());
+            forrigeArbeidsinntektPrÅr = andelDto.getFordeltPrAar() == null ? null : andelDto.getFordeltPrAar().intValue();
+            forrigeInntektskategori = andelDto.getInntektskategori();
+            forrigeRefusjonPrÅr = andelDto.getRefusjonskravPrAar() == null ?
+                    null : andelDto.getRefusjonskravPrAar().intValue();
     }
 
     public void setFastsatteVerdier(FastsatteVerdierDto fastsatteVerdier) {
