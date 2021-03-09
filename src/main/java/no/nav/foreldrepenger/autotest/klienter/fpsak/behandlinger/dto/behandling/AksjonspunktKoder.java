@@ -109,7 +109,6 @@ public class AksjonspunktKoder {
     public static final String AVKLAR_FAKTA_UTTAK = "5070";
     public static final String FASTSETT_UTTAKPERIODER = "5071";
     public static final String AVKLAR_FØRSTE_UTTAKSDATO = "5081";
-    public static final String TILKNYTTET_STORTINGET = "5072";
     public static final String OVERSTYRING_AV_UTTAKPERIODER = "6008";
     public static final String AVKLAR_FAKTA_ANNEN_FORELDER_HAR_RETT_KODE = "5086";
 
