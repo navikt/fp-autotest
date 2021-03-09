@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
@@ -74,7 +75,7 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
                 "Behandlingsresultat");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
                 KonsekvensForYtelsen.INGEN_ENDRING, "konsekvensForYtelsen");
-        verifiserLikhet(saksbehandler.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
+        verifiserLikhet(saksbehandler.valgtBehandling.status, BehandlingStatus.AVSLUTTET, "Behandlingsstatus");
         debugFritekst("Ferdig med andre behandling (revurdering nr 1)");
 
         // Inntektsmelding - endring i inntekt

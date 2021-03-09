@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -208,7 +209,7 @@ public class Klage extends ForeldrepengerTestBase {
                 BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
         verifiserKlageVurdering(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering().kode,
                 "STADFESTE_YTELSESVEDTAK");
-        verifiserLikhet(klagebehandler.valgtBehandling.status.kode, "AVSLU");
+        verifiserLikhet(klagebehandler.valgtBehandling.status, BehandlingStatus.AVSLUTTET);
     }
 
     @Test

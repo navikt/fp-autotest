@@ -32,6 +32,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
@@ -116,7 +117,7 @@ public class Revurdering extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.OPPHØR, "Behandlingsresultat");
         verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(),Avslagsårsak.SØKER_ER_IKKE_MEDLEM, "Avslagsårsak");
-        verifiserLikhet(beslutter.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
+        verifiserLikhet(beslutter.valgtBehandling.status, BehandlingStatus.AVSLUTTET, "Behandlingsstatus");
         logger.info("Status på sak: {}", beslutter.valgtFagsak.status().getKode());
     }
 
