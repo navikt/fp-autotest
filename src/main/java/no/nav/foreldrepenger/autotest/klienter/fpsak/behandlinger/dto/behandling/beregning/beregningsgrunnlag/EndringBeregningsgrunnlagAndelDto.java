@@ -4,7 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EndringBeregningsgrunnlagAndelDto {
@@ -21,8 +22,8 @@ public class EndringBeregningsgrunnlagAndelDto {
     protected double snittIBeregningsperiodenPrMnd;
     protected int andelsnr;
     protected BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
-    protected Kode inntektskategori;
-    protected Kode aktivitetStatus;
+    protected Inntektskategori inntektskategori;
+    protected AktivitetStatus aktivitetStatus;
     protected boolean lagtTilAvSaksbehandler;
     protected boolean fastsattAvSaksbehandler;
     protected List<Double> andelIArbeid;

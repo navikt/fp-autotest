@@ -39,6 +39,9 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
@@ -149,7 +152,7 @@ public class Fodsel extends ForeldrepengerTestBase {
         var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse2
-                .fjernFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL.kode)
+                .fjernFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL)
                 .leggTilMottarYtelseFrilans(false)
                 .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
@@ -831,10 +834,10 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         // uttak går til manuell behandling
         UttakResultatPeriode foreldrepengerFørste6Ukene = uttaksperioder.get(0);
-        assertThat(foreldrepengerFørste6Ukene.getPeriodeResultatType().kode).isEqualTo("INNVILGET");
+        assertThat(foreldrepengerFørste6Ukene.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(foreldrepengerFørste6Ukene.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
         UttakResultatPeriode foreldrepengerEtterUke6 = uttaksperioder.get(1);
-        assertThat(foreldrepengerEtterUke6.getPeriodeResultatType().kode).isEqualTo("INNVILGET");
+        assertThat(foreldrepengerEtterUke6.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(foreldrepengerEtterUke6.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
 
         verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().size() == 4,
@@ -940,8 +943,8 @@ public class Fodsel extends ForeldrepengerTestBase {
         List<UttakResultatPeriode> uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         assertThat(uttaksperioder).hasSize(5);
         for (UttakResultatPeriode periode : uttaksperioder) {
-            assertThat(periode.getPeriodeResultatType().kode).isEqualTo("INNVILGET");
-            assertThat(periode.getPeriodeResultatÅrsak().kode).isNotEqualTo("-");
+            assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
+            assertThat(periode.getPeriodeResultatÅrsak().getKode()).isNotEqualTo(PeriodeResultatÅrsak.UKJENT.getKode());
             assertThat(periode.getAktiviteter()).hasSize(2);
             for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
                 assertThat(aktivitet.getArbeidsgiverReferanse()).isNotNull();
@@ -1050,19 +1053,19 @@ public class Fodsel extends ForeldrepengerTestBase {
         assertThat(uttaksperioder).hasSize(4);
 
         UttakResultatPeriode fpff = uttaksperioder.get(0);
-        assertThat(fpff.getPeriodeResultatType().kode).isEqualTo("INNVILGET");
+        assertThat(fpff.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(fpff.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualByComparingTo(BigDecimal.valueOf(100));
         assertThat(fpff.getAktiviteter().get(0).getTrekkdagerDesimaler()).isGreaterThan(BigDecimal.ZERO);
         assertThat(fpff.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER_FØR_FØDSEL);
         UttakResultatPeriode foreldrepengerFørste6Ukene = uttaksperioder.get(1);
-        assertThat(foreldrepengerFørste6Ukene.getPeriodeResultatType().kode).isEqualTo("INNVILGET");
+        assertThat(foreldrepengerFørste6Ukene.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(foreldrepengerFørste6Ukene.getAktiviteter().get(0).getUtbetalingsgrad())
                 .isEqualByComparingTo(BigDecimal.valueOf(100));
         assertThat(foreldrepengerFørste6Ukene.getAktiviteter().get(0).getTrekkdagerDesimaler())
                 .isGreaterThan(BigDecimal.ZERO);
         assertThat(foreldrepengerFørste6Ukene.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
         UttakResultatPeriode foreldrepengerEtterUke6 = uttaksperioder.get(2);
-        assertThat(foreldrepengerFørste6Ukene.getPeriodeResultatType().kode).isEqualTo("INNVILGET");
+        assertThat(foreldrepengerFørste6Ukene.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(foreldrepengerEtterUke6.getAktiviteter().get(0).getUtbetalingsgrad())
                 .isEqualByComparingTo(BigDecimal.valueOf(100));
         assertThat(foreldrepengerEtterUke6.getAktiviteter().get(0).getTrekkdagerDesimaler())
@@ -1070,8 +1073,8 @@ public class Fodsel extends ForeldrepengerTestBase {
         assertThat(foreldrepengerEtterUke6.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
         // Periode søkt mer enn 49 uker er avslått automatisk
         UttakResultatPeriode periodeMerEnn49Uker = uttaksperioder.get(3);
-        assertThat(periodeMerEnn49Uker.getPeriodeResultatType().kode).isEqualTo("AVSLÅTT");
-        assertThat(periodeMerEnn49Uker.getPeriodeResultatÅrsak().kode).isEqualTo("4002");
+        assertThat(periodeMerEnn49Uker.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.AVSLÅTT);
+        assertThat(periodeMerEnn49Uker.getPeriodeResultatÅrsak()).isEqualTo(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
         assertThat(periodeMerEnn49Uker.getAktiviteter().get(0).getUtbetalingsgrad())
                 .isEqualByComparingTo(BigDecimal.valueOf(0));
         assertThat(periodeMerEnn49Uker.getAktiviteter().get(0).getTrekkdagerDesimaler())
@@ -1268,7 +1271,7 @@ public class Fodsel extends ForeldrepengerTestBase {
 
     private void verifiserUttaksperiode(UttakResultatPeriode uttakResultatPeriode, Stønadskonto stønadskonto,
             int antallAktiviteter) {
-        assertThat(uttakResultatPeriode.getPeriodeResultatType().kode).isEqualTo("INNVILGET");
+        assertThat(uttakResultatPeriode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(uttakResultatPeriode.getUtsettelseType()).isEqualTo(UttakUtsettelseÅrsak.UDEFINERT);
         assertThat(uttakResultatPeriode.getAktiviteter()).hasSize(antallAktiviteter);
         for (UttakResultatPeriodeAktivitet aktivitet : uttakResultatPeriode.getAktiviteter()) {
@@ -1283,22 +1286,22 @@ public class Fodsel extends ForeldrepengerTestBase {
             boolean medFullRefusjon) {
         List<BeregningsresultatPeriode> perioder = beregningResultatForeldrepenger.getPerioder();
         assertThat(beregningResultatForeldrepenger.isSokerErMor()).isTrue();
-        assertThat(perioder.size()).isGreaterThan(0);
+        assertThat(perioder.size()).isPositive();
         for (var periode : perioder) {
-            assertThat(periode.getDagsats()).isGreaterThan(0);
+            assertThat(periode.getDagsats()).isPositive();
             List<BeregningsresultatPeriodeAndel> andeler = periode.getAndeler();
             for (var andel : andeler) {
-                String kode = andel.getAktivitetStatus().kode;
-                if (kode.equals("AT")) {
+                var kode = andel.getAktivitetStatus();
+                if (kode.equals(AktivitetStatus.ARBEIDSTAKER)) {
                     if (medFullRefusjon) {
                         assertThat(andel.getTilSoker()).isZero();
-                        assertThat(andel.getRefusjon()).isGreaterThan(0);
+                        assertThat(andel.getRefusjon()).isPositive();
                     } else {
-                        assertThat(andel.getTilSoker()).isGreaterThan(0);
+                        assertThat(andel.getTilSoker()).isPositive();
                         assertThat(andel.getRefusjon()).isZero();
                     }
-                } else if (kode.equals("FL") || kode.equals("SN")) {
-                    assertThat(andel.getTilSoker()).isGreaterThan(0);
+                } else if (kode.equals(AktivitetStatus.FRILANSER) || kode.equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)) {
+                    assertThat(andel.getTilSoker()).isPositive();
                     assertThat(andel.getRefusjon()).isZero();
                 }
                 assertThat(andel.getUttak().isGradering()).isFalse();

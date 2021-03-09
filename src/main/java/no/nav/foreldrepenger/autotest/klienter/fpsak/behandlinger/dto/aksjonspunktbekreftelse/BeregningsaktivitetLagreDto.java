@@ -4,12 +4,12 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningsaktivitetLagreDto {
 
-    protected Kode opptjeningAktivitetType;
+    protected OpptjeningAktivitetType opptjeningAktivitetType;
 
     protected LocalDate fom;
 
@@ -23,7 +23,7 @@ public class BeregningsaktivitetLagreDto {
 
     protected Boolean skalBrukes;
 
-    public BeregningsaktivitetLagreDto(Kode opptjeningAktivitetType, LocalDate fom, LocalDate tom,
+    public BeregningsaktivitetLagreDto(OpptjeningAktivitetType opptjeningAktivitetType, LocalDate fom, LocalDate tom,
             String oppdragsgiverOrg, String arbeidsgiverIdentifikator, String arbeidsforholdRef, boolean skalBrukes) {
         this.opptjeningAktivitetType = opptjeningAktivitetType;
         this.fom = fom;
@@ -34,7 +34,7 @@ public class BeregningsaktivitetLagreDto {
         this.skalBrukes = skalBrukes;
     }
 
-    public Kode getOpptjeningAktivitetType() {
+    public OpptjeningAktivitetType getOpptjeningAktivitetType() {
         return opptjeningAktivitetType;
     }
 

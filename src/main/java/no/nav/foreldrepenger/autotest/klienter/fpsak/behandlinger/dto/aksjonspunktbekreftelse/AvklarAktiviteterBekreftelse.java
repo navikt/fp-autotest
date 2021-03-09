@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
@@ -27,21 +28,21 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public AvklarAktiviteterBekreftelse godkjennOpptjeningsAktivitet(String opptjeningsAktivitetType) {
+    public AvklarAktiviteterBekreftelse godkjennOpptjeningsAktivitet(OpptjeningAktivitetType opptjeningsAktivitetType) {
         var vurdering = hentBeregningsaktivitetMedOpptjenignsaktivitetstype(opptjeningsAktivitetType);
         vurdering.skalBrukes = true;
         return this;
     }
 
-    public AvklarAktiviteterBekreftelse avvisOpptjeningsAktivitet(String opptjeningsAktivitetType) {
+    public AvklarAktiviteterBekreftelse avvisOpptjeningsAktivitet(OpptjeningAktivitetType opptjeningsAktivitetType) {
         var vurdering = hentBeregningsaktivitetMedOpptjenignsaktivitetstype(opptjeningsAktivitetType);
         vurdering.skalBrukes = false;
         return this;
     }
 
-    private BeregningsaktivitetLagreDto hentBeregningsaktivitetMedOpptjenignsaktivitetstype(String opptjeningsAktivitetType) {
+    private BeregningsaktivitetLagreDto hentBeregningsaktivitetMedOpptjenignsaktivitetstype(OpptjeningAktivitetType opptjeningsAktivitetType) {
         return beregningsaktivitetLagreDtoList.stream()
-                    .filter(aktivitet -> aktivitet.opptjeningAktivitetType.kode.equals(opptjeningsAktivitetType))
+                    .filter(aktivitet -> aktivitet.opptjeningAktivitetType.equals(opptjeningsAktivitetType))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Fant ikke beregningsaktivitet med opptjeningsaktivetetstype " + opptjeningsAktivitetType));
     }

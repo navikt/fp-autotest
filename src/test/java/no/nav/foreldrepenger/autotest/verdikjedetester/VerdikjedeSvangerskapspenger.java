@@ -15,6 +15,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
@@ -306,16 +307,16 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
         assertThat(beregningsresultatPerioder.get(0).getAndeler().size())
                 .as("Andeler for første periode i tilkjent ytelse")
                 .isEqualTo(1);
-        assertThat(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(0), "AT"))
+        assertThat(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(0), AktivitetStatus.ARBEIDSTAKER))
                 .as("Forventer aktivitetsstatus for første andel for første periode er AT")
                 .isTrue();
         assertThat(beregningsresultatPerioder.get(1).getAndeler().size())
                 .as("Andeler for andre periode i tilkjent ytelse")
                 .isEqualTo(2);
-        assertThat(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(1), "AT"))
+        assertThat(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(1),  AktivitetStatus.ARBEIDSTAKER))
                 .as("Forventer aktivitetsstatus for første andel for andre periode er AT")
                 .isTrue();
-        assertThat(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(1), "SN"))
+        assertThat(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(1), AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .as("Forventer aktivitetsstatus for andre andel for andre periode er SN")
                 .isTrue();
 

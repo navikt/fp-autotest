@@ -1,35 +1,56 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import java.util.Arrays;
+import java.util.Optional;
 
-public class FaktaOmBeregningTilfelle extends Kode {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-    private static final String DISCRIMINATOR = "FAKTA_OM_BEREGNING_TILFELLE";
+import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
-    public static final FaktaOmBeregningTilfelle VURDER_MOTTAR_YTELSE = new FaktaOmBeregningTilfelle(
-            "VURDER_MOTTAR_YTELSE", "vurder_mottar_ytelse");
-    public static final FaktaOmBeregningTilfelle FASTSETT_MAANEDSINNTEKT_FL = new FaktaOmBeregningTilfelle(
-            "FASTSETT_MAANEDSINNTEKT_FL", "");
-    public static final FaktaOmBeregningTilfelle FASTSETT_MAANEDSLONN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING = new FaktaOmBeregningTilfelle(
-            "FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING", "");
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+public enum FaktaOmBeregningTilfelle {
 
-    public static final FaktaOmBeregningTilfelle FASTSETT_ETTERLØNN_SLUTTPAKKE = new FaktaOmBeregningTilfelle(
-            "FASTSETT_ETTERLØNN_SLUTTPAKKE", "fastsett_etterlønn_sluttpakke");
-    public static final FaktaOmBeregningTilfelle VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD = new FaktaOmBeregningTilfelle(
-            "VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD", "vurder_tidsbegrenset_arbeidsforhold"); //$NON-NLS-1$
-    public static final FaktaOmBeregningTilfelle FASTSETT_ENDRET_BEREGNINGSGRUNNLAG = new FaktaOmBeregningTilfelle(
-            "FASTSETT_ENDRET_BEREGNINGSGRUNNLAG", "fastsettt_endret_beregningsgrunnlag"); //$NON-NLS-1$
-    public static final FaktaOmBeregningTilfelle VURDER_BESTEBEREGNING = new FaktaOmBeregningTilfelle(
-            "VURDER_BESTEBEREGNING", ""); //$NON-NLS-1$
-    public static final FaktaOmBeregningTilfelle FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE = new FaktaOmBeregningTilfelle(
-            "FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE", ""); //$NON-NLS-1$
+    VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD,
+    VURDER_SN_NY_I_ARBEIDSLIVET,
+    VURDER_NYOPPSTARTET_FL,
+    FASTSETT_MAANEDSINNTEKT_FL,
+    FASTSETT_BG_ARBEIDSTAKER_UTEN_INNTEKTSMELDING,
+    VURDER_LØNNSENDRING,
+    FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING,
+    VURDER_AT_OG_FL_I_SAMME_ORGANISASJON,
+    FASTSETT_BESTEBEREGNING_FØDENDE_KVINNE,
+    VURDER_ETTERLØNN_SLUTTPAKKE,
+    FASTSETT_ETTERLØNN_SLUTTPAKKE,
+    VURDER_MOTTAR_YTELSE,
+    VURDER_BESTEBEREGNING,
+    VURDER_MILITÆR_SIVILTJENESTE,
+    VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT,
+    FASTSETT_BG_KUN_YTELSE,
+    TILSTØTENDE_YTELSE,
+    UDEFINERT("-"),
+    ;
 
-    public FaktaOmBeregningTilfelle() {
 
+    private final String kode;
+
+    FaktaOmBeregningTilfelle() {
+        this(null);
     }
 
-    private FaktaOmBeregningTilfelle(String kode, String navn) {
-        super(DISCRIMINATOR, kode, navn);
+    FaktaOmBeregningTilfelle(String kode) {
+        this.kode = Optional.ofNullable(kode).orElse(name());
     }
 
+    @JsonCreator
+    public static FaktaOmBeregningTilfelle fraKode(String kode) {
+        return Arrays.stream(FaktaOmBeregningTilfelle.values())
+                .filter(value -> value.getKode().equalsIgnoreCase(kode))
+                .findFirst()
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet Inntektskategori " + kode));
+    }
+
+    public String getKode() {
+        return kode;
+    }
 }

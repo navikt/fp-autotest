@@ -44,6 +44,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.perioder.UttaksperiodeBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
@@ -985,14 +986,14 @@ public class Uttak extends ForeldrepengerTestBase {
 
         var avklarAktiviteterBekreftelse1 = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class)
-                .godkjennOpptjeningsAktivitet("FRILANS")
-                .avvisOpptjeningsAktivitet("NÆRING");
+                .godkjennOpptjeningsAktivitet(OpptjeningAktivitetType.FRILANS)
+                .avvisOpptjeningsAktivitet(OpptjeningAktivitetType.NÆRING);
         saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse1);
 
         var vurderFaktaOmBeregningBekreftelse1 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilMottarYtelseFrilans(true)
-                .leggTilmånedsinntektFLMottarStøtte(20_000)
+                .leggTilMaanedsinntektFL(20_000)
                 .setBegrunnelse("Begrunnelse fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse1);
 
@@ -1031,14 +1032,14 @@ public class Uttak extends ForeldrepengerTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var avklarAktiviteterBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class)
-                .godkjennOpptjeningsAktivitet("FRILANS")
-                .avvisOpptjeningsAktivitet("NÆRING");
+                .godkjennOpptjeningsAktivitet(OpptjeningAktivitetType.FRILANS)
+                .avvisOpptjeningsAktivitet(OpptjeningAktivitetType.NÆRING);
         saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse);
 
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilMottarYtelseFrilans(true)
-                .leggTilmånedsinntektFLMottarStøtte(20_000)
+                .leggTilMaanedsinntektFL(20_000)
                 .setBegrunnelse("Begrunnelse fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
