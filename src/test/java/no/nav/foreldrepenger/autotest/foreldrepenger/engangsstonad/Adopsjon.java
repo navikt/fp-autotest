@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -29,12 +30,12 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
-public class Adopsjon extends FpsakTestBase {
+class Adopsjon extends FpsakTestBase {
 
     @Test
     @DisplayName("Mor søker adopsjon - godkjent")
     @Description("Mor søker adopsjon - godkjent happy case")
-    public void morSøkerAdopsjonGodkjent() {
+    void morSøkerAdopsjonGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -59,13 +60,15 @@ public class Adopsjon extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
     @DisplayName("Mor søker adopsjon - avvist - barn er over 15 år")
     @Description("Mor søker adopsjon - avvist - barn er over 15 år og blir dermed avlått")
-    public void morSøkerAdopsjonAvvist() {
+    void morSøkerAdopsjonAvvist() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -91,15 +94,18 @@ public class Adopsjon extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
-        verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.BARN_OVER_15_ÅR, "Avslagsårsak",
-                "Forventer at behandlingen er avslått med avslagskode: Barn over 15 år!");
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
+        assertThat(beslutter.valgtBehandling.hentAvslagsarsak())
+                .as("Avslagsårsak")
+                .isEqualTo(Avslagsårsak.BARN_OVER_15_ÅR);
     }
 
     @Test
     @DisplayName("Mor søker adopsjon med overstyrt vilkår")
     @Description("Mor søker adopsjon med overstyrt vilkår som tar behandlingen fra innvilget til avslått")
-    public void morSøkerAdopsjonOverstyrt() {
+    void morSøkerAdopsjonOverstyrt() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -124,7 +130,9 @@ public class Adopsjon extends FpsakTestBase {
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        verifiserLikhet(overstyrer.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
@@ -132,15 +140,18 @@ public class Adopsjon extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
-        verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.BARN_OVER_15_ÅR, "Avslagsårsak",
-                "Forventer at behandlingen er avslått med avslagskode: Barn over 15 år!");
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
+        assertThat(beslutter.valgtBehandling.hentAvslagsarsak())
+                .as("Avslagsårsak")
+                .isEqualTo(Avslagsårsak.BARN_OVER_15_ÅR);
     }
 
     @Test
     @DisplayName("Far søker adopsjon - godkjent")
     @Description("Far søker adopsjon - godkjent happy case")
-    public void farSøkerAdopsjonGodkjent() {
+    void farSøkerAdopsjonGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -168,14 +179,15 @@ public class Adopsjon extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
-
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
     @DisplayName("Far søker adopsjon av ektefelles barn")
     @Description("Far søker adopsjon av ektefelles barn fører til avvist behandling")
-    public void farSøkerAdopsjonAvvist() {
+    void farSøkerAdopsjonAvvist() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -196,9 +208,12 @@ public class Adopsjon extends FpsakTestBase {
         bekreftelse3.bekreftMannAdoptererIkkeAlene();
         saksbehandler.bekreftAksjonspunktbekreftelserer(bekreftelse1, bekreftelse2, bekreftelse3);
 
-        verifiserLikhet(saksbehandler.vilkårStatus("FP_VK_4").kode, "IKKE_OPPFYLT", "Vilkårstatus for adopsjon");
-        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.EKTEFELLES_SAMBOERS_BARN,
-                "Avslagsårsak (Ektefelles/samboers barn)");
+        assertThat(saksbehandler.vilkårStatus("FP_VK_4").kode)
+                .as("Vilkårstatus for adopsjon")
+                .isEqualTo("IKKE_OPPFYLT");
+        assertThat(saksbehandler.valgtBehandling.hentAvslagsarsak())
+                .as("Avslagsårsak")
+                .isEqualTo(Avslagsårsak.EKTEFELLES_SAMBOERS_BARN);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
@@ -209,6 +224,8 @@ public class Adopsjon extends FpsakTestBase {
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
     }
 }

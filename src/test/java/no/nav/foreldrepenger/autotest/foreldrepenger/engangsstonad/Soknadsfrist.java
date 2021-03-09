@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -25,12 +26,12 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("foreldrepenger")
-public class Soknadsfrist extends FpsakTestBase {
+class Soknadsfrist extends FpsakTestBase {
 
     @Test
     @DisplayName("Behandle søknadsfrist og sent tilbake")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist")
-    public void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() {
+    void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
@@ -62,16 +63,18 @@ public class Soknadsfrist extends FpsakTestBase {
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
         saksbehandler.hentFagsak(saksnummer);
-        verifiserLikhet(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode,
-                "UTFO");
-        verifiserLikhet(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET)
-                .getStatus().kode, "OPPR");
+        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode)
+                .as("Aksjonspunktstatus for SJEKK_MANGLENDE_FØDSEL")
+                .isEqualTo("UTFO");
+        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET).getStatus().kode)
+                .as("Aksjonspunktstatus for MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET")
+                .isEqualTo("OPPR");
     }
 
     @Test
     @DisplayName("Behandle søknadsfrist og sent tilbake på grunn av fødsel")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av fødsel - tester tilbakesending")
-    public void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() {
+    void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusMonths(7);
@@ -96,14 +99,16 @@ public class Soknadsfrist extends FpsakTestBase {
         beslutter.bekreftAksjonspunkt(vedtakBekreftelse);
 
         saksbehandler.hentFagsak(saksnummer);
-        verifiserLikhet(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode,
-                "OPPR");
+        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode)
+                .as("Aksjonspunktstatus for SJEKK_MANGLENDE_FØDSEL")
+                .isEqualTo("OPPR");
 
         var harSøknadsfristAP = saksbehandler.valgtBehandling.getAksjonspunkter().stream()
                 .anyMatch(ap -> ap.getDefinisjon().kode
                         .equals(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET));
-        verifiser(!harSøknadsfristAP, "Behandling hadde aksjonspunkt "
-                + AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET + " selv om det ikke var forventet");
+        assertThat(harSøknadsfristAP)
+                .as("Uforventet aksjonspunkt MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET")
+                .isFalse();
     }
 
 }

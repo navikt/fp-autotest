@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -25,12 +26,12 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 @Tag("fpsak")
 @Tag("engangsstonad")
-public class Klage extends FpsakTestBase {
+class Klage extends FpsakTestBase {
 
     @Test
     @DisplayName("Behandle klage via NFP - medhold")
     @Description("Behandle klage via NFP - vurdert til medhold")
-    public void klageMedholdNFP() {
+    void klageMedholdNFP() {
         // Opprette førstegangssøknad engangsstønad
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
@@ -63,20 +64,23 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_MEDHOLD);
+        assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_MEDHOLD);
-
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
     }
 
     @Test
     @DisplayName("Behandle klage via NFP - påklaget vedtak opphevet")
     @Description("Behandle klage via NFP - stadfestet af NFP og opphevet av KA")
-    public void klageOppheveAvKA() {
+    void klageOppheveAvKA() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -106,8 +110,9 @@ public class Klage extends FpsakTestBase {
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
-                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
+        assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme klagebehandler.
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -124,8 +129,9 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
-                BehandlingResultatType.KLAGE_YTELSESVEDTAK_OPPHEVET);
+        assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_OPPHEVET);
 
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
@@ -142,7 +148,7 @@ public class Klage extends FpsakTestBase {
     @Test
     @DisplayName("Behandle klage via KA - påklaget vedtak omgjort/medhold")
     @Description("Behandle klage via KA - stadfestet af NFP og medhold av KA")
-    public void klageOmgjortAvKA() {
+    void klageOmgjortAvKA() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -172,8 +178,9 @@ public class Klage extends FpsakTestBase {
                 .fritekstBrev("Fritekst brev fra nfp")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
-                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
+        assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // KA - klage kommer rett til KA uten totrinnsbehanling. Kan fortsette med samme klagebehandler.
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -206,7 +213,7 @@ public class Klage extends FpsakTestBase {
     @Test
     @DisplayName("Behandle klage via KA - avslag")
     @Description("Behandle klage via KA - stadfestet af NFP og medhold av KA")
-    public void klageAvslaattAvKA() {
+    void klageAvslaattAvKA() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -233,8 +240,9 @@ public class Klage extends FpsakTestBase {
                 .bekreftStadfestet()
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        verifiserLikhet(klagebehandler.valgtBehandling.behandlingsresultat.getType(),
-                BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
+        assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
 
         // Behandle klage - KA
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
@@ -253,13 +261,15 @@ public class Klage extends FpsakTestBase {
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
         klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
-        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_AVVIST);
+        assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.KLAGE_AVVIST);
     }
 
     @Test
     @DisplayName("Behandle klage via NFP - avvist av beslutter")
     @Description("Behandle klage via NFP - medhold av NFP avvist av beslutter send tilbake til NFP vurdert til delvist gunst")
-    public void avvistAvBelutterNFP() {
+    void avvistAvBelutterNFP() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -293,10 +303,12 @@ public class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserLikhet(klagebehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_MEDHOLD,
-                "Behandlingsresultat");
-        verifiserKlageVurderingOmgjoer(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP()
-                .getKlageVurderingOmgjoer().kode, "GUNST_MEDHOLD_I_KLAGE");
+        assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer().kode)
+                .as("Klagevurderingsresultat")
+                .isEqualTo("GUNST_MEDHOLD_I_KLAGE");
 
         beslutter.hentFagsak(sakId);
         beslutter.ventPåOgVelgKlageBehandling();
@@ -310,12 +322,12 @@ public class Klage extends FpsakTestBase {
 
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
-        verifiserFritekst(
-                klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
-                fritekstbrev1);
-        verifiserFritekst(
-                klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(),
-                begrunnelse1);
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev())
+                .as("Fritekst")
+                .isEqualTo(fritekstbrev1);
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse())
+                .as("Begrunnelse")
+                .isEqualTo(begrunnelse1);
         String fritekstbrev2 = "Fritekst brev nr 2 .";
         String begrunnelse2 = "Fordi.";
         VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse1 = klagebehandler
@@ -334,31 +346,28 @@ public class Klage extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.KLAGE_MEDHOLD);
-        verifiserFritekst(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev(),
-                fritekstbrev2);
-        verifiserFritekst(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse(),
-                begrunnelse2);
-        verifiserKlageVurderingOmgjoer(
-                beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer().kode,
-                "DELVIS_MEDHOLD_I_KLAGE");
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev())
+                .as("Fritekst")
+                .isEqualTo(fritekstbrev2);
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse())
+                .as("begrunnelse2")
+                .isEqualTo(begrunnelse1);
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer().kode)
+                .as("KlageVurderingOmgjoer")
+                .isEqualTo("DELVIS_MEDHOLD_I_KLAGE");
     }
 
     @Step("Oppretter førstegangsvedtak")
     private void opprettForstegangssoknadVedtak(long saksnummer) {
         // Opprette førstegangssøknad engangsstønad
         saksbehandler.hentFagsak(saksnummer);
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         saksbehandler.ventTilAvsluttetBehandling();
-    }
-
-    private void verifiserFritekst(String verdiFaktisk, String verdiForventet) {
-        verifiserLikhet(verdiFaktisk, verdiForventet, "Fritekst");
-    }
-
-    private void verifiserKlageVurderingOmgjoer(String verdiFaktisk, String verdiForventet) {
-        verifiserLikhet(verdiFaktisk, verdiForventet, "KlageVurderingOmgjoer");
     }
 }

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -26,12 +27,12 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
-public class Innsyn extends FpsakTestBase {
+class Innsyn extends FpsakTestBase {
 
     @Test
     @DisplayName("Behandle innsyn for mor - godkjent")
     @Description("Behandle innsyn for mor - godkjent happy case")
-    public void behandleInnsynMorGodkjent() {
+    void behandleInnsynMorGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -43,7 +44,9 @@ public class Innsyn extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.ventPåOgVelgDokumentInnsynBehandling();
@@ -62,15 +65,18 @@ public class Innsyn extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         AllureHelper.debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNSYN_INNVILGET);
-        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT),
-                "Brev er ikke bestilt etter innsyn er godkjent");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNSYN_INNVILGET);
+        assertThat(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT))
+                .as("Historikkinnslag")
+                .isTrue();
     }
 
     @Test
     @DisplayName("Behandle innsyn for mor - avvist")
     @Description("Behandle innsyn for mor - avvist ved vurdering")
-    public void behandleInnsynMorAvvist() {
+    void behandleInnsynMorAvvist() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -82,7 +88,9 @@ public class Innsyn extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         saksbehandler.oprettBehandlingInnsyn(null);
         saksbehandler.ventPåOgVelgDokumentInnsynBehandling();
@@ -97,9 +105,11 @@ public class Innsyn extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNSYN_AVVIST,
-                "Behandlingstatus");
-        verifiser(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT),
-                "Brev er ikke bestilt etter innsyn er godkjent");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNSYN_AVVIST);
+        assertThat(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT))
+                .as("Historikkinnslag (Brev er ikke bestilt etter innsyn er godkjent)")
+                .isTrue();
     }
 }

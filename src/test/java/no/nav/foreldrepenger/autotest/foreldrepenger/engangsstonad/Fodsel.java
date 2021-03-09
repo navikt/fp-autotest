@@ -38,12 +38,12 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
-public class Fodsel extends FpsakTestBase {
+class Fodsel extends FpsakTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel - godkjent")
     @Description("Mor søker fødsel - godkjent happy case")
-    public void morSøkerFødselGodkjent() {
+    void morSøkerFødselGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -55,13 +55,15 @@ public class Fodsel extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
     @DisplayName("Mor søker fødsel - avvist")
     @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i tps")
-    public void morSøkerFødselAvvist() {
+    void morSøkerFødselAvvist() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -84,16 +86,18 @@ public class Fodsel extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        // verifiser at statusen er avvist
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
-        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.FØDSELSDATO_IKKE_OPPGITT_ELLER_REGISTRERT, "Avslagsarsak",
-                "Forventer at behandlingen er avslått fordi fødselsdato er ikke oppgitt eller registrert!");
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
+        assertThat(saksbehandler.valgtBehandling.hentAvslagsarsak())
+                .as("Avslagsarsak (Forventer at behandlingen er avslått fordi fødselsdato er ikke oppgitt eller registrert!)")
+                .isEqualTo(Avslagsårsak.FØDSELSDATO_IKKE_OPPGITT_ELLER_REGISTRERT);
     }
 
     @Test
     @DisplayName("Far søker registrert fødsel")
     @Description("Far søker registrert fødsel og blir avvist fordi far søker")
-    public void farSøkerFødselRegistrert() {
+    void farSøkerFødselRegistrert() {
         TestscenarioDto testscenario = opprettTestscenario("60");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -105,15 +109,18 @@ public class Fodsel extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
-        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.SØKER_ER_FAR, "Behandlingstatus",
-                "Forventer at behandlingen er avslått fordi søker er far!");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
+        assertThat(saksbehandler.valgtBehandling.hentAvslagsarsak())
+                .as("Avslagsårsak (Forventer at behandlingen er avslått fordi søker er far!)")
+                .isEqualTo(Avslagsårsak.SØKER_ER_FAR);
     }
 
     @Test
     @DisplayName("Mor søker fødsel overstyrt vilkår")
     @Description("Mor søker fødsel overstyrt vilkår adopsjon fra godkjent til avslått")
-    public void morSøkerFødselOverstyrt() {
+    void morSøkerFødselOverstyrt() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -129,8 +136,9 @@ public class Fodsel extends FpsakTestBase {
         vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET,
-                "behandlingsresultat");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingstatus")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         overstyrer.hentFagsak(saksnummer);
 
@@ -139,9 +147,12 @@ public class Fodsel extends FpsakTestBase {
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        verifiserLikhet(overstyrer.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
-        verifiserLikhet(overstyrer.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.SØKER_ER_FAR, "Avslagsarsak",
-                "Forventer at behandlingen er avslått med avslagskode: Søker er far!");
+        assertThat(overstyrer.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
+        assertThat(overstyrer.valgtBehandling.hentAvslagsarsak())
+                .as("Avslagsarsak")
+                .isEqualTo(Avslagsårsak.SØKER_ER_FAR);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
@@ -155,7 +166,7 @@ public class Fodsel extends FpsakTestBase {
     @Disabled
     @DisplayName("Mor søker fødsel - beregning overstyrt")
     @Description("Mor søker fødsel - beregning overstyrt fra ett beløp til 10 kroner")
-    public void morSøkerFødselBeregningOverstyrt() {
+    void morSøkerFødselBeregningOverstyrt() {
         TestscenarioDto testscenario = opprettTestscenario("50");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -166,7 +177,9 @@ public class Fodsel extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         // Overstyr beregning
         overstyrer.hentFagsak(saksnummer);
@@ -181,7 +194,9 @@ public class Fodsel extends FpsakTestBase {
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaTillegsopplysningerBekreftelse.class);
         OverstyrBeregning overstyrBeregning = new OverstyrBeregning(10);
         overstyrer.overstyr(overstyrBeregning);
-        verifiserLikhet(10, overstyrer.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse());
+        assertThat(overstyrer.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse())
+                .as("BeregnetTilkjentYtelse")
+                .isEqualTo(10);
 
         ForeslåVedtakBekreftelse foreslåVedtakBekreftelse = overstyrer
                 .hentAksjonspunktbekreftelse(ForeslåVedtakBekreftelse.class);
@@ -198,7 +213,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med flere barn")
     @Description("Mor søker fødsel med flere barn - happy case flere barn")
-    public void morSøkerFødselFlereBarn() {
+    void morSøkerFødselFlereBarn() {
         TestscenarioDto testscenario = opprettTestscenario("53");
         var aktørID = testscenario.personopplysninger().søkerAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
@@ -231,16 +246,22 @@ public class Fodsel extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         Beregningsresultat beregningResultatEngangsstonad = beslutter.valgtBehandling.getBeregningResultatEngangsstonad();
-        assertThat(beregningResultatEngangsstonad.getBeregnetTilkjentYtelse()).as("Beregnet tilkjent ytelse").isPositive();
-        assertThat(beregningResultatEngangsstonad.getAntallBarn()).as("Antall barn").isEqualTo(2);
+        assertThat(beregningResultatEngangsstonad.getBeregnetTilkjentYtelse())
+                .as("Beregnet tilkjent ytelse")
+                .isPositive();
+        assertThat(beregningResultatEngangsstonad.getAntallBarn())
+                .as("Antall barn")
+                .isEqualTo(2);
     }
 
     @Test
     @DisplayName("Mor søker fødsel med verge")
     @Description("Mor søker fødsel med verge - skal få aksjonspunkt om registrering av verge når man er under 18")
-    public void morSøkerFødselMedVerge() {
+    void morSøkerFødselMedVerge() {
         TestscenarioDto testscenario = opprettTestscenario("54");
         var aktørID = testscenario.personopplysninger().søkerAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
@@ -274,13 +295,15 @@ public class Fodsel extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
     @DisplayName("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel")
     @Description("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel. Behandlingen skal bli satt på vent")
-    public void morSøkerUregistrertFødselMindreEnn14DagerEtter() {
+    void morSøkerUregistrertFødselMindreEnn14DagerEtter() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         String aktørID = testscenario.personopplysninger().søkerAktørIdent();
         LocalDate fødselsdato = LocalDate.now().minusWeeks(1);
@@ -297,7 +320,7 @@ public class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Medmor søker fødsel")
     @Description("Medmor søker fødsel - søkand blir avslått fordi søker er medmor")
-    public void medmorSøkerFødsel() {
+    void medmorSøkerFødsel() {
         TestscenarioDto testscenario = opprettTestscenario("90");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -310,9 +333,12 @@ public class Fodsel extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
-        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(),Avslagsårsak.SØKER_ER_MEDMOR, "Avslagsårsak",
-                "Forventer at behandlingen er avslått med avslagskode: Søker er medmor!");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
+        assertThat(saksbehandler.valgtBehandling.hentAvslagsarsak())
+                .as("Avslagsårsak")
+                .isEqualTo(Avslagsårsak.SØKER_ER_MEDMOR);
     }
 
 }

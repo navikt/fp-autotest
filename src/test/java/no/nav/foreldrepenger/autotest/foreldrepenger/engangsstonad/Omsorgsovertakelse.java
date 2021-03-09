@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Omsorgsoverta
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.OMSORGSVILKÅRET;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -30,12 +31,12 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
-public class Omsorgsovertakelse extends FpsakTestBase {
+class Omsorgsovertakelse extends FpsakTestBase {
 
     @Test
     @DisplayName("Mor søker Omsorgsovertakelse - godkjent")
     @Description("Mor søker Omsorgsovertakelse - godkjent happy case")
-    public void MorSøkerOmsorgsovertakelseGodkjent() {
+    void MorSøkerOmsorgsovertakelseGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
 
@@ -65,13 +66,15 @@ public class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
     @DisplayName("Mor søker Omsorgsovertakelse - avvist")
     @Description("Mor søker Omsorgsovertakelse - avvist fordi mor ikke er død")
-    public void morSøkerOmsorgsovertakelseAvvist() {
+    void morSøkerOmsorgsovertakelseAvvist() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
 
@@ -102,13 +105,15 @@ public class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
     }
 
     @Test
     @DisplayName("Far søker Omsorgsovertakelse - godkjent")
     @Description("Far søker Omsorgsovertakelse - får godkjent aksjonspunkt og blir invilget")
-    public void farSøkerOmsorgsovertakelseGodkjent() {
+    void farSøkerOmsorgsovertakelseGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
         RelasjonTilBarnetErketyper.omsorgsovertakelse(ANDRE_FORELDER_DØD);
@@ -138,13 +143,15 @@ public class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
     @DisplayName("Far søker Foreldreansvar 2. ledd - godkjent")
     @Description("Far søker Foreldreansvar 2. ledd - får godkjent aksjonspunkt og blir invilget")
-    public void farSøkerForeldreansvarGodkjent() {
+    void farSøkerForeldreansvarGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
         EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR, ANDRE_FORELDER_DØD);
@@ -171,6 +178,8 @@ public class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_FORELDREANSVARSVILKÅRET_2_LEDD));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 }
