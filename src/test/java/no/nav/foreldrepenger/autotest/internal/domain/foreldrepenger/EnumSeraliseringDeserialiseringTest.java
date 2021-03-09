@@ -10,8 +10,10 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnsynResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
@@ -61,6 +63,14 @@ class EnumSeraliseringDeserialiseringTest extends SerializationTestBase {
     void InntektskategoriTest() {
         test(Inntektskategori.ARBEIDSTAKER);
     }
+
+        @Test
+    void PeriodeResultatÅrsakTest() {
+        test(InnvilgetÅrsak.FORELDREPENGER_ALENEOMSORG);
+        test(IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT);
+    }
+
+
 
     @Test
     void MedlemskapManuellVurderingTypeTest() {

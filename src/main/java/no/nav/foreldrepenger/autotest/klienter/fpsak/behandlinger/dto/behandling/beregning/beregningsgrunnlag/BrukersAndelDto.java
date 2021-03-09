@@ -4,15 +4,16 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BrukersAndelDto {
 
     protected int andelsnr;
     protected BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
-    protected Kode inntektskategori;
-    protected Kode aktivitetStatus;
+    protected Inntektskategori inntektskategori;
+    protected AktivitetStatus aktivitetStatus;
     protected boolean lagtTilAvSaksbehandler;
     protected boolean fastsattAvSaksbehandler;
     protected List<Double> andelIArbeid;
@@ -26,11 +27,11 @@ public class BrukersAndelDto {
         return arbeidsforhold;
     }
 
-    public Kode getInntektskategori() {
+    public Inntektskategori getInntektskategori() {
         return inntektskategori;
     }
 
-    public Kode getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 

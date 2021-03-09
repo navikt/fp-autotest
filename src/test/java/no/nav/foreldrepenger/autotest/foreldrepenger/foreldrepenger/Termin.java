@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
@@ -163,19 +164,19 @@ public class Termin extends ForeldrepengerTestBase {
         List<UttakResultatPeriode> resultatPerioder = saksbehandler.valgtBehandling.getUttakResultatPerioder()
                 .getPerioderSøker();
         verifiser(resultatPerioder.size() == 7, "Antall perioder er ikke 7.");
-        verifiser(resultatPerioder.get(0).getPeriodeResultatType().kode.equals("INNVILGET"),
+        verifiser(resultatPerioder.get(0).getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET),
                 "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(1).getPeriodeResultatType().kode.equals("INNVILGET"),
+        verifiser(resultatPerioder.get(1).getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET),
                 "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(2).getPeriodeResultatType().kode.equals("INNVILGET"),
+        verifiser(resultatPerioder.get(2).getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET),
                 "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(3).getPeriodeResultatType().kode.equals("INNVILGET"),
+        verifiser(resultatPerioder.get(3).getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET),
                 "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(4).getPeriodeResultatType().kode.equals("INNVILGET"),
+        verifiser(resultatPerioder.get(4).getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET),
                 "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(5).getPeriodeResultatType().kode.equals("INNVILGET"),
+        verifiser(resultatPerioder.get(5).getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET),
                 "Perioden er ikke automatisk innvilget.");
-        verifiser(resultatPerioder.get(6).getPeriodeResultatType().kode.equals("INNVILGET"),
+        verifiser(resultatPerioder.get(6).getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET),
                 "Perioden er ikke automatisk innvilget.");
         verifiser(resultatPerioder.get(2).getGraderingInnvilget().equals(true), "Gradering ikke innvilget");
         verifiser(resultatPerioder.get(4).getGraderingInnvilget().equals(true), "Gradering ikke innvilget");
@@ -224,11 +225,11 @@ public class Termin extends ForeldrepengerTestBase {
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
         List<UttakResultatPeriode> resultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         verifiser(resultatPerioder.size() == 2, "Det er ikke blitt opprettet riktig antall perioder.");
-        verifiser(resultatPerioder.get(0).getPeriodeResultatType().kode.equals("INNVILGET"),
+        verifiser(resultatPerioder.get(0).getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET),
                 "Perioden søkt for skal være innvilget.");
         verifiser(resultatPerioder.get(0).getAktiviteter().get(0).getStønadskontoType().equals(MØDREKVOTE),
                 "Feil stønadskontotype.");
-        verifiser(resultatPerioder.get(1).getPeriodeResultatType().kode.equals("INNVILGET"),
+        verifiser(resultatPerioder.get(1).getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET),
                 "Perioden søkt for skal være innvilget.");
         verifiser(resultatPerioder.get(1).getAktiviteter().get(0).getStønadskontoType().equals(MØDREKVOTE),
                 "Feil stønadskontotype.");

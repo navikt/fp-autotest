@@ -5,14 +5,14 @@ import java.lang.reflect.InvocationTargetException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Aksjonspunkt {
 
     @JsonIgnore
-    private transient AksjonspunktBekreftelse bekreftelse;
+    private AksjonspunktBekreftelse bekreftelse;
 
     protected Kode definisjon;
     protected Kode status;

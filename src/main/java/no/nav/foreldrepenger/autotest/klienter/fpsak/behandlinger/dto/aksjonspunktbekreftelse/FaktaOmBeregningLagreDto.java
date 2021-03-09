@@ -7,18 +7,19 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.MottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FaktaOmBeregningLagreDto {
 
     protected FastsettMaanedsinntektFL fastsettMaanedsinntektFL;
     protected FastsettMaanedsinntektUtenInntektsmelding fastsattUtenInntektsmelding;
-    protected List<String> faktaOmBeregningTilfeller = new ArrayList<>();
+    protected List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller = new ArrayList<>();
     protected MottarYtelse mottarYtelse;
     protected FastsettEndretBeregningsgrunnlag fastsettEndringBeregningsgrunnlag;
     protected BesteberegningFødendeKvinneDto besteberegningAndeler;
@@ -27,12 +28,12 @@ public class FaktaOmBeregningLagreDto {
     protected VurderLønnsendringDto vurdertLonnsendring;
     protected List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet = new ArrayList<>();
 
-    public FaktaOmBeregningLagreDto leggTilFaktaOmBeregningTilfeller(String kode) {
+    public FaktaOmBeregningLagreDto leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle kode) {
         this.faktaOmBeregningTilfeller.add(kode);
         return this;
     }
 
-    public FaktaOmBeregningLagreDto fjernFaktaOmBeregningTilfeller(String kode) {
+    public FaktaOmBeregningLagreDto fjernFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle kode) {
         this.faktaOmBeregningTilfeller.remove(kode);
         return this;
     }

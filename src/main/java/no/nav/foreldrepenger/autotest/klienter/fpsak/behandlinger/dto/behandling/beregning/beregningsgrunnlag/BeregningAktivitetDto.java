@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningAktivitetDto {
@@ -14,7 +14,7 @@ public class BeregningAktivitetDto {
     protected LocalDate fom;
     protected LocalDate tom;
     protected String arbeidsforholdId;
-    protected Kode arbeidsforholdType;
+    protected OpptjeningAktivitetType arbeidsforholdType;
     protected AktørId aktørId;
     protected Boolean skalBrukes;
 
@@ -38,7 +38,7 @@ public class BeregningAktivitetDto {
         return arbeidsforholdId;
     }
 
-    public Kode getArbeidsforholdType() {
+    public OpptjeningAktivitetType getArbeidsforholdType() {
         return arbeidsforholdType;
     }
 

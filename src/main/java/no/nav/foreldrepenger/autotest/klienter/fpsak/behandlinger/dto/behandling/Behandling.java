@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
@@ -23,7 +24,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -34,7 +34,7 @@ public class Behandling {
     public int versjon;
     public long fagsakId;
     public BehandlingType type;
-    public Kode status;
+    public BehandlingStatus status;
 
     public LocalDate skjaringstidspunkt;
     public LocalDateTime avsluttet;
@@ -99,11 +99,11 @@ public class Behandling {
     public String toString() {
         // Ikke bruk fields som er deferred i tostring, skaper mange kall
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("{Behandlingsid: %s}\n", this.id));
-        sb.append(String.format("{Behandlingsstatus: %s}\n", this.status.kode));
+        sb.append(String.format("{Behandlingsid: %s}%n", this.id));
+        sb.append(String.format("{Behandlingsstatus: %s}%n", this.status.getKode()));
         sb.append(String.format("{Behandlingstype: %s}", this.type.getKode()));
         if ((this.behandlingsresultat != null) && (this.behandlingsresultat.getAvslagsarsak() != null)) {
-            sb.append(String.format("{Årsak avslag: %s}\n", this.behandlingsresultat.getAvslagsarsak().getKode()));
+            sb.append(String.format("{Årsak avslag: %s}%n", this.behandlingsresultat.getAvslagsarsak().getKode()));
         }
         return sb.toString();
     }

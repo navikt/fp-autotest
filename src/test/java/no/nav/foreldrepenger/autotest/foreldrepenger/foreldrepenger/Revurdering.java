@@ -32,8 +32,11 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.buil
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
@@ -114,7 +117,7 @@ public class Revurdering extends ForeldrepengerTestBase {
 
         verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.OPPHØR, "Behandlingsresultat");
         verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(),Avslagsårsak.SØKER_ER_IKKE_MEDLEM, "Avslagsårsak");
-        verifiserLikhet(beslutter.valgtBehandling.status.kode, "AVSLU", "Behandlingsstatus");
+        verifiserLikhet(beslutter.valgtBehandling.status, BehandlingStatus.AVSLUTTET, "Behandlingsstatus");
         logger.info("Status på sak: {}", beslutter.valgtFagsak.status().getKode());
     }
 
@@ -166,8 +169,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         verifiser(saksbehandler.valgtBehandling.behandlingsresultat.toString().equals("FORELDREPENGER_ENDRET"),
                 "Behandlingsresultat er ikke 'Foreldrepenger er endret'");
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
-                "ENDRING_I_UTTAK", "konsekvensForYtelsen");
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
+                KonsekvensForYtelsen.ENDRING_I_UTTAK, "konsekvensForYtelsen");
         saksbehandler.hentFagsak(saksnummerE);
         verifiserLikhet(saksbehandler.valgtFagsak.status(), FagsakStatus.LØPENDE, "FagsakStatus");
 
@@ -222,8 +225,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtFagsak.status(), FagsakStatus.LØPENDE, "FagsakStatus");
         verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.FORELDREPENGER_ENDRET);
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
-                "ENDRING_I_UTTAK");
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
+                KonsekvensForYtelsen.ENDRING_I_UTTAK);
 
         // Verifisering av uttak
         var UttaksPerioderForSøker = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker();
@@ -302,8 +305,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         verifiserLikhet(saksbehandler.valgtFagsak.status(), FagsakStatus.LØPENDE, "FagsakStatus");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.FORELDREPENGER_ENDRET);
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
-                "ENDRING_I_UTTAK");
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
+                KonsekvensForYtelsen.ENDRING_I_UTTAK);
         verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size(), 5,
                 "Feil antall perioder i uttak.");
         for (UttakResultatPeriode periode : saksbehandler.valgtBehandling.getUttakResultatPerioder()
@@ -373,18 +376,18 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         verifiserLikhet(saksbehandler.valgtFagsak.status(), FagsakStatus.LØPENDE, "FagsakStatus");
         verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.FORELDREPENGER_ENDRET);
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0).kode,
-                "ENDRING_I_UTTAK");
+        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
+                KonsekvensForYtelsen.ENDRING_I_UTTAK);
 
         var UttaksPerioderForSøker = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker();
         verifiserLikhet(UttaksPerioderForSøker.size(), 4,"Feil antall perioder i uttak.");
         verifiserLikhet(UttaksPerioderForSøker.get(2).getUtsettelseType(), UttakUtsettelseÅrsak.ARBEID,
                 "Feil utsettelsesårsak for uttaksperidoe #2.");
-        verifiserLikhet(UttaksPerioderForSøker.get(2).getPeriodeResultatType().kode,"AVSLÅTT",
+        verifiserLikhet(UttaksPerioderForSøker.get(2).getPeriodeResultatType(), PeriodeResultatType.AVSLÅTT,
                 "Forventer at uttaksperioden tilbake i tid blir avslått..");
         verifiserLikhet(UttaksPerioderForSøker.get(3).getUtsettelseType(), UttakUtsettelseÅrsak.ARBEID,
                 "Feil utsettelsesårsak for uttaksperidoe #3.");
-        verifiserLikhet(UttaksPerioderForSøker.get(3).getPeriodeResultatType().kode,"INNVILGET",
+        verifiserLikhet(UttaksPerioderForSøker.get(3).getPeriodeResultatType(),PeriodeResultatType.INNVILGET,
                 "Forventer at uttaksperioden tilbake i tid blir avslått..");
 
     }
@@ -432,7 +435,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         var allePerioderInnvilget = saksbehandler.valgtBehandling.hentUttaksperioder().stream()
-                .allMatch(p -> p.getPeriodeResultatType().kode.equals("INNVILGET"));
+                .allMatch(p -> p.getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET));
         verifiser(allePerioderInnvilget, "Forventer at alle uttaksperioder er innvilget");
     }
 

@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Behandlingsresultat {
@@ -15,7 +16,7 @@ public class Behandlingsresultat {
     protected BehandlingResultatType type;
     protected Avslagsårsak avslagsarsak;
     protected Kode rettenTil;
-    protected List<Kode> konsekvenserForYtelsen;
+    protected List<KonsekvensForYtelsen> konsekvenserForYtelsen;
     protected String avslagsarsakFritekst;
     protected String overskrift;
     protected String fritekstbrev;
@@ -30,7 +31,7 @@ public class Behandlingsresultat {
         return type;
     }
 
-    public List<Kode> getKonsekvenserForYtelsen() {
+    public List<KonsekvensForYtelsen> getKonsekvenserForYtelsen() {
         return konsekvenserForYtelsen;
     }
 

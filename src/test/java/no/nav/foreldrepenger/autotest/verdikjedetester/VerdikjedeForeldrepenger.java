@@ -39,7 +39,11 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AnkeVurderingResultatBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettBruttoBeregningsgrunnlagSNBekreftelse;
@@ -74,7 +78,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.RelasjonTilBarnErketyper;
@@ -257,7 +260,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
         assertThat(beregningAktivitetStatus)
                 .as("Forventer at søker får utbetaling med status SN!")
-                .contains(new Kode("AKTIVITET_STATUS", "SN"));
+                .contains(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE);
         assertThat(beregningAktivitetStatus.size())
                 .as("Beregning aktivitetsstatus")
                 .isEqualTo(1);
@@ -368,8 +371,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .avslåManuellePerioderMedPeriodeResultatÅrsak(
-                        new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
+                .avslåManuellePerioderMedPeriodeResultatÅrsak(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
@@ -525,13 +527,12 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         overstyringUttak.avslåPeriode(
                 fpStartdatoFar.plusWeeks(3),
                 fpStartdatoFar.plusWeeks(11).minusDays(1),
-                new Kode("IKKE_OPPFYLT_AARSAK", "4050",
-                        "§14-13 første ledd bokstav a: Aktivitetskravet arbeid ikke oppfylt"),
+                IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT,
                 true);
         overstyringUttak.innvilgPeriode(
                 fpStartdatoFar.plusWeeks(11),
                 fpStartdatoFar.plusWeeks(19).minusDays(1),
-                new Kode("INNVILGET_AARSAK", "2031", "§14-12, jf. §14-16: Gradering av kvote/overført kvote"),
+                InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE,
                 Stønadskonto.FEDREKVOTE);
         overstyringUttak.splitPeriode(
                 fpStartdatoFar.plusWeeks(19),
@@ -540,11 +541,11 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         overstyringUttak.innvilgPeriode(
                 fpStartdatoFar.plusWeeks(19),
                 fpStartdatoFar.plusWeeks(41).minusDays(1),
-                new Kode("INNVILGET_AARSAK", "2031", "§14-12, jf. §14-16: Gradering av kvote/overført kvote"));
+                InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE);
         overstyringUttak.avslåPeriode(
                 fpStartdatoFar.plusWeeks(41),
                 fpStartdatoFar.plusWeeks(49).minusDays(1),
-                new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
+                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
         overstyringUttak.setBegrunnelse("Begrunnelse fra Autotest.");
         overstyrer.overstyr(overstyringUttak);
 
@@ -814,7 +815,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
         assertThat(beregningAktivitetStatus)
                 .as("Forventer at beregningsstatusen er APP!")
-                .contains(new Kode("AKTIVITET_STATUS", "AAP"));
+                .contains(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
         assertThat(beregningAktivitetStatus.size())
                 .as("Antall perioder med aktivitetsstatus lik AAP")
                 .isEqualTo(1);
@@ -847,12 +848,12 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
                 .as("Forventer at det er 2 avslåtte uttaksperioder")
                 .isEqualTo(2);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak().kodeverk)
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak())
                 .as("Perioden burde være avslått fordi annenpart har overlappende uttak!")
-                .isEqualTo("IKKE_OPPFYLT_AARSAK");
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak().kodeverk)
+                .isInstanceOf(IkkeOppfyltÅrsak.class);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak())
                 .as("Perioden burde være avslått fordi annenpart har overlappende uttak!")
-                .isEqualTo("IKKE_OPPFYLT_AARSAK");
+                .isInstanceOf(IkkeOppfyltÅrsak.class);
 
 
         var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
@@ -1020,7 +1021,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
                 fpStartdatoFar,
                 fpStartdatoFar.plusWeeks(4).minusDays(1),
-                new Kode("INNVILGET_AARSAK", "2038", "§14-10 sjette ledd: Samtidig uttak"),
+                InnvilgetÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
                 true,
                 true,
                 100);
@@ -1031,14 +1032,14 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
                 fpStartdatoFar.plusWeeks(4),
                 fpStartdatoFar.plusWeeks(13).minusDays(1),
-                new Kode("INNVILGET_AARSAK", "2038", "§14-10 sjette ledd: Samtidig uttak"),
+                InnvilgetÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
                 true,
                 true,
                 100);
         fastsettUttaksperioderManueltBekreftelse.avslåPeriode(
                 fpStartdatoFar.plusWeeks(13),
                 fpStartdatoFar.plusWeeks(17).minusDays(1),
-                new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
+                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
@@ -1063,9 +1064,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
                 .as("Avslåtte uttaksperioder")
                 .isEqualTo(1);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(6).getPeriodeResultatÅrsak().kodeverk)
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(6).getPeriodeResultatÅrsak())
                 .as("Perioden burde være avslått fordi det er ingen stønadsdager igjen på stønadskontoen")
-                .isEqualTo("IKKE_OPPFYLT_AARSAK");
+                .isInstanceOf(IkkeOppfyltÅrsak.class);
         assertThat(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().get(6).getDagsats())
                 .as("Siden perioden er avslått, forventes det 0 i dagsats i tilkjent ytelse")
                 .isZero();
@@ -1369,23 +1370,23 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         assertThat(avslåttePerioder.size())
                 .as("Avslåtte uttaksperioder")
                 .isEqualTo(1);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(1).getPeriodeResultatÅrsak().kode)
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(1).getPeriodeResultatÅrsak())
                 .as("Perioden burde være avslått fordi annenpart tar ut mødrekovte med 100% utbetalingsgrad samtidig")
-                .isEqualTo("4084");
+                .isEqualTo(IkkeOppfyltÅrsak.DEN_ANDRE_PART_OVERLAPPENDE_UTTAK_IKKE_SØKT_INNVILGET_SAMTIDIG_UTTAK);
 
         var fastsettUttaksperioderManueltBekreftelseMor = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
                 fellesperiodeStartMor,
                 fellesperiodeStartFar.minusDays(1),
-                new Kode("INNVILGET_AARSAK", "2038", "§14-10 sjette ledd: Samtidig uttak"),
+                InnvilgetÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
                 false,
                 true,
                 100);
         fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
                 fellesperiodeStartFar,
                 fellesperiodeSluttMor,
-                new Kode("INNVILGET_AARSAK", "2038", "§14-10 sjette ledd: Samtidig uttak"),
+                InnvilgetÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
                 false,
                 true,
                 60);
@@ -1397,7 +1398,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
                 fellesperiodeSluttMor.plusDays(1),
                 fomSistePeriode.minusDays(1),
-                new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
+                InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
         var saldoer = saksbehandler
                 .hentSaldoerGittUttaksperioder(fastsettUttaksperioderManueltBekreftelseMor.getPerioder());
         var disponibleFellesdager = saldoer.getStonadskontoer().get(Stønadskonto.FELLESPERIODE).getSaldo();
@@ -1408,11 +1409,11 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
                 fomSistePeriode,
                 sisteDagMedFellesperiode,
-                new Kode("INNVILGET_AARSAK", "2002", "§14-9: Innvilget fellesperiode/foreldrepenger"));
+                InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
         fastsettUttaksperioderManueltBekreftelseMor.avslåPeriode(
                 sisteDagMedFellesperiode.plusDays(1),
                 fellesperiodeSluttFar,
-                new Kode("IKKE_OPPFYLT_AARSAK", "4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"));
+                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
@@ -1542,7 +1543,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
                 .as("Konsekvens for ytelse")
-                .contains(new Kode("ENDRING_I_BEREGNING"), new Kode("ENDRING_I_UTTAK"));
+                .contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -1604,8 +1605,8 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.avslåManuellePerioderMedPeriodeResultatÅrsak(
-                new Kode("IKKE_OPPFYLT_AARSAK", "4072", "§14-9 sjuende ledd: Barnet er dødt"));
+        fastsettUttaksperioderManueltBekreftelse
+                .avslåManuellePerioderMedPeriodeResultatÅrsak(IkkeOppfyltÅrsak.BARNET_ER_DØD);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
@@ -1626,9 +1627,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var uttakResultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         var uttaksperiode_0 = uttakResultatPerioder.get(0);
         var uttaksperiode_1 = uttakResultatPerioder.get(1);
-        assertThat(uttaksperiode_0.getPeriodeResultatType().kode)
+        assertThat(uttaksperiode_0.getPeriodeResultatType())
                 .as("Uttaksresultattype for første periode")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(uttaksperiode_0.getPeriodeType().kode)
                 .as("Forventer at første periode er FELLESPERIODE pga dødfødsel etter termin")
                 .isEqualTo(FELLESPERIODE.name());
@@ -1636,9 +1637,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .as("Verifiserer at antall dager etter termin fylles med fellesperioden")
                 .isEqualTo(uttaksperiode_1.getFom().minusDays(differanseFødselTermin));
 
-        assertThat(uttaksperiode_1.getPeriodeResultatType().kode)
+        assertThat(uttaksperiode_1.getPeriodeResultatType())
                 .as("Uttaksresultattype for andre periode")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(uttaksperiode_1.getPeriodeType().kode)
                 .as("Forventer at første periode er FORELDREPENGER_FØR_FØDSEL pga dødfødsel etter termin")
                 .isEqualTo(FORELDREPENGER_FØR_FØDSEL.name());
@@ -1647,9 +1648,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .isEqualByComparingTo(BigDecimal.valueOf(3 * 5));
 
         var uttaksperiode_2 = uttakResultatPerioder.get(2);
-        assertThat(uttaksperiode_2.getPeriodeResultatType().kode)
+        assertThat(uttaksperiode_2.getPeriodeResultatType())
                 .as("Uttaksresultattype for tredje periode")
-                .isEqualTo("INNVILGET");
+                .isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(uttaksperiode_2.getPeriodeType().kode)
                 .as("Forventer at første periode er MØDREKVTOEN pga dødfødsel etter termin")
                 .isEqualTo(MØDREKVOTE.name());
@@ -1660,12 +1661,12 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
                 .as("Avslåtte uttaksperioder pga dødfødsel")
                 .isEqualTo(2);
-        assertThat(uttakResultatPerioder.get(3).getPeriodeResultatÅrsak().kodeverk)
+        assertThat(uttakResultatPerioder.get(3).getPeriodeResultatÅrsak())
                 .as("Perioden burde være avslått fordi det er mottatt dødfødselshendelse")
-                .isEqualTo("IKKE_OPPFYLT_AARSAK");
-        assertThat(uttakResultatPerioder.get(4).getPeriodeResultatÅrsak().kodeverk)
+                .isInstanceOf(IkkeOppfyltÅrsak.class);
+        assertThat(uttakResultatPerioder.get(4).getPeriodeResultatÅrsak())
                 .as("Perioden burde være avslått fordi det er mottatt dødfødselshendelse")
-                .isEqualTo("IKKE_OPPFYLT_AARSAK");
+                .isInstanceOf(IkkeOppfyltÅrsak.class);
     }
 
 

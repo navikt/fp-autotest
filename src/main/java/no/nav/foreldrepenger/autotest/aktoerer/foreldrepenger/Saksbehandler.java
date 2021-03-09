@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -18,10 +17,14 @@ import java.util.stream.Collectors;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingResponse;
@@ -54,7 +57,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
@@ -201,7 +203,7 @@ public class Saksbehandler extends Aktoer {
      * Behandlingsstatus
      */
     @Step("Venter på behandlingsstatus {status}")
-    public void ventTilBehandlingsstatus(String status) {
+    public void ventTilBehandlingsstatus(BehandlingStatus status) {
         if (harBehandlingsstatus(status)) {
             return;
         }
@@ -217,12 +219,12 @@ public class Saksbehandler extends Aktoer {
         velgBehandling(valgtBehandling);
     }
 
-    public boolean harBehandlingsstatus(String status) {
+    public boolean harBehandlingsstatus(BehandlingStatus status) {
         return getBehandlingsstatus().equals(status);
     }
 
-    public String getBehandlingsstatus() {
-        return valgtBehandling.status.kode;
+    public BehandlingStatus getBehandlingsstatus() {
+        return valgtBehandling.status;
     }
 
     @Step("Velger behandling")
@@ -380,8 +382,7 @@ public class Saksbehandler extends Aktoer {
      */
     public List<UttakResultatPeriode> hentAvslåtteUttaksperioder() {
         return valgtBehandling.hentUttaksperioder().stream()
-                .filter(uttakResultatPeriode -> uttakResultatPeriode.getPeriodeResultatType().kode
-                        .equalsIgnoreCase("AVSLÅTT"))
+                .filter(p -> p.getPeriodeResultatType().equals(PeriodeResultatType.AVSLÅTT))
                 .collect(Collectors.toList());
     }
 
@@ -412,19 +413,16 @@ public class Saksbehandler extends Aktoer {
     public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelISN() {
         return valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().stream()
                 .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
-                .filter(andeler -> andeler.getAktivitetStatus().kode.equalsIgnoreCase("SN"))
+                .filter(a -> a.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .collect(Collectors.toList());
     }
 
     @Step("Henter ut unike aktivitetstatuser i beregning")
-    public Set<Kode> hentUnikeBeregningAktivitetStatus() {
-        Set<Kode> aktivitetStatus = new HashSet<>();
-        for (var beregningsresultatPerioder : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
-            for (var andel : beregningsresultatPerioder.getAndeler()) {
-                aktivitetStatus.add(andel.getAktivitetStatus());
-            }
-        }
-        return aktivitetStatus;
+    public Set<AktivitetStatus> hentUnikeBeregningAktivitetStatus() {
+        return valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().stream()
+                .flatMap(p -> p.getAndeler().stream())
+                .map(BeregningsresultatPeriodeAndel::getAktivitetStatus)
+                .collect(Collectors.toSet());
     }
 
     /*
@@ -510,7 +508,7 @@ public class Saksbehandler extends Aktoer {
 
     @Step("Venter til saken er avsluttet")
     public void ventTilAvsluttetBehandling() {
-        ventTilBehandlingsstatus("AVSLU");
+        ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
     }
 
 
@@ -643,10 +641,9 @@ public class Saksbehandler extends Aktoer {
 
     /* VERIFISERINGER */
     public boolean sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(BeregningsresultatPeriode beregningsresultatPeriode,
-                                                                    String aktivitetskode) {
+                                                                    AktivitetStatus aktivitetskode) {
         return beregningsresultatPeriode.getAndeler().stream()
-                .anyMatch(beregningsresultatPeriodeAndel -> beregningsresultatPeriodeAndel.getAktivitetStatus().kode
-                        .equalsIgnoreCase(aktivitetskode));
+                .anyMatch(p -> p.getAktivitetStatus().equals(aktivitetskode));
     }
 
     public boolean sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet(String aktivitet) {

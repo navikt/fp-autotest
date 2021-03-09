@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettMaanedsinntektUtenInntektsmeldingAndel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -37,13 +38,13 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("foreldrepenger")
-public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
+class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel, men har ikke arbeidsforhold i AAREG, sender inntektsmelding")
     @Description("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til arbeidsforhold " +
             "basert på inntektsmelding")
-    public void utenArbeidsforholdMenMedInntektsmelding() {
+    void utenArbeidsforholdMenMedInntektsmelding() {
         TestscenarioDto testscenario = opprettTestscenario("171");
 
         LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
@@ -80,13 +81,13 @@ public class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
-        verifiserLikhet(beslutter.getBehandlingsstatus(), "AVSLU");
+        verifiserLikhet(beslutter.getBehandlingsstatus(), BehandlingStatus.AVSLUTTET);
     }
 
     @Test
     @DisplayName("Mor søker termin uten aktiviteter i aareg. Legger til fiktivt arbeidsforhold.")
     @Description("Mor søker termin, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til fiktivt arbeidsforhold")
-    public void morSøkerTerminUtenAktiviteterIAareg() {
+    void morSøkerTerminUtenAktiviteterIAareg() {
         // SØKNAD //
         TestscenarioDto testscenario = opprettTestscenario("168");
         String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();

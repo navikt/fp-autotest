@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Vilkar {

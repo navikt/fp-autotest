@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto;
+package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
 import java.io.Serializable;
 import java.util.Objects;

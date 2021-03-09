@@ -7,10 +7,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UttakResultatPeriode implements Serializable {
@@ -18,9 +20,9 @@ public class UttakResultatPeriode implements Serializable {
     protected LocalDate fom;
     protected LocalDate tom;
     protected List<UttakResultatPeriodeAktivitet> aktiviteter;
-    protected Kode periodeResultatType;
+    protected PeriodeResultatType periodeResultatType;
     protected String begrunnelse;
-    protected Kode periodeResultatÅrsak;
+    protected PeriodeResultatÅrsak periodeResultatÅrsak;
     protected Kode manuellBehandlingÅrsak;
     protected Kode graderingAvslagÅrsak;
     protected Boolean flerbarnsdager;
@@ -36,19 +38,19 @@ public class UttakResultatPeriode implements Serializable {
         this.begrunnelse = begrunnelse;
     }
 
-    public Kode getPeriodeResultatType() {
+    public PeriodeResultatType getPeriodeResultatType() {
         return periodeResultatType;
     }
 
-    public void setPeriodeResultatType(Kode periodeResultatType) {
+    public void setPeriodeResultatType(PeriodeResultatType periodeResultatType) {
         this.periodeResultatType = periodeResultatType;
     }
 
-    public Kode getPeriodeResultatÅrsak() {
+    public PeriodeResultatÅrsak getPeriodeResultatÅrsak() {
         return periodeResultatÅrsak;
     }
 
-    public void setPeriodeResultatÅrsak(Kode periodeResultatÅrsak) {
+    public void setPeriodeResultatÅrsak(PeriodeResultatÅrsak periodeResultatÅrsak) {
         this.periodeResultatÅrsak = periodeResultatÅrsak;
     }
 

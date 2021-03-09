@@ -5,7 +5,8 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.kodeverk.dto.Kode;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningsresultatPeriodeAndel {
@@ -16,9 +17,9 @@ public class BeregningsresultatPeriodeAndel {
     protected Uttak uttak;
     protected BigDecimal utbetalingsgrad;
     protected LocalDate sisteUtbetalingsdato;
-    protected Kode aktivitetStatus;
+    protected AktivitetStatus aktivitetStatus;
     protected String arbeidsforholdId;
-    protected Kode arbeidsforholdType;
+    protected OpptjeningAktivitetType arbeidsforholdType;
 
 
     public String getArbeidsgiverReferanse() {
@@ -45,7 +46,7 @@ public class BeregningsresultatPeriodeAndel {
         return sisteUtbetalingsdato;
     }
 
-    public Kode getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 
@@ -53,7 +54,7 @@ public class BeregningsresultatPeriodeAndel {
         return arbeidsforholdId;
     }
 
-    public Kode getArbeidsforholdType() {
+    public OpptjeningAktivitetType getArbeidsforholdType() {
         return arbeidsforholdType;
     }
 

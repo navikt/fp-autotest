@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -160,7 +161,7 @@ public class Termin extends FpsakTestBase {
 
         saksbehandler.henleggBehandling(BehandlingResultatType.HENLAGT_SØKNAD_TRUKKET);
         verifiser(saksbehandler.valgtBehandling.erHenlagt(), "Behandlingen ble uventet ikke henlagt");
-        verifiserLikhet(saksbehandler.getBehandlingsstatus(), "AVSLU", "behandlingsstatus");
+        verifiserLikhet(saksbehandler.getBehandlingsstatus(), BehandlingStatus.AVSLUTTET, "behandlingsstatus");
     }
 
     @Test
