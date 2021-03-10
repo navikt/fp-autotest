@@ -373,10 +373,10 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
      * hent tilrettelegging for behandling
      */
     @Step("Henter tilrettelegging for behandling")
-    public Tilrettelegging behandlingTilrettelegging(Integer behandlingId) {
+    public Tilrettelegging behandlingTilrettelegging(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL)
-                .queryParam(BEHANDLINGID, behandlingId)
+                .queryParam(UUID, behandlingUuid)
                 .request(APPLICATION_JSON_TYPE)
                 .get(Tilrettelegging.class);
     }
