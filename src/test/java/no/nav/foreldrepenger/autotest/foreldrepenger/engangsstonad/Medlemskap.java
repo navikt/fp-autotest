@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -29,14 +30,14 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
-public class Medlemskap extends FpsakTestBase {
+class Medlemskap extends FpsakTestBase {
 
     private static final Logger logger = LoggerFactory.getLogger(Medlemskap.class);
 
     @Test
     @DisplayName("Mor søker fødsel er utvandret")
     @Description("Mor søker fødsel og er utvandret. Skal føre til aksjonspunkt angående medlemskap - avslått")
-    public void morSøkerFødselErUtvandret() {
+    void morSøkerFødselErUtvandret() {
         TestscenarioDto testscenario = opprettTestscenario("51");
 
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
@@ -65,7 +66,9 @@ public class Medlemskap extends FpsakTestBase {
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        assertThat(overstyrer.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
@@ -74,13 +77,15 @@ public class Medlemskap extends FpsakTestBase {
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_MEDLEMSKAPSVILKÅRET));
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
     }
 
     @Test
     @DisplayName("Mor søker med personstatus uregistrert")
     @Description("Mor søker med personstatus uregistrert, får askjonspunkt så hennlegges")
-    public void morSøkerFødselUregistrert() {
+    void morSøkerFødselUregistrert() {
         TestscenarioDto testscenario = opprettTestscenario("120");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -96,14 +101,15 @@ public class Medlemskap extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentAvslagsarsak(), Avslagsårsak.SØKER_ER_IKKE_BOSATT,
-                "Avklart som ikke bosatt skal gi avslag med VM 1025");
+        assertThat(saksbehandler.valgtBehandling.hentAvslagsarsak())
+                .as("Avslagsårsak (Avklart som ikke bosatt skal gi avslag med VM 1025)")
+                .isEqualTo(Avslagsårsak.SØKER_ER_IKKE_BOSATT);
     }
 
     @Test
     @DisplayName("Mor søker med utenlandsk adresse og ingen registert inntekt")
     @Description("Mor søker med utelandsk adresse og ingen registret inntekt")
-    public void morSøkerFødselUtenlandsadresse() {
+    void morSøkerFødselUtenlandsadresse() {
         TestscenarioDto testscenario = opprettTestscenario("121");
         EngangstønadBuilder søknad = lagEngangstønadFødsel(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -114,6 +120,8 @@ public class Medlemskap extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 }

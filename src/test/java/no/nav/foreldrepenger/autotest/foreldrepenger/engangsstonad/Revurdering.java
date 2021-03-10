@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -27,12 +28,12 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 @Tag("fpsak")
 @Tag("engangsstonad")
-public class Revurdering extends FpsakTestBase {
+class Revurdering extends FpsakTestBase {
 
     @Test
     @DisplayName("Manuelt opprettet revurdering")
     @Description("Manuelt opprettet revurdering etter avsluttet behandling med utsendt varsel")
-    public void manueltOpprettetRevurderingSendVarsel() {
+    void manueltOpprettetRevurderingSendVarsel() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -60,7 +61,9 @@ public class Revurdering extends FpsakTestBase {
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingsresultat");
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         saksbehandler.ventTilAvsluttetBehandling();
 
@@ -76,7 +79,8 @@ public class Revurdering extends FpsakTestBase {
         saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT);
         saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BEH_VENT);
 
-        verifiser(saksbehandler.valgtBehandling.erSattPåVent(),
-                "Behandlingen er ikke satt på vent etter varsel for revurdering");
+        assertThat(saksbehandler.valgtBehandling.erSattPåVent())
+                .as("Behandlingen er ikke satt på vent etter varsel for revurdering")
+                .isTrue();
     }
 }

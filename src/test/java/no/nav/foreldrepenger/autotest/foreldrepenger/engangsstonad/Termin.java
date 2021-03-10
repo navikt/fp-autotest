@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -30,12 +31,12 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("engangsstonad")
-public class Termin extends FpsakTestBase {
+class Termin extends FpsakTestBase {
 
     @Test
     @DisplayName("Mor søker termin - godkjent")
     @Description("Mor søker termin - godkjent happy case")
-    public void morSøkerTerminGodkjent() {
+    void morSøkerTerminGodkjent() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -62,14 +63,16 @@ public class Termin extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
     }
 
     @Test
     @DisplayName("Mor søker termin overstyrt vilkår")
     @Description("Mor søker termin overstyrt vilkår fødsel fra oppfylt til avvist")
-    public void morSøkerTerminOvertyrt() {
+    void morSøkerTerminOvertyrt() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -95,7 +98,9 @@ public class Termin extends FpsakTestBase {
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        assertThat(overstyrer.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
@@ -104,7 +109,9 @@ public class Termin extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_FØDSELSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
     }
 
     public void behandleTerminMorUtenTerminbekreftelse() {
@@ -114,7 +121,7 @@ public class Termin extends FpsakTestBase {
     @Test
     @DisplayName("Far søker termin")
     @Description("Far søker termin avslått pga søker er far")
-    public void farSøkerTermin() {
+    void farSøkerTermin() {
         TestscenarioDto testscenario = opprettTestscenario("61");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -133,13 +140,15 @@ public class Termin extends FpsakTestBase {
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.AVSLÅTT, "Behandlingstatus");
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.AVSLÅTT);
     }
 
     @Test
     @DisplayName("Setter behandling på vent og gjennoptar og henlegger")
     @Description("Setter behandling på vent og gjennoptar og henlegger")
-    public void settBehandlingPåVentOgGjenopptaOgHenlegg() {
+    void settBehandlingPåVentOgGjenopptaOgHenlegg() {
         // Opprett scenario og søknad
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
@@ -154,20 +163,28 @@ public class Termin extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         saksbehandler.settBehandlingPåVent(LocalDate.now(), Venteårsak.AVV_DOK);
-        verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er ikke satt på vent");
+        assertThat(saksbehandler.valgtBehandling.erSattPåVent())
+                .as("Behandlingen satt på vent")
+                .isTrue();
 
         saksbehandler.gjenopptaBehandling();
-        verifiser(!saksbehandler.valgtBehandling.erSattPåVent(), "Behandlingen er satt på vent");
+        assertThat(saksbehandler.valgtBehandling.erSattPåVent())
+                .as("Behandlingen satt på vent")
+                .isFalse();
 
         saksbehandler.henleggBehandling(BehandlingResultatType.HENLAGT_SØKNAD_TRUKKET);
-        verifiser(saksbehandler.valgtBehandling.erHenlagt(), "Behandlingen ble uventet ikke henlagt");
-        verifiserLikhet(saksbehandler.getBehandlingsstatus(), BehandlingStatus.AVSLUTTET, "behandlingsstatus");
+        assertThat(saksbehandler.valgtBehandling.erHenlagt())
+                .as("Behandlingen ble uventet ikke henlagt")
+                .isTrue();
+        assertThat(saksbehandler.getBehandlingsstatus())
+                .as("Behandlingsstatus")
+                .isEqualTo(BehandlingStatus.AVSLUTTET);
     }
 
     @Test
     @DisplayName("Mor søker termin 25 dager etter fødsel")
     @Description("Mor søker termin 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
-    public void morSøkerTermin25DagerTilbakeITid() {
+    void morSøkerTermin25DagerTilbakeITid() {
         TestscenarioDto testscenario = opprettTestscenario("55");
         EngangstønadBuilder søknad = lagEngangstønadTermin(
                 testscenario.personopplysninger().søkerAktørIdent(),
@@ -185,7 +202,9 @@ public class Termin extends FpsakTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INNVILGET, "Behandlingstatus");
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         beslutter.hentFagsak(saksnummer);
 
