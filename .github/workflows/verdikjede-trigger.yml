@@ -86,7 +86,7 @@ jobs:
           echo Oppe!
           echo
           echo "Tester om fptilbake er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8030/fptilbake/internal/isReady)" != "200" ]]; do sleep 2; done' || false
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8030/fptilbake/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo
           echo "Tester om fprisk er oppe"
