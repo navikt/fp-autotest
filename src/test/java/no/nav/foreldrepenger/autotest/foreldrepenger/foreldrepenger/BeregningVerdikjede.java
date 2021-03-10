@@ -29,7 +29,6 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.Søk
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
@@ -100,8 +99,9 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
-        verifiserLikhet(saksbehandler.getBehandlingsstatus(), BehandlingStatus.AVSLUTTET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         // Verifiser at beregning er gjort riktig
         List<LocalDate> startdatoer = Arrays.asList(fpStartdato, førsteYtelse.fom, andreYtelse.fom, tredjeYtelse.fom);
@@ -429,7 +429,9 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         // FAKTA OM BEREGNING
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
+        assertThat(aksjonspunkt.erUbekreftet())
+                .as("Aksjonspunktstatus er ubekreftet for VURDER_FAKTA_FOR_ATFL_SN")
+                .isTrue();
     }
 
     @Test
@@ -457,7 +459,9 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        verifiserLikhet(aksjonspunkt.erUbekreftet(), true);
+        assertThat(aksjonspunkt.erUbekreftet())
+                .as("Aksjonspunktstatus er ubekreftet for VURDER_FAKTA_FOR_ATFL_SN")
+                .isTrue();
     }
 
     @Test
@@ -486,7 +490,9 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
     }
 

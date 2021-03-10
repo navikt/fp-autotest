@@ -128,19 +128,31 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse1);
 
         // Verifiser Beregningsgrunnlag
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);// ikke sikker
-                                                                                                          // på denne
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0), AktivitetStatus.KOMBINERT_AT_FL);
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 1);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus())
+                .as("Antall aktivitetstatus")
+                .isEqualTo(1);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0))
+                .as("Aktivitetsstatus i beregnignsgrunnlag")
+                .isEqualTo(AktivitetStatus.KOMBINERT_AT_FL);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto())
+                .as("Antall beregningsgrunnlagsparioder")
+                .isEqualTo(1);
         List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
-        verifiserLikhet(andeler.size(), 2);
-        verifiserLikhet(andeler.get(0).getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER);
-        verifiserLikhet(andeler.get(1).getAktivitetStatus(), AktivitetStatus.FRILANSER);
+        assertThat(andeler.size())
+                .as("Antall andeler")
+                .isEqualTo(2);
+        assertThat(andeler.get(0).getAktivitetStatus())
+                .as("Aktivitetsstatus")
+                .isEqualTo(AktivitetStatus.ARBEIDSTAKER);
+        assertThat(andeler.get(1).getAktivitetStatus())
+                .as("Aktivitetsstatus")
+                .isEqualTo(AktivitetStatus.FRILANSER);
 
         // Legg til og fjern ytelser for å se tilbakehopp og opprettelse av akjsonspunkter
-        verifiser(saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS),
-                "Har ikke aksjonspunkt for FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS");
+        assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS))
+                .as("Har aksjonspunkt FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS")
+                .isTrue();
         VurderFaktaOmBeregningBekreftelse vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
@@ -172,7 +184,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         verifiserUttak(2, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
@@ -233,7 +247,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         verifiserUttak(2, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
@@ -279,7 +295,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
     }
@@ -317,7 +335,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         verifiserUttak(2, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -350,7 +370,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         verifiserUttak(1, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -390,7 +412,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         verifiserUttak(2, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -440,8 +464,9 @@ public class Fodsel extends ForeldrepengerTestBase {
                 startDatoForeldrepenger.plusWeeks(2));
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        List<UttakResultatPeriode> perioder = saksbehandler.valgtBehandling.hentUttaksperioder();
-        verifiserLikhet(perioder.size(), 1);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().size())
+                .as("Uttaksperioder")
+                .isEqualTo(1);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
@@ -451,8 +476,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiser(beslutter.harHistorikkinnslagForBehandling(HistorikkinnslagType.VEDTAK_FATTET),
-                "behandling har ikke historikkinslag 'Vedtak fattet'");
+        assertThat(beslutter.harHistorikkinnslagForBehandling(HistorikkinnslagType.VEDTAK_FATTET))
+                .as("Har historikkinnslag VEDTAK_FATTET")
+                .isTrue();
         beslutter.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_BESTILT);
 
     }
@@ -483,7 +509,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         verifiserUttak(1, saksbehandler.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger(), false);
 
@@ -523,7 +551,9 @@ public class Fodsel extends ForeldrepengerTestBase {
 
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         // verifiserer uttak
         List<UttakResultatPeriode> perioder = saksbehandler.valgtBehandling.hentUttaksperioder();
@@ -546,7 +576,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         aksjonspunktBekreftelseEndringssøknad.setFordeling(fordelingEndringssøknad);
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelseEndringssøknad);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.FORELDREPENGER_ENDRET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
 
         // verifiserer uttak
         List<UttakResultatPeriode> perioderEtterEndringssøknad = saksbehandler.valgtBehandling.hentUttaksperioder();
@@ -587,7 +619,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         fordel.sendInnInntektsmeldinger(List.of(inntektsmeldingBuilder,inntektsmeldingBuilder2), testscenario, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
-        verifiser(saksbehandler.valgtBehandling.erSattPåVent(), "Behandling ikke satt på vent");
+        assertThat(saksbehandler.valgtBehandling.erSattPåVent())
+                .as("Behandling satt på vent")
+                .isTrue();
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
     }
@@ -635,14 +669,23 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
         // Verifiser Beregningsgrunnlag
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);// ikke sikker
-                                                                                                          // på denne
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0), AktivitetStatus.ARBEIDSTAKER);
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 1);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus())
+                .as("Antall aktivitetsstatus i beregningsgrunnlag")
+                .isEqualTo(1);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0))
+                .as("Aktivitetstatus")
+                .isEqualTo(AktivitetStatus.ARBEIDSTAKER);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto())
+                .as("Antall beregningsgrunnlagperioder i beregnignsgrunnlag")
+                .isEqualTo(1);
         List<BeregningsgrunnlagPrStatusOgAndelDto> andeler = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
-        verifiserLikhet(andeler.size(), 1);
-        verifiserLikhet(andeler.get(0).getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER);
+        assertThat(andeler)
+                .as("Andeler")
+                .hasSize(1);
+        assertThat(andeler.get(0).getAktivitetStatus())
+                .as("Aktivitetsstatus i andel")
+                .isEqualTo(AktivitetStatus.ARBEIDSTAKER);
 
         // Bekreft inntekt i beregning
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
@@ -661,7 +704,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
         verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), false);
     }
@@ -714,14 +759,24 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
         // Verifiser Beregningsgrunnlag
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0), AktivitetStatus.ARBEIDSTAKER);
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 1);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus())
+                .as("Antall aktivitetstatuser i beregnignsgrunnlag")
+                .isEqualTo(1);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0))
+                .as("Aktivitetsstatus i beregnignsgrunnlag")
+                .isEqualTo(AktivitetStatus.ARBEIDSTAKER);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto())
+                .as("Antall beregningsgrunnlagperioder i beregningsgrunnlag")
+                .isEqualTo(1);
         List<BeregningsgrunnlagPrStatusOgAndelDto> andelerFørstePeriode = saksbehandler.valgtBehandling
                 .getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
-        verifiserLikhet(andelerFørstePeriode.size(), 1);
-        verifiserLikhet(andelerFørstePeriode.get(0).getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER);
+        assertThat(andelerFørstePeriode)
+                .as("Andeler i første periode")
+                .hasSize(1);
+        assertThat(andelerFørstePeriode.get(0).getAktivitetStatus())
+                .as("Aktivitetsstatus i andel i første periode")
+                .isEqualTo(AktivitetStatus.ARBEIDSTAKER);
 
         // Bekreft inntekt i beregning
         VurderBeregnetInntektsAvvikBekreftelse vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
@@ -734,13 +789,23 @@ public class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK);
 
         // Verifiser Beregningsgrunnlag
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus(), 1);
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0), AktivitetStatus.ARBEIDSTAKER);
-        verifiserLikhet(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto(), 2);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus())
+                .as("Antall aktivitetsstatus i beregningsgrunnlag")
+                .isEqualTo(1);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0))
+                .as("Aktivitetstatus")
+                .isEqualTo(AktivitetStatus.ARBEIDSTAKER);
+        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto())
+                .as("Antall beregningsgrunnlagperioder i beregnignsgrunnlag")
+                .isEqualTo(2);
         andelerFørstePeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
-        verifiserLikhet(andelerFørstePeriode.size(), 1);
-        verifiserLikhet(andelerFørstePeriode.get(0).getAktivitetStatus(), AktivitetStatus.ARBEIDSTAKER);
+        assertThat(andelerFørstePeriode)
+                .as("Andeler")
+                .hasSize(1);
+        assertThat(andelerFørstePeriode.get(0).getAktivitetStatus())
+                .as("Aktivitetsstatus i andel")
+                .isEqualTo(AktivitetStatus.ARBEIDSTAKER);
 
         // Assert refusjon
         List<BeregningsresultatPeriode> resultatPerioder = saksbehandler.valgtBehandling
@@ -764,8 +829,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
-
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
     }
 
@@ -826,7 +892,9 @@ public class Fodsel extends ForeldrepengerTestBase {
                 beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
         // verifiserer uttak
         List<UttakResultatPeriode> uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
@@ -840,8 +908,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         assertThat(foreldrepengerEtterUke6.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(foreldrepengerEtterUke6.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
 
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().size() == 4,
-                "Antall stønadskontoer er feil.");
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer())
+                .as("Stonadskontoer i Saldo")
+                .hasSize(4);
     }
 
     @Test
@@ -882,7 +951,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
@@ -1003,16 +1074,21 @@ public class Fodsel extends ForeldrepengerTestBase {
         assertThat(utsettelse.getAktiviteter().get(1).getTrekkdagerDesimaler()).isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(utsettelse.getAktiviteter().get(1).getStønadskontoType()).isEqualTo(INGEN_STØNADSKONTO);
 
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().size() == 4,
-                "Feil i antall stønadskontoer, skal være 4.");
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL)
-                .getSaldo() >= 0, "FPFF skal ikke være i minus.");
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo() >= 0,
-                "Fellerperiode skal ikke være i minus.");
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(MØDREKVOTE).getSaldo() >= 0,
-                "Mødrekvote skal ikke være i minus");
-
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer())
+                .as("Antall stønadskonter i saldo")
+                .hasSize(4);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo())
+                .as("Saldo igjen på FORELDREPENGER_FØR_FØDSEL")
+                .isGreaterThanOrEqualTo(0);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FELLESPERIODE).getSaldo())
+                .as("Saldo igjen på FELLESPERIODE")
+                .isGreaterThanOrEqualTo(0);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(MØDREKVOTE).getSaldo())
+                .as("Saldo igjen på MØDREKVOTE")
+                .isGreaterThanOrEqualTo(0);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
@@ -1081,14 +1157,18 @@ public class Fodsel extends ForeldrepengerTestBase {
                 .isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(periodeMerEnn49Uker.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
 
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().size() == 2,
-                "Feil antall stønadskontoer");
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL)
-                .getSaldo() >= 0, "FPFF skal ikke være minus.");
-        verifiser(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER).getSaldo() >= 0,
-                "Foreldrepenger skal ikke være i minus.");
-
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer())
+                .as("Antall stønadskonter i saldo")
+                .hasSize(2);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).getSaldo())
+                .as("Saldo igjen på FORELDREPENGER_FØR_FØDSEL")
+                .isNotNegative();
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(FORELDREPENGER).getSaldo())
+                .as("Saldo igjen på FELLESPERIODE")
+                .isNotNegative();
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
@@ -1131,7 +1211,9 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
     }
 
     @Test
@@ -1159,12 +1241,14 @@ public class Fodsel extends ForeldrepengerTestBase {
                 saksnummer);
         saksbehandler.hentFagsak(saksnummer);
 
-        verifiser(saksbehandler.valgtBehandling.erSattPåVent(),
-                "Behandlingen er ikke satt på vent selv om behandlingen ikke har ventet til 2. uke");
+        assertThat(saksbehandler.valgtBehandling.erSattPåVent())
+                .as("Behandling er satt på vent (Har ventet til 2. uke)")
+                .isTrue();
         logger.debug("{}", saksbehandler.valgtBehandling.fristBehandlingPaaVent);
         logger.debug("{}", fødselsdato.plusWeeks(2));
-        verifiser(saksbehandler.valgtBehandling.fristBehandlingPaaVent.equals(fødselsdato.plusWeeks(2)),
-                "Behandlingen er satt på vent for lenge");
+        assertThat(saksbehandler.valgtBehandling.fristBehandlingPaaVent)
+                .as("Frist behandling på vent")
+                .isEqualTo(fødselsdato.plusWeeks(2));
     }
 
     @Test
@@ -1234,21 +1318,27 @@ public class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiser(beslutter.valgtBehandling.hentUttaksperioder().size() == 9,
-                "Feil antall uttaksperioder, skal være 9");
-        verifiser(beslutter.valgtBehandling.hentUttaksperiode(2).getAktiviteter().get(0).getTrekkdagerDesimaler()
-                .compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
-        verifiser(beslutter.valgtBehandling.hentUttaksperiode(3).getAktiviteter().get(0).getTrekkdagerDesimaler()
-                .compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
-        verifiser(beslutter.valgtBehandling.hentUttaksperiode(4).getAktiviteter().get(0).getTrekkdagerDesimaler()
-                .compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
-        verifiser(beslutter.valgtBehandling.hentUttaksperiode(5).getAktiviteter().get(0).getTrekkdagerDesimaler()
-                .compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
-        verifiser(beslutter.valgtBehandling.hentUttaksperiode(6).getAktiviteter().get(0).getTrekkdagerDesimaler()
-                .compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
-        verifiser(beslutter.valgtBehandling.hentUttaksperiode(7).getAktiviteter().get(0).getTrekkdagerDesimaler()
-                .compareTo(BigDecimal.ZERO) == 0, "Feil i antall trekkdager, skal være 0");
-
+        assertThat(beslutter.valgtBehandling.hentUttaksperioder())
+                .as("Uttaksperioder")
+                .hasSize(9);
+        assertThat(beslutter.valgtBehandling.hentUttaksperiode(2).getAktiviteter().get(0).getTrekkdagerDesimaler())
+                .as("Antall trekkdager for aktivitet i uttaksperiode")
+                .isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(beslutter.valgtBehandling.hentUttaksperiode(3).getAktiviteter().get(0).getTrekkdagerDesimaler())
+                .as("Antall trekkdager for aktivitet i uttaksperiode")
+                .isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(beslutter.valgtBehandling.hentUttaksperiode(4).getAktiviteter().get(0).getTrekkdagerDesimaler())
+                .as("Antall trekkdager for aktivitet i uttaksperiode")
+                .isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(beslutter.valgtBehandling.hentUttaksperiode(5).getAktiviteter().get(0).getTrekkdagerDesimaler())
+                .as("Antall trekkdager for aktivitet i uttaksperiode")
+                .isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(beslutter.valgtBehandling.hentUttaksperiode(6).getAktiviteter().get(0).getTrekkdagerDesimaler())
+                .as("Antall trekkdager for aktivitet i uttaksperiode")
+                .isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(beslutter.valgtBehandling.hentUttaksperiode(7).getAktiviteter().get(0).getTrekkdagerDesimaler())
+                .as("Antall trekkdager for aktivitet i uttaksperiode")
+                .isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     private UttakResultatPeriodeAktivitet finnAktivitetForArbeidsgiver(UttakResultatPeriode uttakResultatPeriode,
