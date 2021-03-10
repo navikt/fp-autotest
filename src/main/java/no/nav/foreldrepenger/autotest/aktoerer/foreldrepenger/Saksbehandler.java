@@ -319,8 +319,6 @@ public class Saksbehandler extends Aktoer {
                     new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatEngangsstønad(behandling.uuid)));
             behandling.setBeregningResultatForeldrepenger(
                     new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatForeldrepenger(behandling.uuid)));
-            behandling.setPersonopplysning(
-                    new Lazy<>(() -> behandlingerKlient.behandlingPersonopplysninger(behandling.uuid)));
             behandling.setSoknad(new Lazy<>(() -> behandlingerKlient.behandlingSøknad(behandling.uuid)));
             behandling.setOpptjening(new Lazy<>(() -> behandlingerKlient.behandlingOpptjening(behandling.uuid)));
 

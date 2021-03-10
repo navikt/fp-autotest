@@ -51,7 +51,6 @@ public class Behandling {
 
     private Lazy<List<Vilkar>> vilkar;
     private Lazy<List<Aksjonspunkt>> aksjonspunkter;
-    private Lazy<Personopplysning> personopplysning;
     private Lazy<Beregningsgrunnlag> beregningsgrunnlag;
     private Lazy<Beregningsresultat> beregningResultatEngangsstonad;
     private Lazy<BeregningsresultatMedUttaksplan> beregningResultatForeldrepenger;
@@ -118,14 +117,6 @@ public class Behandling {
 
     public void setVilkar(Lazy<List<Vilkar>> dVilkår) {
         this.vilkar = dVilkår;
-    }
-
-    public Personopplysning getPersonopplysning() {
-        return get(personopplysning);
-    }
-
-    public void setPersonopplysning(Lazy<Personopplysning> dPersonopplysninger) {
-        this.personopplysning = dPersonopplysninger;
     }
 
     public Beregningsgrunnlag getBeregningsgrunnlag() {
