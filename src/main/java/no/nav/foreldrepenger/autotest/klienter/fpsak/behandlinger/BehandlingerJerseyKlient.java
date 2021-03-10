@@ -29,7 +29,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KlageInfo;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerAktiviteskravPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerFaktaData;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Personopplysning;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
@@ -59,7 +58,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     private static final String BEHANDLINGER_ANNEN_PART_BEHANDLING_URL = BEHANDLINGER_URL + "/annen-part-behandling";
 
     private static final String BEHANDLING_URL = "/behandling";
-    private static final String BEHANDLING_PERSONOPPLYSNINGER_URL = BEHANDLING_URL + "/person/personopplysninger";
     private static final String BEHANDLING_PERSON_MEDLEMSKAP = BEHANDLING_URL + "/person/medlemskap-v2";
     private static final String BEHANDLING_ENGANGSSTØNAD_URL = BEHANDLING_URL + "/beregningsresultat/engangsstonad";
     private static final String BEHANDLING_FORELDREPENGER_URL = BEHANDLING_URL + "/beregningsresultat/foreldrepenger";
@@ -167,15 +165,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .queryParam(SAKSNUMMER, saksnummer)
                 .request(APPLICATION_JSON_TYPE)
                 .get(Behandling.class);
-    }
-
-    @Step("Henter personopplysninger for behandling")
-    public Personopplysning behandlingPersonopplysninger(UUID behandlingUuid) {
-        return client.target(base)
-                .path(BEHANDLING_PERSONOPPLYSNINGER_URL)
-                .queryParam(UUID, behandlingUuid)
-                .request(APPLICATION_JSON_TYPE)
-                .get(Personopplysning.class);
     }
 
     @Step("Henter medlemskap for behandling")
