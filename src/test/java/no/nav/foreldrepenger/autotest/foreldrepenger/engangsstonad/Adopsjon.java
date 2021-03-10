@@ -130,7 +130,7 @@ class Adopsjon extends FpsakTestBase {
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+        assertThat(overstyrer.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingstatus")
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
