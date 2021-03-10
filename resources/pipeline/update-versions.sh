@@ -26,7 +26,7 @@ echo FPFRONTEND_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-frontend/
 echo FPFORMIDLING_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-formidling/fpformidling")" >> .env
 echo FPDOKGEN_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-dokgen/fp-dokgen")" >> .env
 echo FPOPPDRAG_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpoppdrag/fpoppdrag")" >> .env
-echo FPTILBAKE_IMAGE="docker.pkg.github.com/navikt/fptilbake/fptilbake:1.0-2021.03.02.092044-46116f6" >> .env
+echo FPTILBAKE_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fptilbake/fptilbake")" >> .env
 echo FPRISK_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-risk/fprisk")" >> .env
 echo FPABONNENT_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpabonnent/fpabonnent")" >> .env
 
