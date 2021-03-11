@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.fptilbake.svangerskapspenger;
 
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,21 +26,21 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
-public class TilbakekrevingSVP extends FptilbakeTestBase {
+class TilbakekrevingSVP extends FptilbakeTestBase {
 
     private static final String ytelseType = "SVP";
 
     @Test
     @DisplayName("1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
-    public void opprettTilbakekrevingManuelt() {
+    void opprettTilbakekrevingManuelt() {
         var testscenario = opprettTestscenario("501");
         var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var søkerFnr = testscenario.personopplysninger().søkerIdent();
         var orgNr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
                 .arbeidsgiverOrgnr();
         var tilrettelegginsprosent = 0;
-        LocalDate termindato = LocalDate.now().plusMonths(3);
+        var termindato = LocalDate.now().plusMonths(3);
         var tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
                 LocalDate.now(),
                 LocalDate.now(),
@@ -70,14 +71,13 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
                 saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaFødselOgTilrettelegging avklarFaktaFødselOgTilrettelegging = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
-        avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
+        var avklarFaktaFødselOgTilrettelegging = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
+                .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
-        BekreftSvangerskapspengervilkår bekreftSvangerskapspengervilkår = saksbehandler
-                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
-        bekreftSvangerskapspengervilkår
+        var bekreftSvangerskapspengervilkår = saksbehandler
+                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
                 .godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
@@ -89,9 +89,10 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
         tbksaksbehandler.hentSisteBehandling(saksnummer);
         tbksaksbehandler.ventTilBehandlingErPåVent();
-        verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"),
-                "Behandling har feil vent årsak.");
-        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
+        assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
+                .as("Venteårsak")
+                .isEqualTo("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG");
+        var kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
@@ -120,10 +121,20 @@ public class TilbakekrevingSVP extends FptilbakeTestBase {
         tbkbeslutter.behandleAksjonspunkt(fattVedtak);
         tbkbeslutter.ventTilAvsluttetBehandling();
 
-        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getRenteBeløp() == 0,"Forventet rentebeløp er 0, rente i beregningsresultat er noe annet");
-        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getSkattBeløp() == 412, "Forventet skattbeløp er 412, skatt i beregningsresultat er noe annet");
-        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp() == 1616, "Forventet tilbakekrevingsbeløp er 412, tilbakekrevingsbeløp i beregningsresultat er noe annet");
-        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløpEtterSkatt() == 1204, "Forventet tilbakekrevingsbeløp etter skatt er 412, tilbakekrevingsbeløp etter skatt i beregningsresultat er noe annet");
-        verifiser(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløpUtenRenter() == 1616, "Forventet tilbakekrevingsbeløp uten renter er 412, tilbakekrevingsbeløp uten renter i beregningsresultat er noe annet");
+        assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getRenteBeløp())
+                .as("Rente i beregningsresultat")
+                .isZero();
+        assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getSkattBeløp())
+                .as("Skattebeløp i beregningsresultat")
+                .isEqualTo(412);
+        assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp())
+                .as("Tilbakekrevingsbeløp i beregningsresultat")
+                .isEqualTo(1616);
+        assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløpEtterSkatt())
+                .as("Tilbakekrevingsbeløp etter skatt i beregningsresultat")
+                .isEqualTo(1204);
+        assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløpUtenRenter())
+                .as("Tilbakekrevingbeløp uten renter i beregningsresultat")
+                .isEqualTo(1616);
     }
 }

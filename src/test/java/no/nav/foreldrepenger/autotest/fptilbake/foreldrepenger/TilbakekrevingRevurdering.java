@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepe
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -16,9 +17,6 @@ import org.junit.jupiter.api.Test;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EndringssøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
@@ -27,27 +25,26 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnla
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
-public class TilbakekrevingRevurdering extends FptilbakeTestBase {
+class TilbakekrevingRevurdering extends FptilbakeTestBase {
 
     private static final String ytelseType = "FP";
 
     @Test
     @DisplayName("Oppretter en tilbakekreving og deretter tilbakekreving revurdering manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving. Revurdering pga Foreldelse")
-    public void opprettTilbakekrevingManuelt() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
+    void opprettTilbakekrevingManuelt() {
+        var testscenario = opprettTestscenario("50");
 
-        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        String søkerIdent = testscenario.personopplysninger().søkerIdent();
-        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
-        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        var søkerIdent = testscenario.personopplysninger().søkerIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
 
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         lagOgSendInntekstsmelding(testscenario, fpStartdato, saksnummer);
 
@@ -56,11 +53,11 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
-        Fordeling fordeling = generiskFordeling(
+        var fordeling = generiskFordeling(
                 uttaksperiode(FELLESPERIODE,fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling,
+        var søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling,
                 saksnummer);
-        long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent,
+        var saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.hentFagsak(saksnummerE);
@@ -70,9 +67,10 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
         tbksaksbehandler.hentSisteBehandling(saksnummer);
         tbksaksbehandler.ventTilBehandlingErPåVent();
-        verifiser(tbksaksbehandler.valgtBehandling.venteArsakKode.equals("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG"),
-                "Behandling har feil vent årsak.");
-        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
+        assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
+                .as("Venteårsak")
+                .isEqualTo("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG");
+        var kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
@@ -115,7 +113,7 @@ public class TilbakekrevingRevurdering extends FptilbakeTestBase {
     }
 
     private void lagOgSendInntekstsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) {
-        InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(
+        var inntektsmelding = lagInntektsmelding(
                 testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,

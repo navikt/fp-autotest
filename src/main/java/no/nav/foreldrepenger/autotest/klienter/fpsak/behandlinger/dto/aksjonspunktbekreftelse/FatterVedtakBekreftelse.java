@@ -16,10 +16,11 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    public void godkjennAksjonspunkter(List<Aksjonspunkt> aksjonspunkter) {
+    public FatterVedtakBekreftelse godkjennAksjonspunkter(List<Aksjonspunkt> aksjonspunkter) {
         for (Aksjonspunkt aksjonspunkt : aksjonspunkter) {
             godkjennAksjonspunkt(aksjonspunkt);
         }
+        return this;
     }
 
     public FatterVedtakBekreftelse godkjennAksjonspunkt(Aksjonspunkt aksjonspunkt) {

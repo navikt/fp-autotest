@@ -8,17 +8,14 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpriskTestBase;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fprisk")
-public class FpriskTest extends FpriskTestBase {
-    Logger LOG = LoggerFactory.getLogger(FpriskTest.class);
+class FpriskTest extends FpriskTestBase {
+
     private static final String BEHANDLINGSTEMA_FORELDREPENGER = "ab0326";
 
     private static final String FPRISK_TOPIC_URL = "privat-foreldrepenger-fprisk-lokal";
@@ -26,16 +23,16 @@ public class FpriskTest extends FpriskTestBase {
     @Test
     @DisplayName("Sender Kafkamelding med risikovurderingsforespørsel, venter på at vurderingen blir gjort.")
     @Description("Sender inn forespørel om risikovurderinger til FPRISK for scenario 50 over Kafka (gjennom VTP). Venter på at saken er ferdig behandlet via polling over REST.")
-    public void sendRisikovurderingsforespørselOgVentPåResultat() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
+    void sendRisikovurderingsforespørselOgVentPåResultat() {
+        var testscenario = opprettTestscenario("50");
 
-        String soekerAktoerId = testscenario.personopplysninger().søkerAktørIdent();
-        LocalDate skjæringstidspunkt = LocalDate.now();
-        LocalDate opplysningsperiodefraOgMed = LocalDate.now();
-        LocalDate opplysningsperiodeTilOgMed = LocalDate.now().plusMonths(1);
-        String annenPartAktørId = testscenario.personopplysninger().annenpartAktørIdent();
-        String konsumentId = UUID.randomUUID().toString();
-        RisikovurderingRequest kontraktFpriskMelding = new RisikovurderingRequest(soekerAktoerId, skjæringstidspunkt,
+        var soekerAktoerId = testscenario.personopplysninger().søkerAktørIdent();
+        var skjæringstidspunkt = LocalDate.now();
+        var opplysningsperiodefraOgMed = LocalDate.now();
+        var opplysningsperiodeTilOgMed = LocalDate.now().plusMonths(1);
+        var annenPartAktørId = testscenario.personopplysninger().annenpartAktørIdent();
+        var konsumentId = UUID.randomUUID().toString();
+        var kontraktFpriskMelding = new RisikovurderingRequest(soekerAktoerId, skjæringstidspunkt,
                 opplysningsperiodefraOgMed,
                 opplysningsperiodeTilOgMed, BEHANDLINGSTEMA_FORELDREPENGER, annenPartAktørId, konsumentId);
 
@@ -43,7 +40,5 @@ public class FpriskTest extends FpriskTestBase {
                 new RequestWrapper(UUID.randomUUID().toString(), kontraktFpriskMelding));
 
         saksbehandler.ventTilRisikoKlassefiseringsstatus(konsumentId, "IKKE_HOY");
-
     }
-
 }

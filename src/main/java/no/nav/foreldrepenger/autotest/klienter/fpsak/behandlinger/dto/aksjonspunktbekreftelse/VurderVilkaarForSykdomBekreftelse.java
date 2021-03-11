@@ -9,8 +9,9 @@ public class VurderVilkaarForSykdomBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    public void setErMorForSykVedFodsel(boolean morForSykVEdFodsel) {
+    public VurderVilkaarForSykdomBekreftelse setErMorForSykVedFodsel(boolean morForSykVEdFodsel) {
         this.erMorForSykVedFodsel = morForSykVEdFodsel;
+        return this;
     }
 
 }

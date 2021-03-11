@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,8 +19,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettMaanedsinntektUtenInntektsmeldingAndel;
@@ -29,10 +28,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Execution(ExecutionMode.CONCURRENT)
@@ -45,27 +42,28 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
     @Description("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til arbeidsforhold " +
             "basert på inntektsmelding")
     void utenArbeidsforholdMenMedInntektsmelding() {
-        TestscenarioDto testscenario = opprettTestscenario("171");
+        var testscenario = opprettTestscenario("171");
 
-        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
-        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
+        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
 
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
-        String fnr = testscenario.personopplysninger().søkerIdent();
-        List<Integer> inntekter = sorterteInntektsbeløp(testscenario);
+        var fnr = testscenario.personopplysninger().søkerIdent();
+        var inntekter = sorterteInntektsbeløp(testscenario);
 
-        InntektsmeldingBuilder inntektsmelding = lagInntektsmelding(inntekter.get(0), fnr, fpStartdato, "910909088")
+        var inntektsmelding = lagInntektsmelding(inntekter.get(0), fnr, fpStartdato, "910909088")
                 .medArbeidsforholdId("ARB001-001");
 
         fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
         saksbehandler.hentFagsak(saksnummer);
 
         // LØSER AKSJONSPUNKT 5080 //
-        var ab = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+        var ab = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .bekreftArbeidsforholdErBasertPåInntektsmelding("910909088", LocalDate.now().minusYears(3),
                         LocalDate.now().plusYears(2), BigDecimal.valueOf(100));
         saksbehandler.bekreftAksjonspunkt(ab);
@@ -75,13 +73,17 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
-        Aksjonspunkt ap = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var ap = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(Collections.singletonList(ap));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        verifiserLikhet(beslutter.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
-        verifiserLikhet(beslutter.getBehandlingsstatus(), BehandlingStatus.AVSLUTTET);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
+        assertThat(beslutter.getBehandlingsstatus())
+                .as("Behandlingsstatus")
+                .isEqualTo(BehandlingStatus.AVSLUTTET);
     }
 
     @Test
@@ -89,34 +91,35 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
     @Description("Mor søker termin, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til fiktivt arbeidsforhold")
     void morSøkerTerminUtenAktiviteterIAareg() {
         // SØKNAD //
-        TestscenarioDto testscenario = opprettTestscenario("168");
-        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        String annenPartAktørid = testscenario.personopplysninger().annenpartAktørIdent();
-        LocalDate fødselsdato = LocalDate.now().plusDays(2);
+        var testscenario = opprettTestscenario("168");
+        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        var annenPartAktørid = testscenario.personopplysninger().annenpartAktørIdent();
+        var fødselsdato = LocalDate.now().plusDays(2);
 
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTermin(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medAnnenForelder(annenPartAktørid);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         saksbehandler.hentFagsak(saksnummer);
 
         saksbehandler.gjenopptaBehandling();
 
         // VURDER ARBEIDSFORHOLD: Legg til fikivt arbeidsforhold //
-        var apBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+        var apBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
                 .leggTilArbeidsforhold("Ambassade", LocalDate.now().minusYears(2), LocalDate.now().plusYears(1), 100);
         saksbehandler.bekreftAksjonspunkt(apBekreftelse);
 
         // VURDER OPPTJENING: Godkjenn fiktivt arbeidsforhold i opptjening //
-        VurderPerioderOpptjeningBekreftelse vurderPerioderOpptjeningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
-        vurderPerioderOpptjeningBekreftelse.godkjennAllOpptjening();
+        var vurderPerioderOpptjeningBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
+                .godkjennAllOpptjening();
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
         // FAKTA OM BERGNING: Fastsett inntekt for fiktivt arbeidsforhold og vurder om
         // mottatt ytelse
-        FastsettMaanedsinntektUtenInntektsmeldingAndel fastsattInntekt = new FastsettMaanedsinntektUtenInntektsmeldingAndel(
-                1L, 25_000);
-        var ab = saksbehandler.hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+        var fastsattInntekt = new FastsettMaanedsinntektUtenInntektsmeldingAndel(1L, 25_000);
+        var ab = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilMaanedsinntektUtenInntektsmelding(List.of(fastsattInntekt))
                 .leggTilMottarYtelse(List.of(new ArbeidstakerandelUtenIMMottarYtelse(1L, false)));
         saksbehandler.bekreftAksjonspunkt(ab);
@@ -133,12 +136,11 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
-        Aksjonspunkt apAvvikBeregning = beslutter
-                .hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
-        Aksjonspunkt apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        Aksjonspunkt apVurderArbeidsforhold = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
-        Aksjonspunkt apVurderOpptjening = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING);
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var apAvvikBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
+        var apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
+        var apVurderArbeidsforhold = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
+        var apVurderOpptjening = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(
                 List.of(apAvvikBeregning, apFaktaOmBeregning, apVurderArbeidsforhold, apVurderOpptjening));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);

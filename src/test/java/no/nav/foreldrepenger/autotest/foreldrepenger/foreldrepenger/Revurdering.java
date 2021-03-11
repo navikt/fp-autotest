@@ -13,8 +13,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.u
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-
-import java.time.LocalDate;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -27,12 +26,10 @@ import org.slf4j.LoggerFactory;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EndringssøknadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
@@ -48,19 +45,16 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 
 @Execution(ExecutionMode.CONCURRENT)
 @Tag("fpsak")
 @Tag("foreldrepenger")
 @Tag("fluoritt")
-public class Revurdering extends ForeldrepengerTestBase {
+class Revurdering extends ForeldrepengerTestBase {
 
     private static final Logger logger = LoggerFactory.getLogger(Revurdering.class);
 
@@ -68,17 +62,17 @@ public class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Revurdering opprettet manuelt av saksbehandler.")
     @Description("Førstegangsbehandling til positivt vedtak. Saksbehandler oppretter revurdering manuelt. " +
             "Overstyrer medlemskap. Vedtaket opphører.")
-    public void opprettRevurderingManuelt() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
-        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
-        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+    void opprettRevurderingManuelt() {
+        var testscenario = opprettTestscenario("50");
+        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
 
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
-        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+        var inntektsmeldinger = lagInntektsmelding(
                 testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
@@ -93,20 +87,22 @@ public class Revurdering extends ForeldrepengerTestBase {
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_MEDLEMSKAP);
 
         overstyrer.hentFagsak(saksnummer);
         overstyrer.ventPåOgVelgRevurderingBehandling();
-        OverstyrMedlemskapsvilkaaret overstyrMedlemskapsvilkaaret = new OverstyrMedlemskapsvilkaaret();
-        overstyrMedlemskapsvilkaaret
+        var overstyrMedlemskapsvilkaaret = new OverstyrMedlemskapsvilkaaret()
                 .avvis(Avslagsårsak.SØKER_ER_IKKE_MEDLEM)
                 .setBegrunnelse("avvist");
         overstyrer.overstyr(overstyrMedlemskapsvilkaaret);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.OPPHØR, "Behandlingsresultat");
-        verifiserLikhet(overstyrer.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.OPPHØR, "Behandlingsresultat");
+        assertThat(overstyrer.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.OPPHØR);
 
         beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgRevurderingBehandling();
@@ -115,28 +111,34 @@ public class Revurdering extends ForeldrepengerTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         beslutter.ventTilFagsakAvsluttet();
 
-        verifiserLikhet(beslutter.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.OPPHØR, "Behandlingsresultat");
-        verifiserLikhet(beslutter.valgtBehandling.hentAvslagsarsak(),Avslagsårsak.SØKER_ER_IKKE_MEDLEM, "Avslagsårsak");
-        verifiserLikhet(beslutter.valgtBehandling.status, BehandlingStatus.AVSLUTTET, "Behandlingsstatus");
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.OPPHØR);
+        assertThat(beslutter.valgtBehandling.hentAvslagsarsak())
+                .as("Avslagsårsak")
+                .isEqualTo(Avslagsårsak.SØKER_ER_IKKE_MEDLEM);
+        assertThat(beslutter.valgtBehandling.status)
+                .as("Behandlingsstatus")
+                .isEqualTo(BehandlingStatus.AVSLUTTET);
         logger.info("Status på sak: {}", beslutter.valgtFagsak.status().getKode());
     }
 
     @Test
     @DisplayName("Endringssøknad med ekstra uttaksperiode.")
     @Description("Førstegangsbehandling til positivt vedtak. Søker sender inn endringsøknad. Endring i uttak. Vedtak fortsatt løpende.")
-    public void endringssøknad() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
+    void endringssøknad() {
+        var testscenario = opprettTestscenario("50");
 
         // Førstegangssøknad
-        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        String søkerIdent = testscenario.personopplysninger().søkerIdent();
-        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
-        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
+        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        var søkerIdent = testscenario.personopplysninger().søkerIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
 
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+        var inntektsmeldinger = lagInntektsmelding(
                 testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
@@ -152,35 +154,43 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.VEDLEGG_MOTTATT);
         debugLoggBehandling(saksbehandler.valgtBehandling);
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.behandlinger.size(), 1, "Antall behandlinger");
-        verifiserLikhet(saksbehandler.valgtBehandling.type.getKode(), "BT-002", "Behandlingstype");
+        assertThat(saksbehandler.behandlinger)
+                .as("Antall behandlinger")
+                .hasSize(1);
+        assertThat(saksbehandler.valgtBehandling.type)
+                .as("Behandlingstype")
+                .isEqualTo(BehandlingType.FØRSTEGANGSSØKNAD);
         saksbehandler.ventTilAvsluttetBehandling();
         debugFritekst("Ferdig med første behandling");
 
         // Endringssøknad
-        Fordeling fordeling = generiskFordeling(
+        var fordeling = generiskFordeling(
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        EndringssøknadBuilder søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer);
-        long saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent,
+        var søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer);
+        var saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiser(saksbehandler.valgtBehandling.behandlingsresultat.toString().equals("FORELDREPENGER_ENDRET"),
-                "Behandlingsresultat er ikke 'Foreldrepenger er endret'");
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
-                KonsekvensForYtelsen.ENDRING_I_UTTAK, "konsekvensForYtelsen");
-        saksbehandler.hentFagsak(saksnummerE);
-        verifiserLikhet(saksbehandler.valgtFagsak.status(), FagsakStatus.LØPENDE, "FagsakStatus");
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getType())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+                .as("konsekvensForYtelsen")
+                .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
 
+        saksbehandler.hentFagsak(saksnummerE);
+        assertThat(saksbehandler.valgtFagsak.status())
+                .as("Fagsak stauts")
+                .isEqualTo(FagsakStatus.LØPENDE);
     }
 
     @Test
     @DisplayName("Endringssøknad med utsettelse")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med utsettelse fra bruker. Vedtak fortsatt løpende.")
-    public void endringssøknadMedUtsettelse() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
+    void endringssøknadMedUtsettelse() {
+        var testscenario = opprettTestscenario("50");
 
         var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
@@ -188,7 +198,7 @@ public class Revurdering extends ForeldrepengerTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
 
         // Opprette perioder mor søker om
-        Fordeling opprinneligFordeling = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
+        var opprinneligFordeling = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medFordeling(opprinneligFordeling);
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
@@ -207,74 +217,94 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.INNVILGET);
-        verifiser(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size() == 4,
-                "Feil antall perioder.");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker())
+                .as("Antall uttaksperioder")
+                .hasSize(4);
 
-        LocalDate utsettelseFom = fødselsdato.plusWeeks(16);
-        LocalDate utsettelseTom = fødselsdato.plusWeeks(18).minusDays(1);
-        Fordeling fordelingUtsettelseEndring = FordelingErketyper.fordelingEndringssøknadUtsettelseOgForskyEksisterndePerioder(opprinneligFordeling,
+        var utsettelseFom = fødselsdato.plusWeeks(16);
+        var utsettelseTom = fødselsdato.plusWeeks(18).minusDays(1);
+        var fordelingUtsettelseEndring = FordelingErketyper.fordelingEndringssøknadUtsettelseOgForskyEksisterndePerioder(opprinneligFordeling,
                 SøknadUtsettelseÅrsak.ARBEID, utsettelseFom, utsettelseTom);
-        EndringssøknadBuilder endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
+        var endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
                 fordelingUtsettelseEndring, saksnummer);
-        long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
+        var saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtFagsak.status(), FagsakStatus.LØPENDE, "FagsakStatus");
-        verifiserLikhet(saksbehandler.valgtBehandling.hentBehandlingsresultat(), BehandlingResultatType.FORELDREPENGER_ENDRET);
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
-                KonsekvensForYtelsen.ENDRING_I_UTTAK);
+        assertThat(saksbehandler.valgtFagsak.status())
+                .as("Fagsak stauts")
+                .isEqualTo(FagsakStatus.LØPENDE);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+                .as("Konsekvenser for ytelse")
+                .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
 
         // Verifisering av uttak
         var UttaksPerioderForSøker = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker();
-        verifiserLikhet(UttaksPerioderForSøker.size(), 6,"Feil antall perioder.");
+        assertThat(UttaksPerioderForSøker)
+                .as("Antall uttaksperioder for søker")
+                .hasSize(6);
         for (UttakResultatPeriode periode : UttaksPerioderForSøker) {
-            verifiserLikhet(periode.getAktiviteter().size(), 1, "Periode har mer enn én aktivitet");
+            assertThat(periode.getAktiviteter())
+                    .as("Antall aktiviteter for hver uttaksperiode")
+                    .hasSize(1);
         }
-        verifiserLikhet(UttaksPerioderForSøker.get(4).getUtsettelseType(), UttakUtsettelseÅrsak.ARBEID,
-                "Feil i utsettelsetype eller periode.");
+        assertThat(UttaksPerioderForSøker.get(4).getUtsettelseType())
+                .as("Uttaksutsettelesårsak")
+                .isEqualTo(UttakUtsettelseÅrsak.ARBEID);
 
         // Verifisering tilkjent ytelse
-        BeregningsresultatMedUttaksplan tilkjentYtelsePerioder = saksbehandler.valgtBehandling
-                .getBeregningResultatForeldrepenger();
-        verifiserLikhet(tilkjentYtelsePerioder.getPerioder().size(), 6,"Feil antall perioder i tilkjentytesle.");
-        verifiser(tilkjentYtelsePerioder.getPerioder().get(0).getDagsats() > 0,
-                "Forventes en dagsats på større en null for periode #1 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder().get(1).getDagsats() > 0,
-                "Forventes en dagsats på større en null for periode #2 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats() > 0,
-                "Forventes en dagsats på større en null for periode #3 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats() > 0,
-                "Forventes en dagsats på større en null for periode #4 i tilkjent ytelse");
-        verifiser(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats() == 0,
-                "Siden perioden er usettelse så forventes det 0 i dagsats.");
-        verifiser(tilkjentYtelsePerioder.getPerioder().get(5).getDagsats() > 0,
-                "Forventes en dagsats på større en null for periode #6 i tilkjent ytelse");
-        verifiser(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0),
-                "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!");
+        var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
+        assertThat(tilkjentYtelsePerioder.getPerioder())
+                .as("Antall perioder i tilkjent ytelse")
+                .hasSize(6);
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(0).getDagsats())
+                .as("Dagsats i tilkjent ytelse periode")
+                .isPositive();
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(1).getDagsats())
+                .as("Dagsats i tilkjent ytelse periode")
+                .isPositive();
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats())
+                .as("Dagsats i tilkjent ytelse periode")
+                .isPositive();
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats())
+                .as("Dagsats i tilkjent ytelse periode")
+                .isPositive();
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats())
+                .as("Dagsats i tilkjent ytelse periode")
+                .isZero();
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(5).getDagsats())
+                .as("Dagsats i tilkjent ytelse periode")
+                .isPositive();
+        assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
+                .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
+                .isTrue();
     }
 
     @Test
     @DisplayName("Endringssøknad med gradering")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med gradering fra bruker. Vedtak fortsatt løpende.")
-    public void endringssøknadMedGradering() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
+    void endringssøknadMedGradering() {
+        var testscenario = opprettTestscenario("50");
 
-        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        String søkerIdent = testscenario.personopplysninger().søkerIdent();
-        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
-        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        String orgnr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        var søkerIdent = testscenario.personopplysninger().søkerIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
+        var orgnr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
                 .arbeidsgiverOrgnr();
 
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        Long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
-        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+        var inntektsmeldinger = lagInntektsmelding(
                 testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
@@ -287,42 +317,51 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size(), 4,
-                "Feil antall perioder i uttak.");
+        assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker())
+                .as("Antall uttaksperioder")
+                .hasSize(4);
 
         // Endringssøknad
-        LocalDate graderingFom = fødselsdato.plusWeeks(20);
-        LocalDate graderingTom = fødselsdato.plusWeeks(23).minusDays(1);
-        Fordeling fordelingGradering = fordelingEndringssøknadGradering(FELLESPERIODE, graderingFom, graderingTom,
+        var graderingFom = fødselsdato.plusWeeks(20);
+        var graderingTom = fødselsdato.plusWeeks(23).minusDays(1);
+        var fordelingGradering = fordelingEndringssøknadGradering(FELLESPERIODE, graderingFom, graderingTom,
                 orgnr, 40);
-        EndringssøknadBuilder endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
+        var endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
                 fordelingGradering, saksnummer);
-        long saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
+        var saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiserLikhet(saksbehandler.valgtFagsak.status(), FagsakStatus.LØPENDE, "FagsakStatus");
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.FORELDREPENGER_ENDRET);
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
-                KonsekvensForYtelsen.ENDRING_I_UTTAK);
-        verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().size(), 5,
-                "Feil antall perioder i uttak.");
+        assertThat(saksbehandler.valgtFagsak.status())
+                .as("Fagsak stauts")
+                .isEqualTo(FagsakStatus.LØPENDE);
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+                .as("Konsekvenser for ytelse")
+                .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
+        assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker())
+                .as("Antall uttaksperioder")
+                .hasSize(5);
         for (UttakResultatPeriode periode : saksbehandler.valgtBehandling.getUttakResultatPerioder()
                 .getPerioderSøker()) {
-            verifiserLikhet(periode.getAktiviteter().size(), 1, "Periode har mer enn én aktivitet");
+            assertThat(periode.getAktiviteter())
+                    .as("Aktiviteter i uttaksperiode")
+                    .hasSize(1);
         }
-        verifiserLikhet(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().get(4)
-                .getGraderingInnvilget(), true, "Feil graderingsperiode.");
-
+        assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().get(4).getGraderingInnvilget())
+                .as("Uttaksperiode 4 er en graderingsperiode")
+                .isTrue();
     }
 
     @Test
     @DisplayName("Mor endringssøknad med aksjonspunkt i uttak")
     @Description("Mor endringssøknad med aksjonspunkt i uttak. Søker utsettelse tilbake i tid for å få aksjonspunkt." +
             "Saksbehandler avslår utsettelsen. Mor har også arbeid med arbeidsforholdId i inntektsmelding")
-    public void endringssøknad_med_aksjonspunkt_i_uttak() {
+    void endringssøknad_med_aksjonspunkt_i_uttak() {
         var testscenario = opprettTestscenario("140");
         var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
         var fnrSøker = testscenario.personopplysninger().søkerIdent();
@@ -359,8 +398,8 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.avslåManuellePerioder();
+                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+                .avslåManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -374,28 +413,38 @@ public class Revurdering extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        verifiserLikhet(saksbehandler.valgtFagsak.status(), FagsakStatus.LØPENDE, "FagsakStatus");
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.FORELDREPENGER_ENDRET);
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
-                KonsekvensForYtelsen.ENDRING_I_UTTAK);
+        assertThat(saksbehandler.valgtFagsak.status())
+                .as("Fagsak stauts")
+                .isEqualTo(FagsakStatus.LØPENDE);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+                .as("Konsekvenser for ytelse")
+                .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
 
         var UttaksPerioderForSøker = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker();
-        verifiserLikhet(UttaksPerioderForSøker.size(), 4,"Feil antall perioder i uttak.");
-        verifiserLikhet(UttaksPerioderForSøker.get(2).getUtsettelseType(), UttakUtsettelseÅrsak.ARBEID,
-                "Feil utsettelsesårsak for uttaksperidoe #2.");
-        verifiserLikhet(UttaksPerioderForSøker.get(2).getPeriodeResultatType(), PeriodeResultatType.AVSLÅTT,
-                "Forventer at uttaksperioden tilbake i tid blir avslått..");
-        verifiserLikhet(UttaksPerioderForSøker.get(3).getUtsettelseType(), UttakUtsettelseÅrsak.ARBEID,
-                "Feil utsettelsesårsak for uttaksperidoe #3.");
-        verifiserLikhet(UttaksPerioderForSøker.get(3).getPeriodeResultatType(),PeriodeResultatType.INNVILGET,
-                "Forventer at uttaksperioden tilbake i tid blir avslått..");
-
+        assertThat(UttaksPerioderForSøker)
+                .as("Antall uttaksperioder")
+                .hasSize(4);
+        assertThat(UttaksPerioderForSøker.get(2).getUtsettelseType())
+                .as("Uttaks utsettelsesårsak for periode 3")
+                .isEqualTo(UttakUtsettelseÅrsak.ARBEID);
+        assertThat(UttaksPerioderForSøker.get(2).getPeriodeResultatType())
+                .as("Perioderesultatstype for periode 3")
+                .isEqualTo(PeriodeResultatType.AVSLÅTT);
+        assertThat(UttaksPerioderForSøker.get(3).getUtsettelseType())
+                .as("Uttaks utsettelsesårsak for periode 3")
+                .isEqualTo(UttakUtsettelseÅrsak.ARBEID);
+        assertThat(UttaksPerioderForSøker.get(3).getPeriodeResultatType())
+                .as("Perioderesultatstype for periode 3")
+                .isEqualTo(PeriodeResultatType.INNVILGET);
     }
 
     @Test
     @DisplayName("Ikke få avslåg på innvilget perioder pga søknadsfrist")
     @Description("Ikke få avslåg på innvilget perioder pga søknadsfrist.")
-    public void ikke_avslag_pa_innvilget_perioder_pga_søknadsfrist_i_revurdering() {
+    void ikke_avslag_pa_innvilget_perioder_pga_søknadsfrist_i_revurdering() {
         var testscenario = opprettTestscenario("74");
         var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
@@ -434,15 +483,15 @@ public class Revurdering extends ForeldrepengerTestBase {
                 saksbehandler.hentAksjonspunktbekreftelse(ForeslåVedtakManueltBekreftelse.class));
         saksbehandler.ventTilAvsluttetBehandling();
 
-        var allePerioderInnvilget = saksbehandler.valgtBehandling.hentUttaksperioder().stream()
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder())
+                .as("Forventer at alle uttaksperioder er innvilget")
                 .allMatch(p -> p.getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET));
-        verifiser(allePerioderInnvilget, "Forventer at alle uttaksperioder er innvilget");
     }
 
     @Test
     @DisplayName("Fortsatt få avslag på avslåtte perioder pga søknadsfrist i neste revurdering")
     @Description("Fortsatt få avslag på avslåtte perioder pga søknadsfrist i neste revurdering. Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
-    public void fortsatt_tape_avslåtte_perioder_pga_søknadsfrist_i_revurdering() {
+    void fortsatt_tape_avslåtte_perioder_pga_søknadsfrist_i_revurdering() {
         var testscenario = opprettTestscenario("74");
         var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
@@ -475,7 +524,9 @@ public class Revurdering extends ForeldrepengerTestBase {
         beslutter.bekreftAksjonspunkt(bekreftelse);
 
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() > 1, "Forventer avslåtte uttaksperioder");
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder())
+                .as("Avslåtte uttaksperioder")
+                .hasSizeGreaterThan(1);
 
         var fordelingEndringssøknad = generiskFordeling(
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(12).plusWeeks(2)));
@@ -489,15 +540,16 @@ public class Revurdering extends ForeldrepengerTestBase {
         // Manuell behandling for å få endringssdato satt til første uttaksdag
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
         saksbehandler.velgSisteBehandling();
-
-        verifiser(saksbehandler.hentAvslåtteUttaksperioder().size() > 1, "Forventer avslåtte uttaksperioder");
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder())
+                .as("Avslåtte uttaksperioder")
+                .hasSizeGreaterThan(1);
     }
 
     @Test
     @DisplayName("Utsettelser og gradering fra førstegangsbehandling skal ikke gå til manuell behandling")
     @Description("Utsettelser og gradering fra førstegangsbehandling skal ikke gå til manuell behandling hvis innenfor søknadsfrist."
             + " Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
-    public void utsettelser_og_gradering_fra_førstegangsbehandling_skal_ikke_gå_til_manuell_behandling_ved_endringssøknad() {
+    void utsettelser_og_gradering_fra_førstegangsbehandling_skal_ikke_gå_til_manuell_behandling_ved_endringssøknad() {
         var testscenario = opprettTestscenario("56");
         var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
@@ -521,8 +573,9 @@ public class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        verifiser(saksbehandler.hentAvslåtteUttaksperioder().isEmpty(),
-                "Forventer at alle uttaksperioder er innvilget");
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder())
+                .as("Avslåtte uttaksperioder")
+                .isEmpty();
 
         var fordelingEndringssøknad = generiskFordeling(
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15).plusDays(1), fødselsdato.plusWeeks(16)));
@@ -532,14 +585,16 @@ public class Revurdering extends ForeldrepengerTestBase {
 
         saksbehandler.velgSisteBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        verifiser(saksbehandler.hentAvslåtteUttaksperioder().isEmpty(),
-                "Forventer at alle uttaksperioder er innvilget");
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder())
+                .as("Avslåtte uttaksperioder")
+                .isEmpty();
 
         // Manuell behandling for å få endringssdato satt til første uttaksdag
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
         saksbehandler.velgSisteBehandling();
-        verifiser(saksbehandler.hentAvslåtteUttaksperioder().isEmpty(),
-                "Forventer at alle uttaksperioder er innvilget");
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder())
+                .as("Avslåtte uttaksperioder")
+                .isEmpty();
     }
 }
 
