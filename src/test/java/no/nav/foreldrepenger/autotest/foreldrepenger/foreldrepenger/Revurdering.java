@@ -94,8 +94,7 @@ class Revurdering extends ForeldrepengerTestBase {
 
         overstyrer.hentFagsak(saksnummer);
         overstyrer.ventPåOgVelgRevurderingBehandling();
-        var overstyrMedlemskapsvilkaaret = overstyrer
-                .hentAksjonspunktbekreftelse(OverstyrMedlemskapsvilkaaret.class)
+        var overstyrMedlemskapsvilkaaret = new OverstyrMedlemskapsvilkaaret()
                 .avvis(Avslagsårsak.SØKER_ER_IKKE_MEDLEM)
                 .setBegrunnelse("avvist");
         overstyrer.overstyr(overstyrMedlemskapsvilkaaret);
@@ -338,7 +337,7 @@ class Revurdering extends ForeldrepengerTestBase {
         assertThat(saksbehandler.valgtFagsak.status())
                 .as("Fagsak stauts")
                 .isEqualTo(FagsakStatus.LØPENDE);
-        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
         assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
