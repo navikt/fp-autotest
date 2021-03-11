@@ -3,8 +3,7 @@ package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
-
-import java.time.LocalDate;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -13,38 +12,36 @@ import org.junit.jupiter.api.Test;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Tag("flaky")
 @Tag("fluoritt")
-public class RevurderingFlaky extends ForeldrepengerTestBase {
+class RevurderingFlaky extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Revurdering via Inntektsmelding")
     @Description("Førstegangsbehandling til positivt vedtak. Sender inn IM uten endring. Så ny IM med endring i inntekt. Vedtak fortsatt løpende.")
-    public void revurderingViaInntektsmelding() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
+    void revurderingViaInntektsmelding() {
+        var testscenario = opprettTestscenario("50");
 
-        String søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        String søkerIdent = testscenario.personopplysninger().søkerIdent();
-        LocalDate fødselsdato = testscenario.personopplysninger().fødselsdato();
-        LocalDate fpStartdato = fødselsdato.minusWeeks(3);
-        String arbeidsforholdId = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        var søkerIdent = testscenario.personopplysninger().søkerIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
+        var arbeidsforholdId = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
                 .arbeidsforholdId();
-        String orgNr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
+        var orgNr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
                 .arbeidsgiverOrgnr();
 
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+        var inntektsmeldinger = lagInntektsmelding(
                 testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 fpStartdato,
@@ -69,13 +66,19 @@ public class RevurderingFlaky extends ForeldrepengerTestBase {
                 saksnummer);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        verifiser(saksbehandler.harRevurderingBehandling(), "Saken har ikke opprettet revurdering.");
+        assertThat(saksbehandler.harRevurderingBehandling())
+                .as("Forventer at saken har revurdert behandling")
+                .isTrue();
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getType(), BehandlingResultatType.INGEN_ENDRING,
-                "Behandlingsresultat");
-        verifiserLikhet(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen().get(0),
-                KonsekvensForYtelsen.INGEN_ENDRING, "konsekvensForYtelsen");
-        verifiserLikhet(saksbehandler.valgtBehandling.status, BehandlingStatus.AVSLUTTET, "Behandlingsstatus");
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INGEN_ENDRING);
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+                .as("Konsekvenser for ytelse")
+                .contains(KonsekvensForYtelsen.INGEN_ENDRING);
+        assertThat(saksbehandler.valgtBehandling.status)
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingStatus.AVSLUTTET);
         debugFritekst("Ferdig med andre behandling (revurdering nr 1)");
 
         // Inntektsmelding - endring i inntekt

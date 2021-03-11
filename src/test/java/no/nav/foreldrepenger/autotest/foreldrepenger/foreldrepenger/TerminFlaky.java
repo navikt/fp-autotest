@@ -14,28 +14,25 @@ import org.junit.jupiter.api.Test;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.ForeldrepengerBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Tag("flaky")
-public class TerminFlaky extends ForeldrepengerTestBase {
+class TerminFlaky extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor søker med ett arbeidsforhold")
     @Description("Mor søkner med ett arbeidsforhold. Forventer at vedtak blir fattet og brev blir sendt")
-    public void MorSøkerMedEttArbeidsforhold() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        LocalDate termindato = LocalDate.now().plusWeeks(3);
-        LocalDate startDatoForeldrepenger = termindato.minusWeeks(3);
-        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
-        ForeldrepengerBuilder søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
+    void MorSøkerMedEttArbeidsforhold() {
+        var testscenario = opprettTestscenario("55");
+        var termindato = LocalDate.now().plusWeeks(3);
+        var startDatoForeldrepenger = termindato.minusWeeks(3);
+        var aktørID = testscenario.personopplysninger().søkerAktørIdent();
+        var søknad = lagSøknadForeldrepengerTermin(termindato, aktørID, SøkersRolle.MOR);
 
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        InntektsmeldingBuilder inntektsmeldinger = lagInntektsmelding(
+        var inntektsmeldinger = lagInntektsmelding(
                 testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
                 testscenario.personopplysninger().søkerIdent(),
                 startDatoForeldrepenger,
