@@ -101,6 +101,7 @@
                             junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.jupiter.CutstomExecutionStrategy
                         </configurationParameters>
                     </properties>
+                    <runOrder>alphabetical</runOrder>
                     <includes>
                         <include>${testPackage}</include>
                     </includes>
