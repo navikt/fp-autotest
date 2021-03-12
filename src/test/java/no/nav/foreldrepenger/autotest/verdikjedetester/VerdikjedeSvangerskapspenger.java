@@ -109,7 +109,6 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 søkerFnr,
                 månedsinntekt,
                 orgnummer);
-        log.info("morSøkerDelvisTilretteleggingMedInntektOver6GTest");
         arbeidsforholdMor.arbeidsgiver().sendInntektsmeldinger(saksnummer, inntektsmedling);
 
         saksbehandler.hentFagsak(saksnummer);
