@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 
 import javax.validation.ConstraintViolationException;
 
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.parallel.Execution;
@@ -56,8 +55,7 @@ public class LoggTest {
         ConstraintViolationException.class.getSimpleName(),
         "javax.persistence.PersistenceException");
 
-    private static final List<String> ignoreContainers = List.of("vtp", "audit.nais", "postgres", "oracle", "redis");
-    private static final List<String> skipContainersOnError = List.of("abakus");
+    private static final List<String> ignoreContainers = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend");
 
     private static final String toNumericPattern(String s) {
         return "^(.*[^0-9])?" + Pattern.quote(s) + "([^0-9].*)?$";
@@ -84,9 +82,6 @@ public class LoggTest {
                         boolean inneholderSensistivOpplysning = currentLine.matches(sensitiv.getData());
                         String msg = String.format("Fant sensitiv opplysning i logg (syntetisk): [%s] for applikasjon: [%s], linje[%s]=%s, type=%s", sensitiv.getData(), containerNavn, linePos,
                             currentLine, sensitiv.getKilde());
-                        if (inneholderSensistivOpplysning && skipContainersOnError.contains(containerNavn)) {
-                            Assumptions.assumeTrue(false, msg);
-                        }
                         if (inneholderSensistivOpplysning) {
                             assertEquals("", sensitiv.getData(), msg);
                         }

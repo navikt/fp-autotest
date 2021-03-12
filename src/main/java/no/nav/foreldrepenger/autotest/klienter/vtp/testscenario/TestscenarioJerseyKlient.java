@@ -50,12 +50,10 @@ public class TestscenarioJerseyKlient extends VTPJerseyKlient {
 
     @Step("Henter alle instansierte testdatascenarier")
     public List<TestscenarioDto> hentAlleScenarier() {
-        var testscenarioDto = client.target(base)
+        return client.target(base)
                 .path(TESTSCENARIO_I_AUTOTEST_POST_URL)
                 .request()
                 .get(Response.class)
-                .readEntity(new GenericType<List<TestscenarioDto>>() {});
-        logger.info("Klarte ikke hente hente liste med testscenarier");
-        return testscenarioDto;
+                .readEntity(new GenericType<>() {});
     }
 }
