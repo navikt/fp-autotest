@@ -69,6 +69,13 @@
             </properties>
         </profile>
         <profile>
+            <id>logger</id>
+            <properties>
+                <includeTestsTags>logger</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
             <id>internal</id>
             <properties>
                 <includeTestsTags>internal</includeTestsTags>
@@ -101,7 +108,6 @@
                             junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.jupiter.CutstomExecutionStrategy
                         </configurationParameters>
                     </properties>
-                    <runOrder>alphabetical</runOrder>
                     <includes>
                         <include>${testPackage}</include>
                     </includes>

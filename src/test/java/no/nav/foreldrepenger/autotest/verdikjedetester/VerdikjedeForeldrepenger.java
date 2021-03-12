@@ -576,7 +576,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
             "noe av fellesperioden og hele fedrekvoten. Opplyser at han er frilanser og har frilanserinntekt frem til" +
             "skjæringstidspunktet.")
     void farSøkerSomFrilanser() {
-        log.info("farSøkerSomFrilanser");
         var familie = new Familie("561");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -596,7 +595,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
          * fedrekvoten
          */
         var far = familie.far();
-        var identFar = far.fødselsnummer();
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FELLESPERIODE, fpStartdatoFar, fpStartdatoFar.plusWeeks(4).minusDays(1)),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFar.plusWeeks(4), fpStartdatoFar.plusWeeks(19).minusDays(1)));
@@ -622,8 +620,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .isTrue();
 
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
-        vurderFaktaOmBeregningBekreftelse
+                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilMottarYtelseFrilans(false)
                 .setBegrunnelse("Begrunnelse fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
@@ -1090,7 +1087,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()));
         //TODO: Fjern denne etter debugging er ferdig.
-        log.info("Sender inn søknadd for MorSøkerMedDagpengerTest");
         var saksnummerMor = mor.søk(søknadMor.build());
 
         saksbehandler.hentFagsak(saksnummerMor);

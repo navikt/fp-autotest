@@ -35,9 +35,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 
-@Tag("teknisk")
-@Tag("verdikjede")
-@Tag("fpsak")
+@Tag("logger")
 @Execution(ExecutionMode.SAME_THREAD)
 public class LoggTest {
 
@@ -55,7 +53,7 @@ public class LoggTest {
         ConstraintViolationException.class.getSimpleName(),
         "javax.persistence.PersistenceException");
 
-    private static final List<String> ignoreContainers = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend");
+    private static final List<String> ignoreContainers = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend", "fpdokgen", "fpsoknad-mottak");
 
     private static final String toNumericPattern(String s) {
         return "^(.*[^0-9])?" + Pattern.quote(s) + "([^0-9].*)?$";
@@ -71,16 +69,16 @@ public class LoggTest {
     @MethodSource("hentContainerNavn")
     public void sjekkLoggerForPersonopplysninger(String containerNavn) {
         if (!ignoreContainers.contains(containerNavn)) {
-            List<SensitivInformasjon> sensitiveStrenger = hentSensitiveStrengerFraVTP(); // Hentes i test for å fungere med Allure
-            String log = DockerUtils.hentLoggForContainer(containerNavn);
-            try (var scanner = new Scanner(log);) {
+            var sensitiveStrenger = hentSensitiveStrengerFraVTP(); // Hentes i test for å fungere med Allure
+            var log = DockerUtils.hentLoggForContainer(containerNavn);
+            try (var scanner = new Scanner(log)) {
                 int linePos = 0;
                 while (scanner.hasNextLine()) {
-                    String currentLine = scanner.nextLine();
+                    var currentLine = scanner.nextLine();
                     linePos++;
-                    for (SensitivInformasjon sensitiv : sensitiveStrenger) {
-                        boolean inneholderSensistivOpplysning = currentLine.matches(sensitiv.getData());
-                        String msg = String.format("Fant sensitiv opplysning i logg (syntetisk): [%s] for applikasjon: [%s], linje[%s]=%s, type=%s", sensitiv.getData(), containerNavn, linePos,
+                    for (var sensitiv : sensitiveStrenger) {
+                        var inneholderSensistivOpplysning = currentLine.matches(sensitiv.getData());
+                        var msg = String.format("Fant sensitiv opplysning i logg (syntetisk): [%s] for applikasjon: [%s], linje[%s]=%s, type=%s", sensitiv.getData(), containerNavn, linePos,
                             currentLine, sensitiv.getKilde());
                         if (inneholderSensistivOpplysning) {
                             assertEquals("", sensitiv.getData(), msg);
@@ -97,13 +95,13 @@ public class LoggTest {
     @MethodSource("hentContainerNavn")
     public void sjekkFeilILogger(String containerNavn) {
         if (!ignoreContainers.contains(containerNavn)) {
-            String log = DockerUtils.hentLoggForContainer(containerNavn);
-            try (var scanner = new Scanner(log);) {
+            var log = DockerUtils.hentLoggForContainer(containerNavn);
+            try (var scanner = new Scanner(log)) {
                 int linePos = 0;
                 while (scanner.hasNextLine()) {
-                    String currentLine = scanner.nextLine();
+                    var currentLine = scanner.nextLine();
                     linePos++;
-                    for (String unwantedString : UNWANTED_STRINGS) {
+                    for (var unwantedString : UNWANTED_STRINGS) {
                         assertFalse(isUnwantedString(currentLine, unwantedString),
                             String.format("Fant feil i logg : [%s] for applikasjon: [%s], linje[%s]=%s", unwantedString, containerNavn, linePos, currentLine));
                     }
@@ -121,7 +119,7 @@ public class LoggTest {
 
     private List<SensitivInformasjon> hentSensitiveStrengerFraVTP() {
         var scenarioKlient = new TestscenarioJerseyKlient();
-        List<TestscenarioDto> testscenarioDtos = scenarioKlient.hentAlleScenarier();
+        var testscenarioDtos = scenarioKlient.hentAlleScenarier();
         List<SensitivInformasjon> sensitiveStrenger = new ArrayList<>();
 
         testscenarioDtos.stream().forEach(testscenarioDto -> {
@@ -139,7 +137,7 @@ public class LoggTest {
     }
 
     private Set<SensitivInformasjon> sensitivArbeidsgiverInformasjon(TestscenarioDto testscenarioDto) {
-        Set<SensitivInformasjon> sensitivArbeidsgiverinformasjon = Optional.ofNullable(testscenarioDto.scenariodataDto())
+        var sensitivArbeidsgiverinformasjon = Optional.ofNullable(testscenarioDto.scenariodataDto())
             .map(InntektYtelseModell::arbeidsforholdModell)
             .map(ArbeidsforholdModell::arbeidsforhold)
             .map(o -> o.stream()
