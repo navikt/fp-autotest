@@ -7,13 +7,13 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public final class DockerUtils {
-
+    
     private DockerUtils() {}
 
     public static String hentAuditNaisLogg() {
         return hentLoggForContainer("audit.nais");
     }
-
+    
     public static String hentLoggForContainer(String containerNavn) {
         try {
             final Process logProcess = new ProcessBuilder(
@@ -28,7 +28,7 @@ public final class DockerUtils {
             throw new RuntimeException("Feil ved uthenting av logg fra container: " + containerNavn, e);
         }
     }
-
+    
     public static String[] hentContainerNavn() {
         try {
             final Process containerNavnProcess = new ProcessBuilder(
@@ -36,13 +36,13 @@ public final class DockerUtils {
                 "ps",
                 "--format", "{{.Names}}")
                     .start();
-
+    
             return outputToString(containerNavnProcess).split("\n");
         } catch (IOException|InterruptedException e) {
             throw new RuntimeException("Feil ved uthenting av containernavn.", e);
         }
     }
-
+    
     private static String outputToString(final Process logProcess) throws InterruptedException, IOException {
         try (InputStream inputStream = logProcess.getInputStream()) {
             String result = inputStreamString(inputStream);
