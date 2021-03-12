@@ -10,7 +10,7 @@ public final class LoggFormater {
     public static void setCallId() {
         var lifecycle = Allure.getLifecycle();
         lifecycle.getCurrentTestCase().ifPresentOrElse(t -> lifecycle.updateTestCase(testResult -> {
-            MDCOperations.putCallId("Testnavn: " + testNavn(testResult));
+            MDCOperations.putCallId("Test:" + testNavn(testResult));
         }), MDCOperations::removeCallId);
     }
 
