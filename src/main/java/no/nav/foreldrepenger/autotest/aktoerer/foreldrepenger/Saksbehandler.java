@@ -245,7 +245,7 @@ public class Saksbehandler extends Aktoer {
 
     private void ventPåProsessering(Behandling behandling) {
         var start = LocalDateTime.now();
-        Vent.til(() -> verifiserProsesseringFerdig(behandling), 240, () -> {
+        Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
             var prosessTasker = hentProsesstaskerForBehandling(behandling);
             var prosessTaskList = new StringBuilder();
             for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
@@ -258,7 +258,9 @@ public class Saksbehandler extends Aktoer {
         });
         var slutt = LocalDateTime.now();
         var seconds = Duration.between(start, slutt).getSeconds();
-        LOG.info("Ventet i {} på prosessering av behandling med fagsakid {}", seconds, behandling.fagsakId);
+        if (seconds > 60 ) {
+            LOG.warn("Ventet i {} på prosessering av behandling med fagsakid {}", seconds, behandling.fagsakId);
+        }
     }
 
     private boolean verifiserProsesseringFerdig(Behandling behandling) {

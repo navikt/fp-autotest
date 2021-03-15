@@ -168,8 +168,6 @@ public class Innsender extends Aktoer {
     }
 
     private Long ventTilFagsakOgBehandlingErOpprettet(String fnr) {
-        LOG.info("Venter på at fagsak og behandling opprettes på fnr {}", fnr);
-
         var start1 = LocalDateTime.now();
         Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 30,
                 "Fagsak for bruker " + fnr + " har ikke blitt opprettet!");
@@ -186,7 +184,9 @@ public class Innsender extends Aktoer {
 
         var seconds1 = Duration.between(start1, slutt1).getSeconds();
         var seconds2 = Duration.between(slutt1, slutt2).getSeconds();
-        LOG.info("Fagsag og behandling opprettet på saksnummer {} etter {} og {} sekunder", saksnummer, seconds1, seconds2);
+        if (seconds1 > 20 || seconds2 > 20) {
+            LOG.warn("Fagsag og behandling opprettet på saksnummer {} etter {} og {} sekunder", saksnummer, seconds1, seconds2);
+        }
         return saksnummer;
     }
 
