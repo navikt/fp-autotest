@@ -23,8 +23,6 @@ import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -35,8 +33,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 
-@Tag("logger")
-@Execution(ExecutionMode.SAME_THREAD)
+@Tag("logg")
 public class LoggTest {
 
     private static final List<String> UNWANTED_STRINGS = List.of(
@@ -53,7 +50,8 @@ public class LoggTest {
         ConstraintViolationException.class.getSimpleName(),
         "javax.persistence.PersistenceException");
 
-    private static final List<String> ignoreContainers = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend", "fpdokgen", "fpsoknad-mottak");
+    private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend");
+    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend", "fpsoknad-mottak");
 
     private static final String toNumericPattern(String s) {
         return "^(.*[^0-9])?" + Pattern.quote(s) + "([^0-9].*)?$";
@@ -68,7 +66,7 @@ public class LoggTest {
     @ParameterizedTest(name = "Sjekk sensitiv logg lekkasje[{index}] {arguments}")
     @MethodSource("hentContainerNavn")
     public void sjekkLoggerForPersonopplysninger(String containerNavn) {
-        if (!ignoreContainers.contains(containerNavn)) {
+        if (!ignoreContainersSensitiveInfo.contains(containerNavn)) {
             var sensitiveStrenger = hentSensitiveStrengerFraVTP(); // Hentes i test for å fungere med Allure
             var log = DockerUtils.hentLoggForContainer(containerNavn);
             try (var scanner = new Scanner(log)) {
@@ -94,7 +92,7 @@ public class LoggTest {
     @ParameterizedTest(name = "Sjekk Feil i Logger[{index}] {arguments}")
     @MethodSource("hentContainerNavn")
     public void sjekkFeilILogger(String containerNavn) {
-        if (!ignoreContainers.contains(containerNavn)) {
+        if (!ignoreContainersFeil.contains(containerNavn)) {
             var log = DockerUtils.hentLoggForContainer(containerNavn);
             try (var scanner = new Scanner(log)) {
                 int linePos = 0;
@@ -106,7 +104,7 @@ public class LoggTest {
                             String.format("Fant feil i logg : [%s] for applikasjon: [%s], linje[%s]=%s", unwantedString, containerNavn, linePos, currentLine));
                     }
                 }
-                if (linePos < 100) {
+                if (!containerNavn.equalsIgnoreCase("fpdokgen") && linePos < 100) {
                     fail(String.format("Det forventes minst 100 linjer i loggen for applijasjon: %s, men var %s.", containerNavn, linePos));
                 }
             }

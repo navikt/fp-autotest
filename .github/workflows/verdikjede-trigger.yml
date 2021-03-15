@@ -241,14 +241,3 @@ jobs:
           docker system df -v
           df -h
           free -m
-
-
-      - name: Sjekker loggen etter errors eller sensitiv informasjon
-        if: always() && env.STACK_STARTED == 'true'
-        id: logger
-        shell: bash
-        run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P logger
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}

@@ -16,6 +16,11 @@ services:
       - ./oracle-init:/docker-entrypoint-initdb.d/
     ports:
       - "1521:1521"
+    healthcheck:
+      test: [ "CMD", "bash", "-c", "echo 'select 1 from dual;' | ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe /u01/app/oracle/product/11.2.0/xe/bin/sqlplus -s USERNAME/PASSWORD@localhost" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
   postgres:
     image: $POSTGRES_IMAGE
     container_name: postgres
@@ -54,9 +59,9 @@ services:
       - "8389:8389"
     healthcheck:
       test: ["CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8060/rest/isReady"]
-      interval: 15s
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
   fpabakus:
     image: $FPABAKUS_IMAGE
     container_name: fpabakus
@@ -107,10 +112,14 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - audit.nais
-      - oracle
-      - vtp
-      - fpabakus
+      audit.nais:
+        condition: service_started
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
+      fpabakus:
+        condition: service_started
   redis:
     image: redis
     container_name: redis

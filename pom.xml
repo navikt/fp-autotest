@@ -27,7 +27,7 @@
         <profile>
             <id>fpsak</id>
             <properties>
-                <includeTestsTags>fpsak</includeTestsTags>
+                <includeTestsTags>fpsak, logg</includeTestsTags>
                 <excludeTestsTags>test, pending</excludeTestsTags>
                 <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
             </properties>
@@ -35,15 +35,8 @@
         <profile>
             <id>fptilbake</id>
             <properties>
-                <testsTags>fptilbake, tilbakekreving</testsTags>
+                <testsTags>fptilbake, tilbakekreving, logg</testsTags>
                 <testPackage>no.nav.foreldrepenger.autotest.fptilbake.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
-            <id>fprisk</id>
-            <properties>
-                <testTags>fprisk</testTags>
-                <testPackage>no.nav.foreldrepenger.autotest.fprisk.**</testPackage>
             </properties>
         </profile>
         <profile>
@@ -57,14 +50,7 @@
         <profile>
             <id>verdikjede</id>
             <properties>
-                <includeTestsTags>verdikjede</includeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
-            <id>utvikling</id>
-            <properties>
-                <includeTestsTags>utvikling</includeTestsTags>
+                <includeTestsTags>verdikjede, logg</includeTestsTags>
                 <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
             </properties>
         </profile>
@@ -104,10 +90,12 @@
                         <configurationParameters>
                             junit.jupiter.execution.parallel.enabled = true
                             junit.jupiter.execution.parallel.mode.default = concurrent
+                            junit.jupiter.execution.parallel.mode.classes.default=same_thread
                             junit.jupiter.execution.parallel.config.strategy = custom
                             junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.jupiter.CutstomExecutionStrategy
                         </configurationParameters>
                     </properties>
+                    <runOrder>alphabetical</runOrder>
                     <includes>
                         <include>${testPackage}</include>
                     </includes>
@@ -215,7 +203,6 @@
             <artifactId>assertj-core</artifactId>
             <version>3.19.0</version>
         </dependency>
-
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>

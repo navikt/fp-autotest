@@ -6,13 +6,10 @@ import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpriskTestBase;
 
-@Execution(ExecutionMode.CONCURRENT)
 @Tag("fprisk")
 class FpriskTest extends FpriskTestBase {
 

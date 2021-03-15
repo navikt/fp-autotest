@@ -27,7 +27,7 @@ public class TestscenarioJerseyKlient extends VTPJerseyKlient {
         super();
     }
 
-    @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
+    @Step("Oppretter testscenario {key} fra Json fil lokalisert i Autotest")
     public TestscenarioDto opprettTestscenarioMedAktorId(String key, String aktorId, String ident) {
         var testscenarioObject = testscenarioHenter.hentScenario(key);
         var testscenarioDto = client.target(base)
@@ -41,7 +41,7 @@ public class TestscenarioJerseyKlient extends VTPJerseyKlient {
         return testscenarioDto;
     }
 
-    @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
+    @Step("Oppretter testscenario {key} fra Json fil lokalisert i Autotest")
     public TestscenarioDto opprettTestscenario(String key) {
         var testscenarioObject = testscenarioHenter.hentScenario(key);
         var testscenarioDto = client.target(base)
