@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 
-@Tag("logg")
+@Tag("logger")
 public class LoggTest {
 
     private static final List<String> UNWANTED_STRINGS = List.of(
