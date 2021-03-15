@@ -23,8 +23,6 @@ import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -35,8 +33,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 
-@Tag("logger")
-@Execution(ExecutionMode.SAME_THREAD)
+@Tag("logg")
 public class LoggTest {
 
     private static final List<String> UNWANTED_STRINGS = List.of(
@@ -53,7 +50,7 @@ public class LoggTest {
         ConstraintViolationException.class.getSimpleName(),
         "javax.persistence.PersistenceException");
 
-    private static final List<String> ignoreContainers = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend", "fpdokgen", "fpsoknad-mottak");
+    private static final List<String> ignoreContainers = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend", "fpdokgen");
 
     private static final String toNumericPattern(String s) {
         return "^(.*[^0-9])?" + Pattern.quote(s) + "([^0-9].*)?$";
