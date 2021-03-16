@@ -59,7 +59,7 @@ jobs:
           env.TEST_SUITE == 'fpsak'
         shell: bash
         run: |
-          if [ ${{ env.LOGGTEST_OUTCOME }} != success && ${{ env.TEST_OUTCOME }} == success ]; then
+          if [ ${{ env.LOGGTEST_OUTCOME }} != success ] && [ ${{ env.TEST_OUTCOME }} == success ]; then
             echo "SLACK_TITLE=Autotestene gikk grønne, men fant feil i loggen" >> $GITHUB_ENV
             echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
               echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
@@ -93,7 +93,7 @@ jobs:
           env.TEST_SUITE == 'verdikjede'
         shell: bash
         run: |
-          if [ ${{ env.LOGGTEST_OUTCOME }} != success && ${{ env.TEST_OUTCOME }} == success ]; then
+          if [ ${{ env.LOGGTEST_OUTCOME }} != success ] && [ ${{ env.TEST_OUTCOME }} == success ]; then
             echo "SLACK_TITLE=Verdikjedetestene gikk grønne, men fant feil i loggen" >> $GITHUB_ENV
             echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
               echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
