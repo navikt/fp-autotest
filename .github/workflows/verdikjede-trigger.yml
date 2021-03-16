@@ -104,7 +104,6 @@ jobs:
           echo "Tester om fpinfo er oppe"
           timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8040/fpinfo/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
-
           echo "STACK_STARTED=true" >> $GITHUB_ENV
 
       - name: Sjekker minneforbruk
@@ -124,72 +123,22 @@ jobs:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
+      - name: Sjekker loggen etter feil og lekket sensitiv data.
+        if: always() && env.STACK_STARTED == 'true'
+        id: logger
+        shell: bash
+        run: |
+          mvn test --batch-mode --settings .github/.m2/settings.xml -P logger
+        env:
+          GITHUB_USERNAME: x-access-token
+          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+
       - name: Sjekker minneforbruk
         if: always()
         shell: bash
         run: |
           docker stats --no-stream
           free -m
-
-      - name: Henter testresultat og setter outcome
-        if: |
-          always() &&
-          env.STACK_STARTED == 'true' &&
-          steps.tester.outcome != 'cancelled'
-        shell: bash
-        run: |
-          echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
-          rm test-result-log.txt
-          if [ ${{ steps.tester.outcome }} == success ]; then
-            echo "Test success!"
-            echo "TEST_OUTCOME=success" >> $GITHUB_ENV
-          else
-            echo "Test failure!"
-            echo "TEST_OUTCOME=failure" >> $GITHUB_ENV
-          fi
-
-      - name: Oppdaterer issue med testresultat
-        if: |
-          always() &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled' &&
-          github.event_name == 'repository_dispatch' &&
-          github.event.client_payload.issue-number != null &&
-          github.event.client_payload.trigger != 'navikt/fp-abakus' &&
-          github.event.client_payload.trigger != 'navikt/fp-sak'
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          event-type: update-issue
-          client-payload: |
-            {
-            "trigger": "${{ github.event.client_payload.trigger }}",
-            "issue-number": "${{ github.event.client_payload.issue-number }}",
-            "success": "${{ env.TEST_OUTCOME }}",
-            "run_id": "${{ github.run_id }}"
-            }
-
-      - name: Notify slack om testfeil
-        if: |
-          always() &&
-          steps.tester.outcome != 'cancelled' &&
-          github.event_name == 'repository_dispatch' &&
-          github.event.client_payload.trigger != null &&
-          github.event.client_payload.version != null
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          event-type: notify-slack
-          client-payload: |
-            {
-            "trigger": "${{ github.event.client_payload.trigger }}",
-            "version": "${{ github.event.client_payload.version }}",
-            "stack_started": "${{ env.STACK_STARTED }}",
-            "test_outcome": "${{ env.TEST_OUTCOME }}",
-            "test_resultat": "${{ env.TEST_RESULTAT }}",
-            "test_suite": "verdikjede",
-            "run_id": "${{ github.run_id }}"
-            }
 
       - name: Generer testrapport
         if: |
@@ -218,6 +167,60 @@ jobs:
           build_dir: gh-pages
         env:
           GH_PAT: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - name: Henter testresultat
+        if: |
+          always() &&
+          env.STACK_STARTED == 'true' &&
+          steps.tester.outcome != 'cancelled'
+        shell: bash
+        run: |
+          echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
+          rm test-result-log.txt
+
+      - name: Oppdaterer issue med testresultat
+        if: |
+          always() &&
+          steps.tester.outcome != 'skipped' &&
+          steps.tester.outcome != 'cancelled' &&
+          github.event_name == 'repository_dispatch' &&
+          github.event.client_payload.issue-number != null &&
+          github.event.client_payload.trigger != 'navikt/fp-abakus' &&
+          github.event.client_payload.trigger != 'navikt/fp-sak'
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          event-type: update-issue
+          client-payload: |
+            {
+            "trigger": "${{ github.event.client_payload.trigger }}",
+            "issue-number": "${{ github.event.client_payload.issue-number }}",
+            "success": "${{ steps.tester.outcome }}",
+            "run_id": "${{ github.run_id }}"
+            }
+
+      - name: Notify slack om testfeil
+        if: |
+          always() &&
+          steps.tester.outcome != 'cancelled' &&
+          github.event_name == 'repository_dispatch' &&
+          github.event.client_payload.trigger != null &&
+          github.event.client_payload.version != null
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          event-type: notify-slack
+          client-payload: |
+            {
+            "trigger": "${{ github.event.client_payload.trigger }}",
+            "version": "${{ github.event.client_payload.version }}",
+            "stack_started": "${{ env.STACK_STARTED }}",
+            "test_outcome": "${{ steps.tester.outcome }}",
+            "loggtest_outcome": "${{ steps.logger.outcome }}",
+            "test_resultat": "${{ env.TEST_RESULTAT }}",
+            "test_suite": "verdikjede",
+            "run_id": "${{ github.run_id }}"
+            }
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'

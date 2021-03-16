@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.zlogg;
+package no.nav.foreldrepenger.autotest.logg;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -34,7 +34,7 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 
 @Tag("logger")
-public class LoggTest {
+class LoggTest {
 
     private static final List<String> UNWANTED_STRINGS = List.of(
         "Server Error",
@@ -65,7 +65,7 @@ public class LoggTest {
     @Description("Test om lekker sensitive opplysninger")
     @ParameterizedTest(name = "Sjekk sensitiv logg lekkasje[{index}] {arguments}")
     @MethodSource("hentContainerNavn")
-    public void sjekkLoggerForPersonopplysninger(String containerNavn) {
+    void sjekkLoggerForPersonopplysninger(String containerNavn) {
         if (!ignoreContainersSensitiveInfo.contains(containerNavn)) {
             var sensitiveStrenger = hentSensitiveStrengerFraVTP(); // Hentes i test for å fungere med Allure
             var log = DockerUtils.hentLoggForContainer(containerNavn);
@@ -91,7 +91,7 @@ public class LoggTest {
     @Description("Test om logger kritiske feil")
     @ParameterizedTest(name = "Sjekk Feil i Logger[{index}] {arguments}")
     @MethodSource("hentContainerNavn")
-    public void sjekkFeilILogger(String containerNavn) {
+    void sjekkFeilILogger(String containerNavn) {
         if (!ignoreContainersFeil.contains(containerNavn)) {
             var log = DockerUtils.hentLoggForContainer(containerNavn);
             try (var scanner = new Scanner(log)) {
@@ -120,7 +120,7 @@ public class LoggTest {
         var testscenarioDtos = scenarioKlient.hentAlleScenarier();
         List<SensitivInformasjon> sensitiveStrenger = new ArrayList<>();
 
-        testscenarioDtos.stream().forEach(testscenarioDto -> {
+        testscenarioDtos.forEach(testscenarioDto -> {
             sensitiveStrenger.add(new SensitivInformasjon("FNR/DNR på person", toNumericPattern(testscenarioDto.personopplysninger().søkerIdent())));
             sensitiveStrenger.add(new SensitivInformasjon("aktørID på person", toNumericPattern(testscenarioDto.personopplysninger().søkerAktørIdent())));
             if (testscenarioDto.personopplysninger().annenpartIdent() != null) {
@@ -135,7 +135,7 @@ public class LoggTest {
     }
 
     private Set<SensitivInformasjon> sensitivArbeidsgiverInformasjon(TestscenarioDto testscenarioDto) {
-        var sensitivArbeidsgiverinformasjon = Optional.ofNullable(testscenarioDto.scenariodataDto())
+        return Optional.ofNullable(testscenarioDto.scenariodataDto())
             .map(InntektYtelseModell::arbeidsforholdModell)
             .map(ArbeidsforholdModell::arbeidsforhold)
             .map(o -> o.stream()
@@ -145,7 +145,6 @@ public class LoggTest {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet()))
             .orElse(Collections.emptySet());
-        return sensitivArbeidsgiverinformasjon;
     }
 
     private static class SensitivInformasjon {
