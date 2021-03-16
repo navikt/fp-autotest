@@ -40,7 +40,7 @@ jobs:
           echo "DIFFERANSE=$(git log --pretty=format:"%s; author: %an" -n 1 ${CURRENT_HASH})" >> $GITHUB_ENV
 
       - name: Bygger opp slack melding når GHA ikke får opp verdikjeden
-        if: always() && env.STACK_STARTED == false
+        if: always() && env.STACK_STARTED == 'false'
         shell: bash
         run: |
           echo "SLACK_TITLE=Noe gikk galt. GHA fikk ikke opp verdikjeden :man-shrugging:" >> $GITHUB_ENV
@@ -55,7 +55,7 @@ jobs:
       - name: Bygger opp slack melding ved testing av fpsak
         if: |
           always() &&
-          env.STACK_STARTED == true &&
+          env.STACK_STARTED == 'true' &&
           env.TEST_SUITE == 'fpsak'
         shell: bash
         run: |
@@ -89,7 +89,7 @@ jobs:
       - name: Bygger opp slack melding ved testing av verdikjeden
         if: |
           always() &&
-          env.STACK_STARTED == true &&
+          env.STACK_STARTED == 'true' &&
           env.TEST_SUITE == 'verdikjede'
         shell: bash
         run: |
