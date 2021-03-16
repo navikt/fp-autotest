@@ -83,6 +83,7 @@ jobs:
               echo "Test failure!"
               echo "SLACK_TITLE=Autotestene feilet :boom:" >> $GITHUB_ENV
               echo "SLACK_COLOR=#ff0000" >> $GITHUB_ENV
+            fi
           fi
 
 
