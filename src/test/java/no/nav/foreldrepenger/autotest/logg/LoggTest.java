@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,7 +45,7 @@ class LoggTest {
         UnsupportedOperationException.class.getSimpleName(),
         ArrayIndexOutOfBoundsException.class.getSimpleName(),
         NoSuchElementException.class.getSimpleName(),
-        SQLException.class.getSimpleName(),
+//        SQLException.class.getSimpleName(),
         ConstraintViolationException.class.getSimpleName(),
         "javax.persistence.PersistenceException");
 
