@@ -76,6 +76,13 @@
             </properties>
         </profile>
         <profile>
+            <id>loggfeil</id>
+            <properties>
+                <includeTestsTags>loggerFeil</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
             <id>internal</id>
             <properties>
                 <includeTestsTags>internal</includeTestsTags>

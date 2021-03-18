@@ -78,7 +78,7 @@ jobs:
             if [ ${{ env.TEST_OUTCOME }} == success ]; then
               echo "Test success!"
               echo "SLACK_TITLE=Autotestene er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
-              echo "SLACK_COLOR=#11ee11" >> $GITHUB_ENV
+              echo "SLACK_COLOR=#25d525" >> $GITHUB_ENV
             else
               echo "Test failure!"
               echo "SLACK_TITLE=Autotestene feilet :boom:" >> $GITHUB_ENV
@@ -113,7 +113,7 @@ jobs:
             if [ ${{ env.TEST_OUTCOME }} == success ]; then
               echo "Test success!"
               echo "SLACK_TITLE=Verdikjedetestene er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
-              echo "SLACK_COLOR=#11ee11" >> $GITHUB_ENV
+              echo "SLACK_COLOR=#25d525" >> $GITHUB_ENV
             else
               echo "Test failure!"
               echo "SLACK_TITLE=Verdikjedetestene feilet :boom:" >> $GITHUB_ENV

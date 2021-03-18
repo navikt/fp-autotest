@@ -86,6 +86,7 @@ class LoggTest {
         }
     }
 
+    @Tag("loggerFeil")
     @DisplayName("Test om logger kritiske feil")
     @Description("Test om logger kritiske feil")
     @ParameterizedTest(name = "Sjekk Feil i Logger[{index}] {arguments}")
