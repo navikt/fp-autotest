@@ -45,6 +45,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerBosattBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
@@ -268,9 +269,13 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
 
         // verifiser ikke berørt sak far
         saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        assertThat(saksbehandler.valgtBehandling.behandlingÅrsaker.stream()
+                .map(BehandlingÅrsak::getBehandlingArsakType)
+                .anyMatch(BehandlingÅrsakType.REBEREGN_FERIEPENGER::equals)).isTrue();
         assertThat(saksbehandler.behandlinger)
                 .as("Antall behandlinger")
-                .hasSize(1);
+                .hasSize(2);
     }
 
     @Test
