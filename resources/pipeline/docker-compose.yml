@@ -200,6 +200,7 @@ services:
     mem_limit: 512mb
     environment:
       - "SPRING_PROFILES_ACTIVE=test"
+      - "NAIS_CLUSTER_NAME=test"
       - "LOADBALANCER_URL=http://localhost:9001"
       - "LOADBALANCER_FQDN=localhost:9001"
       - "MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED=true"
