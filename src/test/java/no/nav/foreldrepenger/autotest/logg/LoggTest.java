@@ -4,13 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -56,7 +54,7 @@ class LoggTest {
         return "^(.*[^0-9])?" + Pattern.quote(s) + "([^0-9].*)?$";
     }
 
-    private static Stream<String> hentContainerNavn() throws IOException, InterruptedException {
+    private static Stream<String> hentContainerNavn() {
         return Arrays.stream(DockerUtils.hentContainerNavn());
     }
 
@@ -142,7 +140,6 @@ class LoggTest {
                 .map(f -> f.arbeidsgiverAktorId() != null
                     ? new SensitivInformasjon("aktørId på arbeidsgiver", toNumericPattern(f.arbeidsgiverAktorId()))
                     : new SensitivInformasjon("orgnr på arbeidsgiver", toNumericPattern(f.arbeidsgiverOrgnr())))
-                .filter(Objects::nonNull)
                 .collect(Collectors.toSet()))
             .orElse(Collections.emptySet());
     }

@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -244,7 +243,6 @@ public class Saksbehandler extends Aktoer {
     }
 
     private void ventPåProsessering(Behandling behandling) {
-        var start = LocalDateTime.now();
         Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
             var prosessTasker = hentProsesstaskerForBehandling(behandling);
             var prosessTaskList = new StringBuilder();
@@ -256,11 +254,6 @@ public class Saksbehandler extends Aktoer {
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList.toString();
         });
-        var slutt = LocalDateTime.now();
-        var seconds = Duration.between(start, slutt).getSeconds();
-        if (seconds > 60 ) {
-            LOG.warn("Ventet i {} på prosessering av behandling med fagsakid {}", seconds, behandling.fagsakId);
-        }
     }
 
     private boolean verifiserProsesseringFerdig(Behandling behandling) {

@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -151,28 +150,22 @@ public class Innsender extends Aktoer {
                                                  Integer antallNyeInntektsmeldinger,
                                                  Integer antallGamleInntekstmeldinger) {
         if (saksnummer != null) {
-            var start = LocalDateTime.now();
             var forventetAntallInnteksmeldinger = antallGamleInntekstmeldinger + antallNyeInntektsmeldinger;
-            AtomicReference<Integer> antallIM = new AtomicReference<>(antallGamleInntekstmeldinger);
+            var antallIM = new AtomicReference<>(antallGamleInntekstmeldinger);
             Vent.til(() -> {
                 antallIM.set(hentAntallHistorikkInnslagAvTypenVedleggMottatt(saksnummer));
                 return antallIM.get() == forventetAntallInnteksmeldinger;
             }, 60, String.format("Forventet at det ble mottatt %d ny(e) innteksmeldinge(r), men det ble mottatt %d!" +
-                            "på saksnummer %s", antallNyeInntektsmeldinger, antallIM.get() - antallGamleInntekstmeldinger, saksnummer));
-            var slutt = LocalDateTime.now();
-            var seconds = Duration.between(start, slutt).getSeconds();
-            LOG.info("Forventet antall inntektsmeldinger mottatt etter {} sekunder", seconds);
+                    "på saksnummer %s", antallNyeInntektsmeldinger, antallIM.get() - antallGamleInntekstmeldinger, saksnummer));
         } else {
             ventTilFagsakOgBehandlingErOpprettet(fnr);
         }
     }
 
     private Long ventTilFagsakOgBehandlingErOpprettet(String fnr) {
-        var start1 = LocalDateTime.now();
         Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 30,
                 "Fagsak for bruker " + fnr + " har ikke blitt opprettet!");
         var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();
-        var slutt1 = LocalDateTime.now();
 
         Vent.til(() -> {
             var behandlinger = behandlingerKlient.alle(saksnummer);
@@ -180,13 +173,7 @@ public class Innsender extends Aktoer {
                     .anyMatch(h -> HistorikkinnslagType.BEH_STARTET.equals(h.type()));
             return !behandlinger.isEmpty() && behandlingStartet;
         }, 30, "Ingen behandlinger er opprettet på saksnummer " + saksnummer + "etter 30 skun");
-        var slutt2 = LocalDateTime.now();
 
-        var seconds1 = Duration.between(start1, slutt1).getSeconds();
-        var seconds2 = Duration.between(slutt1, slutt2).getSeconds();
-        if (seconds1 > 20 || seconds2 > 20) {
-            LOG.warn("Fagsag og behandling opprettet på saksnummer {} etter {} og {} sekunder", saksnummer, seconds1, seconds2);
-        }
         return saksnummer;
     }
 
