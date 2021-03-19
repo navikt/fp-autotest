@@ -628,7 +628,7 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             RisikovurderingResponse response = getRisikovurdering(valgtBehandling.uuid.toString());
             return harRisikoKlassefiseringsstatus(status, response);
-        }, 45, "Feilet. Fikk ikke riktig status");
+        }, 45, "Har ikke riktig risikoklassifiseringsstatus");
     }
 
     private RisikovurderingResponse getRisikovurdering(String uuid) {
