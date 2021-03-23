@@ -45,7 +45,7 @@ services:
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
-      - "CREATE_TOPICS=privat-foreldrepenger-fprisk-lokal,privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp,privat-foreldrepenger-historikk-fordeling,aapen-dok-journalfoering-v1-q1,privat-permittering-lonnskomp-vedtak-vtp,privat-tilbakekreving-dvh-saksstatistikk-v1-vtp,privat-tilbakekreving-dvh-vedtak-v1-vtp"
+      - "CREATE_TOPICS=privat-foreldrepenger-fprisk-lokal,privat-foreldrepenger-kontroll-resultat-lokal,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp,privat-foreldrepenger-historikk-fordeling,aapen-dok-journalfoering-v1-q1,privat-permittering-lonnskomp-vedtak-vtp,privat-tilbakekreving-dvh-saksstatistikk-v1-vtp,privat-tilbakekreving-dvh-vedtak-v1-vtp,tilbakekreving-brukerdialog-local"
       - "ISSO_OAUTH2_ISSUER=https://vtp.openam/issuer"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
@@ -303,6 +303,8 @@ services:
       - "FPSAK_PIP_AKTOER_FOR_SAK_URL=https://fpsak:8080/fpsak/api/pip/aktoer-for-sak"
       - "JOURNALPOSTAPI_OVERRIDE_URL=https://vtp:8063/rest/dokarkiv/"
       - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
+      - "DOKDIST_REST_DISTRIBUER_JOURNALPOST=https://vtp:8063/rest/dokdist/v1/distribuerjournalpost"
+      - "TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
       - "KAFKA_FPLOS_TOPIC=tilbakebetaling-aksjonspunkthendelse"
       - "KAFKA_DVH_SAKSSTATISTIKK_TOPIC=privat-tilbakekreving-dvh-saksstatistikk-v1-vtp"
       - "KAFKA_DVH_VEDTAK_TOPIC=privat-tilbakekreving-dvh-vedtak-v1-vtp"

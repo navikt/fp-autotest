@@ -63,7 +63,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     public void opprettTilbakekrevingRevurdering(Long saksnummer, UUID uuid, int behandlingId, String ytelseType,
             RevurderingArsak behandlingArsakType) {
-        behandlingerKlient.putTilbakekreving(new BehandlingOpprettRevurdering(saksnummer, valgtBehandling.id, uuid,
+        behandlingerKlient.putTilbakekreving(new BehandlingOpprettRevurdering(saksnummer, behandlingId, uuid,
                 "BT-009", ytelseType, behandlingArsakType));
     }
 
