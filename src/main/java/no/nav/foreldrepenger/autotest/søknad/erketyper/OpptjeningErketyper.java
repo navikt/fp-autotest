@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.opptjening.Regnskaps
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.opptjening.UtenlandskArbeidsforhold;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.opptjening.Virksomhetstype;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.ÅpenPeriode;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 
 public final class OpptjeningErketyper {
 
@@ -88,7 +89,7 @@ public final class OpptjeningErketyper {
                 .beskrivelseEndring("Endringsbeskrivelse")
                 .stillingsprosent(new ProsentAndel(100.0))
                 .orgName("Navnet Organisasjon")
-                .orgNummer("910909088")
+                .orgNummer(new Orgnummer("910909088"))
                 .build();
     }
 

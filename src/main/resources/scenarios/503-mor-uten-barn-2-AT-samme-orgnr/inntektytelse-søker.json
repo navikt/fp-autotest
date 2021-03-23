@@ -4,16 +4,7 @@
 			{
 				"fom": "now() - P2Y",
 				"tom": "now()",
-				"beløp": 15000,
-				"orgnr": "910909088",
-				"type": "Lønnsinntekt",
-				"fordel": "kontantytelse",
-				"beskrivelse": "fastloenn"
-			},
-			{
-				"fom": "now() - P4Y",
-				"tom": "now()",
-				"beløp": 20000,
+				"beløp": 40000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",

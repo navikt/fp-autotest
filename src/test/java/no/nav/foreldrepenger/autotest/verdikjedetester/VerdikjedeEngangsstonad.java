@@ -60,7 +60,7 @@ class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
                 .isTrue();
     }
 
-    private NorskForelder lagNorskAnnenforeldre(String indent) {
-        return new NorskForelder(new Fødselsnummer(indent), "");
+    private NorskForelder lagNorskAnnenforeldre(Fødselsnummer indent) {
+        return new NorskForelder(indent, "");
     }
 }

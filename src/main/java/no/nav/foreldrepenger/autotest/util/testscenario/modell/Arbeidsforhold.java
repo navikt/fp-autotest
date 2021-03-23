@@ -6,24 +6,29 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeids
 
 public class Arbeidsforhold {
 
-    private final String arbeidsforholdId;
+    private final Orgnummer orgnummer;
+    private final ArbeidsforholdId arbeidsforholdId; // TODO Skriv arbeidsforholdId til egen klasse!
     private final LocalDate ansettelsesperiodeFom;
     private final LocalDate ansettelsesperiodeTom;
     private final Arbeidsforholdstype arbeidsforholdType;
-    private final int stillingsprosent;
-    private final Arbeidsgiver arbeidsgiver;
+    private final int stillingsprosent; // TODO Skriv stillingsprosent til egen klasse!
 
-    Arbeidsforhold(String arbeidsforholdId, LocalDate ansettelsesperiodeFom, LocalDate ansettelsesperiodeTom,
-                   Arbeidsforholdstype arbeidsforholdType, int stillingsprosent, Arbeidsgiver arbeidsgiver) {
+
+    Arbeidsforhold(Orgnummer orgnummer, ArbeidsforholdId arbeidsforholdId, LocalDate ansettelsesperiodeFom,
+                   LocalDate ansettelsesperiodeTom, Arbeidsforholdstype arbeidsforholdType, int stillingsprosent) {
+        this.orgnummer = orgnummer;
         this.arbeidsforholdId = arbeidsforholdId;
         this.arbeidsforholdType = arbeidsforholdType;
         this.stillingsprosent = stillingsprosent;
-        this.arbeidsgiver = arbeidsgiver;
         this.ansettelsesperiodeFom = ansettelsesperiodeFom;
         this.ansettelsesperiodeTom = ansettelsesperiodeTom;
     }
 
-    public String arbeidsforholdId() {
+    public Orgnummer orgnummer() {
+        return orgnummer;
+    }
+
+    public ArbeidsforholdId arbeidsforholdId() {
         return arbeidsforholdId;
     }
 
@@ -44,10 +49,6 @@ public class Arbeidsforhold {
     }
 
     public Arbeidsgiver arbeidsgiver() {
-        return arbeidsgiver;
-    }
-
-    public String orgnummer() {
-        return arbeidsgiver.orgnummer();
+        return null;
     }
 }

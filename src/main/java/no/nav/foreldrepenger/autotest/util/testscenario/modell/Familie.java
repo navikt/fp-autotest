@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioJerseyKlient;
+import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.personopplysning.BrukerModell;
 
@@ -17,9 +18,9 @@ public class Familie {
 
     public Mor mor() {
         if (scenario.personopplysninger().søkerKjønn().equals(BrukerModell.Kjønn.K)) {
-            return new Mor(scenario.personopplysninger().søkerIdent(), scenario.scenariodataDto());
+            return new Mor(new Fødselsnummer(scenario.personopplysninger().søkerIdent()), scenario.scenariodataDto());
         } else if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.K)) {
-            return new Mor(scenario.personopplysninger().annenpartIdent(), scenario.scenariodataAnnenpartDto());
+            return new Mor(new Fødselsnummer(scenario.personopplysninger().annenpartIdent()), scenario.scenariodataAnnenpartDto());
         } else {
             throw new IllegalStateException("Hverken søker eller annenpart er kvinne. Bruk metoden far()!");
         }
@@ -28,7 +29,7 @@ public class Familie {
     public Mor medmor() {
         if (scenario.personopplysninger().søkerKjønn().equals(BrukerModell.Kjønn.K) &&
                 scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.K)) {
-            return new Mor(scenario.personopplysninger().annenpartIdent(), scenario.scenariodataAnnenpartDto());
+            return new Mor(new Fødselsnummer(scenario.personopplysninger().annenpartIdent()), scenario.scenariodataAnnenpartDto());
         } else {
             throw new IllegalStateException("Medmor eksistere ikke for scenarioid: Enten er søker eller annenpart far");
         }
@@ -36,9 +37,9 @@ public class Familie {
 
     public Far far() {
         if (scenario.personopplysninger().søkerKjønn().equals(BrukerModell.Kjønn.M)) {
-            return new Far(scenario.personopplysninger().søkerIdent(), scenario.scenariodataDto());
+            return new Far(new Fødselsnummer(scenario.personopplysninger().søkerIdent()), scenario.scenariodataDto());
         } else if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.M)) {
-            return new Far(scenario.personopplysninger().annenpartIdent(), scenario.scenariodataAnnenpartDto());
+            return new Far(new Fødselsnummer(scenario.personopplysninger().annenpartIdent()), scenario.scenariodataAnnenpartDto());
         } else {
             throw new IllegalStateException("Hverken søker eller annenpart er mann: Bruk mor() eller medmor()");
         }

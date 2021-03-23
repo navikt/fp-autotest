@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.St
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesPeriode;
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UttaksPeriode;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 
 public final class UttaksperioderErketyper {
 
@@ -47,12 +48,12 @@ public final class UttaksperioderErketyper {
     }
 
     public static GradertUttaksPeriode graderingsperiodeArbeidstaker(StønadskontoType stønadskontoType, LocalDate fom, LocalDate tom,
-                                                                     String orgnummer, Integer arbeidstidsprosentIOrgnr) {
+                                                                     Orgnummer orgnummer, Integer arbeidstidsprosentIOrgnr) {
         return GradertUttaksPeriode.GraderingBuilder()
                 .uttaksperiodeType(stønadskontoType)
                 .fom(fom)
                 .tom(tom)
-                .virksomhetsnummer(List.of(orgnummer))
+                .virksomhetsnummer(List.of(orgnummer.orgnummer()))
                 .arbeidsForholdSomskalGraderes(true)
                 .arbeidstidProsent(new ProsentAndel(Double.valueOf(arbeidstidsprosentIOrgnr)))
                 .erArbeidstaker(true)

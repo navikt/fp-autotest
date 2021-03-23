@@ -1,23 +1,22 @@
 package no.nav.foreldrepenger.autotest.søknad.modell;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import lombok.Data;
+public record Fødselsnummer(@JsonValue String fnr) {
 
-@Data
-public class Fødselsnummer {
-
-    @JsonValue
-    private final String fnr;
-
-    public Fødselsnummer(String fnr) {
-        this.fnr = fnr;
+    @Override
+    public String fnr() {
+        return fnr;
     }
 
-    @JsonCreator
-    public static Fødselsnummer valueOf(@JsonProperty("fnr") String fnr) {
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Fødselsnummer fraOrgnummer(String fnr) {
         return new Fødselsnummer(fnr);
+    }
+
+    @Override
+    public String toString() {
+        return fnr();
     }
 }

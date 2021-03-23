@@ -27,7 +27,7 @@ public final class NorskForelder extends AnnenForelder {
     @Override
     public boolean hasId() {
         return Optional.ofNullable(fnr)
-                .map(Fødselsnummer::getFnr)
+                .map(Fødselsnummer::fnr)
                 .isPresent();
     }
 }

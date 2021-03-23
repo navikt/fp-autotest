@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 
 @BekreftelseKode(kode = "5080")
 public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
@@ -29,7 +30,7 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         }
     }
 
-    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErAktivt(String orgnummer, boolean fortsettUtenInntekt) {
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErAktivt(Orgnummer orgnummer, boolean fortsettUtenInntekt) {
         Arbeidsforhold forhold = finnArbeidsforhold(orgnummer);
         if (forhold == null) {
             throw new RuntimeException("fant ikke arbeidsforhold: " + orgnummer);
@@ -38,7 +39,7 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErIkkeAktivt(String orgnummer, LocalDate startDato,
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErIkkeAktivt(Orgnummer orgnummer, LocalDate startDato,
             LocalDate overstyrtTom, String begrunnelse) {
         Arbeidsforhold forhold = finnArbeidsforhold(orgnummer, startDato);
         if (forhold == null) {
@@ -50,9 +51,9 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErBasertPåInntektsmelding(String navn,
+    public AvklarArbeidsforholdBekreftelse bekreftArbeidsforholdErBasertPåInntektsmelding(Orgnummer orgnummer,
             LocalDate startDato, LocalDate sluttDato, BigDecimal stillingsprosent) {
-        Arbeidsforhold arbeidsforhold = finnArbeidsforhold(navn);
+        Arbeidsforhold arbeidsforhold = finnArbeidsforhold(orgnummer);
 
         arbeidsforhold.setBrukArbeidsforholdet(true);
         arbeidsforhold.setBasertPaInntektsmelding(true);
@@ -68,9 +69,9 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
         forhold.setBegrunnelse("Begrunnelse fra Autotest.");
     }
 
-    private Arbeidsforhold finnArbeidsforhold(String orgnummer) {
+    private Arbeidsforhold finnArbeidsforhold(Orgnummer orgnummer) {
         return this.arbeidsforhold.stream()
-            .filter(a -> orgnummer.equalsIgnoreCase(a.getArbeidsgiverReferanse()))
+            .filter(a -> orgnummer.equals(a.getArbeidsgiverReferanse()))
             .findFirst().orElse(null);
     }
 
@@ -84,9 +85,10 @@ public class AvklarArbeidsforholdBekreftelse extends AksjonspunktBekreftelse {
     }
 
     // Trenger og skille to arbeidsforhold i samme bedrift
-    private Arbeidsforhold finnArbeidsforhold(String orgnummer, LocalDate startDato) {
+    private Arbeidsforhold finnArbeidsforhold(Orgnummer orgnummer, LocalDate startDato) {
         return this.arbeidsforhold.stream()
-            .filter(a -> orgnummer.equalsIgnoreCase(a.getArbeidsgiverReferanse()) && startDato.equals(a.getFomDato()))
+            .filter(a -> orgnummer.equals(a.getArbeidsgiverReferanse()))
+            .filter(a -> startDato.equals(a.getFomDato()))
             .findFirst().orElse(null);
     }
 

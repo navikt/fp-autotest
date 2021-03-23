@@ -4,15 +4,17 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VurderRefusjonAndelBeregningsgrunnlagDto {
 
-    private final String arbeidsgiverOrgnr;
+    private final Orgnummer arbeidsgiverOrgnr;
     private String arbeidsgiverAktoerId;
     private final String internArbeidsforholdRef;
     private LocalDate fastsattRefusjonFom;
 
-    public VurderRefusjonAndelBeregningsgrunnlagDto(String arbeidsgiverOrgnr,
+    public VurderRefusjonAndelBeregningsgrunnlagDto(Orgnummer arbeidsgiverOrgnr,
                                                     String arbeidsgiverAktoerId,
                                                     String internArbeidsforholdRef,
                                                     LocalDate fastsattRefusjonFom) {
@@ -22,7 +24,7 @@ public class VurderRefusjonAndelBeregningsgrunnlagDto {
         this.fastsattRefusjonFom = fastsattRefusjonFom;
     }
 
-    public String getArbeidsgiverOrgnr() {
+    public Orgnummer getArbeidsgiverOrgnr() {
         return arbeidsgiverOrgnr;
     }
 

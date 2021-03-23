@@ -2,18 +2,9 @@
 	"inntektskomponent": {
 		"inntektsperioder": [
 			{
-				"fom": "now() - P2Y",
-				"tom": "now()",
-				"beløp": 30000,
-				"orgnr": "910909088",
-				"type": "Lønnsinntekt",
-				"fordel": "kontantytelse",
-				"beskrivelse": "fastloenn"
-			},
-			{
 				"fom": "now() - P4Y",
 				"tom": "now()",
-				"beløp": 30000,
+				"beløp": 60000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
