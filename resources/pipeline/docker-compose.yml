@@ -182,11 +182,13 @@ services:
     environment:
       - "LOADBALANCER_URL=http://localhost:8040"
       - "LOADBALANCER_FQDN=localhost:8040"
+      - "TOKEN_X_CLIENT_ID=fpinfo"
     env_file:
       - "fpinfo_datasource.list"
       - "common.env"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
+      - "./tokenx:/tokenx"
     ports:
       - "8040:8080"
     depends_on:
@@ -216,10 +218,12 @@ services:
       - "FPFORDEL_BASE_URL=http://fpfordel:8080"
       - "FPFORDEL_MAX=20"
       - "FPINFO_MAX=20"
+      - "TOKEN_X_CLIENT_ID=fpsoknad-mottak"
     env_file:
       - "common.env"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
+      - "./tokenx:/tokenx"
     ports:
       - "9001:9001"
     depends_on:
