@@ -604,14 +604,8 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var saksnummerFar = far.søk(søknadFar.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
-        var vurderPerioderOpptjeningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class);
-        vurderPerioderOpptjeningBekreftelse
-                .godkjennOpptjening("FRILANS")
-                .setBegrunnelse("Godkjenner Aktivitet");
-        saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
-        assertThat(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("FRILANS"))
+        assertThat(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("FRILOPP"))
                 .as("Forventer at det er registert en opptjeningsaktivitet med aktivitettype FRILANSER som " +
                         "har frilansinntekt på skjæringstidspunktet!")
                 .isTrue();
