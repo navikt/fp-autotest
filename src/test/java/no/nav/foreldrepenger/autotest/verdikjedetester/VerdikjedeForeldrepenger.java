@@ -605,7 +605,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
 
-        assertThat(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("FRILOPP"))
+        assertThat(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("FRILANS"))
                 .as("Forventer at det er registert en opptjeningsaktivitet med aktivitettype FRILANSER som " +
                         "har frilansinntekt på skjæringstidspunktet!")
                 .isTrue();
