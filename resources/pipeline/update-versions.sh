@@ -16,7 +16,7 @@ imageVersion () {
 }
 
 echo AUDIT_NAIS_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/k9-verdikjede/audit-nais-mock")" > .env
-echo ORACLE_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpsak-autotest/oracle-flattened")" >> .env
+echo ORACLE_IMAGE="ghcr.io/navikt/oracle-foreldrepenger:11" >> .env
 echo POSTGRES_IMAGE="postgres:12" >> .env
 echo VTP_IMAGE="$(imageVersion "ghcr.io/navikt/vtp")" >> .env
 echo FPABAKUS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-abakus")" >> .env

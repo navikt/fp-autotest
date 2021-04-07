@@ -161,7 +161,7 @@
             <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.18.18.0</version>
+                <version>1.18.20.0</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -226,7 +226,7 @@
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
-            <version>2.13.8</version>
+            <version>2.13.9</version>
         </dependency>
         <dependency>
             <groupId>org.jboss</groupId>
@@ -241,13 +241,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.18</version>
+            <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.neovisionaries</groupId>
             <artifactId>nv-i18n</artifactId>
-            <version>1.27</version>
+            <version>1.28</version>
         </dependency>
 
         <dependency>
