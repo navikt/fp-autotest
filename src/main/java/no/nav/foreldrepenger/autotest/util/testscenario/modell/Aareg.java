@@ -19,7 +19,7 @@ final class Aareg {
 
     static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, Orgnummer orgnummer) {
         return aareg.arbeidsforhold().stream()
-                .filter(a -> a.arbeidsgiverOrgnr().equalsIgnoreCase(orgnummer.orgnummer()))
+                .filter(a -> a.arbeidsgiverOrgnr().equalsIgnoreCase(orgnummer.toString()))
                 .map(Aareg::mapTilArbeidsforhold)
                 .collect(Collectors.toList());
     }

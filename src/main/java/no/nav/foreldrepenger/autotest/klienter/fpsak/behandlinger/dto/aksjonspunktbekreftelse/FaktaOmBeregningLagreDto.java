@@ -91,8 +91,8 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilRefusjonGyldighet(Orgnummer arbeidsgiverId, boolean skalUtvideGyldighet) {
-        refusjonskravGyldighet.add(new RefusjonskravPrArbeidsgiverVurderingDto(arbeidsgiverId.orgnummer(), skalUtvideGyldighet));
+    public FaktaOmBeregningLagreDto leggTilRefusjonGyldighet(Orgnummer org, boolean skalUtvideGyldighet) {
+        refusjonskravGyldighet.add(new RefusjonskravPrArbeidsgiverVurderingDto(org.toString(), skalUtvideGyldighet));
         return this;
     }
 

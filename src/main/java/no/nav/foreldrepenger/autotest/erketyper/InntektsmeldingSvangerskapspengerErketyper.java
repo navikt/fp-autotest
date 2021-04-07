@@ -12,7 +12,7 @@ public class InntektsmeldingSvangerskapspengerErketyper {
 
     public static InntektsmeldingBuilder lagSvangerskapspengerInntektsmelding(Fødselsnummer fnr, Integer beløp,
                                                                               Orgnummer orgnummer) {
-        return lagSvangerskapspengerInntektsmelding(fnr.fnr(), beløp, orgnummer.orgnummer());
+        return lagSvangerskapspengerInntektsmelding(fnr.toString(), beløp, orgnummer.toString());
     }
     public static InntektsmeldingBuilder lagSvangerskapspengerInntektsmelding(String fnr, Integer beløp,
             String orgnummer) {

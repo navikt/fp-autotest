@@ -163,7 +163,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .isTrue();
 
         // Fødselshendelse
-        var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, identSøker.fnr(),
+        var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, identSøker.toString(),
                 null, null, termindato.minusWeeks(1));
         innsender.opprettHendelsePåKafka(fødselshendelseDto);
 
@@ -273,7 +273,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
 
-        var dødshendelseDto = new DødshendelseDto("OPPRETTET", null, identSøker.fnr(),
+        var dødshendelseDto = new DødshendelseDto("OPPRETTET", null, identSøker.toString(),
                 LocalDate.now().minusDays(1));
         innsender.opprettHendelsePåKafka(dødshendelseDto);
 
@@ -1516,7 +1516,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .isZero();
 
         var differanseFødselTermin = 7;
-        var dødfødselshendelseDto = new DødfødselhendelseDto("OPPRETTET", null, søkerIdent.fnr(),
+        var dødfødselshendelseDto = new DødfødselhendelseDto("OPPRETTET", null, søkerIdent.toString(),
                 termindato.plusDays(differanseFødselTermin));
         innsender.opprettHendelsePåKafka(dødfødselshendelseDto);
 

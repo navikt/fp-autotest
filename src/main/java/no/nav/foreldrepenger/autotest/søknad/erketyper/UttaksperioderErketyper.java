@@ -53,7 +53,7 @@ public final class UttaksperioderErketyper {
                 .uttaksperiodeType(stønadskontoType)
                 .fom(fom)
                 .tom(tom)
-                .virksomhetsnummer(List.of(orgnummer.orgnummer()))
+                .virksomhetsnummer(List.of(orgnummer))
                 .arbeidsForholdSomskalGraderes(true)
                 .arbeidstidProsent(new ProsentAndel(Double.valueOf(arbeidstidsprosentIOrgnr)))
                 .erArbeidstaker(true)

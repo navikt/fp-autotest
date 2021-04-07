@@ -33,7 +33,7 @@ public class AzureAdJerseyKlient extends VTPJerseyKlient {
                 .post(Entity.form(new MultivaluedHashMap<>(Map.of(
                         "grant_type", "client_credentials",
                         "scope", "openid",
-                        "code", fnr.fnr()))),
+                        "code", fnr.toString()))),
                         AccessTokenResponseDTO.class)
                 .getIdToken();
     }

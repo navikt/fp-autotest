@@ -64,7 +64,7 @@ public class InntektsmeldingForeldrepengeErketyper {
     }
 
     public static InntektsmeldingBuilder lagInntektsmelding(Integer beløp, Fødselsnummer fnr, LocalDate fpStartdato, Orgnummer orgNr) {
-        return lagInntektsmelding(beløp, fnr.fnr(), fpStartdato, orgNr.orgnummer());
+        return lagInntektsmelding(beløp, fnr.toString(), fpStartdato, orgNr.toString());
     }
 
     public static InntektsmeldingBuilder lagInntektsmelding(Integer beløp, String fnr, LocalDate fpStartdato, String orgNr) {

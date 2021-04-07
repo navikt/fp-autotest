@@ -115,7 +115,7 @@ public class Innsender extends Aktoer {
         journalpostModell.setAvsenderFnr(fnr.toString());
         journalpostModell.setEksternReferanseId(eksternReferanseId);
         journalpostModell.setSakId("");
-        journalpostModell.setBruker(new JournalpostBruker(fnr.fnr(), BrukerType.FNR));
+        journalpostModell.setBruker(new JournalpostBruker(fnr.toString(), BrukerType.FNR));
         journalpostModell.setJournalposttype(Journalposttyper.INNGAAENDE_DOKUMENT);
         journalpostModell.getDokumentModellList().add(lagDokumentModell(innhold, dokumenttypeId));
         return journalpostModell;
@@ -164,9 +164,9 @@ public class Innsender extends Aktoer {
     }
 
     private Long ventTilFagsakOgBehandlingErOpprettet(Fødselsnummer fnr) {
-        Vent.til(() -> !fagsakKlient.søk(fnr.fnr()).isEmpty(), 30,
+        Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 30,
                 "Fagsak for bruker " + fnr + " har ikke blitt opprettet!");
-        var saksnummer = fagsakKlient.søk(fnr.fnr()).get(0).saksnummer();
+        var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();
 
         Vent.til(() -> {
             var behandlinger = behandlingerKlient.alle(saksnummer);

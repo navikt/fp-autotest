@@ -11,7 +11,12 @@ public record Orgnummer(@JsonValue String orgnummer) {
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static Orgnummer fraOrgnummer(String orgnummer) {
+    public static Orgnummer fraString(String orgnummer) {
         return new Orgnummer(orgnummer);
+    }
+
+    @Override
+    public String toString() {
+        return orgnummer();
     }
 }

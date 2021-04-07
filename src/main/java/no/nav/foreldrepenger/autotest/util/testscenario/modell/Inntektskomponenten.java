@@ -19,7 +19,7 @@ final class Inntektskomponenten {
 
     static int månedsinntekt(InntektskomponentModell inntektskomponenten, Orgnummer orgnummer) {
         return inntektskomponenten.inntektsperioder().stream()
-                .filter(p -> orgnummer.orgnummer().equalsIgnoreCase(p.orgnr()))
+                .filter(p -> orgnummer.equals(Orgnummer.fraString(p.orgnr())))
                 .max(Comparator.comparing(Inntektsperiode::tom))
                 .map(Inntektsperiode::beløp)
                 .orElse(0);
