@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.ProsentAndel;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 
 @Data
 @EqualsAndHashCode(callSuper = true, exclude = { "virksomhetsnummer" })
@@ -18,7 +19,7 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.ProsentAndel;
 public class GradertUttaksPeriode extends UttaksPeriode {
     private final ProsentAndel arbeidstidProsent;
     private final boolean erArbeidstaker;
-    private final List<String> virksomhetsnummer;
+    private final List<Orgnummer> virksomhetsnummer;
     private final boolean arbeidsForholdSomskalGraderes;
     private final Boolean frilans;
     private final Boolean selvstendig;
@@ -34,7 +35,7 @@ public class GradertUttaksPeriode extends UttaksPeriode {
             @JsonProperty("arbeidstidProsent") ProsentAndel arbeidstidProsent,
             @JsonProperty("erArbeidstaker") boolean erArbeidstaker,
             @JsonProperty("arbeidsForholdSomskalGraderes") boolean arbeidsForholdSomskalGraderes,
-            @JsonProperty("virksomhetsnummer") List<String> virksomhetsnummer,
+            @JsonProperty("virksomhetsnummer") List<Orgnummer> virksomhetsnummer,
             @JsonProperty("frilans") Boolean frilans,
             @JsonProperty("selvstendig") Boolean selvstendig,
             @JsonProperty("vedlegg") List<String> vedlegg) {

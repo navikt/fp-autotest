@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.MottakJers
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.oauth2.AzureAdJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
+import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -57,17 +58,17 @@ public class Innsender extends Aktoer {
         pdlLeesahKlient = new PdlLeesahJerseyKlient();
     }
 
-    public void sendInnInnteksmeldingFpfordel(String fnr, Long saksnummer, InntektsmeldingBuilder... inntektsmelding) {
+    public void sendInnInnteksmeldingFpfordel(Fødselsnummer fnr, Long saksnummer, InntektsmeldingBuilder... inntektsmelding) {
         sendInnInnteksmeldingFpfordel(List.of(inntektsmelding), fnr, saksnummer);
     }
 
-    public void sendInnInnteksmeldingFpfordel(List<InntektsmeldingBuilder> inntektsmeldinger, String fnr, Long saksnummer) {
+    public void sendInnInnteksmeldingFpfordel(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr, Long saksnummer) {
         var antallGamleInntekstmeldinger = hentAntallHistorikkInnslagAvTypenVedleggMottatt(saksnummer);
         journalførInnteksmeldinger(inntektsmeldinger, fnr);
         ventTilInntekstmeldingErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallGamleInntekstmeldinger);
     }
 
-    private void journalførInnteksmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String fnr) {
+    private void journalførInnteksmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr) {
         for (InntektsmeldingBuilder inntektsmelding : inntektsmeldinger) {
             LOG.info("Sender inn IM for søker: {}", fnr);
             var xml = inntektsmelding.createInntektesmeldingXML();
@@ -77,7 +78,7 @@ public class Innsender extends Aktoer {
         }
     }
 
-    public Long sendInnSøknad(String fnr, Søknad søknad) {
+    public Long sendInnSøknad(Fødselsnummer fnr, Søknad søknad) {
         LOG.info("Sender inn søknadd for bruker {}", fnr);
         var token = oauth2Klient.hentAccessTokenForBruker(fnr);
         var kvittering = mottakKlient.sendSøknad(token, søknad);
@@ -87,7 +88,7 @@ public class Innsender extends Aktoer {
         return saksnummer;
     }
 
-    public Long sendInnPapirsøknad(String fnr, DokumenttypeId dokumenttypeId) {
+    public Long sendInnPapirsøknad(Fødselsnummer fnr, DokumenttypeId dokumenttypeId) {
         LOG.info("Sender inn papirsøknadd for bruker {}", fnr);
         var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null,
                 "SKAN_IM", "skanIkkeUnik.pdf", dokumenttypeId);
@@ -97,13 +98,13 @@ public class Innsender extends Aktoer {
         return saksnummer;
     }
 
-    public void sendInnKlage(String fnr) {
+    public void sendInnKlage(Fødselsnummer fnr) {
         var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null,
                 "SKAN_IM", null, DokumenttypeId.KLAGE_DOKUMENT);
         journalpostKlient.journalførR(journalpostModell);
     }
 
-    private JournalpostModell lagJournalpost(String fnr, String tittel, String innhold, String mottakskanal,
+    private JournalpostModell lagJournalpost(Fødselsnummer fnr, String tittel, String innhold, String mottakskanal,
                                              String eksternReferanseId, DokumenttypeId dokumenttypeId) {
         JournalpostModell journalpostModell = new JournalpostModell();
         journalpostModell.setTittel(tittel);
@@ -111,10 +112,10 @@ public class Innsender extends Aktoer {
         journalpostModell.setMottattDato(LocalDateTime.now());
         journalpostModell.setMottakskanal(mottakskanal);
         journalpostModell.setArkivtema(Arkivtema.FOR);
-        journalpostModell.setAvsenderFnr(fnr);
+        journalpostModell.setAvsenderFnr(fnr.toString());
         journalpostModell.setEksternReferanseId(eksternReferanseId);
         journalpostModell.setSakId("");
-        journalpostModell.setBruker(new JournalpostBruker(fnr, BrukerType.FNR));
+        journalpostModell.setBruker(new JournalpostBruker(fnr.toString(), BrukerType.FNR));
         journalpostModell.setJournalposttype(Journalposttyper.INNGAAENDE_DOKUMENT);
         journalpostModell.getDokumentModellList().add(lagDokumentModell(innhold, dokumenttypeId));
         return journalpostModell;
@@ -146,7 +147,7 @@ public class Innsender extends Aktoer {
                 .count();
     }
 
-    private void ventTilInntekstmeldingErMottatt(String fnr, Long saksnummer,
+    private void ventTilInntekstmeldingErMottatt(Fødselsnummer fnr, Long saksnummer,
                                                  Integer antallNyeInntektsmeldinger,
                                                  Integer antallGamleInntekstmeldinger) {
         if (saksnummer != null) {
@@ -162,7 +163,7 @@ public class Innsender extends Aktoer {
         }
     }
 
-    private Long ventTilFagsakOgBehandlingErOpprettet(String fnr) {
+    private Long ventTilFagsakOgBehandlingErOpprettet(Fødselsnummer fnr) {
         Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 30,
                 "Fagsak for bruker " + fnr + " har ikke blitt opprettet!");
         var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();

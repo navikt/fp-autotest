@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.MottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FaktaOmBeregningLagreDto {
@@ -90,8 +91,8 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilRefusjonGyldighet(String arbeidsgiverId, boolean skalUtvideGyldighet) {
-        refusjonskravGyldighet.add(new RefusjonskravPrArbeidsgiverVurderingDto(arbeidsgiverId, skalUtvideGyldighet));
+    public FaktaOmBeregningLagreDto leggTilRefusjonGyldighet(Orgnummer org, boolean skalUtvideGyldighet) {
+        refusjonskravGyldighet.add(new RefusjonskravPrArbeidsgiverVurderingDto(org.toString(), skalUtvideGyldighet));
         return this;
     }
 

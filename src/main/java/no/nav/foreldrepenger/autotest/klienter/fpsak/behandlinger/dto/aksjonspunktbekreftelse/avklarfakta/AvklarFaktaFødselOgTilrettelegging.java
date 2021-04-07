@@ -8,6 +8,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.ArbeidsforholdId;
 
 @BekreftelseKode(kode = "5091")
 public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse {
@@ -31,13 +32,13 @@ public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse
         return bekreftetSvpArbeidsforholdList;
     }
 
-    public void setSkalBrukesTilFalseForArbeidsforhold(String arbeidsforholdId) {
+    public void setSkalBrukesTilFalseForArbeidsforhold(ArbeidsforholdId arbeidsforholdId) {
         setSkalBrukesTilFalseForAngitteArbeidsforhold(List.of(arbeidsforholdId));
     }
 
-    public void setSkalBrukesTilFalseForAngitteArbeidsforhold(List<String> arbeidsforholdId) {
+    public void setSkalBrukesTilFalseForAngitteArbeidsforhold(List<ArbeidsforholdId> arbeidsforholdId) {
         for (var arbeidsforhold : getBekreftetSvpArbeidsforholdList()) {
-            if (arbeidsforholdId.contains(arbeidsforhold.getEksternArbeidsforholdReferanse())) {
+            if (arbeidsforholdId.contains(new ArbeidsforholdId(arbeidsforhold.getEksternArbeidsforholdReferanse()))) {
                 arbeidsforhold.setSkalBrukes(false);
             }
         }

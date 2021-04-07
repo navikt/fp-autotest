@@ -44,6 +44,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
@@ -351,7 +352,7 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
         // sent
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilRefusjonGyldighetVurdering(orgNr, true)
+                .leggTilRefusjonGyldighetVurdering(new Orgnummer(orgNr), true)
                 .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
@@ -409,7 +410,7 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
         // FAKTA OM ARBEIDSFORHOLD
         var avklarArbeidsforholdBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErAktivt("910909088", true);
+                .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         // FAKTA OM BEREGNING
@@ -440,7 +441,7 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
 
         var avklarArbeidsforholdBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErAktivt("910909088", true);
+                .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
         saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);

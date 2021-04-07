@@ -5,13 +5,15 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Arbeidsforhold {
 
     protected String id = null;
     protected String navn = null;
-    protected String arbeidsgiverIdentifikator = null;
-    protected String arbeidsgiverReferanse = null;
+    protected Orgnummer arbeidsgiverIdentifikator = null;
+    protected Orgnummer arbeidsgiverReferanse = null;
     protected String arbeidsforholdId = null;
     protected LocalDate fomDato = null;
     protected LocalDate tomDato = null;
@@ -74,11 +76,11 @@ public class Arbeidsforhold {
         this.navn = navn;
     }
 
-    public String getArbeidsgiverIdentifikator() {
+    public Orgnummer getArbeidsgiverIdentifikator() {
         return arbeidsgiverIdentifikator != null ? arbeidsgiverIdentifikator : arbeidsgiverReferanse;
     }
 
-    public String getArbeidsgiverReferanse() {
+    public Orgnummer getArbeidsgiverReferanse() {
         return arbeidsgiverReferanse;
     }
 

@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Tag("fpsak")
@@ -61,7 +62,7 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         // LØSER AKSJONSPUNKT 5080 //
         var ab = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErBasertPåInntektsmelding("910909088", LocalDate.now().minusYears(3),
+                .bekreftArbeidsforholdErBasertPåInntektsmelding(new Orgnummer("910909088"), LocalDate.now().minusYears(3),
                         LocalDate.now().plusYears(2), BigDecimal.valueOf(100));
         saksbehandler.bekreftAksjonspunkt(ab);
 

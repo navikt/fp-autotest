@@ -7,11 +7,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningsresultatPeriodeAndel {
 
-    protected String arbeidsgiverReferanse;
+    protected Orgnummer arbeidsgiverReferanse;
     protected Integer refusjon;
     protected Integer tilSoker;
     protected Uttak uttak;
@@ -22,7 +23,7 @@ public class BeregningsresultatPeriodeAndel {
     protected OpptjeningAktivitetType arbeidsforholdType;
 
 
-    public String getArbeidsgiverReferanse() {
+    public Orgnummer getArbeidsgiverReferanse() {
         return arbeidsgiverReferanse;
     }
 

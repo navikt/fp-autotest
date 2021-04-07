@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Sok;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Status;
+import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 
 public class FagsakJerseyKlient extends FpsakJerseyKlient {
 
@@ -41,6 +42,10 @@ public class FagsakJerseyKlient extends FpsakJerseyKlient {
                 .queryParam("saksnummer", saksnummer)
                 .request()
                 .get(Fagsak.class);
+    }
+
+    public List<Fagsak> søk(Fødselsnummer fnr) {
+        return søk(new Sok(fnr.toString()));
     }
 
     @Step("Søker etter fagsak {søk}")

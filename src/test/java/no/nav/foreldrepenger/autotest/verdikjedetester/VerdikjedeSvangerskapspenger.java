@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -48,9 +47,8 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
-        var månedsinntekt = mor.månedsinntekt();
-        var inntektsmedling = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt, orgnummer);
-        arbeidsforholdMor.arbeidsgiver().sendInntektsmeldinger(saksnummer, inntektsmedling);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendDefaultInntektsmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
@@ -70,7 +68,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        int beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
+        int beregnetDagsats = regnUtForventetDagsats(mor.månedsinntekt(), tilrettelegginsprosent);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats())
                 .as("Forventer at dagsatsen beregnes ut i fra årsinntekten og 100% utbetalingsgrad")
                 .isEqualTo(beregnetDagsats);
@@ -85,7 +83,6 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     void morSøkerDelvisTilretteleggingMedInntektOver6GTest() {
         var familie = new Familie("502");
         var mor = familie.mor();
-        var søkerFnr = mor.fødselsnummer();
         var arbeidsforholdMor = mor.arbeidsforhold();
         var orgnummer = arbeidsforholdMor.orgnummer();
         var tilrettelegginsprosent = 40;
@@ -101,12 +98,8 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
-        var månedsinntekt = mor.månedsinntekt();
-        var inntektsmedling = lagSvangerskapspengerInntektsmelding(
-                søkerFnr,
-                månedsinntekt,
-                orgnummer);
-        arbeidsforholdMor.arbeidsgiver().sendInntektsmeldinger(saksnummer, inntektsmedling);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendDefaultInntektsmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
@@ -126,7 +119,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        var beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
+        var beregnetDagsats = regnUtForventetDagsats(mor.månedsinntekt(), tilrettelegginsprosent);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats())
                 .as("Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt")
                 .isEqualTo(beregnetDagsats);
@@ -142,9 +135,8 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
         var familie = new Familie("503");
         var mor = familie.mor();
-        var søkerFnr = mor.fødselsnummer();
-        var arbeidsforholdListe = mor.arbeidsforholdListe();
-        var arbeidsforhold1 = arbeidsforholdListe.get(0);
+        var arbeidsforholdene = mor.arbeidsforholdene();
+        var arbeidsforhold1 = arbeidsforholdene.get(0);
         var orgnummer1 = arbeidsforhold1.orgnummer();
         var termindato = LocalDate.now().plusMonths(3);
         var tilrettelegginsprosent = 0;
@@ -158,25 +150,13 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
-
-        var inntektsperioder = mor.inntektsperioder();
-        var månedsinntekt1 = inntektsperioder.get(0).beløp();
-        var inntektsmedling1 = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt1, orgnummer1)
-                .medArbeidsforholdId(arbeidsforhold1.arbeidsforholdId());
-        arbeidsforhold1.arbeidsgiver().sendInntektsmeldinger(saksnummer, inntektsmedling1);
-
-        var månedsinntekt2 = inntektsperioder.get(1).beløp();
-        var arbeidsforhold2 = arbeidsforholdListe.get(1);
-        var orgNummer2 = arbeidsforhold2.orgnummer();
-        var arbeidsforholdId2 = arbeidsforhold2.arbeidsforholdId();
-        var inntektsmedling2 = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt2, orgNummer2)
-                .medArbeidsforholdId(arbeidsforhold2.arbeidsforholdId());
-        arbeidsforhold2.arbeidsgiver().sendInntektsmeldinger(saksnummer, inntektsmedling2);
+        var arbeidsgivere = mor.arbeidsgivere();
+        arbeidsgivere.sendDefualtInnteksmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
-        avklarFaktaFødselOgTilrettelegging.setSkalBrukesTilFalseForArbeidsforhold(arbeidsforholdId2);
+        avklarFaktaFødselOgTilrettelegging.setSkalBrukesTilFalseForArbeidsforhold(arbeidsforholdene.get(1).arbeidsforholdId());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
@@ -191,7 +171,8 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        var årsinntekt = Double.valueOf(månedsinntekt1) * 12;
+        var månedsinntekt1 = mor.månedsinntekt(orgnummer1, arbeidsforhold1.arbeidsforholdId());
+        var årsinntekt = (double) månedsinntekt1 * 12;
         var utbetalingProsentFaktor = (double) (100 - tilrettelegginsprosent) / 100;
         var beregnetDagsats = regnUtForventetDagsats(månedsinntekt1, tilrettelegginsprosent);
         var beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
@@ -215,7 +196,6 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     void morSøkerFørstForATOgSenereForSNTest() {
         var familie = new Familie("511");
         var mor = familie.mor();
-        var søkerFnr = mor.fødselsnummer();
         var arbeidsforhold = mor.arbeidsforhold();
         var orgNr = arbeidsforhold.orgnummer();
         var næringsinntekt = mor.næringsinntekt(2018);
@@ -236,12 +216,10 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .medOpptjening(opptjening);
         var saksnummer1 = mor.søk(søknad1.build());
 
-
-        var månedsinntekt = mor.månedsinntekt();
-        var inntektsmelding = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt, orgNr)
-                .medArbeidsforholdId(arbeidsforhold.arbeidsforholdId())
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt));
-        arbeidsforhold.arbeidsgiver().sendInntektsmeldinger(saksnummer1, inntektsmelding);
+        var arbeidsgiver = mor.arbeidsgiver();
+        var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP()
+                .medRefusjonsBelopPerMnd(100);
+        arbeidsgiver.sendInntektsmeldinger(saksnummer1, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer1);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
@@ -260,6 +238,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
+        var månedsinntekt = mor.månedsinntekt();
         var beregnetDagsats = regnUtForventetDagsats(månedsinntekt, tilrettelegginsprosent);
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats())
                 .as("Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!")
@@ -333,10 +312,10 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     void morSøkerIngenTilretteleggingForToArbeidsforholdFullRefusjonTest() {
         var familie = new Familie("504");
         var mor = familie.mor();
-        var søkerFnr = mor.fødselsnummer();
-        var arbeidsforhold1 = mor.arbeidsforholdListe().get(0);
+        var arbeidsforholdene = mor.arbeidsforholdene();
+        var arbeidsforhold1 = arbeidsforholdene.get(0);
         var orgnummer1 = arbeidsforhold1.orgnummer();
-        var arbeidsforhold2 = mor.arbeidsforholdListe().get(1);
+        var arbeidsforhold2 = arbeidsforholdene.get(1);
         var orgnummer2 = arbeidsforhold2.orgnummer();
         var termindato = LocalDate.now().plusMonths(3);
         var tilrettelegginsprosent = 0;
@@ -354,16 +333,15 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 List.of(tilrettelegging1, tilrettelegging2));
         var saksnummer = mor.søk(søknad.build());
 
-        var månedsinntekt1 = mor.månedsinntekt(orgnummer1);
-        var inntektsmedling1 = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt1, orgnummer1)
-                .medArbeidsforholdId(arbeidsforhold1.arbeidsforholdId())
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt1));
-        arbeidsforhold1.arbeidsgiver().sendInntektsmeldinger(saksnummer, inntektsmedling1);
-        var månedsinntekt2 = mor.månedsinntekt(orgnummer2);
-        var inntektsmedling2 = lagSvangerskapspengerInntektsmelding(søkerFnr, månedsinntekt2, orgnummer2)
-                .medArbeidsforholdId(arbeidsforhold2.arbeidsforholdId())
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt2));
-        arbeidsforhold2.arbeidsgiver().sendInntektsmeldinger(saksnummer, inntektsmedling2);
+        var arbeidsgivere = mor.arbeidsgivere().getArbeidsgivere();
+        var arbeidsgiver1 = arbeidsgivere.get(0);
+        var inntektsmedling1 = arbeidsgiver1.lagInntektsmeldingSVP()
+                .medRefusjonsBelopPerMnd(100);
+        arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmedling1);
+        var arbeidsgiver2 = arbeidsgivere.get(1);
+        var inntektsmedling2 = arbeidsgiver2.lagInntektsmeldingSVP()
+                .medRefusjonsBelopPerMnd(100);
+        arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmedling2);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
@@ -383,6 +361,9 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
+
+        var månedsinntekt1 = mor.månedsinntekt(orgnummer1);
+        var månedsinntekt2 = mor.månedsinntekt(orgnummer2);
         var beregnetDagsats = regnUtForventetDagsats(månedsinntekt1 + månedsinntekt2, tilrettelegginsprosent);
         var beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0);

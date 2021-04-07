@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.autotest.søknad.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.MedlemsskapErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 
 public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBase {
 
@@ -67,7 +68,7 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
 
     @Test
     public void tilretteleggingTest() {
-        test(helTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.virksomhet("999035462")));
+        test(helTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.virksomhet(new Orgnummer("999035462"))));
         test(delvisTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.privatArbeidsgiver("12345678910"), 50));
         test(ingenTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.selvstendigNæringsdrivende()));
     }

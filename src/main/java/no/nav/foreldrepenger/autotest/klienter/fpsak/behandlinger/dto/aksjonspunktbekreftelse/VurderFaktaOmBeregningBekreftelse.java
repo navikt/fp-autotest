@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 
 @BekreftelseKode(kode = "5058")
 //TODO: Rydd opp i denne. Ganske uoversiktlig.
@@ -72,8 +73,8 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(String orgnummer,
-            boolean skalUtvideGyldighet) {
+    public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(Orgnummer orgnummer,
+                                                                               boolean skalUtvideGyldighet) {
         fakta.leggTilRefusjonGyldighet(orgnummer, skalUtvideGyldighet);
         return this;
     }
