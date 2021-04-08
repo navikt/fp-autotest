@@ -11,8 +11,8 @@ on:
       - 'JenkinsfileAutotest'
       - 'JenkinsfileAutotestNew'
       - 'CODEOWNERS'
-      - '.github/workflows/verdikjede-trigger.yml'
-      - '.github/workflows/fpsak-trigger.yml'
+      - '.github/workflows/deprecated-verdikjede-trigger.yml'
+      - '.github/workflows/deprecated-fpsak-trigger.yml'
       - '.github/workflows/trigger.yml.yml'
       - 'lokalutvikling/*'
 
