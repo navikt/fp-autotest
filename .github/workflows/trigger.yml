@@ -90,13 +90,13 @@ jobs:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - name: Sjekker loggen etter feil
-        if: always() && env.STACK_STARTED == 'true'
-        id: logger
-        run: mvn test --batch-mode --settings .github/.m2/settings.xml -P loggfeil
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+#      - name: Sjekker loggen etter feil
+#        if: always() && env.STACK_STARTED == 'true'
+#        id: logger
+#        run: mvn test --batch-mode --settings .github/.m2/settings.xml -P loggfeil
+#        env:
+#          GITHUB_USERNAME: x-access-token
+#          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Generer testrapport
         if: |
