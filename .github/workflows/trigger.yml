@@ -554,7 +554,7 @@ jobs:
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue-number }}
+          issue-number: ${{ github.event.inputs.issue_number }}
           body: |
             Alle testene gikk grønne!
             Deployer ${{ github.event.inputs.trigger }} til dev-fss!
@@ -565,7 +565,7 @@ jobs:
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue-number }}
+          issue-number: ${{ github.event.inputs.issue_number }}
           body: /promote dev-fss
 
   deploy-fptilbake:
@@ -580,7 +580,7 @@ jobs:
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue-number }}
+          issue-number: ${{ github.event.inputs.issue_number }}
           body: |
             Alle testene gikk grønne!
             Deployer ${{ github.event.inputs.trigger }} til dev-fss!
@@ -590,7 +590,7 @@ jobs:
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue-number }}
+          issue-number: ${{ github.event.inputs.issue_number }}
           body: /promote fp dev-fss teamforeldrepenger
 
   deploy-rest:
@@ -606,7 +606,7 @@ jobs:
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue-number }}
+          issue-number: ${{ github.event.inputs.issue_number }}
           body: |
             Alle testene gikk grønne!
             Deployer ${{ github.event.inputs.trigger }} til dev-fss!
@@ -617,5 +617,5 @@ jobs:
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue-number }}
+          issue-number: ${{ github.event.inputs.issue_number }}
           body: /promote dev-fss
