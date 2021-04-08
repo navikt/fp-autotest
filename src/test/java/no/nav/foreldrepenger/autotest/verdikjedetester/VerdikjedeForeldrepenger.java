@@ -1600,7 +1600,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                                                                                         LocalDate fpStartdatoFar) {
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var mor = familie.mor();
-        var identMor = mor.fødselsnummer();
         var fordelingMor = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),

@@ -1,7 +1,7 @@
 name: Kjører Autotestene for verdikjeden PR
 
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths-ignore:
@@ -11,8 +11,8 @@ on:
       - 'JenkinsfileAutotest'
       - 'JenkinsfileAutotestNew'
       - 'CODEOWNERS'
-      - '.github/workflows/verdikjede-trigger.yml'
-      - '.github/workflows/fpsak-trigger.yml'
+      - '.github/workflows/trigger-verdikjede.yml'
+      - '.github/workflows/trigger-fpsak.yml'
       - 'lokalutvikling/*'
 
 jobs:
