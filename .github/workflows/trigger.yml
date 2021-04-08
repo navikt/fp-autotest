@@ -33,7 +33,7 @@ on:
 
 jobs:
   fpsak-autotester:
-    if: contains('['navikt/fp-abakus', 'navikt/fp-sak']', github.event.inputs.trigger)
+    if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.event.inputs.trigger)
     name: Utfører autotestene for ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest
     steps:
@@ -618,7 +618,7 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.issue-number != null &&
-      !contains('['navikt/fptilbake', 'navikt/fp-sak', 'navikt/fp-abakus']', github.event.inputs.trigger)
+      !contains(fromJson('["navikt/fptilbake", "navikt/fp-sak", "navikt/fp-abakus"]'), github.event.inputs.trigger)
     runs-on: ubuntu-latest
     steps:
       - name: Test success
