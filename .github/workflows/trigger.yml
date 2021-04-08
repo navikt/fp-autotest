@@ -545,7 +545,7 @@ jobs:
   deploy-fpsak:
     if: |
       github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue-number != null
+      github.event.inputs.issue_number != null
     needs: [fpsak-autotester, verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
@@ -571,7 +571,7 @@ jobs:
   deploy-fptilbake:
     if: |
       github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue-number != null
+      github.event.inputs.issue_number != null
     needs: [fptilbake-tester, verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
@@ -596,7 +596,7 @@ jobs:
   deploy-rest:
     if: |
       github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue-number != null &&
+      github.event.inputs.issue_number != null &&
       !contains(fromJson('["navikt/fptilbake", "navikt/fp-sak", "navikt/fp-abakus"]'), github.event.inputs.trigger)
     needs: [verdikjedetestene]
     runs-on: ubuntu-latest
