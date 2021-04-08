@@ -543,10 +543,10 @@ jobs:
           path: container-logs
 
   deploy-fpsak:
-    needs: [fpsak-autotester, verdikjedetestene]
     if: |
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.issue-number != null
+    needs: [fpsak-autotester, verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
       - name: Test success
@@ -569,10 +569,10 @@ jobs:
           body: /promote dev-fss
 
   deploy-fptilbake:
-    needs: [fptilbake-tester, verdikjedetestene]
     if: |
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.issue-number != null
+    needs: [fptilbake-tester, verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
       - name: Test success
@@ -594,11 +594,11 @@ jobs:
           body: /promote fp dev-fss teamforeldrepenger
 
   deploy-rest:
-    needs: [verdikjedetestene]
     if: |
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.issue-number != null &&
       !contains(fromJson('["navikt/fptilbake", "navikt/fp-sak", "navikt/fp-abakus"]'), github.event.inputs.trigger)
+    needs: [verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
       - name: Test success
