@@ -1,7 +1,7 @@
-name: Kjører autotestene for fpsak
+name: Utfører tester mot SUT
 
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths-ignore:
@@ -34,7 +34,7 @@ on:
 jobs:
   fpsak-autotester:
     if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.event.inputs.trigger)
-    name: Utfører autotestene for ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+    name: Kjører fpsak spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -177,7 +177,7 @@ jobs:
 
   fptilbake-tester:
     if: github.event.inputs.trigger == 'navikt/fptilbake'
-    name: Utfører autotestene for ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+    name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -318,26 +318,6 @@ jobs:
           echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
           rm test-result-log.txt
 
-      - name: Oppdaterer issue med testresultat
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled' &&
-          github.event.inputs.trigger != null &&
-          github.event.inputs.version != null
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          event-type: update-issue
-          client-payload: |
-            {
-            "trigger": "${{ github.event.inputs.trigger }}",
-            "issue-number": "${{ github.event.inputs.issue-number }}",
-            "success": "${{ steps.tester.outcome }}",
-            "run_id": "${{ github.run_id }}"
-            }
-
       - name: Notify slack
         if: |
           always() &&
@@ -376,7 +356,7 @@ jobs:
           path: container-logs
 
   verdikjedetestene:
-    name: Utfør verdikjedetestene for ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+    name: Kjører verdikjedetestene som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
