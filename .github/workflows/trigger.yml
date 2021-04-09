@@ -31,6 +31,10 @@ on:
   schedule:
     - cron:  '15 0 * * *'
 
+env:
+  GITHUB_USERNAME: x-access-token
+  GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+
 jobs:
   fpsak-autotester:
     if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.event.inputs.trigger)
@@ -86,17 +90,11 @@ jobs:
       - name: Utfører foreldrepengetestene for fpsak
         id: tester
         run: mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak > >(tee test-result-log.txt)
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
-#      - name: Sjekker loggen etter feil
-#        if: always() && env.STACK_STARTED == 'true'
-#        id: logger
-#        run: mvn test --batch-mode --settings .github/.m2/settings.xml -P loggfeil
-#        env:
-#          GITHUB_USERNAME: x-access-token
-#          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+      - name: Sjekker loggen etter feil
+        if: always() && env.STACK_STARTED == 'true'
+        id: logger
+        run: mvn test --batch-mode --settings .github/.m2/settings.xml -P loggfeil
 
       - name: Generer testrapport
         if: |
@@ -110,6 +108,7 @@ jobs:
           git fetch origin gh-pages
           mkdir gh-pages
           git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede
+          git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake
           git --work-tree=gh-pages checkout origin/gh-pages -- fpsak/history
           resources/allure/set-environment-variables-fpsak.sh ${{ github.event.inputs.trigger }}
           cp resources/allure/environment.properties target/allure-results
@@ -266,46 +265,35 @@ jobs:
       - name: Utfører testene for fptilbake
         id: tester
         run: mvn test --batch-mode --settings .github/.m2/settings.xml -P fptilbake > >(tee test-result-log.txt)
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - name: Sjekker loggen etter feil
-        if: always() && env.STACK_STARTED == 'true'
-        id: logger
+      - name: Generer testrapport
+        if: |
+          always() &&
+          github.event_name == 'workflow_dispatch' &&
+          env.STACK_STARTED == 'true' &&
+          steps.tester.outcome != 'skipped' &&
+          steps.tester.outcome != 'cancelled'
+        id: ghpages
         run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P loggfeil
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+          git fetch origin gh-pages
+          mkdir gh-pages
+          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede
+          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
+          git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake/history
+          resources/allure/set-environment-variables-fpsak.sh ${{ github.event.inputs.trigger }}
+          cp resources/allure/environment.properties target/allure-results
+          cp resources/allure/categories.json target/allure-results
+          cp -r gh-pages/fptilbake/history target/allure-results
+          mvn allure:report --batch-mode --file pom.xml
+          cp -a target/allure-report/. gh-pages/fptilbake/
 
-      #      - name: Generer testrapport
-      #        if: |
-      #          always() &&
-      #          github.event_name == 'workflow_dispatch' &&
-      #          env.STACK_STARTED == 'true' &&
-      #          steps.tester.outcome != 'skipped' &&
-      #          steps.tester.outcome != 'cancelled'
-      #        id: ghpages
-      #        run: |
-      #          git fetch origin gh-pages
-      #          mkdir gh-pages
-      #          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede
-      #          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak/history
-      #          resources/allure/set-environment-variables-fpsak.sh ${{ github.event.inputs.trigger }}
-      #          cp resources/allure/environment.properties target/allure-results
-      #          cp resources/allure/categories.json target/allure-results
-      #          cp -r gh-pages/fpsak/history target/allure-results
-      #          mvn allure:report --batch-mode --file pom.xml
-      #          cp -a target/allure-report/. gh-pages/fpsak/
-      #
-      #      - name: Deploy testrapport
-      #        if: always() && steps.ghpages.outcome == 'success'
-      #        uses: crazy-max/ghaction-github-pages@v2.3.0
-      #        with:
-      #          build_dir: gh-pages
-      #        env:
-      #          GH_PAT: ${{ secrets.GH_ACCESS_TOKEN }}
+      - name: Deploy testrapport
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: crazy-max/ghaction-github-pages@v2.3.0
+        with:
+          build_dir: gh-pages
+        env:
+          GH_PAT: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Henter testresultat og setter outcome
         if: |
@@ -476,6 +464,7 @@ jobs:
           git fetch origin gh-pages
           mkdir gh-pages
           git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
+          git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake
           git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
           resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }}
           cp resources/allure/environment.properties target/allure-results
