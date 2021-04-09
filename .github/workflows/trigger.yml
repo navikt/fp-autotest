@@ -280,7 +280,7 @@ jobs:
           git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede
           git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
           git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake/history
-          resources/allure/set-environment-variables-fpsak.sh ${{ github.event.inputs.trigger }}
+          resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }}
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fptilbake/history target/allure-results
@@ -325,7 +325,7 @@ jobs:
             "test_outcome": "${{ steps.tester.outcome }}",
             "loggtest_outcome": "${{ steps.logger.outcome }}",
             "test_resultat": "${{ env.TEST_RESULTAT }}",
-            "test_suite": "fpsak",
+            "test_suite": "fptilbake",
             "run_id": "${{ github.run_id }}"
             }
 

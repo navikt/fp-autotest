@@ -60,7 +60,7 @@ jobs:
         shell: bash
         run: |
           if [ ${{ env.LOGGTEST_OUTCOME }} != success ] && [ ${{ env.TEST_OUTCOME }} == success ]; then
-            echo "SLACK_TITLE=Autotestene gikk grønne, men fant feil i loggen" >> $GITHUB_ENV
+            echo "SLACK_TITLE=Testene til fpsak gikk grønne, men fant feil i loggen :bug:" >> $GITHUB_ENV
             echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
               echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
               echo '*Resultat*: Sjekk <https://navikt.github.io/fpsak-autotest/fpsak|testrapport> for feilen(e) i loggen' >> $GITHUB_ENV
@@ -77,16 +77,49 @@ jobs:
             echo '\n' >> $GITHUB_ENV
             if [ ${{ env.TEST_OUTCOME }} == success ]; then
               echo "Test success!"
-              echo "SLACK_TITLE=Autotestene er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
+              echo "SLACK_TITLE=Testene til fpsak gikk grønne :rocket:" >> $GITHUB_ENV
               echo "SLACK_COLOR=#25d525" >> $GITHUB_ENV
             else
               echo "Test failure!"
-              echo "SLACK_TITLE=Autotestene feilet :boom:" >> $GITHUB_ENV
+              echo "SLACK_TITLE=Testene til fpsak feilet :boom:" >> $GITHUB_ENV
               echo "SLACK_COLOR=#ff0000" >> $GITHUB_ENV
             fi
           fi
 
 
+      - name: Bygger opp slack melding ved testing av fptilbake
+        if: |
+          always() &&
+          env.STACK_STARTED == 'true' &&
+          env.TEST_SUITE == 'fptilbake'
+        shell: bash
+        run: |
+          if [ ${{ env.LOGGTEST_OUTCOME }} != success ] && [ ${{ env.TEST_OUTCOME }} == success ]; then
+            echo "SLACK_TITLE=Testene til fptilbake gikk grønne, men fant feil i loggen :bug:" >> $GITHUB_ENV
+            echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
+              echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
+              echo '*Resultat*: Sjekk <https://navikt.github.io/fpsak-autotest/fptilbake|testrapport> for feilen(e) i loggen' >> $GITHUB_ENV
+              echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
+              echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
+            echo '\n' >> $GITHUB_ENV
+            echo "SLACK_COLOR=#ffff00" >> $GITHUB_ENV
+          else
+            echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
+              echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
+              echo '*Resultat*: ${{ env.TEST_RESULTAT }}, Rapport: <https://navikt.github.io/fpsak-autotest/fptilbake|testrapport>' >> $GITHUB_ENV
+              echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
+              echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
+            echo '\n' >> $GITHUB_ENV
+            if [ ${{ env.TEST_OUTCOME }} == success ]; then
+              echo "Test success!"
+              echo "SLACK_TITLE=Testene til fptilbake gikk grønne :rocket:" >> $GITHUB_ENV
+              echo "SLACK_COLOR=#25d525" >> $GITHUB_ENV
+            else
+              echo "Test failure!"
+              echo "SLACK_TITLE=Testene til fptilbake feilet :boom:" >> $GITHUB_ENV
+              echo "SLACK_COLOR=#ff0000" >> $GITHUB_ENV
+            fi
+          fi
       - name: Bygger opp slack melding ved testing av verdikjeden
         if: |
           always() &&
@@ -95,7 +128,7 @@ jobs:
         shell: bash
         run: |
           if [ ${{ env.LOGGTEST_OUTCOME }} != success ] && [ ${{ env.TEST_OUTCOME }} == success ]; then
-            echo "SLACK_TITLE=Verdikjedetestene gikk grønne, men fant feil i loggen" >> $GITHUB_ENV
+            echo "SLACK_TITLE=Verdikjedetestene gikk grønne, men fant feil i loggen :bug:" >> $GITHUB_ENV
             echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
               echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
               echo '*Resultat*: Sjekk <https://navikt.github.io/fpsak-autotest/verdikjede|testrapport> for feilen(e) i loggen' >> $GITHUB_ENV
@@ -112,7 +145,7 @@ jobs:
             echo '\n' >> $GITHUB_ENV
             if [ ${{ env.TEST_OUTCOME }} == success ]; then
               echo "Test success!"
-              echo "SLACK_TITLE=Verdikjedetestene er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
+              echo "SLACK_TITLE=Verdikjedetestene gikk grønne :rocket:" >> $GITHUB_ENV
               echo "SLACK_COLOR=#25d525" >> $GITHUB_ENV
             else
               echo "Test failure!"
