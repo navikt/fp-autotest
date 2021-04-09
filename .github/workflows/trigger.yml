@@ -323,7 +323,7 @@ jobs:
             "version": "${{ github.event.inputs.version }}",
             "stack_started": "${{ env.STACK_STARTED }}",
             "test_outcome": "${{ steps.tester.outcome }}",
-            "loggtest_outcome": "${{ steps.logger.outcome }}",
+            "loggtest_outcome": "success",
             "test_resultat": "${{ env.TEST_RESULTAT }}",
             "test_suite": "fptilbake",
             "run_id": "${{ github.run_id }}"
