@@ -21,14 +21,14 @@ echo POSTGRES_IMAGE="postgres:12" >> .env
 echo VTP_IMAGE="$(imageVersion "ghcr.io/navikt/vtp")" >> .env
 echo FPABAKUS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-abakus")" >> .env
 echo FPSAK_IMAGE="$(imageVersion "ghcr.io/navikt/fp-sak")" >> .env
+echo FPTILBAKE_IMAGE="$(imageVersion "ghcr.io/navikt/fptilbake")" >> .env
+echo FPSOKNAD_MOTTAK_IMAGE="$(imageVersion "ghcr.io/navikt/fpsoknad-mottak")" >> .env
 echo FPFORDEL_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpfordel/fpfordel")" >> .env
 echo FPINFO_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpinfo/fpinfo")" >> .env
-echo FPSOKNAD_MOTTAK_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpsoknad-mottak/fpsoknad-mottak")" >> .env
 echo FPFRONTEND_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-frontend/fp-frontend")" >> .env
 echo FPFORMIDLING_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-formidling/fpformidling")" >> .env
 echo FPDOKGEN_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-dokgen/fp-dokgen")" >> .env
 echo FPOPPDRAG_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpoppdrag/fpoppdrag")" >> .env
-echo FPTILBAKE_IMAGE="$(imageVersion "ghcr.io/navikt/fptilbake")" >> .env
 echo FPRISK_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-risk/fprisk")" >> .env
 echo FPABONNENT_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpabonnent/fpabonnent")" >> .env
 
