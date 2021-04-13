@@ -5,7 +5,7 @@ Da kan man dele fpsak-autotest i to, basert på hva den tester, altså: **fpsak 
 
 For lokalt oppsett eller utvikling se [utvikling lokalt](docs).
 
-## Verdikjede [![](https://github.com/navikt/fpsak-autotest/workflows/trigger.yml/badge.svg)](https://github.com/navikt/fpsak-autotest/workflows/trigger.yml)
+## Verdikjede [![](https://github.com/navikt/fpsak-autotest/actions/workflows/trigger.yml/badge.svg)](https://github.com/navikt/fpsak-autotest/actions/workflows/trigger.yml)
 Verdikjeden som disse testene kjøres på er listet opp i tabellen nedunder med status om bygg og promotering i Github Action. 
 For denne verdikjeden kjøres det et sett med verdikjedetester for ytelsene engangsstønad, foreldrepenger og svangeskapspenger. 
 Alle disse testene befinner seg under "fpsak-autotest/test/verdikjedetester" og er ellers tagget med taggen "_verdikjede_".
