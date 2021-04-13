@@ -137,6 +137,7 @@ jobs:
         run: |
           git fetch origin gh-pages
           mkdir gh-pages
+          git --work-tree=gh-pages checkout origin/gh-pages -- index.html
           git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
           git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake
           git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
