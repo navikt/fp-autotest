@@ -30,6 +30,6 @@ echo FPFORMIDLING_IMAGE="$(imageVersion "ghcr.io/navikt/fp-formidling")" >> .env
 echo FPDOKGEN_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fp-dokgen/fp-dokgen")" >> .env
 echo FPOPPDRAG_IMAGE="$(imageVersion "ghcr.io/navikt/fpoppdrag")" >> .env
 echo FPRISK_IMAGE="$(imageVersion "ghcr.io/navikt/fp-risk")" >> .env
-echo FPABONNENT_IMAGE="$(imageVersion "docker.pkg.github.com/navikt/fpabonnent/fpabonnent")" >> .env
+echo FPABONNENT_IMAGE="$(imageVersion "ghcr.io/navikt/fpabonnent")" >> .env
 
 echo ".env fil opprettet - Klart for docker-compose up"
