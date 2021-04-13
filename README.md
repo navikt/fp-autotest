@@ -5,7 +5,7 @@ Da kan man dele fpsak-autotest i to, basert på hva den tester, altså: **fpsak 
 
 For lokalt oppsett eller utvikling se [utvikling lokalt](docs).
 
-## Verdikjede [![](https://github.com/navikt/fpsak-autotest/workflows/Kjører%20verdikjedetestene%20for%20verdikjeden/badge.svg)](https://github.com/navikt/fpsak-autotest/actions?query=workflow%3A%22Kjører+verdikjedetestene+for+verdikjeden%22)
+## Verdikjede [![](https://github.com/navikt/fpsak-autotest/workflows/trigger.yml/badge.svg)](https://github.com/navikt/fpsak-autotest/workflows/trigger.yml)
 Verdikjeden som disse testene kjøres på er listet opp i tabellen nedunder med status om bygg og promotering i Github Action. 
 For denne verdikjeden kjøres det et sett med verdikjedetester for ytelsene engangsstønad, foreldrepenger og svangeskapspenger. 
 Alle disse testene befinner seg under "fpsak-autotest/test/verdikjedetester" og er ellers tagget med taggen "_verdikjede_".
@@ -26,7 +26,7 @@ Disse verdikjedetestene blir trigget av alle prosjektene/applikasjonene som er n
 | fpoppdrag       | [![](https://github.com/navikt/fpoppdrag/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fpoppdrag/actions?query=workflow%3A%22Bygg+og+deploy%22) [![Promote](https://github.com/navikt/fpoppdrag/workflows/Promote/badge.svg)](https://github.com/navikt/fpoppdrag/actions?query=workflow%3APromote) |
 | fptilbake       | [![](https://github.com/navikt/fptilbake/workflows/Bygg%20og%20deploy%20Fptilbake/badge.svg)](https://github.com/navikt/fptilbake/actions?query=workflow%3A%22Bygg+og+deploy+Fptilbake%22) [![Promote](https://github.com/navikt/fptilbake/workflows/Promote/badge.svg)](https://github.com/navikt/fptilbake/actions?query=workflow%3APromote) |
 | fp-risk         | [![](https://github.com/navikt/fp-risk/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-risk/actions?query=workflow%3A%22Bygg+og+deploy%22) [![Promote](https://github.com/navikt/fp-risk/workflows/Promote/badge.svg)](https://github.com/navikt/fp-risk/actions?query=workflow%3APromote) |
-| fpabonnent         | [![](https://github.com/navikt/fpabonnent/actions/workflows/build-and-deploy-master.yml/badge.svg)](https://github.com/navikt/fpabonnent/actions/workflows/build-and-deploy-master.yml) |
+| fpabonnent         | [![](https://github.com/navikt/fpabonnent/actions/workflows/build.yml/badge.svg)](https://github.com/navikt/fpabonnent/actions/workflows/build.yml) |
 
 
 
