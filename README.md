@@ -11,7 +11,7 @@ Verdikjeden som disse testene kjøres på er listet opp i tabellen nedunder med 
 For denne verdikjeden kjøres det et sett med verdikjedetester for ytelsene engangsstønad, foreldrepenger og svangeskapspenger. 
 Alle disse testene befinner seg under "fpsak-autotest/test/verdikjedetester" og er ellers tagget med taggen "_verdikjede_".
 
-Disse verdikjedetestene blir trigget av alle prosjektene/applikasjonene som er nevnt i listen under ved endring på master (med unntak av fp-sak og fp-abakus).
+Disse verdikjedetestene blir trigget av alle prosjektene/applikasjonene som er nevnt i listen under ved endring på master.
 
 ## Tester spesifikk for enkelte applikasjoner
 For øyeblikket har vi to test suits som tester enten fpsak eller fptilbake. Vi har dermed to profiler som kan brukes for å kjøre tester mot disse systemene:
