@@ -38,6 +38,11 @@ jobs:
           distribution: 'adopt'
           java-version: 15
 
+      - name: Log into ghcr registry
+        # GITHUB_TOKEN fungere ikke for PR enda... https://github.community/t/cant-authenticate-with-actions-token-for-pr-event/170752
+        # run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login --username "x-access-token" --password-stdin ghcr.io
+        run: echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin ghcr.io
+
       - name: Setup fpsak og dens avhengigheter
         shell: bash
         run: |
@@ -45,8 +50,6 @@ jobs:
           echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
-          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
-          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin ghcr.io
           cd ../../lokal-utvikling
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}

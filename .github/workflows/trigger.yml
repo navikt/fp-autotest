@@ -56,14 +56,15 @@ jobs:
           distribution: 'adopt'
           java-version: 15
 
+      - name: Log into ghcr registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Setup fpsak og dens avhengigheter
         run: |
           echo "STACK_STARTED=false" >> $GITHUB_ENV
           echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
-          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
-          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin ghcr.io
           cd ../../lokal-utvikling
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
@@ -195,14 +196,15 @@ jobs:
           distribution: 'adopt'
           java-version: 15
 
+      - name: Log into ghcr registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Setup verdikjeden
         run: |
           echo "STACK_STARTED=false" >> $GITHUB_ENV
           echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
-          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
-          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin ghcr.io
           cd ../pipeline
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
           docker-compose up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak
@@ -364,14 +366,15 @@ jobs:
           distribution: 'adopt'
           java-version: 15
 
+      - name: Log into ghcr registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Setup verdikjeden
         run: |
           echo "STACK_STARTED=false" >> $GITHUB_ENV
           echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
-          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
-          echo "${{ secrets.GH_ACCESS_TOKEN }}" | docker login --username "x-access-token" --password-stdin ghcr.io
           cd ../pipeline
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
           docker-compose up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak
