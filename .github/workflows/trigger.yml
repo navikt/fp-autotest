@@ -142,7 +142,6 @@ jobs:
         if: |
           always() &&
           github.event_name == 'workflow_dispatch' &&
-          steps.tester.outcome != 'skipped' &&
           steps.tester.outcome != 'cancelled' &&
           github.event.inputs.trigger != null &&
           github.event.inputs.version != null
@@ -503,7 +502,6 @@ jobs:
         if: |
           always() &&
           github.event_name == 'workflow_dispatch' &&
-          steps.tester.outcome != 'skipped' &&
           steps.tester.outcome != 'cancelled' &&
           github.event.inputs.trigger != null &&
           github.event.inputs.version != null
