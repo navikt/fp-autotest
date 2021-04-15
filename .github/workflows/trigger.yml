@@ -206,7 +206,7 @@ jobs:
           ./make-dummy-keystore.sh
           cd ../pipeline
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak
+          docker-compose up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent
 
       - name: Venter på stacken og sjekker status
         run: |
@@ -247,14 +247,6 @@ jobs:
           echo
           echo "Tester om fpabonnent er oppe"
           timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8065/fpabonnent/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpfordel er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8090/fpfordel/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpinfo er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8040/fpinfo/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo "STACK_STARTED=true" >> $GITHUB_ENV
 
