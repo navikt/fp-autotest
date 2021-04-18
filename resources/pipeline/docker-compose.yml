@@ -95,7 +95,7 @@ services:
     environment:
       - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
       - "FPABAKUS_URL=http://fpabakus:8080/fpabakus"
-      - "ABAKUS_CALLBACK_URL=http://host.docker.internal:8080/fpsak/api/registerdata/iay/callback"
+      - "ABAKUS_CALLBACK_URL=http://fpsak:8080/fpsak/api/registerdata/iay/callback"
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
       - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://fptilbake:8080/fptilbake/api"
