@@ -16,6 +16,10 @@ on:
       - '.github/workflows/trigger.yml.yml'
       - 'lokalutvikling/*'
 
+env:
+  GITHUB_USERNAME: x-access-token
+  GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+
 jobs:
   build:
     name: Utfør verdikjede-test
@@ -37,34 +41,6 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 15
-
-      - uses: navikt/github-app-token-generator@v1
-        id: get-token
-        with:
-          private-key: ${{ secrets.FP_PRIVATE_KEY }}
-          app-id: ${{ secrets.FP_APP_ID }}
-
-      - name: Set navn
-        run: |
-          echo "REPO=$(echo 'navikt/fp-sak' | cut -d'/' -f2)" >> $GITHUB_ENV
-
-      - name: Trigger deploy til teamforeldrepenger
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ steps.get-token.outputs.token }}
-          script: |
-            github.issues.createComment({
-              issue_number: '2480',
-              owner: 'navikt',
-              repo: '${{ env.REPO }}',
-              body: 'test1'
-            })
-            github.issues.createComment({
-              issue_number: '2480',
-              owner: 'navikt',
-              repo: '${{ env.REPO }}',
-              body: 'test2'
-            })
 
       - name: Log into ghcr registry
         # GITHUB_TOKEN fungere ikke for PR enda... https://github.community/t/cant-authenticate-with-actions-token-for-pr-event/170752
@@ -106,9 +82,6 @@ jobs:
         shell: bash
         run: |
           mvn clean install --settings .github/.m2/settings.xml
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Utfører autotestene for fpsak
         shell: bash
@@ -116,9 +89,6 @@ jobs:
           mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
           docker stats --no-stream
           free -m
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Dumper logger for feilsøking
         if: failure() && env.STACK_CREATED == 'true'

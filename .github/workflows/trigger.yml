@@ -125,7 +125,7 @@ jobs:
         with:
           build_dir: gh-pages
         env:
-          GH_PAT: ${{ secrets.GH_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Henter testresultat og setter outcome
         if: |
@@ -147,7 +147,7 @@ jobs:
           github.event.inputs.version != null
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           event-type: notify-slack
           client-payload: |
             {
@@ -288,7 +288,7 @@ jobs:
         with:
           build_dir: gh-pages
         env:
-          GH_PAT: ${{ secrets.GH_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Henter testresultat og setter outcome
         if: |
@@ -310,7 +310,7 @@ jobs:
           github.event.inputs.version != null
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           event-type: notify-slack
           client-payload: |
             {
@@ -429,18 +429,12 @@ jobs:
       - name: Utfører verdikjedetestene
         id: tester
         run: mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede > >(tee test-result-log.txt)
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Sjekker loggen etter feil og lekket sensitiv data.
         if: always() && env.STACK_STARTED == 'true'
         id: logger
         run: |
           mvn test --batch-mode --settings .github/.m2/settings.xml -P logger
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - name: Sjekker minneforbruk
         if: always()
@@ -476,7 +470,7 @@ jobs:
         with:
           build_dir: gh-pages
         env:
-          GH_PAT: ${{ secrets.GH_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Henter testresultat
         if: |
@@ -499,7 +493,7 @@ jobs:
           github.event.inputs.version != null
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           event-type: notify-slack
           client-payload: |
             {
@@ -534,7 +528,53 @@ jobs:
     needs: [fpsak-autotester, verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
-      - name: Set navn
+      - name: Henter ut repo navn fra trigger
+        run: |
+          echo "REPO=$(echo '${{ github.event.inputs.trigger }}' | cut -d'/' -f2)" >> $GITHUB_ENV
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          private-key: ${{ secrets.FP_PRIVATE_KEY }}
+          app-id: ${{ secrets.FP_APP_ID }}
+
+      - name: Kommenterer issue med test OK
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ steps.get-token.outputs.token }}
+          script: |
+            github.issues.createComment({
+              issue_number: '${{ github.event.inputs.issue_number }}',
+              owner: 'navikt',
+              repo: '${{ env.REPO }}',
+              body: 'Alle testene gikk grønne!'
+            })
+      - name: Trigger deploy til teamforeldrepenger
+        if: github.event.inputs.trigger != 'navikt/fp-abakus'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ steps.get-token.outputs.token }}
+          script: |
+            github.issues.createComment({
+              issue_number: '${{ github.event.inputs.issue_number }}',
+              owner: 'navikt',
+              repo: '${{ env.REPO }}',
+              body: '/promote dev-fss'
+            })
+            github.issues.createComment({
+              issue_number: '${{ github.event.inputs.issue_number }}',
+              owner: 'navikt',
+              repo: '${{ env.REPO }}',
+              body: '/promote prod-fss'
+            })
+
+  deploy-fptilbake:
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.issue_number != null
+    needs: [fptilbake-tester, verdikjedetestene]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Henter ut repo navn fra trigger
         run: |
           echo "REPO=$(echo '${{ github.event.inputs.trigger }}' | cut -d'/' -f2)" >> $GITHUB_ENV
       - uses: navikt/github-app-token-generator@v1
@@ -555,44 +595,12 @@ jobs:
               repo: '${{ env.REPO }}',
               body: 'Alle testene gikk grønne!'
             })
-
-      - name: Trigger deploy til teamforeldrepenger
-        if: github.event.inputs.trigger != 'navikt/fp-abakus'
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ steps.get-token.outputs.token }}
-          script: |
             github.issues.createComment({
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
-              body: '/promote dev-fss'
+              body: '/promote fp dev-fss teamforeldrepenger'
             })
-
-  deploy-fptilbake:
-    if: |
-      github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue_number != null
-    needs: [fptilbake-tester, verdikjedetestene]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test success
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue_number }}
-          body: |
-            Alle testene gikk grønne!
-            Deployer ${{ github.event.inputs.trigger }} til dev-fss!
-
-      - name: Trigger deploy til teamforeldrepenger
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue_number }}
-          body: /promote fp dev-fss teamforeldrepenger
 
   deploy-rest:
     if: |
@@ -602,7 +610,7 @@ jobs:
     needs: [verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
-      - name: Set navn
+      - name: Henter ut repo navn fra trigger
         run: |
           echo "REPO=$(echo '${{ github.event.inputs.trigger }}' | cut -d'/' -f2)" >> $GITHUB_ENV
       - uses: navikt/github-app-token-generator@v1
@@ -612,7 +620,6 @@ jobs:
           app-id: ${{ secrets.FP_APP_ID }}
 
       - name: Trigger deploy til teamforeldrepenger
-        if: github.event.inputs.trigger != 'navikt/fp-abakus'
         uses: actions/github-script@v3
         with:
           github-token: ${{ steps.get-token.outputs.token }}
