@@ -534,24 +534,40 @@ jobs:
     needs: [fpsak-autotester, verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
-      - name: Test success
-        uses: peter-evans/create-or-update-comment@v1
+      - name: Set navn
+        run: |
+          echo "REPO=$(echo '${{ github.event.inputs.trigger }}' | cut -d'/' -f2)" >> $GITHUB_ENV
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
         with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue_number }}
-          body: |
-            Alle testene gikk grønne!
-            Deployer ${{ github.event.inputs.trigger }} til dev-fss!
+          private-key: ${{ secrets.FP_PRIVATE_KEY }}
+          app-id: ${{ secrets.FP_APP_ID }}
 
       - name: Trigger deploy til teamforeldrepenger
         if: github.event.inputs.trigger != 'navikt/fp-abakus'
-        uses: peter-evans/create-or-update-comment@v1
+        uses: actions/github-script@v3
         with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue_number }}
-          body: /promote dev-fss
+          github-token: ${{ steps.get-token.outputs.token }}
+          script: |
+            github.issues.createComment({
+              issue_number: '${{ github.event.inputs.issue_number }}',
+              owner: 'navikt',
+              repo: '${{ env.REPO }}',
+              body: 'Alle testene gikk grønne!'
+            })
+
+      - name: Trigger deploy til teamforeldrepenger
+        if: github.event.inputs.trigger != 'navikt/fp-abakus'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ steps.get-token.outputs.token }}
+          script: |
+            github.issues.createComment({
+              issue_number: '${{ github.event.inputs.issue_number }}',
+              owner: 'navikt',
+              repo: '${{ env.REPO }}',
+              body: '/promote dev-fss'
+            })
 
   deploy-fptilbake:
     if: |
@@ -586,21 +602,30 @@ jobs:
     needs: [verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
-      - name: Test success
-        uses: peter-evans/create-or-update-comment@v1
+      - name: Set navn
+        run: |
+          echo "REPO=$(echo '${{ github.event.inputs.trigger }}' | cut -d'/' -f2)" >> $GITHUB_ENV
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
         with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue_number }}
-          body: |
-            Alle testene gikk grønne!
-            Deployer ${{ github.event.inputs.trigger }} til dev-fss!
+          private-key: ${{ secrets.FP_PRIVATE_KEY }}
+          app-id: ${{ secrets.FP_APP_ID }}
 
       - name: Trigger deploy til teamforeldrepenger
         if: github.event.inputs.trigger != 'navikt/fp-abakus'
-        uses: peter-evans/create-or-update-comment@v1
+        uses: actions/github-script@v3
         with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          repository: ${{ github.event.inputs.trigger }}
-          issue-number: ${{ github.event.inputs.issue_number }}
-          body: /promote dev-fss
+          github-token: ${{ steps.get-token.outputs.token }}
+          script: |
+            github.issues.createComment({
+              issue_number: '${{ github.event.inputs.issue_number }}',
+              owner: 'navikt',
+              repo: '${{ env.REPO }}',
+              body: 'Alle testene gikk grønne!'
+            })
+            github.issues.createComment({
+              issue_number: '${{ github.event.inputs.issue_number }}',
+              owner: 'navikt',
+              repo: '${{ env.REPO }}',
+              body: '/promote dev-fss'
+            })
