@@ -593,13 +593,13 @@ jobs:
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
-              body: 'Alle testene gikk grønne!'
+              body: '/promote fp dev-fss teamforeldrepenger'
             })
             github.issues.createComment({
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
-              body: '/promote fp dev-fss teamforeldrepenger'
+              body: 'Alle testene gikk grønne!'
             })
 
   deploy-rest:
@@ -628,11 +628,12 @@ jobs:
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
-              body: 'Alle testene gikk grønne!'
+              body: '/promote dev-fss'
             })
             github.issues.createComment({
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
-              body: '/promote dev-fss'
+              body: 'Alle testene gikk grønne!'
             })
+
