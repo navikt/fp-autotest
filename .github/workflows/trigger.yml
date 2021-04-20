@@ -147,7 +147,7 @@ jobs:
           github.event.inputs.version != null
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
           event-type: notify-slack
           client-payload: |
             {
@@ -310,7 +310,7 @@ jobs:
           github.event.inputs.version != null
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
           event-type: notify-slack
           client-payload: |
             {
@@ -493,7 +493,7 @@ jobs:
           github.event.inputs.version != null
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
           event-type: notify-slack
           client-payload: |
             {
