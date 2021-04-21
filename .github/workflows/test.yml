@@ -1,0 +1,27 @@
+name: Promote
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Print
+        run: |
+          echo "Elements in array: ${{ github.event.issue.labels.*.name }}"
+
+      - name: Vent på velykket deploy til dev
+        if: env.CLUSTER == 'prod-fss'
+        run: |
+          timeout 180 bash -c \
+            'while [[ !"${{ github.event.issue.labels.*.name }}" =~ "dev-fss-teamforeldrepenger" ]]; do
+              echo "Elements in array: ${{ github.event.issue.labels.*.name }}"
+              sleep 2
+            done' || false
+
+      - name: Vent på velykket deploy til dev
+        run: |
+          echo "DEPLOY"
+
