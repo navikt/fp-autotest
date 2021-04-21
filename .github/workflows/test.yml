@@ -19,6 +19,7 @@ jobs:
       - name: Vent på velykket deploy til dev
         if: env.CLUSTER == 'prod-fss'
         run: |
+          echo "Elements in array: ${{ github.event.issue.labels.*.name }}"
           timeout 180 bash -c \
             'while [[ !"${{ github.event.issue.labels.*.name }}" =~ "dev-fss-teamforeldrepenger" ]]; do
               echo "Elements in array: ${{ github.event.issue.labels.*.name }}"
