@@ -20,8 +20,9 @@ jobs:
         if: env.CLUSTER == 'prod-fss'
         run: |
           echo "Elements in array: ${{ github.event.issue.labels.*.name }}"
+          echo "Elements in array: ${{ contains(github.event.issue.labels.*.name, 'bug') }}"
           timeout 180 bash -c \
-            'while [[ !"${{ github.event.issue.labels.*.name }}" =~ "dev-fss-teamforeldrepenger" ]]; do
+            'while [[ !"${{ contains(github.event.issue.labels.*.name, 'bug') }}" =~ "dev-fss-teamforeldrepenger" ]]; do
               echo "Elements in array: ${{ github.event.issue.labels.*.name }}"
               sleep 2
             done' || false
