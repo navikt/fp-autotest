@@ -22,8 +22,8 @@ jobs:
           echo "Elements in array: ${{ github.event.issue.labels.*.name }}"
           echo "Elements in array: ${{ contains(github.event.issue.labels.*.name, 'bug') }}"
           timeout 180 bash -c \
-            'while [ !"${{ !contains(github.event.issue.labels.*.name, 'bug') }}" ]; do
-              echo "Elements in array: ${{ github.event.issue.labels.*.name }}"
+            'while [ !"${{ !contains(github.event.issue.labels.*.name, 'bugger') }}" ]; do
+              echo "Elements in array: fromJSON(${{ github.event.issue.labels.*.name }})"
               sleep 2
             done' || false
 
