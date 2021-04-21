@@ -14,8 +14,8 @@ jobs:
 
       - name: Print
         run: |
-          echo "Elements in array: ${{ toJSON(github.event.issue.labels.*.name) }}"
           echo "Elements in array: ${{ toJSON(github.event.issue.labels) }}"
+          echo "Elements in array: ${{ toJSON(github.event.issue.labels.*.name) }}"
 
       - name: Vent på velykket deploy til dev
         if: env.CLUSTER == 'prod-fss'
