@@ -560,12 +560,12 @@ jobs:
               repo: '${{ env.REPO }}',
               body: '/promote dev-fss'
             })
-            github.issues.createComment({
-              issue_number: '${{ github.event.inputs.issue_number }}',
-              owner: 'navikt',
-              repo: '${{ env.REPO }}',
-              body: '/promote prod-fss'
-            })
+#            github.issues.createComment({
+#              issue_number: '${{ github.event.inputs.issue_number }}',
+#              owner: 'navikt',
+#              repo: '${{ env.REPO }}',
+#              body: '/promote prod-fss'
+#            })
 
   deploy-fptilbake:
     if: |
