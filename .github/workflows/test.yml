@@ -15,6 +15,7 @@ jobs:
       - name: Print
         run: |
           echo "Elements in array: ${{ github.event.issue.labels.*.name }}"
+          echo "Elements in array: ${{ github.event.issue.labels }}"
 
       - name: Vent på velykket deploy til dev
         if: env.CLUSTER == 'prod-fss'
@@ -23,6 +24,7 @@ jobs:
           echo "Elements in array: ${{ contains(github.event.issue.labels.*.name, 'bug') }}"
           timeout 180 bash -c \
             'while [ "${{ !contains(github.event.issue.labels.*.name, 'bugger') }}" ]; do
+              echo "Labels: ${{ github.event.issue.labels.*.name }}"
               echo "Inneholder label: ${{ !contains(github.event.issue.labels.*.name, 'bugger') }}"
               echo "Inneholder label: ${{ contains(github.event.issue.labels.*.name, 'bugger') }}"
               sleep 2
