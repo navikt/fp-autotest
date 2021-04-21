@@ -11,6 +11,7 @@ jobs:
       - name: Sett variabler for cluster og tag
         run: |
           echo "CLUSTER=$(echo '${{github.event.comment.body}}' | cut -d' ' -f2)" >> $GITHUB_ENV
+          echo "SKIP_PROD=$( contains( github.event.issue.labels.*.name, 'skip-deploy-prod' )" >> $GITHUB_ENV
 
       - name: Print
         run: |
