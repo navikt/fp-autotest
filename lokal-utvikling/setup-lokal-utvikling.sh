@@ -117,7 +117,7 @@ for f in {.*,*}; do
   if [[ $f != .env ]]  && [[ $f != *.sh ]] && [[ $f != fpsak-docker-compose.yml ]] && [[ $f != autotest.list ]]; then
     if [[ -f "$f" ]]; then
       cp "$f" "${relativ_path}/$f"
-    elif [[ $f == frontend ]] || [[ $f == oracle-init ]] || [[ $f == postgres-init ]]; then
+    elif [[ $f == frontend ]] || [[ $f == oracle-init ]] || [[ $f == postgres-init ]] || [[ $f == tokenx ]]; then
       cp -r "$f" "${relativ_path}"
     fi
   fi
