@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -1040,6 +1041,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @DisplayName("9: Mor søker med dagpenger som grunnlag, besteberegnes automatisk")
     @Description("Mor søker med dagpenger som grunnlag. Kvalifiserer til automatisk besteberegning." +
             "Beregning etter etter §14-7, 3. ledd gir høyere inntekt enn beregning etter §14-7, 1. ledd")
+    @Disabled // Midlertidig disable da den må endre etter at ny funksjonalitet er merget her https://github.com/navikt/fp-sak/pull/2514
     void MorSøkerMedDagpengerTest() {
         var familie = new Familie("521");
         var mor = familie.mor();
