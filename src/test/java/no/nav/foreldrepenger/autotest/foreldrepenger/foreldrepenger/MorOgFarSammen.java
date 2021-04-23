@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -125,6 +126,78 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
         assertThat(saksbehandler.behandlinger)
                 .as("Antall behandlinger")
                 .hasSize(1);
+    }
+
+    @Test
+    @DisplayName("Mor og far koblet sak, mors endringssøknad sniker")
+    @Description("Mor sin endringssøknad sniker i køen, når far sin behandling venter på IM. Dette skal ikke føre til"
+            + "at far mister til periode som overlapper med mors førstegangssøknad. Mor søker om perioden på nytt får å ta den tilbake")
+    @Disabled("Venter på at endring er gjort i fpsak")
+    void far_skal_ikke_miste_perioder_til_mor_ved_sniking() {
+        var testscenario = opprettTestscenario("82");
+        var morIdent = testscenario.personopplysninger().søkerIdent();
+        var morAktørId = testscenario.personopplysninger().søkerAktørIdent();
+        var farIdent = testscenario.personopplysninger().annenpartIdent();
+        var farAktørId = testscenario.personopplysninger().annenpartAktørIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+
+        var morSøknad = lagSøknadForeldrepengerFødsel(fødselsdato, morAktørId, SøkersRolle.MOR).medFordeling(
+                FordelingErketyper.generiskFordeling(
+                        uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
+                        uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7))))
+                .medAnnenForelder(farAktørId)
+                .medMottattDato(fødselsdato);
+        var morSaksnummer = fordel.sendInnSøknad(morSøknad.build(), morAktørId, morIdent,
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+        var imMor = lagInntektsmelding(
+                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(), morIdent,
+                fødselsdato,
+                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
+        fordel.sendInnInntektsmelding(imMor, morAktørId, morIdent, morSaksnummer);
+        saksbehandler.hentFagsak(morSaksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        var farSøknad = lagSøknadForeldrepengerFødsel(fødselsdato, farAktørId, SøkersRolle.FAR)
+                .medFordeling(FordelingErketyper.generiskFordeling(
+                        uttaksperiode(FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7))))
+                .medAnnenForelder(morAktørId)
+                .medMottattDato(fødselsdato.plusWeeks(1));
+
+        var farSaksnummer = fordel.sendInnSøknad(farSøknad.build(), farAktørId, farIdent,
+                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+
+        //Endringssøknad til mor sniker i køen når fars behandling venter på inntektsmelding
+        var endringssøknadMor = lagEndringssøknad(morAktørId, SøkersRolle.MOR,
+                generiskFordeling(uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(7).plusDays(1), fødselsdato.plusWeeks(8))),
+                morSaksnummer)
+                .medMottattDato(fødselsdato.plusWeeks(2));
+        fordel.sendInnSøknad(endringssøknadMor.build(), morAktørId, morIdent,
+                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, morSaksnummer);
+
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        var imFar = lagInntektsmelding(
+                testscenario.scenariodataAnnenpartDto().inntektskomponentModell().inntektsperioder().get(0).beløp(), farIdent,
+                fødselsdato.plusWeeks(6),
+                testscenario.scenariodataAnnenpartDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
+
+        fordel.sendInnInntektsmelding(imFar, farAktørId, farIdent, farSaksnummer);
+
+        saksbehandler.hentFagsak(farSaksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder()).isEmpty();
+
+        var endringssøknadMor2 = lagEndringssøknad(morAktørId, SøkersRolle.MOR,
+                generiskFordeling(uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(7))),
+                morSaksnummer)
+                .medMottattDato(fødselsdato.plusWeeks(2));
+        fordel.sendInnSøknad(endringssøknadMor2.build(), morAktørId, morIdent,
+                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, morSaksnummer);
+        saksbehandler.hentFagsak(morSaksnummer);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder()).isEmpty();
     }
 
     @Test
