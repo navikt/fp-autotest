@@ -10,8 +10,8 @@ services:
     image: $ORACLE_IMAGE
     container_name: oracle
     restart: on-failure
-    mem_limit: 512mb
-    shm_size: 1gb
+    mem_limit: 1gb
+    shm_size: 2gb
     volumes:
       - ./oracle-init:/docker-entrypoint-initdb.d/
     ports:
