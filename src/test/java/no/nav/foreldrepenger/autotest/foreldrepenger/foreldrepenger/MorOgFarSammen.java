@@ -449,11 +449,8 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
 
         var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
-                .bekreftHarGyldigGrunn(LocalDate.now().minusMonths(4));
+                .bekreftHarGyldigGrunn(LocalDate.now());
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-
-        logger.debug("Date start: " + LocalDate.now().minusMonths(4).plusWeeks(6).plusDays(1));
-        logger.debug("Date start: " + LocalDate.now().minusMonths(4).plusWeeks(10).minusDays(2));
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
