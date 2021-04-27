@@ -10,14 +10,14 @@ services:
     image: $ORACLE_IMAGE
     container_name: oracle
     restart: on-failure
-    mem_limit: 512mb
-    shm_size: 1gb
+    mem_limit: 1gb
+    shm_size: 2gb
     volumes:
       - ./oracle-init:/docker-entrypoint-initdb.d/
     ports:
       - "1521:1521"
     healthcheck:
-      test: [ "CMD", "bash", "-c", "echo 'select 1 from dual;' | ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe /u01/app/oracle/product/11.2.0/xe/bin/sqlplus -s USERNAME/PASSWORD@localhost" ]
+      test: [ "CMD-SHELL","/opt/oracle/product/18c/dbhomeXE/health_check.sh"]
       interval: 5s
       timeout: 10s
       retries: 10
