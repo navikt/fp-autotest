@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -132,7 +131,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
     @DisplayName("Mor og far koblet sak, mors endringssøknad sniker")
     @Description("Mor sin endringssøknad sniker i køen, når far sin behandling venter på IM. Dette skal ikke føre til"
             + "at far mister til periode som overlapper med mors førstegangssøknad. Mor søker om perioden på nytt får å ta den tilbake")
-    @Disabled("Venter på at endring er gjort i fpsak")
     void far_skal_ikke_miste_perioder_til_mor_ved_sniking() {
         var testscenario = opprettTestscenario("82");
         var morIdent = testscenario.personopplysninger().søkerIdent();
