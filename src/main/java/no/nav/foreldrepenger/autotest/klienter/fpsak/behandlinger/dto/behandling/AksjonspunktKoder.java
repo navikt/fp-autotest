@@ -105,7 +105,6 @@ public class AksjonspunktKoder {
     public static final String FASTSETT_BEREGNINGSGRUNNLAG_SELVSTENDIG_NÆRINGSDRIVENDE = "5042";
     public static final String MANUELL_KONTROLL_AV_OM_BRUKER_HAR_OMSORG = "5061";
 
-    public static final String AVKLAR_STARTDATO_FOR_FORELDREPENGEPERIODEN = "5045";
     public static final String AVKLAR_FAKTA_UTTAK = "5070";
     public static final String FASTSETT_UTTAKPERIODER = "5071";
     public static final String AVKLAR_FØRSTE_UTTAKSDATO = "5081";
