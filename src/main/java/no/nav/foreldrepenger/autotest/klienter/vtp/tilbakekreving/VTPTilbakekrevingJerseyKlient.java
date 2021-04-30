@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving;
 
-import static javax.ws.rs.client.Entity.json;
+import static jakarta.ws.rs.client.Entity.json;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -9,13 +9,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 
-import javax.ws.rs.core.HttpHeaders;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.ws.rs.core.HttpHeaders;
 import no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper;
 
 @Tag("fpsak")

@@ -1,12 +1,11 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi;
 
-import static javax.ws.rs.client.Entity.json;
+import static jakarta.ws.rs.client.Entity.json;
 
 import java.util.UUID;
 
-import javax.ws.rs.client.ClientRequestFilter;
-
 import io.qameta.allure.Step;
+import jakarta.ws.rs.client.ClientRequestFilter;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.FptilbakeJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultat;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
