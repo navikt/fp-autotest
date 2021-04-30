@@ -1,10 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak;
 
-import static javax.ws.rs.client.Entity.json;
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.client.Entity.json;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 
-import javax.ws.rs.core.MediaType;
-
+import jakarta.ws.rs.core.MediaType;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.FpsoknadMottakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.dto.Kvittering;
 import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;

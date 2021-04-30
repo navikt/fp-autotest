@@ -3,11 +3,10 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk;
 import java.util.List;
 import java.util.Optional;
 
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
-
 import io.qameta.allure.Step;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 

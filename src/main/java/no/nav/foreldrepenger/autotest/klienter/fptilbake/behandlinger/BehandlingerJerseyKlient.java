@@ -1,17 +1,16 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger;
 
-import static javax.ws.rs.client.Entity.json;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static jakarta.ws.rs.client.Entity.json;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import java.util.List;
 import java.util.UUID;
 
-import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
-
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.FptilbakeJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;

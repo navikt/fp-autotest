@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.saf;
 
-import static javax.ws.rs.client.Entity.json;
+import static jakarta.ws.rs.client.Entity.json;
 
 import java.util.Map;
 import java.util.Optional;

@@ -1,9 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering;
 
-import static javax.ws.rs.client.Entity.json;
+import static jakarta.ws.rs.client.Entity.json;
 
-import javax.ws.rs.client.ClientRequestFilter;
-
+import jakarta.ws.rs.client.ClientRequestFilter;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.FpriskJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingRequest;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingResponse;

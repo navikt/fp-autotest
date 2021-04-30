@@ -1,10 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fordel;
 
-import static javax.ws.rs.client.Entity.json;
-
-import javax.ws.rs.client.ClientRequestFilter;
+import static jakarta.ws.rs.client.Entity.json;
 
 import io.qameta.allure.Step;
+import jakarta.ws.rs.client.ClientRequestFilter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.BehandlendeFagsystem;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.FagsakInformasjon;

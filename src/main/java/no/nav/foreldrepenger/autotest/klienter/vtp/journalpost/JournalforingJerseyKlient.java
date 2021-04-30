@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.journalpost;
 
-import static javax.ws.rs.client.Entity.json;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static jakarta.ws.rs.client.Entity.json;
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import java.util.Optional;
 
