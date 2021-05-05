@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.internal.søknad;
 
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorgovertakelse;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadTermin;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
@@ -63,7 +63,7 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
         test(lagEngangstønadFødsel(MOR, LocalDate.now().minusWeeks(4)).build());
         test(lagEngangstønadTermin(MOR, LocalDate.now().plusWeeks(4)).build());
         test(lagEngangstønadAdopsjon(MOR, LocalDate.now(), false).build());
-        test(lagEngangstønadOmsorg(MOR, LocalDate.now(), SKAL_OVERTA_ALENE).build());
+        test(lagEngangstønadOmsorgovertakelse(MOR, LocalDate.now(), SKAL_OVERTA_ALENE).build());
     }
 
     @Test

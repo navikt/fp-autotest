@@ -86,5 +86,14 @@
 				"ident": "${for2}"
 			}
 		}
+	],
+	"familierelasjonerBarn": [
+		{
+			"rolle": "MORA",
+			"til": {
+				"@type": "søker",
+				"ident": "${for1}"
+			}
+		}
 	]
 }

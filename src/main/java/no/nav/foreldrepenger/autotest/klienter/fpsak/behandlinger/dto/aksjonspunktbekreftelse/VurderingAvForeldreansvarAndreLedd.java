@@ -10,12 +10,14 @@ public class VurderingAvForeldreansvarAndreLedd extends AksjonspunktBekreftelse 
         super();
     }
 
-    public void bekreftGodkjent() {
+    public VurderingAvForeldreansvarAndreLedd bekreftGodkjent() {
         erVilkarOk = true;
+        return this;
     }
 
-    public void bekreftAvvist(String kode) {
+    public VurderingAvForeldreansvarAndreLedd bekreftAvvist(String kode) {
         erVilkarOk = false;
         avslagskode = kode;
+        return this;
     }
 }

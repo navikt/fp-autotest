@@ -33,9 +33,10 @@ public final class SøknadEngangsstønadErketyper {
                 .medRelasjonTilBarn(RelasjonTilBarnErketyper.adopsjon(omsorgsovertakelsedato, ektefellesBarn));
     }
 
-    public static EngangsstønadBuilder lagEngangstønadOmsorg(BrukerRolle brukerRolle,
-                                                             LocalDate omsorgsovertakelsedato,
-                                                             OmsorgsOvertakelsesÅrsak årsak) {
+    @Deprecated
+    public static EngangsstønadBuilder lagEngangstønadOmsorgovertakelse(BrukerRolle brukerRolle,
+                                                                        LocalDate omsorgsovertakelsedato,
+                                                                        OmsorgsOvertakelsesÅrsak årsak) {
         return lagEngangsstønad(brukerRolle)
                 .medRelasjonTilBarn(RelasjonTilBarnErketyper.omsorgsovertakelse(omsorgsovertakelsedato, årsak));
     }

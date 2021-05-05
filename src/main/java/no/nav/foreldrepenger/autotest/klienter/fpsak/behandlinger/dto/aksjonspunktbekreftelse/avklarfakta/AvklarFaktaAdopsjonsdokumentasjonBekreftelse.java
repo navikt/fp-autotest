@@ -23,12 +23,14 @@ public class AvklarFaktaAdopsjonsdokumentasjonBekreftelse extends AksjonspunktBe
         this.omsorgsovertakelseDato = omsorgsovertakelseDato;
     }
 
-    public void leggTilFødselsdato(LocalDate fødselsdato) {
+    public AvklarFaktaAdopsjonsdokumentasjonBekreftelse leggTilFødselsdato(LocalDate fødselsdato) {
         fodselsdatoer.put(fodselsdatoer.size(), fødselsdato);
+        return this;
     }
 
-    public void endreFødselsdato(Integer index, LocalDate fødselsdato) {
+    public AvklarFaktaAdopsjonsdokumentasjonBekreftelse endreFødselsdato(Integer index, LocalDate fødselsdato) {
         fodselsdatoer.put(index, fødselsdato);
+        return this;
     }
 
     public AvklarFaktaAdopsjonsdokumentasjonBekreftelse setBarnetsAnkomstTilNorgeDato(LocalDate dato) {

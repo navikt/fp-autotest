@@ -68,7 +68,7 @@ jobs:
           cd ../../lokal-utvikling
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose -f docker-compose-lokal/docker-compose.yml up --quiet-pull --detach fpsak
+          docker-compose -f docker-compose-lokal/docker-compose.yml up --quiet-pull --detach fpsak fpinfo fpfordel fpsoknad-mottak
 
       - name: Venter på stacken og sjekker status
         run: |
@@ -85,6 +85,14 @@ jobs:
           echo
           echo "Tester om fpsak er oppe"
           timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om fpfordel er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8090/fpfordel/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo
+          echo "Tester om fpinfo er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8040/fpinfo/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo "STACK_STARTED=true" >> $GITHUB_ENV
 

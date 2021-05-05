@@ -1,5 +1,5 @@
 alter database set TIME_ZONE='Europe/Oslo';
-alter database datafile 1 autoextend on maxsize 1G;
+alter database datafile 1 autoextend on maxsize 5G;
 alter system set recyclebin=OFF DEFERRED;
 alter profile default limit password_life_time unlimited;
 alter system set processes=150 scope=spfile;

@@ -35,16 +35,26 @@ public abstract class FpsakTestBase extends TestScenarioTestBase {
         klagebehandler = new Saksbehandler(Aktoer.Rolle.KLAGEBEHANDLER);
         tbksaksbehandler = new TilbakekrevingSaksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
     }
+    protected void fatterVedtak(long saksnummer) {
+        beslutter.hentFagsak(saksnummer);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+    }
 
+    protected void foreslåOgFatterVedtak(long saksnummer) {
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        fatterVedtak(saksnummer);
+    }
 
-    public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,
+    protected void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,
                                                                                          boolean revurdering) {
         if (!revurdering) {
             saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
         }
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-         beslutter.hentFagsak(saksnummer);
+        beslutter.hentFagsak(saksnummer);
         if (beslutter.harRevurderingBehandling() && revurdering) {
             beslutter.ventPåOgVelgRevurderingBehandling();
         }

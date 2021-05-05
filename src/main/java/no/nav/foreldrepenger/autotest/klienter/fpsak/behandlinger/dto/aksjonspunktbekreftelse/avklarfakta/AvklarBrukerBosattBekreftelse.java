@@ -15,6 +15,11 @@ public class AvklarBrukerBosattBekreftelse extends BekreftedePerioderMalDto {
         super();
     }
 
+    public AvklarBrukerBosattBekreftelse setBosattVurderingForAllePerioder(Boolean bosattvurdering) {
+        getBekreftedePerioder().forEach(p -> p.setBosattVurdering(bosattvurdering));
+        return this;
+    }
+
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         List<MedlemPeriodeDto> perioder = behandling.getMedlem().getPerioder();
