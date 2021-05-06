@@ -19,16 +19,22 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Innte
 
 public abstract class Søker {
 
-    private final Fødselsnummer fødselsnummer;
+    private final Fødselsnummer fnr;
+    private final Fødselsnummer fnrAnnenpart;
     private final InntektYtelseModell inntektYtelseModell;
 
-    Søker(Fødselsnummer fødselsnummer, InntektYtelseModell inntektYtelseModell) {
-        this.fødselsnummer = fødselsnummer;
+    Søker(Fødselsnummer fnr, Fødselsnummer fnrAnnenpart, InntektYtelseModell inntektYtelseModell) {
+        this.fnr = fnr;
+        this.fnrAnnenpart = fnrAnnenpart;
         this.inntektYtelseModell = inntektYtelseModell;
     }
 
-    public Fødselsnummer fødselsnummer() {
-        return fødselsnummer;
+    public Fødselsnummer fnr() {
+        return fnr;
+    }
+
+    public Fødselsnummer fnrAnnenpart() {
+        return fnr;
     }
 
     public Arbeidsforhold arbeidsforhold() {
@@ -57,7 +63,7 @@ public abstract class Søker {
                 .map(a -> new Orgnummer(a.arbeidsgiverOrgnr()))
                 .collect(Collectors.toCollection(LinkedHashSet::new))
                 .forEach(orgnr -> arbeidsgivere.add(new Arbeidsgiver(orgnr,
-                        new Arbeidstaker(fødselsnummer, månedsinntekt(orgnr)), arbeidsforholdene(orgnr))));
+                        new Arbeidstaker(fnr, månedsinntekt(orgnr)), arbeidsforholdene(orgnr))));
         return new Arbeidsgivere(arbeidsgivere);
     }
 
@@ -108,15 +114,15 @@ public abstract class Søker {
     }
 
     public long søk(Søknad søknad) {
-        return new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnSøknad(fødselsnummer, søknad);
+        return new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnSøknad(fnr, søknad);
     }
 
     public long søkPåPapir() {
-        return new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnPapirsøknad(fødselsnummer(), DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+        return new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnPapirsøknad(fnr(), DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
 
     public void sendInnKlage() {
-        new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnKlage(fødselsnummer);
+        new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnKlage(fnr);
     }
 
     private void guardFlereArbeidsgivere() {

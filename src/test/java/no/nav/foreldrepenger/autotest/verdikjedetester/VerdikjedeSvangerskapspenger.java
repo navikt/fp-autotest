@@ -32,7 +32,7 @@ class VerdikjedeSvangerskapspenger extends ForeldrepengerTestBase {
     void morSøkerIngenTilretteleggingInntektOver6GTest() {
         var familie = new Familie("501");
         var mor = familie.mor();
-        var søkerFnr = mor.fødselsnummer();
+        var søkerFnr = mor.fnr();
         var tilrettelegginsprosent = 0;
         var termindato = LocalDate.now().plusMonths(3);
         var arbeidsforholdMor = mor.arbeidsforhold();

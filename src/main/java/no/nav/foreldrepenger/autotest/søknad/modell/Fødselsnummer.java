@@ -11,7 +11,7 @@ public record Fødselsnummer(@JsonValue String fnr) {
     }
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static Fødselsnummer fraOrgnummer(String fnr) {
+    public static Fødselsnummer fra(String fnr) {
         return new Fødselsnummer(fnr);
     }
 

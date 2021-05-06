@@ -30,7 +30,7 @@ class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
         var familie = new Familie("505");
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato)
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()));
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fnr()));
         var saksnummer = familie.mor().søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

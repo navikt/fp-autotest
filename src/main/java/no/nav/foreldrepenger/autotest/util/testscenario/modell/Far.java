@@ -4,7 +4,7 @@ import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 
 public class Far extends Søker {
-    Far(Fødselsnummer ident, InntektYtelseModell inntektYtelseModell) {
-        super(ident, inntektYtelseModell);
+    Far(Fødselsnummer ident, Fødselsnummer identAnnenpart, InntektYtelseModell inntektYtelseModell) {
+        super(ident, identAnnenpart, inntektYtelseModell);
     }
 }
