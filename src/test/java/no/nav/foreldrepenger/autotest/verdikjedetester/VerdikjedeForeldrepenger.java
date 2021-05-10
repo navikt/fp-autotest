@@ -67,7 +67,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.KontrollerBesteberegningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.ManuellRegistreringForeldrepengerDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
@@ -94,6 +94,7 @@ import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Tag("verdikjede")
 class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
@@ -324,7 +325,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     void morSykepengerKunYtelseTest() {
         var familie = new Familie("520");
         var mor = familie.mor();
-        var saksnummer = mor.søkPåPapir();
+        var saksnummer = mor.søkPåPapir(DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
         saksbehandler.hentFagsak(saksnummer);
         var termindato = LocalDate.now().plusWeeks(6);
@@ -337,10 +338,10 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 termindato.plusWeeks(20).minusDays(1));
         fordelingDtoMor.permisjonsPerioder.add(foreldrepengerFørFødsel);
         fordelingDtoMor.permisjonsPerioder.add(mødrekvote);
-        var papirSoknadForeldrepengerBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(PapirSoknadForeldrepengerBekreftelse.class)
+        var manuellRegistreringForeldrepengerDto = saksbehandler
+                .hentAksjonspunktbekreftelse(ManuellRegistreringForeldrepengerDto.class)
                 .morSøkerTermin(fordelingDtoMor, termindato, fpMottatDato, DekningsgradDto.AATI);
-        saksbehandler.bekreftAksjonspunkt(papirSoknadForeldrepengerBekreftelse);
+        saksbehandler.bekreftAksjonspunkt(manuellRegistreringForeldrepengerDto);
 
         var avklarArbeidsforholdBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);

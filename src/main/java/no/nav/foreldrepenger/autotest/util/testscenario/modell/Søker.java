@@ -111,8 +111,8 @@ public abstract class Søker {
         return new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnSøknad(fødselsnummer, søknad);
     }
 
-    public long søkPåPapir() {
-        return new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnPapirsøknad(fødselsnummer(), DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+    public long søkPåPapir(DokumenttypeId dokumenttypeId) {
+        return new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnPapirsøknad(fødselsnummer(), dokumenttypeId);
     }
 
     public void sendInnKlage() {

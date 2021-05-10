@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.foreldrepenger.svangerskapspenger;
+package no.nav.foreldrepenger.autotest.foreldrepengerUtvidet.svangerskapspenger;
 
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;

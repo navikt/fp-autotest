@@ -12,6 +12,8 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
 
 public class JournalforingJerseyKlient extends VTPJerseyKlient {
 
+    private static final String BEHANDLINGSTEMA = "behandlingstema";
+
     private static final String JOURNALFØRING_URL = "/journalforing";
     private static final String JOURNALFØR_JOURNALPOST = JOURNALFØRING_URL + "/journalfor";
     private static final String JOURNALFØR_FORELDREPENGER_SØKNAD_URL_FORMAT = JOURNALFØRING_URL + "/journalfor/fnr/{fnr}/dokumenttypeid/{dokumenttypeid}";
