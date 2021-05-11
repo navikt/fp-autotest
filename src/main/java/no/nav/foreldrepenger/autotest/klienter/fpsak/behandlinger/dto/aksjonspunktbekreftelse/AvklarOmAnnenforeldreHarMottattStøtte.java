@@ -1,21 +1,21 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-@BekreftelseKode(kode = "5014")
-public class VurderingAvForeldreansvarFjerdeLedd extends AksjonspunktBekreftelse {
+@BekreftelseKode(kode = "5032")
+public class AvklarOmAnnenforeldreHarMottattStøtte extends AksjonspunktBekreftelse {
 
     protected Boolean erVilkarOk;
     protected String avslagskode;
 
-    public VurderingAvForeldreansvarFjerdeLedd() {
+    public AvklarOmAnnenforeldreHarMottattStøtte() {
         super();
     }
 
-    public VurderingAvForeldreansvarFjerdeLedd bekreftGodkjent() {
+    public AvklarOmAnnenforeldreHarMottattStøtte bekreftGodkjent() {
         erVilkarOk = true;
         return this;
     }
 
-    public VurderingAvForeldreansvarFjerdeLedd bekreftAvvist(String kode) {
+    public AvklarOmAnnenforeldreHarMottattStøtte bekreftAvvist(String kode) {
         erVilkarOk = false;
         avslagskode = kode;
         return this;

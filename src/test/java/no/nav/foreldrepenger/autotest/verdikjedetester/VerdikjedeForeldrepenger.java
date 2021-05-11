@@ -67,10 +67,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.KontrollerBesteberegningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.ManuellRegistreringForeldrepengerDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
@@ -338,10 +336,10 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 termindato.plusWeeks(20).minusDays(1));
         fordelingDtoMor.permisjonsPerioder.add(foreldrepengerFørFødsel);
         fordelingDtoMor.permisjonsPerioder.add(mødrekvote);
-        var manuellRegistreringForeldrepengerDto = saksbehandler
-                .hentAksjonspunktbekreftelse(ManuellRegistreringForeldrepengerDto.class)
-                .morSøkerTermin(fordelingDtoMor, termindato, fpMottatDato, DekningsgradDto.AATI);
-        saksbehandler.bekreftAksjonspunkt(manuellRegistreringForeldrepengerDto);
+//        var manuellRegistreringForeldrepengerDto = saksbehandler
+//                .hentAksjonspunktbekreftelse(ManuellRegistreringForeldrepengerDto.class)
+//                .morSøkerTermin(fordelingDtoMor, termindato, fpMottatDato, DekningsgradDto.AATI);
+//        saksbehandler.bekreftAksjonspunkt(manuellRegistreringForeldrepengerDto);
 
         var avklarArbeidsforholdBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);

@@ -29,7 +29,15 @@
             <properties>
                 <includeTestsTags>fpsak</includeTestsTags>
                 <excludeTestsTags>test, pending</excludeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+                <testPackage>no.nav.foreldrepenger.autotest.foreldrepenger.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>fpsakU</id>
+            <properties>
+                <includeTestsTags>fpsak</includeTestsTags>
+                <excludeTestsTags>test, pending</excludeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.foreldrepengerUtvidet.**</testPackage>
             </properties>
         </profile>
         <profile>
