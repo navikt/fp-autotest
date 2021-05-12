@@ -531,7 +531,7 @@ jobs:
       - name: Henter ut repo navn fra trigger
         run: |
           echo "REPO=$(echo '${{ github.event.inputs.trigger }}' | cut -d'/' -f2)" >> $GITHUB_ENV
-      - uses: navikt/github-app-token-generator@v1
+      - uses: navikt/github-app-token-generator@v1.1
         id: get-token
         with:
           private-key: ${{ secrets.FP_PRIVATE_KEY }}
@@ -571,7 +571,7 @@ jobs:
       - name: Henter ut repo navn fra trigger
         run: |
           echo "REPO=$(echo '${{ github.event.inputs.trigger }}' | cut -d'/' -f2)" >> $GITHUB_ENV
-      - uses: navikt/github-app-token-generator@v1
+      - uses: navikt/github-app-token-generator@v1.1
         id: get-token
         with:
           private-key: ${{ secrets.FP_PRIVATE_KEY }}
@@ -607,7 +607,7 @@ jobs:
       - name: Henter ut repo navn fra trigger
         run: |
           echo "REPO=$(echo '${{ github.event.inputs.trigger }}' | cut -d'/' -f2)" >> $GITHUB_ENV
-      - uses: navikt/github-app-token-generator@v1
+      - uses: navikt/github-app-token-generator@v1.1
         id: get-token
         with:
           private-key: ${{ secrets.FP_PRIVATE_KEY }}
