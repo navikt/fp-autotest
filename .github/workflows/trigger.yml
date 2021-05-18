@@ -148,17 +148,17 @@ jobs:
         run: |
           curl -XPOST -u "x-access-token:${{ secrets.GITHUB_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/navikt/fpsak-autotest/actions/workflows/trigger.yml/dispatches \
-          -d '{"ref":"master",
-                  "inputs":{
-                      "trigger": "${{ github.event.inputs.trigger }}",
-                      "version": "${{ github.event.inputs.version }}",
-                      "stack_started": "${{ env.STACK_STARTED }}",
-                      "test_outcome": "${{ steps.tester.outcome }}",
-                      "loggtest_outcome": "${{ steps.logger.outcome }}",
-                      "test_resultat": "${{ env.TEST_RESULTAT }}",
-                      "test_suite": "fpsak",
-                      "run_id": "${{ github.run_id }}"
+          https://api.github.com/repos/navikt/fpsak-autotest/dispatches \
+          -d '{ "event_type":"notify-slack",
+                "client_payload":{
+                    "trigger": "${{ github.event.inputs.trigger }}",
+                    "version": "${{ github.event.inputs.version }}",
+                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "test_outcome": "${{ steps.tester.outcome }}",
+                    "loggtest_outcome": "${{ steps.logger.outcome }}",
+                    "test_resultat": "${{ env.TEST_RESULTAT }}",
+                    "test_suite": "fpsak",
+                    "run_id": "${{ github.run_id }}"
                   }}'
 
       - name: Dumper logger for feilsøking
@@ -311,17 +311,17 @@ jobs:
         run: |
           curl -XPOST -u "x-access-token:${{ secrets.GITHUB_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/navikt/fpsak-autotest/actions/workflows/trigger.yml/dispatches \
-          -d '{"ref":"master",
-                  "inputs":{
-                      "trigger": "${{ github.event.inputs.trigger }}",
-                      "version": "${{ github.event.inputs.version }}",
-                      "stack_started": "${{ env.STACK_STARTED }}",
-                      "test_outcome": "${{ steps.tester.outcome }}",
-                      "loggtest_outcome": "success",
-                      "test_resultat": "${{ env.TEST_RESULTAT }}",
-                      "test_suite": "fptilbake",
-                      "run_id": "${{ github.run_id }}"
+          https://api.github.com/repos/navikt/fpsak-autotest/dispatches \
+          -d '{ "event_type":"notify-slack",
+                "client_payload":{
+                    "trigger": "${{ github.event.inputs.trigger }}",
+                    "version": "${{ github.event.inputs.version }}",
+                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "test_outcome": "${{ steps.tester.outcome }}",
+                    "loggtest_outcome": "success",
+                    "test_resultat": "${{ env.TEST_RESULTAT }}",
+                    "test_suite": "fptilbake",
+                    "run_id": "${{ github.run_id }}"
                   }}'
 
       - name: Dumper logger for feilsøking
@@ -494,17 +494,17 @@ jobs:
         run: |
           curl -XPOST -u "x-access-token:${{ secrets.GITHUB_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/navikt/fpsak-autotest/actions/workflows/trigger.yml/dispatches \
-          -d '{"ref":"master",
-                  "inputs":{
-                      "trigger": "${{ github.event.inputs.trigger }}",
-                      "version": "${{ github.event.inputs.version }}",
-                      "stack_started": "${{ env.STACK_STARTED }}",
-                      "test_outcome": "${{ steps.tester.outcome }}",
-                      "loggtest_outcome": "${{ steps.logger.outcome }}",
-                      "test_resultat": "${{ env.TEST_RESULTAT }}",
-                      "test_suite": "verdikjede",
-                      "run_id": "${{ github.run_id }}"
+          https://api.github.com/repos/navikt/fpsak-autotest/dispatches \
+          -d '{ "event_type":"notify-slack",
+                "client_payload":{
+                    "trigger": "${{ github.event.inputs.trigger }}",
+                    "version": "${{ github.event.inputs.version }}",
+                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "test_outcome": "${{ steps.tester.outcome }}",
+                    "loggtest_outcome": "${{ steps.logger.outcome }}",
+                    "test_resultat": "${{ env.TEST_RESULTAT }}",
+                    "test_suite": "verdikjede",
+                    "run_id": "${{ github.run_id }}"
                   }}'
 
       - name: Dumper logger for feilsøking
