@@ -164,7 +164,7 @@ services:
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "FPFORDEL_IT_FP_URL=https://vtp:8063/rest/infotrygd/saker/foreldrepenger"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.mottak.hendelse.test.VtpKafkaAvroSerde"
-      - "TOKEN_X_CLIENT_ID=fpinfo"
+      - "TOKEN_X_CLIENT_ID=fpfordel"
     env_file:
       - "fpfordel_datasource.list"
       - "common.env"
