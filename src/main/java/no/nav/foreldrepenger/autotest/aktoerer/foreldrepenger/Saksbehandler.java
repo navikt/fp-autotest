@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.qameta.allure.Step;
@@ -30,7 +31,6 @@ import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.Risiko
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdPost;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
@@ -273,9 +273,9 @@ public class Saksbehandler extends Aktoer {
         } else if (status.isPending()) {
             return false;
         } else {
-            AllureHelper.debugFritekst("Prosesstask feilet for behandling[" + behandling.id
+            AllureHelper.debugFritekst("Prosesstask feilet for behandling[" + behandling.uuid
                     + "] i behandlingsverifisering: " + status.getMessage());
-            throw new RuntimeException("Status for behandling " + behandling.id + " feilet: " + status.getMessage());
+            throw new RuntimeException("Status for behandling " + behandling.uuid + " feilet: " + status.getMessage());
         }
     }
 
@@ -346,7 +346,7 @@ public class Saksbehandler extends Aktoer {
 
     @Step("Henlegger behandling")
     public void henleggBehandling(BehandlingResultatType årsak) {
-        behandlingerKlient.henlegg(new BehandlingHenlegg(valgtBehandling.id, valgtBehandling.versjon, årsak, "Henlagt"));
+        behandlingerKlient.henlegg(new BehandlingHenlegg(valgtBehandling.uuid, valgtBehandling.versjon, årsak, "Henlagt"));
         refreshBehandling();
     }
 
@@ -386,8 +386,7 @@ public class Saksbehandler extends Aktoer {
     public Saldoer hentSaldoerGittUttaksperioder(List<UttakResultatPeriode> uttakResultatPerioder) {
         BehandlingMedUttaksperioderDto behandlingMedUttaksperioderDto = new BehandlingMedUttaksperioderDto();
         behandlingMedUttaksperioderDto.setPerioder(uttakResultatPerioder);
-        BehandlingIdDto behandlingIdDto = new BehandlingIdDto((long) valgtBehandling.id);
-        behandlingMedUttaksperioderDto.setBehandlingId(behandlingIdDto);
+        behandlingMedUttaksperioderDto.setBehandlingUuid(valgtBehandling.uuid);
 
         return behandlingerKlient.behandlingUttakStonadskontoerGittUttaksperioder(behandlingMedUttaksperioderDto);
     }
@@ -483,7 +482,7 @@ public class Saksbehandler extends Aktoer {
     @Step("Bekrefter aksjonspunktbekreftelser")
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
         debugAksjonspunktbekreftelser(bekreftelser);
-        BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
+        BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
     }
@@ -527,22 +526,22 @@ public class Saksbehandler extends Aktoer {
      */
     @Step("Venter på historikkinnslag {type}")
     public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
-        Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.id),
+        Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.uuid),
                 60, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
                         + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
 
     }
 
     public boolean harHistorikkinnslagForBehandling(HistorikkinnslagType type) {
-        return harHistorikkinnslagForBehandling(type, valgtBehandling.id);
+        return harHistorikkinnslagForBehandling(type, valgtBehandling.uuid);
     }
 
-    public boolean harHistorikkinnslagForBehandling(HistorikkinnslagType type, int behandlingsId) {
+    public boolean harHistorikkinnslagForBehandling(HistorikkinnslagType type, UUID behandlingsId) {
         if (type == HistorikkinnslagType.VEDLEGG_MOTTATT) {
-            behandlingsId = 0;
+            behandlingsId = null;
         }
         for (HistorikkInnslag innslag : getHistorikkInnslag()) {
-            if (innslag.type().equals(type) && (innslag.behandlingId() == behandlingsId)) {
+            if (innslag.type().equals(type) && (Objects.equals(innslag.behandlingUuid(), behandlingsId))) {
                 return true;
             }
         }
@@ -578,7 +577,7 @@ public class Saksbehandler extends Aktoer {
             }
         }
         throw new IllegalStateException(
-                String.format("Fant ikke vilkår %s for behandling %s", vilkårKode.toString(), valgtBehandling.id));
+                String.format("Fant ikke vilkår %s for behandling %s", vilkårKode.toString(), valgtBehandling.uuid));
     }
 
     private Vilkar hentVilkår(String vilkårKode) {
@@ -594,7 +593,7 @@ public class Saksbehandler extends Aktoer {
         var filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
         var prosesstasker = prosesstaskKlient.list(filter);
         return prosesstasker.stream()
-                .filter(p -> Objects.equals("" + behandling.id, p.taskParametre().behandlingId()))
+                .filter(p -> Objects.equals(behandling.uuid.toString(), p.taskParametre().behandlingId()))
                 .collect(Collectors.toList());
     }
 

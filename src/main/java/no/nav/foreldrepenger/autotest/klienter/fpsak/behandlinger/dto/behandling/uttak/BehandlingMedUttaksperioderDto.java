@@ -1,23 +1,22 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingMedUttaksperioderDto {
 
-    protected BehandlingIdDto behandlingId;
+    protected UUID behandlingUuid;
     protected List<UttakResultatPeriode> perioder;
 
-    public BehandlingIdDto getBehandlingId() {
-        return behandlingId;
+    public UUID getBehandlingUuid() {
+        return behandlingUuid;
     }
 
-    public void setBehandlingId(BehandlingIdDto behandlingId) {
-        this.behandlingId = behandlingId;
+    public void setBehandlingUuid(UUID behandlingUuid) {
+        this.behandlingUuid = behandlingUuid;
     }
 
     public List<UttakResultatPeriode> getPerioder() {

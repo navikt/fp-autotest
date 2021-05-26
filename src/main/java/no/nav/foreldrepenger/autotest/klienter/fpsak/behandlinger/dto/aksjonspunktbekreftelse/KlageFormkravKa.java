@@ -12,6 +12,6 @@ public class KlageFormkravKa extends KlageFormkravBekreftelse {
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        this.setPåklagdVedtak(Integer.toString(behandling.id - 1));
+        this.setPåklagdVedtak(null, behandling.id - 1);
     }
 }

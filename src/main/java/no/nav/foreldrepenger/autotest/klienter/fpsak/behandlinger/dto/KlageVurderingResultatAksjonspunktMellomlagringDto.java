@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
@@ -12,32 +14,31 @@ public class KlageVurderingResultatAksjonspunktMellomlagringDto {
 
     private final String kode;
     private final String begrunnelse;
-    private final int behandlingId;
+    private final UUID behandlingUuid;
     private final String fritekstTilBrev;
     private final Kode klageMedholdArsak;
     private final Kode klageVurdering;
     private final Kode klageVurderingOmgjoer;
 
-    public KlageVurderingResultatAksjonspunktMellomlagringDto(String kode, String begrunnelse, int behandlingId,
+    public KlageVurderingResultatAksjonspunktMellomlagringDto(String kode, String begrunnelse, UUID behandlingUuid,
                                                               String fritekstTilBrev, Kode klageMedholdArsak,
                                                               Kode klageVurdering, Kode klageVurderingOmgjoer) {
-        super();
         this.kode = kode;
         this.begrunnelse = begrunnelse;
-        this.behandlingId = behandlingId;
+        this.behandlingUuid = behandlingUuid;
         this.fritekstTilBrev = fritekstTilBrev;
         this.klageMedholdArsak = klageMedholdArsak;
         this.klageVurdering = klageVurdering;
         this.klageVurderingOmgjoer = klageVurderingOmgjoer;
     }
 
-    public KlageVurderingResultatAksjonspunktMellomlagringDto(int behandlingId, KlageVurderingResultat resultat,
-            Aksjonspunkt aksjonspunkt) {
-        this(aksjonspunkt.getDefinisjon().kode, resultat.getBegrunnelse(), behandlingId, resultat.getFritekstTilBrev(),
+    public KlageVurderingResultatAksjonspunktMellomlagringDto(UUID behandlingUuid, KlageVurderingResultat resultat,
+                                                              Aksjonspunkt aksjonspunkt) {
+        this(aksjonspunkt.getDefinisjon().kode, resultat.getBegrunnelse(), behandlingUuid, resultat.getFritekstTilBrev(),
                 resultat.getKlageMedholdArsak(), resultat.getKlageVurdering(), resultat.getKlageVurderingOmgjoer());
     }
 
     public KlageVurderingResultatAksjonspunktMellomlagringDto(Behandling behandling, Aksjonspunkt aksjonspunkt) {
-        this(behandling.id, behandling.getKlagevurdering().getKlageVurderingResultatNFP(), aksjonspunkt); // lage for hvert av dem?
+        this(behandling.uuid, behandling.getKlagevurdering().getKlageVurderingResultatNFP(), aksjonspunkt); // lage for hvert av dem?
     }
 }

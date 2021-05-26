@@ -29,6 +29,9 @@ import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Behandling {
 
+    //TODO palfi fjern all bruk av id
+    //bruk uuid
+    @Deprecated(forRemoval = true)
     public int id;
     public UUID uuid;
     public int versjon;
@@ -98,7 +101,7 @@ public class Behandling {
     public String toString() {
         // Ikke bruk fields som er deferred i tostring, skaper mange kall
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("{Behandlingsid: %s}%n", this.id));
+        sb.append(String.format("{Behandlingsid: %s}%n", this.uuid));
         sb.append(String.format("{Behandlingsstatus: %s}%n", this.status.getKode()));
         sb.append(String.format("{Behandlingstype: %s}", this.type.getKode()));
         if ((this.behandlingsresultat != null) && (this.behandlingsresultat.getAvslagsarsak() != null)) {

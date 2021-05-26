@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
@@ -14,8 +14,9 @@ public class AnkeVurderingResultatBekreftelse extends AksjonspunktBekreftelse{
     private AnkeOmgjørÅrsak ankeOmgjoerArsak;
     private AnkeVurderingOmgjør ankeVurderingOmgjoer;
     private boolean erGodkjentAvMedunderskriver;
-    @JsonProperty("vedtak")
-    private Long påAnketBehandlingId;
+    private UUID vedtakBehandlingUuid;
+    //TODO palfi fjern vedtak, bruk vedtakBehandlingUuid
+    private Long vedtak;
     private final boolean erAnkerIkkePart = false;
     private final boolean erFristIkkeOverholdt = false;
     private final boolean erIkkeKonkret = false;
@@ -27,7 +28,7 @@ public class AnkeVurderingResultatBekreftelse extends AksjonspunktBekreftelse{
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        this.påAnketBehandlingId = (long) (behandling.id - 1);
+        this.vedtak = (long) (behandling.id - 1);
     }
 
 
