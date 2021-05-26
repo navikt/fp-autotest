@@ -52,7 +52,7 @@ public abstract class FpsakTestBase extends TestScenarioTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         if (saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT,
-                saksbehandler.valgtBehandling.id)) {
+                saksbehandler.valgtBehandling.uuid)) {
             saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_SENT);
         }
     }

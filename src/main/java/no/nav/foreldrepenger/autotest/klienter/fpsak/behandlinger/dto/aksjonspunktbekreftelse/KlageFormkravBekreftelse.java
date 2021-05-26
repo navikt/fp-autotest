@@ -1,12 +1,16 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
+import java.util.UUID;
+
 public abstract class KlageFormkravBekreftelse extends AksjonspunktBekreftelse {
 
     protected boolean erKlagerPart;
     protected boolean erFristOverholdt;
     protected boolean erKonkret;
     protected boolean erSignert;
-    protected String vedtak; // påklagdBehandlingsId;
+    protected UUID vedtakBehandlingUuid;
+    //TODO palfi fjern vedtak
+    protected Long vedtak;
 
     public KlageFormkravBekreftelse() {
         super();
@@ -32,8 +36,9 @@ public abstract class KlageFormkravBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public KlageFormkravBekreftelse setPåklagdVedtak(String vedtakId) {
-        this.vedtak = vedtakId;
+    public KlageFormkravBekreftelse setPåklagdVedtak(UUID vedtakId, long behandlingId) {
+        this.vedtakBehandlingUuid = vedtakId;
+        this.vedtak = behandlingId;
         return this;
     }
 

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.internal.klienter.fpsak.historikk;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class HistorikkDtoSeraliseringDeserialiseringTest extends SerializationTestBase 
 
     @Test
     void HistorikkInnslagTest() {
-        test(new HistorikkInnslag(123456789,
+        test(new HistorikkInnslag(UUID.randomUUID(),
                 HistorikkinnslagType.BREV_BESTILT,
                 new Kode("","SBH", "Saksbehandler"),
                 new Kode("-", "M", "Mann"),
