@@ -90,12 +90,12 @@ jobs:
 
       - name: Utfører foreldrepengetestene for fpsak
         id: tester
-        run: mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak > >(tee test-result-log.txt)
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -P fpsak > >(tee test-result-log.txt)
 
       - name: Sjekker loggen etter feil
         if: always() && env.STACK_STARTED == 'true'
         id: logger
-        run: mvn test --batch-mode --settings .github/.m2/settings.xml -P loggfeil
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -P loggfeil
 
       - name: Generer testrapport
         if: |
@@ -258,7 +258,7 @@ jobs:
 
       - name: Utfører testene for fptilbake
         id: tester
-        run: mvn test --batch-mode --settings .github/.m2/settings.xml -P fptilbake > >(tee test-result-log.txt)
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -P fptilbake > >(tee test-result-log.txt)
 
       - name: Generer testrapport
         if: |
@@ -428,13 +428,13 @@ jobs:
 
       - name: Utfører verdikjedetestene
         id: tester
-        run: mvn test --batch-mode --settings .github/.m2/settings.xml -P verdikjede > >(tee test-result-log.txt)
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -P verdikjede > >(tee test-result-log.txt)
 
       - name: Sjekker loggen etter feil og lekket sensitiv data.
         if: always() && env.STACK_STARTED == 'true'
         id: logger
         run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P logger
+          mvn test -e --batch-mode --settings .github/.m2/settings.xml -P logger
 
       - name: Sjekker minneforbruk
         if: always()
