@@ -28,6 +28,7 @@ public class KravgrunnlagDetaljert {
     protected String behandlendeEnhet;
     protected String kontrollFelt;
     protected String saksBehId;
+    //TODO palfi, bruk uuid
     protected String referanse;
 
     protected List<KravgrunnlagPeriode> perioder;

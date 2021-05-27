@@ -2,9 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.UUID;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-
 @BekreftelseKode(kode = "5093")
 public class AnkeVurderingResultatBekreftelse extends AksjonspunktBekreftelse{
 
@@ -15,8 +12,6 @@ public class AnkeVurderingResultatBekreftelse extends AksjonspunktBekreftelse{
     private AnkeVurderingOmgjør ankeVurderingOmgjoer;
     private boolean erGodkjentAvMedunderskriver;
     private UUID vedtakBehandlingUuid;
-    //TODO palfi fjern vedtak, bruk vedtakBehandlingUuid
-    private Long vedtak;
     private final boolean erAnkerIkkePart = false;
     private final boolean erFristIkkeOverholdt = false;
     private final boolean erIkkeKonkret = false;
@@ -26,16 +21,11 @@ public class AnkeVurderingResultatBekreftelse extends AksjonspunktBekreftelse{
         super();
     }
 
-    @Override
-    public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        this.vedtak = (long) (behandling.id - 1);
-    }
-
-
-    public AnkeVurderingResultatBekreftelse omgjørTilGunst() {
+    public AnkeVurderingResultatBekreftelse omgjørTilGunst(UUID vedtakBehandlingUuid) {
         ankeOmgjoerArsak = AnkeOmgjørÅrsak.ULIK_VURDERING;
         ankeVurdering = AnkeVurdering.ANKE_OMGJOER;
         ankeVurderingOmgjoer = AnkeVurderingOmgjør.ANKE_TIL_GUNST;
+        this.vedtakBehandlingUuid = vedtakBehandlingUuid;
         return this;
     }
 

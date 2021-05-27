@@ -1,5 +1,34 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_DØD_FORELDER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper.medEgenNaeringOpptjening;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.overføringsperiode;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesÅrsak.ARBEID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
@@ -65,34 +94,6 @@ import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_DØD_FORELDER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper.medEgenNaeringOpptjening;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.overføringsperiode;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
-import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesÅrsak.ARBEID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("verdikjede")
 class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
@@ -380,9 +381,11 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         mor.sendInnKlage();
         klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("Super duper klage!");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
@@ -396,6 +399,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var klageFormkravKa = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("Super duper klage!");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
 
@@ -426,7 +430,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         klagebehandler.ventPåOgVelgAnkeBehandling();
         var ankeVurderingResultatBekreftelse = klagebehandler
                 .hentAksjonspunktbekreftelse(AnkeVurderingResultatBekreftelse.class)
-                .omgjørTilGunst()
+                .omgjørTilGunst(førstegangsbehandling.uuid)
                 .setBegrunnelse("Super duper anke!");
         klagebehandler.bekreftAksjonspunkt(ankeVurderingResultatBekreftelse);
 
@@ -1428,9 +1432,11 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("Super duper klage!");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 

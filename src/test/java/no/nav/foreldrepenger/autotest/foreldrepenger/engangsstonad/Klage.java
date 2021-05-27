@@ -52,6 +52,7 @@ class Klage extends FpsakTestBase {
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(klagebehandler.førstegangsbehandling().uuid)
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
@@ -98,8 +99,10 @@ class Klage extends FpsakTestBase {
         klagebehandler.ventPåOgVelgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         klageFormkravNfp
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
@@ -118,6 +121,7 @@ class Klage extends FpsakTestBase {
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
         klageFormkravKa
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla begrunnelse");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
 
@@ -166,8 +170,10 @@ class Klage extends FpsakTestBase {
         klagebehandler.ventPåOgVelgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         klageFormkravNfp
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
@@ -186,6 +192,7 @@ class Klage extends FpsakTestBase {
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
         klageFormkravKa
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla begrunnelse");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
 
@@ -230,8 +237,10 @@ class Klage extends FpsakTestBase {
         klagebehandler.ventPåOgVelgKlageBehandling();
 
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         klageFormkravNfp
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
         VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler
@@ -248,6 +257,7 @@ class Klage extends FpsakTestBase {
         KlageFormkravKa klageFormkravKa = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravKa.class);
         klageFormkravKa
                 .klageErIkkeKonkret()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("Begrunnelse formkrav");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -289,6 +299,7 @@ class Klage extends FpsakTestBase {
         KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
         klageFormkravNfp
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(klagebehandler.førstegangsbehandling().uuid)
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
         String fritekstbrev1 = "Fritekst brev nfp.";

@@ -106,21 +106,9 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.uuid);
     }
 
-    // Økonomi actions
-    public void sendNyttKravgrunnlag(Long saksnummer, String ident, int fpsakBehandlingId, String ytelseType) {
-        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, ident, fpsakBehandlingId, ytelseType, "NY");
-        sendNyttKravgrunnlag(kravgrunnlag, saksnummer, fpsakBehandlingId);
-    }
-
     public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag, Long saksnummer, int fpsakBehandlingId) {
         vtpTilbakekrevingJerseyKlient.oppdaterTilbakekrevingKonsistens(saksnummer, fpsakBehandlingId);
         okonomiKlient.putGrunnlag(kravgrunnlag, valgtBehandling.id);
-    }
-
-    public void sendEndretKravgrunnlag(Long saksnummer, String ident, int fpsakBehandlingId, String ytelseType,
-            int behandlingId) {
-        Kravgrunnlag kravgrunnlag = new Kravgrunnlag(saksnummer, ident, fpsakBehandlingId, ytelseType, "ENDR");
-        okonomiKlient.putGrunnlag(kravgrunnlag, behandlingId);
     }
 
     public BeregningResultatPerioder hentResultat(UUID uuid){

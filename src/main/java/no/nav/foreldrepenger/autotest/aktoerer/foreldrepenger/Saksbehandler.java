@@ -723,4 +723,9 @@ public class Saksbehandler extends Aktoer {
         return utbetaltRefusjonForAndeler.stream().mapToInt(Integer::intValue)
                 .sum() != forventetUtbetaltDagsatsTilArbeidsgiver;
     }
+
+    public Behandling førstegangsbehandling() {
+        return behandlinger.stream().filter(b -> b.type.equals(BehandlingType.FØRSTEGANGSSØKNAD)).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Finner ikke førstegangsbehandling"));
+    }
 }
