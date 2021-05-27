@@ -1198,8 +1198,8 @@ class Fodsel extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("Mor søker uregistrert fødsel før det har gått 2 uker")
-    @Description("Mor søker uregistrert fødsel før det har gått 2 uker - skal sette behandling på vent")
+    @DisplayName("Mor søker uregistrert fødsel før det har gått 1 uke")
+    @Description("Mor søker uregistrert fødsel før det har gått 1 uke - skal sette behandling på vent")
     void morSøkerUregistrertEtterFør2Uker() {
         var testscenario = opprettTestscenario("55");
         var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
@@ -1229,7 +1229,7 @@ class Fodsel extends ForeldrepengerTestBase {
         logger.debug("{}", fødselsdato.plusWeeks(2));
         assertThat(saksbehandler.valgtBehandling.fristBehandlingPaaVent)
                 .as("Frist behandling på vent")
-                .isEqualTo(fødselsdato.plusWeeks(2));
+                .isEqualTo(fødselsdato.plusWeeks(1).plusDays(1));
     }
 
     @Test
