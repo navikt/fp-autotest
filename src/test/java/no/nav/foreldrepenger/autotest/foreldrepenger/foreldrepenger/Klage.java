@@ -48,9 +48,11 @@ class Klage extends ForeldrepengerTestBase {
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
         var fritekstBrev = "Fritektst til brev fra NFP.";
@@ -117,9 +119,11 @@ class Klage extends ForeldrepengerTestBase {
 
         klagebehandler.ventPåOgVelgKlageBehandling();
 
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla");
         debugLoggBehandling(klagebehandler.valgtBehandling);
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
@@ -137,6 +141,7 @@ class Klage extends ForeldrepengerTestBase {
         var klageFormkravKa = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla begrunnelse");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
         var vurderingAvKlageNkBekreftelse = klagebehandler
@@ -168,9 +173,11 @@ class Klage extends ForeldrepengerTestBase {
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("Begrunnelse NFP.");
         debugLoggBehandling(klagebehandler.valgtBehandling);
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
@@ -188,6 +195,7 @@ class Klage extends ForeldrepengerTestBase {
         var klageFormkravKa = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla begrunnelse");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
         var vurderingAvKlageNkBekreftelse = klagebehandler
@@ -235,9 +243,11 @@ class Klage extends ForeldrepengerTestBase {
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
         var vurderingAvKlageNfpBekreftelse = klagebehandler
@@ -254,6 +264,7 @@ class Klage extends ForeldrepengerTestBase {
         var klageFormkravKa = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
                 .godkjennAlleFormkrav()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla begrunnelse");
         klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
         var vurderingAvKlageNkBekreftelse = klagebehandler
@@ -299,9 +310,11 @@ class Klage extends ForeldrepengerTestBase {
         klagebehandler.hentFagsak(sakId);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
+        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
                 .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
                 .klageErIkkeKonkret()
+                .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);

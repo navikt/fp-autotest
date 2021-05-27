@@ -9,8 +9,6 @@ public abstract class KlageFormkravBekreftelse extends AksjonspunktBekreftelse {
     protected boolean erKonkret;
     protected boolean erSignert;
     protected UUID vedtakBehandlingUuid;
-    //TODO palfi fjern vedtak
-    protected Long vedtak;
 
     public KlageFormkravBekreftelse() {
         super();
@@ -36,9 +34,8 @@ public abstract class KlageFormkravBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public KlageFormkravBekreftelse setPåklagdVedtak(UUID vedtakId, long behandlingId) {
+    public KlageFormkravBekreftelse setPåklagdVedtak(UUID vedtakId) {
         this.vedtakBehandlingUuid = vedtakId;
-        this.vedtak = behandlingId;
         return this;
     }
 
