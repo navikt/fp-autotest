@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.util.rest;
 import static no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper.mapper;
 import static no.nav.foreldrepenger.autotest.util.rest.RestClientSupportProdusent.connectionManager;
 import static no.nav.foreldrepenger.autotest.util.rest.RestClientSupportProdusent.createKeepAliveStrategy;
-import static no.nav.foreldrepenger.autotest.util.rest.RestClientSupportProdusent.defaultHeaders;
 import static no.nav.foreldrepenger.autotest.util.rest.RestClientSupportProdusent.defaultRequestConfig;
 import static org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS;
 
@@ -45,8 +44,7 @@ public abstract class AbstractJerseyRestKlient {
         cfg.register(jacksonProvider(mapper));
         cfg.connectorProvider(new ApacheConnectorProvider());
         cfg.register((ApacheHttpClientBuilderConfigurator) b ->
-                b.setDefaultHeaders(defaultHeaders())
-                .setKeepAliveStrategy(createKeepAliveStrategy(30))
+                b.setKeepAliveStrategy(createKeepAliveStrategy(30))
                 .setDefaultRequestConfig(defaultRequestConfig())
                 .setRetryHandler(new HttpRequestRetryHandler())
                 .setConnectionManager(connectionManager()));
