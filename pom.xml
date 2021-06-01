@@ -16,7 +16,7 @@
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
 
-        <vtp.versjon>1.0.12</vtp.versjon>
+        <vtp.versjon>1.0.14</vtp.versjon>
         <dokumentgenerator.version>1.0.0</dokumentgenerator.version>
         <aspectj.version>1.9.7.M3</aspectj.version>
         <jackson.version>2.12.3</jackson.version>
@@ -184,7 +184,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>kontrakter</artifactId>
             <version>${vtp.versjon}</version>
         </dependency>
 
