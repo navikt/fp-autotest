@@ -118,7 +118,7 @@ public class Fordel extends Aktoer {
     }
     private String finnBehandlingstemaKode(DokumenttypeId dokumenttypeId) {
         try {
-            return ControllerHelper.translateSøknadDokumenttypeToBehandlingstema(dokumenttypeId).getKode();
+            return ControllerHelper.translateSøknadDokumenttypeToBehandlingstema(dokumenttypeId).getOffisiellKode();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
