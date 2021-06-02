@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
@@ -305,18 +306,34 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
                 lagBGAndel(orgNr, 720_000, 720_000, 0, 720_000));
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
-                lagBGAndelForAktivitetStatus("SN", 37580.83, 37580.83));
+        assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel().stream()
+                .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
+                .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
 
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
                 lagBGAndelMedFordelt(orgNr, 720_000, 500_000, 500_000, 500_000));
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
-                lagBGAndelMedFordelt("SN", 37580.83, 235_138, 235_138));
+        assertFordeltSNAndel(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1), 235_138);
 
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2),
                 lagBGAndel(orgNr, 720_000, 720_000, 0, 720_000));
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2),
-                lagBGAndelForAktivitetStatus("SN", 37580.83, 37580.83));
+        assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2).getBeregningsgrunnlagPrStatusOgAndel().stream()
+                .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
+                .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
+    }
+
+    private void assertFordeltSNAndel(BeregningsgrunnlagPeriodeDto periode, int bruttoPrÅr) {
+        var brutto = periode.getBeregningsgrunnlagPrStatusOgAndel().stream()
+                .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
+                .mapToInt(andel -> ((Double)andel.getBruttoPrAar()).intValue()).sum();
+        var fordelt = periode.getBeregningsgrunnlagPrStatusOgAndel().stream()
+                .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
+                .mapToInt(andel -> ((Double)andel.getFordeltPrAar()).intValue()).sum();
+        var dagsats = periode.getBeregningsgrunnlagPrStatusOgAndel().stream()
+                .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
+                .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum();
+        assertThat(brutto).isEqualTo(bruttoPrÅr);
+        assertThat(fordelt).isEqualTo(bruttoPrÅr);
+        assertThat(dagsats).isGreaterThan(0);
     }
 
     @Test
