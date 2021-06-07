@@ -206,7 +206,8 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var mor = familie.mor();
         var identSøker = mor.fødselsnummer();
         var næringsinntekt = mor.næringsinntekt(2018);
-        var avvikendeNæringsinntekt = næringsinntekt * 1.8; // >25% avvik
+        // Merk: Avviket er G-sensitivt og kan bli påvirket av g-regulering
+        var avvikendeNæringsinntekt = næringsinntekt * 1.9; // >25% avvik
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, avvikendeNæringsinntekt, true);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()))
@@ -221,26 +222,17 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Opptjening godkjent av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
-        // Verifiser at aksjonspunkt 5042 ikke blir oprettet uten varig endring
         var vurderVarigEndringEllerNyoppstartetSNBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class)
                 .setErVarigEndretNaering(false)
                 .setBegrunnelse("Ingen endring");
         saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse);
-        assertThatThrownBy(() -> saksbehandler.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_SELVSTENDIG_NÆRINGSDRIVENDE))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Fant ikke aksjonspunkt med kode 5042");
-
         var vurderVarigEndringEllerNyoppstartetSNBekreftelse1 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class)
                 .setErVarigEndretNaering(true)
+                .setBruttoBeregningsgrunnlag((int)avvikendeNæringsinntekt)
                 .setBegrunnelse("Vurder varig endring for selvstendig næringsdrivende begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse1);
-        var fastsettBruttoBeregningsgrunnlagSNBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettBruttoBeregningsgrunnlagSNBekreftelse.class)
-                .setBruttoBeregningsgrunnlag((int) avvikendeNæringsinntekt)
-                .setBegrunnelse("Grunnlag begrunnelse");
-        saksbehandler.bekreftAksjonspunkt(fastsettBruttoBeregningsgrunnlagSNBekreftelse);
 
         // verifiser skjæringstidspunkt i følge søknad
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getSkjaeringstidspunktBeregning())
