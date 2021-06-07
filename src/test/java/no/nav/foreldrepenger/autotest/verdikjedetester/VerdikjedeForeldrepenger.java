@@ -206,7 +206,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var mor = familie.mor();
         var identSøker = mor.fødselsnummer();
         var næringsinntekt = mor.næringsinntekt(2018);
-        var avvikendeNæringsinntekt = næringsinntekt * 1.8; // >25% avvik
+        var avvikendeNæringsinntekt = næringsinntekt * 2.5; // >25% avvik
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, avvikendeNæringsinntekt, true);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()))
