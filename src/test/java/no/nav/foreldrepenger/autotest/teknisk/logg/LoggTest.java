@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.logg;
+package no.nav.foreldrepenger.autotest.teknisk.logg;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

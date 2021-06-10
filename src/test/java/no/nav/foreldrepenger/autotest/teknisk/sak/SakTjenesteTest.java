@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.foreldrepenger;
+package no.nav.foreldrepenger.autotest.teknisk.sak;
 
 import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.VTP_ROOT;
 import static org.assertj.core.api.Assertions.assertThat;

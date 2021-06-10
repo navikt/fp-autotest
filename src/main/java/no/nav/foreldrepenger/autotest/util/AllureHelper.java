@@ -79,6 +79,10 @@ public class AllureHelper {
         }
     }
 
+    public static void tilJsonOgPubliserIAllureRapport(Object testscenarioDto) {
+        debugJson(toJson(testscenarioDto));
+    }
+
     @Attachment(value = "Json", type = "application/json")
     public static String debugJson(String json) {
         return json;

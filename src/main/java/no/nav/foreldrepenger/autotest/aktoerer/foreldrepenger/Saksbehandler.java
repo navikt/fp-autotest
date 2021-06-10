@@ -96,7 +96,6 @@ public class Saksbehandler extends Aktoer {
         hentFagsak("" + saksnummer);
     }
 
-    @Step("Hent fagsak {saksnummer}")
     public void hentFagsak(String saksnummer) {
         valgtFagsak = fagsakKlient.getFagsak(saksnummer);
         if (valgtFagsak == null) {
@@ -253,7 +252,7 @@ public class Saksbehandler extends Aktoer {
                         .append(prosessTaskListItemDto.status())
                         .append("\n");
             }
-            return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList.toString();
+            return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
         });
     }
 
@@ -421,10 +420,15 @@ public class Saksbehandler extends Aktoer {
     /*
      * Henter aksjonspunkt bekreftelse av gitt klasse
      */
-    @Step("Henter aksjonspunktbekreftelse for {type}")
+
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) {
         var aksjonspunktKode = type.getDeclaredAnnotation(BekreftelseKode.class).kode();
-        var aksjonspunkt = hentAksjonspunkt(aksjonspunktKode);
+        return hentAksjonspunktbekreftelse(aksjonspunktKode);
+    }
+
+    @Step("Sjekker om AP {kode} har forekommet og returnerer aksjonspunktbekreftelsen")
+    public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(String kode) {
+        var aksjonspunkt = hentAksjonspunkt(kode);
         var bekreftelse = aksjonspunkt.getBekreftelse();
         bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
         return (T) bekreftelse;

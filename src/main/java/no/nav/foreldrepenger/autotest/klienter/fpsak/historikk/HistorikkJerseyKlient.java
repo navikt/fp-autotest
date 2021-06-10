@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk;
 import java.util.List;
 import java.util.Optional;
 
-import io.qameta.allure.Step;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
@@ -18,7 +17,6 @@ public class HistorikkJerseyKlient extends FpsakJerseyKlient {
         super(filter);
     }
 
-    @Step("Henter liste av historiske innslag")
     public List<HistorikkInnslag> hentHistorikk(long saksnummer) {
         return Optional.ofNullable(client.target(base)
                 .path(HISTORIKK_URL_FORMAT)

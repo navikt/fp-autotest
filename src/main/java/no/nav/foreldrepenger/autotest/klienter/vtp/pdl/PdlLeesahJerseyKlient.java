@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.pdl;
 
 import static jakarta.ws.rs.client.Entity.json;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.tilJsonOgPubliserIAllureRapport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,9 @@ public class PdlLeesahJerseyKlient extends VTPJerseyKlient {
         super();
     }
 
-    @Step("Legger til hendelse på PDL topic")
+    @Step("Oppretter og mottak hendelse")
     public void opprettHendelse(PersonhendelseDto personhendelseDto) {
+        tilJsonOgPubliserIAllureRapport(personhendelseDto);
         LOG.info("Legger til hendelse av type: {} i PDL", personhendelseDto.getType());
         client.target(base)
                 .path(PDL_LEESAH)
