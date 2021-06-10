@@ -20,7 +20,7 @@
         <dokumentgenerator.version>1.0.0</dokumentgenerator.version>
         <aspectj.version>1.9.7.M3</aspectj.version>
         <jackson.version>2.12.3</jackson.version>
-        <jersey.version>3.0.1</jersey.version>
+        <jersey.version>3.0.2</jersey.version>
     </properties>
 
     <profiles>
@@ -249,7 +249,16 @@
             <artifactId>nv-i18n</artifactId>
             <version>1.28</version>
         </dependency>
-
+             
+<!--            TEST -->
+         <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <version>6.0.0</version>
+         </dependency>
+             
+             
+             
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
