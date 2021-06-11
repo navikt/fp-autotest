@@ -63,7 +63,7 @@ jobs:
             echo "SLACK_TITLE=Testene til fpsak gikk grønne, men fant feil i loggen :bug:" >> $GITHUB_ENV
             echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
               echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
-              echo '*Resultat*: Sjekk <https://navikt.github.io/fpsak-autotest/fpsak|testrapport> for feilen\(e\) i loggen' >> $GITHUB_ENV
+              echo '*Resultat*: Sjekk <https://navikt.github.io/fpsak-autotest/fpsak|testrapport> for feilen i loggen' >> $GITHUB_ENV
               echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
               echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
             echo '\n' >> $GITHUB_ENV
@@ -98,7 +98,7 @@ jobs:
             echo "SLACK_TITLE=Testene til fptilbake gikk grønne, men fant feil i loggen :bug:" >> $GITHUB_ENV
             echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
               echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
-              echo '*Resultat*: Sjekk <https://navikt.github.io/fpsak-autotest/fptilbake|testrapport> for feilen\(e\) i loggen' >> $GITHUB_ENV
+              echo '*Resultat*: Sjekk <https://navikt.github.io/fpsak-autotest/fptilbake|testrapport> for feilen i loggen' >> $GITHUB_ENV
               echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
               echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
             echo '\n' >> $GITHUB_ENV
@@ -131,7 +131,7 @@ jobs:
             echo "SLACK_TITLE=Verdikjedetestene gikk grønne, men fant feil i loggen :bug:" >> $GITHUB_ENV
             echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
               echo '*Trigger*: ${{ env.TRIGGER }}:${{ env.VERSION }}' >> $GITHUB_ENV
-              echo '*Resultat*: Sjekk <https://navikt.github.io/fpsak-autotest/verdikjede|testrapport> for feilen\(e\) i loggen' >> $GITHUB_ENV
+              echo '*Resultat*: Sjekk <https://navikt.github.io/fpsak-autotest/verdikjede|testrapport> for feilen i loggen' >> $GITHUB_ENV
               echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
               echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ env.RUN_ID }}|Github Action Url>' >> $GITHUB_ENV
             echo '\n' >> $GITHUB_ENV
