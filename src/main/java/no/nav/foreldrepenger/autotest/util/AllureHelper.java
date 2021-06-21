@@ -1,28 +1,28 @@
 package no.nav.foreldrepenger.autotest.util;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper;
 
-public class AllureHelper {
+public final class AllureHelper {
 
-    @Step("Henter aksjonspunkter: {aksjonspunkter}")
-    public static void debugListUtAksjonspunkter(String aksjonspunkter) {
+    private AllureHelper() {
     }
 
     @Step("Informasjon om behandling:")
     public static void debugLoggBehandling(Behandling behandling) {
-        String json = toJson(behandling);
-        debugJson(json);
+        debugJson(toJson(behandling));
     }
 
     @Step("Informasjon om behandlinger: ")
@@ -32,11 +32,8 @@ public class AllureHelper {
         }
     }
 
-    @Step("Informasjon om behandlinger: {tekst} ")
-    public static void debugLoggBehandlingsliste(String tekst, List<Behandling> behandlinger) {
-        for (Behandling behandling : behandlinger) {
-            debugLoggBehandling(behandling);
-        }
+    @Step("[{behandlingsUUID}] Venter på behandlingsstatus {status}")
+    public static void debugBehandlingsstatus(BehandlingStatus status, UUID behandlingsUUID) {
     }
 
     @Step("Sender inn dokument {type} med innhold:")
@@ -63,19 +60,17 @@ public class AllureHelper {
 
     @Step("Informasjon om aksjonspunkt:")
     public static void debugAksjonspunkt(Aksjonspunkt aksjonspunkt) {
-
+        debugJson(toJson(aksjonspunkt));
     }
 
-    @Step("{aksjonspunkt}")
-    public static void debugAksjonspunktbekreftelse(AksjonspunktBekreftelse aksjonspunkt) {
-        String json = toJson(aksjonspunkt);
-        debugJson(json);
+    @Step("[{id}]: Behandler aksjonspunkt {aksjonspunkt.kode}")
+    public static void debugAksjonspunktbekreftelse(AksjonspunktBekreftelse aksjonspunkt, UUID id) {
+        debugJson(toJson(aksjonspunkt));
     }
 
-    @Step("Informasjon om aksjonspunktbekreftelser:")
-    public static void debugAksjonspunktbekreftelser(List<AksjonspunktBekreftelse> aksjonspunkter) {
+    public static void debugAksjonspunktbekreftelser(List<AksjonspunktBekreftelse> aksjonspunkter, UUID id) {
         for (AksjonspunktBekreftelse aksjonspunkt : aksjonspunkter) {
-            debugAksjonspunktbekreftelse(aksjonspunkt);
+            debugAksjonspunktbekreftelse(aksjonspunkt, id);
         }
     }
 

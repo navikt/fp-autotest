@@ -231,7 +231,6 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
         vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-        saksbehandler.harAksjonspunkt("5055");
         var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(KontrollerRevuderingsbehandling.class);
         saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);

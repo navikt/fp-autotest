@@ -13,7 +13,6 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErke
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandlingsliste;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -80,7 +79,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
                 .isEqualTo(FagsakStatus.UNDER_BEHANDLING);
         var saksnummerFar = sendInnSøknadFar(testscenario, fødselsdato, fpstartdatoFar);
         saksbehandler.hentFagsak(saksnummerFar);
-        debugLoggBehandlingsliste(saksbehandler.behandlinger);
         assertThat(saksbehandler.valgtFagsak.status())
                 .as("Fagsak stauts")
                 .isEqualTo(FagsakStatus.UNDER_BEHANDLING);
@@ -90,7 +88,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
 
         // Behandle ferdig mor sin sak
         saksbehandler.hentFagsak(saksnummerMor);
-        debugLoggBehandlingsliste("mors behandlinger", saksbehandler.behandlinger);
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
                 .innvilgManuellePerioder();
@@ -512,7 +509,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
         return saksnummer;
     }
 
-    @Step("Behandle søknad for mor uten overlapp")
     private long behandleSøknadForMorUtenOverlapp(TestscenarioDto testscenario, LocalDate fødselsdato) {
         var saksnummer = sendInnSøknadOgInntektMor(testscenario, fødselsdato);
 
@@ -541,7 +537,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
         return saksnummer;
     }
 
-    @Step("Behandle søknad for far uten overlapp")
     private long behandleSøknadForFarUtenOverlapp(TestscenarioDto testscenario, LocalDate fødselsdato) {
         var saksnummer = sendInnSøknadOgInntektFar(testscenario, fødselsdato, fødselsdato.plusWeeks(10).plusDays(1));
 
@@ -572,7 +567,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
         return saksnummer;
     }
 
-    @Step("Send inn endringssøknad for mor")
     private void sendInnEndringssøknadforMor(TestscenarioDto testscenario, long saksnummerMor) {
         var søkerAktørid = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
@@ -583,7 +577,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
                 saksnummerMor);
     }
 
-    @Step("Send inn endringssøknad for mor med endret uttak")
     private void sendInnEndringssøknadforMorMedEndretUttak(TestscenarioDto testscenario, long saksnummerMor) {
         var søkerAktørid = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
@@ -594,7 +587,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
                 saksnummerMor);
     }
 
-    @Step("Behandle søknad for far satt på vent")
     private long behandleSøknadForFarSattPåVent(TestscenarioDto testscenario, LocalDate fødselsdato) {
         var saksnummer = sendInnSøknadOgInntektFar(testscenario, fødselsdato, fødselsdato.plusWeeks(10).plusDays(1));
 
@@ -606,14 +598,13 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
         return saksnummer;
     }
 
-    @Step("Send inn søknad og inntekt mor")
+
     private long sendInnSøknadOgInntektMor(TestscenarioDto testscenario, LocalDate fødselsdato) {
         var saksnummer = sendInnSøknadMor(testscenario, fødselsdato);
         sendInnInntektsmeldingMor(testscenario, fødselsdato, saksnummer);
         return saksnummer;
     }
 
-    @Step("Send inn søknad mor: fødsel funnet sted mor med far")
     private long sendInnSøknadMor(TestscenarioDto testscenario, LocalDate fødselsdato) {
         var søkerAktørid = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
@@ -625,7 +616,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
 
-    @Step("Send inn søknad mor med aksjonspunkt")
     private long sendInnSøknadMorMedAksjonspunkt(TestscenarioDto testscenario, LocalDate fødselsdato) {
         var søkerAktørid = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
@@ -642,7 +632,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
 
-    @Step("Send inn inntektsmelding mor")
     private long sendInnInntektsmeldingMor(TestscenarioDto testscenario, LocalDate fødselsdato, Long saksnummer) {
         var søkerAktørid = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
@@ -660,7 +649,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
         return fordel.sendInnInntektsmelding(inntektsmelding, søkerAktørid, søkerIdent, saksnummer);
     }
 
-    @Step("Send inn søknad og inntektsmelding far")
     private long sendInnSøknadOgInntektFar(TestscenarioDto testscenario, LocalDate fødselsdato,
             LocalDate startDatoForeldrepenger) {
         var saksnummer = sendInnSøknadFar(testscenario, fødselsdato, startDatoForeldrepenger);
@@ -668,7 +656,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
         return saksnummer;
     }
 
-    @Step("Send inn søknad far")
     private long sendInnSøknadFar(TestscenarioDto testscenario, LocalDate fødselsdato,
             LocalDate startDatoForeldrepenger) {
         var søkerAktørid = testscenario.personopplysninger().annenpartAktørIdent();
@@ -684,7 +671,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
 
-    @Step("Send inn inntektsmelding far")
     private long sendInnInntektsmeldingFar(TestscenarioDto testscenario, LocalDate fødselsdato,
             LocalDate startDatoForeldrepenger, Long saksnummer) {
         var søkerAktørid = testscenario.personopplysninger().annenpartAktørIdent();

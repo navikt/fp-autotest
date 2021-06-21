@@ -19,7 +19,7 @@ public class PdlLeesahJerseyKlient extends VTPJerseyKlient {
         super();
     }
 
-    @Step("Oppretter og mottak hendelse")
+    @Step("Sender inn {personhendelseDto.type}")
     public void opprettHendelse(PersonhendelseDto personhendelseDto) {
         tilJsonOgPubliserIAllureRapport(personhendelseDto);
         LOG.info("Legger til hendelse av type: {} i PDL", personhendelseDto.getType());

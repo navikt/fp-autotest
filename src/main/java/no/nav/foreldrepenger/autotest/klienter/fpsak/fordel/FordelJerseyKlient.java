@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.fordel;
 
 import static jakarta.ws.rs.client.Entity.json;
 
-import io.qameta.allure.Step;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.BehandlendeFagsystem;
@@ -35,7 +34,6 @@ public class FordelJerseyKlient extends FpsakJerseyKlient {
                 .post(json(vurderFagsystem), BehandlendeFagsystem.class);
     }
 
-    @Step("Sender journalpost")
     public void journalpost(JournalpostMottak journalpostMottak) {
         client.target(base)
                 .path(JOURNALPOST_URL)
@@ -43,7 +41,6 @@ public class FordelJerseyKlient extends FpsakJerseyKlient {
                 .post(json(journalpostMottak));
     }
 
-    @Step("Oppretter fagsak")
     public Saksnummer fagsakOpprett(OpprettSak journalpost) {
         return client.target(base)
                 .path(FAGSAK_OPPRETT_URL)
@@ -58,7 +55,6 @@ public class FordelJerseyKlient extends FpsakJerseyKlient {
                 .post(json(id), FagsakInformasjon.class);
     }
 
-    @Step("Knytter fagsak til journalpost")
     public void fagsakKnyttJournalpost(JournalpostKnyttning knyttJournalpost) {
         client.target(base)
                 .path(FAGSAK_KNYTT_JOURNALPOST_URL)
