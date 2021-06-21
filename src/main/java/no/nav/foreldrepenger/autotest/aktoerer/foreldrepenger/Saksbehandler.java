@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -96,8 +96,7 @@ public class Saksbehandler extends Aktoer {
         hentFagsak("" + saksnummer);
     }
 
-    @Step("Hent fagsak {saksnummer}")
-    public void hentFagsak(String saksnummer) {
+    private void hentFagsak(String saksnummer) {
         valgtFagsak = fagsakKlient.getFagsak(saksnummer);
         if (valgtFagsak == null) {
             throw new RuntimeException("Kan ikke velge fagsak. fagsak er null");
@@ -128,15 +127,13 @@ public class Saksbehandler extends Aktoer {
         return valgtFagsak.status().equals(status);
     }
 
-    @Step("Refresh fagsak")
     private void refreshFagsak() {
-        hentFagsak(valgtFagsak.saksnummer());
+        hentFagsak(valgtFagsak.saksnummer().toString());
     }
 
     /*
      * Behandling
      */
-    @Step("Henter behandlinger for saksnummer {saksnummer}")
     public List<Behandling> hentAlleBehandlingerForFagsak(long saksnummer) {
         return behandlingerKlient.alle(saksnummer);
     }
@@ -172,7 +169,7 @@ public class Saksbehandler extends Aktoer {
         ventPåOgVelgBehandling(BehandlingType.INNSYN);
     }
 
-    @Step("Venter på at fagsak får behandlingstype: {behandlingstype.kode}")
+    @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
     private void ventPåOgVelgBehandling(BehandlingType behandlingstype) {
         ventTilSakHarBehandling(behandlingstype);
         var behandling = behandlinger.stream()
@@ -202,8 +199,8 @@ public class Saksbehandler extends Aktoer {
     /*
      * Behandlingsstatus
      */
-    @Step("Venter på behandlingsstatus {status}")
     public void ventTilBehandlingsstatus(BehandlingStatus status) {
+        debugBehandlingsstatus(status, valgtBehandling.uuid);
         if (harBehandlingsstatus(status)) {
             return;
         }
@@ -214,7 +211,6 @@ public class Saksbehandler extends Aktoer {
                 + valgtFagsak.saksnummer());
     }
 
-    @Step("Refresh behandling")
     private void refreshBehandling() {
         velgBehandling(valgtBehandling);
     }
@@ -227,10 +223,8 @@ public class Saksbehandler extends Aktoer {
         return valgtBehandling.status;
     }
 
-    @Step("Velger behandling")
-    private void velgBehandling(Behandling behandling) {
-        debugLoggBehandling(behandling);
 
+    private void velgBehandling(Behandling behandling) {
         // Sjekker om behandlingen prosesserer. Siden vi vil vente på at den er ferdig for å få den siste
         // behandling.versjon. Og å hindre at tester henter data fra behandlingen som kan endre seg ettersom
         // behandlingen ikke har stoppet opp
@@ -253,7 +247,7 @@ public class Saksbehandler extends Aktoer {
                         .append(prosessTaskListItemDto.status())
                         .append("\n");
             }
-            return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList.toString();
+            return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
         });
     }
 
@@ -267,19 +261,16 @@ public class Saksbehandler extends Aktoer {
                 AllureHelper.debugFritekst("Prosesstask feilet i behandlingsverifisering: " + status.getMessage());
                 throw new IllegalStateException("Prosesstask i vrang tilstand: " + status.getMessage());
             } else {
-                AllureHelper.debugFritekst("Prossesstask DELAYED: " + status.getMessage());
                 return false;
             }
         } else if (status.isPending()) {
             return false;
         } else {
-            AllureHelper.debugFritekst("Prosesstask feilet for behandling[" + behandling.uuid
-                    + "] i behandlingsverifisering: " + status.getMessage());
             throw new RuntimeException("Status for behandling " + behandling.uuid + " feilet: " + status.getMessage());
         }
     }
 
-    @Step("Populerer behandling")
+
     private void populateBehandling(Behandling behandling) {
 
         behandling.setAksjonspunkter(new Lazy<>(() -> behandlingerKlient.getBehandlingAksjonspunkt(behandling.uuid)));
@@ -353,10 +344,10 @@ public class Saksbehandler extends Aktoer {
     /*
      * Opretter behandling på nåværende fagsak
      */
-    @Step("Oppretter behandling på gitt fagsak")
+    @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {valgtFagsak.saksnummer}")
     public void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak) {
         opprettBehandling(behandlingstype, årsak, valgtFagsak);
-        hentFagsak(valgtFagsak.saksnummer());
+        hentFagsak(valgtFagsak.saksnummer().toString());
     }
 
     private void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak, Fagsak fagsak) {
@@ -410,7 +401,6 @@ public class Saksbehandler extends Aktoer {
                 .collect(Collectors.toList());
     }
 
-    @Step("Henter ut unike aktivitetstatuser i beregning")
     public Set<AktivitetStatus> hentUnikeBeregningAktivitetStatus() {
         return valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().stream()
                 .flatMap(p -> p.getAndeler().stream())
@@ -421,10 +411,14 @@ public class Saksbehandler extends Aktoer {
     /*
      * Henter aksjonspunkt bekreftelse av gitt klasse
      */
-    @Step("Henter aksjonspunktbekreftelse for {type}")
+
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) {
         var aksjonspunktKode = type.getDeclaredAnnotation(BekreftelseKode.class).kode();
-        var aksjonspunkt = hentAksjonspunkt(aksjonspunktKode);
+        return hentAksjonspunktbekreftelse(aksjonspunktKode);
+    }
+
+    public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(String kode) {
+        var aksjonspunkt = hentAksjonspunkt(kode);
         var bekreftelse = aksjonspunkt.getBekreftelse();
         bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
         return (T) bekreftelse;
@@ -433,7 +427,6 @@ public class Saksbehandler extends Aktoer {
     /*
      * Henter aksjonspunkt av gitt kode
      */
-    @Step("Henter aksjonspunkt {kode}")
     public Aksjonspunkt hentAksjonspunkt(String kode) {
         return valgtBehandling.getAksjonspunkter().stream()
                 .filter(ap -> ap.getDefinisjon().kode.equals(kode))
@@ -441,7 +434,6 @@ public class Saksbehandler extends Aktoer {
                 .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode));
     }
 
-    @Step("Henter aksjonspunkt som skal til totrinns kontroll")
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
         return valgtBehandling.getAksjonspunkter().stream()
                 .filter(Aksjonspunkt::skalTilToTrinnsBehandling)
@@ -451,9 +443,7 @@ public class Saksbehandler extends Aktoer {
     /*
      * Sjekker om aksjonspunkt av gitt kode er på behandlingen
      */
-    @Step("Sjekker om aksjonspunkt av gitt kode er på behandling")
     public boolean harAksjonspunkt(String kode) {
-        debugLoggBehandling(valgtBehandling);
         try {
             return hentAksjonspunkt(kode) != null;
         } catch (Exception e) {
@@ -464,42 +454,36 @@ public class Saksbehandler extends Aktoer {
     /*
      * Bekrefte aksjonspunkt bekreftelse
      */
-    @Step("Henter og bekrefter aksjonspunkt for {type}")
     public <T extends AksjonspunktBekreftelse> void bekreftAksjonspunktMedDefaultVerdier(Class<T> type) {
         bekreftAksjonspunkt(hentAksjonspunktbekreftelse(type));
     }
 
     public void bekreftAksjonspunkt(AksjonspunktBekreftelse bekreftelse) {
-        List<AksjonspunktBekreftelse> bekreftelser = new ArrayList<>();
-        bekreftelser.add(bekreftelse);
-        bekreftAksjonspunktbekreftelserer(bekreftelser);
+        bekreftAksjonspunktbekreftelserer(List.of(bekreftelse));
     }
 
     public void bekreftAksjonspunktbekreftelserer(AksjonspunktBekreftelse... bekreftelser) {
         bekreftAksjonspunktbekreftelserer(Arrays.asList(bekreftelser));
     }
 
-    @Step("Bekrefter aksjonspunktbekreftelser")
+//    @Step("Bekrefter aksjonspunktbekreftelser")
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
-        debugAksjonspunktbekreftelser(bekreftelser);
+        debugAksjonspunktbekreftelser(bekreftelser, valgtBehandling.uuid);
         BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
     }
 
-    @Step("Fatter vedtak og venter til sak er avsluttet")
     public void fattVedtakOgVentTilAvsluttetBehandling(FatterVedtakBekreftelse bekreftelse) {
         bekreftAksjonspunkt(bekreftelse);
         ventTilAvsluttetBehandling();
     }
 
-    @Step("Fatter vedtak uten totrinnsbehandling og venter til sak er avsluttet")
     public void fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling() {
         bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
         ventTilAvsluttetBehandling();
     }
 
-    @Step("Venter til saken er avsluttet")
     public void ventTilAvsluttetBehandling() {
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
     }
@@ -514,7 +498,7 @@ public class Saksbehandler extends Aktoer {
         overstyr(bekreftelser);
     }
 
-    @Step("Overstyrer aksjonspunkt")
+    @Step("Overstyrer aksjonspunkter")
     public void overstyr(List<AksjonspunktBekreftelse> bekreftelser) {
         OverstyrAksjonspunkter aksjonspunkter = new OverstyrAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
         behandlingerKlient.overstyr(aksjonspunkter);
@@ -524,7 +508,6 @@ public class Saksbehandler extends Aktoer {
     /*
      * Historikkinnslag
      */
-    @Step("Venter på historikkinnslag {type}")
     public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
         Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.uuid),
                 60, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
@@ -588,7 +571,6 @@ public class Saksbehandler extends Aktoer {
         return hentVilkår(vilkårKode).getVilkarStatus();
     }
 
-    @Step("Henter prosesstasker for behandling")
     private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
         var filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
         var prosesstasker = prosesstaskKlient.list(filter);
@@ -616,7 +598,6 @@ public class Saksbehandler extends Aktoer {
     /*
      * Risikovurderingsklient
      */
-    @Step("Venter til risikovurdering har status: {status}")
     public void ventTilRisikoKlassefiseringsstatus(String status) {
         Vent.til(() -> {
             RisikovurderingResponse response = getRisikovurdering(valgtBehandling.uuid.toString());

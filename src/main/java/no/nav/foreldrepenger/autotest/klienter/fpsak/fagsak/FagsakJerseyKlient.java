@@ -4,7 +4,6 @@ import static jakarta.ws.rs.client.Entity.json;
 
 import java.util.List;
 
-import io.qameta.allure.Step;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
@@ -34,7 +33,7 @@ public class FagsakJerseyKlient extends FpsakJerseyKlient {
                 .get(Status.class);
     }
 
-    @Step("Henter fagsak {saksnummer}")
+
     public Fagsak getFagsak(String saksnummer) {
         return client.target(base)
                 .path(FAGSAK_URL)
@@ -47,7 +46,6 @@ public class FagsakJerseyKlient extends FpsakJerseyKlient {
         return søk(new Sok(fnr.toString()));
     }
 
-    @Step("Søker etter fagsak {søk}")
     public List<Fagsak> søk(String søk) {
         return søk(new Sok(søk));
     }

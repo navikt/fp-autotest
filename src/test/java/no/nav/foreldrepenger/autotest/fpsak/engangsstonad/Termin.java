@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.foreldrepenger.engangsstonad;
+package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
@@ -18,6 +19,7 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.oauth2.AzureAdJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
 import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
+import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
@@ -62,6 +64,7 @@ public class Innsender extends Aktoer {
         sendInnInnteksmeldingFpfordel(List.of(inntektsmelding), fnr, saksnummer);
     }
 
+    @Step("Sender inn IM for bruker {fnr}")
     public void sendInnInnteksmeldingFpfordel(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr, Long saksnummer) {
         var antallGamleInntekstmeldinger = hentAntallHistorikkInnslagAvTypenVedleggMottatt(saksnummer);
         journalførInnteksmeldinger(inntektsmeldinger, fnr);
@@ -78,9 +81,11 @@ public class Innsender extends Aktoer {
         }
     }
 
+    @Step("[{søknad.søker.søknadsRolle}]: Sender inn søknad: {fnr}")
     public Long sendInnSøknad(Fødselsnummer fnr, Søknad søknad) {
         LOG.info("Sender inn søknadd for bruker {}", fnr);
         var token = oauth2Klient.hentAccessTokenForBruker(fnr);
+        AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var kvittering = mottakKlient.sendSøknad(token, søknad);
         assertTrue(kvittering.erVellykket(), "Innsending av søknad til fpsoknad-mottak feilet!");
         var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);

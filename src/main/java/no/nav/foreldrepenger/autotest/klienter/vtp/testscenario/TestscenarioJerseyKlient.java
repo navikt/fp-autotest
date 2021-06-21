@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.testscenario;
 
 import static jakarta.ws.rs.client.Entity.json;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.tilJsonOgPubliserIAllureRapport;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class TestscenarioJerseyKlient extends VTPJerseyKlient {
         super();
     }
 
-    @Step("Oppretter testscenario {key} fra Json fil lokalisert i Autotest")
+    @Step("Oppretter familie/scenario #{key}")
     public TestscenarioDto opprettTestscenarioMedAktorId(String key, String aktorId, String ident) {
         var testscenarioObject = testscenarioHenter.hentScenario(key);
         var testscenarioDto = client.target(base)
@@ -35,25 +36,30 @@ public class TestscenarioJerseyKlient extends VTPJerseyKlient {
                 .queryParam("ident1", ident)
                 .request()
                 .post(json(testscenarioObject), TestscenarioDto.class);
+        oppdaterCallIdOgLeggTilModellIAllureRapport(testscenarioObject);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
                 testscenarioDto.personopplysninger().søkerIdent());
         return testscenarioDto;
     }
 
-    @Step("Oppretter testscenario {key} fra Json fil lokalisert i Autotest")
+    @Step("Oppretter familie/scenario #{key}")
     public TestscenarioDto opprettTestscenario(String key) {
         var testscenarioObject = testscenarioHenter.hentScenario(key);
         var testscenarioDto = client.target(base)
                 .path(TESTSCENARIO_I_AUTOTEST_POST_URL)
                 .request()
                 .post(json(testscenarioObject), TestscenarioDto.class);
-        LoggFormater.setCallId();
+        oppdaterCallIdOgLeggTilModellIAllureRapport(testscenarioObject);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
                 testscenarioDto.personopplysninger().søkerIdent());
         return testscenarioDto;
     }
 
-    @Step("Henter alle instansierte testdatascenarier")
+    private void oppdaterCallIdOgLeggTilModellIAllureRapport(Object testscenarioObject) {
+        LoggFormater.setCallId();
+        tilJsonOgPubliserIAllureRapport(testscenarioObject);
+    }
+
     public List<TestscenarioDto> hentAlleScenarier() {
         return client.target(base)
                 .path(TESTSCENARIO_I_AUTOTEST_POST_URL)

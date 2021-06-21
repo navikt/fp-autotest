@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.util.testscenario;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.Map;
@@ -24,7 +23,7 @@ import no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper;
 public class TestscenarioHenter {
 
     private static final String PATH_TIL_SCENARIO = "scenarios/";
-    private static final String PERSONOPPLYSNING_JSON_FIL_NAVN = "personopplysning.json";
+    private static final String PERSONOPPLYSNING_JSON_FIL_NAVN = "personopplysninger.json";
     private static final String INNTEKTYTELSE_SØKER_JSON_FIL_NAVN = "inntektytelse-søker.json";
     private static final String INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN = "inntektytelse-annenpart.json";
     private static final String ORGANISASJON_JSON_FIL_NAVN = "organisasjon.json";
@@ -39,24 +38,25 @@ public class TestscenarioHenter {
     }
 
     private Object LesOgReturnerScenarioFraJsonfil(String scenarioId) {
-        String scenarioNavn = henterNavnPåScenarioMappe(scenarioId).orElseThrow(() ->
+        var scenarioNavn = henterNavnPåScenarioMappe(scenarioId).orElseThrow(() ->
                 new RuntimeException("Fant ikke scenario med scenario nummer [" + scenarioId + "]"));
 
-        final ObjectNode root = MAPPER.createObjectNode();
+        final var root = MAPPER.createObjectNode();
         root.set("scenario-navn", MAPPER.convertValue(scenarioNavn, new TypeReference<>() {}));
-        lesFilOgLeggTilIObjectNode(scenarioNavn, root, PERSONOPPLYSNING_JSON_FIL_NAVN, "personopplysninger");
-        lesFilOgLeggTilIObjectNode(scenarioNavn, root, INNTEKTYTELSE_SØKER_JSON_FIL_NAVN, "inntektytelse-søker");
-        lesFilOgLeggTilIObjectNode(scenarioNavn, root, INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN,   "inntektytelse-annenpart");
-        lesFilOgLeggTilIObjectNode(scenarioNavn, root, ORGANISASJON_JSON_FIL_NAVN, "organisasjon");
-        lesFilOgLeggTilIObjectNode(scenarioNavn, root, VARS_JSON_FIL_NAVN, "vars");
+        lesFilOgLeggTilIObjectNode(scenarioNavn, root, PERSONOPPLYSNING_JSON_FIL_NAVN);
+        lesFilOgLeggTilIObjectNode(scenarioNavn, root, INNTEKTYTELSE_SØKER_JSON_FIL_NAVN);
+        lesFilOgLeggTilIObjectNode(scenarioNavn, root, INNTEKTYTELSE_ANNENPART_JSON_FIL_NAVN);
+        lesFilOgLeggTilIObjectNode(scenarioNavn, root, ORGANISASJON_JSON_FIL_NAVN);
+        lesFilOgLeggTilIObjectNode(scenarioNavn, root, VARS_JSON_FIL_NAVN);
         return MAPPER.convertValue(root, new TypeReference<>() {});
     }
 
 
-    private void lesFilOgLeggTilIObjectNode(String navnPåMappen, ObjectNode root, String jsonFilNavn, String navnPåNøkkel) {
-        try (InputStream is = TestscenarioHenter.class.getResourceAsStream("/" + PATH_TIL_SCENARIO + navnPåMappen + "/" + jsonFilNavn)) {
+    private void lesFilOgLeggTilIObjectNode(String navnPåMappen, ObjectNode root, String jsonFilNavn) {
+        try (var is = TestscenarioHenter.class.getResourceAsStream("/" + PATH_TIL_SCENARIO + navnPåMappen + "/" + jsonFilNavn)) {
             if (is != null) {
-                JsonNode verdiAvNøkkel = MAPPER.readValue(is, JsonNode.class);
+                var verdiAvNøkkel = MAPPER.readValue(is, JsonNode.class);
+                var navnPåNøkkel = jsonFilNavn.replace(".json", "");
                 root.set(navnPåNøkkel, verdiAvNøkkel);
             }
         } catch (IOException e) {
@@ -65,7 +65,7 @@ public class TestscenarioHenter {
     }
 
     private Optional<String> henterNavnPåScenarioMappe(String scenarioNummer) {
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(
+        try (var r = new BufferedReader(new InputStreamReader(
                 Objects.requireNonNull(this.getClass().getClassLoader().getResourceAsStream(PATH_TIL_SCENARIO))))) {
             String navnPåMappe;
             while((navnPåMappe = r.readLine()) != null) {
@@ -80,7 +80,7 @@ public class TestscenarioHenter {
     }
 
     private String henterNavnPåScenarioMappeFraJARressurs(String scenarioNummer) {
-        final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        final var jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
         if(jarFile.isFile()) {
             try (JarFile jar = new JarFile(jarFile)) {
                 final Enumeration<JarEntry> entries = jar.entries();

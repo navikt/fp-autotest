@@ -72,7 +72,7 @@ public class Fordel extends Aktoer {
     /*
      * Sender inn søkand og returnerer saksinformasjon
      */
-    @Step("Sender inn søknad")
+    @Step("[{søknad.soeker.soeknadsrolle.kode}]: Sender inn {dokumenttypeId.termnavn}")
     public long sendInnSøknad(Soeknad søknad, String aktørId, String fnr, DokumenttypeId dokumenttypeId,
             Long saksnummer) {
         String xml = null;
@@ -187,7 +187,7 @@ public class Fordel extends Aktoer {
     /*
      * Sender inn inntektsmelding og returnerer saksnummer
      */
-    @Step("Sender inn inntektsmelding")
+    @Step("Sender inn IM for fnr {fnr}")
     public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, String aktørId, String fnr,
             Long gammeltSaksnummer) {
         String xml = inntektsmelding.createInntektesmeldingXML();
@@ -214,7 +214,7 @@ public class Fordel extends Aktoer {
                         .anyMatch(h -> HistorikkinnslagType.VEDLEGG_MOTTATT.equals(h.type()));
             }, 40, "Saken har ikke mottatt inntektsmeldingen.\nHar historikk: " + historikkRef.get());
         } else {
-            Vent.til(() -> fagsakKlient.søk("" + nyttSaksnummer).size() > 0,
+            Vent.til(() -> !fagsakKlient.søk("" + nyttSaksnummer).isEmpty(),
                     40, "Opprettet ikke fagsak for inntektsmelding");
         }
 
@@ -231,7 +231,6 @@ public class Fordel extends Aktoer {
         return sendInnInntektsmeldinger(inntektsmeldinger, scenario, null);
     }
 
-    @Step("Sender inn innteksmeldinger")
     public Long sendInnInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, String aktørId, String fnr,
             Long saksnummer) {
         int gammelAntallIM = 0;
@@ -253,7 +252,6 @@ public class Fordel extends Aktoer {
         return saksnummer;
     }
 
-    @Step("Henter antall innteksmeldingerMottatt for saksnummer [{saksnummer}]")
     private int antallInntektsmeldingerMottatt(long saksnummer) {
         List<HistorikkInnslag> historikk = historikkKlient.hentHistorikk(saksnummer);
         return (int) historikk.stream()
@@ -267,7 +265,7 @@ public class Fordel extends Aktoer {
                 testscenario.personopplysninger().søkerIdent(), saksnummer);
     }
 
-    @Step("Sender inn klage for bruker")
+    @Step("Sender inn klage på saksnummer {saksnummer}")
     public long sendInnKlage(String xmlstring, TestscenarioDto scenario, Long saksnummer) {
         String aktørId = scenario.personopplysninger().søkerAktørIdent();
         String behandlingstemaOffisiellKode = "ab0047";
@@ -293,7 +291,6 @@ public class Fordel extends Aktoer {
                 dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
     }
 
-    @Step("Sender inn journalpost")
     private Long sendInnJournalpost(String xml, LocalDate mottattDato, String journalpostId,
             String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode,
             String dokumentKategori, String aktørId, Long saksnummer) {

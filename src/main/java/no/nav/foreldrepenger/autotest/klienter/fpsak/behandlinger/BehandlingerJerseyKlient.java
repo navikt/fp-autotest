@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import io.qameta.allure.Step;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -87,7 +86,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
         super(filter);
     }
 
-    @Step("Henter behandlingsdata")
     public Behandling getBehandling(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_URL)
@@ -96,7 +94,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(Behandling.class);
     }
 
-    @Step("Oppretter ny behandling")
     public void putBehandlinger(BehandlingNy behandling) {
         client.target(base)
                 .path(BEHANDLINGER_URL)
@@ -104,7 +101,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .put(json(behandling));
     }
 
-    @Step("Henter status for behandling")
     public AsyncPollingStatus statusAsObject(UUID behandlingUuid) {
         var response = client.target(base)
                 .path(BEHANDLINGER_STATUS_URL)
@@ -119,7 +115,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     }
 
 
-    @Step("Setter behandling på vent")
     public void settPaVent(BehandlingPaVent behandling) {
         client.target(base)
                 .path(BEHANDLINGER_SETT_PA_VENT_URL)
@@ -128,7 +123,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .post(json(behandling));
     }
 
-    @Step("Henlegger behandling")
+
     public void henlegg(BehandlingHenlegg behandling) {
         client.target(base)
                 .path(BEHANDLINGER_HENLEGG_URL)
@@ -137,7 +132,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .post(json(behandling));
     }
 
-    @Step("Gjenopptar behandling")
+
     public void gjenoppta(BehandlingIdPost behandling) {
         client.target(base)
                 .path(BEHANDLINGER_GJENOPPTA_URL)
@@ -146,7 +141,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .post(json(behandling));
     }
 
-    @Step("Henter alle behandlinger")
+
     public List<Behandling> alle(long saksnummer) {
         return Optional.ofNullable(client.target(base)
                 .path(BEHANDLINGER_ALLE_URL)
@@ -157,7 +152,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .orElse(List.of());
     }
 
-    @Step("Henter behandling for annenpart {saksnummer}")
+
     public Behandling annenPartBehandling(long saksnummer) {
         return client.target(base)
                 .path(BEHANDLINGER_ANNEN_PART_BEHANDLING_URL)
@@ -166,7 +161,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(Behandling.class);
     }
 
-    @Step("Henter medlemskap for behandling")
+
     public Medlem behandlingMedlemskap(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_PERSON_MEDLEMSKAP)
@@ -175,7 +170,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(Medlem.class);
     }
 
-    @Step("Henter beregningsgrunnlag for behandling")
+
     public Beregningsgrunnlag behandlingBeregningsgrunnlag(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_BEREGNINGSGRUNNALG_URL)
@@ -184,7 +179,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(Beregningsgrunnlag.class);
     }
 
-    @Step("Henter beregningsresultat engangstønad for behandling")
+
     public Beregningsresultat behandlingBeregningsresultatEngangsstønad(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_ENGANGSSTØNAD_URL)
@@ -193,7 +188,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(Beregningsresultat.class);
     }
 
-    @Step("Henter beregningsresultat foreldrepenger for behandling")
+
     public BeregningsresultatMedUttaksplan behandlingBeregningsresultatForeldrepenger(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_FORELDREPENGER_URL)
@@ -202,7 +197,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(BeregningsresultatMedUttaksplan.class);
     }
 
-    @Step("Henter ut vilkår for behanlding {behandlingUuid}")
+
     public List<Vilkar> behandlingVilkår(UUID behandlingUuid) {
         return Optional.ofNullable(client.target(base)
                 .path(BEHANDLING_VILKAAR_URL)
@@ -213,7 +208,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .orElse(List.of());
     }
 
-    @Step("Henter aksjonspunkter for behandling {behandlingUuid}")
+
     public List<Aksjonspunkt> getBehandlingAksjonspunkt(UUID behandlingUuid) {
         return Optional.ofNullable(client.target(base)
                 .path(BEHANDLING_AKSJONSPUNKT_GET_URL)
@@ -224,7 +219,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .orElse(List.of());
     }
 
-    @Step("Sender inn aksjonspunktbekreftelse.")
+
     public void postBehandlingAksjonspunkt(BekreftedeAksjonspunkter aksjonspunkter) {
         client.target(base)
                 .path(BEHANDLING_AKSJONSPUNKT_URL)
@@ -232,7 +227,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .post(json(aksjonspunkter));
     }
 
-    @Step("Overstyrer aksjonspunkter")
+
     public void overstyr(OverstyrAksjonspunkter aksjonsunkter) {
         client.target(base)
                 .path(BEHANDLING_AKSJONSPUNKT_OVERSTYR_URL)
@@ -241,7 +236,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .post(json(aksjonsunkter));
     }
 
-    @Step("Henter søknad for behandling")
+
     public Soknad behandlingSøknad(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_SOKNAD_URL)
@@ -250,7 +245,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(Soknad.class);
     }
 
-    @Step("Henter familiehendelse for behandling")
+
     public Familiehendelse behandlingFamiliehendelse(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_FAMILIE_HENDELSE_URL)
@@ -259,7 +254,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(Familiehendelse.class);
     }
 
-    @Step("Henter opptjening for behandling")
+
     public Opptjening behandlingOpptjening(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_OPPTJENING_URL)
@@ -268,7 +263,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(Opptjening.class);
     }
 
-    @Step("Henter inntekt arbeidsytelse for behandling")
+
     public InntektArbeidYtelse behandlingInntektArbeidYtelse(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_INNTEKT_ARBEID_YTELSE_URL)
@@ -277,7 +272,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(InntektArbeidYtelse.class);
     }
 
-    @Step("Henter klageinfo for behandling")
+
     public KlageInfo klage(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_KLAGE_URL)
@@ -286,7 +281,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .get(KlageInfo.class);
     }
 
-    @Step("Mellomlagrer klage")
+
     public void mellomlagre(KlageVurderingResultatAksjonspunktMellomlagringDto vurdering) {
         client.target(base)
                 .path(BEHANDLING_KLAGE_MELLOMLAGRE_URL)
@@ -298,7 +293,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     /*
      * hent stønadskontoer for behandling
      */
-    @Step("Henter stønadskontoer for behandling")
     public Saldoer behandlingUttakStonadskontoer(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_UTTAK_STONADSKONTOER_URL)
@@ -310,7 +304,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     /*
      * hent stønadskontoer for behandling gitt uttaksperioder
      */
-    @Step("Henter stønadskontoer for behandling gitt uttaksperioder")
     public Saldoer behandlingUttakStonadskontoerGittUttaksperioder(BehandlingMedUttaksperioderDto uttaksperioderDto) {
         return client.target(base)
                 .path(BEHANDLING_UTTAK_STONADSKONTOER_GITT_UTTAKSPERIODER_URL)
@@ -322,7 +315,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     /*
      * hent kontroller fakta for behandling
      */
-    @Step("Kontrollerer fakta for behandling")
     public KontrollerFaktaData behandlingKontrollerFaktaPerioder(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_UTTAK_KONTROLLER_FAKTA_PERIODER_URL)
@@ -334,7 +326,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     /*
      * hent kontroller fakta for behandling
      */
-    @Step("Kontrollerer fakta for behandling")
     public List<KontrollerAktiviteskravPeriode> behandlingKontrollerAktivitetskrav(UUID behandlingUuid) {
         return Optional.ofNullable(client.target(base)
                 .path(BEHANDLING_UTTAK_KONTROLLER_AKTIVITETSKRAV_URL)
@@ -348,7 +339,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     /*
      * hent resultat perioder for behandling
      */
-    @Step("Henter resultatperioder for behandling")
     public UttakResultatPerioder behandlingUttakResultatPerioder(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_UTTAK_RESULTAT_PERIODER_URL)
@@ -360,7 +350,6 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     /*
      * hent tilrettelegging for behandling
      */
-    @Step("Henter tilrettelegging for behandling")
     public Tilrettelegging behandlingTilrettelegging(UUID behandlingUuid) {
         return client.target(base)
                 .path(BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL)

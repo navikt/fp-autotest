@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.foreldrepenger.foreldrepenger;
+package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
@@ -37,8 +37,8 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel, men har ikke arbeidsforhold i AAREG, sender inntektsmelding")
-    @Description("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til arbeidsforhold " +
-            "basert på inntektsmelding")
+    @Description("Mor søker fødsel. Har ikke arbeidsforhold i AAREG, men det blir sendt inn en " +
+            "innteksmelding. Saksbehandler legger til arbeidsforhold basert på motatt inntektsmelding")
     void utenArbeidsforholdMenMedInntektsmelding() {
         var testscenario = opprettTestscenario("171");
 
@@ -85,7 +85,7 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("Mor søker termin uten aktiviteter i aareg. Legger til fiktivt arbeidsforhold.")
+    @DisplayName("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Legger til fiktivt arbeidsforhold.")
     @Description("Mor søker termin, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til fiktivt arbeidsforhold")
     void morSøkerTerminUtenAktiviteterIAareg() {
         // SØKNAD //

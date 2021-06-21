@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
-import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioJerseyKlient;
 import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
@@ -52,8 +51,6 @@ public class Familie {
         return new Barn(scenario.personopplysninger().fødselsdato());
     }
 
-
-    @Step("Oppretter testscenario {id} fra Json fil lokalisert i Autotest")
     private TestscenarioDto opprettTestscenario(String id) {
         return TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(id);
     }

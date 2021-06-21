@@ -5,7 +5,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import java.util.Optional;
 
-import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.dto.JournalpostIdDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
@@ -21,7 +20,6 @@ public class JournalforingJerseyKlient extends VTPJerseyKlient {
         super();
     }
 
-    @Step("Journalfører sak i VTP")
     public JournalpostIdDto journalførR(JournalpostModell journalpostModell) {
         return client.target(base)
                 .path(JOURNALFØR_JOURNALPOST)
@@ -30,7 +28,6 @@ public class JournalforingJerseyKlient extends VTPJerseyKlient {
                 .invoke(JournalpostIdDto.class);
     }
 
-    @Step("Journalfører sak i VTP")
     public JournalpostIdDto journalfør(JournalpostModell journalpostModell) {
         return client.target(base)
                 .path(JOURNALFØR_FORELDREPENGER_SØKNAD_URL_FORMAT)
@@ -41,7 +38,6 @@ public class JournalforingJerseyKlient extends VTPJerseyKlient {
                 .invoke(JournalpostIdDto.class);
     }
 
-    @Step("Knytter journalpost id {journalpostId} til sak {saksnummer} i VTP")
     public JournalpostIdDto knyttSakTilJournalpost(String journalpostId, String saksnummer) {
         return client.target(base)
                 .path(KNYTT_SAK_TIL_JOURNALPOST)
