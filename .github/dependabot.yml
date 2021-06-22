@@ -26,3 +26,5 @@ updates:
         versions: ["x", "x.x"]
       - dependency-name: "no.nav.foreldrepenger.kontrakter:*"
         versions: ["x", "x.x"]
+      - dependency-name: "no.nav.foreldrepenger.autotest.dokumentgenerator:*"
+        versions: ["x", "x.x"]
