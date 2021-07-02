@@ -344,7 +344,7 @@ public class Saksbehandler extends Aktoer {
     /*
      * Opretter behandling på nåværende fagsak
      */
-    @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {valgtFagsak.saksnummer}")
+    @Step("Oppretter {behandlingstype} på fagsak med årsak {årsak}")
     public void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak) {
         opprettBehandling(behandlingstype, årsak, valgtFagsak);
         hentFagsak(valgtFagsak.saksnummer().toString());

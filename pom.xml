@@ -62,6 +62,13 @@
             </properties>
         </profile>
         <profile>
+            <id>lovendring</id>
+            <properties>
+                <includeTestsTags>lovendring</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
             <id>utvikling</id>
             <properties>
                 <includeTestsTags>utvikling</includeTestsTags>
@@ -249,7 +256,7 @@
             <artifactId>nv-i18n</artifactId>
             <version>1.28</version>
         </dependency>
-             
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>

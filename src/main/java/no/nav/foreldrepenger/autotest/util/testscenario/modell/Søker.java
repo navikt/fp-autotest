@@ -11,8 +11,12 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
+import no.nav.foreldrepenger.autotest.søknad.builder.ForeldrepengerBuilder;
+import no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper;
+import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
 import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
+import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.NorskForelder;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
@@ -20,10 +24,12 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Innte
 public abstract class Søker {
 
     private final Fødselsnummer fødselsnummer;
+    private final Relasjoner relasjoner;
     private final InntektYtelseModell inntektYtelseModell;
 
-    Søker(Fødselsnummer fødselsnummer, InntektYtelseModell inntektYtelseModell) {
+    Søker(Fødselsnummer fødselsnummer, Relasjoner relasjoner, InntektYtelseModell inntektYtelseModell) {
         this.fødselsnummer = fødselsnummer;
+        this.relasjoner = relasjoner;
         this.inntektYtelseModell = inntektYtelseModell;
     }
 
@@ -103,7 +109,11 @@ public abstract class Søker {
         return hentNæringsinntekt(inntektYtelseModell.sigrunModell(), beregnFraOgMedÅr);
     }
 
-    public Søknad lagSøknad() {
+    public ForeldrepengerBuilder lagSøknad(SøknadYtelse ytelse, SøknadHendelse hendelse, LocalDate familiehendelse) {
+        if(ytelse.equals(SøknadYtelse.FORELDREPENGER) && hendelse.equals(SøknadHendelse.FØDSEL)) {
+            return SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(familiehendelse, BrukerRolle.MOR)
+                    .medAnnenForelder(new NorskForelder(relasjoner.annenforeldre().relatertPersonsIdent(), ""));
+        }
         return null;
     }
 
