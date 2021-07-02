@@ -1,6 +1,6 @@
 # Lokalt oppsett
 
-Standard NAV-oppsett og Oppsett for foreldrepenger trenger du bare gjøre en gang.
+**Standard NAV-oppsett** og **Oppsett for foreldrepenger** trenger du bare gjøre en gang.
 
 ## Standard NAV-oppsett
 1. Installer [Docker Desktop](https://www.docker.com/products/docker-desktop), [JDK16](https://adoptopenjdk.net/?variant=openjdk16&jvmVariant=hotspot), Git og [Maven](https://maven.apache.org/download.cgi).
@@ -13,9 +13,6 @@ Standard NAV-oppsett og Oppsett for foreldrepenger trenger du bare gjøre en gan
     `docker login ghcr.io -u DITT_GITHUBBRUKERNAVN_HER -p DITT_GENERERTE_PERSONAL_ACCESS_TOKEN_HER` eller
    
     `echo $PAT_VARIABEL_NAVN | docker login ghcr.io -u DITT_GITHUBBRUKERNAVN_HER --password-stdin`
-
-
-Ved behov for mer utfyllende informasjon, se utviklerdokumentasjon på intern Confluence.
 
 ## Oppsett for foreldrepenger
 1. Gå til katalogen der du vil ha kodeprosjektene dine og kjør `git clone git@github.com:navikt/fpsak-autotest.git`
