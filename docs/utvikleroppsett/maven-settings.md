@@ -1,53 +1,58 @@
 # Mavens "settings.xml"
 
-1. Lag en fil kalt "settings.xml" med XML-en under og lagre denne i "~/.m2".
-2. Oppdater med dine verdier for "DITT_GITHUBBRUKERNAVN_HER" og "DITT_GENERERTE_PERSONAL_ACCESS_TOKEN_HER".
+1. Sett opp settings-security.xml
+
+    * Kjør ```mvn --encrypt-master-password etvalgfrittpassord```
+    * Under mappen "~/.m2" opprett en fil med navnet "settings-security.xml" med innholder:
+
+        ```
+        <settingsSecurity>
+            <master>string som ble returnert fra kommando over</master>
+        </settingsSecurity>
+        ```
+2.  Krypter din PAT (personal access token fra tidliger):
+
+    ```mvn --encrypt-password DITT_GENERERTE_PERSONAL_ACCESS_TOKEN_HER```
+3. Lag en fil kalt "settings.xml" med XML-en under og lagre denne i "~/.m2".
+
+    * Oppdater med dine verdier for "DITT_GITHUBBRUKERNAVN_HER" og "DITT_KRYPTERT_PAT_FRA_STEG_2_HER.
 
 ```xml
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+<settings>
+    <servers>
+        <server>
+            <id>github-package-registry-navikt</id>
+            <username>DITT_GITHUBBRUKERNAVN_HER</username>
+            <password>DITT_KRYPTERT_PAT_FRA_STEG_2_HER</password>
+        </server>
+    </servers>
     <profiles>
         <profile>
-            <id>internal-repo</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
+            <id>default</id>
             <repositories>
                 <repository>
-                    <id>nexus-internal</id>
-                    <name>NAV internal Nexus</name>
-                    <url>https://repo.adeo.no/repository/maven-public</url>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
                 </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>nexus-internal</id>
-                    <name>NAV internal Nexus</name>
-                    <url>https://repo.adeo.no/repository/maven-public</url>
-                </pluginRepository>
-            </pluginRepositories>
-        </profile>
-        <profile>
-            <id>github</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <repositories>
                 <repository>
-                    <id>github-tjenestespesifikasjoner</id>
-                    <name>GitHub tjenestespesifikasjoner Apache Maven Packages</name>
-                    <url>https://maven.pkg.github.com/navikt/tjenestespesifikasjoner</url>
+                    <id>github-package-registry-navikt</id>
+                    <url>https://maven.pkg.github.com/navikt/maven-release</url>
+                </repository>
+                <repository>
+                    <id>confluent</id>
+                    <url>https://packages.confluent.io/maven/</url>
                 </repository>
             </repositories>
         </profile>
     </profiles>
-    <servers>
-        <server>
-            <id>github-tjenestespesifikasjoner</id>
-            <username>DITT_GITHUBBRUKERNAVN_HER</username>
-            <password>DITT_GENERERTE_PERSONAL_ACCESS_TOKEN_HER</password>
-        </server>
-    </servers>
+    <activeProfiles>
+        <activeProfile>default</activeProfile>
+    </activeProfiles>
 </settings>
 ```
