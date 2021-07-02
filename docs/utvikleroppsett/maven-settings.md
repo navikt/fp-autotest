@@ -10,7 +10,7 @@
             <master>string som ble returnert fra kommando over</master>
         </settingsSecurity>
         ```
-2.  Krypter din PAT (personal access token fra tidliger):
+2.  Krypter din PAT (personal access token fra tidligere):
 
     ```mvn --encrypt-password DITT_GENERERTE_PERSONAL_ACCESS_TOKEN_HER```
 3. Lag en fil kalt "settings.xml" med XML-en under og lagre denne i "~/.m2".
