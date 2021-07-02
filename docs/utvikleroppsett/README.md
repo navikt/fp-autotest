@@ -4,7 +4,7 @@
 
 ## Standard NAV-oppsett
 1. Installer [Docker Desktop](https://www.docker.com/products/docker-desktop), [JDK16](https://adoptopenjdk.net/?variant=openjdk16&jvmVariant=hotspot), Git og [Maven](https://maven.apache.org/download.cgi).
-2. Docker Desktop har maksimum 2 GiB minne som standard. Gå inn i innstillinger og endre dette til 8 GiB (gitt at du har minst 16GB minne på maskinen).
+2. Docker Desktop har maksimum 2 GiB minne som standard. Gå inn i innstillinger og endre dette til minst 8 GiB (gitt at du har minst 16GB minne på maskinen).
 3. Sett opp SSH-nøkkel for Git. Se [stegvis forklaring](github-ssh-key.md).
 4. Sett opp "Personal access tokens" for din Github-bruker som skal brukes for Maven og Docker. Se [stegvis forklaring](github-personal-access-tokens.md).
 5. Sett opp Mavens "settings.xml" for tilgang mot NAVs repositories. Se [eksempelfil og stegvis forklaring](maven-settings.md).
