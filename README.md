@@ -4,7 +4,7 @@ er fra gammelt av, hvor fpsak-autotest ble bare brukt til å teste fpsak. Nå i 
 
 Da kan man dele fpsak-autotest i to, basert på hva den tester, altså: **tester spesifikk for enkelte applikasjoner** og **verdikjedetester**.
 
-For lokalt oppsett eller utvikling se [utvikling lokalt](docs).
+For lokalt oppsett eller utvikling se [utvikling lokalt](docs/utvikleroppsett/README.md).
 
 ## Verdikjede 
 Verdikjeden som disse testene kjøres på er listet opp i tabellen nedunder med status om bygg og promotering i Github Action. 

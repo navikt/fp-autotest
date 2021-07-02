@@ -1,6 +1,21 @@
 # Lokalt oppsett
-## Krav til PC
-1. Trenger en datamaskin med 12GB RAM eller mer.
+
+Standard NAV-oppsett og Oppsett for foreldrepenger trenger du bare gjøre en gang.
+
+## Standard NAV-oppsett
+1. Installer [Docker Desktop](https://www.docker.com/products/docker-desktop), [JDK16](https://adoptopenjdk.net/?variant=openjdk16&jvmVariant=hotspot), Git og [Maven](https://maven.apache.org/download.cgi).
+2. Docker Desktop har maksimum 2 GiB minne som standard. Gå inn i innstillinger og endre dette til 8 GiB (gitt at du har minst 16GB minne på maskinen).
+3. Sett opp SSH-nøkkel for Git. Se [stegvis forklaring](github-ssh-key.md).
+4. Sett opp "Personal access tokens" for din Github-bruker som skal brukes for Maven og Docker. Se [stegvis forklaring](github-personal-access-tokens.md).
+5. Sett opp Mavens "settings.xml" for tilgang mot NAVs repositories. Se [eksempelfil og stegvis forklaring](maven-settings.md).
+6. Kjør følgende kommando for å autentisere mot ghcr.io: 
+   
+    `docker login ghcr.io -u DITT_GITHUBBRUKERNAVN_HER -p DITT_GENERERTE_PERSONAL_ACCESS_TOKEN_HER` eller
+   
+    `echo $PAT_VARIABEL_NAVN | docker login ghcr.io -u DITT_GITHUBBRUKERNAVN_HER --password-stdin`
+
+
+Ved behov for mer utfyllende informasjon, se utviklerdokumentasjon på intern Confluence.
 
 ## Oppsett for foreldrepenger
 1. Gå til katalogen der du vil ha kodeprosjektene dine og kjør `git clone git@github.com:navikt/fpsak-autotest.git`
@@ -11,9 +26,7 @@
 127.0.0.1  fptilbake fpoppdrag fpformidling fprisk fpabonennt fpfrontend fpsak fpabakus vtp oracle postgres
 ```
 
-NB. stegene over trenger du bare å gjøre en gang!
-
-## Docker Compose
+## Kjøring av fpsak-autotest via Docker Compose
 Docker Compose brukes til å sette opp verdikjeden for testing lokalt, i pipeline (GA og Jenkins), og utvikling lokalt.
 
 * Ønsker du å bruke Docker Compose for lokal utvikling se i avsnittet "Docker Compose for lokal utvikling". Dette passer for
