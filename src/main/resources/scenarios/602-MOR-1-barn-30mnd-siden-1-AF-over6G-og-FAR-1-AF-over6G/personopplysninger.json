@@ -13,7 +13,7 @@
 		"adresser": [
 			{
 				"@type": "ref",
-				"fom": "now() - P10Y",
+				"fom": "now()-P10Y",
 				"adresseType": "BOSTEDSADRESSE",
 				"land": "NOR"
 			}
@@ -38,23 +38,18 @@
 		"etternavn": "Duck",
 		"fødselsdato": "now()-P50Y",
 		"kjønn": "M",
-		"adresser": [
-			{
-				"@type": "ref",
-				"fom": "now() - P10Y",
-				"adresseType": "BOSTEDSADRESSE",
-				"land": "NOR"
-			}
-		],
 		"personstatus": [
 			{
 				"kode": "BOSA",
 				"fom": "now()-P50Y"
 			}
 		],
-		"sivilstand": [
+		"adresser": [
 			{
-				"kode": "GIFT"
+				"@type": "ref",
+				"fom": "now()-P10Y",
+				"adresseType": "BOSTEDSADRESSE",
+				"land": "NOR"
 			}
 		]
 	},
@@ -66,7 +61,7 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P13M"
+				"fødselsdato": "now()-P28M"
 			}
 		},
 		{
@@ -77,6 +72,7 @@
 			}
 		}
 	],
+
 	"familierelasjonerAnnenPart": [
 		{
 			"rolle": "BARN",
@@ -85,7 +81,7 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P13M"
+				"fødselsdato": "now()-P28M"
 			}
 		},
 		{

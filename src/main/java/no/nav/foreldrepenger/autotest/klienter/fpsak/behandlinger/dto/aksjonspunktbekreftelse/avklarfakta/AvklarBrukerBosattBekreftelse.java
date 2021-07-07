@@ -26,4 +26,9 @@ public class AvklarBrukerBosattBekreftelse extends BekreftedePerioderMalDto {
         }
         setBekreftedePerioder(bekreftedePerioderDtos);
     }
+
+    public AvklarBrukerBosattBekreftelse bekreftBosettelse() {
+        getBekreftedePerioder().forEach(p -> p.setBosattVurdering(true));
+        return this;
+    }
 }

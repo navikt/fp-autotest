@@ -24,11 +24,13 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Innte
 public abstract class Søker {
 
     private final Fødselsnummer fødselsnummer;
+    private final BrukerRolle brukerRolle;
     private final Relasjoner relasjoner;
     private final InntektYtelseModell inntektYtelseModell;
 
-    Søker(Fødselsnummer fødselsnummer, Relasjoner relasjoner, InntektYtelseModell inntektYtelseModell) {
+    Søker(Fødselsnummer fødselsnummer, BrukerRolle brukerRolle, Relasjoner relasjoner, InntektYtelseModell inntektYtelseModell) {
         this.fødselsnummer = fødselsnummer;
+        this.brukerRolle = brukerRolle;
         this.relasjoner = relasjoner;
         this.inntektYtelseModell = inntektYtelseModell;
     }
@@ -110,9 +112,16 @@ public abstract class Søker {
     }
 
     public ForeldrepengerBuilder lagSøknad(SøknadYtelse ytelse, SøknadHendelse hendelse, LocalDate familiehendelse) {
-        if(ytelse.equals(SøknadYtelse.FORELDREPENGER) && hendelse.equals(SøknadHendelse.FØDSEL)) {
-            return SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(familiehendelse, BrukerRolle.MOR)
-                    .medAnnenForelder(new NorskForelder(relasjoner.annenforeldre().relatertPersonsIdent(), ""));
+
+        if(ytelse.equals(SøknadYtelse.FORELDREPENGER)) {
+            return switch (hendelse) {
+                case FØDSEL -> SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(familiehendelse, brukerRolle)
+                        .medAnnenForelder(new NorskForelder(relasjoner.annenforeldre().relatertPersonsIdent(), ""));
+                case ADOPSJON -> SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon(familiehendelse, brukerRolle, false)
+                        .medAnnenForelder(new NorskForelder(relasjoner.annenforeldre().relatertPersonsIdent(), ""));
+                case TERMIN -> SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(familiehendelse, brukerRolle)
+                        .medAnnenForelder(new NorskForelder(relasjoner.annenforeldre().relatertPersonsIdent(), ""));
+            };
         }
         return null;
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioJerseyKlient;
+import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
 import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.personopplysning.BrukerModell;
@@ -24,10 +25,12 @@ public class Familie {
     public Mor mor() {
         if (scenario.personopplysninger().søkerKjønn().equals(BrukerModell.Kjønn.K)) {
             return new Mor(new Fødselsnummer(scenario.personopplysninger().søkerIdent()),
+                    BrukerRolle.MOR,
                     hentRelasjonerFor(new Fødselsnummer(scenario.personopplysninger().søkerIdent())),
                     scenario.scenariodataDto());
         } else if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.K)) {
             return new Mor(new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
+                    BrukerRolle.MOR,
                     hentRelasjonerFor(new Fødselsnummer(scenario.personopplysninger().annenpartIdent())),
                     scenario.scenariodataAnnenpartDto());
         } else {
@@ -39,6 +42,7 @@ public class Familie {
         if (scenario.personopplysninger().søkerKjønn().equals(BrukerModell.Kjønn.K) &&
                 scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.K)) {
             return new Mor(new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
+                    BrukerRolle.MEDMOR,
                     hentRelasjonerFor(new Fødselsnummer(scenario.personopplysninger().annenpartIdent())),
                     scenario.scenariodataAnnenpartDto());
         } else {
@@ -49,10 +53,12 @@ public class Familie {
     public Far far() {
         if (scenario.personopplysninger().søkerKjønn().equals(BrukerModell.Kjønn.M)) {
             return new Far(new Fødselsnummer(scenario.personopplysninger().søkerIdent()),
+                    BrukerRolle.FAR,
                     hentRelasjonerFor(new Fødselsnummer(scenario.personopplysninger().søkerIdent())),
                     scenario.scenariodataDto());
         } else if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.M)) {
             return new Far(new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
+                    BrukerRolle.FAR,
                     hentRelasjonerFor(new Fødselsnummer(scenario.personopplysninger().annenpartIdent())),
                     scenario.scenariodataAnnenpartDto());
         } else {
