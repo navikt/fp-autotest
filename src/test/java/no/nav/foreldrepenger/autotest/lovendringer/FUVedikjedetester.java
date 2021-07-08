@@ -84,7 +84,6 @@ public class FUVedikjedetester extends ForeldrepengerTestBase {
 
         var far = familie.far();
         var sisteUttaksdatoMor = hentSisteUttaksdatoFraForeldrepengeSøknad(søknadMor);
-
         var førsteUttaksdatoeFar = sisteUttaksdatoMor.plusDays(1);
         var fordeling = FordelingErketyper.generiskFordeling(
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.FEDREKVOTE, førsteUttaksdatoeFar, førsteUttaksdatoeFar.plusWeeks(10).minusDays(1)),
@@ -99,22 +98,46 @@ public class FUVedikjedetester extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventTilAvsluttetBehandling();
 
+        // Uttak
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder())
+                .as("Avslåtte uttaksperioder")
+                .isEmpty();
+
+        // Tilkent Ytelse verifisering
+        var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
+        assertThat(tilkjentYtelsePerioder)
+                .as("Fedrekvoten skal være delt opp i to perioden. En før og en etter opphold")
+                .hasSize(2);
+        assertThat(tilkjentYtelsePerioder.get(0).getTom())
+                .as("Første periode har tom frem til opphold")
+                .isEqualTo(førsteUttaksdatoeFar.plusWeeks(10).minusDays(1));
+        assertThat(tilkjentYtelsePerioder.get(1).getFom())
+                .as("Fom på andre periode er etter opphold")
+                .isEqualTo(førsteUttaksdatoeFar.plusMonths(4).plusWeeks(10));
+
+
         // Fødselshendelse
         var fødselsdatoBarn2 = fødselsdatoBarn1.plusMonths(13);
         var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, mor.fødselsnummer().toString(),
                 far.fødselsnummer().toString(), null, fødselsdatoBarn2);
         innsender.opprettHendelsePåKafka(fødselshendelseDto);
 
-        // TODO: Ny søknad sendes til GOSYS??
+        // Mor sender inn søknad om foreldrepenger på nytt barn.
         var søknadMor2 = mor.lagSøknad(FORELDREPENGER, FØDSEL, fødselsdatoBarn2)
                 .medMottatdato(fødselsdatoBarn2);
         var saksnummerMor2 = mor.søk(søknadMor2.build());
-
-        List<TestscenarioDto> testscenarioDtos = hentTestscenario();
         mor.arbeidsgiver().sendDefaultInntektsmeldingerFP(saksnummerMor2, fødselsdatoBarn2.minusWeeks(3));
-        // TODO: Her opprettes det ikke ny fagsak automatisk? What is wrong?
 
+        // TODO: Her sendes søknadden til GOSYS fordi, i fpfordel, så sammenlignes eldre fagsaker med opprettet tidspunkt.
+        //  Opprettet tidspunkt blir satt til dagens dato uansett, selv om den eldre fagsaken gjaldt for over ett år siden.
+        //  Vi havner dermed innenfor "VurderFagsystem FP strukturert søknad nyere sak enn 10mnd for uansett...
 
+        // Far sin behandling skal revurderes. Gå fra løpende til avsluttet.
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventTilFagsakAvsluttet();
+
+        // TODO Verifiser korrekt opphør av uttak.
 
     }
 
@@ -131,27 +154,47 @@ public class FUVedikjedetester extends ForeldrepengerTestBase {
         mor.arbeidsgiver().sendDefaultInntektsmeldingerFP(saksnummerMor, fødselsdatoBarn1.minusWeeks(3));
 
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilAvsluttetBehandling();
+        // TODO: Finn ut hvorfor vi trenger denne her for eldre saker?
+        var avklarBrukerBosattBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarBrukerBosattBekreftelse.class)
+                .bekreftBosettelse();
+        saksbehandler.bekreftAksjonspunkt(avklarBrukerBosattBekreftelse);
+
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, false);
         // TODO: Legg til verifiseringer
 
         var far = familie.far();
         var sisteUttaksdatoMor = hentSisteUttaksdatoFraForeldrepengeSøknad(søknadMor);
-        var førsteUttaksdatoeFar = sisteUttaksdatoMor.plusMonths(3);
+        var førsteUttaksdatoeFar = sisteUttaksdatoMor.plusMonths(3).plusDays(1);
         var fordeling = FordelingErketyper.generiskFordeling(
+                // Opphold 3 måneder
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.FEDREKVOTE, førsteUttaksdatoeFar, førsteUttaksdatoeFar.plusWeeks(15).minusDays(1)));
         var søknadFar = far.lagSøknad(FORELDREPENGER, FØDSEL, fødselsdatoBarn1)
                 .medFordeling(fordeling);
         var saksnummerFar =far.søk(søknadFar.build());
-        far.arbeidsgiver().sendDefaultInntektsmeldingerFP(saksnummerFar, sisteUttaksdatoMor);
+        far.arbeidsgiver().sendDefaultInntektsmeldingerFP(saksnummerFar, førsteUttaksdatoeFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        // TODO: Verifiser at oppholdsperioden ikke fører til fedrekvoten.
-        //  Orginalt regelverk: Ikke innvilget uttak pga ikke sammenhengene perioder for oppholde. Mister dermed store del av fedrekvoten etter.
-        //  Nytt regelverk: Opphold OK, mister ikke noe av fedrekvoten.
+        // Uttak
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder())
+                .as("Det skal ikke være noen avslåtte uttaksperioder!")
+                .isEmpty();
 
+        // Tilkent Ytelse verifisering
+        var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger().getPerioder();
+        assertThat(tilkjentYtelsePerioder)
+                .as("Det skal bare være en tilkjent ytelsesperiode. Ved gammelt regelverk vil det være 2 eller flere.")
+                .hasSize(1);
+        assertThat(tilkjentYtelsePerioder.get(0).getFom())
+                .as("Første tilkjent ytelsesperiode har 15 ukers varighet")
+                .isEqualTo(førsteUttaksdatoeFar);
+        assertThat(tilkjentYtelsePerioder.get(0).getTom())
+                .as("Første tilkjent ytelse periode er etter opphold")
+                .isEqualTo(førsteUttaksdatoeFar.plusWeeks(15).minusDays(1));
 
+        // TODO: Verifisering på saldo? Skal være oppbrukt, og ikke ikke negativ.
     }
 
     @Test
@@ -178,7 +221,6 @@ public class FUVedikjedetester extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        // TODO: Legg til verifiseringer
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Opphold skal ikke avslås pga ikke sammenhengende perioder")
                 .isEmpty();
@@ -197,11 +239,14 @@ public class FUVedikjedetester extends ForeldrepengerTestBase {
                 null, null, fødselsdatoBarn2);
         innsender.opprettHendelsePåKafka(fødselshendelseDto);
 
-
-        // TODO: Ny søknad sendes til GOSYS??
         var søknadMor2 = mor.lagSøknad(FORELDREPENGER, FØDSEL, fødselsdatoBarn2)
                 .medMottatdato(fødselsdatoBarn2.plusWeeks(2));
         var saksnummerMor2 = mor.søk(søknadMor2.build());
+
+        // TODO: Her sendes søknadden til GOSYS fordi, i fpfordel, så sammenlignes eldre fagsaker med opprettet tidspunkt.
+        //  Opprettet tidspunkt blir satt til dagens dato uansett, selv om den eldre fagsaken gjaldt for over ett år siden.
+        //  Vi havner dermed innenfor "VurderFagsystem FP strukturert søknad nyere sak enn 10mnd for uansett...
+
     }
 
 
@@ -209,7 +254,7 @@ public class FUVedikjedetester extends ForeldrepengerTestBase {
     @DisplayName("4: Mor, adopsjon, syk innenfor de første 6 ukene")
     @Description("Mor, adopsjon, syk innenfor de første 6 ukene. Sjekk at mor ikke må søke utsettelse for sykdom.")
     void morAdopsjonSykInnenforDeFørste6Ukene() {
-        var familie = new Familie(501);
+        var familie = new Familie(610);
         var overtagelsesdato = LocalDate.now().minusWeeks(4);
         var mor = familie.mor();
         var fordeling = generiskFordeling(
@@ -231,6 +276,20 @@ public class FUVedikjedetester extends ForeldrepengerTestBase {
 
         saksbehandler.ventTilAvsluttetBehandling();
         // TODO: Legg til verifiseringer
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder())
+                .as("Avslåtte uttaksperioder for behandling")
+                .isEmpty();
+        var uttakResultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
+        assertThat(uttakResultatPerioder)
+                .as("Forventer samme antall perioder som i fordelingen i søknadden")
+                .hasSize(3);
+        var stønadskontoer = saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer();
+        assertThat(stønadskontoer.get(Stønadskonto.MØDREKVOTE).getSaldo())
+                .as("Verifsier at MØDREKOVTEN er brukt opp og ikke i minus!")
+                .isZero();
+        assertThat(stønadskontoer.get(Stønadskonto.FELLESPERIODE).getSaldo())
+                .as("Verifsier at FELLESPERIODEN er brukt opp og ikke i minus!")
+                .isZero();
     }
 
 

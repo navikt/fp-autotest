@@ -182,7 +182,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
-
         // Verifiser riktig justering av kontoer og uttak.
         saldoer = saksbehandler.valgtBehandling.getSaldoer();
         assertThat(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo())
@@ -191,6 +190,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         assertThat(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo())
                 .as("Saldo for stønadskontoen FORELDREPENGER")
                 .isEqualTo(70);
+
     }
 
     @Test

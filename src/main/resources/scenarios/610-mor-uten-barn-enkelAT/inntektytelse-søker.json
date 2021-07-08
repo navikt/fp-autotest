@@ -2,8 +2,8 @@
 	"inntektskomponent": {
 		"inntektsperioder": [
 			{
-				"fom": "now() - P4Y",
-				"beløp": 40000,
+				"fom": "now() - P2Y",
+				"beløp": 50000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
@@ -23,7 +23,7 @@
 
 				"arbeidsavtaler" : [
 					{
-						"fomGyldighetsperiode": "now() - P4Y",
+						"fomGyldighetsperiode": "now() - P2Y",
 						"sisteLønnsendringsdato": "now() - P1M",
 						"avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "40",

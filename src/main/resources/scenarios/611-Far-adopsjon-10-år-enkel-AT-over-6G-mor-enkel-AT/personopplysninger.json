@@ -4,12 +4,16 @@
 		"ident": "${for1}",
 		"fornavn": "Dolly",
 		"etternavn": "Duck",
-		"fødselsdato": "now()-P20Y",
-		"kjønn": "K",
+		"fødselsdato": "now()-P50Y",
+		"kjønn": "M",
+		"geografiskTilknytning": {
+			"type": "Land",
+			"kode": "NOR"
+		},
 		"adresser": [
 			{
 				"@type": "ref",
-				"fom": "now() - P10Y",
+				"fom": "now() - P1Y",
 				"adresseType": "BOSTEDSADRESSE",
 				"land": "NOR"
 			}
@@ -17,8 +21,7 @@
 		"personstatus": [
 			{
 				"kode": "BOSA",
-                "fom": "now()-P20Y",
-				"tom": "now()"
+                "fom": "now()-P50Y"
 			}
 		],
 		"sivilstand": [
@@ -33,25 +36,20 @@
 		"ident": "${for2}",
 		"fornavn": "Donaldo",
 		"etternavn": "Duck",
-		"fødselsdato": "now()-P22Y",
-		"kjønn": "M",
-		"adresser": [
-			{
-				"@type": "ref",
-				"fom": "now() - P5M",
-				"adresseType": "BOSTEDSADRESSE",
-				"land": "NOR"
-			}
-		],
+		"fødselsdato": "now()-P50Y",
+		"kjønn": "K",
 		"personstatus": [
 			{
 				"kode": "BOSA",
-				"fom": "now()-P5M"
+				"fom": "now()-P50Y"
 			}
 		],
-		"sivilstand": [
+		"adresser": [
 			{
-				"kode": "GIFT"
+				"@type": "ref",
+				"fom": "now() - P1Y",
+				"adresseType": "BOSTEDSADRESSE",
+				"land": "NOR"
 			}
 		]
 	},
@@ -63,7 +61,7 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P13M"
+				"fødselsdato": "now()-P10Y"
 			}
 		},
 		{
@@ -82,7 +80,7 @@
 				"ident": "${barn1}",
 				"fornavn": "${nevø1}",
 				"etternavn": "Duck",
-				"fødselsdato": "now()-P13M"
+				"fødselsdato": "now()-P10Y"
 			}
 		},
 		{
@@ -96,14 +94,14 @@
 
 	"familierelasjonerBarn": [
 		{
-			"rolle": "MORA",
+			"rolle": "FARA",
 			"til": {
 				"@type": "søker",
 				"ident": "${for1}"
 			}
 		},
 		{
-			"rolle": "FARA",
+			"rolle": "MORA",
 			"til": {
 				"@type": "annenPart",
 				"ident": "${for2}"

@@ -2,8 +2,9 @@
 	"inntektskomponent": {
 		"inntektsperioder": [
 			{
-				"fom": "now() - P4Y",
-				"beløp": 40000,
+				"fom": "now() - P2Y",
+				"tom": "now()",
+				"beløp": 60000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
@@ -16,40 +17,23 @@
 			{
 				"arbeidsforholdId": "ARB001-001",
 
-				"ansettelsesperiodeFom": "now() - P4Y",
+				"ansettelsesperiodeFom": "now() - P2Y",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
 				"arbeidsgiverOrgnr": "910909088",
 
 
 				"arbeidsavtaler" : [
 					{
-						"fomGyldighetsperiode": "now() - P4Y",
+						"fomGyldighetsperiode": "now() - P2Y",
 						"sisteLønnsendringsdato": "now() - P1M",
 						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "40",
+						"avtaltArbeidstimerPerUke": "20",
 						"stillingsprosent" : 100,
-						"beregnetAntallTimerPerUke": "40"
+						"beregnetAntallTimerPerUke": "20"
 					}
 				]
 
 			}
 		]
-	},
-	"sigrun": {
-		"inntektsår": [
-			{
-				"år": "2016",
-				"oppføring": [
-					{
-						"tekniskNavn": "ettellerannet",
-						"beløp": 5000
-					},
-					{
-						"tekniskNavn": "noeannet",
-						"beløp": 6000
-					}
-				]
-			}
-		]
 	}
-}
+ }

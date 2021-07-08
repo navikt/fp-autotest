@@ -1,0 +1,66 @@
+{
+	"søker": {
+		"@type": "søker",
+		"ident": "${for1}",
+		"fornavn": "Dolly",
+		"etternavn": "Duck",
+		"fødselsdato": "now()-P19Y",
+		"kjønn": "K",
+		"geografiskTilknytning": {
+			"type": "Land",
+			"kode": "NOR"
+		},
+		"adresser": [
+			{
+				"@type": "ref",
+				"fom": "now() - P1Y",
+				"adresseType": "BOSTEDSADRESSE",
+				"land": "NOR"
+			}
+		],
+		"personstatus": [
+			{
+				"kode": "BOSA",
+                "fom": "now()-P19Y"
+			}
+		],
+		"sivilstand": [
+			{
+				"kode": "GIFT"
+			}
+		],
+		"medlemskap": {}
+	},
+	"annenPart": {
+		"@type": "annenPart",
+		"ident": "${for2}",
+		"fornavn": "Donaldo",
+		"etternavn": "Duck",
+		"fødselsdato": "now()-P29Y",
+		"kjønn": "M",
+		"personstatus": [
+			{
+				"kode": "BOSA",
+				"fom": "now()-P29Y"
+			}
+		]
+	},
+	"familierelasjoner": [
+		{
+			"rolle": "EKTE",
+			"til": {
+				"@type": "annenPart",
+				"ident": "${for2}"
+			}
+		}
+	],
+	"familierelasjonerAnnenPart": [
+		{
+			"rolle": "EKTE",
+			"til": {
+				"@type": "annenPart",
+				"ident": "${for1}"
+			}
+		}
+	]
+}
