@@ -19,7 +19,7 @@
         <vtp.versjon>1.0.15</vtp.versjon>
         <dokumentgenerator.version>1.0.0</dokumentgenerator.version>
         <aspectj.version>1.9.7</aspectj.version>
-        <jackson.version>2.12.3</jackson.version>
+        <jackson.version>2.12.4</jackson.version>
         <jersey.version>3.0.2</jersey.version>
     </properties>
 
