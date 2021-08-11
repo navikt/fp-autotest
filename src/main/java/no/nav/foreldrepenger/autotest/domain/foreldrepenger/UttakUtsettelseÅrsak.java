@@ -19,6 +19,7 @@ public enum UttakUtsettelseÅrsak {
     BARN_INNLAGT("BARN_INNLAGT"),
     HV_OVELSE("HV_OVELSE"),
     NAV_TILTAK("NAV_TILTAK"),
+    FRI("FRI"),
     UDEFINERT("-"),
     ;
 

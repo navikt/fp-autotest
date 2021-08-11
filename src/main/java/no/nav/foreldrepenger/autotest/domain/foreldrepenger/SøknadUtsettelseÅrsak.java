@@ -18,6 +18,7 @@ public enum SøknadUtsettelseÅrsak {
     INSTITUSJON_BARN("INSTITUSJONSOPPHOLD_BARNET"),
     HV_OVELSE("HV_OVELSE"),
     NAV_TILTAK("NAV_TILTAK"),
+    FRI("FRI"),
     UDEFINERT("-"),
     ;
 
