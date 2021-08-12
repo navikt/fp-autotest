@@ -44,13 +44,14 @@ som skal gjøre dette lettere. Scriptene som finnes der, og kan brukes til lokal
 3)  `lokal-utvikling-fpformidling-fprisk-fpabonnent.sh`: Brukes for lokal utvikling av enten FPFORMIDLING, FPRISK eller
 FPABONNENT. Dette scritet kjøres med en av følgende argumentene fpformidling, fprisk eller fpabonnent.
 4)  `lokal-utvikling-fpoppdrag-og-fptilbake.sh`: Brukes for lokal utvikling av fpoppdrag og fptilbake samtidig. 
-5)  `setup-lokal-utvikling.sh`: Brukes for lokal utvikling hvis de over ikke skulle dekke ditt behov.
+5)  `lokal-utvikling-ide.sh`: Gir deg mulighet til å skrive inn hvilke applikasjoner du vil utvikle lokalt i IDE som argumenter.
+6)  `setup-lokal-utvikling.sh`: Brukes for lokal utvikling hvis de over ikke skulle dekke ditt behov.
 
-Etter at du har kjørt enten script 1, 2, 3 eller 3 er det mulig å kjøre ned applikasjonene i Docker Compose med å kalle 
+Etter at du har kjørt enten script 1, 2, 3, 4 eller 5 er det mulig å kjøre ned applikasjonene i Docker Compose med å kalle 
 scriptet igjen med argumentet "_down_" – på lignende måte som en gjør i docker-compose.
 
 
-Skulle script 1, 2, 3 eller 4 mot formodning ikke dekke ditt behov, så kan du bruke det fjerde scriptet 
+Skulle script 1-5 mot formodning ikke dekke ditt behov, så kan du bruke det sjette scriptet 
 `setup-lokal-utvikling.sh` til å sette opp hva enn du måtte ønske. Dette scriptet brukes til å sette opp miljøvariablene
 slik at de peker ut på applikasjonene som du kjører utenfor Docker Compose. Når du kjører dette scriptet spesifiserer
 du hvilke applikasjoner du ønsker å kjøre utenfor docker-compose (og valgfritt, om du ønsker å kjøre opp mer av verdikjeden innenfor Docker Compose):
