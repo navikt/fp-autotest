@@ -7,7 +7,8 @@ public enum UtsettelsesÅrsak {
     INSTITUSJONSOPPHOLD_SØKER,
     INSTITUSJONSOPPHOLD_BARNET,
     HV_OVELSE("periode.utsettelse.hv"),
-    NAV_TILTAK("periode.utsettelse.nav");
+    NAV_TILTAK("periode.utsettelse.nav"),
+    FRI;
 
     private final String key;
 

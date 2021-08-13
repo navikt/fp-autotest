@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
+import static java.util.Set.of;
+
 import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -32,6 +34,7 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     OVERFØRING_ANNEN_PART_SYKDOM_SKADE("2021", "§14-12: Overføring oppfylt, annen part er helt avhengig av hjelp til å ta seg av barnet"),
     OVERFØRING_ANNEN_PART_INNLAGT("2022", "§14-12: Overføring oppfylt, annen part er innlagt i helseinstitusjon"),
     OVERFØRING_SØKER_HAR_ALENEOMSORG_FOR_BARNET("2023", "§14-15 første ledd: Overføring oppfylt, søker har aleneomsorg for barnet"),
+    UTSETTELSE_GYLDIG("2024", "§14-11 Gyldig utsettelse"),
     GRADERING_FELLESPERIODE_ELLER_FORELDREPENGER("2030", "§14-9, jf. §14-16: Gradering av fellesperiode/foreldrepenger"),
     GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE("2031", "§14-12, jf. §14-16: Gradering av kvote/overført kvote"),
     GRADERING_ALENEOMSORG("2032", "§14-15, jf. §14-16: Gradering foreldrepenger ved aleneomsorg"),
