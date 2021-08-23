@@ -50,7 +50,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
-@Tag("fluoritt")
 class MorOgFarSammen extends ForeldrepengerTestBase {
 
     private static final Logger logger = LoggerFactory.getLogger(MorOgFarSammen.class);
