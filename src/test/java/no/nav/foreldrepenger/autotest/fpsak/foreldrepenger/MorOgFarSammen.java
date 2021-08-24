@@ -195,58 +195,6 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("Mor og far koblet sak, kant til kant. Automatisk innvilget utsettelse")
-    @Description("Mor søker utsettelse pga arbeid og får automatisk innvilget, far søker kant i kant med mor og automatisk innvilges")
-    void morOgFar_fødsel_ettArbeidsforholdHver_kobletsak_kantTilKant_med_automatisk_utsettelse() {
-        var testscenario = opprettTestscenario("140");
-        var morIdent = testscenario.personopplysninger().søkerIdent();
-        var morAktørId = testscenario.personopplysninger().søkerAktørIdent();
-        var farIdent = testscenario.personopplysninger().annenpartIdent();
-        var farAktørId = testscenario.personopplysninger().annenpartAktørIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
-        var fpstartdatoMor = fødselsdato.minusWeeks(3);
-
-        var fordelingMor = generiskFordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
-                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10).minusDays(1)),
-                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødselsdato.plusWeeks(10),
-                        fødselsdato.plusWeeks(11).minusDays(1)),
-                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(11), fødselsdato.plusWeeks(12).minusDays(1)));
-        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, morAktørId, SøkersRolle.MOR)
-                .medFordeling(fordelingMor)
-                .medAnnenForelder(farAktørId);
-
-        var saksnummerMor = fordel.sendInnSøknad(søknadMor.build(), morAktørId, morIdent,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-
-        var inntektsmeldingerMor = makeInntektsmeldingFromTestscenario(testscenario, fpstartdatoMor);
-        fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
-        saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilAvsluttetBehandling();
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.INNVILGET);
-
-        var fordelingFar = generiskFordeling(
-                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødselsdato.plusWeeks(12), fødselsdato.plusWeeks(13).minusDays(1)),
-                uttaksperiode(FEDREKVOTE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(15).minusDays(1)));
-        var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, farAktørId, SøkersRolle.FAR)
-                .medFordeling(fordelingFar)
-                .medAnnenForelder(morAktørId);
-        var saksnummerFar = fordel.sendInnSøknad(søknadFar.build(), farAktørId, farIdent,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-
-        var inntektsmeldingerFar = makeInntektsmeldingFromTestscenarioMedIdent(testscenario, farIdent,
-                fødselsdato.plusWeeks(12), true);
-        fordel.sendInnInntektsmeldinger(inntektsmeldingerFar, farAktørId, farIdent, saksnummerFar);
-        saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.ventTilAvsluttetBehandling();
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.INNVILGET);
-    }
-
-    @Test
     @DisplayName("Far og mor søker fødsel med overlappende uttaksperiode")
     @Description("Mor søker og får innvilget. Far søker med to uker overlapp med mor (stjeling). Far får innvilget. " +
             "Berørt sak opprettet mor. Siste periode blir spittet i to og siste del blir avlsått. Det opprettes ikke" +
