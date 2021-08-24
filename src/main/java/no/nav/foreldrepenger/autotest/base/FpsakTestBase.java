@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 
 public abstract class FpsakTestBase extends TestScenarioTestBase {
 
@@ -34,6 +35,7 @@ public abstract class FpsakTestBase extends TestScenarioTestBase {
         beslutter = new Saksbehandler(Aktoer.Rolle.BESLUTTER);
         klagebehandler = new Saksbehandler(Aktoer.Rolle.KLAGEBEHANDLER);
         tbksaksbehandler = new TilbakekrevingSaksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
+        LoggFormater.setCallId();
     }
 
 

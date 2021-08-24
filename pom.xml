@@ -18,6 +18,7 @@
 
         <vtp.versjon>1.0.15</vtp.versjon>
         <dokumentgenerator.version>1.0.0</dokumentgenerator.version>
+        <felles.versjon>4.0.6</felles.versjon>
         <aspectj.version>1.9.7</aspectj.version>
         <jackson.version>2.12.4</jackson.version>
         <jersey.version>3.0.2</jersey.version>
@@ -205,6 +206,11 @@
             <artifactId>foreldrepengesoknad</artifactId>
             <version>${dokumentgenerator.version}</version>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-log</artifactId>
+            <version>${felles.versjon}</version>
+        </dependency>
 
         <!-- External dependencies -->
         <dependency>
@@ -249,7 +255,7 @@
             <artifactId>nv-i18n</artifactId>
             <version>1.28</version>
         </dependency>
-             
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>

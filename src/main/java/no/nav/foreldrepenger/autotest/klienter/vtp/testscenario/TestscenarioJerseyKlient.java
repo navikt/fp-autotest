@@ -12,7 +12,6 @@ import io.qameta.allure.Step;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPJerseyKlient;
-import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 import no.nav.foreldrepenger.autotest.util.testscenario.TestscenarioHenter;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
@@ -36,7 +35,7 @@ public class TestscenarioJerseyKlient extends VTPJerseyKlient {
                 .queryParam("ident1", ident)
                 .request()
                 .post(json(testscenarioObject), TestscenarioDto.class);
-        oppdaterCallIdOgLeggTilModellIAllureRapport(testscenarioObject);
+        tilJsonOgPubliserIAllureRapport(testscenarioObject);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
                 testscenarioDto.personopplysninger().søkerIdent());
         return testscenarioDto;
@@ -49,15 +48,10 @@ public class TestscenarioJerseyKlient extends VTPJerseyKlient {
                 .path(TESTSCENARIO_I_AUTOTEST_POST_URL)
                 .request()
                 .post(json(testscenarioObject), TestscenarioDto.class);
-        oppdaterCallIdOgLeggTilModellIAllureRapport(testscenarioObject);
+        tilJsonOgPubliserIAllureRapport(testscenarioObject);
         logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
                 testscenarioDto.personopplysninger().søkerIdent());
         return testscenarioDto;
-    }
-
-    private void oppdaterCallIdOgLeggTilModellIAllureRapport(Object testscenarioObject) {
-        LoggFormater.setCallId();
-        tilJsonOgPubliserIAllureRapport(testscenarioObject);
     }
 
     public List<TestscenarioDto> hentAlleScenarier() {
