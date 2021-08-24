@@ -49,6 +49,7 @@ public abstract class AbstractJerseyRestKlient {
                 .setRetryHandler(new HttpRequestRetryHandler())
                 .setConnectionManager(connectionManager()));
         cfg.register(new HeaderLoggingFilter());
+        cfg.register(new CallIdRequestFilter());
         cfg.property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
         filters.forEach(cfg::register);
         client = ClientBuilder.newClient(cfg);
