@@ -10,7 +10,7 @@ import jakarta.annotation.Priority;
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 
-@Priority(999999)
+@Priority(999998)
 class CallIdRequestFilter implements ClientRequestFilter {
 
     @Override
