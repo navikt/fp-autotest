@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
+import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +15,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.slf4j.MDC;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -63,6 +66,7 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
+import no.nav.vedtak.log.mdc.MDCOperations;
 
 public class Saksbehandler extends Aktoer {
 
@@ -97,6 +101,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     private void hentFagsak(String saksnummer) {
+        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer));
         valgtFagsak = fagsakKlient.getFagsak(saksnummer);
         if (valgtFagsak == null) {
             throw new RuntimeException("Kan ikke velge fagsak. fagsak er null");
@@ -344,12 +349,12 @@ public class Saksbehandler extends Aktoer {
     /*
      * Opretter behandling på nåværende fagsak
      */
-    @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {valgtFagsak.saksnummer}")
     public void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak) {
         opprettBehandling(behandlingstype, årsak, valgtFagsak);
         hentFagsak(valgtFagsak.saksnummer().toString());
     }
 
+    @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {fagsak.saksnummer}")
     private void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak, Fagsak fagsak) {
         behandlingerKlient.putBehandlinger(new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak));
     }

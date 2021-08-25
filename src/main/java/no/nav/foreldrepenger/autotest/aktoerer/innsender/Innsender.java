@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
+import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
+import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummer;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
@@ -83,27 +85,32 @@ public class Innsender extends Aktoer {
 
     @Step("[{søknad.søker.søknadsRolle}]: Sender inn søknad: {fnr}")
     public Long sendInnSøknad(Fødselsnummer fnr, Søknad søknad) {
+        var callId = leggTilCallIdForFnr(fnr);
         LOG.info("Sender inn søknadd for bruker {}", fnr);
         var token = oauth2Klient.hentAccessTokenForBruker(fnr);
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var kvittering = mottakKlient.sendSøknad(token, søknad);
         assertTrue(kvittering.erVellykket(), "Innsending av søknad til fpsoknad-mottak feilet!");
         var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);
+        leggTilCallIdforSaksnummer(callId, saksnummer);
         LOG.info("Innsending av søknad er vellykket!");
         return saksnummer;
     }
 
     public Long sendInnPapirsøknad(Fødselsnummer fnr, DokumenttypeId dokumenttypeId) {
+        var callId = leggTilCallIdForFnr(fnr);
         LOG.info("Sender inn papirsøknadd for bruker {}", fnr);
         var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null,
                 "SKAN_IM", "skanIkkeUnik.pdf", dokumenttypeId);
         journalpostKlient.journalførR(journalpostModell);
         var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);
         LOG.info("Innsending av papirsøknad er vellykket!");
+        leggTilCallIdforSaksnummer(callId, saksnummer);
         return saksnummer;
     }
 
     public void sendInnKlage(Fødselsnummer fnr) {
+        leggTilCallIdForFnr(fnr);
         var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null,
                 "SKAN_IM", null, DokumenttypeId.KLAGE_DOKUMENT);
         journalpostKlient.journalførR(journalpostModell);

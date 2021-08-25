@@ -35,7 +35,7 @@ public abstract class FpsakTestBase extends TestScenarioTestBase {
         beslutter = new Saksbehandler(Aktoer.Rolle.BESLUTTER);
         klagebehandler = new Saksbehandler(Aktoer.Rolle.KLAGEBEHANDLER);
         tbksaksbehandler = new TilbakekrevingSaksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
-        LoggFormater.setCallId();
+        LoggFormater.leggTilKjørendeTestCaseILogger();
     }
 
 
