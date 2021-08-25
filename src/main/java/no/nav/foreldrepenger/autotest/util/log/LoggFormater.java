@@ -5,7 +5,10 @@ import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.slf4j.MDC;
+
 import io.qameta.allure.Allure;
+import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public final class LoggFormater {
@@ -14,12 +17,10 @@ public final class LoggFormater {
         // Skal ikke instansieres
     }
 
-    public static void setCallId() {
+    public static void leggTilKjørendeTestCaseILogger() {
         var lifecycle = Allure.getLifecycle();
-        lifecycle.getCurrentTestCase().ifPresentOrElse(t -> lifecycle.updateTestCase(testResult -> {
-            MDCOperations.putCallId("Testcase: " + testNavn(testResult));
-            MDCOperations.putToMDC(MDC_CONSUMER_ID, UUID.randomUUID().toString());
-        }), MDCOperations::removeCallId);
+        lifecycle.getCurrentTestCase().ifPresentOrElse(t -> lifecycle.updateTestCase(testResult ->
+                MDCOperations.putCallId("Testcase: " + testNavn(testResult))), MDCOperations::removeCallId);
     }
 
     private static String testNavn(io.qameta.allure.model.TestResult testResult) {
@@ -36,5 +37,21 @@ public final class LoggFormater {
         testnavn.append(split.get(size - 1));
 
         return testnavn.toString();
+    }
+
+    public static void leggTilCallIdforSaksnummer(String callId, Long saksnummer) {
+        // Legger til Callid for saksnummer slik at vi kan slå opp riktig callid senere
+        MDCOperations.putToMDC(saksnummer.toString(), callId);
+    }
+
+    public static String leggTilCallIdForFnr(Fødselsnummer fnr) {
+        // Legger til Callid for fnr slik at vi kan slå opp riktig callid senere
+        var callId = MDC.get(fnr.toString());
+        if (callId == null || callId.isBlank()) {
+            callId = UUID.randomUUID().toString();
+            MDCOperations.putToMDC(fnr.toString(), callId);
+        }
+        MDCOperations.putToMDC(MDC_CONSUMER_ID, callId);
+        return callId;
     }
 }

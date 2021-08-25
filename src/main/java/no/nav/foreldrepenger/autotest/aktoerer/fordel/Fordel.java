@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.autotest.aktoerer.fordel;
 
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
+import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
+import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummer;
 
 import java.time.LocalDate;
 import java.util.Base64;
@@ -30,6 +32,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Historikkinns
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafJerseyKlient;
+import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.util.ControllerHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -89,6 +92,7 @@ public class Fordel extends Aktoer {
         if ((saksnummer != null) && (saksnummer != 0L)) {
             journalpostModell.setSakId(saksnummer.toString());
         }
+        var callId = leggTilCallIdForFnr(new Fødselsnummer(fnr));
         String journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
 
         String behandlingstemaOffisiellKode = finnBehandlingstemaKode(dokumenttypeId);
@@ -96,6 +100,7 @@ public class Fordel extends Aktoer {
         debugSenderInnDokument("Foreldrepengesøknad", xml);
         long sakId = sendInnJournalpost(xml, mottattDato, journalpostId, behandlingstemaOffisiellKode,
                 dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
+        leggTilCallIdforSaksnummer(callId, sakId);
         journalpostModell.setSakId(String.valueOf(sakId));
         logger.info("Sendt inn søknad på sak med saksnummer: {}", sakId);
 
