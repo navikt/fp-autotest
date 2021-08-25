@@ -68,7 +68,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
-import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.ObjectFactory;
 
 @Tag("fpsak")
@@ -1230,96 +1229,6 @@ class Fodsel extends ForeldrepengerTestBase {
         assertThat(saksbehandler.valgtBehandling.fristBehandlingPaaVent)
                 .as("Frist behandling på vent")
                 .isEqualTo(fødselsdato.plusWeeks(1).plusDays(1));
-    }
-
-    @Test
-    @DisplayName("Utsettelse av forskjellige årsaker")
-    @Description("Mor søker fødsel med mange utsettelseperioder. Hensikten er å sjekke at alle årsaker fungerer." +
-            "Kun arbeid (og ferie) skal oppgis i IM. Verifiserer på 0 trekkdager for perioder med utsettelse. " +
-            "Kun perioder som krever dokumentasjon skal bli manuelt behandlet i fakta om uttak. Ingen AP i uttak.")
-    void utsettelse_med_avvik() {
-        var testscenario = opprettTestscenario("50");
-
-        var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
-        var fødsel = testscenario.personopplysninger().fødselsdato();
-        var fpStartdato = fødsel.minusWeeks(3);
-
-        var fordeling = new Fordeling();
-        fordeling.setAnnenForelderErInformert(true);
-        var perioder = fordeling.getPerioder();
-        perioder.add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødsel.minusDays(1)));
-        perioder.add(uttaksperiode(MØDREKVOTE, fødsel, fødsel.plusWeeks(6).minusDays(1)));
-        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_BARN, fødsel.plusWeeks(6),
-                fødsel.plusWeeks(9).minusDays(1)));
-        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER, fødsel.plusWeeks(9),
-                fødsel.plusWeeks(12).minusDays(1)));
-        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.SYKDOM, fødsel.plusWeeks(12),
-                fødsel.plusWeeks(15).minusDays(1)));
-        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødsel.plusWeeks(15),
-                fødsel.plusWeeks(16).minusDays(1)));
-        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.HV_OVELSE, fødsel.plusWeeks(16),
-                fødsel.plusWeeks(17).minusDays(1)));
-        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.NAV_TILTAK, fødsel.plusWeeks(17),
-                fødsel.plusWeeks(18).minusDays(1)));
-        perioder.add(uttaksperiode(FELLESPERIODE, fødsel.plusWeeks(18),
-                fødsel.plusWeeks(21).minusDays(1)));
-
-        // sender inn søknad
-        var søknad = lagSøknadForeldrepengerFødsel(fødsel, søkerAktørId, SøkersRolle.MOR)
-                .medFordeling(fordeling);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        var inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
-                testscenario.personopplysninger().søkerIdent(),
-                fpStartdato,
-                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
-                        .arbeidsgiverOrgnr());
-        inntektsmeldinger.medUtsettelse(SøknadUtsettelseÅrsak.ARBEID.getKode(), fødsel.plusWeeks(15),
-                fødsel.plusWeeks(18).minusDays(1));
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.personopplysninger().søkerAktørIdent(),
-                testscenario.personopplysninger().søkerIdent(),
-                saksnummer);
-
-        saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaUttakPerioder = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
-                .godkjennPeriode(fødsel.plusWeeks(6), fødsel.plusWeeks(9).minusDays(1))
-                .godkjennPeriode(fødsel.plusWeeks(9), fødsel.plusWeeks(12).minusDays(1))
-                .godkjennPeriode(fødsel.plusWeeks(12), fødsel.plusWeeks(15).minusDays(1))
-                .godkjennPeriode(fødsel.plusWeeks(16), fødsel.plusWeeks(17).minusDays(1))
-                .godkjennPeriode(fødsel.plusWeeks(17), fødsel.plusWeeks(18).minusDays(1));
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-        beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-
-        assertThat(beslutter.valgtBehandling.hentUttaksperioder())
-                .as("Uttaksperioder")
-                .hasSize(9);
-        assertThat(beslutter.valgtBehandling.hentUttaksperiode(2).getAktiviteter().get(0).getTrekkdagerDesimaler())
-                .as("Antall trekkdager for aktivitet i uttaksperiode")
-                .isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(beslutter.valgtBehandling.hentUttaksperiode(3).getAktiviteter().get(0).getTrekkdagerDesimaler())
-                .as("Antall trekkdager for aktivitet i uttaksperiode")
-                .isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(beslutter.valgtBehandling.hentUttaksperiode(4).getAktiviteter().get(0).getTrekkdagerDesimaler())
-                .as("Antall trekkdager for aktivitet i uttaksperiode")
-                .isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(beslutter.valgtBehandling.hentUttaksperiode(5).getAktiviteter().get(0).getTrekkdagerDesimaler())
-                .as("Antall trekkdager for aktivitet i uttaksperiode")
-                .isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(beslutter.valgtBehandling.hentUttaksperiode(6).getAktiviteter().get(0).getTrekkdagerDesimaler())
-                .as("Antall trekkdager for aktivitet i uttaksperiode")
-                .isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(beslutter.valgtBehandling.hentUttaksperiode(7).getAktiviteter().get(0).getTrekkdagerDesimaler())
-                .as("Antall trekkdager for aktivitet i uttaksperiode")
-                .isEqualByComparingTo(BigDecimal.ZERO);
     }
 
     private UttakResultatPeriodeAktivitet finnAktivitetForArbeidsgiver(UttakResultatPeriode uttakResultatPeriode,

@@ -30,7 +30,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
-@Tag("fluoritt")
 class Klage extends ForeldrepengerTestBase {
 
     @Test
