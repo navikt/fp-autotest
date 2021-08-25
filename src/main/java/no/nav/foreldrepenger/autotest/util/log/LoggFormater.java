@@ -5,8 +5,6 @@ import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 import java.util.Arrays;
 import java.util.UUID;
 
-import org.slf4j.MDC;
-
 import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
@@ -46,11 +44,8 @@ public final class LoggFormater {
 
     public static String leggTilCallIdForFnr(Fødselsnummer fnr) {
         // Legger til Callid for fnr slik at vi kan slå opp riktig callid senere
-        var callId = MDC.get(fnr.toString());
-        if (callId == null || callId.isBlank()) {
-            callId = UUID.randomUUID().toString();
-            MDCOperations.putToMDC(fnr.toString(), callId);
-        }
+        var callId = UUID.randomUUID().toString();
+        MDCOperations.putToMDC(fnr.toString(), callId);
         MDCOperations.putToMDC(MDC_CONSUMER_ID, callId);
         return callId;
     }

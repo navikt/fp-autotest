@@ -110,6 +110,7 @@ public class Innsender extends Aktoer {
     }
 
     public void sendInnKlage(Fødselsnummer fnr) {
+        leggTilCallIdForFnr(fnr);
         var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null,
                 "SKAN_IM", null, DokumenttypeId.KLAGE_DOKUMENT);
         journalpostKlient.journalførR(journalpostModell);
