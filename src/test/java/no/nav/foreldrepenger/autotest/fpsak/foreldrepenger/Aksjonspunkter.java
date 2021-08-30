@@ -10,7 +10,6 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErke
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.overføringsperiode;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 
 import java.time.LocalDate;
@@ -24,7 +23,6 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OverføringÅrsak;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
@@ -147,7 +145,7 @@ class Aksjonspunkter extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("VURDER_FAKTA_FOR_ATFL_SN")
+    @DisplayName("5058 – VURDER_FAKTA_FOR_ATFL_SN")
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER() {
         var testscenario = opprettTestscenario("501");
         var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
@@ -158,8 +156,6 @@ class Aksjonspunkter extends ForeldrepengerTestBase {
                         fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE,
                         fødselsdato, fødselsdato.plusWeeks(10)),
-                utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER,
-                        fødselsdato.plusWeeks(10).plusDays(1), fødselsdato.plusWeeks(20).minusDays(1)),
                 uttaksperiode(FEDREKVOTE,
                         fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(30)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
@@ -202,8 +198,6 @@ class Aksjonspunkter extends ForeldrepengerTestBase {
         var fordeling = FordelingErketyper.generiskFordeling(
                 overføringsperiode(OverføringÅrsak.SYKDOM_ANNEN_FORELDER, MØDREKVOTE,
                         termindato, termindato.plusWeeks(10)),
-                utsettelsesperiode(SøknadUtsettelseÅrsak.INSTITUSJON_SØKER,
-                        termindato.plusWeeks(10).plusDays(1), termindato.plusWeeks(20).minusDays(1)),
                 uttaksperiode(FEDREKVOTE,
                         termindato.plusWeeks(20), termindato.plusWeeks(30))
 

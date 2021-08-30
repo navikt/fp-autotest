@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.INGEN_STØNADSKONTO;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingPrivateArbeidsgiver;
@@ -11,7 +10,6 @@ import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErke
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +37,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
@@ -937,8 +934,8 @@ class Fodsel extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("Mor søker gradering og utsettelse. Med to arbeidsforhold. Uten avvikende inntektsmelding")
-    @Description("Mor, med to arbeidsforhold, søker gradering og utsettelse. Samsvar med IM.")
+    @DisplayName("Mor søker gradering. Med to arbeidsforhold. Uten avvikende inntektsmelding")
+    @Description("Mor, med to arbeidsforhold, søker gradering. Samsvar med IM.")
     void morSøkerGraderingOgUtsettelseMedToArbeidsforhold_utenAvvikendeInntektsmeldinger() {
 
         var testscenario = opprettTestscenario("56");
@@ -958,9 +955,6 @@ class Fodsel extends ForeldrepengerTestBase {
         var arbeidstidsprosent = BigDecimal.TEN;
         perioder.add(graderingsperiodeArbeidstaker(FELLESPERIODE, graderingFom, graderingTom, gradetArbeidsgiver,
                 arbeidstidsprosent.intValue()));
-        var utsettelseFom = fødselsdato.plusWeeks(12).plusDays(1);
-        var utsettelseTom = fødselsdato.plusWeeks(14);
-        perioder.add(utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, utsettelseFom, utsettelseTom));
 
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
                 .medFordeling(fordeling);
@@ -992,7 +986,7 @@ class Fodsel extends ForeldrepengerTestBase {
 
         // verifiserer uttak
         var uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
-        assertThat(uttaksperioder).hasSize(5);
+        assertThat(uttaksperioder).hasSize(4);
         for (UttakResultatPeriode periode : uttaksperioder) {
             assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
             assertThat(periode.getPeriodeResultatÅrsak().getKode()).isNotEqualTo(PeriodeResultatÅrsak.UKJENT.getKode());
@@ -1045,14 +1039,6 @@ class Fodsel extends ForeldrepengerTestBase {
         assertThat(gradertAktivitet.getUtbetalingsgrad())
                 .isEqualByComparingTo(BigDecimal.valueOf(100).subtract(arbeidstidsprosent));
         assertThat(gradertAktivitet.getProsentArbeid()).isEqualTo(arbeidstidsprosent);
-        var utsettelse = uttaksperioder.get(4);
-        assertThat(utsettelse.getUtsettelseType()).isEqualTo(UttakUtsettelseÅrsak.ARBEID);
-        assertThat(utsettelse.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(utsettelse.getAktiviteter().get(0).getTrekkdagerDesimaler()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(utsettelse.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(INGEN_STØNADSKONTO);
-        assertThat(utsettelse.getAktiviteter().get(1).getUtbetalingsgrad()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(utsettelse.getAktiviteter().get(1).getTrekkdagerDesimaler()).isEqualByComparingTo(BigDecimal.ZERO);
-        assertThat(utsettelse.getAktiviteter().get(1).getStønadskontoType()).isEqualTo(INGEN_STØNADSKONTO);
 
         assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer())
                 .as("Antall stønadskonter i saldo")

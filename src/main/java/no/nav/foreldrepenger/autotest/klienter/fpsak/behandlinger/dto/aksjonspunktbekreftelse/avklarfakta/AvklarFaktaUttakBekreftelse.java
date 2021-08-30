@@ -18,14 +18,14 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
     protected List<BekreftetUttakPeriode> bekreftedePerioder = new ArrayList<>();
     protected List<BekreftetUttakPeriode> slettedePerioder = new ArrayList<>();
 
-    public AvklarFaktaUttakBekreftelse() {
+    protected AvklarFaktaUttakBekreftelse() {
         super();
     }
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         for (KontrollerFaktaPeriode periode : behandling.getKontrollerFaktaData().getPerioder()) {
-            BekreftetUttakPeriode bekreftetUttakPeriode = new BekreftetUttakPeriode(periode.getFom(),
+            var bekreftetUttakPeriode = new BekreftetUttakPeriode(periode.getFom(),
                     periode.getTom(),
                     periode.getArbeidstidsprosent(),
                     periode.getBegrunnelse(),
@@ -49,8 +49,8 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         return godkjennPeriode(fra, til, UttakPeriodeVurderingType.PERIODE_OK, dokumenterPeriode);
     }
 
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(KontrollerFaktaPeriode faktaPeriode, UttakPeriodeVurderingType godkjenningskode) {
-        godkjennPeriode(faktaPeriode.getFom(), faktaPeriode.getTom(), godkjenningskode, true);
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(KontrollerFaktaPeriode faktaPeriode) {
+        godkjennPeriode(faktaPeriode.getFom(), faktaPeriode.getTom(), UttakPeriodeVurderingType.PERIODE_OK, true);
         return this;
     }
 
@@ -62,31 +62,27 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
 
     public AvklarFaktaUttakBekreftelse delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra,
             LocalDate godkjentTil, UttakPeriodeVurderingType godkjenningskode, boolean dokumenterPeriode) {
-        BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
-
-        periode.bekreftetPeriode.setBekreftet(true);
-        periode.bekreftetPeriode.setResultat(godkjenningskode);
-        periode.bekreftetPeriode.setBegrunnelse("Godkjent av autotest");
-
+        var periode = finnUttaksperiode(fra, til);
+        godkjennPeriode(periode, godkjenningskode, dokumenterPeriode);
         periode.bekreftetPeriode.setFom(godkjentFra);
         periode.bekreftetPeriode.setTom(godkjentTil);
-        if (dokumenterPeriode) {
-            periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(godkjentFra, godkjentTil));
-        }
         return this;
     }
 
     private AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, UttakPeriodeVurderingType godkjenningskode,
             boolean dokumenterPeriode) {
-        BekreftetUttakPeriode periode = finnUttaksperiode(fra, til);
+        var periode = finnUttaksperiode(fra, til);
+        godkjennPeriode(periode, godkjenningskode, dokumenterPeriode);
+        return this;
+    }
 
+    private void godkjennPeriode(BekreftetUttakPeriode periode, UttakPeriodeVurderingType godkjenningskode, boolean dokumenterPeriode) {
         periode.bekreftetPeriode.setBekreftet(true);
         periode.bekreftetPeriode.setResultat(godkjenningskode);
         periode.bekreftetPeriode.setBegrunnelse("Godkjent av autotest");
         if (dokumenterPeriode) {
-            periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(fra, til));
+            periode.bekreftetPeriode.getDokumentertePerioder().add(new UttakDokumentasjon(periode.orginalFom, periode.orginalTom));
         }
-        return this;
     }
 
     private BekreftetUttakPeriode finnUttaksperiode(LocalDate fra, LocalDate til) {
@@ -124,6 +120,15 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         public AvklarFaktaUttakPerioder() {
             super();
         }
+
+        public AvklarFaktaUttakPerioder sykdomErDokumentertForPeriode() {
+            bekreftedePerioder.stream()
+                    .map(periode -> periode.bekreftetPeriode)
+                    .filter(kontrollerFaktaPeriode -> kontrollerFaktaPeriode.getResultat().equals(UttakPeriodeVurderingType.PERIODE_IKKE_VURDERT))
+                    .forEach(this::godkjennPeriode);
+            return this;
+        }
+
     }
 
     @BekreftelseKode(kode = "5081")

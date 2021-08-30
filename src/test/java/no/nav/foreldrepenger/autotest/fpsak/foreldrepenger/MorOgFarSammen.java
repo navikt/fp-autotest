@@ -34,7 +34,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
@@ -42,6 +41,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerBosattBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
@@ -73,6 +73,7 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
         var inntektsmeldingerMor = makeInntektsmeldingFromTestscenario(testscenario, fpstartdatoMor);
         fordel.sendInnInntektsmeldinger(inntektsmeldingerMor, morAktørId, morIdent, saksnummerMor);
         saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.harAksjonspunkt("5070");
         assertThat(saksbehandler.valgtFagsak.status())
                 .as("Fagsak stauts")
                 .isEqualTo(FagsakStatus.UNDER_BEHANDLING);
@@ -87,10 +88,10 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
 
         // Behandle ferdig mor sin sak
         saksbehandler.hentFagsak(saksnummerMor);
-        var fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .innvilgManuellePerioder();
-        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+        var avklarFaktaUttak = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
+                .sykdomErDokumentertForPeriode();
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttak);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         beslutter.hentFagsak(saksnummerMor);
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
@@ -571,7 +572,7 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
 
         var fordeling = generiskFordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødselsdato,fødselsdato.plusWeeks(6).minusDays(1)));
+                utsettelsesperiode(SøknadUtsettelseÅrsak.SYKDOM, fødselsdato,fødselsdato.plusWeeks(6).minusDays(1)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørid, SøkersRolle.MOR)
                 .medFordeling(fordeling)
                 .medAnnenForelder(annenPartAktørid);

@@ -23,6 +23,10 @@ import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Uttaksperiode;
 
 public class UttaksperioderErketyper {
 
+    private UttaksperioderErketyper() {
+        // Skal ikke instansieres
+    }
+
     public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom) {
         return uttaksperiode(stønadskonto, fom, tom, null);
     }
@@ -40,15 +44,15 @@ public class UttaksperioderErketyper {
     }
 
     public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom,
-                                              Boolean flerbarnsdager,
-                                              Boolean samtidigUttak) {
+                                              boolean flerbarnsdager,
+                                              boolean samtidigUttak) {
         return uttaksperiode(stønadskonto, fom, tom, flerbarnsdager, samtidigUttak, 100);
     }
 
     public static Uttaksperiode uttaksperiode(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom,
-                                              Boolean flerbarnsdager,
-                                              Boolean samtidigUttak, int uttaksprosent) {
-        UttaksperiodeBuilder uttaksperiodeBuilder = new UttaksperiodeBuilder(stønadskonto.getKode(), fom, tom);
+                                              boolean flerbarnsdager,
+                                              boolean samtidigUttak, int uttaksprosent) {
+        var uttaksperiodeBuilder = new UttaksperiodeBuilder(stønadskonto.getKode(), fom, tom);
         if (flerbarnsdager) {
             uttaksperiodeBuilder.medFlerbarnsdager();
         }
@@ -80,37 +84,15 @@ public class UttaksperioderErketyper {
                 .build();
     }
 
-    public static Utsettelsesperiode utsettelsesperiode(SøknadUtsettelseÅrsak utsettelseÅrsak, LocalDate fom, LocalDate tom) {
-        return utsettelsesperiode(utsettelseÅrsak, fom, tom, null);
-
-    }
-
-    public static Utsettelsesperiode utsettelsesperiode(SøknadUtsettelseÅrsak utsettelseÅrsak, LocalDate fom, LocalDate tom,
-                                                        no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.MorsAktivitet morsAktivitet) {
-        Utsettelsesperiode utsettelsesperiode = new Utsettelsesperiode();
-        utsettelsesperiode.setFom(fom);
-        utsettelsesperiode.setTom(tom);
-        if (morsAktivitet != null) {
-            var morsAktivitetIPerioden = new MorsAktivitetsTyper();
-            morsAktivitetIPerioden.setKode(morsAktivitet.name());
-            utsettelsesperiode.setMorsAktivitetIPerioden(morsAktivitetIPerioden);
-        }
-        Utsettelsesaarsaker årsaker = new Utsettelsesaarsaker();
-        årsaker.setKode(utsettelseÅrsak.getKode());
-        utsettelsesperiode.setAarsak(årsaker);
-
-        return utsettelsesperiode;
-    }
-
     public static Overfoeringsperiode overføringsperiode(OverføringÅrsak overføringÅrsak, Stønadskonto stønadskonto,
                                                          LocalDate fom, LocalDate tom) {
-        Overfoeringsaarsaker overfoeringsaarsaker = new Overfoeringsaarsaker();
+        var overfoeringsaarsaker = new Overfoeringsaarsaker();
         overfoeringsaarsaker.setKode(overføringÅrsak.name());
 
-        Uttaksperiodetyper uttaksperiodetyper = new Uttaksperiodetyper();
+        var uttaksperiodetyper = new Uttaksperiodetyper();
         uttaksperiodetyper.setKode(stønadskonto.getKode());
 
-        Overfoeringsperiode overfoeringsperiode = new Overfoeringsperiode();
+        var overfoeringsperiode = new Overfoeringsperiode();
         overfoeringsperiode.setAarsak(overfoeringsaarsaker);
         overfoeringsperiode.setOverfoeringAv(uttaksperiodetyper);
         overfoeringsperiode.setFom(fom);
@@ -119,12 +101,35 @@ public class UttaksperioderErketyper {
     }
 
     public static Oppholdsperiode oppholdsperiode(OppholdÅrsak oppholdsårsak, LocalDate fom, LocalDate tom) {
-        Oppholdsperiode oppholdsperiode = new Oppholdsperiode();
-        Oppholdsaarsaker oppholdsaarsaker = new Oppholdsaarsaker();
+        var oppholdsperiode = new Oppholdsperiode();
+        var oppholdsaarsaker = new Oppholdsaarsaker();
         oppholdsaarsaker.setKode(oppholdsårsak.getKode());
         oppholdsperiode.setAarsak(oppholdsaarsaker);
         oppholdsperiode.setFom(fom);
         oppholdsperiode.setTom(tom);
         return oppholdsperiode;
     }
+
+    public static Utsettelsesperiode utsettelsesperiode(SøknadUtsettelseÅrsak utsettelseÅrsak, LocalDate fom, LocalDate tom) {
+        return utsettelsesperiode(utsettelseÅrsak, fom, tom, null);
+
+    }
+
+    public static Utsettelsesperiode utsettelsesperiode(SøknadUtsettelseÅrsak utsettelseÅrsak, LocalDate fom, LocalDate tom,
+                                                        no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.MorsAktivitet morsAktivitet) {
+        var utsettelsesperiode = new Utsettelsesperiode();
+        utsettelsesperiode.setFom(fom);
+        utsettelsesperiode.setTom(tom);
+        if (morsAktivitet != null) {
+            var morsAktivitetIPerioden = new MorsAktivitetsTyper();
+            morsAktivitetIPerioden.setKode(morsAktivitet.name());
+            utsettelsesperiode.setMorsAktivitetIPerioden(morsAktivitetIPerioden);
+        }
+        var årsaker = new Utsettelsesaarsaker();
+        årsaker.setKode(utsettelseÅrsak.getKode());
+        utsettelsesperiode.setAarsak(årsaker);
+
+        return utsettelsesperiode;
+    }
+
 }

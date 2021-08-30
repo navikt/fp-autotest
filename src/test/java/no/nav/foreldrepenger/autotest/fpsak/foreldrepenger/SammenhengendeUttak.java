@@ -178,9 +178,10 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
                 .hasSize(4);
 
         var utsettelseFom = fødselsdato.plusWeeks(16);
-        var utsettelseTom = fødselsdato.plusWeeks(18).minusDays(1);
-        var fordelingUtsettelseEndring = FordelingErketyper.fordelingEndringssøknadUtsettelseOgForskyEksisterndePerioder(opprinneligFordeling,
-                SøknadUtsettelseÅrsak.ARBEID, utsettelseFom, utsettelseTom);
+        var fordelingUtsettelseEndring = generiskFordeling(
+                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, utsettelseFom, utsettelseFom.plusWeeks(2).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, utsettelseFom.plusWeeks(2), utsettelseFom.plusWeeks(16).minusDays(1)));
+
         var endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
                 fordelingUtsettelseEndring, saksnummer)
                 .medMottattDato(utsettelseFom.minusWeeks(3));
