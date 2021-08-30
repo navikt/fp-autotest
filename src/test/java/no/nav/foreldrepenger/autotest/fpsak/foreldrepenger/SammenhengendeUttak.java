@@ -25,7 +25,6 @@ import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
@@ -52,7 +51,7 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
             "Kun arbeid (og ferie) skal oppgis i IM. Verifiserer på 0 trekkdager for perioder med utsettelse. " +
             "Kun perioder som krever dokumentasjon skal bli manuelt behandlet i fakta om uttak. Ingen AP i uttak.")
     void utsettelse_med_avvik() {
-        var testscenario = opprettTestscenario("50");
+        var testscenario = opprettTestscenario("600");
 
         var søkerAktørId = testscenario.personopplysninger().søkerAktørIdent();
         var fødsel = testscenario.personopplysninger().fødselsdato();
@@ -80,7 +79,8 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
 
         // sender inn søknad
         var søknad = lagSøknadForeldrepengerFødsel(fødsel, søkerAktørId, SøkersRolle.MOR)
-                .medFordeling(fordeling);
+                .medFordeling(fordeling)
+                .medMottattDato(fpStartdato.minusWeeks(3));
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         var inntektsmeldinger = lagInntektsmelding(
@@ -142,7 +142,7 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
     @DisplayName("Endringssøknad med utsettelse")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med utsettelse fra bruker. Vedtak fortsatt løpende.")
     void endringssøknadMedUtsettelse() {
-        var testscenario = opprettTestscenario("50");
+        var testscenario = opprettTestscenario("600");
 
         var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
         var søkerIdent = testscenario.personopplysninger().søkerIdent();
@@ -152,7 +152,8 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
         // Opprette perioder mor søker om
         var opprinneligFordeling = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
-                .medFordeling(opprinneligFordeling);
+                .medFordeling(opprinneligFordeling)
+                .medMottattDato(fpStartdato.minusWeeks(3));
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
 
@@ -181,16 +182,15 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
         var fordelingUtsettelseEndring = FordelingErketyper.fordelingEndringssøknadUtsettelseOgForskyEksisterndePerioder(opprinneligFordeling,
                 SøknadUtsettelseÅrsak.ARBEID, utsettelseFom, utsettelseTom);
         var endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
-                fordelingUtsettelseEndring, saksnummer);
+                fordelingUtsettelseEndring, saksnummer)
+                .medMottattDato(utsettelseFom.minusWeeks(3));
         var saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        assertThat(saksbehandler.valgtFagsak.status())
-                .as("Fagsak stauts")
-                .isEqualTo(FagsakStatus.LØPENDE);
+        saksbehandler.ventTilFagsakAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
@@ -245,7 +245,7 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
     @Description("Mor endringssøknad med aksjonspunkt i uttak. Søker utsettelse tilbake i tid for å få aksjonspunkt." +
             "Saksbehandler avslår utsettelsen. Mor har også arbeid med arbeidsforholdId i inntektsmelding")
     void endringssøknad_med_aksjonspunkt_i_uttak() {
-        var testscenario = opprettTestscenario("140");
+        var testscenario = opprettTestscenario("600");
         var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
         var fnrSøker = testscenario.personopplysninger().søkerIdent();
         var inntekt = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
@@ -256,7 +256,8 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
-                .medFordeling(fordeling);
+                .medFordeling(fordeling)
+                .medMottattDato(fpStartdato.minusWeeks(3));
 
         var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
                 DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
@@ -269,11 +270,14 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
+        var startUtsettelse = fødselsdato.plusWeeks(6);
         var fordelingEndring = generiskFordeling(
-                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, fødselsdato.plusWeeks(6),
-                        fødselsdato.plusWeeks(10).minusDays(1)));
+                utsettelsesperiode(SøknadUtsettelseÅrsak.ARBEID, startUtsettelse,
+                        startUtsettelse.plusWeeks(4).minusDays(1)));
 
-        var søknadE = lagEndringssøknad(aktørIdSøker, SøkersRolle.MOR, fordelingEndring, saksnummer);
+        // TODO: Bekreft at det er endringssøknad med mottatt dato frem i tid som er tanken her. 4 uker etter endring ok?
+        var søknadE = lagEndringssøknad(aktørIdSøker, SøkersRolle.MOR, fordelingEndring, saksnummer)
+                .medMottattDato(startUtsettelse.plusWeeks(2));
         var saksnummerE = fordel.sendInnSøknad(søknadE.build(), aktørIdSøker, fnrSøker,
                 DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
@@ -296,9 +300,8 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        assertThat(saksbehandler.valgtFagsak.status())
-                .as("Fagsak stauts")
-                .isEqualTo(FagsakStatus.LØPENDE);
+        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilFagsakAvsluttet();
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
@@ -326,14 +329,15 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Utsettelser og gradering fra førstegangsbehandling skal ikke gå til manuell behandling")
-    @Description("Utsettelser og gradering fra førstegangsbehandling skal ikke gå til manuell behandling hvis innenfor søknadsfrist."
-            + " Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
+    @Description("Utsettelser og gradering fra førstegangsbehandling skal ikke gå til manuell behandling hvis innenfor søknadsfrist." +
+            "Førstegangsbehandling avslutter med utsettelse. Søker sender inn endringssøknad hvor en tar ut 1 uke etter utsettelsen.")
     void utsettelser_og_gradering_fra_førstegangsbehandling_skal_ikke_gå_til_manuell_behandling_ved_endringssøknad() {
-        var testscenario = opprettTestscenario("56");
+        var testscenario = opprettTestscenario("600");
         var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
         var fødselsdato = testscenario.personopplysninger().fødselsdato();
         var orgnummer = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr();
         var fordeling = generiskFordeling(
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                 graderingsperiodeArbeidstaker(MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(12).minusDays(1),
                         orgnummer, 50),
@@ -356,10 +360,12 @@ class SammenhengendeUttak extends ForeldrepengerTestBase {
                 .as("Avslåtte uttaksperioder")
                 .isEmpty();
 
+        var utsettelseStart = fødselsdato.plusWeeks(15);
         var fordelingEndringssøknad = generiskFordeling(
-                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15).plusDays(1), fødselsdato.plusWeeks(16)));
+                uttaksperiode(FELLESPERIODE, utsettelseStart, utsettelseStart.plusWeeks(1).minusDays(1)));
         var søknadE = lagEndringssøknad(testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR,
-                fordelingEndringssøknad, saksnummer);
+                fordelingEndringssøknad, saksnummer)
+                .medMottattDato(utsettelseStart.minusWeeks(3));
         fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
 
         saksbehandler.velgSisteBehandling();

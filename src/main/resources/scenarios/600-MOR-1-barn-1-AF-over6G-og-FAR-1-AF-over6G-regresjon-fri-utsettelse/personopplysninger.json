@@ -1,0 +1,112 @@
+{
+	"søker": {
+		"@type": "søker",
+		"ident": "${for1}",
+		"fornavn": "Dolly",
+		"etternavn": "Duck",
+		"fødselsdato": "now()-P50Y",
+		"kjønn": "K",
+		"personstatus": [
+			{
+				"kode": "BOSA",
+				"fom": "now()-P50Y"
+			}
+		],
+		"adresser": [
+			{
+				"@type": "ref",
+				"fom": "2018-01-01",
+				"adresseType": "BOSTEDSADRESSE",
+				"land": "NOR"
+			}
+		],
+		"sivilstand": [
+			{
+				"kode": "GIFT"
+			}
+		]
+	},
+	"annenPart": {
+		"@type": "annenPart",
+		"ident": "${for2}",
+		"fornavn": "Donaldo",
+		"etternavn": "Duck",
+		"fødselsdato": "now()-P50Y",
+		"kjønn": "M",
+		"personstatus": [
+			{
+				"kode": "BOSA",
+				"fom": "now()-P50Y"
+			}
+		],
+		"adresser": [
+			{
+				"@type": "ref",
+				"fom": "2018-01-01",
+				"adresseType": "BOSTEDSADRESSE",
+				"land": "NOR"
+			}
+		],
+		"sivilstand": [
+			{
+				"kode": "GIFT"
+			}
+		]
+	},
+	"familierelasjoner": [
+		{
+			"rolle": "BARN",
+			"til": {
+				"@type": "barn",
+				"ident": "${barn1}",
+				"fornavn": "${nevø1}",
+				"etternavn": "Duck",
+				"fødselsdato": "2019-11-01"
+			}
+		},
+		{
+			"rolle": "EKTE",
+			"til": {
+				"@type": "annenPart",
+				"ident": "${for2}"
+			}
+		}
+	],
+
+	"familierelasjonerAnnenPart": [
+		{
+			"rolle": "BARN",
+			"til": {
+				"@type": "barn",
+				"ident": "${barn1}",
+				"fornavn": "${nevø1}",
+				"etternavn": "Duck",
+				"fødselsdato": "2019-11-01"
+			}
+		},
+		{
+			"rolle": "EKTE",
+			"til": {
+				"@type": "annenPart",
+				"ident": "${for1}"
+			}
+		}
+	],
+
+	"familierelasjonerBarn": [
+		{
+			"rolle": "MORA",
+			"til": {
+				"@type": "søker",
+				"ident": "${for1}"
+			}
+		},
+		{
+			"rolle": "FARA",
+			"til": {
+				"@type": "annenPart",
+				"ident": "${for2}"
+			}
+		}
+	]
+}
