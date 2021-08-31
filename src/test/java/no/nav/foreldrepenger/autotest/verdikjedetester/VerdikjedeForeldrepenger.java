@@ -9,13 +9,11 @@ import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepe
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.overføringsperiode;
-import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
 import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesÅrsak.ARBEID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -85,7 +83,6 @@ import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.NorskF
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.UkjentForelder;
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.Overføringsårsak;
 import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType;
-import no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
@@ -109,8 +106,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var fordeling = FordelingErketyper.generiskFordeling(
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
-                UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, termindato.plusWeeks(15),
-                        termindato.plusWeeks(20).minusDays(1)),
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
@@ -464,10 +459,8 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
          * arbeidsforholdID og refusjon på begge.
          */
         var far = familie.far();
-        var identFar = far.fødselsnummer();
         var orgNummerFar = far.arbeidsgiver().orgnummer();
         var fordelingFar = generiskFordeling(
-                utsettelsesperiode(ARBEID, fpStartdatoFar, fpStartdatoFar.plusWeeks(3).minusDays(1)),
                 graderingsperiodeArbeidstaker(FELLESPERIODE,
                         fpStartdatoFar.plusWeeks(3),
                         fpStartdatoFar.plusWeeks(19).minusDays(1),
