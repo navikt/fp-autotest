@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,19 @@ public class KontrollerAktivitetskravBekreftelse extends AksjonspunktBekreftelse
             p.setAvklaring(KontrollerAktivitetskravAvklaring.I_AKTIVITET);
             p.setBegrunnelse("Autotest begrunnelse");
         }
+        return this;
+    }
+
+    public KontrollerAktivitetskravBekreftelse periodeIkkeAktivitetIkkeDokumentert(LocalDate fom, LocalDate tom) {
+        setAvklaringForPeriode(fom, tom, KontrollerAktivitetskravAvklaring.IKKE_I_AKTIVITET_IKKE_DOKUMENTERT);
+        return this;
+    }
+
+    public KontrollerAktivitetskravBekreftelse setAvklaringForPeriode(LocalDate fom, LocalDate tom, KontrollerAktivitetskravAvklaring avklaring) {
+        avklartePerioder.stream()
+                .filter(p -> p.getFom().equals(fom))
+                .filter(p -> p.getTom().equals(tom))
+                .forEach(p -> p.setAvklaring(avklaring));
         return this;
     }
 }

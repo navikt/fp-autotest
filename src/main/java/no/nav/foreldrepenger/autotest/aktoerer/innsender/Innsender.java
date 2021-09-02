@@ -118,7 +118,7 @@ public class Innsender extends Aktoer {
 
     private JournalpostModell lagJournalpost(Fødselsnummer fnr, String tittel, String innhold, String mottakskanal,
                                              String eksternReferanseId, DokumenttypeId dokumenttypeId) {
-        JournalpostModell journalpostModell = new JournalpostModell();
+        var journalpostModell = new JournalpostModell();
         journalpostModell.setTittel(tittel);
         journalpostModell.setJournalStatus(Journalstatus.MIDLERTIDIG_JOURNALFØRT);
         journalpostModell.setMottattDato(LocalDateTime.now());
@@ -134,7 +134,7 @@ public class Innsender extends Aktoer {
     }
 
     private DokumentModell lagDokumentModell(String innhold, DokumenttypeId dokumenttypeId) {
-        DokumentModell dokumentModell = new DokumentModell();
+        var dokumentModell = new DokumentModell();
         dokumentModell.setInnhold(innhold);
         dokumentModell.setDokumentType(dokumenttypeId);
         dokumentModell.setDokumentTilknyttetJournalpost(DokumentTilknyttetJournalpost.HOVEDDOKUMENT);
@@ -185,7 +185,7 @@ public class Innsender extends Aktoer {
             var behandlingStartet = historikkKlient.hentHistorikk(saksnummer).stream()
                     .anyMatch(h -> HistorikkinnslagType.BEH_STARTET.equals(h.type()));
             return !behandlinger.isEmpty() && behandlingStartet;
-        }, 30, "Ingen behandlinger er opprettet på saksnummer " + saksnummer + "etter 30 skun");
+        }, 30, "Ingen behandlinger er opprettet på saksnummer " + saksnummer);
 
         return saksnummer;
     }

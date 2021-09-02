@@ -1,14 +1,19 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak.FRI;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.fordelingEndringssøknadGradering;
 import static no.nav.foreldrepenger.autotest.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadEndringErketyper.lagEndringssøknad;
 import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.MorsAktivitet.ARBEID_OG_UTDANNING;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,18 +33,23 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper;
+import no.nav.foreldrepenger.autotest.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
+import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Tag("fpsak")
@@ -349,6 +359,108 @@ class Revurdering extends ForeldrepengerTestBase {
                 .hasSizeGreaterThan(1);
     }
 
+
+    @Test
+    @DisplayName("Bare far har rett. Endringssøknad med utsettelse. Delvis aktivitetskrav")
+    @Description("Bare far har rett (BFHR) sender inn en endringssøknad med 2 utsettelsesperioder. Aktivitetskravet for " +
+            "første utsettesle er oppfylt men ikke for andre perioder. Andre periode avslås og trekker dager.")
+    void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
+        var testscenario = opprettTestscenario("60");
+        var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
+        var fnrFar = testscenario.personopplysninger().søkerIdent();
+        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var fpStartdatoFar = Virkedager.helgejustertTilMandag(fødselsdato.plusWeeks(6));
+        var fordeling = generiskFordeling(
+                uttaksperiode(FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(40).minusDays(1), ARBEID_OG_UTDANNING));
+
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
+                .medFordeling(fordeling)
+                .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
+                .medMottattDato(fødselsdato);
+        var saksnummer = fordel.sendInnSøknad(søknad.build(), aktørIdFar, fnrFar, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+
+        var im = InntektsmeldingForeldrepengeErketyper
+                .makeInntektsmeldingFromTestscenario(testscenario, fødselsdato);
+        fordel.sendInnInntektsmeldinger(im, testscenario, saksnummer);
+
+        saksbehandler.hentFagsak(saksnummer);
+        var kontrollerAktivitetskravBekreftelse1 = saksbehandler
+                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
+                .iAktivitet()
+                .setBegrunnelse("Mor er i aktivitet!");
+        saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse1);
+
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummer);
+        var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFørstegangsbehandling);
+
+        // Verifiseringer førstegangsbehandling
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo())
+                .as("Saldoen for stønadskonton FORELDREPENGER")
+                .isZero();
+
+
+        // Endringssøknad
+        var fordelingUtsettelse = generiskFordeling(
+                utsettelsesperiode(FRI, fpStartdatoFar.plusWeeks(32), fpStartdatoFar.plusWeeks(35).minusDays(1), ARBEID_OG_UTDANNING),
+                uttaksperiode(FORELDREPENGER, fpStartdatoFar.plusWeeks(35), fpStartdatoFar.plusWeeks(37).minusDays(1), ARBEID_OG_UTDANNING),
+                utsettelsesperiode(FRI, fpStartdatoFar.plusWeeks(37), fpStartdatoFar.plusWeeks(38).minusDays(1), ARBEID_OG_UTDANNING),
+                uttaksperiode(FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), ARBEID_OG_UTDANNING));
+        var endretSøknad = lagEndringssøknad(aktørIdFar, SøkersRolle.FAR,
+                fordelingUtsettelse, saksnummer);
+        var saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), aktørIdFar, fnrFar,
+                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+
+        saksbehandler.hentFagsak(saksnummerE);
+        var kontrollerAktivitetskravBekreftelse2 = saksbehandler
+                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
+                .periodeIkkeAktivitetIkkeDokumentert(fpStartdatoFar.plusWeeks(37), fpStartdatoFar.plusWeeks(38).minusDays(1))
+                .periodeIkkeAktivitetIkkeDokumentert(fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1))
+                .setBegrunnelse("Mor er bare delvis i aktivitet!");
+        saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse2);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummer);
+        var bekreftelseRevurdering = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseRevurdering);
+
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+                .as("Konsekvenser for ytelse")
+                .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
+
+        // Verifiseringer på uttak
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo())
+                .as("Saldoen for stønadskonton FORELDREPENGER")
+                .isZero();
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
+                .as("Forventer at det er 2 avslåtte uttaksperioder")
+                .isEqualTo(2);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak())
+                .as("Perioderesultatårsak")
+                .isInstanceOf(IkkeOppfyltÅrsak.class)
+                .isEqualTo(AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getAktiviteter().get(0).getTrekkdagerDesimaler())
+                .as("Trekkdager")
+                .isNotZero();
+
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getPeriodeResultatÅrsak())
+                .as("Perioderesultatårsak")
+                .isInstanceOf(IkkeOppfyltÅrsak.class)
+                .isEqualTo(AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getAktiviteter().get(0).getTrekkdagerDesimaler())
+                .as("Trekkdager")
+                .isNotZero();
+
+
+    }
 
 }
 

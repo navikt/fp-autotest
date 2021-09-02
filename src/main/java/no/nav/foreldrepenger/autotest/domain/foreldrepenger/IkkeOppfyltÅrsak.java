@@ -84,6 +84,16 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
     FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT("4098", "§14-5: Foreldreansvarsvilkåret er ikke oppfylt"),
     OPPTJENINGSVILKÅRET_IKKE_OPPFYLT("4099", "§14-6: Opptjeningsvilkåret er ikke oppfylt"),
     UTTAK_FØR_OMSORGSOVERTAKELSE("4100", "§14-10 andre ledd: Uttak før omsorgsovertakelse"),
+    BARE_FAR_RETT_IKKE_SØKT("4102", "§14-14, jf 14-13: Bare far har rett, mangler søknad uttak/aktivitetskrav"),
+    MOR_FØRSTE_SEKS_UKER_IKKE_SØKT("4103", "§14-9 sjette ledd: Mangler søknad for første 6 uker etter fødsel"),
+    // 4104: TFP-4533 avslag pga stønadsperiode nytt barn jf 14-10 tredje ledd (og 14-4 fjerde for SVP)
+    // 4105: TFP-4557 avslag pga farsrollen søker før termin/fødsel/omsorg, uavklart hjemmel
+    SØKERS_SYKDOM_SKADE_SEKS_UKER_IKKE_OPPFYLT("4110", "§14-11: Søkers sykdom/skade første 6 uker ikke oppfylt"),
+    SØKERS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT("4111", "§14-11: Søkers innleggelse første 6 uker ikke oppfylt"),
+    BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT("4112", "§14-11: Barnets innleggelse første 6 uker ikke oppfylt"),
+    SØKERS_SYKDOM_ELLER_SKADE_SEKS_UKER_IKKE_DOKUMENTERT("4115", "§14-11, jf §21-3: Søkers sykdom/skade første 6 uker ikke dokumentert"),
+    SØKERS_INNLEGGELSE_SEKS_UKER_IKKE_DOKUMENTERT("4116", "§14-11, jf §21-3: Søkers innleggelse første 6 uker ikke dokumentert"),
+    BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_DOKUMENTERT("4117", "§14-11, jf §21-3: Barnets innleggelse første 6 uker ikke dokumentert"),
     ;
 
     public static final String KODEVERK = "IKKE_OPPFYLT_AARSAK";
@@ -101,7 +111,7 @@ public enum IkkeOppfyltÅrsak implements PeriodeResultatÅrsak {
         return Arrays.stream(IkkeOppfyltÅrsak.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet FagsakStatus " + kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet ikkeOppfyltÅrsak " + kode));
     }
 
     @Override
