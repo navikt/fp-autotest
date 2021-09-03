@@ -100,8 +100,6 @@ public final class UttaksperioderErketyper {
                 // TODO: Følgende eksistere ikke i Utsettelsesperiode for XML.
                 //  stønadskontotype, erarbeidstaker, virksomhetsnummer og morsaktiattstype
                 .build();
-
-
     }
 
     public static OverføringsPeriode overføringsperiode(Overføringsårsak overføringÅrsak, StønadskontoType stønadskontoType,

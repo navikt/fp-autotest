@@ -6,22 +6,20 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.LukketPeriodeMedVedlegg;
 
 public class FordelingErketyper {
+
+    private FordelingErketyper() {
+        // Skal ikke instansieres
+    }
 
     public static Fordeling fordelingHappyCase(LocalDate familehendelseDato, SøkersRolle søkerRolle) {
         if (søkerRolle == SøkersRolle.MOR) {
@@ -55,7 +53,7 @@ public class FordelingErketyper {
     }
 
     public static Fordeling fordelingMorHappyCaseMedEkstraUttak(LocalDate familiehendelseDato) {
-        Fordeling fordeling = new Fordeling();
+        var fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
         fordeling.getPerioder().add(uttaksperiode(FELLESPERIODE, familiehendelseDato.plusWeeks(10).plusDays(1),
                 familiehendelseDato.plusWeeks(12)));
@@ -63,7 +61,7 @@ public class FordelingErketyper {
     }
 
     public static Fordeling fordelingMorMedAksjonspunkt(LocalDate familiehendelseDato) {
-        Fordeling fordeling = new Fordeling();
+        var fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
         fordeling.getPerioder().add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familiehendelseDato.minusWeeks(3),
                 familiehendelseDato.minusDays(1)));
@@ -71,7 +69,7 @@ public class FordelingErketyper {
     }
 
     public static Fordeling fordelingMorAleneomsorgHappyCase(LocalDate familehendelseDato) {
-        Fordeling fordeling = new Fordeling();
+        var fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(false);
 
         fordeling.getPerioder().add(uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3),
@@ -104,7 +102,7 @@ public class FordelingErketyper {
     }
 
     public static Fordeling fordelingFarAleneomsorg(LocalDate familehendelseDato) {
-        Fordeling fordeling = new Fordeling();
+        var fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(false);
 
         fordeling.getPerioder()
@@ -113,19 +111,7 @@ public class FordelingErketyper {
         return fordeling;
     }
 
-    public static Fordeling fordelingEndringssøknadUtsettelseOgForskyEksisterndePerioder(Fordeling opprinneligFordeling,
-                                                                                         SøknadUtsettelseÅrsak utsettelseÅrsak,
-                                                                                         LocalDate utsettelseFom,
-                                                                                         LocalDate utsettelseTom) {
-        Fordeling endringsFordeling = generiskFordeling(
-                utsettelsesperiode(utsettelseÅrsak, utsettelseFom, utsettelseTom));
 
-        List<LukketPeriodeMedVedlegg> perioderEtterUtsettelse =
-                forskyvEksisterendePeriodeTilsvarendeDenNyePerioden(opprinneligFordeling, utsettelseFom, utsettelseTom);
-        endringsFordeling.getPerioder().addAll(perioderEtterUtsettelse);
-
-        return endringsFordeling;
-    }
 
     public static Fordeling fordelingEndringssøknadGradering(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom,
                                                              String orgnummer, Integer arbeidstidsprosentIOrgnr) {
@@ -134,7 +120,7 @@ public class FordelingErketyper {
     }
 
     public static Fordeling generiskFordeling(LukketPeriodeMedVedlegg... perioder) {
-        Fordeling fordeling = new Fordeling();
+        var fordeling = new Fordeling();
         fordeling.setAnnenForelderErInformert(true);
 
         for (LukketPeriodeMedVedlegg lukketPeriodeMedVedlegg : perioder) {
@@ -142,29 +128,5 @@ public class FordelingErketyper {
         }
 
         return fordeling;
-    }
-
-
-    /* HJELPEMETODER */
-    private static List<LukketPeriodeMedVedlegg> forskyvEksisterendePeriodeTilsvarendeDenNyePerioden(Fordeling opprinneligFordeling,
-                                                                                                     LocalDate endringsperiodeFom,
-                                                                                                     LocalDate endringsperiodeTom) {
-        var differanseIDager = ChronoUnit.DAYS.between(endringsperiodeFom, endringsperiodeTom);
-        List<LukketPeriodeMedVedlegg> forskyvetPerioder = opprinneligFordeling.getPerioder().stream()
-                .filter(lukketPeriodeMedVedlegg -> lukketPeriodeMedVedlegg.getTom().isAfter(endringsperiodeFom))
-                .sorted(Comparator.comparing(LukketPeriodeMedVedlegg::getFom))
-                .collect(Collectors.toList());
-
-        for ( var periode : forskyvetPerioder ) {
-            if (periode.getTom().isAfter(endringsperiodeFom) && periode.getFom().isAfter(endringsperiodeFom)) {
-                periode.setTom(periode.getTom().plusDays(differanseIDager + 1));
-                periode.setFom(periode.getFom().plusDays(differanseIDager + 1));
-
-            } else {
-                periode.setFom(endringsperiodeTom.plusDays(1));
-                periode.setTom(periode.getTom().plusDays(differanseIDager + 1));
-            }
-        }
-        return forskyvetPerioder;
     }
 }
