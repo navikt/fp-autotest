@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DisplayName;
@@ -152,10 +151,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .as("Saldoen for stønadskontoen FORELDREPENGER")
                 .isEqualTo(75);
 
-        var beregnetDagsats = regnUtForventetDagsatsForPeriode(List.of(månedsinntekt), List.of(100), List.of(false));
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats())
                 .as("Forventer at dagsatsen blir justert ut i fra årsinntekten og utbeatlinsggrad, og IKKE 6G fordi inntekten er under 6G!")
-                .isEqualTo(beregnetDagsats.get(0));
+                .isEqualTo(1846);
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(60))
                 .as("Forventer at 40% summen utbetales til søker og 60% av summen til arbeisdgiver pga 60% refusjon!")
                 .isTrue();
