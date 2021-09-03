@@ -17,10 +17,10 @@ public class KontrollerAktivitetskravBekreftelse extends AksjonspunktBekreftelse
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         avklartePerioder = behandling.getKontrollerAktiviteskrav();
-        iAktivitet();
+        morErIAktivitetForAllePerioder();
     }
 
-    public KontrollerAktivitetskravBekreftelse iAktivitet() {
+    public KontrollerAktivitetskravBekreftelse morErIAktivitetForAllePerioder() {
         for (KontrollerAktiviteskravPeriode p : avklartePerioder) {
             p.setAvklaring(KontrollerAktivitetskravAvklaring.I_AKTIVITET);
             p.setBegrunnelse("Autotest begrunnelse");

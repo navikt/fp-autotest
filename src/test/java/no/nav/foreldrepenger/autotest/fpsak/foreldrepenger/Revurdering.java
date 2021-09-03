@@ -386,7 +386,7 @@ class Revurdering extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummer);
         var kontrollerAktivitetskravBekreftelse1 = saksbehandler
                 .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
-                .iAktivitet()
+                .morErIAktivitetForAllePerioder()
                 .setBegrunnelse("Mor er i aktivitet!");
         saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse1);
 

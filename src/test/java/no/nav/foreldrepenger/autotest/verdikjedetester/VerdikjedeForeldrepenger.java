@@ -675,7 +675,11 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .setBegrunnelse("Bare far har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
+        var kontrollerAktivitetskravBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
+                .morErIAktivitetForAllePerioder()
+                .setBegrunnelse("Mor er i aktivitet!");
+        saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
