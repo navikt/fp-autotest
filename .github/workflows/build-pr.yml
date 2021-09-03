@@ -25,20 +25,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set cache key
-        run: |
-          echo "CACHE_KEY=$(expr $(date +%V) - 1 + 1)" >> $GITHUB_ENV
-          echo "PREVIOUS_CACHE_KEY=$(expr $(date +%V) - 1)" >> $GITHUB_ENV
-      - uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
-          restore-keys: |
-            ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
           java-version: 16
+          cache: 'maven'
 
       - name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # Use commit-sha1 instead of tag for security concerns
