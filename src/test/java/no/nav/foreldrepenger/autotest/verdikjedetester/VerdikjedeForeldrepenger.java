@@ -591,12 +591,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                         "har frilansinntekt på skjæringstidspunktet!")
                 .isTrue();
 
-        var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilMottarYtelseFrilans(false)
-                .setBegrunnelse("Begrunnelse fra Autotest.");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
-
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);

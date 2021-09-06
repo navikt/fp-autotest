@@ -105,12 +105,6 @@ class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.VEDLEGG_MOTTATT);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        var vurderFaktaOmBeregningBekreftelse1 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilMottarYtelseFrilans(false)
-                .setBegrunnelse("Endret av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse1);
-
         // Verifiser Beregningsgrunnlag
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus())
                 .as("Antall aktivitetstatus")
@@ -137,19 +131,6 @@ class Fodsel extends ForeldrepengerTestBase {
         assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS))
                 .as("Har aksjonspunkt FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS")
                 .isTrue();
-        var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilMottarYtelseFrilans(true)
-                .leggTilMaanedsinntektFL(25800)
-                .setBegrunnelse("Endret av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
-
-        var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .fjernFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL)
-                .leggTilMottarYtelseFrilans(false)
-                .setBegrunnelse("Endret av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
