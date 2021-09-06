@@ -118,8 +118,7 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
         var fastsattInntekt = new FastsettMaanedsinntektUtenInntektsmeldingAndel(1L, 25_000);
         var ab = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilMaanedsinntektUtenInntektsmelding(List.of(fastsattInntekt))
-                .leggTilMottarYtelse(List.of(new ArbeidstakerandelUtenIMMottarYtelse(1L, false)));
+                .leggTilMaanedsinntektUtenInntektsmelding(List.of(fastsattInntekt));
         saksbehandler.bekreftAksjonspunkt(ab);
 
         // AVVIK I BEREGNING //

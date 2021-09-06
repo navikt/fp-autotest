@@ -8,6 +8,14 @@
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
 				"beskrivelse": "fastloenn"
+			},
+			{
+				"fom": "now() - P5M",
+				"beløp": 40000,
+				"orgnr": "910909088",
+				"type": "YtelseFraOffentlige",
+				"fordel": "kontantytelse",
+				"beskrivelse": "fastloenn"
 			}
 		]
 	},

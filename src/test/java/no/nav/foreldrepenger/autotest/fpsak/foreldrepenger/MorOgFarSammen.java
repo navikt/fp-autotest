@@ -115,7 +115,7 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
-        debugFritekst("Ferdig med behandling far");
+        debugFritekst("Ferdig med behandling far.");
 
         // Verifisere at det ikke er blitt opprettet revurdering berørt sak på mor
         saksbehandler.hentFagsak(saksnummerMor);

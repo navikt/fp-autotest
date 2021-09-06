@@ -48,7 +48,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
@@ -57,7 +56,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
@@ -75,8 +73,8 @@ class Fodsel extends ForeldrepengerTestBase {
 
     @Test
     @DisplayName("Mor fødsel med arbeidsforhold og frilans. Vurderer opptjening og beregning. Finner avvik")
-    @Description("Mor søker fødsel med ett arbeidsforhold og frilans. Vurder opptjening. Vurder fakta om beregning. Avvik i beregning")
-    void morSøkerFødselMedEttArbeidsforholdOgFrilans_VurderOpptjening_VurderFaktaOmBeregning_AvvikIBeregning() {
+    @Description("Mor søker fødsel med ett arbeidsforhold og frilans. Vurder opptjening. Avvik i beregning")
+    void morSøkerFødselMedEttArbeidsforholdOgFrilans_VurderOpptjening_AvvikIBeregning() {
         var testscenario = opprettTestscenario("59");
 
         var fnr = testscenario.personopplysninger().søkerIdent();
@@ -105,11 +103,6 @@ class Fodsel extends ForeldrepengerTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.VEDLEGG_MOTTATT);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        var vurderFaktaOmBeregningBekreftelse1 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilMottarYtelseFrilans(false)
-                .setBegrunnelse("Endret av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse1);
 
         // Verifiser Beregningsgrunnlag
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus())
@@ -133,24 +126,9 @@ class Fodsel extends ForeldrepengerTestBase {
                 .as("Aktivitetsstatus")
                 .isEqualTo(AktivitetStatus.FRILANSER);
 
-        // Legg til og fjern ytelser for å se tilbakehopp og opprettelse av akjsonspunkter
         assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS))
                 .as("Har aksjonspunkt FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS")
                 .isTrue();
-        var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilMottarYtelseFrilans(true)
-                .leggTilMaanedsinntektFL(25800)
-                .setBegrunnelse("Endret av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
-
-        var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .fjernFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_MAANEDSINNTEKT_FL)
-                .leggTilMottarYtelseFrilans(false)
-                .setBegrunnelse("Endret av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
-
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
                 .leggTilInntektFrilans(overstyrtFrilanserInntekt)

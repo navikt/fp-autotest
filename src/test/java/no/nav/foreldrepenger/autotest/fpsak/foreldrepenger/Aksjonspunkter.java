@@ -15,6 +15,7 @@ import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.u
 import java.time.LocalDate;
 import java.util.Collections;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -180,9 +181,10 @@ class Aksjonspunkter extends ForeldrepengerTestBase {
                 .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
+
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
-                .leggTilMottarYtelse(Collections.emptyList());
+                .leggTilMottarYtelse(Collections.singletonList(new ArbeidstakerandelUtenIMMottarYtelse(1, false)));
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
     }
