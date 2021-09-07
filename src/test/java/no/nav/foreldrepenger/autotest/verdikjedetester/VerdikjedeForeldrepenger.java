@@ -35,7 +35,6 @@ import org.junit.jupiter.api.Test;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
@@ -521,16 +520,16 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE,
                 Stønadskonto.FEDREKVOTE);
         overstyringUttak.splitPeriode(
-                fpStartdatoFar.plusWeeks(19),
-                fpStartdatoFar.plusWeeks(49).minusDays(1),
-                fpStartdatoFar.plusWeeks(41).minusDays(1));
+                fpStartdatoFar.plusWeeks(25),
+                fpStartdatoFar.plusWeeks(55).minusDays(1),
+                fpStartdatoFar.plusWeeks(47).minusDays(1));
         overstyringUttak.innvilgPeriode(
-                fpStartdatoFar.plusWeeks(19),
-                fpStartdatoFar.plusWeeks(41).minusDays(1),
+                fpStartdatoFar.plusWeeks(25),
+                fpStartdatoFar.plusWeeks(47).minusDays(1),
                 InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE);
         overstyringUttak.avslåPeriode(
-                fpStartdatoFar.plusWeeks(41),
-                fpStartdatoFar.plusWeeks(49).minusDays(1),
+                fpStartdatoFar.plusWeeks(47),
+                fpStartdatoFar.plusWeeks(55).minusDays(1),
                 IKKE_STØNADSDAGER_IGJEN);
         overstyringUttak.setBegrunnelse("Begrunnelse fra Autotest.");
         overstyrer.overstyr(overstyringUttak);
@@ -1801,14 +1800,14 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .isEqualTo(2);
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(0).getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
-                .isInstanceOf(Avslagsårsak.class)
+                .isInstanceOf(IkkeOppfyltÅrsak.class)
                 .isEqualTo(BARE_FAR_RETT_IKKE_SØKT);
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(1).getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
                 .isInstanceOf(InnvilgetÅrsak.class);
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
-                .isInstanceOf(Avslagsårsak.class)
+                .isInstanceOf(IkkeOppfyltÅrsak.class)
                 .isEqualTo(IKKE_STØNADSDAGER_IGJEN);
     }
 
