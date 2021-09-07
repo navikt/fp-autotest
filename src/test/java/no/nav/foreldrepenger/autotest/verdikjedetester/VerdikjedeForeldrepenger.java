@@ -2,8 +2,11 @@ package no.nav.foreldrepenger.autotest.verdikjedetester;
 
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_DØD_FORELDER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak.GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak.UTSETTELSE_GYLDIG_SEKS_UKER_FRI_SYKDOM;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper.medEgenNaeringOpptjening;
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
@@ -15,6 +18,7 @@ import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErk
 import static no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
 import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.søknad.modell.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
@@ -67,6 +72,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerAktivitetskravAvklaring;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
@@ -78,7 +84,6 @@ import no.nav.foreldrepenger.autotest.søknad.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.RelasjonTilBarnErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadForeldrepengerErketyper;
-import no.nav.foreldrepenger.autotest.søknad.erketyper.UttaksperioderErketyper;
 import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
 import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.NorskForelder;
@@ -107,9 +112,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var termindato = LocalDate.now().plusWeeks(1);
         var fpStartdato = termindato.minusWeeks(3);
         var fordeling = FordelingErketyper.generiskFordeling(
-                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
-                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
-                UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
+                uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
                 .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett())
@@ -353,7 +358,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .avslåManuellePerioderMedPeriodeResultatÅrsak(IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+                .avslåManuellePerioderMedPeriodeResultatÅrsak(IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
@@ -436,9 +441,10 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     }
 
     @Test
-    @DisplayName("4: Far søker resten av fellesperioden og hele fedrekvoten med gradert uttak.")
+    @DisplayName("4: Far søker resten av fellesperioden og hele fedrekvoten med gradert uttak og opphold før og i midten.")
     @Description("Mor har løpende fagsak med hele mødrekvoten og deler av fellesperioden. Far søker resten av fellesperioden" +
-            "og hele fedrekvoten med gradert uttak. Far har to arbeidsforhold i samme virksomhet, samme org.nr, men ulik" +
+            "og hele fedrekvoten med gradert uttak. Far starter med opphold og har også opphold mellom uttak av" +
+            "fellesperioden og fedrekvoten. Far har to arbeidsforhold i samme virksomhet, samme org.nr, men ulik" +
             "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge.")
     void farSøkerForeldrepengerTest() {
         var familie = new Familie("560");
@@ -446,9 +452,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
-        var fpStartdatoFar = fødselsdato.plusWeeks(23);
+        var fpSluttdatoMor = fødselsdato.plusWeeks(23);
         var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(familie,
-                fødselsdato, fpStartdatoMor, fpStartdatoFar);
+                fødselsdato, fpStartdatoMor, fpSluttdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
@@ -456,21 +462,23 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
 
         /*
          * FAR: Søker med to arbeidsforhold i samme virksomhet, orgn.nr, men med ulik
-         * arbeidsforholdID. Søker utsettelse arbeid og deretter resten av felles
-         * perioden og hele fedrekvoten med gradert uttak. Sender inn 2 IM med ulik
+         * arbeidsforholdID. Starter med opphold og starter uttak med resten av fellesperiode etter oppholdet.
+         * Far har også opphold mellom uttak av fellesperioden og fedrekvoten. Sender inn 2 IM med ulik
          * arbeidsforholdID og refusjon på begge.
          */
         var far = familie.far();
+        var fpStartdatoFar = fpSluttdatoMor.plusWeeks(3);
         var orgNummerFar = far.arbeidsgiver().orgnummer();
         var fordelingFar = generiskFordeling(
                 graderingsperiodeArbeidstaker(FELLESPERIODE,
-                        fpStartdatoFar.plusWeeks(3),
-                        fpStartdatoFar.plusWeeks(19).minusDays(1),
+                        fpStartdatoFar,
+                        fpStartdatoFar.plusWeeks(16).minusDays(1),
                         orgNummerFar,
                         50),
+                //opphold midt i perioden/uttaket
                 graderingsperiodeArbeidstaker(FEDREKVOTE,
-                        fpStartdatoFar.plusWeeks(19),
-                        fpStartdatoFar.plusWeeks(49).minusDays(1),
+                        fpStartdatoFar.plusWeeks(25),
+                        fpStartdatoFar.plusWeeks(55).minusDays(1),
                         orgNummerFar,
                         50));
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
@@ -499,17 +507,17 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         var overstyringUttak = new OverstyrUttaksperioder();
         overstyringUttak.oppdaterMedDataFraBehandling(overstyrer.valgtFagsak, overstyrer.valgtBehandling);
         overstyringUttak.splitPeriode(
-                fpStartdatoFar.plusWeeks(3),
-                fpStartdatoFar.plusWeeks(19).minusDays(1),
-                fpStartdatoFar.plusWeeks(11).minusDays(1));
+                fpStartdatoFar,
+                fpStartdatoFar.plusWeeks(16).minusDays(1),
+                fpStartdatoFar.plusWeeks(8).minusDays(1));
         overstyringUttak.avslåPeriode(
-                fpStartdatoFar.plusWeeks(3),
-                fpStartdatoFar.plusWeeks(11).minusDays(1),
+                fpStartdatoFar,
+                fpStartdatoFar.plusWeeks(8).minusDays(1),
                 IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT,
                 true);
         overstyringUttak.innvilgPeriode(
-                fpStartdatoFar.plusWeeks(11),
-                fpStartdatoFar.plusWeeks(19).minusDays(1),
+                fpStartdatoFar.plusWeeks(8),
+                fpStartdatoFar.plusWeeks(16).minusDays(1),
                 InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE,
                 Stønadskonto.FEDREKVOTE);
         overstyringUttak.splitPeriode(
@@ -523,7 +531,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         overstyringUttak.avslåPeriode(
                 fpStartdatoFar.plusWeeks(41),
                 fpStartdatoFar.plusWeeks(49).minusDays(1),
-                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+                IKKE_STØNADSDAGER_IGJEN);
         overstyringUttak.setBegrunnelse("Begrunnelse fra Autotest.");
         overstyrer.overstyr(overstyringUttak);
 
@@ -1032,7 +1040,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelse.avslåPeriode(
                 fpStartdatoFar.plusWeeks(13),
                 fpStartdatoFar.plusWeeks(17).minusDays(1),
-                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+                IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
@@ -1380,7 +1388,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         fastsettUttaksperioderManueltBekreftelseMor.avslåPeriode(
                 sisteDagMedFellesperiode.plusDays(1),
                 fellesperiodeSluttFar,
-                IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN);
+                IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
@@ -1630,6 +1638,180 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .as("Perioden burde være avslått fordi det er mottatt dødfødselshendelse")
                 .isInstanceOf(IkkeOppfyltÅrsak.class);
     }
+
+    @Test
+    @DisplayName("14: Mor, fødsel, sykdom uke 5 til 10, må søke om utsettelse fra uke 5-6")
+    @Description("Mor søker fødsel hvor hun oppgir annenpart. Mor er syk fra uke 5 til 10. Hun må søke utsettelse fra " +
+            "uke 5 til 6 ettersom det er innenfor de første 6 ukene etter fødsel. Ukene etter trenger hun ikke søke om" +
+            "utsettelse og blir automatisk innvilget uten trekk.")
+    void mor_fødsel_sykdom_innefor_første_6_ukene_utsettelse() {
+        var familie = new Familie("500");
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var fpStartdato = fødselsdato.minusWeeks(3);
+
+        var fordeling = FordelingErketyper.generiskFordeling(
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(5).minusDays(1)),
+                utsettelsesperiode(UtsettelsesÅrsak.SYKDOM, fødselsdato.plusWeeks(5), fødselsdato.plusWeeks(6).minusDays(1)),
+                // Opphold uke 6 til 10
+                uttaksperiode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(36).minusDays(1)));
+        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medFordeling(fordeling)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()))
+                .medMottatdato(fødselsdato.minusWeeks(3));
+        var saksnummer = mor.søk(søknad.build());
+
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendDefaultInntektsmeldingerFP(saksnummer, fpStartdato);
+
+        saksbehandler.hentFagsak(saksnummer);
+        var avklarFaktaUttak = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
+                .sykdomErDokumentertForPeriode();
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttak);
+
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+
+        // UTTAK
+        var saldoer = saksbehandler.valgtBehandling.getSaldoer();
+        assertThat(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+                .as("Saldo for stønadskontoen FORELDREPENGER_FØR_FØDSEL")
+                .isZero();
+        assertThat(saldoer.getStonadskontoer().get(Stønadskonto.MØDREKVOTE).getSaldo())
+                .as("Saldo for stønadskontoen MØDREKVOTE")
+                .isZero();
+        assertThat(saldoer.getStonadskontoer().get(Stønadskonto.FELLESPERIODE).getSaldo())
+                .as("Saldo for stønadskontoen FELLESPERIODE")
+                .isZero();
+
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
+                .as("Avslåtte uttaksperioder")
+                .isZero();
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak())
+                .as("Perioderesultatårsak")
+                .isInstanceOf(InnvilgetÅrsak.class)
+                .isEqualTo(UTSETTELSE_GYLDIG_SEKS_UKER_FRI_SYKDOM);
+
+        // Tilkjent ytelse
+        var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(2).getFom())
+                .as("Utsettelsesperiode fom")
+                .isEqualTo(fødselsdato.plusWeeks(5));
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(2).getTom())
+                .as("Utsettelsesperiode tom")
+                .isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats())
+                .as("Utsettelsesperiode dagsats")
+                .isZero();
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getFom())
+                .as("Periode etter fri utsettelse fom")
+                .isEqualTo(fødselsdato.plusWeeks(10));
+
+    }
+
+    @Test
+    @DisplayName("15: Mor, adopsjon, sykdom uke 3 til 8, trenger ikke søke utsettelse for uke 3 til 6")
+    @Description("Mor søker adopsjon hvor hun oppgir annenpart. Mor er syk innenfor de første 6 ukene og etter. Sykdom" +
+            "fra uke 3 til 8. Ikke noe krav til å søke om utsettlse og saken blir automatisk behandlet og innvilget.")
+    void mor_adopsjon_sykdom_uke_3_til_8_automatisk_invilget() {
+        var familie = new Familie("86");
+        var mor = familie.mor();
+        var omsorgsovertagelsesdato = LocalDate.now().minusMonths(2);
+        var fordeling = FordelingErketyper.generiskFordeling(
+                uttaksperiode(MØDREKVOTE, omsorgsovertagelsesdato, omsorgsovertagelsesdato.plusWeeks(3).minusDays(1)),
+                // Opphold uke 3 til 10
+                uttaksperiode(MØDREKVOTE, omsorgsovertagelsesdato.plusWeeks(10), omsorgsovertagelsesdato.plusWeeks(22).minusDays(1)));
+
+        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon(omsorgsovertagelsesdato, BrukerRolle.MOR, false)
+                .medFordeling(fordeling)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()))
+                .medMottatdato(omsorgsovertagelsesdato.minusWeeks(3));
+        var saksnummer = mor.søk(søknad.build());
+
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendDefaultInntektsmeldingerFP(saksnummer, omsorgsovertagelsesdato);
+
+        saksbehandler.hentFagsak(saksnummer);
+        var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .setBegrunnelse("Adopsjon behandlet av Autotest");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
+
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        var saldoer = saksbehandler.valgtBehandling.getSaldoer();
+        assertThat(saldoer.getStonadskontoer().get(Stønadskonto.MØDREKVOTE).getSaldo())
+                .as("Saldo for stønadskontoen MØDREKVOTE")
+                .isZero();
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
+                .as("Avslåtte uttaksperioder")
+                .isZero();
+    }
+
+    @Test
+    @DisplayName("16: Far, adopsjon, bare far har rett, starter med opphold som trekker dager")
+    @Description("Bare far har rett søker 40 uker adopsjon. Starter med 10 uker opphold som resulterer i trekk av tilsvarende" +
+            "uker pga manglende aktivitetskrav. De siste 10 ukene av uttaket blir avslått pga manglende stønadsdager igjen")
+    void far_adopsjon_bfhr_starter_med_opphold_som_trekker_dager_pga_manglende_aktivitetskrav() {
+        var familie = new Familie("563");
+        var far = familie.far();
+        var omsorgsovertagelsesdato = LocalDate.now().minusMonths(2);
+        var fpStartdato = omsorgsovertagelsesdato.plusWeeks(10);
+        var fordeling = FordelingErketyper.generiskFordeling(
+                uttaksperiode(FORELDREPENGER, fpStartdato, fpStartdato.plusWeeks(40).minusDays(1)));
+        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon(omsorgsovertagelsesdato, BrukerRolle.FAR, false)
+                .medFordeling(fordeling)
+                .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor().fødselsnummer()))
+                .medMottatdato(omsorgsovertagelsesdato.minusWeeks(3));
+        var saksnummer = far.søk(søknad.build());
+
+        var arbeidsgiver = far.arbeidsgiver();
+        arbeidsgiver.sendDefaultInntektsmeldingerFP(saksnummer, omsorgsovertagelsesdato);
+
+        saksbehandler.hentFagsak(saksnummer);
+        var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .setBegrunnelse("Adopsjon behandlet av Autotest");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
+
+        var avklarFaktaAnnenForeldreHarRett = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .setAnnenforelderHarRett(false)
+                .setBegrunnelse("Både far og mor har rett!");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
+
+        var kontrollerAktivitetskravBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
+                .setAvklaringForPeriode(fpStartdato, fpStartdato.plusWeeks(30).minusDays(1), KontrollerAktivitetskravAvklaring.I_AKTIVITET)
+                .setBegrunnelse("Mor er i aktivitet!");
+        saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
+
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+
+        var saldoer = saksbehandler.valgtBehandling.getSaldoer();
+        assertThat(saldoer.getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo())
+                .as("Saldo for stønadskontoen MØDREKVOTE")
+                .isZero();
+
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
+                .as("Avslåtte uttaksperioder")
+                .isEqualTo(2);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(0).getPeriodeResultatÅrsak())
+                .as("Perioderesultatårsak")
+                .isInstanceOf(Avslagsårsak.class)
+                .isEqualTo(BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(1).getPeriodeResultatÅrsak())
+                .as("Perioderesultatårsak")
+                .isInstanceOf(InnvilgetÅrsak.class);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak())
+                .as("Perioderesultatårsak")
+                .isInstanceOf(Avslagsårsak.class)
+                .isEqualTo(IKKE_STØNADSDAGER_IGJEN);
+    }
+
 
 
     private Long sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,

@@ -84,5 +84,59 @@
 				"ident": "${for2}"
 			}
 		}
+	],	"familierelasjoner": [
+		{
+			"rolle": "BARN",
+			"til": {
+				"@type": "barn",
+				"ident": "${barn1}",
+				"fornavn": "${nevø1}",
+				"etternavn": "Duck",
+				"fødselsdato": "now()-P8W"
+			}
+		},
+		{
+			"rolle": "EKTE",
+			"til": {
+				"@type": "annenPart",
+				"ident": "${for2}"
+			}
+		}
+	],
+	"familierelasjonerAnnenPart": [
+		{
+			"rolle": "BARN",
+			"til": {
+				"@type": "barn",
+				"ident": "${barn1}",
+				"fornavn": "${nevø1}",
+				"etternavn": "Duck",
+				"fødselsdato": "now()-P8W"
+			}
+		},
+		{
+			"rolle": "EKTE",
+			"til": {
+				"@type": "annenPart",
+				"ident": "${for1}"
+			}
+		}
+	],
+
+	"familierelasjonerBarn": [
+		{
+			"rolle": "MORA",
+			"til": {
+				"@type": "søker",
+				"ident": "${for1}"
+			}
+		},
+		{
+			"rolle": "FARA",
+			"til": {
+				"@type": "annenPart",
+				"ident": "${for2}"
+			}
+		}
 	]
 }
