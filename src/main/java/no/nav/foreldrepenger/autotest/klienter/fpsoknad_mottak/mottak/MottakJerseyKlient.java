@@ -4,9 +4,9 @@ import static jakarta.ws.rs.client.Entity.json;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 
 import jakarta.ws.rs.core.MediaType;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Søknad;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.FpsoknadMottakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.dto.Kvittering;
-import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
 
 public class MottakJerseyKlient extends FpsoknadMottakJerseyKlient {
 

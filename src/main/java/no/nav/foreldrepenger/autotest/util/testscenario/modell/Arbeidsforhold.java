@@ -2,12 +2,13 @@ package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
 
 public class Arbeidsforhold {
 
     private final Orgnummer orgnummer;
-    private final ArbeidsforholdId arbeidsforholdId; // TODO Skriv arbeidsforholdId til egen klasse!
+    private final ArbeidsforholdId arbeidsforholdId;
     private final LocalDate ansettelsesperiodeFom;
     private final LocalDate ansettelsesperiodeTom;
     private final Arbeidsforholdstype arbeidsforholdType;

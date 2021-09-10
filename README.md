@@ -36,6 +36,11 @@ For øyeblikket har vi to test suits som tester enten fpsak eller fptilbake. Vi 
 | fp-risk         | [![](https://github.com/navikt/fp-risk/workflows/Bygg%20og%20deploy/badge.svg)](https://github.com/navikt/fp-risk/actions?query=workflow%3A%22Bygg+og+deploy%22) [![Promote](https://github.com/navikt/fp-risk/workflows/Promote/badge.svg)](https://github.com/navikt/fp-risk/actions?query=workflow%3APromote) |
 | fpabonnent         | [![](https://github.com/navikt/fpabonnent/actions/workflows/build.yml/badge.svg)](https://github.com/navikt/fpabonnent/actions/workflows/build.yml) |
 
+## Avhengigheter av fpsak-autotest
+Fpsak-autotest er avhengig av følgende repo:
+* [vtp](https://github.com/navikt/vtp) – Brukes for virtualisere eksterne tjenester
+* [autotest-dokumentgenerator](https://github.com/navikt/autotest-dokumentgenerator) – Bibliotek som innholder buildere for søknad og inntektsmelding for testformål.
+
 
 ## Arkitektur og oppbygning av fpsak-autotest
 For å se hvordan fpsak-autotest er bygget gå [her](docs/arkitektur.md).

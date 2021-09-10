@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import io.qameta.allure.Allure;
-import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public final class LoggFormater {
