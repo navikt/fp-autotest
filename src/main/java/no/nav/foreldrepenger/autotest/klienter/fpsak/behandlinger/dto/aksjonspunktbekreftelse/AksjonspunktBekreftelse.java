@@ -32,7 +32,7 @@ public abstract class AksjonspunktBekreftelse {
             aksjonspunktBekreftelseClasses = Collections.unmodifiableList(
                     index.getSubClassesWithAnnotation(AksjonspunktBekreftelse.class, BekreftelseKode.class));
         } catch (URISyntaxException e) {
-            throw new ExceptionInInitializerError(e);
+            throw new IllegalStateException("Feil i initialisering av aksjonspunktbekreftelser", e);
         }
     }
 

@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
@@ -299,7 +300,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     }
 
-    private UttakResultatPeriode deepCopy(Object object) {
+    private UttakResultatPeriode deepCopy(Object object){
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             try (ObjectOutputStream outputStrm = new ObjectOutputStream(outputStream)) {
                 outputStrm.writeObject(object);
@@ -308,9 +309,8 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
                     new ByteArrayInputStream(outputStream.toByteArray()))) {
                 return (UttakResultatPeriode) objInputStream.readObject();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new IllegalStateException("Klarte ikke å lage en kopi av perioden", e);
         }
     }
 }

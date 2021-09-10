@@ -29,19 +29,16 @@ public final class Vent {
                 if (!logget && now.isAfter(advarsel)) {
                     logget = true;
                     var ste = getCallerCallerClassName();
-                    LOG.warn("Async venting av {} har tatt mer enn 75% av en timeout på {} sekunder!", ste, timeoutInSeconds);
+                    LOG.warn("Async venting av {} har tatt mer enn 75% av timeout på {} sekunder!", ste, timeoutInSeconds);
                 }
                 if (now.isAfter(end)) {
-                    throw new RuntimeException(
-                            String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds,
-                                    errorMessageProducer.call()));
+                    throw new IllegalStateException(
+                            String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds, errorMessageProducer.call()));
                 }
                 Thread.sleep(1000);
             }
-        } catch (RuntimeException e) {
-            throw e;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
