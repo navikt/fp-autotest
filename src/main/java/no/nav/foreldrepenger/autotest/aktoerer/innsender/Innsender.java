@@ -10,6 +10,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Søknad;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
@@ -19,8 +21,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.MottakJers
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.oauth2.AzureAdJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
-import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
-import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;

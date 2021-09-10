@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OppholdÅrsak;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Arbeidsgiver;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakDokumentasjon;

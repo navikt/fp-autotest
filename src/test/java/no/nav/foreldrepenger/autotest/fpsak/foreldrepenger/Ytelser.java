@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;

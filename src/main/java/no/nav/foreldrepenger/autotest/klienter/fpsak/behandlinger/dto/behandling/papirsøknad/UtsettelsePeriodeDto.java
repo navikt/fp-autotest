@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.SøknadUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøknadUtsettelseÅrsak;
 
 public class UtsettelsePeriodeDto {
 

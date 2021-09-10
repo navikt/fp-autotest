@@ -5,10 +5,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MultivaluedHashMap;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.openam.dto.AccessTokenResponseDTO;
-import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 
 public class AzureAdJerseyKlient extends VTPJerseyKlient {
 

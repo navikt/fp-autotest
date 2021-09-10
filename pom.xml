@@ -17,7 +17,7 @@
         <changelist>-SNAPSHOT</changelist>
 
         <vtp.versjon>1.0.15</vtp.versjon>
-        <dokumentgenerator.version>1.0.1</dokumentgenerator.version>
+        <dokumentgenerator.version>2.0.0</dokumentgenerator.version>
         <felles.versjon>4.0.8</felles.versjon>
         <aspectj.version>1.9.7</aspectj.version>
         <jackson.version>2.12.5</jackson.version>
@@ -243,17 +243,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.neovisionaries</groupId>
-            <artifactId>nv-i18n</artifactId>
-            <version>1.29</version>
         </dependency>
 
         <dependency>

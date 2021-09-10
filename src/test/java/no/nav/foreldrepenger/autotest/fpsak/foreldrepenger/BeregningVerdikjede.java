@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.graderingsperiodeSN;
-import static no.nav.foreldrepenger.autotest.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto.MØDREKVOTE;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.UttaksperioderErketyper.graderingsperiodeSN;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -23,12 +23,13 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.Orgnummer;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
-import no.nav.foreldrepenger.autotest.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
@@ -45,7 +46,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
 import no.nav.vedtak.felles.xml.soeknad.uttak.v3.Fordeling;
@@ -333,7 +333,7 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum();
         assertThat(brutto).isEqualTo(bruttoPrÅr);
         assertThat(fordelt).isEqualTo(bruttoPrÅr);
-        assertThat(dagsats).isGreaterThan(0);
+        assertThat(dagsats).isPositive();
     }
 
     @Test

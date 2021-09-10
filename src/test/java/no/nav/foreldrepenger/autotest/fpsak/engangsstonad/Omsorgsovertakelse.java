@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.FORELDREANSVARSVILKÅRET_2_LEDD;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.OMSORGSVILKÅRET;
-import static no.nav.foreldrepenger.autotest.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,11 +13,11 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.builders.EngangstønadBuilder;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
-import no.nav.foreldrepenger.autotest.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvForeldreansvarAndreLedd;

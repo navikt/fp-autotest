@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
 

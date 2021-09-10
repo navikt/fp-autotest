@@ -8,11 +8,11 @@ import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Sok;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Status;
-import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
 
 public class FagsakJerseyKlient extends FpsakJerseyKlient {
 

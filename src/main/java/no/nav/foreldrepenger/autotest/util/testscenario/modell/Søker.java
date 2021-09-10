@@ -11,8 +11,9 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
-import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
-import no.nav.foreldrepenger.autotest.søknad.modell.Søknad;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Søknad;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;

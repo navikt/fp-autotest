@@ -10,14 +10,14 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.BrukerRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.annenforelder.NorskForelder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLovligOppholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.autotest.søknad.erketyper.SøknadEngangsstønadErketyper;
-import no.nav.foreldrepenger.autotest.søknad.modell.BrukerRolle;
-import no.nav.foreldrepenger.autotest.søknad.modell.Fødselsnummer;
-import no.nav.foreldrepenger.autotest.søknad.modell.felles.annenforelder.NorskForelder;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 
 @Tag("verdikjede")

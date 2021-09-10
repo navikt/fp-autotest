@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.Orgnummer;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -10,7 +11,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Orgnummer;
 
 @BekreftelseKode(kode = "5058")
 //TODO: Rydd opp i denne. Ganske uoversiktlig.

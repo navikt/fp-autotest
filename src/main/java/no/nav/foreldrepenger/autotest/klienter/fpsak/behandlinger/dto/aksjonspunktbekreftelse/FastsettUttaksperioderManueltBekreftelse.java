@@ -10,11 +10,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;

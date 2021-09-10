@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Stønadskonto;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
 
 public class PermisjonPeriodeDto {
 
