@@ -526,7 +526,7 @@ jobs:
           app-id: ${{ secrets.FP_APP_ID }}
 
       - name: Kommenterer issue med test OK
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ steps.get-token.outputs.token }}
           script: |
@@ -538,7 +538,7 @@ jobs:
             })
       - name: Trigger deploy til teamforeldrepenger
         if: github.event.inputs.trigger != 'navikt/fp-abakus'
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ steps.get-token.outputs.token }}
           script: |
@@ -567,7 +567,7 @@ jobs:
 
       - name: Trigger deploy til teamforeldrepenger
         if: github.event.inputs.trigger != 'navikt/fp-abakus'
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ steps.get-token.outputs.token }}
           script: |
@@ -602,7 +602,7 @@ jobs:
           app-id: ${{ secrets.FP_APP_ID }}
 
       - name: Trigger deploy til teamforeldrepenger
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ steps.get-token.outputs.token }}
           script: |
