@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import io.qameta.allure.Allure;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
+import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public final class LoggFormater {
@@ -45,7 +45,7 @@ public final class LoggFormater {
     public static String leggTilCallIdForFnr(Fødselsnummer fnr) {
         // Legger til Callid for fnr slik at vi kan slå opp riktig callid senere
         var callId = UUID.randomUUID().toString();
-        MDCOperations.putToMDC(fnr.toString(), callId);
+        MDCOperations.putToMDC(fnr.getFnr(), callId);
         MDCOperations.putToMDC(MDC_CONSUMER_ID, callId);
         return callId;
     }

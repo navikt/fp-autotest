@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.Orgnummer;
+import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
 
@@ -20,7 +20,7 @@ final class Aareg {
 
     static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, Orgnummer orgnummer) {
         return aareg.arbeidsforhold().stream()
-                .filter(a -> a.arbeidsgiverOrgnr().equalsIgnoreCase(orgnummer.toString()))
+                .filter(a -> a.arbeidsgiverOrgnr().equalsIgnoreCase(orgnummer.orgnr()))
                 .map(Aareg::mapTilArbeidsforhold)
                 .collect(Collectors.toList());
     }
