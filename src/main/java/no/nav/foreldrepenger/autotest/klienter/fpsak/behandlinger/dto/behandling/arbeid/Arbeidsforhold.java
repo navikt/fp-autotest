@@ -12,6 +12,7 @@ public class Arbeidsforhold {
 
     protected String id = null;
     protected String navn = null;
+    // TODO: Dette kan også være aktørid. Fiks ved senere anlednign
     protected Orgnummer arbeidsgiverIdentifikator = null;
     protected Orgnummer arbeidsgiverReferanse = null;
     protected String arbeidsforholdId = null;
