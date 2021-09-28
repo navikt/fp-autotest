@@ -394,7 +394,7 @@ public class Saksbehandler extends Aktoer {
             Orgnummer orgnummer) {
         return valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().stream()
                 .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
-                .filter(andeler -> orgnummer.equals(andeler.getArbeidsgiverReferanse()))
+                .filter(andeler -> orgnummer.orgnr().equalsIgnoreCase(andeler.getArbeidsgiverReferanse()))
                 .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
                 .collect(Collectors.toList());
     }
