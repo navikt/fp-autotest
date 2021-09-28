@@ -5,10 +5,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.MultivaluedHashMap;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.openam.dto.AccessTokenResponseDTO;
+import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
 public class AzureAdJerseyKlient extends VTPJerseyKlient {
 
@@ -32,7 +32,7 @@ public class AzureAdJerseyKlient extends VTPJerseyKlient {
                 .post(Entity.form(new MultivaluedHashMap<>(Map.of(
                         "grant_type", "client_credentials",
                         "scope", "openid",
-                        "code", fnr.toString()))),
+                        "code", fnr.getFnr()))),
                         AccessTokenResponseDTO.class)
                 .getIdToken();
     }

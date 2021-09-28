@@ -8,11 +8,11 @@ import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Sok;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Status;
+import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
 public class FagsakJerseyKlient extends FpsakJerseyKlient {
 
@@ -43,7 +43,7 @@ public class FagsakJerseyKlient extends FpsakJerseyKlient {
     }
 
     public List<Fagsak> søk(Fødselsnummer fnr) {
-        return søk(new Sok(fnr.toString()));
+        return søk(new Sok(fnr.getFnr()));
     }
 
     public List<Fagsak> søk(String søk) {

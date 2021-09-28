@@ -10,8 +10,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Søknad;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
@@ -23,6 +21,8 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.oauth2.AzureAdJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
+import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.common.domain.Søknad;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -75,7 +75,7 @@ public class Innsender extends Aktoer {
 
     private void journalførInnteksmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr) {
         for (InntektsmeldingBuilder inntektsmelding : inntektsmeldinger) {
-            LOG.info("Sender inn IM for søker: {}", fnr);
+            LOG.info("Sender inn IM for søker: {}", fnr.getFnr());
             var xml = inntektsmelding.createInntektesmeldingXML();
             var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml,
                     "ALTINN", null, DokumenttypeId.INNTEKTSMELDING);
@@ -86,7 +86,7 @@ public class Innsender extends Aktoer {
     @Step("[{søknad.søker.søknadsRolle}]: Sender inn søknad: {fnr}")
     public Long sendInnSøknad(Fødselsnummer fnr, Søknad søknad) {
         var callId = leggTilCallIdForFnr(fnr);
-        LOG.info("Sender inn søknadd for bruker {}", fnr);
+        LOG.info("Sender inn søknadd for bruker {}", fnr.getFnr());
         var token = oauth2Klient.hentAccessTokenForBruker(fnr);
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var kvittering = mottakKlient.sendSøknad(token, søknad);
@@ -124,10 +124,10 @@ public class Innsender extends Aktoer {
         journalpostModell.setMottattDato(LocalDateTime.now());
         journalpostModell.setMottakskanal(mottakskanal);
         journalpostModell.setArkivtema(Arkivtema.FOR);
-        journalpostModell.setAvsenderFnr(fnr.toString());
+        journalpostModell.setAvsenderFnr(fnr.getFnr());
         journalpostModell.setEksternReferanseId(eksternReferanseId);
         journalpostModell.setSakId("");
-        journalpostModell.setBruker(new JournalpostBruker(fnr.toString(), BrukerType.FNR));
+        journalpostModell.setBruker(new JournalpostBruker(fnr.getFnr(), BrukerType.FNR));
         journalpostModell.setJournalposttype(Journalposttyper.INNGAAENDE_DOKUMENT);
         journalpostModell.getDokumentModellList().add(lagDokumentModell(innhold, dokumenttypeId));
         return journalpostModell;
@@ -177,7 +177,7 @@ public class Innsender extends Aktoer {
 
     private Long ventTilFagsakOgBehandlingErOpprettet(Fødselsnummer fnr) {
         Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 30,
-                "Fagsak for bruker " + fnr + " har ikke blitt opprettet!");
+                "Fagsak for bruker " + fnr.getFnr() + " har ikke blitt opprettet!");
         var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();
 
         Vent.til(() -> {

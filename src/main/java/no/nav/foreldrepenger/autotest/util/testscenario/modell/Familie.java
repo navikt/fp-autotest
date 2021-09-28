@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.Fødselsnummer;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioJerseyKlient;
+import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.personopplysning.BrukerModell;
 

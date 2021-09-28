@@ -20,7 +20,6 @@ import org.slf4j.MDC;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.Orgnummer;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
@@ -66,6 +65,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterD
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
+import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public class Saksbehandler extends Aktoer {

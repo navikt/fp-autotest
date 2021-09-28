@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.Orgnummer;
+import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
 
 public class Arbeidsforhold {

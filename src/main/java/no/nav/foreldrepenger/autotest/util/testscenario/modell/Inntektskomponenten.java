@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
 import java.util.Comparator;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.modell.felles.Orgnummer;
+import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.InntektskomponentModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
 
@@ -20,7 +20,7 @@ final class Inntektskomponenten {
 
     static int månedsinntekt(InntektskomponentModell inntektskomponenten, Orgnummer orgnummer) {
         return inntektskomponenten.inntektsperioder().stream()
-                .filter(p -> orgnummer.equals(Orgnummer.fraString(p.orgnr())))
+                .filter(p -> orgnummer.equals(Orgnummer.valueOf(p.orgnr())))
                 .max(Comparator.comparing(Inntektsperiode::tom))
                 .map(Inntektsperiode::beløp)
                 .orElse(0);
