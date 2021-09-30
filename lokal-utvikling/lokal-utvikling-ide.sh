@@ -22,6 +22,6 @@ else
     cp docker-compose-lokal/.env .env
   fi
 
-  docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps fpformidling fprisk fpabonnent
+  docker-compose -f docker-compose-lokal/docker-compose.yml pull
   docker-compose -f docker-compose-lokal/docker-compose.yml up --detach ${scale}
 fi
