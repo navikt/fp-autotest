@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
@@ -22,8 +20,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -35,15 +33,11 @@ class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker fødsel er utvandret")
     @Description("Mor søker fødsel og er utvandret. Skal føre til aksjonspunkt angående medlemskap - avslått")
     void morSøkerFødselErUtvandret() {
-        TestscenarioDto testscenario = opprettTestscenario("51");
-
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                testscenario.personopplysninger().fødselsdato());
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("51", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
         logger.info("Opprettet sak med saksnummer: {}", saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -83,13 +77,11 @@ class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker med personstatus uregistrert")
     @Description("Mor søker med personstatus uregistrert, får askjonspunkt så hennlegges")
     void morSøkerFødselUregistrert() {
-        TestscenarioDto testscenario = opprettTestscenario("120");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                testscenario.personopplysninger().fødselsdato());
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("120", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         var bosatt = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerBosattBekreftelse.class);
@@ -107,13 +99,11 @@ class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker med utenlandsk adresse og ingen registert inntekt")
     @Description("Mor søker med utelandsk adresse og ingen registret inntekt")
     void morSøkerFødselUtenlandsadresse() {
-        TestscenarioDto testscenario = opprettTestscenario("121");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                testscenario.personopplysninger().fødselsdato());
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("121", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();

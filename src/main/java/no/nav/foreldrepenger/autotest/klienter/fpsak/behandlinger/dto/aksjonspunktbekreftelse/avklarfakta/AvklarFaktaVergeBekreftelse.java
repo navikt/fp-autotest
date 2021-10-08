@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
+import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
 @BekreftelseKode(kode = "5030")
 public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
@@ -22,8 +23,8 @@ public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    public AvklarFaktaVergeBekreftelse setVerge(String fnr) {
-        this.fnr = fnr;
+    public AvklarFaktaVergeBekreftelse setVerge(Fødselsnummer fnr) {
+        this.fnr = fnr.getFnr();
 
         // Defaults
         gyldigFom = LocalDate.now().minusYears(1);

@@ -65,7 +65,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterD
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
+import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public class Saksbehandler extends Aktoer {
@@ -391,10 +391,10 @@ public class Saksbehandler extends Aktoer {
      * Henting av Beregningsresultat
      */
     public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelIArbeidsforhold(
-            Orgnummer orgnummer) {
+            ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
         return valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().stream()
                 .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
-                .filter(andeler -> orgnummer.orgnr().equalsIgnoreCase(andeler.getArbeidsgiverReferanse()))
+                .filter(andeler -> arbeidsgiverIdentifikator.value().equalsIgnoreCase(andeler.getArbeidsgiverReferanse()))
                 .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
                 .collect(Collectors.toList());
     }
@@ -674,18 +674,18 @@ public class Saksbehandler extends Aktoer {
         return utbetaltTilSøkerForAndeler.stream().mapToInt(Integer::intValue).sum() == forventetUtbetaltDagsatsTilSøker;
     }
 
-    private String hentInternArbeidsforholdId(Orgnummer orgnummer) {
+    private String hentInternArbeidsforholdId(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
         return valgtBehandling.getInntektArbeidYtelse().getArbeidsforhold().stream()
-                .filter(arbeidsforhold -> orgnummer.equals(arbeidsforhold.getArbeidsgiverReferanse()))
+                .filter(arbeidsforhold -> arbeidsgiverIdentifikator.equals(arbeidsforhold.getArbeidsgiverReferanse()))
                 .map(Arbeidsforhold::getArbeidsforholdId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Fant ingen interne arbeidforhold med orgnummer " + orgnummer));
+                .orElseThrow(() -> new RuntimeException("Fant ingen interne arbeidforhold med orgnummer " + arbeidsgiverIdentifikator));
     }
 
-    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(Orgnummer orgnummer,
+    public boolean verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
                                                                                        double prosentAvDagsatsTilArbeidsgiver) {
         var prosentfaktor = prosentAvDagsatsTilArbeidsgiver / 100;
-        var internArbeidsforholdID = hentInternArbeidsforholdId(orgnummer);
+        var internArbeidsforholdID = hentInternArbeidsforholdId(arbeidsgiverIdentifikator);
         for (var periode : valgtBehandling.getBeregningResultatForeldrepenger().getPerioder()) {
             if (verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForPeriode(periode, internArbeidsforholdID,
                     prosentfaktor)) {

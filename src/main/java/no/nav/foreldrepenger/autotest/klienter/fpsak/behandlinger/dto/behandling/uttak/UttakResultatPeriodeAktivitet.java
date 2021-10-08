@@ -5,13 +5,13 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UttakResultatPeriodeAktivitet implements Serializable {
 
-    protected Stønadskonto stønadskontoType = null;
+    protected StønadskontoType stønadskontoType = null;
     protected BigDecimal trekkdagerDesimaler = null;
     protected BigDecimal prosentArbeid = null;
     protected BigDecimal utbetalingsgrad = null;
@@ -38,11 +38,11 @@ public class UttakResultatPeriodeAktivitet implements Serializable {
         this.trekkdagerDesimaler = trekkdagerDesimaler;
     }
 
-    public Stønadskonto getStønadskontoType() {
+    public StønadskontoType getStønadskontoType() {
         return stønadskontoType;
     }
 
-    public void setStønadskontoType(Stønadskonto stønadskontoType) {
+    public void setStønadskontoType(StønadskontoType stønadskontoType) {
         this.stønadskontoType = stønadskontoType;
     }
 

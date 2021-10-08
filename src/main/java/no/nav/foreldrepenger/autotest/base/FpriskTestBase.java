@@ -7,18 +7,18 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
+import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.fprisk.Saksbehandler;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.AktørId;
-import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioJerseyKlient;
 
-public class FpriskTestBase extends TestScenarioTestBase {
+public class FpriskTestBase {
 
     protected Saksbehandler saksbehandler;
-    protected TestscenarioJerseyKlient testscenarioKlient;
+    protected Fordel fordel;
 
     public FpriskTestBase() {
         saksbehandler = new Saksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
-        testscenarioKlient = new TestscenarioJerseyKlient();
+        fordel = new Fordel(Aktoer.Rolle.SAKSBEHANDLER);
     }
 
     public static class RequestWrapper {

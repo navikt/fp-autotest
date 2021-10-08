@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 public class TestscenarioJerseyKlient extends VTPJerseyKlient {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestscenarioJerseyKlient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestscenarioJerseyKlient.class);
 
     private static final String TESTSCENARIO_I_AUTOTEST_POST_URL = "/testscenarios";
     private static final TestscenarioHenter testscenarioHenter = new TestscenarioHenter();
@@ -36,7 +36,7 @@ public class TestscenarioJerseyKlient extends VTPJerseyKlient {
                 .request()
                 .post(json(testscenarioObject), TestscenarioDto.class);
         tilJsonOgPubliserIAllureRapport(testscenarioObject);
-        logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
+        LOG.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
                 testscenarioDto.personopplysninger().søkerIdent());
         return testscenarioDto;
     }
@@ -49,7 +49,7 @@ public class TestscenarioJerseyKlient extends VTPJerseyKlient {
                 .request()
                 .post(json(testscenarioObject), TestscenarioDto.class);
         tilJsonOgPubliserIAllureRapport(testscenarioObject);
-        logger.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
+        LOG.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
                 testscenarioDto.personopplysninger().søkerIdent());
         return testscenarioDto;
     }

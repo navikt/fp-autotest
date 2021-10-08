@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEngangstønadErketyper.lagEngangstønadTermin;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadTermin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
@@ -23,8 +21,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -34,14 +32,11 @@ class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin - godkjent")
     @Description("Mor søker termin - godkjent happy case")
     void morSøkerTerminGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                LocalDate.now().plusWeeks(3));
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var termindato = LocalDate.now().plusWeeks(3);
+        var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
@@ -70,14 +65,11 @@ class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin overstyrt vilkår")
     @Description("Mor søker termin overstyrt vilkår fødsel fra oppfylt til avvist")
     void morSøkerTerminOvertyrt() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                LocalDate.now().plusWeeks(3));
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var termindato = LocalDate.now().plusWeeks(3);
+        var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
@@ -111,22 +103,16 @@ class Termin extends FpsakTestBase {
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
     }
 
-    public void behandleTerminMorUtenTerminbekreftelse() {
-        opprettTestscenario("55");
-    }
 
     @Test
     @DisplayName("Far søker termin")
     @Description("Far søker termin avslått pga søker er far")
     void farSøkerTermin() {
-        TestscenarioDto testscenario = opprettTestscenario("61");
-        EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.FAR,
-                LocalDate.now().plusWeeks(3));
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("61", fordel);
+        var far = familie.far();
+        var termindato = LocalDate.now().plusWeeks(3);
+        var søknad = lagEngangstønadTermin(BrukerRolle.FAR, termindato);
+        var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
@@ -146,16 +132,11 @@ class Termin extends FpsakTestBase {
     @DisplayName("Setter behandling på vent og gjennoptar og henlegger")
     @Description("Setter behandling på vent og gjennoptar og henlegger")
     void settBehandlingPåVentOgGjenopptaOgHenlegg() {
-        // Opprett scenario og søknad
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                LocalDate.now().plusWeeks(3));
-
-        // Send inn søknad
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var termindato = LocalDate.now().plusWeeks(3);
+        var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -182,14 +163,12 @@ class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin 25 dager etter fødsel")
     @Description("Mor søker termin 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
     void morSøkerTermin25DagerTilbakeITid() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadTermin(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                LocalDate.now().minusDays(26));
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var termindato = LocalDate.now().minusDays(26);
+        var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato)
+                .medMottatdato(termindato.plusDays(25));
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler

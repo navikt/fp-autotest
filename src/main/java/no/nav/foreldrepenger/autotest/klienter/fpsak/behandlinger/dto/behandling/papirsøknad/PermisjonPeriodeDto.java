@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 public class PermisjonPeriodeDto {
 
@@ -10,9 +10,9 @@ public class PermisjonPeriodeDto {
 
     public LocalDate periodeTom;
 
-    public Stønadskonto periodeType;
+    public StønadskontoType periodeType;
 
-    public PermisjonPeriodeDto(Stønadskonto stønadskonto, LocalDate fom, LocalDate tom) {
+    public PermisjonPeriodeDto(StønadskontoType stønadskonto, LocalDate fom, LocalDate tom) {
         this.periodeType = stønadskonto;
         this.periodeFom = fom;
         this.periodeTom = tom;

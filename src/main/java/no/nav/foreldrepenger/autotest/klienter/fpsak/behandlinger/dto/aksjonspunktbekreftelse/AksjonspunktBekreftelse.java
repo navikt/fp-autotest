@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.autotest.util.IndexClasses;
 
 public abstract class AksjonspunktBekreftelse {
 
-    private static final Logger logger = LoggerFactory.getLogger(AksjonspunktBekreftelse.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AksjonspunktBekreftelse.class);
 
     @JsonProperty("@type")
     protected String kode;
@@ -54,7 +54,7 @@ public abstract class AksjonspunktBekreftelse {
             if (Modifier.isAbstract(klasse.getModifiers())) {
                 continue; // trenger trenger ikke skjekke klasser som er abstrakte
             } else if (annotation == null) {
-                logger.warn("Aksjonspunkt mangler annotasjon='{}'", klasse.getName());
+                LOG.warn("Aksjonspunkt mangler annotasjon='{}'", klasse.getName());
             } else if (annotation.kode().equals(kode)) {
                 return klasse.getConstructor().newInstance();
             }

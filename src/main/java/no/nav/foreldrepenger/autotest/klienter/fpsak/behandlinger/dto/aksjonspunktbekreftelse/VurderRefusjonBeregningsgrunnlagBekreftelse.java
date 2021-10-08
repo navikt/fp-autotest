@@ -7,6 +7,7 @@ import java.util.List;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.common.domain.Orgnummer;
 
 @BekreftelseKode(kode = "5059")
 public class VurderRefusjonBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse {
@@ -34,7 +35,7 @@ public class VurderRefusjonBeregningsgrunnlagBekreftelse extends AksjonspunktBek
         super.oppdaterMedDataFraBehandling(fagsak, behandling);
         for (Arbeidsforhold arbeidsforhold : behandling.getInntektArbeidYtelse().getArbeidsforhold()) {
             var vurderRefusjonAndelBeregningsgrunnlagDto = new VurderRefusjonAndelBeregningsgrunnlagDto(
-                    arbeidsforhold.getArbeidsgiverIdentifikator(),
+                    Orgnummer.valueOf(arbeidsforhold.getArbeidsgiverIdentifikator()),
                     null,
                     arbeidsforhold.getArbeidsforholdId(),
                     null);

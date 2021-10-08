@@ -1,25 +1,19 @@
 package no.nav.foreldrepenger.autotest.fptilbake.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEndringErketyper.lagEndringssøknad;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.UttaksperioderErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRevuderingsbehandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
@@ -29,39 +23,40 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
 class TilbakekrevingFP extends FptilbakeTestBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(TilbakekrevingFP.class);
     private static final String ytelseType = "FP";
 
     @Test
     @DisplayName("1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     void opprettTilbakekrevingManuelt() {
-
-        var testscenario = opprettTestscenario("50");
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var søkerIdent = testscenario.personopplysninger().søkerIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("50");
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer);
+        lagOgSendInntektsmelding(familie, fpStartdato, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
-        var fordeling = generiskFordeling(uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        var søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer);
-        fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+        var fordeling = generiskFordeling(
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, saksnummer);
+        mor.søk(søknadE.build());
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -73,7 +68,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
                 .as("Venteårsak")
                 .isEqualTo("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG");
-        var kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
+        var kravgrunnlag = new Kravgrunnlag(saksnummer, mor.fødselsnummer().getFnr(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
@@ -107,27 +102,28 @@ class TilbakekrevingFP extends FptilbakeTestBase {
     @DisplayName("2. Oppretter en tilbakekreving automatisk etter negativ simulering på fpsak revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving men med registrert advokat som verge/fullmektig")
     void opprettTilbakekrevingAutomatisk() {
-        var testscenario = opprettTestscenario("142");
-
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("142");
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
+                .medMottatdato(fpStartdato);
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR).medMottattDato(fpStartdato);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer);
+        lagOgSendInntektsmelding(familie, fpStartdato, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
-        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer, true);
+        lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, true);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt(testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp() * 6, 1)
+                .leggTilInntekt(mor.månedsinntekt() * 6, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
@@ -145,7 +141,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
                 .as("Venteårsak")
                 .isEqualTo("VENT_PÅ_BRUKERTILBAKEMELDING");
 
-        var kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
+        var kravgrunnlag = new Kravgrunnlag(saksnummer, mor.fødselsnummer().getFnr(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
@@ -204,27 +200,28 @@ class TilbakekrevingFP extends FptilbakeTestBase {
     @DisplayName("3. Oppretter og behandler en tilbakekreving helt-automatisk")
     @Description("Heltautomatisert scenario. Beløp under et halvt rettsgebyr og blir plukket av auto-batch")
     void opprettOgBehandleTilbakekrevingAutomatisk() {
-        var testscenario = opprettTestscenario("142");
-
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("142");
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
+                .medMottatdato(fpStartdato);
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR).medMottattDato(fpStartdato);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer);
+        lagOgSendInntektsmelding(familie, fpStartdato, saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
-        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer, true);
+        lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, true);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt(testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp() * 6, 1)
+                .leggTilInntekt(mor.månedsinntekt() * 6, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
@@ -241,7 +238,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
                 .as("Venteårsak")
                 .isEqualTo("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG");
 
-        var kravgrunnlag = new Kravgrunnlag(saksnummer, testscenario.personopplysninger().søkerIdent(),
+        var kravgrunnlag = new Kravgrunnlag(saksnummer, mor.fødselsnummer().getFnr(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilPeriodeMedSmåBeløp();
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
@@ -254,24 +251,15 @@ class TilbakekrevingFP extends FptilbakeTestBase {
                 .isZero();
     }
 
-    private void lagOgSendInntektsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer) {
-        lagOgSendInntektsmelding(testscenario, fpStartdato, saksnummer, false);
+    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, Long saksnummer) {
+        lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, false);
     }
-    private void lagOgSendInntektsmelding(TestscenarioDto testscenario, LocalDate fpStartdato, Long saksnummer, Boolean redusert) {
-        var belop = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp();
+    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, Long saksnummer, Boolean redusert) {
+        var arbeidsgiver = familie.mor().arbeidsgiver();
+        var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
         if (redusert){
-            belop = BigInteger.valueOf(belop).divide(BigInteger.valueOf(2)).intValue();
+            inntektsmelding.medBeregnetInntekt(new ProsentAndel(50));
         }
-        var inntektsmelding = lagInntektsmelding(
-                belop,
-                testscenario.personopplysninger().søkerIdent(),
-                fpStartdato,
-                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
-                        .arbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmelding,
-                testscenario.personopplysninger().søkerAktørIdent(),
-                testscenario.personopplysninger().søkerIdent(),
-                saksnummer);
+        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
     }
 }

@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
@@ -25,8 +23,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNkBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Mor;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -36,13 +35,13 @@ class Klage extends ForeldrepengerTestBase {
     @DisplayName("Klage med Medhold Ugunst NFP")
     @Description("Sender inn klage på førstegangsbehandling. Bekrefter medhold i Ugunst hos NFP. Beslutter og avslutter.")
     void klageMedholUgunstNFP() {
-        // opprette førstegangsbehandling til vedtak
-        var testscenario = opprettTestscenario("50");
-        var saksnummer = opprettForstegangsbehandling(testscenario);
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
 
         // Motta og behandle klage NFP
-        var sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.hentFagsak(sakId);
+        mor.sendInnKlage();
+        klagebehandler.hentFagsak(saksnummer);
 
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         klagebehandler.ventPåOgVelgKlageBehandling();
@@ -81,7 +80,7 @@ class Klage extends ForeldrepengerTestBase {
 
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.hentFagsak(sakId);
+        beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
@@ -108,13 +107,13 @@ class Klage extends ForeldrepengerTestBase {
     @DisplayName("Klage med hjemsende av KA")
     @Description("Sender inn klage på førstegangsbehandling. NFP sender videre til KA. KA bekrefter hjemsende. Beslutter og avslutter.")
     void hjemsendeKA() {
-        // opprette førstegangsbehandling til vedtak
-        var testscenario = opprettTestscenario("50");
-        var saksnummer = opprettForstegangsbehandling(testscenario);
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
 
         // Motta og behandle klage NFP
-        var sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.hentFagsak(sakId);
+        mor.sendInnKlage();
+        klagebehandler.hentFagsak(saksnummer);
 
         klagebehandler.ventPåOgVelgKlageBehandling();
 
@@ -163,13 +162,13 @@ class Klage extends ForeldrepengerTestBase {
     @DisplayName("Klage med stadfestet av KA")
     @Description("Sender inn klage på førstegangsbehandling. NFP sender videre til KA. KA bekrefter stadfestet. Beslutter og avslutter.")
     void stadfesteKA() {
-        // opprette førstegangsbehandling til vedtak
-        var testscenario = opprettTestscenario("50");
-        var saksnummer = opprettForstegangsbehandling(testscenario);
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
 
         // Motta og behandle klage NFP
-        var sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.hentFagsak(sakId);
+        mor.sendInnKlage();
+        klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
         var førstegangsbehandling = klagebehandler.førstegangsbehandling();
@@ -205,19 +204,17 @@ class Klage extends ForeldrepengerTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.hentFagsak(sakId);
+        beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(bekreftelse);
 
-        klagebehandler.hentFagsak(sakId);
+        klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
         klagebehandler.ventTilAvsluttetBehandling();
 
-        klagebehandler.hentFagsak(sakId);
-        klagebehandler.ventPåOgVelgKlageBehandling();
         assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
@@ -233,13 +230,13 @@ class Klage extends ForeldrepengerTestBase {
     @DisplayName("Klage med Medhold Delvis Gunst KA")
     @Description("Sender inn klage på førstegangsbehandling. NFP sender videre til KA. KA bekrefter medhold med delvis gunst. Beslutter og avslutter.")
     void medholdDelvisGunstKA() {
-        // opprette førstegangsbehandling til vedtak
-        var testscenario = opprettTestscenario("50");
-        var saksnummer = opprettForstegangsbehandling(testscenario);
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
 
         // Motta og behandle klage NFP
-        var sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.hentFagsak(sakId);
+        mor.sendInnKlage();
+        klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
         var førstegangsbehandling = klagebehandler.førstegangsbehandling();
@@ -274,13 +271,13 @@ class Klage extends ForeldrepengerTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.hentFagsak(sakId);
+        beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(bekreftelse);
 
-        klagebehandler.hentFagsak(sakId);
+        klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
         klagebehandler.ventTilAvsluttetBehandling();
@@ -300,13 +297,13 @@ class Klage extends ForeldrepengerTestBase {
     @DisplayName("Klage avvist i formkrav av NFP")
     @Description("Sender inn klage på førstegangsbehandling. NFP avslår formkrav (ikke konkret). Beslutter og avslutter.")
     void avvisFormkravNFP() {
-        // opprette førstegangsbehandling til vedtak
-        var testscenario = opprettTestscenario("50");
-        var saksnummer = opprettForstegangsbehandling(testscenario);
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
 
         // Motta og behandle klage NFP
-        var sakId = fordel.sendInnKlage(null, testscenario, saksnummer);
-        klagebehandler.hentFagsak(sakId);
+        mor.sendInnKlage();
+        klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
 
         var førstegangsbehandling = klagebehandler.førstegangsbehandling();
@@ -318,7 +315,7 @@ class Klage extends ForeldrepengerTestBase {
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
         klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.hentFagsak(sakId);
+        beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgKlageBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
@@ -332,25 +329,15 @@ class Klage extends ForeldrepengerTestBase {
     }
 
     @Step("Klage: oppretter førstegangsbehandling")
-    private long opprettForstegangsbehandling(TestscenarioDto testscenario) {
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+    private long opprettForstegangsbehandlingMor(Mor mor, Familie familie) {
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        var inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
-                testscenario.personopplysninger().søkerIdent(),
-                fpStartdato,
-                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
-                        .arbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.personopplysninger().søkerAktørIdent(),
-                testscenario.personopplysninger().søkerIdent(),
-                saksnummer);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);

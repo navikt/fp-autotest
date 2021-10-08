@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -11,16 +11,14 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnsynResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvInnsynBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -30,14 +28,12 @@ class Innsyn extends FpsakTestBase {
     @DisplayName("Behandle innsyn for mor - godkjent")
     @Description("Behandle innsyn for mor - godkjent happy case")
     void behandleInnsynMorGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                testscenario.personopplysninger().fødselsdato());
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR,
+                fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
@@ -74,14 +70,12 @@ class Innsyn extends FpsakTestBase {
     @DisplayName("Behandle innsyn for mor - avvist")
     @Description("Behandle innsyn for mor - avvist ved vurdering")
     void behandleInnsynMorAvvist() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                testscenario.personopplysninger().fødselsdato());
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR,
+                fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();

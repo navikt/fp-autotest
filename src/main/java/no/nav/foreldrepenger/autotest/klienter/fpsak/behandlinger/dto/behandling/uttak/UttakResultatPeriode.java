@@ -8,11 +8,11 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OppholdÅrsak;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UttakResultatPeriode implements Serializable {
@@ -122,9 +122,9 @@ public class UttakResultatPeriode implements Serializable {
         this.periodeType = periodeType;
     }
 
-    public void setStønadskonto(Stønadskonto stønadskonto) {
+    public void setStønadskonto(StønadskontoType stønadskonto) {
         for (UttakResultatPeriodeAktivitet aktivitet : aktiviteter) {
-            aktivitet.stønadskontoType = stønadskonto;
+            aktivitet.setStønadskontoType(stønadskonto);
         }
     }
 

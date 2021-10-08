@@ -4,21 +4,21 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Stonadskontoer {
-    private final Stønadskonto stonadskontoType;
+    private final StønadskontoType stonadskontoType;
     private final int maxDager;
     private final int saldo;
 
-    public Stonadskontoer(Stønadskonto stonadskontoType, int maxDager, int saldo) {
+    public Stonadskontoer(StønadskontoType stonadskontoType, int maxDager, int saldo) {
         this.stonadskontoType = stonadskontoType;
         this.maxDager = maxDager;
         this.saldo = saldo;
     }
 
-    public Stønadskonto getStonadskontoType() {
+    public StønadskontoType getStonadskontoType() {
         return this.stonadskontoType;
     }
 

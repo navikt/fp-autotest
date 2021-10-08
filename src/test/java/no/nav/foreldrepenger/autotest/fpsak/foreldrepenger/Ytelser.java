@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -18,7 +16,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -28,17 +27,12 @@ class Ytelser extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel og mottar sykepenger")
     @Description("Mor søker fødsel og mottar sykepenger - opptjening automatisk oppfylt")
     void morSøkerFødselMottarSykepenger() {
-        var testscenario = opprettTestscenario("70");
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var søkerIdent = testscenario.personopplysninger().søkerIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
-
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        var saksnummer = fordel.sendInnSøknad(
-                søknad.build(),
-                søkerAktørIdent,
-                søkerIdent,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+        var familie = new Familie("70", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarArbeidsforholdBekreftelse = saksbehandler
@@ -75,30 +69,16 @@ class Ytelser extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel og mottar sykepenger og inntekter")
     @Description("Mor søker fødsel og mottar sykepenger og inntekter - opptjening automatisk godkjent")
     void morSøkerFødselMottarSykepengerOgInntekter() {
-        var testscenario = opprettTestscenario("72");
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var søkerIdent = testscenario.personopplysninger().søkerIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("72", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
+        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        var saksnummer = fordel.sendInnSøknad(
-                søknad.build(),
-                søkerAktørIdent,
-                søkerIdent,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-
-        var inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
-                testscenario.personopplysninger().søkerIdent(),
-                startDatoForeldrepenger,
-                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
-                        .arbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.personopplysninger().søkerAktørIdent(),
-                testscenario.personopplysninger().søkerIdent(),
-                saksnummer);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
 
         saksbehandler.hentFagsak(saksnummer);
 

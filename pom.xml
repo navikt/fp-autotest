@@ -17,7 +17,7 @@
         <changelist>-SNAPSHOT</changelist>
 
         <vtp.versjon>1.0.15</vtp.versjon>
-        <dokumentgenerator.version>2.0.3</dokumentgenerator.version>
+        <dokumentgenerator.version>3.0.0</dokumentgenerator.version>
         <felles.versjon>4.0.8</felles.versjon>
         <aspectj.version>1.9.7</aspectj.version>
         <jackson.version>2.12.5</jackson.version>
@@ -300,6 +300,11 @@
                     <artifactId>jakarta.inject</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.12.4</version>
         </dependency>
     </dependencies>
 

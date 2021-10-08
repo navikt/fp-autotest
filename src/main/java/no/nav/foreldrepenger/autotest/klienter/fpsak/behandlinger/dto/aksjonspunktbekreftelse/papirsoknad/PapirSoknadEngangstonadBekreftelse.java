@@ -4,14 +4,14 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.AnnenForelderDto;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @BekreftelseKode(kode = "5012")
 public class PapirSoknadEngangstonadBekreftelse extends AksjonspunktBekreftelse {
-    protected String tema = "FODSL";
+    protected String tema = "OMSRGO";
     protected String soknadstype = "ES";
     protected LocalDate mottattDato = LocalDate.now().minusDays(10);
 
@@ -25,7 +25,7 @@ public class PapirSoknadEngangstonadBekreftelse extends AksjonspunktBekreftelse 
     protected List<LocalDate> foedselsDato = Collections.singletonList(LocalDate.now().minusWeeks(1));
     protected AnnenForelderDto annenForelder = new AnnenForelderDto();
 
-    public PapirSoknadEngangstonadBekreftelse setSøker(SøkersRolle søker) {
+    public PapirSoknadEngangstonadBekreftelse setSøker(BrukerRolle søker) {
         this.soker = søker.name();
         return this;
     }

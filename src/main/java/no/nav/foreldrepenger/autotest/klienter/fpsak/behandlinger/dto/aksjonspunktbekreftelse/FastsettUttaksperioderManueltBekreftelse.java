@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
@@ -22,6 +21,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 @BekreftelseKode(kode = "5071")
 public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekreftelse {
@@ -106,7 +106,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     public FastsettUttaksperioderManueltBekreftelse innvilgPeriode(LocalDate fra,
                                                                    LocalDate til,
                                                                    PeriodeResultatÅrsak periodeResultatÅrsak,
-                                                                   Stønadskonto stønadskonto) {
+                                                                   StønadskontoType stønadskonto) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         innvilgPeriode(periode, periodeResultatÅrsak, stønadskonto);
         return this;
@@ -179,7 +179,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         innvilgPeriode(periode, InnvilgetÅrsak.UTTAK_OPPFYLT);
     }
 
-    private void innvilgPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, Stønadskonto stønadskonto) {
+    private void innvilgPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, StønadskontoType stønadskonto) {
         periode.setPeriodeResultatType(PeriodeResultatType.INNVILGET);
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
         periode.setBegrunnelse("Perioden er innvilget av Autotest.");
@@ -253,8 +253,8 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         // HACK for manglende aktivitet i periode (set aktivitet til å trekke fra
         // mødrekvoten)
         if ((aktivitet.getStønadskontoType() == null) || aktivitet.getStønadskontoType()
-                .equals(Stønadskonto.INGEN_STØNADSKONTO)) {
-            aktivitet.setStønadskontoType(Stønadskonto.MØDREKVOTE);
+                .equals(StønadskontoType.IKKE_SATT)) {
+            aktivitet.setStønadskontoType(StønadskontoType.MØDREKVOTE);
         }
     }
 
