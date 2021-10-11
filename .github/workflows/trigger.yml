@@ -534,11 +534,11 @@ jobs:
           app-id: ${{ secrets.FP_APP_ID }}
 
       - name: Kommenterer issue med test OK
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ steps.get-token.outputs.token }}
           script: |
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
@@ -546,11 +546,11 @@ jobs:
             })
       - name: Trigger deploy til teamforeldrepenger
         if: github.event.inputs.trigger != 'navikt/fp-abakus'
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ steps.get-token.outputs.token }}
           script: |
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
@@ -575,17 +575,17 @@ jobs:
 
       - name: Trigger deploy til teamforeldrepenger
         if: github.event.inputs.trigger != 'navikt/fp-abakus'
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ steps.get-token.outputs.token }}
           script: |
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
               body: '/promote fp dev-fss teamforeldrepenger'
             })
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
@@ -610,17 +610,17 @@ jobs:
           app-id: ${{ secrets.FP_APP_ID }}
 
       - name: Trigger deploy til teamforeldrepenger
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           github-token: ${{ steps.get-token.outputs.token }}
           script: |
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
               body: '/promote dev-fss'
             })
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: '${{ github.event.inputs.issue_number }}',
               owner: 'navikt',
               repo: '${{ env.REPO }}',
