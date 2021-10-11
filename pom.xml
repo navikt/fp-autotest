@@ -20,7 +20,7 @@
         <dokumentgenerator.version>3.0.1</dokumentgenerator.version>
         <felles.versjon>4.0.10</felles.versjon>
         <aspectj.version>1.9.7</aspectj.version>
-        <jackson.version>2.12.5</jackson.version>
+        <jackson.version>2.13.0</jackson.version>
         <jersey.version>3.0.3</jersey.version>
     </properties>
 
