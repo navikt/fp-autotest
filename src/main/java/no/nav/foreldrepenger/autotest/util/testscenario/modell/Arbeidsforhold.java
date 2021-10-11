@@ -2,12 +2,12 @@ package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.common.domain.Orgnummer;
+import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
 
 public class Arbeidsforhold {
 
-    private final Orgnummer orgnummer;
+    private final ArbeidsgiverIdentifikator arbeidsgiverIdentifikasjon;
     private final ArbeidsforholdId arbeidsforholdId;
     private final LocalDate ansettelsesperiodeFom;
     private final LocalDate ansettelsesperiodeTom;
@@ -15,9 +15,10 @@ public class Arbeidsforhold {
     private final int stillingsprosent; // TODO Skriv stillingsprosent til egen klasse!
 
 
-    Arbeidsforhold(Orgnummer orgnummer, ArbeidsforholdId arbeidsforholdId, LocalDate ansettelsesperiodeFom,
-                   LocalDate ansettelsesperiodeTom, Arbeidsforholdstype arbeidsforholdType, int stillingsprosent) {
-        this.orgnummer = orgnummer;
+    Arbeidsforhold(ArbeidsgiverIdentifikator arbeidsgiverIdentifikasjon, ArbeidsforholdId arbeidsforholdId,
+                   LocalDate ansettelsesperiodeFom, LocalDate ansettelsesperiodeTom,
+                   Arbeidsforholdstype arbeidsforholdType, int stillingsprosent) {
+        this.arbeidsgiverIdentifikasjon = arbeidsgiverIdentifikasjon;
         this.arbeidsforholdId = arbeidsforholdId;
         this.arbeidsforholdType = arbeidsforholdType;
         this.stillingsprosent = stillingsprosent;
@@ -25,8 +26,8 @@ public class Arbeidsforhold {
         this.ansettelsesperiodeTom = ansettelsesperiodeTom;
     }
 
-    public Orgnummer orgnummer() {
-        return orgnummer;
+    public ArbeidsgiverIdentifikator arbeidsgiverIdentifikasjon() {
+        return arbeidsgiverIdentifikasjon;
     }
 
     public ArbeidsforholdId arbeidsforholdId() {
@@ -49,7 +50,7 @@ public class Arbeidsforhold {
         return stillingsprosent;
     }
 
-    public Arbeidsgiver arbeidsgiver() {
+    public Virksomhet arbeidsgiver() {
         return null;
     }
 }

@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -11,31 +11,27 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("foreldrepenger")
 class Soknadsfrist extends FpsakTestBase {
 
     @Test
     @DisplayName("Behandle søknadsfrist og sent tilbake")
-    @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist")
+    @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist. Manglende fødsel.")
     void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
-        LocalDate fødselsdato = LocalDate.now().minusMonths(7);
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var fødselsdato = LocalDate.now().minusMonths(7);
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -72,13 +68,11 @@ class Soknadsfrist extends FpsakTestBase {
     @DisplayName("Behandle søknadsfrist og sent tilbake på grunn av fødsel")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av fødsel - tester tilbakesending")
     void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
-        LocalDate fødselsdato = LocalDate.now().minusMonths(7);
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var fødselsdato = LocalDate.now().minusMonths(7);
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderManglendeFodselBekreftelse = saksbehandler

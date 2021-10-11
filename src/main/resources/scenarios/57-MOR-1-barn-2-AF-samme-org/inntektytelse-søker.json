@@ -4,20 +4,11 @@
 			{
 				"fom": "now() - P2Y",
 				"tom": "now() - P2M",
-				"beløp": 30000,
+				"beløp": 45000,
 				"orgnr": "910909088",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
 				"beskrivelse": "fastloenn"
-			},
-			{
-				"fom": "now() - P3Y",
-				"tom": "now() - P2M",
-				"beløp": 15000,
-				"orgnr": "910909088",
-				"type": "Lønnsinntekt",
-				"fordel": "kontantytelse",
-				"beskrivelse": "testbeskrivelsesomfungererennsålenge"
 			}
 		]
 	},

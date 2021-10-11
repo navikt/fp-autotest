@@ -3,11 +3,11 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 public class GraderingPeriodeDto {
 
-    public Stønadskonto periodeForGradering;
+    public StønadskontoType periodeForGradering;
     public LocalDate periodeFom;
     public LocalDate periodeTom;
 
@@ -17,7 +17,7 @@ public class GraderingPeriodeDto {
     public boolean erFrilanser;
     public boolean erSelvstNæringsdrivende;
 
-    public GraderingPeriodeDto(Stønadskonto stønadskonto,
+    public GraderingPeriodeDto(StønadskontoType stønadskonto,
             LocalDate fom, LocalDate tom,
             BigDecimal prosentandelArbeid,
             String arbeidsgiverIdentifikator,

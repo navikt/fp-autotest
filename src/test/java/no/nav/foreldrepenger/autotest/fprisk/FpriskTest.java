@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpriskTestBase;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 
 @Tag("fprisk")
 class FpriskTest extends FpriskTestBase {
@@ -21,13 +22,14 @@ class FpriskTest extends FpriskTestBase {
     @DisplayName("Sender Kafkamelding med risikovurderingsforespørsel, venter på at vurderingen blir gjort.")
     @Description("Sender inn forespørel om risikovurderinger til FPRISK for scenario 50 over Kafka (gjennom VTP). Venter på at saken er ferdig behandlet via polling over REST.")
     void sendRisikovurderingsforespørselOgVentPåResultat() {
-        var testscenario = opprettTestscenario("50");
-
-        var soekerAktoerId = testscenario.personopplysninger().søkerAktørIdent();
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var far = familie.far();
+        var soekerAktoerId = mor.aktørId().value();
         var skjæringstidspunkt = LocalDate.now();
         var opplysningsperiodefraOgMed = LocalDate.now();
         var opplysningsperiodeTilOgMed = LocalDate.now().plusMonths(1);
-        var annenPartAktørId = testscenario.personopplysninger().annenpartAktørIdent();
+        var annenPartAktørId = far.aktørId().value();
         var konsumentId = UUID.randomUUID().toString();
         var kontraktFpriskMelding = new RisikovurderingRequest(soekerAktoerId, skjæringstidspunkt,
                 opplysningsperiodefraOgMed,

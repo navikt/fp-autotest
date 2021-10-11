@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
+import no.nav.foreldrepenger.autotest.util.jackson.StønadskontoTypeDeserializerFP;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.common.domain.serialization.CustomSerializerModule;
 import no.nav.foreldrepenger.vtp.testmodell.identer.LokalIdentIndeks;
 import no.nav.foreldrepenger.vtp.testmodell.util.VariabelContainer;
@@ -22,7 +24,9 @@ public class JacksonObjectMapper {
     public static ObjectMapper getObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-        mapper.registerModule(new CustomSerializerModule());
+        var customSerializerModule = new CustomSerializerModule();
+        customSerializerModule.addDeserializer(StønadskontoType.class, new StønadskontoTypeDeserializerFP());
+        mapper.registerModule(customSerializerModule);
         mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
 
         mapper.setVisibility(PropertyAccessor.GETTER, Visibility.NONE);

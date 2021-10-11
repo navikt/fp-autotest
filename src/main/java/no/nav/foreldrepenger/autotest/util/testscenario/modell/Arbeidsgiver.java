@@ -1,76 +1,93 @@
 package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
+import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingSvangerskapspengerErketyper;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
+import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 
+public abstract class Arbeidsgiver {
 
-public class Arbeidsgiver {
+    protected final ArbeidsgiverIdentifikator arbeidsgiverIdentifikator;
+    protected final Arbeidstaker arbeidstaker;
+    protected final List<Arbeidsforhold> arbeidsforhold;
+    private final Innsender innsender;
 
-    private final Orgnummer orgnummer;
-    private final Arbeidstaker arbeidstaker;
-    private final List<Arbeidsforhold> arbeidsforhold;
-    private List<InntektsmeldingBuilder> inntektsmeldinger;
-
-    public Arbeidsgiver(Orgnummer orgnummer, Arbeidstaker arbeidstaker, List<Arbeidsforhold> arbeidsforhold) {
-        this.orgnummer = orgnummer;
+    Arbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, Arbeidstaker arbeidstaker,
+                               List<Arbeidsforhold> arbeidsforhold, Innsender innsender) {
+        this.arbeidsgiverIdentifikator = arbeidsgiverIdentifikator;
         this.arbeidstaker = arbeidstaker;
         this.arbeidsforhold = arbeidsforhold;
+        this.innsender = innsender;
     }
 
-    public Orgnummer orgnummer() {
-        return orgnummer;
+    protected abstract InntektsmeldingBuilder lagInntektsmeldingFP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId, LocalDate startdatoForeldrepenger);
+    protected abstract InntektsmeldingBuilder lagInntektsmeldingSVP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId);
+
+    public ArbeidsgiverIdentifikator arbeidsgiverIdentifikator() {
+        return arbeidsgiverIdentifikator;
     }
 
-    public List<InntektsmeldingBuilder> getInntektsmeldinger() {
-        return inntektsmeldinger;
-    }
 
     public InntektsmeldingBuilder lagInntektsmeldingFP(LocalDate startdatoForeldrepenger) {
-        guardFlereArbeidsforhold();
-        var inntektsmeldingBuilder = InntektsmeldingForeldrepengeErketyper.lagInntektsmelding(arbeidstaker.månedsinntekt(),
-                arbeidstaker.fødselsnummer(), startdatoForeldrepenger, orgnummer)
-                .medArbeidsforholdId(arbeidsforhold.get(0).arbeidsforholdId().arbeidsforholdId());
-        this.inntektsmeldinger = List.of(inntektsmeldingBuilder);
-        return inntektsmeldingBuilder;
+        guardFlereEllerIngenArbeidsforhold(startdatoForeldrepenger);
+        return lagInntektsmeldingFP(arbeidstaker.månedsinntekt(), hentArbeidsforholdIdFraAktivtArbeidsforhold(startdatoForeldrepenger),
+                startdatoForeldrepenger);
+    }
+
+    private ArbeidsforholdId hentArbeidsforholdIdFraAktivtArbeidsforhold(LocalDate startdatoForeldrepenger) {
+        return arbeidsforhold.stream()
+                .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
+                .map(Arbeidsforhold::arbeidsforholdId)
+                .findFirst()
+                .orElseThrow();
     }
 
     public List<InntektsmeldingBuilder> lagInntektsmeldingerFP(LocalDate startdatoForeldrepenger) {
         var im = new ArrayList<InntektsmeldingBuilder>();
-        if(arbeidsforhold.size() == 1) {
+        if(arbeidsforhold.size() == 1 && erAktivtArbeidsforhold(arbeidsforhold.get(0), startdatoForeldrepenger)) {
             im.add(lagInntektsmeldingFP(startdatoForeldrepenger));
         } else {
             var stillingsprosentSamlet = arbeidsforhold.stream()
+                    .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
                     .map(Arbeidsforhold::stillingsprosent)
                     .mapToInt(Integer::intValue).sum();
 
-            for (Arbeidsforhold af : arbeidsforhold) {
-                im.add(InntektsmeldingForeldrepengeErketyper
-                        .lagInntektsmelding(arbeidstaker.månedsinntekt() * af.stillingsprosent() / stillingsprosentSamlet,
-                                arbeidstaker.fødselsnummer(), startdatoForeldrepenger, orgnummer)
-                        .medArbeidsforholdId(af.arbeidsforholdId().arbeidsforholdId()));
-            }
+            arbeidsforhold.stream()
+                    .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
+                    .forEach(a -> im.add(lagInntektsmeldingFP(
+                            arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
+                            a.arbeidsforholdId(),
+                            startdatoForeldrepenger)));
         }
-        this.inntektsmeldinger = im;
         return im;
     }
 
-    public InntektsmeldingBuilder lagInntektsmeldingSVP() {
-        guardFlereArbeidsforhold();
-        var inntektsmeldingBuilder = InntektsmeldingSvangerskapspengerErketyper
-                .lagSvangerskapspengerInntektsmelding(arbeidstaker.fødselsnummer(), arbeidstaker.månedsinntekt(), orgnummer)
-                .medArbeidsforholdId(arbeidsforhold.get(0).arbeidsforholdId().arbeidsforholdId());
-        this.inntektsmeldinger = List.of(inntektsmeldingBuilder);
-        return inntektsmeldingBuilder;
+    public InntektsmeldingBuilder lagInntektsmeldingTilkommendeArbeidsforholdEtterFPstartdato(LocalDate startdatoForeldrepenger) {
+        guardFlereEllerIngenArbeidsforhold(startdatoForeldrepenger);
+        return lagInntektsmeldingFP(arbeidstaker.månedsinntekt(), ArbeidsforholdEtterFPstartdato(startdatoForeldrepenger),
+                startdatoForeldrepenger);
     }
 
+    public ArbeidsforholdId ArbeidsforholdEtterFPstartdato(LocalDate fpStartdato) {
+        return arbeidsforhold.stream()
+                .filter(a -> tilkommendeArbeidsforhold(a, fpStartdato))
+                .map(Arbeidsforhold::arbeidsforholdId)
+                .findFirst()
+                .orElseThrow();
+    }
+
+    public InntektsmeldingBuilder lagInntektsmeldingSVP() {
+        guardFlereEllerIngenArbeidsforhold();
+        return lagInntektsmeldingSVP(arbeidstaker.månedsinntekt(), arbeidsforhold.get(0).arbeidsforholdId());
+    }
+
+    // TODO: Sender IM for alle arbeidsforhold. Trenger å vite dato for tilrettelegging for å kunne avgjøre
+    //  om arbeidsforholdet er aktivt eller ei.
     public List<InntektsmeldingBuilder> lagInntektsmeldingerSVP() {
         var im = new ArrayList<InntektsmeldingBuilder>();
         if(arbeidsforhold.size() == 1) {
@@ -80,37 +97,73 @@ public class Arbeidsgiver {
                     .map(Arbeidsforhold::stillingsprosent)
                     .mapToInt(Integer::intValue).sum();
 
-            for (Arbeidsforhold af : arbeidsforhold) {
-                im.add(InntektsmeldingSvangerskapspengerErketyper
-                        .lagSvangerskapspengerInntektsmelding(arbeidstaker.fødselsnummer(),
-                                arbeidstaker.månedsinntekt() * af.stillingsprosent() / stillingsprosentSamlet,
-                                orgnummer)
-                        .medArbeidsforholdId(af.arbeidsforholdId().arbeidsforholdId()));
-            }
+            arbeidsforhold.forEach(a ->
+                    im.add(lagInntektsmeldingSVP(arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
+                            a.arbeidsforholdId())));
         }
-        this.inntektsmeldinger = im;
         return im;
     }
 
-    public void sendDefaultInntektsmeldingerSVP(long saksnummer) {
-        new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnInnteksmeldingFpfordel(lagInntektsmeldingerSVP(), arbeidstaker.fødselsnummer(), saksnummer);
+    public long sendInntektsmeldingerSVP(Long saksnummer) {
+        return innsender.sendInnInntektsmelding(lagInntektsmeldingerSVP(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public void sendDefaultInntektsmeldingerFP(long saksnummer, LocalDate startdatoForeldrepenger) {
-        new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnInnteksmeldingFpfordel(lagInntektsmeldingerFP(startdatoForeldrepenger), arbeidstaker.fødselsnummer(), saksnummer);
+    public long sendInntektsmeldingerFP(Long saksnummer, LocalDate startdatoForeldrepenger) {
+        return innsender.sendInnInntektsmelding(lagInntektsmeldingerFP(startdatoForeldrepenger), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public void sendInntektsmeldinger(long saksnummer, InntektsmeldingBuilder... inntektsmelding) {
-        new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnInnteksmeldingFpfordel(arbeidstaker.fødselsnummer(), saksnummer, inntektsmelding);
+    public long sendInntektsmeldinger(Long saksnummer, InntektsmeldingBuilder... inntektsmelding) {
+        return innsender.sendInnInntektsmelding(List.of(inntektsmelding), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public void sendInntektsmeldinger(long saksnummer, List<InntektsmeldingBuilder> inntektsmeldinger) {
-        new Innsender(Aktoer.Rolle.SAKSBEHANDLER).sendInnInnteksmeldingFpfordel(inntektsmeldinger, arbeidstaker.fødselsnummer(), saksnummer);
+    public long sendInntektsmeldinger(Long saksnummer, List<InntektsmeldingBuilder> inntektsmeldinger) {
+        return innsender.sendInnInntektsmelding(inntektsmeldinger, arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    private void guardFlereArbeidsforhold() {
-        if (arbeidsforhold.size() > 1) {
-            throw new UnsupportedOperationException("Det er flere arbeidsforhold...");
+    protected void guardFlereEllerIngenArbeidsforhold() {
+        var antallOrdinæreArbeidsforhold = arbeidsforhold.stream()
+                .filter(a -> a.arbeidsforholdstype().equals(ORDINÆRT_ARBEIDSFORHOLD))
+                .map(Arbeidsforhold::arbeidsgiverIdentifikasjon)
+                .distinct()
+                .count();
+        if (antallOrdinæreArbeidsforhold > 1) {
+            throw new UnsupportedOperationException("Det er flere arbeidsforhold! Bruk metode for å lage flere inntektsmeldiger istedenfor!");
         }
+        if (antallOrdinæreArbeidsforhold == 0) {
+            throw new IllegalStateException("Kan ikke lage IM når det ikke finnes arbeidsforhold definert på søker");
+        }
+    }
+
+    protected void guardFlereEllerIngenArbeidsforhold(LocalDate startdatoForeldrepenger) {
+        var antallOrdinæreArbeidsforhold = arbeidsforhold.stream()
+                .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger) || tilkommendeArbeidsforhold(a,startdatoForeldrepenger))
+                .map(Arbeidsforhold::arbeidsgiverIdentifikasjon)
+                .distinct()
+                .count();
+        if (antallOrdinæreArbeidsforhold > 1) {
+            throw new UnsupportedOperationException("Det er flere arbeidsforhold! Bruk metode for å lage flere inntektsmeldiger istedenfor!");
+        }
+        if (antallOrdinæreArbeidsforhold == 0) {
+            throw new IllegalStateException("Kan ikke lage IM når det ikke finnes arbeidsforhold definert på søker");
+        }
+    }
+
+    private boolean erAktivtArbeidsforhold(Arbeidsforhold a, LocalDate startdatoFP) {
+        // Arbeidsforhold er frem i tid og ikke aktivt enda
+        if (a.ansettelsesperiodeFom().isEqual(startdatoFP) || a.ansettelsesperiodeFom().isAfter(startdatoFP)) {
+            return false;
+        }
+        // Aktivt og ikke frem i tid
+        if (a.ansettelsesperiodeTom() == null) {
+            return true;
+        }
+        return a.ansettelsesperiodeTom().isEqual(startdatoFP) || a.ansettelsesperiodeTom().isAfter(startdatoFP);
+    }
+
+    private boolean tilkommendeArbeidsforhold(Arbeidsforhold a, LocalDate fpStartdato) {
+        if (a.ansettelsesperiodeTom() != null && a.ansettelsesperiodeTom().isBefore(fpStartdato)) {
+            return false;
+        }
+        return a.ansettelsesperiodeFom().isAfter(fpStartdato);
     }
 }

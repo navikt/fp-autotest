@@ -1,21 +1,20 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OmsorgsovertakelseÅrsak.ANDRE_FORELDER_DØD;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEngangstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.FORELDREANSVARSVILKÅRET_2_LEDD;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.OMSORGSVILKÅRET;
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON;
+import static no.nav.foreldrepenger.common.domain.felles.relasjontilbarn.OmsorgsOvertakelsesÅrsak.DØDSFALL_ANNEN_FORELDER;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.builders.EngangstønadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.RelasjonTilBarnetErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -23,24 +22,33 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvForeldreansvarAndreLedd;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvOmsorgsvilkoret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaOmsorgOgForeldreansvarBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadEngangstonadBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
+@Disabled
 class Omsorgsovertakelse extends FpsakTestBase {
+
+    // TODO PAPIRSØKNAD!!!
 
     @Test
     @DisplayName("Mor søker Omsorgsovertakelse - godkjent")
     @Description("Mor søker Omsorgsovertakelse - godkjent happy case")
     void MorSøkerOmsorgsovertakelseGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
+        var familie = new Familie("55", fordel);
+        var medmor = familie.medmor();
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
+        var saksnummer = medmor.søkPapirsøknadForeldrepenger();
 
-        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
-                ANDRE_FORELDER_DØD);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        saksbehandler.hentFagsak(saksnummer);
+        var papirsøknadAP = saksbehandler.hentAksjonspunktbekreftelse(PapirSoknadEngangstonadBekreftelse.class);
+
+
+        var søknad = lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato, DØDSFALL_ANNEN_FORELDER);
+//        var saksnummer = medmor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
@@ -72,13 +80,11 @@ class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Mor søker Omsorgsovertakelse - avvist")
     @Description("Mor søker Omsorgsovertakelse - avvist fordi mor ikke er død")
     void morSøkerOmsorgsovertakelseAvvist() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
-
-        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
-                ANDRE_FORELDER_DØD);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
+        var søknad = lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato, DØDSFALL_ANNEN_FORELDER);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
@@ -111,13 +117,11 @@ class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Far søker Omsorgsovertakelse - godkjent")
     @Description("Far søker Omsorgsovertakelse - får godkjent aksjonspunkt og blir invilget")
     void farSøkerOmsorgsovertakelseGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("61");
-        String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
-        RelasjonTilBarnetErketyper.omsorgsovertakelse(ANDRE_FORELDER_DØD);
-        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR,
-                ANDRE_FORELDER_DØD);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        var familie = new Familie("61", fordel);
+        var far = familie.far();
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
+        var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato, DØDSFALL_ANNEN_FORELDER);
+        var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
@@ -149,10 +153,11 @@ class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Far søker Foreldreansvar 2. ledd - godkjent")
     @Description("Far søker Foreldreansvar 2. ledd - får godkjent aksjonspunkt og blir invilget")
     void farSøkerForeldreansvarGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("61");
-        String søkerAktørID = testscenario.personopplysninger().søkerAktørIdent();
-        EngangstønadBuilder søknad = lagEngangstønadOmsorg(søkerAktørID, SøkersRolle.MOR, ANDRE_FORELDER_DØD);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        var familie = new Familie("61", fordel);
+        var far = familie.far();
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
+        var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato, DØDSFALL_ANNEN_FORELDER);
+        var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler

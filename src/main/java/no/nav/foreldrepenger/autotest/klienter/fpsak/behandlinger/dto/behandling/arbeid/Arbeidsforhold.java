@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.ArbeidsforholdId;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -12,8 +13,7 @@ public class Arbeidsforhold {
 
     protected String id = null;
     protected String navn = null;
-    // TODO: Dette kan også være aktørid. Fiks ved senere anlednign
-    protected Orgnummer arbeidsgiverIdentifikator = null;
+    protected ArbeidsforholdId arbeidsgiverIdentifikator = null;
     protected Orgnummer arbeidsgiverReferanse = null;
     protected String arbeidsforholdId = null;
     protected LocalDate fomDato = null;
@@ -77,8 +77,8 @@ public class Arbeidsforhold {
         this.navn = navn;
     }
 
-    public Orgnummer getArbeidsgiverIdentifikator() {
-        return arbeidsgiverIdentifikator != null ? arbeidsgiverIdentifikator : arbeidsgiverReferanse;
+    public String getArbeidsgiverIdentifikator() {
+        return arbeidsgiverIdentifikator != null ? arbeidsgiverIdentifikator.value() : arbeidsgiverReferanse.value();
     }
 
     public Orgnummer getArbeidsgiverReferanse() {

@@ -1,17 +1,11 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto.FELLESPERIODE;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto.FORELDREPENGER;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto.MØDREKVOTE;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøknadUtsettelseÅrsak.FRI;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.FordelingErketyper.fordelingEndringssøknadGradering;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEndringErketyper.lagEndringssøknad;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.UttaksperioderErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.UttaksperioderErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordelingEndringssøknadGradering;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
@@ -26,10 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.RettigheterErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
@@ -45,12 +36,16 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -63,25 +58,16 @@ class Revurdering extends ForeldrepengerTestBase {
     @Description("Førstegangsbehandling til positivt vedtak. Saksbehandler oppretter revurdering manuelt. " +
             "Overstyrer medlemskap. Vedtaket opphører.")
     void opprettRevurderingManuelt() {
-        var testscenario = opprettTestscenario("50");
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-
-        var inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
-                testscenario.personopplysninger().søkerIdent(),
-                fpStartdato,
-                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.personopplysninger().søkerAktørIdent(),
-                testscenario.personopplysninger().søkerIdent(),
-                saksnummer);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
@@ -127,27 +113,16 @@ class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Endringssøknad med ekstra uttaksperiode.")
     @Description("Førstegangsbehandling til positivt vedtak. Søker sender inn endringsøknad. Endring i uttak. Vedtak fortsatt løpende.")
     void endringssøknad() {
-        var testscenario = opprettTestscenario("50");
-
-        // Førstegangssøknad
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var søkerIdent = testscenario.personopplysninger().søkerIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-        var inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
-                testscenario.personopplysninger().søkerIdent(),
-                fpStartdato,
-                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.personopplysninger().søkerAktørIdent(),
-                testscenario.personopplysninger().søkerIdent(),
-                saksnummer);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
@@ -165,10 +140,9 @@ class Revurdering extends ForeldrepengerTestBase {
 
         // Endringssøknad
         var fordeling = generiskFordeling(
-                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        var søknadE = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR, fordeling, saksnummer);
-        var saksnummerE = fordel.sendInnSøknad(søknadE.build(), søkerAktørIdent, søkerIdent,
-                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
+        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, saksnummer);
+        var saksnummerE = mor.søk(søknadE.build());
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -190,28 +164,17 @@ class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Endringssøknad med gradering")
     @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med gradering fra bruker. Vedtak fortsatt løpende.")
     void endringssøknadMedGradering() {
-        var testscenario = opprettTestscenario("50");
-
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var søkerIdent = testscenario.personopplysninger().søkerIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var orgnr = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
-                .arbeidsgiverOrgnr();
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
-        var inntektsmeldinger = lagInntektsmelding(
-                testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0).beløp(),
-                testscenario.personopplysninger().søkerIdent(),
-                fpStartdato,
-                testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0).arbeidsgiverOrgnr());
-        fordel.sendInnInntektsmelding(
-                inntektsmeldinger,
-                testscenario.personopplysninger().søkerAktørIdent(),
-                testscenario.personopplysninger().søkerIdent(),
-                saksnummer);
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -222,12 +185,12 @@ class Revurdering extends ForeldrepengerTestBase {
         // Endringssøknad
         var graderingFom = fødselsdato.plusWeeks(20);
         var graderingTom = fødselsdato.plusWeeks(23).minusDays(1);
-        var fordelingGradering = fordelingEndringssøknadGradering(FELLESPERIODE, graderingFom, graderingTom,
-                orgnr, 40);
-        var endretSøknad = lagEndringssøknad(søkerAktørIdent, SøkersRolle.MOR,
+        var arbeidsgiveridentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
+        var fordelingGradering = fordelingEndringssøknadGradering(StønadskontoType.FELLESPERIODE, graderingFom, graderingTom,
+                arbeidsgiveridentifikator, 40);
+        var endretSøknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR,
                 fordelingGradering, saksnummer);
-        var saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), søkerAktørIdent, søkerIdent,
-                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+        var saksnummerE = mor.søk(endretSøknad.build());
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -259,32 +222,31 @@ class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Ikke få avslåg på innvilget perioder pga søknadsfrist")
     @Description("Ikke få avslåg på innvilget perioder pga søknadsfrist.")
     void ikke_avslag_pa_innvilget_perioder_pga_søknadsfrist_i_revurdering() {
-        var testscenario = opprettTestscenario("74");
-        var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("74", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var fordeling = generiskFordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(13).minusDays(1)));
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
+                uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(13).minusDays(1)));
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
-                .medMottattDato(fødselsdato.plusWeeks(9));
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
+                .medMottatdato(fødselsdato.plusWeeks(9));
+        var saksnummer = mor.søk(søknad.build());
 
-        var im = InntektsmeldingForeldrepengeErketyper
-                .makeInntektsmeldingFromTestscenario(testscenario, fpStartdato).get(0);
-        fordel.sendInnInntektsmelding(im, testscenario, saksnummer);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
         // Sender endringssøknad for å gi fagsaken en ny søknad mottatt dato
         var fordelingEndringssøknad = generiskFordeling(
-                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(14).minusDays(1)));
-        var søknadE = lagEndringssøknad(aktørIdSøker, SøkersRolle.MOR, fordelingEndringssøknad, saksnummer)
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(14).minusDays(1)));
+        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordelingEndringssøknad, saksnummer)
                 .medMottattDato(fødselsdato.plusWeeks(10));
-        fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+        mor.søk(søknadE.build());
 
         saksbehandler.velgSisteBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -306,23 +268,21 @@ class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Fortsatt få avslag på avslåtte perioder pga søknadsfrist i neste revurdering")
     @Description("Fortsatt få avslag på avslåtte perioder pga søknadsfrist i neste revurdering. Bruker papirsøknad for å kunne sette mottatt dato tilbake i tid")
     void fortsatt_tape_avslåtte_perioder_pga_søknadsfrist_i_revurdering() {
-        var testscenario = opprettTestscenario("74");
-        var aktørIdSøker = testscenario.personopplysninger().søkerAktørIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("74", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var fordeling = generiskFordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(13).minusDays(1)));
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdSøker, SøkersRolle.MOR)
+                uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(13).minusDays(1)));
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
-                //Ikke alle periodene skal avlås pga søknadsfrist
-                .medMottattDato(fødselsdato.plusWeeks(18));
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
+                .medMottatdato(fødselsdato.plusWeeks(18));
+        var saksnummer = mor.søk(søknad.build());
 
-        var im = InntektsmeldingForeldrepengeErketyper
-                .makeInntektsmeldingFromTestscenario(testscenario, fpStartdato).get(0);
-        fordel.sendInnInntektsmelding(im, testscenario, saksnummer);
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -343,10 +303,10 @@ class Revurdering extends ForeldrepengerTestBase {
                 .hasSizeGreaterThan(1);
 
         var fordelingEndringssøknad = generiskFordeling(
-                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(12).plusWeeks(2)));
-        var søknadE = lagEndringssøknad(testscenario.personopplysninger().søkerAktørIdent(), SøkersRolle.MOR,
-                fordelingEndringssøknad, saksnummer);
-        fordel.sendInnSøknad(søknadE.build(), testscenario, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(12).plusWeeks(2)));
+        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordelingEndringssøknad, saksnummer)
+                .medMottattDato(fødselsdato.plusWeeks(10));
+        mor.søk(søknadE.build());
 
         saksbehandler.velgSisteBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
@@ -365,25 +325,29 @@ class Revurdering extends ForeldrepengerTestBase {
     @Description("Bare far har rett (BFHR) sender inn en endringssøknad med 2 utsettelsesperioder. Aktivitetskravet for " +
             "første utsettesle er oppfylt men ikke for andre perioder. Andre periode avslås og trekker dager.")
     void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
-        var testscenario = opprettTestscenario("60");
-        var aktørIdFar = testscenario.personopplysninger().søkerAktørIdent();
-        var fnrFar = testscenario.personopplysninger().søkerIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("60", fordel);
+        var far = familie.far();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdatoFar = Virkedager.helgejustertTilMandag(fødselsdato.plusWeeks(6));
         var fordeling = generiskFordeling(
-                uttaksperiode(FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(40).minusDays(1), ARBEID_OG_UTDANNING));
-
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, aktørIdFar, SøkersRolle.FAR)
+                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(40).minusDays(1), ARBEID_OG_UTDANNING));
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(fordeling)
                 .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
-                .medMottattDato(fødselsdato);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), aktørIdFar, fnrFar, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
+                .medMottatdato(fødselsdato);
+        var saksnummer = far.søk(søknad.build());
 
-        var im = InntektsmeldingForeldrepengeErketyper
-                .makeInntektsmeldingFromTestscenario(testscenario, fødselsdato);
-        fordel.sendInnInntektsmeldinger(im, testscenario, saksnummer);
+        var arbeidsgiver = far.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummer);
+        var avklarFaktaAnnenForeldreHarRett = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .setAnnenforelderHarRett(false)
+                .setBegrunnelse("Mor har ikke rett!");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
+
         var kontrollerAktivitetskravBekreftelse1 = saksbehandler
                 .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
                 .morErIAktivitetForAllePerioder()
@@ -400,21 +364,18 @@ class Revurdering extends ForeldrepengerTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER")
                 .isZero();
 
-
         // Endringssøknad
         var fordelingUtsettelse = generiskFordeling(
-                utsettelsesperiode(FRI, fpStartdatoFar.plusWeeks(32), fpStartdatoFar.plusWeeks(35).minusDays(1), ARBEID_OG_UTDANNING),
-                uttaksperiode(FORELDREPENGER, fpStartdatoFar.plusWeeks(35), fpStartdatoFar.plusWeeks(37).minusDays(1), ARBEID_OG_UTDANNING),
-                utsettelsesperiode(FRI, fpStartdatoFar.plusWeeks(37), fpStartdatoFar.plusWeeks(38).minusDays(1), ARBEID_OG_UTDANNING),
-                uttaksperiode(FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), ARBEID_OG_UTDANNING));
-        var endretSøknad = lagEndringssøknad(aktørIdFar, SøkersRolle.FAR,
-                fordelingUtsettelse, saksnummer);
-        var saksnummerE = fordel.sendInnSøknad(endretSøknad.build(), aktørIdFar, fnrFar,
-                DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+                utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(32), fpStartdatoFar.plusWeeks(35).minusDays(1), ARBEID_OG_UTDANNING),
+                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(35), fpStartdatoFar.plusWeeks(37).minusDays(1), ARBEID_OG_UTDANNING),
+                utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(37), fpStartdatoFar.plusWeeks(38).minusDays(1), ARBEID_OG_UTDANNING),
+                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), ARBEID_OG_UTDANNING));
+        var endretSøknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.FAR, fordelingUtsettelse, saksnummer);
+        var saksnummerE = far.søk(endretSøknad.build());
 
         saksbehandler.hentFagsak(saksnummerE);
         var kontrollerAktivitetskravBekreftelse2 = saksbehandler
@@ -437,7 +398,7 @@ class Revurdering extends ForeldrepengerTestBase {
                 .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
 
         // Verifiseringer på uttak
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(Stønadskonto.FORELDREPENGER).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER")
                 .isZero();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())

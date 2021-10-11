@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettMaanedsinntektUtenInntektsmeldingAndel;
@@ -28,8 +27,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -40,23 +40,18 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
     @Description("Mor søker fødsel. Har ikke arbeidsforhold i AAREG, men det blir sendt inn en " +
             "innteksmelding. Saksbehandler legger til arbeidsforhold basert på motatt inntektsmelding")
     void utenArbeidsforholdMenMedInntektsmelding() {
-        var testscenario = opprettTestscenario("171");
-
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
+        var familie = new Familie("171", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, søkerAktørIdent, SøkersRolle.MOR);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
-
-        var fnr = testscenario.personopplysninger().søkerIdent();
-        var inntekter = sorterteInntektsbeløp(testscenario);
-
-        var inntektsmelding = lagInntektsmelding(inntekter.get(0), fnr, fpStartdato, "910909088")
+        var inntektsmelding = lagInntektsmelding(mor.månedsinntekt(), mor.fødselsnummer(), fpStartdato, Orgnummer.valueOf("910909088"))
                 .medArbeidsforholdId("ARB001-001");
+        mor.sendIMBasertPåInntekskomponenten(inntektsmelding);
 
-        fordel.sendInnInntektsmelding(inntektsmelding, testscenario, saksnummer);
         saksbehandler.hentFagsak(saksnummer);
 
         // LØSER AKSJONSPUNKT 5080 //
@@ -88,15 +83,14 @@ class ArbeidsforholdVarianter extends ForeldrepengerTestBase {
     @DisplayName("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Legger til fiktivt arbeidsforhold.")
     @Description("Mor søker termin, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til fiktivt arbeidsforhold")
     void morSøkerTerminUtenAktiviteterIAareg() {
-        // SØKNAD //
-        var testscenario = opprettTestscenario("168");
-        var søkerAktørIdent = testscenario.personopplysninger().søkerAktørIdent();
-        var annenPartAktørid = testscenario.personopplysninger().annenpartAktørIdent();
-        var fødselsdato = LocalDate.now().plusDays(2);
+        var familie = new Familie("168", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var termindato = fødselsdato.plusDays(2);
+        var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSøknadForeldrepengerTermin(fødselsdato, søkerAktørIdent, SøkersRolle.MOR)
-                .medAnnenForelder(annenPartAktørid);
-        var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL);
         saksbehandler.hentFagsak(saksnummer);
 
         saksbehandler.gjenopptaBehandling();

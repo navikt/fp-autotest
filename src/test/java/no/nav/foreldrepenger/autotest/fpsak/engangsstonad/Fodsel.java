@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEngangstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.builders.EngangstønadBuilder;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.RelasjonTilBarnetErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.RelasjonTilBarnErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
@@ -30,8 +28,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrBeregning;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -41,13 +39,11 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel - godkjent")
     @Description("Mor søker fødsel - godkjent happy case")
     void morSøkerFødselGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                testscenario.personopplysninger().fødselsdato());
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
@@ -61,14 +57,11 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel - avvist")
     @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i tps")
     void morSøkerFødselAvvist() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                LocalDate.now().minusDays(30L));
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var fødselsdato = LocalDate.now().minusDays(30L);
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
@@ -95,13 +88,11 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Far søker registrert fødsel")
     @Description("Far søker registrert fødsel og blir avvist fordi far søker")
     void farSøkerFødselRegistrert() {
-        TestscenarioDto testscenario = opprettTestscenario("60");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                testscenario.personopplysninger().fødselsdato());
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("60", fordel);
+        var far = familie.far();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.FAR, fødselsdato);
+        var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
@@ -118,14 +109,11 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel overstyrt vilkår")
     @Description("Mor søker fødsel overstyrt vilkår adopsjon fra godkjent til avslått")
     void morSøkerFødselOverstyrt() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                LocalDate.now().minusDays(30L));
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var fødselsdato = LocalDate.now().minusDays(30L);
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
@@ -164,13 +152,11 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel - beregning overstyrt")
     @Description("Mor søker fødsel - beregning overstyrt fra ett beløp til 10 kroner")
     void morSøkerFødselBeregningOverstyrt() {
-        TestscenarioDto testscenario = opprettTestscenario("50");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR,
-                testscenario.personopplysninger().fødselsdato());
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("50", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
@@ -211,14 +197,12 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel med flere barn")
     @Description("Mor søker fødsel med flere barn - happy case flere barn")
     void morSøkerFødselFlereBarn() {
-        TestscenarioDto testscenario = opprettTestscenario("53");
-        var aktørID = testscenario.personopplysninger().søkerAktørIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato)
-                .medSoekersRelasjonTilBarnet(RelasjonTilBarnetErketyper.fødsel(2, fødselsdato));
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("53", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato)
+                .medRelasjonTilBarn(RelasjonTilBarnErketyper.fødsel(2, fødselsdato));
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
@@ -259,12 +243,11 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel med verge")
     @Description("Mor søker fødsel med verge - skal få aksjonspunkt om registrering av verge når man er under 18")
     void morSøkerFødselMedVerge() {
-        TestscenarioDto testscenario = opprettTestscenario("54");
-        var aktørID = testscenario.personopplysninger().søkerAktørIdent();
-        var fødselsdato = testscenario.personopplysninger().fødselsdato();
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("54", fordel);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -272,7 +255,7 @@ class Fodsel extends FpsakTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaVergeBekreftelse.class);
         avklarFaktaVergeBekreftelse.bekreftSøkerErKontaktperson()
                 .bekreftSøkerErIkkeUnderTvungenForvaltning()
-                .setVerge(testscenario.personopplysninger().annenpartIdent());
+                .setVerge(familie.far().fødselsnummer());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaVergeBekreftelse);
 
         AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
@@ -301,13 +284,11 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel")
     @Description("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel. Behandlingen skal bli satt på vent")
     void morSøkerUregistrertFødselMindreEnn14DagerEtter() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        String aktørID = testscenario.personopplysninger().søkerAktørIdent();
-        LocalDate fødselsdato = LocalDate.now().minusWeeks(1);
-
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(aktørID, SøkersRolle.MOR, fødselsdato);
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var fødselsdato = LocalDate.now().minusWeeks(1);
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -318,14 +299,12 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Medmor søker fødsel")
     @Description("Medmor søker fødsel - søkand blir avslått fordi søker er medmor")
     void medmorSøkerFødsel() {
-        TestscenarioDto testscenario = opprettTestscenario("90");
-        EngangstønadBuilder søknad = lagEngangstønadFødsel(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MEDMOR,
-                testscenario.personopplysninger().fødselsdato());
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        var familie = new Familie("90", fordel);
+        var medmor = familie.medmor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MEDMOR, fødselsdato)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()));
+        var saksnummer = medmor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();

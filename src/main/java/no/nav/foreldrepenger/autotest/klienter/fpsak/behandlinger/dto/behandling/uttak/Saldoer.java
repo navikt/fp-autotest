@@ -6,16 +6,17 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Saldoer {
 
     private final LocalDate maksDatoUttak;
 
-    private final Map<Stønadskonto, Stonadskontoer> stonadskontoer;
+    private final Map<StønadskontoType, Stonadskontoer> stonadskontoer;
 
-    public Saldoer(LocalDate maksDatoUttak, Map<Stønadskonto, Stonadskontoer> stonadskontoer) {
+    // TODO: Her mangler StønadskontoType FLERBARNSDAGER som er i fpsak, men ikke i mottak. Egen modell for fpsak??
+    public Saldoer(LocalDate maksDatoUttak, Map<StønadskontoType, Stonadskontoer> stonadskontoer) {
         this.maksDatoUttak = maksDatoUttak;
         this.stonadskontoer = stonadskontoer;
     }
@@ -24,7 +25,7 @@ public class Saldoer {
         return this.maksDatoUttak;
     }
 
-    public Map<Stønadskonto, Stonadskontoer> getStonadskontoer() {
+    public Map<StønadskontoType, Stonadskontoer> getStonadskontoer() {
         return this.stonadskontoer;
     }
 

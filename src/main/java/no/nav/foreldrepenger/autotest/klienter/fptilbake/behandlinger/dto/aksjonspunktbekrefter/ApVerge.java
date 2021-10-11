@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 
 @AksjonspunktKode(kode = "5030", fagsystem = Fagsystem.FPTILBAKE)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -26,8 +26,8 @@ public class ApVerge extends AksjonspunktBehandling {
         this.gyldigTom = LocalDate.now().withDayOfMonth(1).plusMonths(6);
     }
 
-    public void setVerge(TestscenarioDto person) {
-        this.fnr = person.personopplysninger().søkerIdent();
+    public void setVerge(Familie familie) {
+        this.fnr = familie.mor().fødselsnummer().getFnr();
         this.navn = "VERGE PERSON";
         this.vergeType = "VOKSEN";
     }

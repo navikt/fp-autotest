@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadEngangstønadErketyper.lagEngangstønadAdopsjon;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.builders.EngangstønadBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -22,8 +20,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrAdopsjonsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -33,13 +31,11 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon - godkjent")
     @Description("Mor søker adopsjon - godkjent happy case")
     void morSøkerAdopsjonGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR, false);
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
+        var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse bekreftelse1 = saksbehandler.hentAksjonspunktbekreftelse(
@@ -66,13 +62,11 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon - avvist - barn er over 15 år")
     @Description("Mor søker adopsjon - avvist - barn er over 15 år og blir dermed avlått")
     void morSøkerAdopsjonAvvist() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR, false);
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
+        var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse bekreftelse1 = saksbehandler
@@ -103,13 +97,11 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon med overstyrt vilkår")
     @Description("Mor søker adopsjon med overstyrt vilkår som tar behandlingen fra innvilget til avslått")
     void morSøkerAdopsjonOverstyrt() {
-        TestscenarioDto testscenario = opprettTestscenario("55");
-        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.MOR, false);
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        var familie = new Familie("55", fordel);
+        var mor = familie.mor();
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
+        var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
+        var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse bekreftelse1 = saksbehandler
@@ -149,13 +141,11 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Far søker adopsjon - godkjent")
     @Description("Far søker adopsjon - godkjent happy case")
     void farSøkerAdopsjonGodkjent() {
-        TestscenarioDto testscenario = opprettTestscenario("61");
-        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.FAR, false);
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        var familie = new Familie("61", fordel);
+        var far = familie.far();
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
+        var søknad = lagEngangstønadAdopsjon(BrukerRolle.FAR, omsorgsovertakelsedato, false);
+        var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse bekreftelse1 = saksbehandler
@@ -185,13 +175,11 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Far søker adopsjon av ektefelles barn")
     @Description("Far søker adopsjon av ektefelles barn fører til avvist behandling")
     void farSøkerAdopsjonAvvist() {
-        TestscenarioDto testscenario = opprettTestscenario("61");
-        EngangstønadBuilder søknad = lagEngangstønadAdopsjon(
-                testscenario.personopplysninger().søkerAktørIdent(),
-                SøkersRolle.FAR, true);
-
-        long saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON);
+        var familie = new Familie("61", fordel);
+        var far = familie.far();
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
+        var søknad = lagEngangstønadAdopsjon(BrukerRolle.FAR, omsorgsovertakelsedato, false);
+        var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaAdopsjonsdokumentasjonBekreftelse bekreftelse1 = saksbehandler

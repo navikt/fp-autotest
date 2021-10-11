@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 
 @BekreftelseKode(kode = "5052")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,9 +19,9 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    public AvklarAktiviteterBekreftelse setSkalBrukes(boolean skalBrukes, String orgnr) {
+    public AvklarAktiviteterBekreftelse setSkalBrukes(boolean skalBrukes, ArbeidsgiverIdentifikator orgnr) {
         BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
-                .filter(a -> a.oppdragsgiverOrg.equals(orgnr))
+                .filter(a -> a.oppdragsgiverOrg.equalsIgnoreCase(orgnr.value()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ingen beregningsaktivitet med orgnummer " + orgnr));
         vurdering.skalBrukes = skalBrukes;
@@ -59,6 +59,6 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
                         aktivitet.getArbeidsgiverId(),
                         aktivitet.getAktørId() == null ? null : aktivitet.getAktørId().getAktørId(),
                         aktivitet.getArbeidsforholdId(), true))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

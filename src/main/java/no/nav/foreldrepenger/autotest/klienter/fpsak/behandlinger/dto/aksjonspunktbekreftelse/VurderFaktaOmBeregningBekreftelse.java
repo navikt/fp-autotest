@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
+import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 
 @BekreftelseKode(kode = "5058")
 //TODO: Rydd opp i denne. Ganske uoversiktlig.
@@ -73,9 +73,9 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(Orgnummer orgnummer,
+    public VurderFaktaOmBeregningBekreftelse leggTilRefusjonGyldighetVurdering(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
                                                                                boolean skalUtvideGyldighet) {
-        fakta.leggTilRefusjonGyldighet(orgnummer, skalUtvideGyldighet);
+        fakta.leggTilRefusjonGyldighet(arbeidsgiverIdentifikator, skalUtvideGyldighet);
         return this;
     }
 

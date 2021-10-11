@@ -1,12 +1,10 @@
 package no.nav.foreldrepenger.autotest.fpsak.svangerskapspenger;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.SøknadSvangerskapspengerErketype.lagSvangerskapspengerSøknad;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagSvangerskapspengerInntektsmelding;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,16 +16,17 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøkersRolle;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.erketyper.TilretteleggingsErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.ArbeidsforholdErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
-import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.common.domain.Orgnummer;
 
 @Tag("fpsak")
 @Tag("svangerskapspenger")
@@ -39,40 +38,25 @@ class Førstegangsbehandling extends FpsakTestBase {
     @DisplayName("Mor søker SVP med to arbeidsforhold - hel tilrettelegging")
     @Description("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
     void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() {
-
-        final var testscenario = opprettTestscenario("504");
-        final var morAktoerId = testscenario.personopplysninger().søkerAktørIdent();
-        final var fnrMor = testscenario.personopplysninger().søkerIdent();
-        final var termindato = LocalDate.now().plusWeeks(4);
-
-        final var inntektsperioder = testscenario.scenariodataDto().inntektskomponentModell()
-                .inntektsperioder();
-        final var arbeidsforhold = testscenario.scenariodataDto().arbeidsforholdModell()
-                .arbeidsforhold();
-        final var orgnr1 = arbeidsforhold.get(0).arbeidsgiverOrgnr();
-        final var orgnr2 = arbeidsforhold.get(1).arbeidsgiverOrgnr();
-
-        final var forsteTilrettelegging = TilretteleggingsErketyper.helTilrettelegging(
+        var familie = new Familie("504", fordel);
+        var mor = familie.mor();
+        var termindato = LocalDate.now().plusWeeks(4);
+        var arbeidsforholdene = mor.arbeidsforholdene();
+        var arbeidsforhold1 = arbeidsforholdene.get(0).arbeidsgiverIdentifikasjon();
+        var arbeidsforhold2 = arbeidsforholdene.get(1).arbeidsgiverIdentifikasjon();
+        var forsteTilrettelegging = TilretteleggingsErketyper.helTilrettelegging(
                 LocalDate.now().minusWeeks(1),
                 LocalDate.now().plusWeeks(2),
-                ArbeidsforholdErketyper.virksomhet(orgnr1));
-        final var andreTilrettelegging2 = TilretteleggingsErketyper.helTilrettelegging(
+                ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsforhold1));
+        var andreTilrettelegging2 = TilretteleggingsErketyper.helTilrettelegging(
                 LocalDate.now(),
                 LocalDate.now().plusWeeks(3),
-                ArbeidsforholdErketyper.virksomhet(orgnr2));
+                ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsforhold2));
+        var søknad = lagSvangerskapspengerSøknad(BrukerRolle.MOR, termindato, List.of(forsteTilrettelegging, andreTilrettelegging2));
+        var saksnummer = mor.søk(søknad.build());
 
-        var søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR, termindato,
-                List.of(forsteTilrettelegging, andreTilrettelegging2));
-
-        final var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
-
-        // Inntektsmelding
-        var inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor,
-                inntektsperioder.get(0).beløp(), orgnr1);
-        var inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor,
-                inntektsperioder.get(1).beløp(), orgnr2);
-        fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2), testscenario, saksnummer);
+        var arbeidsgivere = mor.arbeidsgivere();
+        arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
@@ -122,48 +106,47 @@ class Førstegangsbehandling extends FpsakTestBase {
     @DisplayName("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     void mor_søker_svp_tre_arbeidsforhold_hel_halv_og_ingen_tilrettelegging() {
-
-        final var testscenario = opprettTestscenario("78");
-        final var morAktoerId = testscenario.personopplysninger().søkerAktørIdent();
-        final var fnrMor = testscenario.personopplysninger().søkerIdent();
-
-        final var arbeidsforhold = testscenario.scenariodataDto().arbeidsforholdModell()
-                .arbeidsforhold();
-        final var orgnr1 = arbeidsforhold.get(0).arbeidsgiverOrgnr();
-        final var orgnr2 = arbeidsforhold.get(1).arbeidsgiverOrgnr();
-        final var orgnr3 = arbeidsforhold.get(2).arbeidsgiverOrgnr();
-
+        var familie = new Familie("78", fordel);
+        var mor = familie.mor();
         var termindato = LocalDate.now().plusMonths(3);
-
+        var arbeidsforholdene = mor.arbeidsforholdene();
+        var arbeidsforholdIdentifikator1 = arbeidsforholdene.get(0).arbeidsgiverIdentifikasjon();
+        var arbeidsforholdIdentifikator2 = arbeidsforholdene.get(1).arbeidsgiverIdentifikasjon();
+        var arbeidsforholdIdentifikator3 = arbeidsforholdene.get(2).arbeidsgiverIdentifikasjon();
         final var helTilrettelegging = TilretteleggingsErketyper.helTilrettelegging(
                 termindato.minusMonths(3),
                 termindato.minusMonths(3),
-                ArbeidsforholdErketyper.virksomhet(orgnr1));
+                ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsforholdIdentifikator1));
         final var delvisTilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
                 termindato.minusMonths(2),
                 termindato.minusMonths(2),
-                ArbeidsforholdErketyper.virksomhet(orgnr2),
+                ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsforholdIdentifikator2),
                 BigDecimal.valueOf(40));
         final var ingenTilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
                 termindato.minusMonths(2),
                 termindato.minusMonths(2),
-                ArbeidsforholdErketyper.virksomhet(orgnr3));
-
-        var søknad = lagSvangerskapspengerSøknad(morAktoerId, SøkersRolle.MOR, termindato,
+                ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsforholdIdentifikator3));
+        var søknad = lagSvangerskapspengerSøknad(BrukerRolle.MOR, termindato,
                 List.of(helTilrettelegging, delvisTilrettelegging, ingenTilrettelegging));
+        var saksnummer = mor.søk(søknad.build());
 
+        var arbeidsgivere = mor.arbeidsgivere();
+        var arbeidsgiver1 = arbeidsgivere.getArbeidsgivere().get(0);
+        var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingSVP()
+                .medBeregnetInntekt(20_833);
+        arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmelding1);
 
-        final var saksnummer = fordel.sendInnSøknad(søknad.build(), testscenario,
-                DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER);
-
-        // Inntektsmelding
-        var inntektsmelding1 = lagSvangerskapspengerInntektsmelding(fnrMor, 20_833, orgnr1);
-        var inntektsmelding2 = lagSvangerskapspengerInntektsmelding(fnrMor, 62_500, orgnr2)
+        var arbeidsgiver2 = arbeidsgivere.getArbeidsgivere().get(1);
+        var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingSVP()
+                .medBeregnetInntekt(62_500)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(27_778));
-        var inntektsmelding3 = lagSvangerskapspengerInntektsmelding(fnrMor, 50_000, orgnr3)
+        arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmelding2);
+
+        var arbeidsgiver3 = arbeidsgivere.getArbeidsgivere().get(2);
+        var inntektsmelding3 = arbeidsgiver3.lagInntektsmeldingSVP()
+                .medBeregnetInntekt(50_000)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(46_667));
-        fordel.sendInnInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2, inntektsmelding3), testscenario,
-                saksnummer);
+        arbeidsgiver3.sendInntektsmeldinger(saksnummer, inntektsmelding3);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
@@ -222,33 +205,6 @@ class Førstegangsbehandling extends FpsakTestBase {
 
         // TODO: Gjør ferdig, feiler på tilkjentytelse.
         // TODO (OL) Utvide med videre funksjonalitet
-
-        final var testscenario = opprettTestscenario("50");
-        final var morAktoerId = testscenario.personopplysninger().søkerAktørIdent();
-        final var fnrMor = testscenario.personopplysninger().søkerIdent();
-
-        final var beløpMor = testscenario.scenariodataDto().inntektskomponentModell().inntektsperioder().get(0)
-                .beløp();
-        final var orgNrMor = testscenario.scenariodataDto().arbeidsforholdModell().arbeidsforhold().get(0)
-                .arbeidsgiverOrgnr();
-
-
-        final var inntektsmelding = lagSvangerskapspengerInntektsmelding(fnrMor, beløpMor, orgNrMor);
-        final var saksnummer = fordel.sendInnInntektsmelding(inntektsmelding, testscenario, null);
-
-        final var tilrettelegging = TilretteleggingsErketyper.helTilrettelegging(
-                LocalDate.now(),
-                LocalDate.now().plusWeeks(1),
-                ArbeidsforholdErketyper.virksomhet(orgNrMor));
-
-        var søknad = lagSvangerskapspengerSøknad(
-                morAktoerId, SøkersRolle.MOR,
-                LocalDate.now().plusWeeks(4),
-                Collections.singletonList(tilrettelegging));
-
-        fordel.sendInnSøknad(søknad.build(), testscenario, DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER, saksnummer);
-
-        saksbehandler.hentFagsak(saksnummer);
 
     }
 }
