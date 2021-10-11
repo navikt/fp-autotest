@@ -17,7 +17,7 @@
         <changelist>-SNAPSHOT</changelist>
 
         <vtp.versjon>1.0.15</vtp.versjon>
-        <dokumentgenerator.version>3.0.1</dokumentgenerator.version>
+        <dokumentgenerator.version>3.0.2</dokumentgenerator.version>
         <felles.versjon>4.0.10</felles.versjon>
         <aspectj.version>1.9.7</aspectj.version>
         <jackson.version>2.12.5</jackson.version>
@@ -175,8 +175,34 @@
         </plugins>
     </build>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
+                <artifactId>dokumentgenerator</artifactId>
+                <version>${dokumentgenerator.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
+        <!-- Autotest dokumentgenerator avhengigheter -->
+        <dependency>
+            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
+            <artifactId>inntektsmelding</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
+            <artifactId>foreldrepengesoknad</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-log</artifactId>
+            <version>${felles.versjon}</version>
+        </dependency>
+
         <!-- VTP prosjektavhengigheter -->
         <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>
@@ -187,29 +213,6 @@
             <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>kontrakter</artifactId>
             <version>${vtp.versjon}</version>
-        </dependency>
-
-        <!-- Autotest dokumentgenerator avhengigheter -->
-        <dependency>
-            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
-            <artifactId>inntektsmelding</artifactId>
-            <version>${dokumentgenerator.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-annotations</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
-            <artifactId>foreldrepengesoknad</artifactId>
-            <version>${dokumentgenerator.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-log</artifactId>
-            <version>${felles.versjon}</version>
         </dependency>
 
         <!-- External dependencies -->
