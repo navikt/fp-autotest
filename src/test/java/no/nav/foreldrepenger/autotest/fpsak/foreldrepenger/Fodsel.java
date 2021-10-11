@@ -339,8 +339,8 @@ class Fodsel extends ForeldrepengerTestBase {
 
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
-                .setAnnenforelderHarRett(false)
-                .setBegrunnelse("Mor har ikke rett!");
+                .setAnnenforelderHarRett(true)
+                .setBegrunnelse("Mor har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
