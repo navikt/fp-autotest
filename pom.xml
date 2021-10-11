@@ -18,7 +18,7 @@
 
         <vtp.versjon>1.0.15</vtp.versjon>
         <dokumentgenerator.version>3.0.1</dokumentgenerator.version>
-        <felles.versjon>4.0.8</felles.versjon>
+        <felles.versjon>4.0.10</felles.versjon>
         <aspectj.version>1.9.7</aspectj.version>
         <jackson.version>2.12.5</jackson.version>
         <jersey.version>3.0.2</jersey.version>
