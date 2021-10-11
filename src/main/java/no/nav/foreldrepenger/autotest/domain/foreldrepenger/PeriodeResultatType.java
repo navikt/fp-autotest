@@ -10,20 +10,11 @@ import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum PeriodeResultatType {
+
     INNVILGET,
     AVSLÅTT,
-    IKKE_FASTSATT,
-    MANUELL_BEHANDLING,
-
-    /** @deprecated kan fjernes når beregning har sluttet å bruke. */
-    @Deprecated
-    GYLDIG_UTSETTELSE,
-
-    /** @deprecated kan fjernes når beregning har sluttet å bruke. */
-    @Deprecated
-    UGYLDIG_UTSETTELSE,
+    MANUELL_BEHANDLING
     ;
-
 
     private final String kode;
 
