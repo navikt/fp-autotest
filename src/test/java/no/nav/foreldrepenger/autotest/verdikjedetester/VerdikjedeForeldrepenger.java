@@ -86,7 +86,6 @@ import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.UkjentForelder;
@@ -658,15 +657,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD);
         saksbehandler.gjenopptaBehandling();
-
-        var avklarArbeidsforholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErIkkeAktivt(
-                        new Orgnummer("991779493"),
-                        arbeidsforholdene.get(2).ansettelsesperiodeFom(),
-                        LocalDate.now().minusYears(4).minusDays(1),
-                        "Arbeidsforholdet skulle vært avsluttet");
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
