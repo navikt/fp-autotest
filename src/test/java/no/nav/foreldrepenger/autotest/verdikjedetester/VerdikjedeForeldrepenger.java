@@ -659,15 +659,6 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD);
         saksbehandler.gjenopptaBehandling();
 
-        var avklarArbeidsforholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErIkkeAktivt(
-                        new Orgnummer("991779493"),
-                        arbeidsforholdene.get(2).ansettelsesperiodeFom(),
-                        LocalDate.now().minusYears(4).minusDays(1),
-                        "Arbeidsforholdet skulle vært avsluttet");
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
-
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
                 .setAnnenforelderHarRett(false)
