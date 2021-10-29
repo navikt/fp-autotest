@@ -130,6 +130,7 @@ services:
     mem_limit: 64mb
     environment:
       - "APP_PORT=9000"
+      - "APP_URL=http://fpsak:8080"
       - "APP_URL_FPSAK=http://fpsak:8080"
       - "APP_URL_FPOPPDRAG=http://fpoppdrag:8080"
       - "APP_URL_FPFORMIDLING=http://fpformidling:8080"
