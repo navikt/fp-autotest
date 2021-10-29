@@ -123,11 +123,6 @@ services:
         condition: service_healthy
       fpabakus:
         condition: service_started
-  redis:
-    image: redis
-    container_name: redis
-    restart: on-failure
-    mem_limit: 8mb
   fpfrontend:
     image: $FPFRONTEND_IMAGE
     container_name: fpfrontend
@@ -142,14 +137,10 @@ services:
       - "OIDC_HOST_URL=https://vtp:8063/rest/isso/oauth2"
       - "OIDC_AGENTNAME=fpsak-localhost"
       - "OIDC_PASSWORD=vtp"
-      - "REDIS_HOST=redis"
-    volumes:
-      - "./frontend/:/nginx"
     ports:
       - "9000:9000"
     depends_on:
       - fpsak
-      - redis
   fpfordel:
     image: $FPFORDEL_IMAGE
     container_name: fpfordel
