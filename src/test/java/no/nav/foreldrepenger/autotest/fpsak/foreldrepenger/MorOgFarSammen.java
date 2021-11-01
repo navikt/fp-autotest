@@ -322,6 +322,57 @@ class MorOgFarSammen extends ForeldrepengerTestBase {
     }
 
     @Test
+    @DisplayName("Koblet sak endringssøknad far frasier seg alt")
+    @Description("Sender inn søknad mor. Sender inn søknad far uten overlapp. Sender inn endringssøknad far med " +
+            "fri utsettelse. Verifiserer at behandlingsresultat maker sense.")
+    void KobletSakFarUtsetterAlt() {
+        var fødselsdato = LocalDate.now().minusMonths(4);
+        var testscenario = opprettTestscenario("84");
+        var saksnummerMor = behandleSøknadForMorUtenOverlapp(testscenario, fødselsdato);
+        var saksnummerFar = behandleSøknadForFarUtenOverlapp(testscenario, fødselsdato);
+
+        saksbehandler.hentFagsak(saksnummerFar);
+        assertThat(saksbehandler.harRevurderingBehandling())
+                .as("Har revurdert behandling")
+                .isFalse();
+
+
+        var søkerAktørid = testscenario.personopplysninger().annenpartAktørIdent();
+        var søkerIdent = testscenario.personopplysninger().annenpartIdent();
+        var fkdato = fødselsdato.plusWeeks(10).plusDays(1);
+
+        var fordelingFrasiPerioder = generiskFordeling(utsettelsesperiode(SøknadUtsettelseÅrsak.FRI, fkdato, fkdato.plusWeeks(2)));
+        var søknadFrasiPerioder = lagEndringssøknad(søkerAktørid, SøkersRolle.FAR, fordelingFrasiPerioder, saksnummerFar);
+
+        fordel.sendInnSøknad(søknadFrasiPerioder.build(), søkerAktørid, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD,
+                saksnummerFar);
+
+
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        /* OK gir revurdering som går rett gjennom til vedtak og innvilger med rett STP.
+         * OBS på at den tar vare på innvilget utsettelse/2024 fra forrige - men den blir ikke med i BR
+        var fordelingUtsattFK = generiskFordeling(uttaksperiode(Stønadskonto.FEDREKVOTE, fkdato.plusMonths(3), fkdato.plusMonths(5)));
+        var søknadUtsattFK = lagEndringssøknad(søkerAktørid, SøkersRolle.FAR, fordelingUtsattFK, saksnummerFar);
+
+        fordel.sendInnSøknad(søknadUtsattFK.build(), søkerAktørid, søkerIdent, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD,
+                saksnummerFar);
+
+        */
+        /* Crash for alle revurdering uten søknad/oppgittPeriode
+        sendInnInntektsmeldingFar(testscenario, fødselsdato, fkdato.plusMonths(1), saksnummerFar);
+        */
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+
+        saksbehandler.ventTilAvsluttetBehandling();
+
+    }
+
+    @Test
     @DisplayName("Mor får revurdering fra endringssøknad vedtak opphører")
     @Description("Mor får revurdering fra endringssøknad vedtak opphører - far får revurdering")
     void BerørtSakOpphør() {
