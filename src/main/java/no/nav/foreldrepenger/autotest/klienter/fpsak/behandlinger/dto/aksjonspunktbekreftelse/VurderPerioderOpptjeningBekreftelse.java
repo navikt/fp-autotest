@@ -11,14 +11,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 @BekreftelseKode(kode = "5051")
 public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse {
 
-    protected List<OpptjeningAktivitet> opptjeningAktivitetList = new ArrayList<>();
+    protected List<OpptjeningAktivitet> opptjeningsaktiviteter = new ArrayList<>();
 
     public VurderPerioderOpptjeningBekreftelse() {
         super();
     }
 
     public VurderPerioderOpptjeningBekreftelse godkjennAllOpptjening() {
-        opptjeningAktivitetList.forEach(aktivitet -> aktivitet.vurder(true, "Godkjent", false));
+        opptjeningsaktiviteter.forEach(aktivitet -> aktivitet.vurder(true, "Godkjent", false));
         return this;
     }
 
@@ -38,7 +38,7 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
 
     public VurderPerioderOpptjeningBekreftelse leggTilOpptjening(OpptjeningAktivitet aktivitet) {
         aktivitet.setErManueltOpprettet(true);
-        opptjeningAktivitetList.add(aktivitet);
+        opptjeningsaktiviteter.add(aktivitet);
         return this;
     }
 
@@ -51,7 +51,7 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
     }
 
     private List<OpptjeningAktivitet> hentOpptjeningAktiviteter(String aktivitetType) {
-        return opptjeningAktivitetList.stream()
+        return opptjeningsaktiviteter.stream()
                 .filter(aktivitet -> aktivitet.getAktivitetType().kode.equals(aktivitetType))
                 .collect(Collectors.toList());
     }
@@ -69,7 +69,7 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
             opptjeningAktivitet.setArbeidsgiverReferanse(opptjeningAktivitet.getArbeidsgiverReferanse());
             opptjeningAktivitet.setArbeidsforholdRef(opptjeningAktivitet.getArbeidsforholdRef());
             opptjeningAktivitet.setAktivitetType(opptjeningAktivitet.getAktivitetType());
-            opptjeningAktivitetList.add(opptjeningAktivitet);
+            opptjeningsaktiviteter.add(opptjeningAktivitet);
         }
     }
 }
