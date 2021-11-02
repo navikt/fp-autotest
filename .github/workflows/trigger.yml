@@ -32,7 +32,6 @@ on:
     - cron:  '15 0 * * *'
 
 env:
-  GITHUB_USERNAME: x-access-token
   GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
 jobs:
@@ -45,7 +44,7 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: 16
+          java-version: 17
           cache: 'maven'
 
       - name: Login to GitHub Packages Docker Registry
@@ -180,7 +179,7 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: 16
+          java-version: 17
           cache: 'maven'
 
       - name: Login to GitHub Packages Docker Registry
@@ -346,7 +345,7 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: 16
+          java-version: 17
           cache: 'maven'
 
       - name: Login to GitHub Packages Docker Registry
