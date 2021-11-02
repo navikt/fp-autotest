@@ -608,13 +608,12 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .isTrue();
     }
 
-//    @Test
-//    @Disabled
-//    @DisplayName("6: Bare Far har rett søker foreldrepenger med AF som ikke er avsluttet. Utsettelse i midten.")
-//    @Description("Far søker foreldrepenger med to aktive arbeidsforhold og ett gammelt arbeidsforhold som skulle vært " +
-//            "avsluttet men er ikke det. Far søker gradering i ett av disse AFene med utsettelsesperiode i midten." +
-//            "I dette arbeidsforholdet gjennopptar han full deltidsstilling og AG vil har full refusjon i hele perioden." +
-//            "I det andre arbeidsforholdet vil AG bare ha refusjon i to måneder.")
+    @Test
+    @DisplayName("6: Bare Far har rett søker foreldrepenger med AF som ikke er avsluttet. Utsettelse i midten.")
+    @Description("Far søker foreldrepenger med to aktive arbeidsforhold og ett gammelt arbeidsforhold som skulle vært " +
+            "avsluttet men er ikke det. Far søker gradering i ett av disse AFene med utsettelsesperiode i midten." +
+            "I dette arbeidsforholdet gjennopptar han full deltidsstilling og AG vil har full refusjon i hele perioden." +
+            "I det andre arbeidsforholdet vil AG bare ha refusjon i to måneder.")
     void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var familie = new Familie("570");
         var far = familie.far();
