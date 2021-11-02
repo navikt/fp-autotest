@@ -40,7 +40,7 @@ For øyeblikket har vi to test suits som tester enten fpsak eller fptilbake. Vi 
 Fpsak-autotest er avhengig av følgende repo:
 * [Vtp](https://github.com/navikt/vtp) – Brukes for virtualisere eksterne tjenester
 * [Autotest-dokumentgenerator](https://github.com/navikt/autotest-dokumentgenerator) – Bibliotek som innholder buildere for søknad og inntektsmelding for testformål.
-* [Fpsoknad-felles](https://github.com/navikt/fpsoknad-felles) – felles søknadsobjekt/søknadsDTO
+* [Fpsoknad-felles](https://github.com/navikt/fpsoknad-felles) – felles søknadsobjekt/søknadsDTO som trekkes inn indirekte. Denne avhengigheten er brukt i Autotest-dokumentgenerator
 
 
 ## Arkitektur og oppbygning av fpsak-autotest
