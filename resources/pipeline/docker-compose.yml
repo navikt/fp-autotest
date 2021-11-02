@@ -72,7 +72,6 @@ services:
       - "LOADBALANCER_URL=http://localhost:8015"
       - "LOADBALANCER_FQDN=localhost:8015"
       - "KAFKA_LONNSKOMPENSASJON_TOPIC=privat-permittering-lonnskomp-vedtak-vtp"
-      - "TOKEN_X_CLIENT_ID=fpabakus"
     env_file:
       - "fpabakus_datasource.list"
       - "common.env"
@@ -106,7 +105,6 @@ services:
       - "LOADBALANCER_URL=http://localhost:8080"
       - "LOADBALANCER_FQDN=localhost:8080"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
-      - "TOKEN_X_CLIENT_ID=fpsak"
     env_file:
       - "fpsak_datasource.list"
       - "common.env"
@@ -158,7 +156,6 @@ services:
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "FPFORDEL_IT_FP_URL=https://vtp:8063/rest/infotrygd/saker/foreldrepenger"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.mottak.hendelse.test.VtpKafkaAvroSerde"
-      - "TOKEN_X_CLIENT_ID=fpfordel"
     env_file:
       - "fpfordel_datasource.list"
       - "common.env"
@@ -179,7 +176,6 @@ services:
     environment:
       - "LOADBALANCER_URL=http://localhost:8040"
       - "LOADBALANCER_FQDN=localhost:8040"
-      - "TOKEN_X_CLIENT_ID=fpinfo"
     env_file:
       - "fpinfo_datasource.list"
       - "common.env"
@@ -214,7 +210,6 @@ services:
       - "FPFORDEL_BASE_URL=http://fpfordel:8080"
       - "FPFORDEL_MAX=20"
       - "FPINFO_MAX=20"
-      - "TOKEN_X_CLIENT_ID=fpsoknad-mottak"
     env_file:
       - "common.env"
     volumes:
@@ -239,7 +234,6 @@ services:
       - "OPENIDCONNECT_USERNAME=fpformidling-localhost"
       - "LOADBALANCER_URL=http://localhost:8010"
       - "LOADBALANCER_FQDN=localhost:8010"
-      - "TOKEN_X_CLIENT_ID=fpformidling"
     env_file:
       - "fpformidling_datasource.list"
       - "common.env"
@@ -258,7 +252,6 @@ services:
     mem_limit: 256mb
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
-      - "TOKEN_X_CLIENT_ID=fpdokgen"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -278,7 +271,6 @@ services:
       - "LOADBALANCER_URL=http://localhost:8070"
       - "LOADBALANCER_FQDN=localhost:8070"
       - "OPENIDCONNECT_USERNAME=fpoppdrag-localhost"
-      - "TOKEN_X_CLIENT_ID=fpoppdrag"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -313,7 +305,6 @@ services:
       - "ABAC_ATTRIBUTT_FAGSAK=no.nav.abac.attributter.foreldrepenger.fagsak"
       - "ABAC_ATTRIBUTT_VENTEFRIST=no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist"
       - "ABAC_ATTRIBUTT_BATCH=no.nav.abac.attributter.foreldrepenger.batch"
-      - "TOKEN_X_CLIENT_ID=fptilbake"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -334,7 +325,6 @@ services:
       - "LOADBALANCER_URL=http://localhost:8075"
       - "OPENIDCONNECT_USERNAME=fprisk-localhost"
       - "BRREG_PROXY=https://vtp:8063/rest/brreg/proxy/not/implemented"
-      - "TOKEN_X_CLIENT_ID=fprisk"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
@@ -358,7 +348,6 @@ services:
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
       - "FPSAKHENDELSER_V1_URL=http://fpsak:8080/fpsak/api/hendelser/"
-      - "TOKEN_X_CLIENT_ID=fpabonnent"
     volumes:
       - "~/.modig:/var/run/secrets/naisd.io"
     ports:
