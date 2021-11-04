@@ -449,6 +449,7 @@ class Fodsel extends ForeldrepengerTestBase {
                 fødselsdato.plusWeeks(10).plusDays(1), fødselsdato.plusWeeks(15));
         fordelingEndringssøknad.permisjonsPerioder.add(fellesperiode);
         aksjonspunktBekreftelseEndringssøknad.setFordeling(fordelingEndringssøknad);
+        aksjonspunktBekreftelseEndringssøknad.setAnnenForelderInformert(true);
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelseEndringssøknad);
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())

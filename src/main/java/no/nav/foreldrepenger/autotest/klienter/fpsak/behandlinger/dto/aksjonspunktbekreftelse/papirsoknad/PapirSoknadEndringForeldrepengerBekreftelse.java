@@ -22,7 +22,13 @@ public class PapirSoknadEndringForeldrepengerBekreftelse extends AksjonspunktBek
 
     protected FordelingDto tidsromPermisjon = new FordelingDto();
 
+    protected boolean annenForelderInformert;
+
     public void setFordeling(FordelingDto tidsromPermisjon) {
         this.tidsromPermisjon = tidsromPermisjon;
+    }
+
+    public void setAnnenForelderInformert(boolean annenForelderInformert) {
+        this.annenForelderInformert = annenForelderInformert;
     }
 }
