@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningsgrunnlagArbeidsforholdDto {
     protected String arbeidsgiverNavn;
-    protected String arbeidsgiverId;
+    protected String arbeidsgiverIdent;
     protected String startdato;
     protected String opphoersdato;
     protected String arbeidsforholdId;
@@ -19,8 +19,8 @@ public class BeregningsgrunnlagArbeidsforholdDto {
         return arbeidsgiverNavn;
     }
 
-    public String getArbeidsgiverId() {
-        return arbeidsgiverId;
+    public String getArbeidsgiverIdent() {
+        return arbeidsgiverIdent;
     }
 
     public String getStartdato() {

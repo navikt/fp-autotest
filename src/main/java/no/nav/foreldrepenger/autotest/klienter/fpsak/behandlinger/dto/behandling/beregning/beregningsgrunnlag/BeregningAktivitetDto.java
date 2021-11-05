@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetT
 public class BeregningAktivitetDto {
 
     protected String arbeidsgiverNavn;
-    protected String arbeidsgiverId;
+    protected String arbeidsgiverIdent;
     protected LocalDate fom;
     protected LocalDate tom;
     protected String arbeidsforholdId;
@@ -22,8 +22,8 @@ public class BeregningAktivitetDto {
         return arbeidsgiverNavn;
     }
 
-    public String getArbeidsgiverId() {
-        return arbeidsgiverId;
+    public String getArbeidsgiverIdent() {
+        return arbeidsgiverIdent;
     }
 
     public LocalDate getFom() {

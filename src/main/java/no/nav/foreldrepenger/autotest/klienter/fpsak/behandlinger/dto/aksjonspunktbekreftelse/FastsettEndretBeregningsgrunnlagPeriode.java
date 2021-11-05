@@ -30,7 +30,7 @@ class FastsettEndretBeregningsgrunnlagPeriode {
     void leggTilAndel(BeregningsgrunnlagPrStatusOgAndelDto andel, FastsatteVerdier fastsatteVerdier) {
         if (andeler.stream().anyMatch(a -> a.andelsnr == andel.getAndelsnr())) {
             RedigerbarAndel andelInfo = new RedigerbarAndel("Andelsinfo", andel.getAndelsnr(),
-                    andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsgiverId(),
+                    andel.getArbeidsforhold() == null ? null : andel.getArbeidsforhold().getArbeidsgiverIdent(),
                     andel.getArbeidsforhold().getArbeidsforholdId(),
                     true, true, andel.getAktivitetStatus(),
                     andel.getBeregningsperiodeFom(),
@@ -39,7 +39,7 @@ class FastsettEndretBeregningsgrunnlagPeriode {
             andeler.add(new FastsettEndretBeregningsgrunnlagAndel(andelInfo, fastsatteVerdier));
         } else {
             RedigerbarAndel andelInfo = new RedigerbarAndel("Andelsinfo", andel.getAndelsnr(),
-                    andel.getArbeidsforhold().getArbeidsgiverId(), andel.getArbeidsforhold().getArbeidsforholdId(),
+                    andel.getArbeidsforhold().getArbeidsgiverIdent(), andel.getArbeidsforhold().getArbeidsforholdId(),
                     false, false,
                     andel.getAktivitetStatus(), andel.getBeregningsperiodeFom(),
                     andel.getBeregningsperiodeTom(),

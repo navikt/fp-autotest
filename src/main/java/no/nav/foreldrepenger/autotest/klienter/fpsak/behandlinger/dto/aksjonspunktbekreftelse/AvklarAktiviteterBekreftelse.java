@@ -56,7 +56,7 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
                 .stream()
                 .map(aktivitet -> new BeregningsaktivitetLagreDto(aktivitet.getArbeidsforholdType(), aktivitet.getFom(),
                         aktivitet.getTom(),
-                        aktivitet.getArbeidsgiverId(),
+                        aktivitet.getArbeidsgiverIdent(),
                         aktivitet.getAktørId() == null ? null : aktivitet.getAktørId().getAktørId(),
                         aktivitet.getArbeidsforholdId(), true))
                 .toList();
