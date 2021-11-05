@@ -17,7 +17,7 @@ public class FastsettBeregningsgrunnlagAndelDto extends RedigerbarAndelDto {
 
     public FastsettBeregningsgrunnlagAndelDto(FordelBeregningsgrunnlagAndelDto andelDto, BeregningsgrunnlagPrStatusOgAndelDto bgAndelDto) {
         super(andelDto.getAndelsnr(),
-                andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsgiverId(),
+                andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsgiverIdent(),
                 andelDto.getArbeidsforhold() == null ? null : andelDto.getArbeidsforhold().getArbeidsforholdId(),
                 false,
                 andelDto.getKilde(),

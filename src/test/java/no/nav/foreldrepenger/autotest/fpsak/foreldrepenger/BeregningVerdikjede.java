@@ -517,7 +517,7 @@ class BeregningVerdikjede extends ForeldrepengerTestBase {
     private boolean andelTilhørerArbeidsgiverMedId(BGAndelHelper BGAndelHelper,
             BeregningsgrunnlagPrStatusOgAndelDto andel) {
         return (andel.getArbeidsforhold() != null)
-                && Objects.equals(andel.getArbeidsforhold().getArbeidsgiverId(), BGAndelHelper.arbeidsgiverId);
+                && Objects.equals(andel.getArbeidsforhold().getArbeidsgiverIdent(), BGAndelHelper.arbeidsgiverId);
     }
 
     private BGAndelHelper lagBGAndel(ArbeidsgiverIdentifikator orgNr, int beregnetPrÅr, int bruttoPrÅr, double bortfaltNaturalytelseBeløp,
