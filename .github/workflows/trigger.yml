@@ -519,7 +519,8 @@ jobs:
   deploy-fpsak:
     if: |
       github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue_number != null
+      github.event.inputs.issue_number != null &&
+      github.event.inputs.trigger != 'navikt/fp-abakus'
     needs: [fpsak-autotester, verdikjedetestene]
     runs-on: ubuntu-latest
     steps:
