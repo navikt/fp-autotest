@@ -154,6 +154,10 @@ public class Saksbehandler extends Aktoer {
         ventPåOgVelgBehandling(BehandlingType.FØRSTEGANGSSØKNAD);
     }
 
+    public void ventPåOgVelgÅpenFørstegangsbehandling() {
+        ventPåOgVelgBehandling(BehandlingType.FØRSTEGANGSSØKNAD, true);
+    }
+
     public void ventPåOgVelgKlageBehandling() {
         ventPåOgVelgBehandling(BehandlingType.KLAGE);
     }
@@ -174,11 +178,16 @@ public class Saksbehandler extends Aktoer {
         ventPåOgVelgBehandling(BehandlingType.INNSYN);
     }
 
-    @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
     private void ventPåOgVelgBehandling(BehandlingType behandlingstype) {
+        ventPåOgVelgBehandling(behandlingstype, false);
+    }
+
+    @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
+    private void ventPåOgVelgBehandling(BehandlingType behandlingstype, boolean åpenStatus) {
         ventTilSakHarBehandling(behandlingstype);
         var behandling = behandlinger.stream()
                 .filter(b -> b.type.equals(behandlingstype))
+                .filter(b -> !åpenStatus || !b.status.equals(BehandlingStatus.AVSLUTTET))
                 .findFirst();
         behandling.ifPresent(this::velgBehandling);
     }
