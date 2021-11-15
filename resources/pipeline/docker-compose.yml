@@ -133,9 +133,6 @@ services:
       - "APP_URL_FPOPPDRAG=http://fpoppdrag:8080"
       - "APP_URL_FPFORMIDLING=http://fpformidling:8080"
       - "APP_URL_FPTILBAKE=http://fptilbake:8080"
-      - "OIDC_HOST_URL=https://vtp:8063/rest/isso/oauth2"
-      - "OIDC_AGENTNAME=fpsak-localhost"
-      - "OIDC_PASSWORD=vtp"
     ports:
       - "9000:9000"
     depends_on:
