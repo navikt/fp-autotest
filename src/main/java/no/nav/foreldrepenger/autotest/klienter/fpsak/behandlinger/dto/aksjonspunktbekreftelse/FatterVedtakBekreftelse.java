@@ -65,9 +65,4 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
             aksjonspunktKode = aksjonspunkt.getDefinisjon().kode;
         }
     }
-
-    @Override
-    public String toString() {
-        return String.format("FatterVedtakBekreftelse: {kode:%s, begrunnelse%s}", kode, begrunnelse);
-    }
 }

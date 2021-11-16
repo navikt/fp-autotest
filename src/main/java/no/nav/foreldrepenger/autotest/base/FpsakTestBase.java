@@ -62,7 +62,7 @@ public abstract class FpsakTestBase {
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        if (saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT,
+        if (saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.BREV_BESTILT,
                 saksbehandler.valgtBehandling.uuid)) {
             saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_SENT);
         }

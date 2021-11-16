@@ -101,11 +101,11 @@ public class Behandling {
     public String toString() {
         // Ikke bruk fields som er deferred i tostring, skaper mange kall
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("{Behandlingsid: %s}%n", this.uuid));
-        sb.append(String.format("{Behandlingsstatus: %s}%n", this.status.getKode()));
-        sb.append(String.format("{Behandlingstype: %s}", this.type.getKode()));
+        sb.append("{Behandlingsid: ").append(this.uuid).append("}\n");
+        sb.append("{Behandlingsstatus: ").append(this.status.getKode()).append("}\n");
+        sb.append("{Behandlingstype: ").append(this.type.getKode()).append("}");
         if ((this.behandlingsresultat != null) && (this.behandlingsresultat.getAvslagsarsak() != null)) {
-            sb.append(String.format("{Årsak avslag: %s}%n", this.behandlingsresultat.getAvslagsarsak().getKode()));
+            sb.append("{Årsak avslag: ").append(this.behandlingsresultat.getAvslagsarsak().getKode()).append("}\n");
         }
         return sb.toString();
     }

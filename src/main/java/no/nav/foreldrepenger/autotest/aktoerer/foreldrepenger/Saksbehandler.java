@@ -104,7 +104,7 @@ public class Saksbehandler extends Aktoer {
         MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer));
         valgtFagsak = fagsakKlient.getFagsak(saksnummer);
         if (valgtFagsak == null) {
-            throw new RuntimeException("Kan ikke velge fagsak. fagsak er null");
+            throw new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer);
         }
         behandlinger = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer());
         velgSisteBehandling();
@@ -125,7 +125,7 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> {
             refreshFagsak();
             return harFagsakstatus(status);
-        }, 10, "Fagsak har ikke status " + status);
+        }, 10, "Fagsak har ikke status [" + status + "]");
     }
 
     private boolean harFagsakstatus(FagsakStatus status) {
@@ -146,7 +146,7 @@ public class Saksbehandler extends Aktoer {
     public void velgSisteBehandling() {
         var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer()).stream()
                 .max(Comparator.comparing(b -> b.opprettet))
-                .orElseThrow(() -> new RuntimeException("Fant ingen behandlinger for saksnummer " + valgtFagsak.saksnummer()));
+                .orElseThrow(() -> new RuntimeException("Fant ingen behandlinger for saksnummer: " + valgtFagsak.saksnummer()));
         velgBehandling(behandling);
     }
 
@@ -307,30 +307,22 @@ public class Saksbehandler extends Aktoer {
             // p.t. I tillegg er det unødvendig å spørre på noe som ikke
             // finnes slik det skjer nå.
 
-            behandling.setUttakResultatPerioder(
-                    new Lazy<>(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid)));
+            behandling.setUttakResultatPerioder(new Lazy<>(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid)));
             behandling.setSaldoer(new Lazy<>(() -> behandlingerKlient.behandlingUttakStonadskontoer(behandling.uuid)));
 
-            behandling.setBeregningsgrunnlag(
-                    new Lazy<>(() -> behandlingerKlient.behandlingBeregningsgrunnlag(behandling.uuid)));
-            behandling.setInntektArbeidYtelse(
-                    new Lazy<>(() -> behandlingerKlient.behandlingInntektArbeidYtelse(behandling.uuid)));
+            behandling.setBeregningsgrunnlag(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsgrunnlag(behandling.uuid)));
+            behandling.setInntektArbeidYtelse(new Lazy<>(() -> behandlingerKlient.behandlingInntektArbeidYtelse(behandling.uuid)));
 
-            behandling.setBeregningResultatEngangsstonad(
-                    new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatEngangsstønad(behandling.uuid)));
-            behandling.setBeregningResultatForeldrepenger(
-                    new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatForeldrepenger(behandling.uuid)));
+            behandling.setBeregningResultatEngangsstonad(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatEngangsstønad(behandling.uuid)));
+            behandling.setBeregningResultatForeldrepenger(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatForeldrepenger(behandling.uuid)));
             behandling.setSoknad(new Lazy<>(() -> behandlingerKlient.behandlingSøknad(behandling.uuid)));
             behandling.setOpptjening(new Lazy<>(() -> behandlingerKlient.behandlingOpptjening(behandling.uuid)));
 
-            behandling.setKontrollerFaktaData(
-                    new Lazy<>(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid)));
-            behandling.setKontrollerAktivitetskrav(
-                    new Lazy<>(() -> behandlingerKlient.behandlingKontrollerAktivitetskrav(behandling.uuid)));
+            behandling.setKontrollerFaktaData(new Lazy<>(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid)));
+            behandling.setKontrollerAktivitetskrav(new Lazy<>(() -> behandlingerKlient.behandlingKontrollerAktivitetskrav(behandling.uuid)));
             behandling.setMedlem(new Lazy<>(() -> behandlingerKlient.behandlingMedlemskap(behandling.uuid)));
 
-            behandling
-                    .setTilrettelegging(new Lazy<>(() -> behandlingerKlient.behandlingTilrettelegging(behandling.uuid)));
+            behandling.setTilrettelegging(new Lazy<>(() -> behandlingerKlient.behandlingTilrettelegging(behandling.uuid)));
         }
     }
 
@@ -382,7 +374,7 @@ public class Saksbehandler extends Aktoer {
     public List<UttakResultatPeriode> hentAvslåtteUttaksperioder() {
         return valgtBehandling.hentUttaksperioder().stream()
                 .filter(p -> p.getPeriodeResultatType().equals(PeriodeResultatType.AVSLÅTT))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /*
@@ -405,14 +397,14 @@ public class Saksbehandler extends Aktoer {
                 .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
                 .filter(andeler -> arbeidsgiverIdentifikator.value().equalsIgnoreCase(andeler.getArbeidsgiverReferanse()))
                 .sorted(Comparator.comparing(BeregningsresultatPeriodeAndel::getSisteUtbetalingsdato))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<BeregningsresultatPeriodeAndel> hentBeregningsresultatPerioderMedAndelISN() {
         return valgtBehandling.getBeregningResultatForeldrepenger().getPerioder().stream()
                 .flatMap(beregningsresultatPeriode -> beregningsresultatPeriode.getAndeler().stream())
                 .filter(a -> a.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Set<AktivitetStatus> hentUnikeBeregningAktivitetStatus() {
@@ -451,7 +443,7 @@ public class Saksbehandler extends Aktoer {
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
         return valgtBehandling.getAksjonspunkter().stream()
                 .filter(Aksjonspunkt::skalTilToTrinnsBehandling)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /*
@@ -519,48 +511,50 @@ public class Saksbehandler extends Aktoer {
         refreshBehandling();
     }
 
+
     /*
      * Historikkinnslag
      */
-    public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
-        Vent.til(() -> harHistorikkinnslagForBehandling(type, valgtBehandling.uuid),
-                60, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
-                        + String.join("\t\n", String.valueOf(getHistorikkInnslag())));
 
-    }
-
-    public boolean harHistorikkinnslagForBehandling(HistorikkinnslagType type) {
-        return harHistorikkinnslagForBehandling(type, valgtBehandling.uuid);
-    }
-
-    public boolean harHistorikkinnslagForBehandling(HistorikkinnslagType type, UUID behandlingsId) {
-        if (type == HistorikkinnslagType.VEDLEGG_MOTTATT) {
-            behandlingsId = null;
-        }
-        for (HistorikkInnslag innslag : getHistorikkInnslag()) {
-            if (innslag.type().equals(type) && (Objects.equals(innslag.behandlingUuid(), behandlingsId))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public List<HistorikkInnslag> getHistorikkInnslag() {
+    public List<HistorikkInnslag> hentHistorikkinnslagPåFagsak() {
         refreshBehandling();
         return get(historikkInnslag);
     }
 
+    public List<HistorikkInnslag> hentHistorikkinnslagPåBehandling() {
+        return hentHistorikkinnslagPåBehandling(valgtBehandling.uuid);
+    }
+
+    public List<HistorikkInnslag> hentHistorikkinnslagPåBehandling(UUID uuid) {
+        return hentHistorikkinnslagPåFagsak().stream()
+                .filter(innslag -> Objects.equals(uuid, innslag.behandlingUuid()))
+                .toList();
+    }
+
+    public boolean harHistorikkinnslagPåBehandling(HistorikkinnslagType type) {
+        return harHistorikkinnslagPåBehandling(type, valgtBehandling.uuid);
+    }
+
+    public boolean harHistorikkinnslagPåBehandling(HistorikkinnslagType type, UUID behandlingsId) {
+        if (List.of(HistorikkinnslagType.VEDLEGG_MOTTATT, HistorikkinnslagType.REVURD_OPPR).contains(type)) {
+            behandlingsId = null;
+        }
+        return hentHistorikkinnslagPåBehandling(behandlingsId).stream()
+                .anyMatch(innslag -> type.equals(innslag.type()));
+    }
+
     public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkinnslagType type) {
         ventTilHistorikkinnslag(type);
-        return historikkInnslag.get().stream()
-                .filter(h -> h.type().equals(type))
+        return hentHistorikkinnslagPåBehandling().stream()
+                .filter(innslag -> type.equals(innslag.type()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Finner ikke historikkinnslag av typen " + type.getKode()));
     }
 
-    public String hentDokumentIdFraHistorikkinnslag(HistorikkinnslagType type) {
-        var innslag = hentHistorikkinnslagAvType(type);
-        return innslag.dokumentLinks().get(0).dokumentId();
+    public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
+        Vent.til(() -> harHistorikkinnslagPåBehandling(type),
+                30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
+                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
     }
 
 
@@ -573,8 +567,7 @@ public class Saksbehandler extends Aktoer {
                 return vilkår;
             }
         }
-        throw new IllegalStateException(
-                String.format("Fant ikke vilkår %s for behandling %s", vilkårKode.toString(), valgtBehandling.uuid));
+        throw new IllegalStateException("Fant ikke vilkår " + vilkårKode.toString() + "for behandling " + valgtBehandling.uuid);
     }
 
     private Vilkar hentVilkår(String vilkårKode) {
@@ -590,7 +583,7 @@ public class Saksbehandler extends Aktoer {
         var prosesstasker = prosesstaskKlient.list(filter);
         return prosesstasker.stream()
                 .filter(p -> Objects.equals(behandling.uuid.toString(), p.taskParametre().behandlingId()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public boolean sakErKobletTilAnnenpart() {

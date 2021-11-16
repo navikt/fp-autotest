@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.verdikjedetester;
 
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper.medEgenNaeringOpptjening;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
@@ -81,6 +82,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
@@ -613,7 +615,8 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
     @Description("Far søker foreldrepenger med to aktive arbeidsforhold og ett gammelt arbeidsforhold som skulle vært " +
             "avsluttet men er ikke det. Far søker gradering i ett av disse AFene med utsettelsesperiode i midten." +
             "I dette arbeidsforholdet gjennopptar han full deltidsstilling og AG vil har full refusjon i hele perioden." +
-            "I det andre arbeidsforholdet vil AG bare ha refusjon i to måneder.")
+            "I det andre arbeidsforholdet vil AG bare ha refusjon i to måneder." +
+            "Far sender dermed inn endringssøknad og gir fra seg alle periodene.")
     void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var familie = new Familie("570");
         var far = familie.far();
@@ -772,6 +775,25 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         assertThat(andelerForAT2.get(4).getTilSoker())
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isZero();
+
+        // Endringssøknad: Far bestemmer seg for å gi fra seg alle periodene
+        var fordelingGiFraSegAlt = generiskFordeling(utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar, fpStartdatoFar.plusDays(1)));
+        var endringssøknadBuilder = lagEndringssøknadFødsel(familie.barn().fødselsdato(), BrukerRolle.FAR,
+                fordelingGiFraSegAlt, saksnummerFar);
+        far.søk(endringssøknadBuilder.build());
+
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.FORELDREPENGER_SENERE);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder())
+                .as("Uttaksperioder for valgt behandling")
+                .isEmpty();
+        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
+                .as("Historikkinnslag på revurdering")
+                .extracting(HistorikkInnslag::type)
+                .contains(HistorikkinnslagType.BREV_BESTILT);
+        // TODO: Legg til støtte får å hente ut maltype på brevet som er produsert. Skal være FORELDREPENGER_ANNULLERT
     }
 
     @Test
@@ -1093,9 +1115,13 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        assertThat(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT))
+        assertThat(saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.BREV_BESTILT))
                 .as("Brev er bestillt i førstegangsbehandling")
                 .isTrue();
+        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
+                .as("Historikkinnslag")
+                .extracting(HistorikkInnslag::type)
+                .contains(HistorikkinnslagType.BREV_BESTILT);
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
@@ -1186,9 +1212,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar2);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        assertThat(saksbehandler.behandlinger.size())
+        assertThat(saksbehandler.behandlinger)
                 .as("Antall behandlinger")
-                .isEqualTo(2);
+                .hasSize(2);
         saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.SPOLT_TILBAKE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
