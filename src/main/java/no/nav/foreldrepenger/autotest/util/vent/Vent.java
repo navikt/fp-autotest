@@ -32,8 +32,8 @@ public final class Vent {
                     LOG.warn("Async venting av {} har tatt mer enn 75% av timeout på {} sekunder!", ste, timeoutInSeconds);
                 }
                 if (now.isAfter(end)) {
-                    throw new IllegalStateException(
-                            String.format("Async venting timet ut etter %s sekunder fordi: %s", timeoutInSeconds, errorMessageProducer.call()));
+                    throw new IllegalStateException("Async venting timet ut etter " + timeoutInSeconds +
+                            " sekunder fordi: " + errorMessageProducer.call());
                 }
                 Thread.sleep(1000);
             }

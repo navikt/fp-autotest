@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderEktefellesBarnBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
@@ -70,9 +71,12 @@ class Revurdering extends FpsakTestBase {
         varselOmRevurderingBekreftelse.bekreftSendVarsel(Venteårsak.UTV_FRIST, "Send brev");
         saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 
-        saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.REVURD_OPPR);
-        saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT);
-        saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BEH_VENT);
+        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
+                .as("Historikkinnslag på revurdering")
+                .extracting(HistorikkInnslag::type)
+                .contains(  HistorikkinnslagType.REVURD_OPPR,
+                            HistorikkinnslagType.BREV_BESTILT,
+                            HistorikkinnslagType.BEH_VENT);
 
         assertThat(saksbehandler.valgtBehandling.erSattPåVent())
                 .as("Behandlingen er ikke satt på vent etter varsel for revurdering")

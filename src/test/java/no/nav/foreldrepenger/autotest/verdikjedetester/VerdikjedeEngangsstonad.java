@@ -53,7 +53,10 @@ class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
                 .as("Beregnet tilkjent ytelse")
                 .isPositive();
 
-        var dokumentId = saksbehandler.hentDokumentIdFraHistorikkinnslag(HistorikkinnslagType.BREV_SENT);
+        var dokumentId = saksbehandler
+                .hentHistorikkinnslagAvType(HistorikkinnslagType.BREV_SENT)
+                .dokumentLinks().get(0)
+                .dokumentId();
         var pdf = fordel.hentJournalførtDokument(dokumentId, "ARKIV");
         assertThat(is_pdf(pdf))
                 .as("Sjekker om byte array er av typen PDF")

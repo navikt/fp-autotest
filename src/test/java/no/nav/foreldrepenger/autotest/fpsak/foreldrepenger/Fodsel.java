@@ -55,6 +55,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
@@ -363,11 +364,10 @@ class Fodsel extends ForeldrepengerTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        assertThat(beslutter.harHistorikkinnslagForBehandling(HistorikkinnslagType.VEDTAK_FATTET))
-                .as("Har historikkinnslag VEDTAK_FATTET")
-                .isTrue();
-        beslutter.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_BESTILT);
-
+        assertThat(beslutter.hentHistorikkinnslagPåBehandling())
+                .as("Historikkinnslag")
+                .extracting(HistorikkInnslag::type)
+                .contains(HistorikkinnslagType.VEDTAK_FATTET, HistorikkinnslagType.BREV_BESTILT);
     }
 
     @Test

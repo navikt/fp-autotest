@@ -49,7 +49,7 @@ public final class AllureHelper {
         StringBuilder sb = new StringBuilder();
         sb.append("Historikkinnslag\n");
         for (HistorikkInnslag historikkInnslag : historikkInnslagList) {
-            sb.append(String.format("\t{%s}", historikkInnslag.type()));
+            sb.append("\t").append("{").append(historikkInnslag.type()).append("}");
         }
         loggHistorikkinnslag(sb.toString());
     }

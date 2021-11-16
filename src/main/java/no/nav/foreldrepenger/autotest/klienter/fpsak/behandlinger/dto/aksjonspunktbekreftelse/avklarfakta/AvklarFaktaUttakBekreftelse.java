@@ -91,8 +91,7 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
                 return periode;
             }
         }
-        throw new IllegalStateException(
-                String.format("Fant ikke uttaksperiode fra som går fra %s til %s", fra.toString(), til.toString()));
+        throw new IllegalStateException("Fant ikke uttaksperiode fra som går fra " + fra + " til " + til);
     }
 
     public static class BekreftetUttakPeriode {

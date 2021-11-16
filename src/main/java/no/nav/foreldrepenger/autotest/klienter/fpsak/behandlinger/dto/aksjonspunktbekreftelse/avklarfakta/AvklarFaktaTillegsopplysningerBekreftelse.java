@@ -9,10 +9,4 @@ public class AvklarFaktaTillegsopplysningerBekreftelse extends AksjonspunktBekre
     public AvklarFaktaTillegsopplysningerBekreftelse() {
         super();
     }
-
-    @Override
-    public String toString() {
-        return String.format("FatterVedtakBekreftelse: {kode:%s, begrunnelse%s}", kode, begrunnelse);
-    }
-
 }

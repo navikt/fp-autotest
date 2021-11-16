@@ -324,7 +324,7 @@ class Revurdering extends ForeldrepengerTestBase {
     @DisplayName("Bare far har rett. Endringssøknad med utsettelse. Delvis aktivitetskrav")
     @Description("Bare far har rett (BFHR) sender inn en endringssøknad med 2 utsettelsesperioder. Aktivitetskravet for " +
             "første utsettesle er oppfylt men ikke for andre perioder. Andre periode avslås og trekker dager.")
-    void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
+    void bareFarHarRettEndringssøknadMed2UtsettelsesperioderTest() {
         var familie = new Familie("60", fordel);
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();

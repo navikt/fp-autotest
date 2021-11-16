@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnsynResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvInnsynBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
@@ -57,13 +58,14 @@ class Innsyn extends FpsakTestBase {
 
         saksbehandler.ventTilAvsluttetBehandling();
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
-        AllureHelper.debugLoggHistorikkinnslag(saksbehandler.getHistorikkInnslag());
+        AllureHelper.debugLoggHistorikkinnslag(saksbehandler.hentHistorikkinnslagPåBehandling());
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNSYN_INNVILGET);
-        assertThat(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT))
+        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
                 .as("Historikkinnslag")
-                .isTrue();
+                .extracting(HistorikkInnslag::type)
+                .contains(HistorikkinnslagType.BREV_BESTILT);
     }
 
     @Test
@@ -99,8 +101,9 @@ class Innsyn extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNSYN_AVVIST);
-        assertThat(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT))
+        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
                 .as("Historikkinnslag (Brev er ikke bestilt etter innsyn er godkjent)")
-                .isTrue();
+                .extracting(HistorikkInnslag::type)
+                .contains(HistorikkinnslagType.BREV_BESTILT);
     }
 }

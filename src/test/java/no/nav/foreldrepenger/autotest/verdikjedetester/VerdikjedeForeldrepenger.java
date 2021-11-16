@@ -82,6 +82,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
@@ -788,6 +789,11 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         assertThat(saksbehandler.valgtBehandling.hentUttaksperioder())
                 .as("Uttaksperioder for valgt behandling")
                 .isEmpty();
+        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
+                .as("Historikkinnslag på revurdering")
+                .extracting(HistorikkInnslag::type)
+                .contains(HistorikkinnslagType.BREV_BESTILT);
+        // TODO: Legg til støtte får å hente ut maltype på brevet som er produsert. Skal være FORELDREPENGER_ANNULLERT
     }
 
     @Test
@@ -1109,9 +1115,13 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        assertThat(saksbehandler.harHistorikkinnslagForBehandling(HistorikkinnslagType.BREV_BESTILT))
+        assertThat(saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.BREV_BESTILT))
                 .as("Brev er bestillt i førstegangsbehandling")
                 .isTrue();
+        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
+                .as("Historikkinnslag")
+                .extracting(HistorikkInnslag::type)
+                .contains(HistorikkinnslagType.BREV_BESTILT);
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
@@ -1202,9 +1212,9 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar2);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        assertThat(saksbehandler.behandlinger.size())
+        assertThat(saksbehandler.behandlinger)
                 .as("Antall behandlinger")
-                .isEqualTo(2);
+                .hasSize(2);
         saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.SPOLT_TILBAKE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 

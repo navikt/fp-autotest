@@ -31,7 +31,7 @@ public class StønadskontoTypeDeserializerFP extends StdDeserializer<Stønadskon
         } else if (rootNode instanceof ObjectNode o) {
             stønadskontoType = StønadskontoType.valueSafelyOf(fromString(o));
         } else {
-            throw new IllegalArgumentException(String.format("Ukjent node type [%s]", rootNode.getClass().getSimpleName()));
+            throw new IllegalArgumentException("Ukjent node type [" + rootNode.getClass().getSimpleName() + "]");
         }
         if (stønadskontoType == null) {
             return StønadskontoType.IKKE_SATT;

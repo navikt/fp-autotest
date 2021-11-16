@@ -220,8 +220,9 @@ public class SøknadMottak extends Aktoer implements Innsender {
             Vent.til(() -> {
                 antallIM.set(hentAntallHistorikkInnslagAvTypenVedleggMottatt(saksnummer));
                 return antallIM.get() == forventetAntallInnteksmeldinger;
-            }, 60, String.format("Forventet at det ble mottatt %d ny(e) innteksmeldinge(r), men det ble mottatt %d!" +
-                    "på saksnummer %s", antallNyeInntektsmeldinger, antallIM.get() - antallGamleInntekstmeldinger, saksnummer));
+            }, 60, "Forventet at det ble mottatt " + antallNyeInntektsmeldinger +
+                    " ny(e) innteksmeldinge(r), men det ble mottatt " + (antallIM.get() - antallGamleInntekstmeldinger) +
+                    " på saksnummer " + saksnummer);
             return saksnummer;
         } else {
             return ventTilFagsakOgBehandlingErOpprettet(fnr);

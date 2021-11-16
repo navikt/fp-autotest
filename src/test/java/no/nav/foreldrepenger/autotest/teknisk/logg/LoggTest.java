@@ -73,8 +73,8 @@ class LoggTest {
                     linePos++;
                     for (var sensitiv : sensitiveStrenger) {
                         var inneholderSensistivOpplysning = currentLine.matches(sensitiv.getData());
-                        var msg = String.format("Fant sensitiv opplysning i logg (syntetisk): [%s] for applikasjon: [%s], linje[%s]=%s, type=%s", sensitiv.getData(), containerNavn, linePos,
-                            currentLine, sensitiv.getKilde());
+                        var msg = String.format("Fant sensitiv opplysning i logg (syntetisk): [%s] for applikasjon: [%s], linje[%s]=%s, type=%s",
+                                sensitiv.getData(), containerNavn, linePos, currentLine, sensitiv.getKilde());
                         if (inneholderSensistivOpplysning) {
                             assertEquals("", sensitiv.getData(), msg);
                         }
@@ -99,11 +99,13 @@ class LoggTest {
                     linePos++;
                     for (var unwantedString : UNWANTED_STRINGS) {
                         assertFalse(isUnwantedString(currentLine, unwantedString),
-                            String.format("Fant feil i logg : [%s] for applikasjon: [%s], linje[%s]=%s", unwantedString, containerNavn, linePos, currentLine));
+                            String.format("Fant feil i logg : [%s] for applikasjon: [%s], linje[%s]=%s",
+                                    unwantedString, containerNavn, linePos, currentLine));
                     }
                 }
                 if (!containerNavn.equalsIgnoreCase("fpdokgen") && linePos < 100) {
-                    fail(String.format("Det forventes minst 100 linjer i loggen for applijasjon: %s, men var %s.", containerNavn, linePos));
+                    fail(String.format("Det forventes minst 100 linjer i loggen for applijasjon: %s, men var %s.",
+                            containerNavn, linePos));
                 }
             }
         }
