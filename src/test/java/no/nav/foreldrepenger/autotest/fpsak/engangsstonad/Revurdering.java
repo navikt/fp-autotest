@@ -65,6 +65,7 @@ class Revurdering extends FpsakTestBase {
 
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_FEIL_ELLER_ENDRET_FAKTA);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.REVURD_OPPR);
 
         VarselOmRevurderingBekreftelse varselOmRevurderingBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
@@ -74,8 +75,7 @@ class Revurdering extends FpsakTestBase {
         assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
                 .as("Historikkinnslag på revurdering")
                 .extracting(HistorikkInnslag::type)
-                .contains(  HistorikkinnslagType.REVURD_OPPR,
-                            HistorikkinnslagType.BREV_BESTILT,
+                .contains(  HistorikkinnslagType.BREV_BESTILT,
                             HistorikkinnslagType.BEH_VENT);
 
         assertThat(saksbehandler.valgtBehandling.erSattPåVent())

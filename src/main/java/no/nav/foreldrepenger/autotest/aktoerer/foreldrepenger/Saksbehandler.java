@@ -515,13 +515,18 @@ public class Saksbehandler extends Aktoer {
     /*
      * Historikkinnslag
      */
+
+    public List<HistorikkInnslag> hentHistorikkinnslagPåFagsak() {
+        refreshBehandling();
+        return get(historikkInnslag);
+    }
+
     public List<HistorikkInnslag> hentHistorikkinnslagPåBehandling() {
         return hentHistorikkinnslagPåBehandling(valgtBehandling.uuid);
     }
 
     public List<HistorikkInnslag> hentHistorikkinnslagPåBehandling(UUID uuid) {
-        refreshBehandling();
-        return get(historikkInnslag).stream()
+        return hentHistorikkinnslagPåFagsak().stream()
                 .filter(innslag -> Objects.equals(uuid, innslag.behandlingUuid()))
                 .toList();
     }
@@ -531,7 +536,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     public boolean harHistorikkinnslagPåBehandling(HistorikkinnslagType type, UUID behandlingsId) {
-        if (type.equals(HistorikkinnslagType.VEDLEGG_MOTTATT)) {
+        if (List.of(HistorikkinnslagType.VEDLEGG_MOTTATT, HistorikkinnslagType.REVURD_OPPR).contains(type)) {
             behandlingsId = null;
         }
         return hentHistorikkinnslagPåBehandling(behandlingsId).stream()
