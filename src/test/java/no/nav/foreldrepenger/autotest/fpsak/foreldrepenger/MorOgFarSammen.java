@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper;
@@ -43,7 +43,7 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Utsettelses�
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
-class MorOgFarSammen extends ForeldrepengerTestBase {
+class MorOgFarSammen extends FpsakTestBase {
 
     private static final Logger logger = LoggerFactory.getLogger(MorOgFarSammen.class);
 

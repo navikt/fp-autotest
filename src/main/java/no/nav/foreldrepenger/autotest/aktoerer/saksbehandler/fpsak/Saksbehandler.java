@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger;
+package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak;
 
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
@@ -30,7 +30,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingResponse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
@@ -284,45 +283,27 @@ public class Saksbehandler extends Aktoer {
         }
     }
 
-
     private void populateBehandling(Behandling behandling) {
-
         behandling.setAksjonspunkter(new Lazy<>(() -> behandlingerKlient.getBehandlingAksjonspunkt(behandling.uuid)));
         behandling.setVilkar(new Lazy<>(() -> behandlingerKlient.behandlingVilkår(behandling.uuid)));
 
-        /*
-         * KODE OFFISIELL_KODE BESKRIVELSE BT-002 ae0034 Førstegangsbehandling BT-003
-         * ae0058 Klage BT-004 ae0028 Revurdering BT-005 ae0043 Tilbakebetaling endring
-         * BT-006 ae0042 Dokumentinnsyn
-         */
-
         if (behandling.type.equals(BehandlingType.INNSYN)) {
             // Gjør ingenting
-        } else if (behandling.type.equals(BehandlingType.KLAGE)) {
+        } else if (List.of(BehandlingType.KLAGE, BehandlingType.ANKE).contains(behandling.type)) {
             behandling.setKlagevurdering(new Lazy<>(() -> behandlingerKlient.klage(behandling.uuid)));
         } else {
-            // FIXME: Forespørslene her burde konsultere resultat for valgtbehandling for å
-            // sjekke om URLene er tilgjengelig før de kjører.
-            // URLene kan endre seg, men koden i behandlingerKlient tar ikke hensyn til det
-            // p.t. I tillegg er det unødvendig å spørre på noe som ikke
-            // finnes slik det skjer nå.
-
-            behandling.setUttakResultatPerioder(new Lazy<>(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid)));
-            behandling.setSaldoer(new Lazy<>(() -> behandlingerKlient.behandlingUttakStonadskontoer(behandling.uuid)));
-
             behandling.setBeregningsgrunnlag(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsgrunnlag(behandling.uuid)));
-            behandling.setInntektArbeidYtelse(new Lazy<>(() -> behandlingerKlient.behandlingInntektArbeidYtelse(behandling.uuid)));
-
             behandling.setBeregningResultatEngangsstonad(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatEngangsstønad(behandling.uuid)));
             behandling.setBeregningResultatForeldrepenger(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatForeldrepenger(behandling.uuid)));
-            behandling.setSoknad(new Lazy<>(() -> behandlingerKlient.behandlingSøknad(behandling.uuid)));
-            behandling.setOpptjening(new Lazy<>(() -> behandlingerKlient.behandlingOpptjening(behandling.uuid)));
-
-            behandling.setKontrollerFaktaData(new Lazy<>(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid)));
+            behandling.setInntektArbeidYtelse(new Lazy<>(() -> behandlingerKlient.behandlingInntektArbeidYtelse(behandling.uuid)));
             behandling.setKontrollerAktivitetskrav(new Lazy<>(() -> behandlingerKlient.behandlingKontrollerAktivitetskrav(behandling.uuid)));
+            behandling.setKontrollerFaktaData(new Lazy<>(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid)));
             behandling.setMedlem(new Lazy<>(() -> behandlingerKlient.behandlingMedlemskap(behandling.uuid)));
-
+            behandling.setOpptjening(new Lazy<>(() -> behandlingerKlient.behandlingOpptjening(behandling.uuid)));
+            behandling.setSaldoer(new Lazy<>(() -> behandlingerKlient.behandlingUttakStonadskontoer(behandling.uuid)));
+            behandling.setSoknad(new Lazy<>(() -> behandlingerKlient.behandlingSøknad(behandling.uuid)));
             behandling.setTilrettelegging(new Lazy<>(() -> behandlingerKlient.behandlingTilrettelegging(behandling.uuid)));
+            behandling.setUttakResultatPerioder(new Lazy<>(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid)));
         }
     }
 
@@ -607,18 +588,10 @@ public class Saksbehandler extends Aktoer {
      */
     public void ventTilRisikoKlassefiseringsstatus(String status) {
         Vent.til(() -> {
-            RisikovurderingResponse response = getRisikovurdering(valgtBehandling.uuid.toString());
-            return harRisikoKlassefiseringsstatus(status, response);
+            var response = risikovurderingKlient.getRisikovurdering(valgtBehandling.uuid.toString());
+            return response.risikoklasse().equalsIgnoreCase(status);
         }, 45, "Har ikke riktig risikoklassifiseringsstatus");
     }
-
-    private RisikovurderingResponse getRisikovurdering(String uuid) {
-        return risikovurderingKlient.getRisikovurdering(uuid);
-    }
-    private boolean harRisikoKlassefiseringsstatus(String status, RisikovurderingResponse responseDto) {
-        return responseDto.risikoklasse().equalsIgnoreCase(status);
-    }
-
 
     /* VERIFISERINGER */
     public boolean sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(BeregningsresultatPeriode beregningsresultatPeriode,

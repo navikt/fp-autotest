@@ -1,24 +1,12 @@
-package no.nav.foreldrepenger.autotest.base;
+package no.nav.foreldrepenger.autotest.util.pdf;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+public class Pdf {
 
-import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
-import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Inntektsperiode;
-
-public class ForeldrepengerTestBase extends FpsakTestBase {
-
-    protected List<Integer> sorterteInntektsbeløp(TestscenarioDto testscenario) {
-        return testscenario.scenariodataDto().inntektskomponentModell().getInntektsperioderSplittMånedlig().stream()
-                .map(Inntektsperiode::beløp)
-                .distinct()
-                .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList());
+    private Pdf() {
     }
 
-    /* Verifisering av PDF */
-    protected boolean is_pdf(byte[] data) {
+    /* Verifiserer at byte array er en PDF */
+    public static boolean is_pdf(byte[] data) {
         if (data != null && data.length > 4 &&
                 data[0] == 0x25 && // %
                 data[1] == 0x50 && // P

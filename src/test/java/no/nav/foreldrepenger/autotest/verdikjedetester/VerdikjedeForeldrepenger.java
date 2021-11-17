@@ -34,7 +34,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
+import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.RelasjonTilBarnErketyper;
@@ -99,7 +101,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 
 @Tag("verdikjede")
-class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
+class VerdikjedeForeldrepenger extends FpsakTestBase {
 
     @Test
     @DisplayName("1: Mor automatisk førstegangssøknad termin (med fødselshendelse), aleneomsorg og avvik i beregning.")
@@ -890,6 +892,7 @@ class VerdikjedeForeldrepenger extends ForeldrepengerTestBase {
                 .isZero();
 
         if (forventerNegativSimuleringForBehandling(fpStartdatoFarEndret)) {
+            var tbksaksbehandler = new TilbakekrevingSaksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
             tbksaksbehandler.hentSisteBehandling(saksnummerMor);
             tbksaksbehandler.ventTilBehandlingErPåVent();
             assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)

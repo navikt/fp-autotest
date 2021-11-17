@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslags√•rsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
@@ -49,7 +49,7 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Utsettelses√
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
-class Revurdering extends ForeldrepengerTestBase {
+class Revurdering extends FpsakTestBase {
 
     private static final Logger logger = LoggerFactory.getLogger(Revurdering.class);
 

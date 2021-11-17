@@ -5,7 +5,7 @@ import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 
 import jakarta.ws.rs.core.MediaType;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.FpsoknadMottakJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.dto.Kvittering;
+import no.nav.foreldrepenger.common.domain.Kvittering;
 import no.nav.foreldrepenger.common.domain.Søknad;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.Endringssøknad;
 

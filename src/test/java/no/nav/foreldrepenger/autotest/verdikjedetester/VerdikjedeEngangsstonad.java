@@ -9,19 +9,20 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLovligOppholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 
 @Tag("verdikjede")
-class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
+class VerdikjedeEngangsstonad extends FpsakTestBase {
 
     @Test
     @DisplayName("1: Mor er tredjelandsborger og søker engangsstønad")
@@ -58,7 +59,7 @@ class VerdikjedeEngangsstonad extends ForeldrepengerTestBase {
                 .dokumentLinks().get(0)
                 .dokumentId();
         var pdf = fordel.hentJournalførtDokument(dokumentId, "ARKIV");
-        assertThat(is_pdf(pdf))
+        assertThat(Pdf.is_pdf(pdf))
                 .as("Sjekker om byte array er av typen PDF")
                 .isTrue();
     }

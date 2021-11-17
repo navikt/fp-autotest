@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -30,7 +30,7 @@ import no.nav.foreldrepenger.common.domain.Orgnummer;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
-class Termin extends ForeldrepengerTestBase {
+class Termin extends FpsakTestBase {
 
     @Test
     @DisplayName("Mor søker med ett arbeidsforhold. Inntektmelding innsendt før søknad")
@@ -150,10 +150,8 @@ class Termin extends ForeldrepengerTestBase {
         var resultatPerioder = saksbehandler.valgtBehandling.getUttakResultatPerioder()
                 .getPerioderSøker();
         assertThat(resultatPerioder)
-                .as("Antall uttaksperioder")
-                .hasSize(7);
-        assertThat(resultatPerioder)
-                .as("Alle perioderresultatstype for uttaksperiodene skal være INNVILGET, men er ikke det")
+                .as("Uttaksperioder (resultat)")
+                .hasSize(7)
                 .allMatch(p -> p.getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET));
         assertThat(resultatPerioder.get(2).getGraderingInnvilget())
                 .as("Gradering innvilget")

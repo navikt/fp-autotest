@@ -41,13 +41,6 @@
             </properties>
         </profile>
         <profile>
-            <id>fprisk</id>
-            <properties>
-                <testTags>fprisk</testTags>
-                <testPackage>no.nav.foreldrepenger.autotest.fprisk.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
             <id>svangerskapspenger</id>
             <properties>
                 <includeTestsTags>svangerskapspenger</includeTestsTags>

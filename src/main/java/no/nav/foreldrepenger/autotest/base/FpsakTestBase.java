@@ -5,15 +5,13 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.BeforeEach;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.aktoerer.fordel.Fordel;
-import no.nav.foreldrepenger.autotest.aktoerer.foreldrepenger.Saksbehandler;
-import no.nav.foreldrepenger.autotest.aktoerer.fptilbake.TilbakekrevingSaksbehandler;
+import no.nav.foreldrepenger.autotest.aktoerer.innsender.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.SøknadMottak;
+import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Saksbehandler;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Søker;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 
@@ -28,7 +26,6 @@ public abstract class FpsakTestBase {
     protected Saksbehandler overstyrer;
     protected Saksbehandler beslutter;
     protected Saksbehandler klagebehandler;
-    protected TilbakekrevingSaksbehandler tbksaksbehandler;
 
 
     @BeforeEach
@@ -39,14 +36,8 @@ public abstract class FpsakTestBase {
         overstyrer = new Saksbehandler(Aktoer.Rolle.OVERSTYRER);
         beslutter = new Saksbehandler(Aktoer.Rolle.BESLUTTER);
         klagebehandler = new Saksbehandler(Aktoer.Rolle.KLAGEBEHANDLER);
-        tbksaksbehandler = new TilbakekrevingSaksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
         LoggFormater.leggTilKjørendeTestCaseILogger();
     }
-
-    public Familie nyFamilie(String ID) {
-        return new Familie(ID, fordel);
-    }
-
 
     public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,
                                                                                          boolean revurdering) {
@@ -62,8 +53,7 @@ public abstract class FpsakTestBase {
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        if (saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.BREV_BESTILT,
-                saksbehandler.valgtBehandling.uuid)) {
+        if (saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.BREV_BESTILT, saksbehandler.valgtBehandling.uuid)) {
             saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_SENT);
         }
     }
