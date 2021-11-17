@@ -1,10 +1,9 @@
-package no.nav.foreldrepenger.autotest.aktoerer.fptilbake;
+package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
@@ -18,7 +17,6 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behand
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BrukerresponsDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.AksjonspunktBehandling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVerge;
@@ -69,7 +67,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     // Brukerrespons action
     public void registrerBrukerrespons(boolean akseptertFaktagrunnlag){
-        BrukerresponsDto brukerrespons = new BrukerresponsDto(valgtBehandling.id);
+        var brukerrespons = new BrukerresponsDto(valgtBehandling.id);
         brukerrespons.setAkseptertFaktagrunnlag(akseptertFaktagrunnlag);
         behandlingerKlient.registrerBrukerrespons(brukerrespons);
     }
@@ -112,8 +110,8 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     public BeregningResultatPerioder hentResultat(UUID uuid){
-        BeregningResultatPerioder resultat = new BeregningResultatPerioder();
-        for (BeregningResultatPerioder beregningResultatPeriode : okonomiKlient.hentResultat(uuid).getBeregningResultatPerioderList()) {
+        var resultat = new BeregningResultatPerioder();
+        for (var beregningResultatPeriode : okonomiKlient.hentResultat(uuid).getBeregningResultatPerioderList()) {
             resultat.addRenteBeløp(beregningResultatPeriode.getRenteBeløp());
             resultat.addSkattBeløp(beregningResultatPeriode.getSkattBeløp());
             resultat.addTilbakekrevingBeløp(beregningResultatPeriode.getTilbakekrevingBeløp());
@@ -127,7 +125,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     // Henter aksjonspunkt for en gitt kode, brukes ikke direkte i test men av
     // metoder for å verifisere at aksjonspunktet finnes.
     private AksjonspunktDto hentAksjonspunkt(int kode) {
-        for (AksjonspunktDto aksjonspunktDto : behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid)) {
+        for (var aksjonspunktDto : behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid)) {
             if (aksjonspunktDto.definisjon.kode.equals(String.valueOf(kode))) {
                 return aksjonspunktDto;
             }
@@ -136,7 +134,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     public boolean harAktivtAksjonspunkt(int kode) {
-        AksjonspunktDto aksjonspunktDto = hentAksjonspunkt(kode);
+        var aksjonspunktDto = hentAksjonspunkt(kode);
         if (aksjonspunktDto == null) {
             return false;
         }
@@ -149,21 +147,19 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         }
         switch (aksjonspunktkode) {
             case 7003:
-                ApFaktaFeilutbetaling apFaktaFeilutbetaling = new ApFaktaFeilutbetaling();
-                for (FeilutbetalingPerioder perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.uuid)
+                var apFaktaFeilutbetaling = new ApFaktaFeilutbetaling();
+                for (var perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.uuid)
                         .getPerioder()) {
                     apFaktaFeilutbetaling.addFaktaPeriode(perioder.fom, perioder.tom);
                 }
                 return apFaktaFeilutbetaling;
             case 5002:
-                ApVilkårsvurdering apVilkårsvurdering = new ApVilkårsvurdering();
-                for (FeilutbetalingPerioder perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.uuid)
+                var apVilkårsvurdering = new ApVilkårsvurdering();
+                for (var perioder : behandlingerKlient.hentFeilutbetalingFakta(valgtBehandling.uuid)
                         .getPerioder()) {
                     apVilkårsvurdering.addVilkårPeriode(perioder.fom, perioder.tom);
                 }
                 return apVilkårsvurdering;
-            case 5003:
-//                ApForeldelse apForeldelse = new ApForeldelse();
             case 5004:
                 return new ForeslåVedtak();
             case 5005:
@@ -171,7 +167,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             case 5030:
                 return new ApVerge();
             default:
-                throw new IllegalArgumentException(aksjonspunktkode + " er ikke et gyldig aksjonspunkt");
+                throw new IllegalArgumentException(aksjonspunktkode + " er ikke et gyldig aksjonspunkt eller ikke støttet!");
         }
     }
 
@@ -179,8 +175,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     public void behandleAksjonspunkt(AksjonspunktBehandling aksjonspunktdata) {
         List<AksjonspunktBehandling> aksjonspunktdataer = new ArrayList<>();
         aksjonspunktdataer.add(aksjonspunktdata);
-        BehandledeAksjonspunkter aksjonspunkter = new BehandledeAksjonspunkter(valgtBehandling, saksnummer,
-                aksjonspunktdataer);
+        var aksjonspunkter = new BehandledeAksjonspunkter(valgtBehandling, saksnummer, aksjonspunktdataer);
         behandlingerKlient.postAksjonspunkt(aksjonspunkter);
         refreshBehandling();
     }
@@ -226,7 +221,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     private void ventPåProsessering(Behandling behandling) {
         Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
             var prosessTaskList = new StringBuilder();
-            for (ProsessTaskListItemDto prosessTaskListItemDto : hentProsesstaskerForBehandling(behandling)) {
+            for (var prosessTaskListItemDto : hentProsesstaskerForBehandling(behandling)) {
                 prosessTaskList
                         .append(prosessTaskListItemDto.taskType())
                         .append(" - ")
@@ -237,7 +232,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     private boolean verifiserProsesseringFerdig(Behandling behandling) {
-        AsyncPollingStatus status = behandlingerKlient.hentStatus(behandling.id);
+        var status = behandlingerKlient.hentStatus(behandling.id);
 
         if ((status == null) || (status.getStatus() == null)) {
             return true;
@@ -259,10 +254,11 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
-        SokeFilterDto filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
-        List<ProsessTaskListItemDto> prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream().filter(p -> p.taskParametre().behandlingId().equalsIgnoreCase("" + behandling.id))
-                .collect(Collectors.toList());
+        var filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
+        var prosesstasker = prosesstaskKlient.list(filter);
+        return prosesstasker.stream()
+                .filter(p -> p.taskParametre().behandlingId().equalsIgnoreCase("" + behandling.id))
+                .toList();
     }
 
     //Batch trigger

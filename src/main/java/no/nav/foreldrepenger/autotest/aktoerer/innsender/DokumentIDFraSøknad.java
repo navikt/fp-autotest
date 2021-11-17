@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.aktoerer.fordel;
+package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL;

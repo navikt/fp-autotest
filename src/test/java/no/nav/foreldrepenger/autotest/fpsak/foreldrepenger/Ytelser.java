@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
-class Ytelser extends ForeldrepengerTestBase {
+class Ytelser extends FpsakTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel og mottar sykepenger")

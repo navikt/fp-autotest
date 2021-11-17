@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
-class Klage extends ForeldrepengerTestBase {
+class Klage extends FpsakTestBase {
 
     @Test
     @DisplayName("Klage med Medhold Ugunst NFP")

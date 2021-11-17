@@ -1,6 +1,6 @@
-package no.nav.foreldrepenger.autotest.aktoerer.fordel;
+package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.fordel.DokumentIDFraSøknad.dokumentTypeFraRelasjon;
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.DokumentIDFraSøknad.dokumentTypeFraRelasjon;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
 import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
 import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummer;
@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -72,6 +71,7 @@ public class Fordel extends Aktoer implements Innsender {
     JournalforingJerseyKlient journalpostKlient;
     SafJerseyKlient safKlient;
 
+
     public Fordel(Rolle rolle) {
         super(rolle);
         fordelKlient = new FordelJerseyKlient(cookieRequestFilter);
@@ -87,21 +87,46 @@ public class Fordel extends Aktoer implements Innsender {
     /*
      * Sender inn søkand og returnerer saksinformasjon
      */
-    // TODO ytelses type inkludert i allure?
-    @Step("Sender inn søknad")
+    @Override
+    public long sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
+        return sendInnSøknad(søknad, aktørId, fnr, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+    }
+
+    public long sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, DokumenttypeId dokumenttypeId) {
+        return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, null);
+    }
+
+    @Override
+    @Step("Sender inn papirsøknad foreldrepenger")
+    public long sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr) {
+        return sendInnSøknad(null, aktørId, fnr, SØKNAD_FORELDREPENGER_FØDSEL);
+    }
+
+    @Override
+    @Step("Sender inn endringssøknad på papir")
+    public long sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
+        return sendInnSøknad(null, aktørId, fnr, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+    }
+
+    @Override
+    @Step("Sender inn papirsøknad engangsstønad")
+    public long sendInnPapirsøknadEngangsstønad(AktørId aktørId, Fødselsnummer fnr) {
+        return sendInnSøknad(null, aktørId, fnr, SØKNAD_ENGANGSSTØNAD_FØDSEL);
+    }
+
+    @Override
+    public long sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
+        var dokumenttypeId = dokumentTypeFraRelasjon(søknad);
+        return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
+    }
+
+    @Step("Sender inn søknad [{dokumenttypeId}]")
     public long sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, DokumenttypeId dokumenttypeId,
                               Long saksnummer) {
         String xml = null;
         LocalDate mottattDato;
         if (null != søknad) {
-            // Singleton?
-            xml = switch (dokumenttypeId) {
-                case SØKNAD_FORELDREPENGER_FØDSEL, SØKNAD_FORELDREPENGER_ADOPSJON -> new V3ForeldrepengerDomainMapper(oppslag).tilXML(søknad, aktørId, null);
-                case SØKNAD_SVANGERSKAPSPENGER -> new V1SvangerskapspengerDomainMapper().tilXML(søknad, aktørId, null);
-                case SØKNAD_ENGANGSSTØNAD_FØDSEL, SØKNAD_ENGANGSSTØNAD_ADOPSJON -> new V3EngangsstønadDomainMapper(oppslag).tilXML(søknad, aktørId, null);
-                case FORELDREPENGER_ENDRING_SØKNAD -> new V3ForeldrepengerDomainMapper(oppslag).tilXML((Endringssøknad) søknad, aktørId, null);
-                default -> throw new IllegalArgumentException("Ikke støttet dokumenttypeid: " + dokumenttypeId);
-            };
+            xml = tilSøknadXML(søknad, aktørId, dokumenttypeId);
             mottattDato = søknad.getMottattdato();
         } else {
             mottattDato = LocalDate.now();
@@ -142,10 +167,21 @@ public class Fordel extends Aktoer implements Innsender {
         return sakId;
     }
 
-    @Override
-    public long sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
-        var dokumenttypeId = dokumentTypeFraRelasjon(søknad);
-        return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
+    private String tilSøknadXML(Søknad søknad, AktørId aktørId, DokumenttypeId dokumenttypeId) {
+        var mapper = switch (dokumenttypeId) {
+            case SØKNAD_FORELDREPENGER_FØDSEL, SØKNAD_FORELDREPENGER_ADOPSJON, FORELDREPENGER_ENDRING_SØKNAD -> new V3ForeldrepengerDomainMapper(oppslag);
+            case SØKNAD_SVANGERSKAPSPENGER -> new V1SvangerskapspengerDomainMapper();
+            case SØKNAD_ENGANGSSTØNAD_FØDSEL, SØKNAD_ENGANGSSTØNAD_ADOPSJON -> new V3EngangsstønadDomainMapper(oppslag);
+            default -> throw new IllegalArgumentException("Ikke støttet dokumenttypeid: " + dokumenttypeId);
+        };
+
+        String xml;
+        if (dokumenttypeId.equals(FORELDREPENGER_ENDRING_SØKNAD)) {
+            xml = mapper.tilXML((Endringssøknad) søknad, aktørId, null);
+        } else {
+            xml = mapper.tilXML(søknad, aktørId, null);
+        }
+        return xml;
     }
 
     private String finnBehandlingstemaKode(DokumenttypeId dokumenttypeId) {
@@ -162,39 +198,6 @@ public class Fordel extends Aktoer implements Innsender {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /*
-     * Sender inn søknad og opretter ny sak
-     */
-    @Override
-    public long sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
-        return sendInnSøknad(søknad, aktørId, fnr, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
-    }
-
-    public long sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, DokumenttypeId dokumenttypeId) {
-        return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, null);
-    }
-
-    /*
-     * Sender inn søknad og returnerer saksinformasjon
-     */
-    @Override
-    @Step("Sender inn papirsøknad foreldrepenger")
-    public long sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr) {
-        return sendInnSøknad(null, aktørId, fnr, SØKNAD_FORELDREPENGER_FØDSEL);
-    }
-
-    @Override
-    @Step("Sender inn endringssøknad på papir")
-    public long sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
-        return sendInnSøknad(null, aktørId, fnr, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
-    }
-
-    @Override
-    @Step("Sender inn papirsøknad engangsstønad")
-    public long sendInnPapirsøknadEngangsstønad(AktørId aktørId, Fødselsnummer fnr) {
-        return sendInnSøknad(null, aktørId, fnr, SØKNAD_ENGANGSSTØNAD_FØDSEL);
     }
 
     /*

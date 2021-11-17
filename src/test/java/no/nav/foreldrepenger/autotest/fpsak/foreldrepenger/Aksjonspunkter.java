@@ -15,7 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.autotest.base.ForeldrepengerTestBase;
+import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
@@ -36,7 +36,7 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Overførings
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 @Tag("util")
-class Aksjonspunkter extends ForeldrepengerTestBase {
+class Aksjonspunkter extends FpsakTestBase {
 
     @Test
     @DisplayName("REGISTRER_PAPIRSØKNAD_FORELDREPENGER")

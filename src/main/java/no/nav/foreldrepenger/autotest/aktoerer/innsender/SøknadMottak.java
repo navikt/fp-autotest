@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.MottakJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.dto.Kvittering;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.oauth2.AzureAdJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
@@ -24,6 +23,7 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.common.domain.Kvittering;
 import no.nav.foreldrepenger.common.domain.Søknad;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.Endringssøknad;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -112,7 +112,6 @@ public class SøknadMottak extends Aktoer implements Innsender {
         LOG.info("Sender inn søknadd for bruker {}", fnr.getFnr());
         var token = oauth2Klient.hentAccessTokenForBruker(fnr);
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
-        // TODO: Bruk Kvittering i felles istedenfor hardkodet her.
         Kvittering kvittering;
         if (søknad instanceof Endringssøknad endringssøknad) {
             kvittering = mottakKlient.sendSøknad(token, endringssøknad);
