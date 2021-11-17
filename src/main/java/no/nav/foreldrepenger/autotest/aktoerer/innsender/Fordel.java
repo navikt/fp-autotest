@@ -120,7 +120,7 @@ public class Fordel extends Aktoer implements Innsender {
         return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
     }
 
-    @Step("Sender inn søknad [{dokumenttypeId.name}]")
+    @Step("Sender inn søknad [{dokumenttypeId}]")
     public long sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, DokumenttypeId dokumenttypeId,
                               Long saksnummer) {
         String xml = null;
