@@ -248,10 +248,11 @@ class BeregningVerdikjede extends FpsakTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, 30_000, false);
         var graderingFom = fødselsdato.plusWeeks(6);
+        var graderingTom = fødselsdato.plusWeeks(10);
         var fordeling = generiskFordeling(
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, graderingFom.minusDays(1)),
-                graderingsperiodeSN(StønadskontoType.FELLESPERIODE, graderingFom, fødselsdato.plusWeeks(10), 50));
+                graderingsperiodeSN(StønadskontoType.FELLESPERIODE, graderingFom, graderingTom, 50));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medOpptjening(opptjening)
                 .medFordeling(fordeling)
@@ -273,7 +274,10 @@ class BeregningVerdikjede extends FpsakTestBase {
                 .hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class)
                 .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingFom, 500_000, 500_000,
                         Inntektskategori.ARBEIDSTAKER, 1)
-                .settFastsattBeløpOgInntektskategori(graderingFom, 235_138, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2);
+                .settFastsattBeløpOgInntektskategori(graderingFom, 235_138, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2)
+                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingTom.plusDays(1), 720_000, 720_000,
+                        Inntektskategori.ARBEIDSTAKER, 1)
+                .settFastsattBeløpOgInntektskategori(graderingTom.plusDays(1), 0, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2);
         saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
 
         // FORESLÅ VEDTAK //
@@ -300,7 +304,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         assertFordeltSNAndel(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1), 235_138);
 
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2),
-                lagBGAndel(arbeidsgiverIdentifikator, 720_000, 720_000, 0, 720_000));
+                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 720_000, 720_000, 720_000, 720_000));
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2).getBeregningsgrunnlagPrStatusOgAndel().stream()
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
