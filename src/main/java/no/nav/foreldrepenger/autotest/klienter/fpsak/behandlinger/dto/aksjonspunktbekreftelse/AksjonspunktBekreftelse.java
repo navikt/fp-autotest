@@ -73,6 +73,10 @@ public abstract class AksjonspunktBekreftelse {
 
     }
 
+    public String kode() {
+        return kode;
+    }
+
     public AksjonspunktBekreftelse setBegrunnelse(String begrunnelse) {
         this.begrunnelse = begrunnelse;
         return this;

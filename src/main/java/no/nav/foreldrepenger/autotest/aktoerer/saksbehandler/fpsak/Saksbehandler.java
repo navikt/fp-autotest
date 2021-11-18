@@ -418,7 +418,8 @@ public class Saksbehandler extends Aktoer {
         return valgtBehandling.getAksjonspunkter().stream()
                 .filter(ap -> ap.getDefinisjon().kode.equals(kode))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + ".\nAksjonspunkt på behanlding: " + valgtBehandling.getAksjonspunkter().toString()));
+                .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + "." +
+                        "\nAksjonspunkt på behanlding: " + valgtBehandling.getAksjonspunkter().toString()));
     }
 
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
@@ -453,12 +454,26 @@ public class Saksbehandler extends Aktoer {
         bekreftAksjonspunktbekreftelserer(Arrays.asList(bekreftelser));
     }
 
-//    @Step("Bekrefter aksjonspunktbekreftelser")
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
         debugAksjonspunktbekreftelser(bekreftelser, valgtBehandling.uuid);
         BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
+
+        verifsierAPUtført(bekreftelser);
+    }
+
+    private void verifsierAPUtført(List<AksjonspunktBekreftelse> bekreftelser) {
+        for (var bekreftelse : bekreftelser) {
+            var ap = valgtBehandling.getAksjonspunkter().stream()
+                    .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().kode.equalsIgnoreCase(bekreftelse.kode()))
+                    .findFirst()
+                    .orElseThrow();
+            if (!ap.getStatus().kode.equalsIgnoreCase("UTFO")) {
+                throw new RuntimeException("Aksjonsbekreftelse er sendt inn programatisk for AP [" + bekreftelse.kode() +
+                        "], men AP bekreftelsen løste ikke sette AP. AP har status [" +  ap.getStatus().kode + "]");
+            }
+        }
     }
 
     public void fattVedtakOgVentTilAvsluttetBehandling(FatterVedtakBekreftelse bekreftelse) {
