@@ -459,19 +459,37 @@ public class Saksbehandler extends Aktoer {
         BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
-
-        verifsierAPUtført(bekreftelser);
+        verifsierAP(bekreftelser);
     }
 
-    private void verifsierAPUtført(List<AksjonspunktBekreftelse> bekreftelser) {
+    private void verifsierAP(List<AksjonspunktBekreftelse> bekreftelser) {
         for (var bekreftelse : bekreftelser) {
-            var ap = valgtBehandling.getAksjonspunkter().stream()
-                    .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().kode.equalsIgnoreCase(bekreftelse.kode()))
-                    .findFirst()
-                    .orElseThrow();
-            if (!ap.getStatus().kode.equalsIgnoreCase("UTFO")) {
-                throw new RuntimeException("Aksjonsbekreftelse er sendt inn programatisk for AP [" + bekreftelse.kode() +
-                        "], men AP bekreftelsen løste ikke sette AP. AP har status [" +  ap.getStatus().kode + "]");
+            if (bekreftelse instanceof FatterVedtakBekreftelse f && f.harAvvisteAksjonspunkt()) {
+                verifiserAtAPErOpprettetPåNytt(f);
+            } else {
+                verifsierAtAPErFerdigbehandlet(bekreftelse);
+            }
+        }
+    }
+
+    private void verifsierAtAPErFerdigbehandlet(AksjonspunktBekreftelse bekreftelse) {
+        var ap = valgtBehandling.getAksjonspunkter().stream()
+                .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().kode.equalsIgnoreCase(bekreftelse.kode()))
+                .findFirst()
+                .orElseThrow(); // Vil ikke inntreffe ettersom hentAksjonspunkt() vil alltid bli kalt først.
+        if (!ap.getStatus().kode.equalsIgnoreCase("UTFO")) {
+            throw new RuntimeException("AP bekreftelse er sendt inn programatisk for AP [" + bekreftelse.kode() +
+                    "] uten at det løste AP. Forventet status på AP er UTFO, men er [" + ap.getStatus().kode + "]");
+        }
+    }
+
+    private void verifiserAtAPErOpprettetPåNytt(FatterVedtakBekreftelse bekreftelse) {
+        var avvisteAksjonspunktkoder = bekreftelse.avvisteAksjonspunkt();
+        for (var kode : avvisteAksjonspunktkoder) {
+            var AP = hentAksjonspunkt(kode);
+            if (!AP.getStatus().kode.equalsIgnoreCase("OPPR")) {
+                throw new RuntimeException("AP [" + bekreftelse.kode() + "] skal være avvist av beslutter og " +
+                        "opprettet nytt, men har status [" + AP.getStatus().kode + "]");
             }
         }
     }

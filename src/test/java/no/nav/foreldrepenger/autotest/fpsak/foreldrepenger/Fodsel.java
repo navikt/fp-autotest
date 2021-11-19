@@ -119,7 +119,6 @@ class Fodsel extends FpsakTestBase {
                 .as("Aktivitetsstatus")
                 .isEqualTo(AktivitetStatus.FRILANSER);
 
-        // Legg til og fjern ytelser for å se tilbakehopp og opprettelse av akjsonspunkter
         assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS))
                 .as("Har aksjonspunkt FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS")
                 .isTrue();
