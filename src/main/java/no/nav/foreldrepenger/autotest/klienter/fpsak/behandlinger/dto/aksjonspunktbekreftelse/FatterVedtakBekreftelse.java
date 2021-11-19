@@ -17,42 +17,50 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
     }
 
     public FatterVedtakBekreftelse godkjennAksjonspunkter(List<Aksjonspunkt> aksjonspunkter) {
-        for (Aksjonspunkt aksjonspunkt : aksjonspunkter) {
-            godkjennAksjonspunkt(aksjonspunkt);
-        }
+        aksjonspunkter.forEach(this::godkjennAksjonspunkt);
         return this;
     }
 
     public FatterVedtakBekreftelse godkjennAksjonspunkt(Aksjonspunkt aksjonspunkt) {
         if (!aksjonspunkt.skalTilToTrinnsBehandling()) {
             AllureHelper.debugAksjonspunkt(aksjonspunkt);
-            throw new RuntimeException(
-                    "Godkjenner aksjonspunkt som ikke skal til totrinnskontroll: " + aksjonspunkt.getDefinisjon().kode);
+            throw new RuntimeException("Godkjenner aksjonspunkt som ikke skal til totrinnskontroll: " +
+                    aksjonspunkt.getDefinisjon().kode);
         }
 
-        AksjonspunktGodkjenningDto godkjenning = new AksjonspunktGodkjenningDto(aksjonspunkt);
+        var godkjenning = new AksjonspunktGodkjenningDto(aksjonspunkt);
         godkjenning.godkjent = true;
         aksjonspunktGodkjenningDtos.add(godkjenning);
         return this;
     }
 
     public FatterVedtakBekreftelse avvisAksjonspunkt(Aksjonspunkt aksjonspunkt, VurderÅrsak kode) {
-        List<String> årsaker = new ArrayList<>();
-        årsaker.add(kode.getKode());
-        avvisAksjonspunkt(aksjonspunkt, årsaker);
+        avvisAksjonspunkt(aksjonspunkt, List.of(kode.getKode()));
         return this;
     }
 
-    public void avvisAksjonspunkt(Aksjonspunkt aksjonspunkt, List<String> arsaker) {
+    public FatterVedtakBekreftelse avvisAksjonspunkt(Aksjonspunkt aksjonspunkt, List<String> arsaker) {
         if (!aksjonspunkt.skalTilToTrinnsBehandling()) {
-            throw new RuntimeException(
-                    "Avvister aksjonspunkt som ikke skal til totrinnskontroll: " + aksjonspunkt.getDefinisjon().kode);
+            throw new RuntimeException("Avvister aksjonspunkt som ikke skal til totrinnskontroll: " +
+                    aksjonspunkt.getDefinisjon().kode);
         }
 
-        AksjonspunktGodkjenningDto godkjenning = new AksjonspunktGodkjenningDto(aksjonspunkt);
+        var godkjenning = new AksjonspunktGodkjenningDto(aksjonspunkt);
         godkjenning.godkjent = false;
         godkjenning.arsaker = arsaker;
         aksjonspunktGodkjenningDtos.add(godkjenning);
+        return this;
+    }
+
+    public boolean harAvvisteAksjonspunkt() {
+        return aksjonspunktGodkjenningDtos.stream().anyMatch(a -> !a.godkjent);
+    }
+
+    public List<String> avvisteAksjonspunkt() {
+        return aksjonspunktGodkjenningDtos.stream()
+                .filter(a -> !a.godkjent)
+                .map(a -> a.aksjonspunktKode)
+                .toList();
     }
 
     public static class AksjonspunktGodkjenningDto {

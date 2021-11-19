@@ -418,7 +418,8 @@ public class Saksbehandler extends Aktoer {
         return valgtBehandling.getAksjonspunkter().stream()
                 .filter(ap -> ap.getDefinisjon().kode.equals(kode))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + ".\nAksjonspunkt på behanlding: " + valgtBehandling.getAksjonspunkter().toString()));
+                .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + "." +
+                        "\nAksjonspunkt på behanlding: " + valgtBehandling.getAksjonspunkter().toString()));
     }
 
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
@@ -453,12 +454,44 @@ public class Saksbehandler extends Aktoer {
         bekreftAksjonspunktbekreftelserer(Arrays.asList(bekreftelser));
     }
 
-//    @Step("Bekrefter aksjonspunktbekreftelser")
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
         debugAksjonspunktbekreftelser(bekreftelser, valgtBehandling.uuid);
         BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
+        verifsierAP(bekreftelser);
+    }
+
+    private void verifsierAP(List<AksjonspunktBekreftelse> bekreftelser) {
+        for (var bekreftelse : bekreftelser) {
+            if (bekreftelse instanceof FatterVedtakBekreftelse f && f.harAvvisteAksjonspunkt()) {
+                verifiserAtAPErOpprettetPåNytt(f);
+            } else {
+                verifsierAtAPErFerdigbehandlet(bekreftelse);
+            }
+        }
+    }
+
+    private void verifsierAtAPErFerdigbehandlet(AksjonspunktBekreftelse bekreftelse) {
+        var ap = valgtBehandling.getAksjonspunkter().stream()
+                .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().kode.equalsIgnoreCase(bekreftelse.kode()))
+                .findFirst()
+                .orElseThrow(); // Vil ikke inntreffe ettersom hentAksjonspunkt() vil alltid bli kalt først.
+        if (!ap.getStatus().kode.equalsIgnoreCase("UTFO")) {
+            throw new RuntimeException("AP bekreftelse er sendt inn programatisk for AP [" + bekreftelse.kode() +
+                    "] uten at det løste AP. Forventet status på AP er UTFO, men er [" + ap.getStatus().kode + "]");
+        }
+    }
+
+    private void verifiserAtAPErOpprettetPåNytt(FatterVedtakBekreftelse bekreftelse) {
+        var avvisteAksjonspunktkoder = bekreftelse.avvisteAksjonspunkt();
+        for (var kode : avvisteAksjonspunktkoder) {
+            var AP = hentAksjonspunkt(kode);
+            if (!AP.getStatus().kode.equalsIgnoreCase("OPPR")) {
+                throw new RuntimeException("AP [" + bekreftelse.kode() + "] skal være avvist av beslutter og " +
+                        "opprettet nytt, men har status [" + AP.getStatus().kode + "]");
+            }
+        }
     }
 
     public void fattVedtakOgVentTilAvsluttetBehandling(FatterVedtakBekreftelse bekreftelse) {
