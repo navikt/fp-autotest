@@ -17,7 +17,7 @@
         <changelist>-SNAPSHOT</changelist>
 
         <vtp.versjon>1.1.1</vtp.versjon>
-        <dokumentgenerator.version>3.1.0</dokumentgenerator.version>
+        <dokumentgenerator.version>3.1.1</dokumentgenerator.version>
         <felles.versjon>4.1.1</felles.versjon>
         <aspectj.version>1.9.7</aspectj.version>
         <jackson.version>2.13.0</jackson.version>
