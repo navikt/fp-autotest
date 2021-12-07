@@ -1781,7 +1781,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var saksnummer = far.søk(søknad.build());
 
         var arbeidsgiver = far.arbeidsgiver();
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, omsorgsovertagelsesdato);
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
