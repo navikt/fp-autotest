@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 
-@BekreftelseKode(kode = "5048")
+@BekreftelseKode(kode = "5062")
 public class KontrollerBesteberegningBekreftelse extends AksjonspunktBekreftelse {
 
     protected Boolean besteberegningErKorrekt;
