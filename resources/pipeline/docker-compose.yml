@@ -99,7 +99,7 @@ services:
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
       - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://fptilbake:8080/fptilbake/api"
-      - "FPRISK_RISIKOKLASSIFISERING_HENT_URL=http://fprisk:8080/fprisk/api/risikovurdering/hent"
+      - "FPRISK_URL=http://fprisk:8080/fprisk"
       - "FPFORDEL_BASE_URL=http://fpfordel:8080/fpfordel"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
