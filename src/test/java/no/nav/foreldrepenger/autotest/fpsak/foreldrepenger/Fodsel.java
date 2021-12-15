@@ -686,7 +686,7 @@ class Fodsel extends FpsakTestBase {
         var familie = new Familie("550", fordel);
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
-        var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
+        var startDatoForeldrepenger = fødselsdato;
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett())
                 .medFordeling(FordelingErketyper.fordelingFarAleneomsorg(fødselsdato))
