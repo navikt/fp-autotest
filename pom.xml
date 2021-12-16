@@ -23,6 +23,7 @@
         <aspectj.version>1.9.7</aspectj.version>
         <jackson.version>2.13.0</jackson.version>
         <jersey.version>3.0.3</jersey.version>
+        <fp-kontrakter.version>6.0.7</fp-kontrakter.version>
     </properties>
 
     <profiles>
@@ -188,6 +189,12 @@
             <artifactId>felles-log</artifactId>
             <version>${felles.versjon}</version>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>risk-v1</artifactId>
+            <version>${fp-kontrakter.version}</version>
+        </dependency>
+
 
         <!-- VTP prosjektavhengigheter -->
         <dependency>

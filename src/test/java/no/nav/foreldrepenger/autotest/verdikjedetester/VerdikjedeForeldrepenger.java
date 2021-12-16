@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -459,7 +460,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 fødselsdato, fpStartdatoMor, fpSluttdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
+        saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*
@@ -574,7 +575,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 fødselsdato, fpStartdatoMor, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
+        saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*
@@ -814,7 +815,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 fødselsdato, fpStartdatoMor, fpStartdatoFarOrdinær);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
+        saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
         saksbehandler.ventTilAvsluttetBehandling();
 
         /*

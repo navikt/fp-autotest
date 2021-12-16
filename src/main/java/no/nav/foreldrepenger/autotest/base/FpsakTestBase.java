@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.base;
 
 import static org.mockito.Mockito.when;
 
+import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import org.junit.jupiter.api.BeforeEach;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -42,7 +43,7 @@ public abstract class FpsakTestBase {
     public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,
                                                                                          boolean revurdering) {
         if (!revurdering) {
-            saksbehandler.ventTilRisikoKlassefiseringsstatus("IKKE_HOY");
+            saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
         }
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
