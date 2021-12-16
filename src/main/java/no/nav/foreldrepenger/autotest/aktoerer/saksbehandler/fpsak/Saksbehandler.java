@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import org.slf4j.MDC;
 
 import io.qameta.allure.Step;
@@ -619,10 +620,10 @@ public class Saksbehandler extends Aktoer {
     /*
      * Risikovurderingsklient
      */
-    public void ventTilRisikoKlassefiseringsstatus(String status) {
+    public void ventTilRisikoKlassefiseringsstatus(RisikoklasseType forventetRisikoklasse) {
         Vent.til(() -> {
-            var response = risikovurderingKlient.getRisikovurdering(valgtBehandling.uuid.toString());
-            return response.risikoklasse().equalsIgnoreCase(status);
+            var response = risikovurderingKlient.getRisikovurdering(valgtBehandling.uuid);
+            return response.risikoklasse().equals(forventetRisikoklasse);
         }, 45, "Har ikke riktig risikoklassifiseringsstatus");
     }
 

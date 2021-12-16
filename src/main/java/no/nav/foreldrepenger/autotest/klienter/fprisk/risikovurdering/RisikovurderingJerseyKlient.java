@@ -4,22 +4,24 @@ import static jakarta.ws.rs.client.Entity.json;
 
 import jakarta.ws.rs.client.ClientRequestFilter;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.FpriskJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingRequest;
-import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.dto.RisikovurderingResponse;
+import no.nav.foreldrepenger.kontrakter.risk.v1.HentRisikovurderingDto;
+import no.nav.foreldrepenger.kontrakter.risk.v1.RisikovurderingResultatDto;
+
+import java.util.UUID;
 
 public class RisikovurderingJerseyKlient extends FpriskJerseyKlient {
 
     private static final String RISIKOVURDERING_URL = "/risikovurdering";
-    private static final String RISIKOVURDERING_HENT_URL = RISIKOVURDERING_URL + "/hent";
+    private static final String RISIKOVURDERING_HENT_URL = RISIKOVURDERING_URL + "/hentResultat";
 
     public RisikovurderingJerseyKlient(ClientRequestFilter filter) {
         super(filter);
     }
 
-    public RisikovurderingResponse getRisikovurdering(String uuid) {
+    public RisikovurderingResultatDto getRisikovurdering(UUID uuid) {
         return client.target(base)
                 .path(RISIKOVURDERING_HENT_URL)
                 .request()
-                .post(json(new RisikovurderingRequest(uuid)), RisikovurderingResponse.class);
+                .post(json(new HentRisikovurderingDto(uuid)), RisikovurderingResultatDto.class);
     }
 }
