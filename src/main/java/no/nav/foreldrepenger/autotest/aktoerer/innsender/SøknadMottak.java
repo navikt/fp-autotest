@@ -1,8 +1,7 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
 import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
-import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummer;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummerForLogging;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +22,6 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.domain.Kvittering;
 import no.nav.foreldrepenger.common.domain.Søknad;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.Endringssøknad;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -93,6 +91,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
             var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml,
                     "ALTINN", null, DokumenttypeId.INNTEKTSMELDING);
             journalpostKlient.journalførR(journalpostModell);
+            LOG.info("IM sendt inn!");
         }
     }
 
@@ -112,15 +111,13 @@ public class SøknadMottak extends Aktoer implements Innsender {
         LOG.info("Sender inn søknadd for bruker {}", fnr.getFnr());
         var token = oauth2Klient.hentAccessTokenForBruker(fnr);
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
-        Kvittering kvittering;
         if (søknad instanceof Endringssøknad endringssøknad) {
-            kvittering = mottakKlient.sendSøknad(token, endringssøknad);
+            mottakKlient.sendSøknad(token, endringssøknad);
         } else {
-            kvittering = mottakKlient.sendSøknad(token, søknad);
+            mottakKlient.sendSøknad(token, søknad);
         }
-        assertTrue(kvittering != null && kvittering.erVellykket(), "Innsending av søknad til fpsoknad-mottak feilet!");
         var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);
-        leggTilCallIdforSaksnummer(callId, saksnummer);
+        leggTilCallIdforSaksnummerForLogging(callId, saksnummer);
         LOG.info("Innsending av søknad er vellykket!");
         return saksnummer;
     }
@@ -151,7 +148,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
         journalpostKlient.journalførR(journalpostModell);
         saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);
         LOG.info("Innsending av papirsøknad er vellykket!");
-        leggTilCallIdforSaksnummer(callId, saksnummer);
+        leggTilCallIdforSaksnummerForLogging(callId, saksnummer);
         return saksnummer;
     }
 
