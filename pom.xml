@@ -21,7 +21,7 @@
         <dokumentgenerator.version>3.1.1</dokumentgenerator.version>
         <felles.versjon>4.1.4</felles.versjon>
         <aspectj.version>1.9.7</aspectj.version>
-        <jackson.version>2.13.0</jackson.version>
+        <jackson.version>2.13.1</jackson.version>
         <jersey.version>3.0.3</jersey.version>
         <fp-kontrakter.version>6.0.7</fp-kontrakter.version>
     </properties>
