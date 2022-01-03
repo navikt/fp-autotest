@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.DokumentIDFraSøknad.dokumentTypeFraRelasjon;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
 import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
-import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummer;
+import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummerForLogging;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL;
@@ -15,8 +15,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -52,8 +50,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkatego
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 public class Fordel extends Aktoer implements Innsender {
-
-    private static final Logger LOG = LoggerFactory.getLogger(Fordel.class);
 
     // TODO: Finn bedre plass for denne
     public Oppslag oppslag = Mockito.mock(Oppslag.class);
@@ -145,7 +141,7 @@ public class Fordel extends Aktoer implements Innsender {
         debugSenderInnDokument("Foreldrepengesøknad", xml);
         long sakId = sendInnJournalpost(xml, mottattDato, journalpostId, behandlingstemaOffisiellKode,
                 dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
-        leggTilCallIdforSaksnummer(callId, sakId);
+        leggTilCallIdforSaksnummerForLogging(callId, sakId);
         journalpostModell.setSakId(String.valueOf(sakId));
         LOG.info("Sendt inn søknad på sak med saksnummer: {}", sakId);
 
