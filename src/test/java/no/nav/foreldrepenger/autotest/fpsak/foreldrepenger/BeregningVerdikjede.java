@@ -300,11 +300,11 @@ class BeregningVerdikjede extends FpsakTestBase {
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
 
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
-                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 720_000, 500_000, 500_000, 500_000));
+                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 720_000, 500_000, 0, 500_000));
         assertFordeltSNAndel(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1), 235_138);
 
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2),
-                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 720_000, 720_000, 720_000, 720_000));
+                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 720_000, 720_000, 0, 720_000));
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2).getBeregningsgrunnlagPrStatusOgAndel().stream()
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
@@ -321,7 +321,7 @@ class BeregningVerdikjede extends FpsakTestBase {
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum();
         assertThat(brutto).isEqualTo(bruttoPrÅr);
-        assertThat(fordelt).isEqualTo(bruttoPrÅr);
+        assertThat(fordelt).isEqualTo(0);
         assertThat(dagsats).isPositive();
     }
 
