@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import org.slf4j.MDC;
 
 import io.qameta.allure.Step;
@@ -66,6 +65,7 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
+import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public class Saksbehandler extends Aktoer {
@@ -568,7 +568,7 @@ public class Saksbehandler extends Aktoer {
 
     public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
         Vent.til(() -> harHistorikkinnslagPåBehandling(type),
-                30, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
+                45, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
                         + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
     }
 
