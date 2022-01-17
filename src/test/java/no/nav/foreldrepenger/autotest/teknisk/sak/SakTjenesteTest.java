@@ -42,7 +42,7 @@ class SakTjenesteTest {
 
         var sakResponse = client.send(sakRequest, HttpResponse.BodyHandlers.ofString());
         //Beste hvis vi hadde klart å authentisere oss riktig og få en 200, men dette er en god nok løsning for å teste det vi ser etter
-        assertThat(sakResponse.body()).contains("SecurityError");
+        assertThat(sakResponse.body()).contains("401");
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
