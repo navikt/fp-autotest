@@ -19,7 +19,7 @@
         <allure.version>2.17.2</allure.version>
         <vtp.versjon>1.1.1</vtp.versjon>
         <dokumentgenerator.version>3.1.4</dokumentgenerator.version>
-        <felles.versjon>4.1.4</felles.versjon>
+        <felles.versjon>4.1.13</felles.versjon>
         <aspectj.version>1.9.7</aspectj.version>
         <jackson.version>2.13.1</jackson.version>
         <jersey.version>3.0.3</jersey.version>
