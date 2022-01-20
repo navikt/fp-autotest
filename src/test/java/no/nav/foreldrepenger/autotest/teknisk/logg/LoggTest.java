@@ -103,8 +103,8 @@ class LoggTest {
                                     unwantedString, containerNavn, linePos, currentLine));
                     }
                 }
-                if (!containerNavn.equalsIgnoreCase("fpdokgen") && linePos < 100) {
-                    fail(String.format("Det forventes minst 100 linjer i loggen for applijasjon: %s, men var %s.",
+                if (!containerNavn.equalsIgnoreCase("fpdokgen") && linePos < 90) {
+                    fail(String.format("Det forventes minst 90 linjer i loggen for applijasjon: %s, men var %s.",
                             containerNavn, linePos));
                 }
             }
