@@ -228,6 +228,7 @@ services:
       - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
       - "DOKDIST_REST_BASE_URL=https://vtp:8063/rest/dokdist/v1"
       - "JOURNALPOST_REST_V1_URL=https://vtp:8063/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
+      - "JOURNALPOST_REST_PROXY_V1_URL=https://vtp:8063/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "OPENIDCONNECT_USERNAME=fpformidling-localhost"
       - "LOADBALANCER_URL=http://localhost:8010"
       - "LOADBALANCER_FQDN=localhost:8010"
