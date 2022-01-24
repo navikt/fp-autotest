@@ -8,6 +8,8 @@ public class AvklarFaktaAnnenForeldreHarRett extends AksjonspunktBekreftelse {
 
     protected boolean annenforelderHarRett;
 
+    private Boolean annenforelderMottarUføretrygd;
+
     public AvklarFaktaAnnenForeldreHarRett() {
         super();
     }
@@ -17,4 +19,8 @@ public class AvklarFaktaAnnenForeldreHarRett extends AksjonspunktBekreftelse {
         return this;
     }
 
+    public AvklarFaktaAnnenForeldreHarRett setAnnenforelderMottarUføretrygd(Boolean annenforelderMottarUføretrygd) {
+        this.annenforelderMottarUføretrygd = annenforelderMottarUføretrygd;
+        return this;
+    }
 }
