@@ -45,7 +45,7 @@ jobs:
           ref: 'master'
       - uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: 17
           cache: 'maven'
 
@@ -182,7 +182,7 @@ jobs:
           ref: 'master'
       - uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: 17
           cache: 'maven'
 
@@ -350,7 +350,7 @@ jobs:
           ref: 'master'
       - uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: 17
           cache: 'maven'
 
