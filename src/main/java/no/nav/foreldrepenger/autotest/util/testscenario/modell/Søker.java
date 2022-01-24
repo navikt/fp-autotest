@@ -66,7 +66,7 @@ public abstract class Søker {
         guardFlereArbeidsgivere();
         return arbeidsgivere().getArbeidsgivere().stream()
                 .findFirst()
-                .orElseThrow(() -> new UnsupportedOperationException("Ingen arbeidsgivere funnet for søker"));
+                .orElseThrow(() -> new UnsupportedOperationException("Ingen arbeidsgivere funnet for søker i AAREG"));
     }
 
     public Arbeidsgivere arbeidsgivere(){

@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
 import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
 import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummerForLogging;
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.ALTINN;
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +38,7 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumentTilkny
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalposttyper;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalstatus;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
 public class SøknadMottak extends Aktoer implements Innsender {
@@ -89,7 +92,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
             LOG.info("Sender inn IM for søker: {}", fnr.getFnr());
             var xml = inntektsmelding.createInntektesmeldingXML();
             var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml,
-                    "ALTINN", null, DokumenttypeId.INNTEKTSMELDING);
+                    ALTINN, null, DokumenttypeId.INNTEKTSMELDING);
             journalpostKlient.journalførR(journalpostModell);
             LOG.info("IM sendt inn!");
         }
@@ -141,7 +144,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
         var callId = leggTilCallIdForFnr(fnr);
         LOG.info("Sender inn papirsøknadd for bruker {}", fnr);
         var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null,
-                "SKAN_IM", "skanIkkeUnik.pdf", dokumenttypeId);
+                SKAN_IM, "skanIkkeUnik.pdf", dokumenttypeId);
         if (saksnummer != null) {
             journalpostModell.setSakId(saksnummer.toString());
         }
@@ -160,11 +163,11 @@ public class SøknadMottak extends Aktoer implements Innsender {
     public void sendInnKlage(Fødselsnummer fnr) {
         leggTilCallIdForFnr(fnr);
         var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null,
-                "SKAN_IM", null, DokumenttypeId.KLAGE_DOKUMENT);
+                SKAN_IM, null, DokumenttypeId.KLAGE_DOKUMENT);
         journalpostKlient.journalførR(journalpostModell);
     }
 
-    private JournalpostModell lagJournalpost(Fødselsnummer fnr, String tittel, String innhold, String mottakskanal,
+    private JournalpostModell lagJournalpost(Fødselsnummer fnr, String tittel, String innhold, Mottakskanal mottakskanal,
                                              String eksternReferanseId, DokumenttypeId dokumenttypeId) {
         var journalpostModell = new JournalpostModell();
         journalpostModell.setTittel(tittel);
