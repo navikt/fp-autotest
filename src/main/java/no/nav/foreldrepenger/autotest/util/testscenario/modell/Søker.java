@@ -89,7 +89,7 @@ public abstract class Søker {
                     innsender));
         } else if(arbeidsgiverIdentifikator instanceof AktørId id) {
             // Trenger fnr for person arbeidsgiver pga aktørid ikke kan brukes for IM
-            var fnrArbeidsgiver = Fødselsnummer.valueOf(inntektYtelseModell.inntektskomponentModell().inntektsperioder().stream()
+            var fnrArbeidsgiver = new Fødselsnummer(inntektYtelseModell.inntektskomponentModell().inntektsperioder().stream()
                     .filter(p -> p.arbeidsgiver() != null && p.arbeidsgiver().getAktørIdent().equalsIgnoreCase(id.value()))
                     .max(Comparator.nullsFirst(Comparator.comparing(Inntektsperiode::tom)))
                     .map(p -> p.arbeidsgiver().getIdent())

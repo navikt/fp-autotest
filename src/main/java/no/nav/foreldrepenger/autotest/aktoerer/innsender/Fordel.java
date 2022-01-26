@@ -129,7 +129,7 @@ public class Fordel extends Aktoer implements Innsender {
         }
 
         JournalpostModell journalpostModell = JournalpostModellGenerator
-                .lagJournalpostStrukturertDokument(xml == null ? "" : xml, fnr.getFnr(), dokumenttypeId);
+                .lagJournalpostStrukturertDokument(xml == null ? "" : xml, fnr.value(), dokumenttypeId);
         if ((saksnummer != null) && (saksnummer != 0L)) {
             journalpostModell.setSakId(saksnummer.toString());
         }
@@ -209,7 +209,7 @@ public class Fordel extends Aktoer implements Innsender {
         String dokumentKategori = Dokumentkategori.IKKE_TOLKBART_SKJEMA.getKode();
         String dokumentTypeIdOffisiellKode = DokumenttypeId.INNTEKTSMELDING.getKode();
 
-        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, fnr.getFnr(),
+        JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostStrukturertDokument(xml, fnr.value(),
                 DokumenttypeId.INNTEKTSMELDING);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
 
@@ -271,7 +271,7 @@ public class Fordel extends Aktoer implements Innsender {
         String dokumentTypeIdOffisiellKode = DokumenttypeId.KLAGE_DOKUMENT.getKode();
 
         JournalpostModell journalpostModell = JournalpostModellGenerator.lagJournalpostUstrukturertDokument(
-                fnr.getFnr(), DokumenttypeId.KLAGE_DOKUMENT);
+                fnr.value(), DokumenttypeId.KLAGE_DOKUMENT);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
 
         long sakId = sendInnJournalpost(null, journalpostId, behandlingstemaOffisiellKode,
