@@ -42,6 +42,7 @@ public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
     GRADERING_ALENEOMSORG("2032", "§14-15, jf. §14-16: Gradering foreldrepenger ved aleneomsorg"),
     GRADERING_FORELDREPENGER_KUN_FAR_HAR_RETT("2033", "§14-14, jf. §14-13, jf. §14-16: Gradering foreldrepenger, kun far har rett"),
     GRADERING_FORELDREPENGER_KUN_MOR_HAR_RETT("2034", "§14-10, jf. §14-16: Gradering foreldrepenger, kun mor har rett"),
+    GRADERING_KUN_FAR_HAR_RETT_MOR_UFØR("2035", "§14-14 tredje ledd: Gradering foreldrepenger, kun far har rett og mor er ufør"),
     FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR("2036", "§14-14 tredje ledd: Innvilget foreldrepenger, kun far har rett og mor er ufør"),
     FORELDREPENGER_FELLESPERIODE_TIL_FAR("2037", "§14-9, jf. §14-13: Innvilget fellesperiode til far"),
     FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK("2038", "§14-10 sjette ledd: Samtidig uttak"),
