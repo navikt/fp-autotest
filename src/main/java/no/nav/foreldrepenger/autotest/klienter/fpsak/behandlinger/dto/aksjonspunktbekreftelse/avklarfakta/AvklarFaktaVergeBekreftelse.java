@@ -24,7 +24,7 @@ public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
     }
 
     public AvklarFaktaVergeBekreftelse setVerge(Fødselsnummer fnr) {
-        this.fnr = fnr.getFnr();
+        this.fnr = fnr.value();
 
         // Defaults
         gyldigFom = LocalDate.now().minusYears(1);

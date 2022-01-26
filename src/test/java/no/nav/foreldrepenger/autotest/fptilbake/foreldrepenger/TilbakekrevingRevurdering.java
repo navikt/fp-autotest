@@ -65,7 +65,7 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
         assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
                 .as("Venteårsak")
                 .isEqualTo("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG");
-        var kravgrunnlag = new Kravgrunnlag(saksnummer, mor.fødselsnummer().getFnr(),
+        var kravgrunnlag = new Kravgrunnlag(saksnummer, mor.fødselsnummer().value(),
                 saksbehandler.valgtBehandling.id, ytelseType, "NY");
         kravgrunnlag.leggTilGeneriskPeriode();
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);

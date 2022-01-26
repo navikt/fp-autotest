@@ -43,7 +43,7 @@ public class FagsakJerseyKlient extends FpsakJerseyKlient {
     }
 
     public List<Fagsak> søk(Fødselsnummer fnr) {
-        return søk(new Sok(fnr.getFnr()));
+        return søk(new Sok(fnr.value()));
     }
 
     public List<Fagsak> søk(String søk) {

@@ -27,7 +27,7 @@ public class ApVerge extends AksjonspunktBehandling {
     }
 
     public void setVerge(Familie familie) {
-        this.fnr = familie.mor().fødselsnummer().getFnr();
+        this.fnr = familie.mor().fødselsnummer().value();
         this.navn = "VERGE PERSON";
         this.vergeType = "VOKSEN";
     }

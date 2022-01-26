@@ -89,7 +89,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
 
     private void journalførInnteksmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr) {
         for (InntektsmeldingBuilder inntektsmelding : inntektsmeldinger) {
-            LOG.info("Sender inn IM for søker: {}", fnr.getFnr());
+            LOG.info("Sender inn IM for søker: {}", fnr.value());
             var xml = inntektsmelding.createInntektesmeldingXML();
             var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml,
                     ALTINN, null, DokumenttypeId.INNTEKTSMELDING);
@@ -111,7 +111,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
     @Step("[{søknad.søker.søknadsRolle}]: Sender inn søknad: {fnr}")
     private Long sendInnSøknad(Fødselsnummer fnr, Søknad søknad) {
         var callId = leggTilCallIdForFnr(fnr);
-        LOG.info("Sender inn søknadd for bruker {}", fnr.getFnr());
+        LOG.info("Sender inn søknadd for bruker {}", fnr.value());
         var token = oauth2Klient.hentAccessTokenForBruker(fnr);
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         if (søknad instanceof Endringssøknad endringssøknad) {
@@ -175,10 +175,10 @@ public class SøknadMottak extends Aktoer implements Innsender {
         journalpostModell.setMottattDato(LocalDateTime.now());
         journalpostModell.setMottakskanal(mottakskanal);
         journalpostModell.setArkivtema(Arkivtema.FOR);
-        journalpostModell.setAvsenderFnr(fnr.getFnr());
+        journalpostModell.setAvsenderFnr(fnr.value());
         journalpostModell.setEksternReferanseId(eksternReferanseId);
         journalpostModell.setSakId("");
-        journalpostModell.setBruker(new JournalpostBruker(fnr.getFnr(), BrukerType.FNR));
+        journalpostModell.setBruker(new JournalpostBruker(fnr.value(), BrukerType.FNR));
         journalpostModell.setJournalposttype(Journalposttyper.INNGAAENDE_DOKUMENT);
         journalpostModell.getDokumentModellList().add(lagDokumentModell(innhold, dokumenttypeId));
         return journalpostModell;
@@ -230,7 +230,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
 
     private Long ventTilFagsakOgBehandlingErOpprettet(Fødselsnummer fnr) {
         Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 30,
-                "Fagsak for bruker " + fnr.getFnr() + " har ikke blitt opprettet!");
+                "Fagsak for bruker " + fnr.value() + " har ikke blitt opprettet!");
         var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();
 
         Vent.til(() -> {

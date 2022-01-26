@@ -40,7 +40,7 @@ final class Inntektskomponenten {
     static int månedsinntekt(InntektskomponentModell inntektskomponenten, Fødselsnummer arbeidsgiverFnr) {
         return inntektskomponenten.inntektsperioder().stream()
                 .filter(p -> p.arbeidsgiver() != null)
-                .filter(p -> arbeidsgiverFnr.getFnr().equalsIgnoreCase(p.arbeidsgiver().getIdent()))
+                .filter(p -> arbeidsgiverFnr.value().equalsIgnoreCase(p.arbeidsgiver().getIdent()))
                 .max(Comparator.comparing(Inntektsperiode::tom))
                 .map(Inntektsperiode::beløp)
                 .orElse(0);

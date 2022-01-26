@@ -45,7 +45,7 @@ public final class LoggFormater {
     public static String leggTilCallIdForFnr(Fødselsnummer fnr) {
         // Legger til Callid for fnr slik at vi kan slå opp riktig callid senere
         var callId = UUID.randomUUID().toString();
-        MDCOperations.putToMDC(fnr.getFnr(), callId);
+        MDCOperations.putToMDC(fnr.value(), callId);
         MDCOperations.putToMDC(MDC_CONSUMER_ID, callId);
         return callId;
     }
