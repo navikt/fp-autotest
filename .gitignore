@@ -49,6 +49,7 @@ allure-results/*
 server/src/main/resources/webapps
 resources/ssl-terminator/localhost.*
 resources/pipeline/.env
+resources/pipeline/colima.yaml
 resources/.DS_Store
 lokal-utvikling/docker-compose-lokal
 lokal-utvikling/update-versions.sh
