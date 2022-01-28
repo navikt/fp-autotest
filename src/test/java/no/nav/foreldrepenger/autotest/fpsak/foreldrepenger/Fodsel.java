@@ -1,7 +1,12 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak.BARE_FAR_RETT_IKKE_SØKT;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UFØRE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
@@ -32,6 +37,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
@@ -57,6 +63,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
@@ -1009,6 +1016,79 @@ class Fodsel extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.fristBehandlingPaaVent)
                 .as("Frist behandling på vent")
                 .isEqualTo(fødselsdato.plusWeeks(1).plusDays(1));
+    }
+
+
+    @Test
+    @DisplayName("Bare far har rett. Mor Ufør. Happy-case")
+    @Description("Bare far har rett (BFHR) mor uføretrygdet og har 15 uker uten aktivitetskrav som tas ut over 40 uker og siste periode avslås fordi konto tom")
+    void bareFarHarRettMorUførHappyCaseTest() {
+        var familie = new Familie("60", fordel);
+        var far = familie.far();
+        var fødselsdato = Virkedager.helgejustertTilMandag(familie.barn().fødselsdato());
+        var fpStartdatoFar = fødselsdato.plusWeeks(6);
+        // Søker 5 + 5 + 4 uker av 15 tilgjengelig uten aktivitetskrav. Siste periode får innvilget 2 uker tom uke 39, resten avslås
+        var fordeling = generiskFordeling(
+                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(1), fpStartdatoFar.plusWeeks(6).minusDays(1), UFØRE),
+                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(26), fpStartdatoFar.plusWeeks(31).minusDays(1), UFØRE),
+                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(42).minusDays(1), UFØRE)
+        );
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
+                .medFordeling(fordeling)
+                .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
+                .medMottatdato(fødselsdato);
+        var saksnummer = far.søk(søknad.build());
+
+        var arbeidsgiver = far.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoFar);
+
+        // Må bekrefte at mor er ufør inntil det kommer mock + modell
+        saksbehandler.hentFagsak(saksnummer);
+        var avklarFaktaAnnenForeldreHarRett = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .setAnnenforelderHarRett(false)
+                .setAnnenforelderMottarUføretrygd(true)
+                .setBegrunnelse("Mor har ikke rett og mottar uføretrygd!");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
+
+        // 2trinn pga bekreftet at mor er ufør
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummer);
+        var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFørstegangsbehandling);
+
+        // Verifiseringer førstegangsbehandling
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
+                .as("Saldoen for stønadskonton FORELDREPENGER")
+                .isZero();
+
+        // Tom på konto
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
+                .as("Saldoen for stønadskonton FORELDREPENGER")
+                .isZero();
+        // 5 + 5 + 2 uker innvilget
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().stream().filter(u -> PeriodeResultatType.INNVILGET.equals(u.getPeriodeResultatType())).count())
+                .as("Forventer at det er 3 innvilgete uttaksperioder")
+                .isEqualTo(3);
+        // Avslått første og to mellomliggende MSP. Den siste avslås pga tom på konto
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().stream().filter(u -> PeriodeResultatType.AVSLÅTT.equals(u.getPeriodeResultatType())).count())
+                .as("Forventer at det er 4 avslåtte uttaksperioder")
+                .isEqualTo(4);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().get(0).getPeriodeResultatÅrsak())
+                .as("Forventer at første uke avslått MSP")
+                .isEqualTo(BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().get(5).getPeriodeResultatÅrsak())
+                .as("Forventer at det er en lengre tom på konto periode")
+                .isEqualTo(InnvilgetÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().get(6).getPeriodeResultatÅrsak())
+                .as("Forventer at det er en lengre tom på konto periode")
+                .isEqualTo(IKKE_STØNADSDAGER_IGJEN);
+
     }
 
     private UttakResultatPeriodeAktivitet finnAktivitetForArbeidsgiver(UttakResultatPeriode uttakResultatPeriode,
