@@ -292,6 +292,8 @@ services:
       - "FPOPPDRAG_OVERRIDE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "FPSAK_PIP_AKTOER_FOR_SAK_URL=https://fpsak:8080/fpsak/api/pip/aktoer-for-sak"
       - "JOURNALPOSTAPI_OVERRIDE_URL=https://vtp:8063/rest/dokarkiv/"
+      - "DOKARKIV_BASE_URL=https://vtp:8063/rest/dokarkiv/"
+      - "KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
       - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
       - "DOKDIST_REST_DISTRIBUER_JOURNALPOST=https://vtp:8063/rest/dokdist/v1/distribuerjournalpost"
       - "TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
