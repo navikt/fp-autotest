@@ -8,6 +8,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OppholdÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
@@ -23,6 +25,8 @@ public class UttakResultatPeriode implements Serializable {
     protected PeriodeResultatType periodeResultatType;
     protected String begrunnelse;
     protected PeriodeResultatÅrsak periodeResultatÅrsak;
+    protected InnvilgetÅrsak innvilgetÅrsak;
+    protected IkkeOppfyltÅrsak ikkeOppfyltÅrsak;
     protected Kode manuellBehandlingÅrsak;
     protected Kode graderingAvslagÅrsak;
     protected Boolean flerbarnsdager;
@@ -47,11 +51,32 @@ public class UttakResultatPeriode implements Serializable {
     }
 
     public PeriodeResultatÅrsak getPeriodeResultatÅrsak() {
+        if (innvilgetÅrsak != null && !InnvilgetÅrsak.UKJENT.equals(innvilgetÅrsak)) {
+            return innvilgetÅrsak;
+        } else if (ikkeOppfyltÅrsak != null && !IkkeOppfyltÅrsak.UKJENT.equals(ikkeOppfyltÅrsak)) {
+            return ikkeOppfyltÅrsak;
+        }
         return periodeResultatÅrsak;
     }
 
     public void setPeriodeResultatÅrsak(PeriodeResultatÅrsak periodeResultatÅrsak) {
         this.periodeResultatÅrsak = periodeResultatÅrsak;
+    }
+
+    public InnvilgetÅrsak getInnvilgetÅrsak() {
+        return innvilgetÅrsak;
+    }
+
+    public void setInnvilgetÅrsak(InnvilgetÅrsak innvilgetÅrsak) {
+        this.innvilgetÅrsak = innvilgetÅrsak;
+    }
+
+    public IkkeOppfyltÅrsak getIkkeOppfyltÅrsak() {
+        return ikkeOppfyltÅrsak;
+    }
+
+    public void setIkkeOppfyltÅrsak(IkkeOppfyltÅrsak ikkeOppfyltÅrsak) {
+        this.ikkeOppfyltÅrsak = ikkeOppfyltÅrsak;
     }
 
     public UttakUtsettelseÅrsak getUtsettelseType() {

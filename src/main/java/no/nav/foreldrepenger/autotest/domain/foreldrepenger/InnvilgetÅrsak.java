@@ -11,6 +11,7 @@ import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum InnvilgetÅrsak implements PeriodeResultatÅrsak {
 
+    UKJENT("-", "Ikke definert"),
     UTTAK_OPPFYLT("2001", "§14-6: Uttak er oppfylt"),
     FELLESPERIODE_ELLER_FORELDREPENGER("2002", "§14-9: Innvilget fellesperiode/foreldrepenger"),
     KVOTE_ELLER_OVERFØRT_KVOTE("2003", "§14-12: Innvilget uttak av kvote"),
