@@ -1043,13 +1043,21 @@ class Fodsel extends FpsakTestBase {
         var arbeidsgiver = far.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoFar);
 
+        // Må bekrefte at mor er ufør inntil det kommer mock + modell
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
                 .setAnnenforelderHarRett(false)
+                .setAnnenforelderMottarUføretrygd(true)
                 .setBegrunnelse("Mor har ikke rett og mottar uføretrygd!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
+        // 2trinn pga bekreftet at mor er ufør
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummer);
+        var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFørstegangsbehandling);
         saksbehandler.ventTilAvsluttetBehandling();
 
         // Verifiseringer førstegangsbehandling
