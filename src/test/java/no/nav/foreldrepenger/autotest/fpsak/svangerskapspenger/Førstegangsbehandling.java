@@ -131,18 +131,18 @@ class Førstegangsbehandling extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgivere = mor.arbeidsgivere();
-        var arbeidsgiver1 = arbeidsgivere.getArbeidsgivere().get(0);
+        var arbeidsgiver1 = arbeidsgivere.toList().get(0);
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(20_833);
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmelding1);
 
-        var arbeidsgiver2 = arbeidsgivere.getArbeidsgivere().get(1);
+        var arbeidsgiver2 = arbeidsgivere.toList().get(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(62_500)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(27_778));
         arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmelding2);
 
-        var arbeidsgiver3 = arbeidsgivere.getArbeidsgivere().get(2);
+        var arbeidsgiver3 = arbeidsgivere.toList().get(2);
         var inntektsmelding3 = arbeidsgiver3.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(50_000)
                 .medRefusjonsBelopPerMnd(BigDecimal.valueOf(46_667));

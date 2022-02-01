@@ -463,12 +463,12 @@ class BeregningVerdikjede extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgivere = mor.arbeidsgivere();
-        var arbeidsgiver1 = arbeidsgivere.getArbeidsgivere().get(0);
+        var arbeidsgiver1 = arbeidsgivere.toList().get(0);
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(fpStartdato)
                 .medRefusjonsBelopPerMnd(new ProsentAndel(100));
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmelding1);
 
-        var arbeidsgiver2 = arbeidsgivere.getArbeidsgivere().get(1);
+        var arbeidsgiver2 = arbeidsgivere.toList().get(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(fpStartdato)
                 .medRefusjonsBelopPerMnd(new ProsentAndel(100));
         arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmelding2);

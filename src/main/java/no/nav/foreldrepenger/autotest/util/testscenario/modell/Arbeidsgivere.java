@@ -14,7 +14,7 @@ public class Arbeidsgivere {
         this.alleArbeidsgivere = alleArbeidsgivere;
     }
 
-    public List<Arbeidsgiver> getArbeidsgivere() {
+    public List<Arbeidsgiver> toList() {
         return alleArbeidsgivere;
     }
 

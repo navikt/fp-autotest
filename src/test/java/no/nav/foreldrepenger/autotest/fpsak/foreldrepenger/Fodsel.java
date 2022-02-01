@@ -485,12 +485,12 @@ class Fodsel extends FpsakTestBase {
 
         var inntektPerMåned = 20_000;
         var arbeidsgivere = mor.arbeidsgivere();
-        var arbeidsgiver1 = arbeidsgivere.getArbeidsgivere().get(0);
+        var arbeidsgiver1 = arbeidsgivere.toList().get(0);
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(startDatoForeldrepenger)
                 .medBeregnetInntekt(inntektPerMåned)
                 .medArbeidsforholdId("1");
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmelding1);
-        var arbeidsgiver2 = arbeidsgivere.getArbeidsgivere().get(1);
+        var arbeidsgiver2 = arbeidsgivere.toList().get(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(startDatoForeldrepenger)
                 .medBeregnetInntekt(inntektPerMåned)
                 .medArbeidsforholdId("9");
@@ -793,7 +793,7 @@ class Fodsel extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var arbeidsgivere = mor.arbeidsgivere();
-        var gradertArbeidsgiverIdentifikator = arbeidsgivere.getArbeidsgivere().get(0).arbeidsgiverIdentifikator();
+        var gradertArbeidsgiverIdentifikator = arbeidsgivere.toList().get(0).arbeidsgiverIdentifikator();
         var graderingFom = fødselsdato.plusWeeks(10).plusDays(1);
         var graderingTom = fødselsdato.plusWeeks(12);
         var arbeidstidsprosent = BigDecimal.TEN;
