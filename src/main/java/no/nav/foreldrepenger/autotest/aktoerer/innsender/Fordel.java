@@ -143,7 +143,7 @@ public class Fordel extends Aktoer implements Innsender {
                 dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
         leggTilCallIdforSaksnummerForLogging(callId, sakId);
         journalpostModell.setSakId(String.valueOf(sakId));
-        LOG.info("Sendt inn søknad på sak med saksnummer: {}", sakId);
+        LOG.info("Saksnummer {} Sendt inn søknad", sakId);
 
         Vent.til(() -> {
             List<Behandling> behandlinger = behandlingerKlient.alle(sakId);
