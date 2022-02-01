@@ -1023,7 +1023,7 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Bare far har rett. Mor Ufør. Happy-case")
     @Description("Bare far har rett (BFHR) mor uføretrygdet og har 15 uker uten aktivitetskrav som tas ut over 40 uker og siste periode avslås fordi konto tom")
     void bareFarHarRettMorUførHappyCaseTest() {
-        var familie = new Familie("60", fordel);
+        var familie = new Familie("62", fordel);
         var far = familie.far();
         var fødselsdato = Virkedager.helgejustertTilMandag(familie.barn().fødselsdato());
         var fpStartdatoFar = fødselsdato.plusWeeks(6);
@@ -1042,15 +1042,6 @@ class Fodsel extends FpsakTestBase {
 
         var arbeidsgiver = far.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoFar);
-
-        // Må bekrefte at mor er ufør inntil det kommer mock + modell
-        saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaAnnenForeldreHarRett = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
-                .setAnnenforelderHarRett(false)
-                .setAnnenforelderMottarUføretrygd(true)
-                .setBegrunnelse("Mor har ikke rett og mottar uføretrygd!");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
         // 2trinn pga bekreftet at mor er ufør
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
