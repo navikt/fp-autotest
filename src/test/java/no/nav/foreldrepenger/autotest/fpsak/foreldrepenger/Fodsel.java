@@ -1047,11 +1047,10 @@ class Fodsel extends FpsakTestBase {
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
                 .setAnnenforelderHarRett(false)
-                .setAnnenforelderMottarUføretrygd(true) // TODO: Fjern denne etter det er fikset
                 .setBegrunnelse("Mor har ikke rett og mottar uføretrygd!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        saksbehandler.ventTilAvsluttetBehandling();
 
         // Verifiseringer førstegangsbehandling
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
