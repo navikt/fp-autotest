@@ -335,7 +335,7 @@ class VerdikjedeSvangerskapspenger extends FpsakTestBase {
                 List.of(tilrettelegging1, tilrettelegging2));
         var saksnummer = mor.søk(søknad.build());
 
-        var arbeidsgivere = mor.arbeidsgivere().getArbeidsgivere();
+        var arbeidsgivere = mor.arbeidsgivere().toList();
         var arbeidsgiver1 = arbeidsgivere.get(0);
         var inntektsmedling1 = arbeidsgiver1.lagInntektsmeldingSVP()
                 .medRefusjonsBelopPerMnd(new ProsentAndel(100));

@@ -647,7 +647,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                         .medAnnenForelder(lagNorskAnnenforeldre(familie.mor().fødselsnummer()));
         var saksnummerFar = far.søk(søknadFar.build());
 
-        var arbeidsgivere = far.arbeidsgivere().getArbeidsgivere();
+        var arbeidsgivere = far.arbeidsgivere().toList();
         var arbeidsgiver1 = arbeidsgivere.get(0);
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(fpStartdatoFar)
                 .medRefusjonsBelopPerMnd(new ProsentAndel(100));
