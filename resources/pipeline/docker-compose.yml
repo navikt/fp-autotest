@@ -290,8 +290,9 @@ services:
     environment:
       - "FPSAK_OVERRIDE_URL=http://fpsak:8080"
       - "FPOPPDRAG_OVERRIDE_URL=http://fpoppdrag:8080/fpoppdrag/api"
-      - "FPSAK_PIP_AKTOER_FOR_SAK_URL=https://fpsak:8080/fpsak/api/pip/aktoer-for-sak"
       - "JOURNALPOSTAPI_OVERRIDE_URL=https://vtp:8063/rest/dokarkiv/"
+      - "FPSAK_BASE_URL=http://fpsak:8080"
+      - "FPOPPDRAG_BASE_URL=http://fpoppdrag:8080"
       - "DOKARKIV_BASE_URL=https://vtp:8063/rest/dokarkiv/"
       - "KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
       - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
@@ -301,7 +302,6 @@ services:
       - "KAFKA_DVH_SAKSSTATISTIKK_TOPIC=privat-tilbakekreving-dvh-saksstatistikk-v1-vtp"
       - "KAFKA_DVH_VEDTAK_TOPIC=privat-tilbakekreving-dvh-vedtak-v1-vtp"
       - "LOADBALANCER_URL=http://localhost:8030"
-      - "LOADBALANCER_FQDN=localhost:8030"
       - "ABAC_ATTRIBUTT_APPLIKASJON=no.nav.abac.attributter.foreldrepenger"
       - "ABAC_ATTRIBUTT_FAGSAK=no.nav.abac.attributter.foreldrepenger.fagsak"
       - "ABAC_ATTRIBUTT_VENTEFRIST=no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist"
