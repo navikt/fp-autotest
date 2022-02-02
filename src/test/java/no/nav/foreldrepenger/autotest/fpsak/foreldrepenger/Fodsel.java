@@ -793,7 +793,7 @@ class Fodsel extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var arbeidsgivere = mor.arbeidsgivere();
-        var gradertArbeidsgiverIdentifikator = arbeidsgivere.toList().get(0).identifikator();
+        var gradertArbeidsgiverIdentifikator = arbeidsgivere.toList().get(0).arbeidsgiverIdentifikator();
         var graderingFom = fødselsdato.plusWeeks(10).plusDays(1);
         var graderingTom = fødselsdato.plusWeeks(12);
         var arbeidstidsprosent = BigDecimal.TEN;

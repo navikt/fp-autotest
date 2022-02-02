@@ -12,30 +12,26 @@ import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 
 public abstract class Arbeidsgiver {
 
-    protected final ArbeidsgiverIdentifikator identifikator;
+    protected final ArbeidsgiverIdentifikator arbeidsgiverIdentifikator;
     protected final Arbeidstaker arbeidstaker;
     protected final List<Arbeidsforhold> arbeidsforhold;
     private final Innsender innsender;
 
-    Arbeidsgiver(ArbeidsgiverIdentifikator identifikator,
-                 Arbeidstaker arbeidstaker,
-                 List<Arbeidsforhold> arbeidsforhold,
-                 Innsender innsender) {
-        this.identifikator = identifikator;
+    Arbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, Arbeidstaker arbeidstaker,
+                               List<Arbeidsforhold> arbeidsforhold, Innsender innsender) {
+        this.arbeidsgiverIdentifikator = arbeidsgiverIdentifikator;
         this.arbeidstaker = arbeidstaker;
         this.arbeidsforhold = arbeidsforhold;
         this.innsender = innsender;
     }
 
-    protected abstract InntektsmeldingBuilder lagInntektsmeldingFP(Integer månedsinntekt,
-                                                                   ArbeidsforholdId arbeidsforholdId,
-                                                                   LocalDate startdatoForeldrepenger);
-
+    protected abstract InntektsmeldingBuilder lagInntektsmeldingFP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId, LocalDate startdatoForeldrepenger);
     protected abstract InntektsmeldingBuilder lagInntektsmeldingSVP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId);
 
-    public ArbeidsgiverIdentifikator identifikator() {
-        return identifikator;
+    public ArbeidsgiverIdentifikator arbeidsgiverIdentifikator() {
+        return arbeidsgiverIdentifikator;
     }
+
 
     public InntektsmeldingBuilder lagInntektsmeldingFP(LocalDate startdatoForeldrepenger) {
         guardFlereEllerIngenArbeidsforhold(startdatoForeldrepenger);
@@ -59,14 +55,14 @@ public abstract class Arbeidsgiver {
             var stillingsprosentSamlet = arbeidsforhold.stream()
                     .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
                     .map(Arbeidsforhold::stillingsprosent)
-                    .mapToInt(Integer::intValue)
-                    .sum();
+                    .mapToInt(Integer::intValue).sum();
 
             arbeidsforhold.stream()
                     .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger))
-                    .forEach(a -> im.add(
-                            lagInntektsmeldingFP(arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
-                                    a.arbeidsforholdId(), startdatoForeldrepenger)));
+                    .forEach(a -> im.add(lagInntektsmeldingFP(
+                            arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
+                            a.arbeidsforholdId(),
+                            startdatoForeldrepenger)));
         }
         return im;
     }
@@ -94,34 +90,30 @@ public abstract class Arbeidsgiver {
     //  om arbeidsforholdet er aktivt eller ei.
     public List<InntektsmeldingBuilder> lagInntektsmeldingerSVP() {
         var im = new ArrayList<InntektsmeldingBuilder>();
-        if (arbeidsforhold.size() == 1) {
+        if(arbeidsforhold.size() == 1) {
             im.add(lagInntektsmeldingSVP());
         } else {
             var stillingsprosentSamlet = arbeidsforhold.stream()
                     .map(Arbeidsforhold::stillingsprosent)
-                    .mapToInt(Integer::intValue)
-                    .sum();
+                    .mapToInt(Integer::intValue).sum();
 
-            arbeidsforhold.forEach(a -> im.add(
-                    lagInntektsmeldingSVP(arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
+            arbeidsforhold.forEach(a ->
+                    im.add(lagInntektsmeldingSVP(arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
                             a.arbeidsforholdId())));
         }
         return im;
     }
 
     public long sendInntektsmeldingerSVP(Long saksnummer) {
-        return innsender.sendInnInntektsmelding(lagInntektsmeldingerSVP(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(),
-                saksnummer);
+        return innsender.sendInnInntektsmelding(lagInntektsmeldingerSVP(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
     public long sendInntektsmeldingerFP(Long saksnummer, LocalDate startdatoForeldrepenger) {
-        return innsender.sendInnInntektsmelding(lagInntektsmeldingerFP(startdatoForeldrepenger), arbeidstaker.aktørId(),
-                arbeidstaker.fødselsnummer(), saksnummer);
+        return innsender.sendInnInntektsmelding(lagInntektsmeldingerFP(startdatoForeldrepenger), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
     public long sendInntektsmeldinger(Long saksnummer, InntektsmeldingBuilder... inntektsmelding) {
-        return innsender.sendInnInntektsmelding(List.of(inntektsmelding), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(),
-                saksnummer);
+        return innsender.sendInnInntektsmelding(List.of(inntektsmelding), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
     public long sendInntektsmeldinger(Long saksnummer, List<InntektsmeldingBuilder> inntektsmeldinger) {
@@ -135,8 +127,7 @@ public abstract class Arbeidsgiver {
                 .distinct()
                 .count();
         if (antallOrdinæreArbeidsforhold > 1) {
-            throw new UnsupportedOperationException(
-                    "Det er flere arbeidsforhold! Bruk metode for å lage flere inntektsmeldiger istedenfor!");
+            throw new UnsupportedOperationException("Det er flere arbeidsforhold! Bruk metode for å lage flere inntektsmeldiger istedenfor!");
         }
         if (antallOrdinæreArbeidsforhold == 0) {
             throw new IllegalStateException("Kan ikke lage IM når det ikke finnes arbeidsforhold definert på søker");
@@ -145,14 +136,12 @@ public abstract class Arbeidsgiver {
 
     protected void guardFlereEllerIngenArbeidsforhold(LocalDate startdatoForeldrepenger) {
         var antallOrdinæreArbeidsforhold = arbeidsforhold.stream()
-                .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger) || tilkommendeArbeidsforhold(a,
-                        startdatoForeldrepenger))
+                .filter(a -> erAktivtArbeidsforhold(a, startdatoForeldrepenger) || tilkommendeArbeidsforhold(a,startdatoForeldrepenger))
                 .map(Arbeidsforhold::arbeidsgiverIdentifikasjon)
                 .distinct()
                 .count();
         if (antallOrdinæreArbeidsforhold > 1) {
-            throw new UnsupportedOperationException(
-                    "Det er flere arbeidsforhold! Bruk metode for å lage flere inntektsmeldiger istedenfor!");
+            throw new UnsupportedOperationException("Det er flere arbeidsforhold! Bruk metode for å lage flere inntektsmeldiger istedenfor!");
         }
         if (antallOrdinæreArbeidsforhold == 0) {
             throw new IllegalStateException("Kan ikke lage IM når det ikke finnes arbeidsforhold definert på søker");

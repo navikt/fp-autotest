@@ -471,7 +471,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
          */
         var far = familie.far();
         var fpStartdatoFar = fpSluttdatoMor.plusWeeks(3);
-        var orgNummerFar = far.arbeidsgiver().identifikator();
+        var orgNummerFar = far.arbeidsgiver().arbeidsgiverIdentifikator();
         var fordelingFar = generiskFordeling(
                 graderingsperiodeArbeidstaker(FELLESPERIODE,
                         fpStartdatoFar,
@@ -1001,7 +1001,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var dagsatsTilAF = (int) Math.round(dagsats * prosentfaktorAvDagsatsTilAF);
 
         var perioderMedAndelIArbeidsforhold = saksbehandler
-                .hentBeregningsresultatPerioderMedAndelIArbeidsforhold(arbeidsgiverFar.identifikator());
+                .hentBeregningsresultatPerioderMedAndelIArbeidsforhold(arbeidsgiverFar.arbeidsgiverIdentifikator());
         assertThat(perioderMedAndelIArbeidsforhold.get(0).getTilSoker())
                 .as("Forventer at dagsatsen for arbeidsforholdet blir beregnet først – rest går til søker for SN")
                 .isEqualTo(dagsatsTilAF);
@@ -1011,7 +1011,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(perioderMedAndelIArbeidsforhold.get(2).getTilSoker())
                 .as("Forventer at dagsatsen for arbeidsforholdet blir beregnet først – rest går til søker for SN")
                 .isEqualTo(dagsatsTilAF);
-        assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(arbeidsgiverFar.identifikator(), 0))
+        assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(arbeidsgiverFar.arbeidsgiverIdentifikator(), 0))
                 .as("Foventer at hele den utbetalte dagsatsen går til søker!")
                 .isTrue();
 
@@ -1191,7 +1191,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse
-                .leggTilRefusjonGyldighetVurdering(arbeidsgiver.identifikator(), false)
+                .leggTilRefusjonGyldighetVurdering(arbeidsgiver.arbeidsgiverIdentifikator(), false)
                 .setBegrunnelse("Refusjonskrav er sendt inn for sent og skal ikke tas med i beregning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
@@ -1225,7 +1225,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
         vurderFaktaOmBeregningBekreftelse2
-                .leggTilRefusjonGyldighetVurdering(arbeidsgiver.identifikator(), false)
+                .leggTilRefusjonGyldighetVurdering(arbeidsgiver.arbeidsgiverIdentifikator(), false)
                 .setBegrunnelse("Refusjonskrav er sendt inn for sent og skal ikke tas med i beregning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 

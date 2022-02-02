@@ -420,7 +420,7 @@ public class Saksbehandler extends Aktoer {
                 .filter(ap -> ap.getDefinisjon().kode.equals(kode))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + "." +
-                        "\nAksjonspunkt på behandling: " + valgtBehandling.getAksjonspunkter().toString()));
+                        "\nAksjonspunkt på behanlding: " + valgtBehandling.getAksjonspunkter().toString()));
     }
 
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
