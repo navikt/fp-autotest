@@ -176,7 +176,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     // PRIVATE METODER //
 
     private void innvilgPeriode(UttakResultatPeriode periode) {
-        innvilgPeriode(periode, InnvilgetÅrsak.UTTAK_OPPFYLT);
+        innvilgPeriode(periode, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
 
     private void innvilgPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, StønadskontoType stønadskonto) {
