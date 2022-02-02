@@ -185,7 +185,7 @@ class Revurdering extends FpsakTestBase {
         // Endringssøknad
         var graderingFom = fødselsdato.plusWeeks(20);
         var graderingTom = fødselsdato.plusWeeks(23).minusDays(1);
-        var arbeidsgiveridentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
+        var arbeidsgiveridentifikator = arbeidsgiver.identifikator();
         var fordelingGradering = fordelingEndringssøknadGradering(StønadskontoType.FELLESPERIODE, graderingFom, graderingTom,
                 arbeidsgiveridentifikator, 40);
         var endretSøknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR,

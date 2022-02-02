@@ -114,7 +114,7 @@ public abstract class Søker {
 
     public Arbeidsgivere arbeidsgivere(Orgnummer orgnummer){
         return new Arbeidsgivere(arbeidsgivere().toList().stream()
-               .filter(a -> orgnummer.equals(a.arbeidsgiverIdentifikator()))
+               .filter(a -> orgnummer.equals(a.identifikator()))
                .toList());
     }
 

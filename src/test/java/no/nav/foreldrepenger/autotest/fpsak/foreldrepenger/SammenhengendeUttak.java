@@ -290,7 +290,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var arbeidsgiver = mor.arbeidsgiver();
-        var arbeidsgiverIdentifikasjon = arbeidsgiver.arbeidsgiverIdentifikator();
+        var arbeidsgiverIdentifikasjon = arbeidsgiver.identifikator();
         var fordeling = FordelingErketyper.generiskFordeling(
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),

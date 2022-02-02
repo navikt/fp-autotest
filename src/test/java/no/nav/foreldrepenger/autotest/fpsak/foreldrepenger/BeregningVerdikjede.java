@@ -92,7 +92,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserBGPerioder(startdatoer, beregningsgrunnlag);
         var inntektPrÅr = mor.månedsinntekt() * 12;
-        var orgNr = arbeidsgiver.arbeidsgiverIdentifikator();
+        var orgNr = arbeidsgiver.identifikator();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
                 lagBGAndel(orgNr, inntektPrÅr, inntektPrÅr, 0, 0));
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
@@ -140,7 +140,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
                 lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().getKode(), totaltBg, 0, 0));
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
-                lagBGAndelMedFordelt(arbeidsgiver.arbeidsgiverIdentifikator(), 0, totaltBg, totaltBg, inntektPerMåned * 12));
+                lagBGAndelMedFordelt(arbeidsgiver.identifikator(), 0, totaltBg, totaltBg, inntektPerMåned * 12));
     }
 
     @Test
@@ -155,7 +155,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
-        var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
+        var arbeidsgiverIdentifikator = arbeidsgiver.identifikator();
         var månedsinntekt = mor.månedsinntekt(arbeidsgiverIdentifikator);
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medRefusjonsBelopPerMnd(månedsinntekt);
@@ -260,7 +260,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
-        var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
+        var arbeidsgiverIdentifikator = arbeidsgiver.identifikator();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medRefusjonsBelopPerMnd(new ProsentAndel(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
@@ -338,7 +338,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
-        var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
+        var arbeidsgiverIdentifikator = arbeidsgiver.identifikator();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(new ProsentAndel(50))
                 .medRefusjonsBelopPerMnd(29_000);

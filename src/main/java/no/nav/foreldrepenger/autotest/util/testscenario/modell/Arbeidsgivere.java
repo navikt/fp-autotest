@@ -20,7 +20,7 @@ public class Arbeidsgivere {
 
     public Arbeidsgiver arbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
         return alleArbeidsgivere.stream()
-                .filter(a -> a.arbeidsgiverIdentifikator().equals(arbeidsgiverIdentifikator))
+                .filter(a -> a.identifikator().equals(arbeidsgiverIdentifikator))
                 .findFirst()
                 .orElseThrow();
     }

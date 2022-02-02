@@ -18,13 +18,13 @@ public class Virksomhet extends Arbeidsgiver {
 
     protected InntektsmeldingBuilder lagInntektsmeldingFP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId, LocalDate startdatoForeldrepenger) {
         return InntektsmeldingForeldrepengeErketyper
-                .lagInntektsmelding(månedsinntekt, arbeidstaker.fødselsnummer(), startdatoForeldrepenger, arbeidsgiverIdentifikator)
+                .lagInntektsmelding(månedsinntekt, arbeidstaker.fødselsnummer(), startdatoForeldrepenger, identifikator)
                 .medArbeidsforholdId(arbeidsforholdId != null ? arbeidsforholdId.value() : null);
     }
 
     protected InntektsmeldingBuilder lagInntektsmeldingSVP(Integer månedsinntekt, ArbeidsforholdId arbeidsforholdId) {
         return InntektsmeldingSvangerskapspengerErketyper
-                .lagSvangerskapspengerInntektsmelding(arbeidstaker.fødselsnummer(), månedsinntekt, arbeidsgiverIdentifikator)
+                .lagSvangerskapspengerInntektsmelding(arbeidstaker.fødselsnummer(), månedsinntekt, identifikator)
                 .medArbeidsforholdId(arbeidsforholdId != null ? arbeidsforholdId.value() : null);
     }
 

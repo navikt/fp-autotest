@@ -41,7 +41,7 @@ class TilbakekrevingSVP extends FptilbakeTestBase {
         var tilrettelegging = ingenTilrettelegging(
                 LocalDate.now(),
                 LocalDate.now(),
-                virksomhet((Orgnummer) arbeidsgiver.arbeidsgiverIdentifikator()));
+                virksomhet((Orgnummer) arbeidsgiver.identifikator()));
         var søknad = lagSvangerskapspengerSøknad(BrukerRolle.MOR, termindato, List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
