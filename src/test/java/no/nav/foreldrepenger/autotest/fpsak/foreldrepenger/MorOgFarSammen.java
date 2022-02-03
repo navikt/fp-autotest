@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -326,7 +325,6 @@ class MorOgFarSammen extends FpsakTestBase {
                 .isFalse();
     }
 
-    @Disabled
     @Test
     @DisplayName("Koblet sak. Far utsetter alt. Far ny 1gang")
     @Description("Sender inn søknad mor. Sender inn søknad far uten overlapp. Sender inn endringssøknad far med kun" +
@@ -349,9 +347,12 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknad = SøknadEndringErketyper.lagEndringssøknadFødsel(fødselsdato, BrukerRolle.FAR, fordelingFrasiPerioder, saksnummerFar);
         familie.far().søk(søknad.build());
 
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventTilAvsluttetBehandling();
+
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-
         saksbehandler.ventTilAvsluttetBehandling();
 
         // Har fått tømt uttaket
