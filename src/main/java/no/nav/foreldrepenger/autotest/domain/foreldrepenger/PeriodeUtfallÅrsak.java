@@ -133,8 +133,12 @@ public enum PeriodeUtfallÅrsak {
     private final String kode;
     private final String navn;
 
-    @JsonCreator
-    public static PeriodeUtfallÅrsak fraKode(String kode) {
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static PeriodeUtfallÅrsak fraKode(@JsonProperty(value = "kode") Object node) {
+        if (node == null) {
+            return null;
+        }
+        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
         return Arrays.stream(PeriodeUtfallÅrsak.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
