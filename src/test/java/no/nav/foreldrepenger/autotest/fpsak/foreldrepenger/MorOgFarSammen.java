@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -325,6 +326,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 .isFalse();
     }
 
+    @Disabled
     @Test
     @DisplayName("Koblet sak. Far utsetter alt. Far ny 1gang")
     @Description("Sender inn søknad mor. Sender inn søknad far uten overlapp. Sender inn endringssøknad far med kun" +
