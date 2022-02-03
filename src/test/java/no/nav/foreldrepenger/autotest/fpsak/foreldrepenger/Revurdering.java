@@ -26,7 +26,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeUtfallÅrsak;
@@ -406,7 +405,6 @@ class Revurdering extends FpsakTestBase {
                 .isEqualTo(2);
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeUtfallÅrsak())
                 .as("Perioderesultatårsak")
-                .isInstanceOf(IkkeOppfyltÅrsak.class)
                 .isEqualTo(PeriodeUtfallÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getAktiviteter().get(0).getTrekkdagerDesimaler())
                 .as("Trekkdager")
@@ -414,7 +412,6 @@ class Revurdering extends FpsakTestBase {
 
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getPeriodeUtfallÅrsak())
                 .as("Perioderesultatårsak")
-                .isInstanceOf(IkkeOppfyltÅrsak.class)
                 .isEqualTo(PeriodeUtfallÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getAktiviteter().get(0).getTrekkdagerDesimaler())
                 .as("Trekkdager")
