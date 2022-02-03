@@ -159,4 +159,12 @@ public enum PeriodeUtfallÅrsak {
         this.navn = navn;
     }
 
+    public boolean isInnvilgetÅrsak() {
+        return !UKJENT.getKode().equals(kode) && Long.parseLong(kode) < 4000;
+    }
+
+    public boolean isAvslåttÅrsak() {
+        return !UKJENT.getKode().equals(kode) && Long.parseLong(kode) >= 4000;
+    }
+
 }
