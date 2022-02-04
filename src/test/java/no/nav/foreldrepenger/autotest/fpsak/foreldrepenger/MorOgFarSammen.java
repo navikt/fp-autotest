@@ -348,7 +348,7 @@ class MorOgFarSammen extends FpsakTestBase {
         familie.far().søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.velgSisteBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
 
         saksbehandler.hentFagsak(saksnummerFar);
