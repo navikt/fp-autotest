@@ -3,7 +3,9 @@ package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Kode implements Serializable {
@@ -42,6 +44,15 @@ public class Kode implements Serializable {
 
     public static Kode lagBlankKode() {
         return new Kode(null, "-", null);
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Kode fraKode(@JsonProperty(value = "kode") Object node) {
+        if (node == null) {
+            return null;
+        }
+        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
+        return new Kode(kode);
     }
 
     @Override

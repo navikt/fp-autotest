@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
@@ -60,8 +61,12 @@ public enum Avslagsårsak {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static Avslagsårsak fraKode(String kode) {
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Avslagsårsak fraKode(@JsonProperty(value = "kode") Object node) {
+        if (node == null) {
+            return null;
+        }
+        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
         return Arrays.stream(Avslagsårsak.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
