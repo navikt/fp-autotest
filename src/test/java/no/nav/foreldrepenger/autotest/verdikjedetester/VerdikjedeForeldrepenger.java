@@ -1810,7 +1810,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(1).getPeriodeUtfallÅrsak().isInnvilgetÅrsak())
                 .as("Perioderesultatårsak")
                 .isTrue();
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeUtfallÅrsak().isAvslåttÅrsak())
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeUtfallÅrsak())
                 .as("Perioderesultatårsak")
                 .isEqualTo(PeriodeUtfallÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
