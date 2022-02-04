@@ -29,8 +29,12 @@ public enum UttakUtsettelseÅrsak {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static UttakUtsettelseÅrsak fraKode(@JsonProperty("kode") String kode) {
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static UttakUtsettelseÅrsak fraKode(@JsonProperty(value = "kode") Object node) {
+        if (node == null) {
+            return null;
+        }
+        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
         return Arrays.stream(UttakUtsettelseÅrsak.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()

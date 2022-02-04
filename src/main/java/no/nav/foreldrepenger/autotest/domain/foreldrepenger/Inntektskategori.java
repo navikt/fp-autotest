@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
@@ -34,8 +35,12 @@ public enum Inntektskategori {
         this.kode = Optional.ofNullable(kode).orElse(name());
     }
 
-    @JsonCreator
-    public static Inntektskategori fraKode(String kode) {
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static Inntektskategori fraKode(@JsonProperty(value = "kode") Object node) {
+        if (node == null) {
+            return null;
+        }
+        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
         return Arrays.stream(Inntektskategori.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
