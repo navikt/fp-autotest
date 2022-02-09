@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ArbeidOgInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
@@ -66,6 +67,7 @@ public class Behandling {
     private Lazy<KlageInfo> klagevurdering;
     private Lazy<Saldoer> saldoer;
     private Lazy<Tilrettelegging> tilrettelegging;
+    private Lazy<ArbeidOgInntektsmeldingDto> arbeidOgInntektsmeldingDto;
     private Lazy<List<KontrollerAktiviteskravPeriode>> kontrollerAktiviteskrav;
 
     public List<UttakResultatPeriode> hentUttaksperioder() {
@@ -235,6 +237,14 @@ public class Behandling {
 
     public void setTilrettelegging(Lazy<Tilrettelegging> dTilrettelegging) {
         this.tilrettelegging = dTilrettelegging;
+    }
+
+    public void setArbeidInntektsmelding(Lazy<ArbeidOgInntektsmeldingDto> arbeidInntektsmelding) {
+        this.arbeidOgInntektsmeldingDto = arbeidInntektsmelding;
+    }
+
+    public ArbeidOgInntektsmeldingDto getArbeidOgInntektsmeldingDto() {
+        return get(arbeidOgInntektsmeldingDto);
     }
 
     public static <V> V get(Lazy<V> o) {

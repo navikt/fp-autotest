@@ -30,6 +30,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ArbeidOgInntektsmeldingDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManglendeOpplysningerVurderingDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
@@ -81,6 +84,10 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     private static final String BEHANDLING_SVANGERSKAPSPENGER = BEHANDLING_URL + "/svangerskapspenger";
     private static final String BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL = BEHANDLING_SVANGERSKAPSPENGER + "/tilrettelegging-v2";
 
+    private static final String BEHANDLING_ARBEID_INNTEKTSMELDING = BEHANDLING_URL + "/arbeid-inntektsmelding";
+    private static final String BEHANDLING_ARBEID_INNTEKTSMELDING_VURDERING = BEHANDLING_ARBEID_INNTEKTSMELDING + "/lagre-vurdering";
+    private static final String BEHANDLING_ARBEID_INNTEKTSMELDING_OPPRETT_ARBEIDSFORHOLD = BEHANDLING_ARBEID_INNTEKTSMELDING + "/lagre-arbeidsforhold";
+    private static final String BEHANDLING_ARBEID_INNTEKTSMELDING_NY_VURDERING = BEHANDLING_ARBEID_INNTEKTSMELDING + "/apne-for-ny-vurdering";
 
     public BehandlingerJerseyKlient(ClientRequestFilter filter) {
         super(filter);
@@ -356,5 +363,40 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .queryParam(UUID, behandlingUuid)
                 .request(APPLICATION_JSON_TYPE)
                 .get(Tilrettelegging.class);
+    }
+
+    /*
+     * hent arbeid, inntekt og inntektsmeldinger
+     */
+    public ArbeidOgInntektsmeldingDto behandlingArbeidInntektsmelding(UUID behandlingUuid) {
+        return client.target(base)
+                .path(BEHANDLING_ARBEID_INNTEKTSMELDING)
+                .queryParam(UUID, behandlingUuid)
+                .request(APPLICATION_JSON_TYPE)
+                .get(ArbeidOgInntektsmeldingDto.class);
+    }
+
+    public void behandlingArbeidInntektsmeldingLagreArbfor(ManueltArbeidsforholdDto arbeidsforhold) {
+        client.target(base)
+                .path(BEHANDLING_ARBEID_INNTEKTSMELDING_OPPRETT_ARBEIDSFORHOLD)
+                .request(APPLICATION_JSON_TYPE)
+                .header(HttpHeaders.ACCEPT, APPLICATION_JSON)
+                .post(json(arbeidsforhold));
+    }
+
+    public void behandlingArbeidInntektsmeldingNyVurdering(BehandlingIdPost behandlingIdDto) {
+        client.target(base)
+                .path(BEHANDLING_ARBEID_INNTEKTSMELDING_NY_VURDERING)
+                .request(APPLICATION_JSON_TYPE)
+                .header(HttpHeaders.ACCEPT, APPLICATION_JSON)
+                .post(json(behandlingIdDto));
+    }
+
+    public void behandlingArbeidInntektsmeldingLagreValg(ManglendeOpplysningerVurderingDto manglendeOpplysningerVurderingDto) {
+        client.target(base)
+                .path(BEHANDLING_ARBEID_INNTEKTSMELDING_VURDERING)
+                .request(APPLICATION_JSON_TYPE)
+                .header(HttpHeaders.ACCEPT, APPLICATION_JSON)
+                .post(json(manglendeOpplysningerVurderingDto));
     }
 }

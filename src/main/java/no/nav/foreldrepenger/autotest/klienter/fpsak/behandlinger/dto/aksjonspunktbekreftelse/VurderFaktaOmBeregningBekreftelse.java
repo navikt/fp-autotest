@@ -43,6 +43,12 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
+    public VurderFaktaOmBeregningBekreftelse leggTilNyIArbeidslivet(
+            boolean nyIArbeidslivet) {
+        fakta.leggTilNyIArbeidslivet(nyIArbeidslivet);
+        return this;
+    }
+
     public VurderFaktaOmBeregningBekreftelse leggTilVurdertLønnsendring(boolean vurdertLonnsendring) {
         fakta.leggTilVurdertLonnsendring(vurdertLonnsendring);
         return this;

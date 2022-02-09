@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 
 @Tag("fpsak")
@@ -88,10 +89,15 @@ class Termin extends FpsakTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
-        var ab = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
-        saksbehandler.bekreftAksjonspunkt(ab);
+
+        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
+            saksbehandler.fortsettUteninntektsmeldinger();
+        } else {
+            var ab = saksbehandler
+                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+                    .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
+            saksbehandler.bekreftAksjonspunkt(ab);
+        }
 
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
 

@@ -21,6 +21,8 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidInntektsmeldingAksjonspunktÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidsforholdKomplettVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
@@ -31,15 +33,18 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.ArbeidInntektsmeldingBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLopendeVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManglendeOpplysningerVurderingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
@@ -409,10 +414,14 @@ class BeregningVerdikjede extends FpsakTestBase {
         saksbehandler.gjenopptaBehandling();
 
         // FAKTA OM ARBEIDSFORHOLD
-        var avklarArbeidsforholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
+            saksbehandler.fortsettUteninntektsmeldinger();
+        } else {
+            var avklarArbeidsforholdBekreftelse = saksbehandler
+                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+                    .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
+            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        }
 
         // FAKTA OM BEREGNING
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
@@ -440,10 +449,14 @@ class BeregningVerdikjede extends FpsakTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
-        var avklarArbeidsforholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
+            saksbehandler.fortsettUteninntektsmeldinger();
+        } else {
+            var avklarArbeidsforholdBekreftelse = saksbehandler
+                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+                    .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
+            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        }
 
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
         assertThat(aksjonspunkt.erUbekreftet())
@@ -484,7 +497,6 @@ class BeregningVerdikjede extends FpsakTestBase {
     // @Test for å kunne teste automatisk besteberegning TODO?
     void skal_teste_automatisk_besteberegning() {
     }
-
 
     private void verifiserAndelerIPeriode(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
             BGAndelHelper BGAndelHelper) {
