@@ -31,8 +31,8 @@
 				"arbeidsgiverOrgnr": "910909088",
 				"arbeidsavtaler" : [
 					{
-						"fomGyldighetsperiode": "now() - P2M",
-						"sisteLønnsendringsdato": "now() - P1M",
+						"fomGyldighetsperiode": "now() - P59D",
+                        "sisteLønnsendringsdato": "now() - P1M",
 						"avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "40",
 						"stillingsprosent" : 100,
@@ -40,7 +40,8 @@
 					},
 					{
 						"fomGyldighetsperiode": "now() - P4M",
-						"avlønningstype": "fastlønn",
+                        "tomGyldighetsperiode": "now() - P60D",
+                        "avlønningstype": "fastlønn",
 						"avtaltArbeidstimerPerUke": "30",
 						"stillingsprosent" : 50,
 						"beregnetAntallTimerPerUke": "20"

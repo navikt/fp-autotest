@@ -220,7 +220,7 @@ class Fodsel extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(15_000)
-                .medRefusjonsBelopPerMnd(0);
+                .medRefusjonsBelopPerMnd(refusjon);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -238,18 +238,12 @@ class Fodsel extends FpsakTestBase {
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-//
-//        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
-//                .as("Behandlingsresultat")
-//                .isEqualTo(BehandlingResultatType.INNVILGET);
-//        verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
-//        verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
 
-        var inntektsmelding2 = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medBeregnetInntekt(15_000)
-                .medRefusjonsBelopPerMnd(refusjon);
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding2);
-
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
+        verifiserUttak(1, beslutter.valgtBehandling.hentUttaksperioder());
+        verifiserTilkjentYtelse(beslutter.valgtBehandling.getBeregningResultatForeldrepenger(), true);
     }
 
     @Test

@@ -104,14 +104,20 @@ class Termin extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
 
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        if (!ArbeidInnteksmeldingToggle.erTogglePå()) {
+            saksbehandler.hentFagsak(saksnummer);
+            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.hentFagsak(saksnummer);
-        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
-        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+            beslutter.hentFagsak(saksnummer);
+            var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+            fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+            beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
+        } else {
+            saksbehandler.ventTilAvsluttetBehandling();
+        }
+
+        saksbehandler.velgSisteBehandling();
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
     }
