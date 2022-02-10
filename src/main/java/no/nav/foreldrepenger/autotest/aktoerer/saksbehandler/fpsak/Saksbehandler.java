@@ -750,11 +750,12 @@ public class Saksbehandler extends Aktoer {
                 .arbeidsforhold()
                 .stream()
                 .filter(a -> a.årsak().equals(ArbeidInntektsmeldingAksjonspunktÅrsak.MANGLENDE_INNTEKTSMELDING))
-                .collect(Collectors.toList());
-        var dtoer = arbforSomManglerIM.stream().map(arbfor -> new ManglendeOpplysningerVurderingDto(valgtBehandling.uuid,
-                ArbeidsforholdKomplettVurderingType.FORTSETT_UTEN_INNTEKTSMELDING, "Dette er en begrunnelse",
-                arbfor.arbeidsgiverIdent(), arbfor.internArbeidsforholdId()))
-                .collect(Collectors.toList());
+                .toList();
+        var dtoer = arbforSomManglerIM.stream()
+                .map(arbfor -> new ManglendeOpplysningerVurderingDto(valgtBehandling.uuid,
+                        ArbeidsforholdKomplettVurderingType.FORTSETT_UTEN_INNTEKTSMELDING, "Dette er en begrunnelse",
+                        arbfor.arbeidsgiverIdent(), arbfor.internArbeidsforholdId()))
+                .toList();
         dtoer.forEach(this::lagreArbeidsforholdValg);
         var ab = hentAksjonspunktbekreftelse(ArbeidInntektsmeldingBekreftelse.class);
         bekreftAksjonspunkt(ab);
