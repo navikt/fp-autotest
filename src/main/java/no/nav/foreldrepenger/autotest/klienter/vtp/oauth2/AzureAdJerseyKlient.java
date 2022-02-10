@@ -15,7 +15,7 @@ public class AzureAdJerseyKlient extends VTPJerseyKlient {
     private static final Map<Fødselsnummer, String> tokens = new ConcurrentHashMap<>();
 
     private static final String AZURE_AD = "/rest/AzureAd";
-    private static final String TOKEN_ENDPOINT = AZURE_AD + "/aadb2c/oauth2/v2.0/token";
+    private static final String TOKEN_ENDPOINT = AZURE_AD + "/loginservice/oauth2/v2.0/token";
 
     public AzureAdJerseyKlient() {
         super();
