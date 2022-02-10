@@ -28,6 +28,7 @@ public class FaktaOmBeregningLagreDto {
     protected YtelseForedeling kunYtelseFordeling;
     protected VurderLønnsendringDto vurdertLonnsendring;
     protected List<RefusjonskravPrArbeidsgiverVurderingDto> refusjonskravGyldighet = new ArrayList<>();
+    private VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto vurderNyIArbeidslivet;
 
     public FaktaOmBeregningLagreDto leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle kode) {
         this.faktaOmBeregningTilfeller.add(kode);
@@ -80,6 +81,11 @@ public class FaktaOmBeregningLagreDto {
 
     public FaktaOmBeregningLagreDto leggTilMaanedsinntektFL(int maanedsinntekt) {
         fastsettMaanedsinntektFL = new FastsettMaanedsinntektFL(maanedsinntekt);
+        return this;
+    }
+
+    public FaktaOmBeregningLagreDto leggTilNyIArbeidslivet(boolean nyIArbeidslivet) {
+        vurderNyIArbeidslivet = new VurderSelvstendigNæringsdrivendeNyIArbeidslivetDto(nyIArbeidslivet);
         return this;
     }
 

@@ -37,7 +37,7 @@ public enum AndelKilde {
         return Arrays.stream(AndelKilde.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet behandlingresultattype " + kode));
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet andekilde " + kode));
     }
 
     public String getKode() {

@@ -21,6 +21,8 @@ import org.slf4j.MDC;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidInntektsmeldingAksjonspunktÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidsforholdKomplettVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
@@ -43,11 +45,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelseUtenTotrinn;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.OverstyrAksjonspunkter;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.ArbeidInntektsmeldingBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManglendeOpplysningerVurderingDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriodeAndel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.BehandlingMedUttaksperioderDto;
@@ -304,6 +309,7 @@ public class Saksbehandler extends Aktoer {
             behandling.setSaldoer(new Lazy<>(() -> behandlingerKlient.behandlingUttakStonadskontoer(behandling.uuid)));
             behandling.setSoknad(new Lazy<>(() -> behandlingerKlient.behandlingSøknad(behandling.uuid)));
             behandling.setTilrettelegging(new Lazy<>(() -> behandlingerKlient.behandlingTilrettelegging(behandling.uuid)));
+            behandling.setArbeidInntektsmelding(new Lazy<>(() -> behandlingerKlient.behandlingArbeidInntektsmelding(behandling.uuid)));
             behandling.setUttakResultatPerioder(new Lazy<>(() -> behandlingerKlient.behandlingUttakResultatPerioder(behandling.uuid)));
         }
     }
@@ -722,5 +728,36 @@ public class Saksbehandler extends Aktoer {
     public Behandling førstegangsbehandling() {
         return behandlinger.stream().filter(b -> b.type.equals(BehandlingType.FØRSTEGANGSSØKNAD)).findFirst()
                 .orElseThrow(() -> new IllegalStateException("Finner ikke førstegangsbehandling"));
+    }
+
+    public void lagreArbeidsforholdValg(ManglendeOpplysningerVurderingDto manglendeOpplysningerVurderingDto) {
+        behandlingerKlient.behandlingArbeidInntektsmeldingLagreValg(manglendeOpplysningerVurderingDto);
+        refreshBehandling();
+    }
+
+    public void lagreOpprettetArbeidsforhold(ManueltArbeidsforholdDto manueltArbeidsforholdDto) {
+        behandlingerKlient.behandlingArbeidInntektsmeldingLagreArbfor(manueltArbeidsforholdDto);
+        refreshBehandling();
+    }
+
+    public void åpneForNyArbeidsforholdVurdering(BehandlingIdPost behandlingIdDto) {
+        behandlingerKlient.behandlingArbeidInntektsmeldingNyVurdering(behandlingIdDto);
+        refreshBehandling();
+    }
+
+    public void fortsettUteninntektsmeldinger() {
+        var arbforSomManglerIM = valgtBehandling.getArbeidOgInntektsmeldingDto()
+                .arbeidsforhold()
+                .stream()
+                .filter(a -> a.årsak().equals(ArbeidInntektsmeldingAksjonspunktÅrsak.MANGLENDE_INNTEKTSMELDING))
+                .toList();
+        var dtoer = arbforSomManglerIM.stream()
+                .map(arbfor -> new ManglendeOpplysningerVurderingDto(valgtBehandling.uuid,
+                        ArbeidsforholdKomplettVurderingType.FORTSETT_UTEN_INNTEKTSMELDING, "Dette er en begrunnelse",
+                        arbfor.arbeidsgiverIdent(), arbfor.internArbeidsforholdId()))
+                .toList();
+        dtoer.forEach(this::lagreArbeidsforholdValg);
+        var ab = hentAksjonspunktbekreftelse(ArbeidInntektsmeldingBekreftelse.class);
+        bekreftAksjonspunkt(ab);
     }
 }

@@ -85,6 +85,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInns
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
@@ -334,9 +335,11 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .morSøkerTermin(fordelingDtoMor, termindato, fpMottatDato, DekningsgradDto.AATI);
         saksbehandler.bekreftAksjonspunkt(papirSoknadForeldrepengerBekreftelse);
 
-        var avklarArbeidsforholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        if (!ArbeidInnteksmeldingToggle.erTogglePå()) {
+            var avklarArbeidsforholdBekreftelse = saksbehandler
+                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
+            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        }
 
         var avklarFaktaTerminBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class)
@@ -1441,9 +1444,11 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        var avklarArbeidsforholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        if (!ArbeidInnteksmeldingToggle.erTogglePå()) {
+            var avklarArbeidsforholdBekreftelse = saksbehandler
+                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
+            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        }
 
         assertThat(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"))
                 .as("Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +
@@ -1503,9 +1508,11 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .as("Behandlingsårsakstype")
                 .isEqualTo(BehandlingÅrsakType.RE_KLAGE_MED_END_INNTEKT);
 
-        var avklarArbeidsforholdBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse2);
+        if (!ArbeidInnteksmeldingToggle.erTogglePå()) {
+            var avklarArbeidsforholdBekreftelse = saksbehandler
+                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
+            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        }
 
         assertThat(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"))
                 .as("Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +

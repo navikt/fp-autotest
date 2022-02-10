@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
@@ -35,10 +36,12 @@ class Ytelser extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarArbeidsforholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        if (!ArbeidInnteksmeldingToggle.erTogglePå()) {
+            var avklarArbeidsforholdBekreftelse = saksbehandler
+                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
+            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
 
+        }
         assertThat(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"))
                 .as("Forventer at SYKEPENGER ligger til grunn for opptjening")
                 .isTrue();

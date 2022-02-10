@@ -40,6 +40,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
@@ -409,10 +410,14 @@ class BeregningVerdikjede extends FpsakTestBase {
         saksbehandler.gjenopptaBehandling();
 
         // FAKTA OM ARBEIDSFORHOLD
-        var avklarArbeidsforholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
+            saksbehandler.fortsettUteninntektsmeldinger();
+        } else {
+            var avklarArbeidsforholdBekreftelse = saksbehandler
+                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+                    .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
+            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        }
 
         // FAKTA OM BEREGNING
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
@@ -440,10 +445,14 @@ class BeregningVerdikjede extends FpsakTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
-        var avklarArbeidsforholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
-        saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
+            saksbehandler.fortsettUteninntektsmeldinger();
+        } else {
+            var avklarArbeidsforholdBekreftelse = saksbehandler
+                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
+                    .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
+            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
+        }
 
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
         assertThat(aksjonspunkt.erUbekreftet())
@@ -484,7 +493,6 @@ class BeregningVerdikjede extends FpsakTestBase {
     // @Test for å kunne teste automatisk besteberegning TODO?
     void skal_teste_automatisk_besteberegning() {
     }
-
 
     private void verifiserAndelerIPeriode(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
             BGAndelHelper BGAndelHelper) {
