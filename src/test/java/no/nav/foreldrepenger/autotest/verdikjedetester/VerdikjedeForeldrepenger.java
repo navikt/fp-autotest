@@ -1759,6 +1759,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
     @DisplayName("16: Far, adopsjon, bare far har rett, starter med opphold som trekker dager")
     @Description("Bare far har rett søker 40 uker adopsjon. Starter med 10 uker opphold som resulterer i trekk av tilsvarende" +
             "uker pga manglende aktivitetskrav. De siste 10 ukene av uttaket blir avslått pga manglende stønadsdager igjen")
+    // TODO: Mor uføre, far søker med rettighet mor uføre. MOr er registret uføre.
     void far_adopsjon_bfhr_starter_med_opphold_som_trekker_dager_pga_manglende_aktivitetskrav() {
         var familie = new Familie("563");
         var far = familie.far();
