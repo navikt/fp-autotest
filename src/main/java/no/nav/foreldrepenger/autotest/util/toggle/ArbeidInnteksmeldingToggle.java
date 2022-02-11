@@ -6,6 +6,6 @@ public class ArbeidInnteksmeldingToggle {
     }
 
     public static boolean erTogglePå() {
-        return false;
+        return true;
     }
 }
