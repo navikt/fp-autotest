@@ -536,7 +536,7 @@ jobs:
           private-key: ${{ secrets.FP_PRIVATE_KEY }}
           app-id: ${{ secrets.FP_APP_ID }}
 
-      - name: Deployer applikasjon til dev
+      - name: Deployer fpsak til dev og prod
         run: |
           curl -XPOST -u "x-access-token:${{ steps.get-token.outputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
