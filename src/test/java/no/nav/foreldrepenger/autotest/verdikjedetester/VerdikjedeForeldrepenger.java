@@ -12,7 +12,6 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_DØD_FORELDER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER;
@@ -42,9 +41,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeUtfallÅrsak;
@@ -361,7 +358,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .avslåManuellePerioderMedPeriodeResultatÅrsak(IKKE_STØNADSDAGER_IGJEN);
+                .avslåManuellePerioderMedPeriodeResultatÅrsak(PeriodeUtfallÅrsak.IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
@@ -516,12 +513,12 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         overstyringUttak.avslåPeriode(
                 fpStartdatoFar,
                 fpStartdatoFar.plusWeeks(8).minusDays(1),
-                IkkeOppfyltÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT,
+                PeriodeUtfallÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT,
                 true);
         overstyringUttak.innvilgPeriode(
                 fpStartdatoFar.plusWeeks(8),
                 fpStartdatoFar.plusWeeks(16).minusDays(1),
-                InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE,
+                PeriodeUtfallÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE,
                 StønadskontoType.FEDREKVOTE);
         overstyringUttak.splitPeriode(
                 fpStartdatoFar.plusWeeks(25),
@@ -530,11 +527,11 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         overstyringUttak.innvilgPeriode(
                 fpStartdatoFar.plusWeeks(25),
                 fpStartdatoFar.plusWeeks(47).minusDays(1),
-                InnvilgetÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE);
+                PeriodeUtfallÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE);
         overstyringUttak.avslåPeriode(
                 fpStartdatoFar.plusWeeks(47),
                 fpStartdatoFar.plusWeeks(55).minusDays(1),
-                IKKE_STØNADSDAGER_IGJEN);
+                PeriodeUtfallÅrsak.IKKE_STØNADSDAGER_IGJEN);
         overstyringUttak.setBegrunnelse("Begrunnelse fra Autotest.");
         overstyrer.overstyr(overstyringUttak);
 
@@ -1030,7 +1027,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
                 fpStartdatoFar,
                 fpStartdatoFar.plusWeeks(4).minusDays(1),
-                InnvilgetÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
+                PeriodeUtfallÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
                 true,
                 true,
                 100);
@@ -1041,14 +1038,14 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
                 fpStartdatoFar.plusWeeks(4),
                 fpStartdatoFar.plusWeeks(13).minusDays(1),
-                InnvilgetÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
+                PeriodeUtfallÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
                 true,
                 true,
                 100);
         fastsettUttaksperioderManueltBekreftelse.avslåPeriode(
                 fpStartdatoFar.plusWeeks(13),
                 fpStartdatoFar.plusWeeks(17).minusDays(1),
-                IKKE_STØNADSDAGER_IGJEN);
+                PeriodeUtfallÅrsak.IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
@@ -1363,14 +1360,14 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
                 fellesperiodeStartMor,
                 fellesperiodeStartFar.minusDays(1),
-                InnvilgetÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
+                PeriodeUtfallÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
                 false,
                 true,
                 100);
         fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
                 fellesperiodeStartFar,
                 fellesperiodeSluttMor,
-                InnvilgetÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
+                PeriodeUtfallÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
                 false,
                 true,
                 60);
@@ -1382,7 +1379,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
                 fellesperiodeSluttMor.plusDays(1),
                 fomSistePeriode.minusDays(1),
-                InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
+                PeriodeUtfallÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
         var saldoer = saksbehandler
                 .hentSaldoerGittUttaksperioder(fastsettUttaksperioderManueltBekreftelseMor.getPerioder());
         var disponibleFellesdager = saldoer.getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo();
@@ -1393,11 +1390,11 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
                 fomSistePeriode,
                 sisteDagMedFellesperiode,
-                InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
+                PeriodeUtfallÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
         fastsettUttaksperioderManueltBekreftelseMor.avslåPeriode(
                 sisteDagMedFellesperiode.plusDays(1),
                 fellesperiodeSluttFar,
-                IKKE_STØNADSDAGER_IGJEN);
+                PeriodeUtfallÅrsak.IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
@@ -1589,7 +1586,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
         fastsettUttaksperioderManueltBekreftelse
-                .avslåManuellePerioderMedPeriodeResultatÅrsak(IkkeOppfyltÅrsak.BARNET_ER_DØD);
+                .avslåManuellePerioderMedPeriodeResultatÅrsak(PeriodeUtfallÅrsak.BARNET_ER_DØD);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum PeriodeUtfallÅrsak {
+public enum PeriodeResultatÅrsak {
 
     UKJENT("-", "Ikke definert"),
 
@@ -134,12 +134,12 @@ public enum PeriodeUtfallÅrsak {
     private final String navn;
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static PeriodeUtfallÅrsak fraKode(@JsonProperty(value = "kode") Object node) {
+    public static PeriodeResultatÅrsak fraKode(@JsonProperty(value = "kode") Object node) {
         if (node == null) {
             return null;
         }
-        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
-        return Arrays.stream(PeriodeUtfallÅrsak.values())
+        var kode = TempAvledeKode.getVerdi(PeriodeResultatÅrsak.class, node, "kode");
+        return Arrays.stream(PeriodeResultatÅrsak.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
                 .orElseThrow(() -> new UnexpectedInputException("Ikke støttet PeriodeUtfallÅrsak " + kode));
@@ -158,7 +158,7 @@ public enum PeriodeUtfallÅrsak {
         return KODEVERK;
     }
 
-    PeriodeUtfallÅrsak(String kode, String navn) {
+    PeriodeResultatÅrsak(String kode, String navn) {
         this.kode = kode;
         this.navn = navn;
     }

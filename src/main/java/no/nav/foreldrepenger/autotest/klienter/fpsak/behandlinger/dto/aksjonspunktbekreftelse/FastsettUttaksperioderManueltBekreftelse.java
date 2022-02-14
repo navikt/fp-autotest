@@ -11,10 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeUtfallÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -53,7 +50,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         return this;
     }
 
-    public FastsettUttaksperioderManueltBekreftelse innvilgManuellePerioder(PeriodeResultatÅrsak periodeResultatÅrsak) {
+    public FastsettUttaksperioderManueltBekreftelse innvilgManuellePerioder(PeriodeUtfallÅrsak periodeResultatÅrsak) {
         for (UttakResultatPeriode uttaksperiode : perioder) {
             if ((uttaksperiode.getManuellBehandlingÅrsak() != null)
                     && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
@@ -73,7 +70,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         return this;
     }
 
-    public FastsettUttaksperioderManueltBekreftelse avslåManuellePerioderMedPeriodeResultatÅrsak(PeriodeResultatÅrsak periodeResultatÅrsak) {
+    public FastsettUttaksperioderManueltBekreftelse avslåManuellePerioderMedPeriodeResultatÅrsak(PeriodeUtfallÅrsak periodeResultatÅrsak) {
         for (UttakResultatPeriode uttakPeriode : perioder) {
             if (!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
                 avslåPeriode(uttakPeriode, periodeResultatÅrsak, false);
@@ -98,7 +95,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     public FastsettUttaksperioderManueltBekreftelse innvilgPeriode(LocalDate fra,
                                                                    LocalDate til,
-                                                                   PeriodeResultatÅrsak periodeResultatÅrsak) {
+                                                                   PeriodeUtfallÅrsak periodeResultatÅrsak) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         innvilgPeriode(periode, periodeResultatÅrsak);
         return this;
@@ -106,7 +103,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     public FastsettUttaksperioderManueltBekreftelse innvilgPeriode(LocalDate fra,
                                                                    LocalDate til,
-                                                                   PeriodeResultatÅrsak periodeResultatÅrsak,
+                                                                   PeriodeUtfallÅrsak periodeResultatÅrsak,
                                                                    StønadskontoType stønadskonto) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         innvilgPeriode(periode, periodeResultatÅrsak, stønadskonto);
@@ -115,7 +112,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     public FastsettUttaksperioderManueltBekreftelse innvilgPeriode(LocalDate fra,
                                                                    LocalDate til,
-                                                                   PeriodeResultatÅrsak periodeResultatÅrsak,
+                                                                   PeriodeUtfallÅrsak periodeResultatÅrsak,
                                                                    boolean flerbarnsdager,
                                                                    boolean samtidigUttak,
                                                                    int samtidigUttakProsent) {
@@ -128,13 +125,13 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public FastsettUttaksperioderManueltBekreftelse avslåPeriode(LocalDate fra, LocalDate til) {
-        avslåPeriode(fra, til, IkkeOppfyltÅrsak.UKJENT);
+        avslåPeriode(fra, til, PeriodeUtfallÅrsak.UKJENT);
         return this;
     }
 
     public FastsettUttaksperioderManueltBekreftelse avslåPeriode(LocalDate fra,
                                                                  LocalDate til,
-                                                                 PeriodeResultatÅrsak periodeResultatÅrsak) {
+                                                                 PeriodeUtfallÅrsak periodeResultatÅrsak) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         avslåPeriode(periode, periodeResultatÅrsak, false);
         return this;
@@ -142,7 +139,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     public FastsettUttaksperioderManueltBekreftelse avslåPeriode(LocalDate fra,
                                                                  LocalDate til,
-                                                                 PeriodeResultatÅrsak periodeResultatÅrsak,
+                                                                 PeriodeUtfallÅrsak periodeResultatÅrsak,
                                                                  boolean trekkDager) {
         UttakResultatPeriode periode = finnPeriode(fra, til);
         avslåPeriode(periode, periodeResultatÅrsak, trekkDager);
@@ -177,10 +174,10 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     // PRIVATE METODER //
 
     private void innvilgPeriode(UttakResultatPeriode periode) {
-        innvilgPeriode(periode, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
+        innvilgPeriode(periode, PeriodeUtfallÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
 
-    private void innvilgPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, StønadskontoType stønadskonto) {
+    private void innvilgPeriode(UttakResultatPeriode periode, PeriodeUtfallÅrsak periodeResultatÅrsak, StønadskontoType stønadskonto) {
         periode.setPeriodeResultatType(PeriodeResultatType.INNVILGET);
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
         periode.setPeriodeUtfallÅrsak(PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode()));
@@ -191,7 +188,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
     }
 
-    private void innvilgPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak) {
+    private void innvilgPeriode(UttakResultatPeriode periode, PeriodeUtfallÅrsak periodeResultatÅrsak) {
         periode.setPeriodeResultatType(PeriodeResultatType.INNVILGET);
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
         periode.setPeriodeUtfallÅrsak(PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode()));
@@ -230,10 +227,10 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     private void avslåPeriode(UttakResultatPeriode periode) {
-        avslåPeriode(periode, IkkeOppfyltÅrsak.UKJENT, false);
+        avslåPeriode(periode, PeriodeUtfallÅrsak.UKJENT, false);
     }
 
-    private void avslåPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, boolean trekkDager) {
+    private void avslåPeriode(UttakResultatPeriode periode, PeriodeUtfallÅrsak periodeResultatÅrsak, boolean trekkDager) {
         periode.setPeriodeResultatType(PeriodeResultatType.AVSLÅTT);
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
         periode.setPeriodeUtfallÅrsak(PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode()));
@@ -263,12 +260,12 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     private void innvilgAktiviteterOgAvslåResten(UttakResultatPeriode periode, List<String> organisasjonsnummere) {
-        innvilgAktiviteterOgAvslåResten(periode, organisasjonsnummere, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
+        innvilgAktiviteterOgAvslåResten(periode, organisasjonsnummere, PeriodeUtfallÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
 
     private void innvilgAktiviteterOgAvslåResten(UttakResultatPeriode periode,
                                                  List<String> organisasjonsnummere,
-                                                 PeriodeResultatÅrsak periodeResultatÅrsak) {
+                                                 PeriodeUtfallÅrsak periodeResultatÅrsak) {
         if (organisasjonsnummere == null || organisasjonsnummere.isEmpty()) {
             throw new IllegalArgumentException("Bruk avslåPeriode() istedenfor!");
         }
