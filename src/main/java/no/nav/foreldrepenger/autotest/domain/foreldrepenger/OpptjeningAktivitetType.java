@@ -45,7 +45,7 @@ public enum OpptjeningAktivitetType {
         if (node == null) {
             return null;
         }
-        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
+        var kode = TempAvledeKode.getVerdi(OpptjeningAktivitetType.class, node, "kode");
         return Arrays.stream(OpptjeningAktivitetType.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()

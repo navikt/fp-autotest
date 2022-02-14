@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OppholdÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeUtfallÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
@@ -22,6 +23,7 @@ public class UttakResultatPeriode implements Serializable {
     protected List<UttakResultatPeriodeAktivitet> aktiviteter;
     protected PeriodeResultatType periodeResultatType;
     protected String begrunnelse;
+    protected PeriodeResultatÅrsak periodeResultatÅrsak;
     protected PeriodeUtfallÅrsak periodeUtfallÅrsak;
     protected Kode manuellBehandlingÅrsak;
     protected Kode graderingAvslagÅrsak;
@@ -44,6 +46,15 @@ public class UttakResultatPeriode implements Serializable {
 
     public void setPeriodeResultatType(PeriodeResultatType periodeResultatType) {
         this.periodeResultatType = periodeResultatType;
+    }
+
+    public PeriodeResultatÅrsak getPeriodeResultatÅrsak() {
+        return periodeResultatÅrsak;
+    }
+
+    public void setPeriodeResultatÅrsak(PeriodeResultatÅrsak periodeResultatÅrsak) {
+        this.periodeUtfallÅrsak = PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode());
+        this.periodeResultatÅrsak = periodeResultatÅrsak;
     }
 
     public PeriodeUtfallÅrsak getPeriodeUtfallÅrsak() {

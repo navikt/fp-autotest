@@ -32,7 +32,7 @@ public enum VurderÅrsak {
         if (node == null) {
             return null;
         }
-        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
+        var kode = TempAvledeKode.getVerdi(VurderÅrsak.class, node, "kode");
         return Arrays.stream(VurderÅrsak.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()

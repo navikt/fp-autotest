@@ -27,7 +27,7 @@ public enum OmsorgsovertakelseVilkårType {
         if (node == null) {
             return null;
         }
-        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
+        var kode = TempAvledeKode.getVerdi(OmsorgsovertakelseVilkårType.class, node, "kode");
         return Arrays.stream(OmsorgsovertakelseVilkårType.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()

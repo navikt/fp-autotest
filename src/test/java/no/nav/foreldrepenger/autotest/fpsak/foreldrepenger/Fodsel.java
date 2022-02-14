@@ -35,7 +35,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeUtfallÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
@@ -815,7 +815,7 @@ class Fodsel extends FpsakTestBase {
         assertThat(uttaksperioder).hasSize(4);
         for (UttakResultatPeriode periode : uttaksperioder) {
             assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
-            assertThat(periode.getPeriodeUtfallÅrsak().getKode()).isNotEqualTo(PeriodeUtfallÅrsak.UKJENT.getKode());
+            assertThat(periode.getPeriodeResultatÅrsak().getKode()).isNotEqualTo(PeriodeResultatÅrsak.UKJENT.getKode());
             assertThat(periode.getAktiviteter()).hasSize(2);
             for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
                 assertThat(aktivitet.getArbeidsgiverReferanse()).isNotNull();
@@ -931,7 +931,7 @@ class Fodsel extends FpsakTestBase {
         // Periode søkt mer enn 49 uker er avslått automatisk
         var periodeMerEnn49Uker = uttaksperioder.get(3);
         assertThat(periodeMerEnn49Uker.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.AVSLÅTT);
-        assertThat(periodeMerEnn49Uker.getPeriodeUtfallÅrsak()).isEqualTo(PeriodeUtfallÅrsak.IKKE_STØNADSDAGER_IGJEN);
+        assertThat(periodeMerEnn49Uker.getPeriodeResultatÅrsak()).isEqualTo(PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN);
         assertThat(periodeMerEnn49Uker.getAktiviteter().get(0).getUtbetalingsgrad())
                 .isEqualByComparingTo(BigDecimal.valueOf(0));
         assertThat(periodeMerEnn49Uker.getAktiviteter().get(0).getTrekkdagerDesimaler())
@@ -1076,15 +1076,15 @@ class Fodsel extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().stream().filter(u -> PeriodeResultatType.AVSLÅTT.equals(u.getPeriodeResultatType())).count())
                 .as("Forventer at det er 4 avslåtte uttaksperioder")
                 .isEqualTo(4);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().get(0).getPeriodeUtfallÅrsak())
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().get(0).getPeriodeResultatÅrsak())
                 .as("Forventer at første uke avslått MSP")
-                .isEqualTo(PeriodeUtfallÅrsak.BARE_FAR_RETT_IKKE_SØKT);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().get(5).getPeriodeUtfallÅrsak())
+                .isEqualTo(PeriodeResultatÅrsak.BARE_FAR_RETT_IKKE_SØKT);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().get(5).getPeriodeResultatÅrsak())
                 .as("Forventer at det er en lengre tom på konto periode")
-                .isEqualTo(PeriodeUtfallÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().get(6).getPeriodeUtfallÅrsak())
+                .isEqualTo(PeriodeResultatÅrsak.FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR);
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperioder().get(6).getPeriodeResultatÅrsak())
                 .as("Forventer at det er en lengre tom på konto periode")
-                .isEqualTo(PeriodeUtfallÅrsak.IKKE_STØNADSDAGER_IGJEN);
+                .isEqualTo(PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN);
 
     }
 

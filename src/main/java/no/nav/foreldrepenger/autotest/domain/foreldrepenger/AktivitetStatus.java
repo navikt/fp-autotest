@@ -38,7 +38,7 @@ public enum AktivitetStatus {
         if (node == null) {
             return null;
         }
-        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
+        var kode = TempAvledeKode.getVerdi(AktivitetStatus.class, node, "kode");
         return Arrays.stream(AktivitetStatus.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()

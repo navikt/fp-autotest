@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeUtfallÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
@@ -403,16 +403,16 @@ class Revurdering extends FpsakTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
                 .as("Forventer at det er 2 avslåtte uttaksperioder")
                 .isEqualTo(2);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeUtfallÅrsak())
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
-                .isEqualTo(PeriodeUtfallÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
+                .isEqualTo(PeriodeResultatÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getAktiviteter().get(0).getTrekkdagerDesimaler())
                 .as("Trekkdager")
                 .isNotZero();
 
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getPeriodeUtfallÅrsak())
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
-                .isEqualTo(PeriodeUtfallÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
+                .isEqualTo(PeriodeResultatÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
         assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getAktiviteter().get(0).getTrekkdagerDesimaler())
                 .as("Trekkdager")
                 .isNotZero();
