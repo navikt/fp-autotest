@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeUtfallÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
@@ -24,7 +23,6 @@ public class UttakResultatPeriode implements Serializable {
     protected PeriodeResultatType periodeResultatType;
     protected String begrunnelse;
     protected PeriodeResultatÅrsak periodeResultatÅrsak;
-    protected PeriodeUtfallÅrsak periodeUtfallÅrsak;
     protected Kode manuellBehandlingÅrsak;
     protected Kode graderingAvslagÅrsak;
     protected Boolean flerbarnsdager;
@@ -53,16 +51,7 @@ public class UttakResultatPeriode implements Serializable {
     }
 
     public void setPeriodeResultatÅrsak(PeriodeResultatÅrsak periodeResultatÅrsak) {
-        this.periodeUtfallÅrsak = PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode());
         this.periodeResultatÅrsak = periodeResultatÅrsak;
-    }
-
-    public PeriodeUtfallÅrsak getPeriodeUtfallÅrsak() {
-        return periodeUtfallÅrsak;
-    }
-
-    public void setPeriodeUtfallÅrsak(PeriodeUtfallÅrsak periodeUtfallÅrsak) {
-        this.periodeUtfallÅrsak = periodeUtfallÅrsak;
     }
 
     public UttakUtsettelseÅrsak getUtsettelseType() {
