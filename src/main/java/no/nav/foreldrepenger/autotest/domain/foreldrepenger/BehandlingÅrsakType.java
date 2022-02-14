@@ -72,7 +72,7 @@ public enum BehandlingÅrsakType {
         if (node == null) {
             return null;
         }
-        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
+        var kode = TempAvledeKode.getVerdi(BehandlingÅrsakType.class, node, "kode");
         return Arrays.stream(BehandlingÅrsakType.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()

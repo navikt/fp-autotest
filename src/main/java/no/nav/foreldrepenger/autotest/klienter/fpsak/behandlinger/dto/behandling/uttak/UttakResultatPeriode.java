@@ -53,6 +53,7 @@ public class UttakResultatPeriode implements Serializable {
     }
 
     public void setPeriodeResultatÅrsak(PeriodeResultatÅrsak periodeResultatÅrsak) {
+        this.periodeUtfallÅrsak = PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode());
         this.periodeResultatÅrsak = periodeResultatÅrsak;
     }
 

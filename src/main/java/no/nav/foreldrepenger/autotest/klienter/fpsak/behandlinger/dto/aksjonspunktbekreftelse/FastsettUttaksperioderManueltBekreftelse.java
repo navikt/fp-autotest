@@ -11,11 +11,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnvilgetÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeUtfallÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
@@ -128,7 +125,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public FastsettUttaksperioderManueltBekreftelse avslåPeriode(LocalDate fra, LocalDate til) {
-        avslåPeriode(fra, til, IkkeOppfyltÅrsak.UKJENT);
+        avslåPeriode(fra, til, PeriodeResultatÅrsak.UKJENT);
         return this;
     }
 
@@ -177,13 +174,12 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     // PRIVATE METODER //
 
     private void innvilgPeriode(UttakResultatPeriode periode) {
-        innvilgPeriode(periode, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
+        innvilgPeriode(periode, PeriodeResultatÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
 
     private void innvilgPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, StønadskontoType stønadskonto) {
         periode.setPeriodeResultatType(PeriodeResultatType.INNVILGET);
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setPeriodeUtfallÅrsak(PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode()));
         periode.setBegrunnelse("Perioden er innvilget av Autotest.");
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             aktivitet.setStønadskontoType(stønadskonto);
@@ -194,7 +190,6 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     private void innvilgPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak) {
         periode.setPeriodeResultatType(PeriodeResultatType.INNVILGET);
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setPeriodeUtfallÅrsak(PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode()));
         periode.setBegrunnelse("Perioden er innvilget av Autotest.");
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             innvilgAktivitetForPeriode(periode, aktivitet);
@@ -230,13 +225,12 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     private void avslåPeriode(UttakResultatPeriode periode) {
-        avslåPeriode(periode, IkkeOppfyltÅrsak.UKJENT, false);
+        avslåPeriode(periode, PeriodeResultatÅrsak.UKJENT, false);
     }
 
     private void avslåPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, boolean trekkDager) {
         periode.setPeriodeResultatType(PeriodeResultatType.AVSLÅTT);
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setPeriodeUtfallÅrsak(PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode()));
         periode.setBegrunnelse("Perioden er avslått av Autotest.");
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             avslåAktivitet(aktivitet, periode, trekkDager);
@@ -263,7 +257,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     private void innvilgAktiviteterOgAvslåResten(UttakResultatPeriode periode, List<String> organisasjonsnummere) {
-        innvilgAktiviteterOgAvslåResten(periode, organisasjonsnummere, InnvilgetÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
+        innvilgAktiviteterOgAvslåResten(periode, organisasjonsnummere, PeriodeResultatÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
     }
 
     private void innvilgAktiviteterOgAvslåResten(UttakResultatPeriode periode,
@@ -274,7 +268,6 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
         }
         periode.setPeriodeResultatType(PeriodeResultatType.INNVILGET);
         periode.setPeriodeResultatÅrsak(periodeResultatÅrsak);
-        periode.setPeriodeUtfallÅrsak(PeriodeUtfallÅrsak.fraKode(periodeResultatÅrsak.getKode()));
         periode.setBegrunnelse("Innvilger angitte aktiviteter og avslå resten");
         for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
             if (organisasjonsnummere.contains(aktivitet.getArbeidsgiverReferanse())) {

@@ -128,7 +128,7 @@ public enum PeriodeUtfallÅrsak {
     BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_DOKUMENTERT("4117", "§14-11, jf §21-3: Barnets innleggelse første 6 uker ikke dokumentert"),
     ;
 
-    public static final String KODEVERK = "INNVILGET_AARSAK";
+    public static final String KODEVERK = "PERIODE_UTFALL_AARSAK";
 
     private final String kode;
     private final String navn;

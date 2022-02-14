@@ -28,7 +28,7 @@ public enum MedlemskapManuellVurderingType {
         if (node == null) {
             return null;
         }
-        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
+        var kode = TempAvledeKode.getVerdi(MedlemskapManuellVurderingType.class, node, "kode");
         return Arrays.stream(MedlemskapManuellVurderingType.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()

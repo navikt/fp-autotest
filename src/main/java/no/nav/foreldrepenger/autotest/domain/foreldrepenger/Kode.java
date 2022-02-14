@@ -51,7 +51,7 @@ public class Kode implements Serializable {
         if (node == null) {
             return null;
         }
-        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
+        var kode = TempAvledeKode.getVerdi(PeriodeResultatÅrsak.class, node, "kode");
         return new Kode(kode);
     }
 

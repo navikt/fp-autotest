@@ -67,7 +67,7 @@ public enum Venteårsak {
         if (node == null) {
             return null;
         }
-        var kode = TempAvledeKode.getVerdi(PeriodeUtfallÅrsak.class, node, "kode");
+        var kode = TempAvledeKode.getVerdi(Venteårsak.class, node, "kode");
         return Arrays.stream(Venteårsak.values())
                 .filter(value -> value.getKode().equalsIgnoreCase(kode))
                 .findFirst()
