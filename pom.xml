@@ -23,7 +23,7 @@
         <aspectj.version>1.9.8</aspectj.version>
         <jackson.version>2.13.1</jackson.version>
         <jersey.version>3.0.3</jersey.version>
-        <fp-kontrakter.version>6.1.4</fp-kontrakter.version>
+        <fp-kontrakter.version>6.1.5</fp-kontrakter.version>
     </properties>
 
     <profiles>
