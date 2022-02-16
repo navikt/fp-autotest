@@ -92,7 +92,6 @@ services:
     mem_limit: 1gb
     shm_size: 256mb
     environment:
-      - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
       - "FPABAKUS_URL=http://fpabakus:8080/fpabakus"
       - "ABAKUS_CALLBACK_URL=http://fpsak:8080/fpsak/api/registerdata/iay/callback"
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
@@ -345,7 +344,6 @@ services:
       - "common.env"
     environment:
       - "LOADBALANCER_URL=http://localhost:8065"
-      - "PIP_USERS=im-just-a-fake-code,srvfpoppdrag,srvfplos,srvfptilbake,srvfpformidling"
       - "KAFKA_PDL_LEESAH_TOPIC=aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
