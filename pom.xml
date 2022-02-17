@@ -16,7 +16,7 @@
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
 
-        <allure.version>2.17.2</allure.version>
+        <allure.version>2.17.3</allure.version>
         <vtp.versjon>1.1.5</vtp.versjon>
         <dokumentgenerator.version>3.2.1</dokumentgenerator.version>
         <felles.versjon>4.1.17</felles.versjon>
