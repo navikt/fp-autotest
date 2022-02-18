@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.svangerskapspenger;
 
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,7 +10,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -19,11 +19,13 @@ import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
+import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
@@ -198,13 +200,80 @@ class Førstegangsbehandling extends FpsakTestBase {
     }
 
     @Test
-    @Disabled
-    @DisplayName("mor_SVP_imFørSøknad")
-    @Description("mor_SVP_imFørSøknad")
-    void mor_SVP_imFørSøknad() {
+    @DisplayName("Mor søker SVP og FP - revurder SVP")
+    @Description("Mor søker SVP og FP - revurder SVP, SVP seks uker før termin, FP tre uker før tidligere termin")
+    void revurder_svp_pga_innvilget_fp() {
+        // Innvilg SVP fra nå til Termin-3uker - tom fredag
+        var familie = new Familie("502", fordel);
+        var mor = familie.mor();
+        var termindato = Virkedager.helgejustertTilMandag(LocalDate.now().plusWeeks(6));
+        var arbeidsforholdene = mor.arbeidsforholdene();
+        var arbeidsforhold1 = arbeidsforholdene.get(0).arbeidsgiverIdentifikasjon();
+        var forsteTilrettelegging = TilretteleggingsErketyper.helTilrettelegging(
+                LocalDate.now().minusWeeks(1),
+                termindato.minusWeeks(3).minusDays(3),
+                ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsforhold1));
+        var søknad = lagSvangerskapspengerSøknad(BrukerRolle.MOR, termindato, List.of(forsteTilrettelegging));
+        var saksnummer = mor.søk(søknad.build());
 
-        // TODO: Gjør ferdig, feiler på tilkjentytelse.
-        // TODO (OL) Utvide med videre funksjonalitet
+        var arbeidsgivere = mor.arbeidsgivere();
+        arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummer);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+
+        beslutter.hentFagsak(saksnummer);
+
+        var bekreftelse = beslutter
+                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
+
+        // Innvilg FP fom Termin-4uker
+        var søknadFP = lagSøknadForeldrepengerTermin(termindato.minusWeeks(1), BrukerRolle.MOR)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var saksnummerFP = mor.søk(søknadFP.build());
+
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummerFP, termindato.minusWeeks(4));
+
+        beslutter.hentFagsak(saksnummerFP);
+        beslutter.ventTilAvsluttetBehandling();
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN);
+
+        // Revurder SVP - siste periode skal bli avslått i uttak og tilkjent dagsats = 0
+        overstyrer.hentFagsak(saksnummer);
+        overstyrer.ventPåOgVelgRevurderingBehandling();
+        overstyrer.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
+        overstyrer.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
+        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+
+        beslutter.hentFagsak(saksnummer);
+
+        var bekreftelse2 = beslutter
+                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse2);
+
+        var tilkjentYtelsePerioder = beslutter.valgtBehandling.getBeregningResultatForeldrepenger()
+                .getPerioder();
+        assertThat(tilkjentYtelsePerioder.size())
+                .as("Antall tilkjent ytelses peridoer")
+                .isGreaterThan(1);
+        assertThat(tilkjentYtelsePerioder.get(1).getFom())
+                .as("Avslått tilkjent ytelse Fom")
+                .isEqualTo(termindato.minusWeeks(4));
+        assertThat(tilkjentYtelsePerioder.get(1).getDagsats())
+                .as("Avslått tilkjent ytelse med dagsats 0")
+                .isZero();
+
 
     }
 }
