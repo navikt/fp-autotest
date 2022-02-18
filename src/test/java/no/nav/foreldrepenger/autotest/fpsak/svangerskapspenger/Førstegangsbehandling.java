@@ -267,6 +267,7 @@ class Førstegangsbehandling extends FpsakTestBase {
         assertThat(tilkjentYtelsePerioder.size())
                 .as("Antall tilkjent ytelses peridoer")
                 .isGreaterThan(1);
+        // Litt datogamble
         assertThat(tilkjentYtelsePerioder.get(1).getFom())
                 .as("Avslått tilkjent ytelse Fom")
                 .isEqualTo(termindato.minusWeeks(4));
