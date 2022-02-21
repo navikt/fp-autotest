@@ -459,6 +459,9 @@ class Revurdering extends FpsakTestBase {
 
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFP, termindato.minusWeeks(3));
 
+        saksbehandler.hentFagsak(saksnummerFP);
+        saksbehandler.ventTilAvsluttetBehandling();
+
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarLopendeVedtakBekreftelse.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
