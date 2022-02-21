@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -80,6 +82,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.innsyn.dto.Dekningsgrad;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
@@ -98,6 +101,8 @@ import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 
 @Tag("verdikjede")
 class VerdikjedeForeldrepenger extends FpsakTestBase {
+
+    private static final Logger LOG = LoggerFactory.getLogger(VerdikjedeForeldrepenger.class);
 
     @Test
     @DisplayName("1: Mor automatisk førstegangssøknad termin (med fødselshendelse), aleneomsorg og avvik i beregning.")
@@ -191,6 +196,11 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
                 .as("Saldo for stønadskontoen FORELDREPENGER")
                 .isEqualTo(70);
+
+
+        var saker = mor.innsyn().hentSaker();
+
+        LOG.info("Saker: {}", saker);
     }
 
     @Test
@@ -1820,6 +1830,44 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .isEqualTo(PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN);
     }
 
+    @Test
+    @DisplayName("17: Mor happy case - verifiser innsyn har korrekt data")
+    @Description("")
+    void mor_innsyn_verifsere() {
+        var familie = new Familie("500");
+        /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
+        var fødselsdato = familie.barn().fødselsdato();
+        var fpStartdatoMor = fødselsdato.minusWeeks(3);
+        var fpSluttdatoMor = fødselsdato.plusWeeks(23);
+        var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(familie,
+                fødselsdato, fpStartdatoMor, fpSluttdatoMor);
+
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        var mor = familie.mor();
+        var saker = mor.innsyn().hentSaker();
+        assertThat(saker.engangsstønad()).isEmpty();
+        assertThat(saker.svangerskapspenger()).isEmpty();
+        assertThat(saker.foreldrepenger()).hasSize(1);
+        var innsynForeldrepenger = saker.foreldrepenger().iterator().next();
+        assertThat(innsynForeldrepenger.annenPart()).isNotNull();
+        assertThat(innsynForeldrepenger.dekningsgrad()).isEqualTo(Dekningsgrad.HUNDRE);
+        assertThat(innsynForeldrepenger.barn()).hasSize(1);
+
+        // Sammenlign uttak fra fpfrontend og innsyn for bruker
+        var uttakResultatPeriodes = saksbehandler.valgtBehandling.hentUttaksperioder();
+        var vedtaksperioderInnsyn = innsynForeldrepenger.gjeldendeVedtak().perioder();
+        assertThat(uttakResultatPeriodes).hasSize(3);
+        assertThat(uttakResultatPeriodes.size()).isEqualTo(vedtaksperioderInnsyn.size());
+
+        var gjeldendeVedtak = innsynForeldrepenger.gjeldendeVedtak().perioder().get(0);
+
+
+
+
+    }
 
 
     private Long sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,

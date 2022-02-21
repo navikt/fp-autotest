@@ -37,7 +37,7 @@ public abstract class AksjonspunktBekreftelse {
     }
 
     @SuppressWarnings("unused")
-    public AksjonspunktBekreftelse() {
+    protected AksjonspunktBekreftelse() {
         if (null == this.getClass().getAnnotation(BekreftelseKode.class)) {
             throw new RuntimeException("Kode annotation er ikke satt for " + this.getClass().getTypeName());
         }
@@ -47,13 +47,13 @@ public abstract class AksjonspunktBekreftelse {
     public static AksjonspunktBekreftelse fromKode(String kode) throws InstantiationException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 
-        for (Class<? extends AksjonspunktBekreftelse> klasse : aksjonspunktBekreftelseClasses) {
-
-            BekreftelseKode annotation = klasse.getDeclaredAnnotation(BekreftelseKode.class);
+        for (var klasse : aksjonspunktBekreftelseClasses) {
+            var annotation = klasse.getDeclaredAnnotation(BekreftelseKode.class);
 
             if (Modifier.isAbstract(klasse.getModifiers())) {
                 continue; // trenger trenger ikke skjekke klasser som er abstrakte
-            } else if (annotation == null) {
+            }
+            if (annotation == null) {
                 LOG.warn("Aksjonspunkt mangler annotasjon='{}'", klasse.getName());
             } else if (annotation.kode().equals(kode)) {
                 return klasse.getConstructor().newInstance();

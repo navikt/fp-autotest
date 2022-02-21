@@ -14,7 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import jakarta.ws.rs.NotSupportedException;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
+import no.nav.foreldrepenger.autotest.aktoerer.innsyn.Innsyn;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
@@ -32,6 +34,7 @@ public abstract class Søker {
     private final InntektYtelseModell inntektYtelseModell;
     private final Innsender innsender;
 
+    private Innsyn innsyn;
     private Long saksnummer = null;
 
     Søker(Fødselsnummer fødselsnummer, AktørId aktørId, InntektYtelseModell inntektYtelseModell, Innsender innsender) {
@@ -47,6 +50,13 @@ public abstract class Søker {
 
     public AktørId aktørId() {
         return aktørId;
+    }
+
+    public Innsyn innsyn() {
+        if (innsyn == null) {
+            innsyn = new Innsyn(fødselsnummer);
+        }
+        return innsyn;
     }
 
     public Arbeidsforhold arbeidsforhold() {
@@ -159,7 +169,7 @@ public abstract class Søker {
     }
 
     public Søknad lagSøknad() {
-        return null;
+        throw new NotSupportedException();
     }
 
     public long søk(Søknad søknad) {

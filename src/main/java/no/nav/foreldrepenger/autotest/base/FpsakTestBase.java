@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.autotest.base;
 
 import static org.mockito.Mockito.when;
 
-import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import org.junit.jupiter.api.BeforeEach;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -15,6 +14,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Historikkinns
 import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Søker;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
+import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 
 public abstract class FpsakTestBase {
 

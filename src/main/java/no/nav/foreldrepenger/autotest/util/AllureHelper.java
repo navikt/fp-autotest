@@ -34,6 +34,7 @@ public final class AllureHelper {
 
     @Step("[{behandlingsUUID}] Venter på behandlingsstatus {status}")
     public static void debugBehandlingsstatus(BehandlingStatus status, UUID behandlingsUUID) {
+        // Dette legger til et punkt i allure rapporten som matcher det som står i @Step
     }
 
     @Step("Sender inn dokument {type} med innhold:")
@@ -43,6 +44,7 @@ public final class AllureHelper {
 
     @Step("Fritekstlogg {fritekst}")
     public static void debugFritekst(String fritekst) {
+        // Dette legger til et punkt i allure rapporten som matcher det som står i @Step
     }
 
     public static void debugLoggHistorikkinnslag(List<HistorikkInnslag> historikkInnslagList) {
@@ -56,6 +58,7 @@ public final class AllureHelper {
 
     @Step("Informasjon om historikkinnslag: {historikkinnslag}")
     private static void loggHistorikkinnslag(String historikkinnslag) {
+        // Dette legger til et punkt i allure rapporten som matcher det som står i @Step
     }
 
     @Step("Informasjon om aksjonspunkt:")
