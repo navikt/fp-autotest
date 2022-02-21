@@ -462,7 +462,10 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerFP);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarLopendeVedtakBekreftelse.class);
+        var avklarLopendeVedtakBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarLopendeVedtakBekreftelse.class)
+                .bekreftGodkjent();
+        saksbehandler.bekreftAksjonspunkt(avklarLopendeVedtakBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
