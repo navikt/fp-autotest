@@ -262,6 +262,8 @@ class Førstegangsbehandling extends FpsakTestBase {
                 .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse2);
 
+
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
         var tilkjentYtelsePerioder = beslutter.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
         assertThat(tilkjentYtelsePerioder.size())
