@@ -450,39 +450,30 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
-        // Søker for barn 2 med termin om 6 uker og blir innvilget med start om 3 uker.
+        // Barn 2: Søker for barn 2 med termin om 6 uker og blir innvilget med start om 3 uker.
         var termindato = Virkedager.helgejustertTilMandag(LocalDate.now().plusWeeks(6));
-
         var søknadFP = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummerFP = mor.søk(søknadFP.build());
-
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFP, termindato.minusWeeks(3));
 
         saksbehandler.hentFagsak(saksnummerFP);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-
         var avklarLopendeVedtakBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarLopendeVedtakBekreftelse.class)
                 .bekreftGodkjent();
         saksbehandler.bekreftAksjonspunkt(avklarLopendeVedtakBekreftelse);
+
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummerFP);
+        var bekreftelseRevurdering = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseRevurdering);
 
-        beslutter.hentFagsak(saksnummer);
-        beslutter.ventPåOgVelgFørstegangsbehandling();
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-
-        // Revurderer barn 1 og skal få avslått siste uttaksperiode med rett årsak
+        // Barn 1: Revurdering skal avslå siste uttaksperiode med rett årsak
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN);
-        // Får aksjonspunkt 5056 pga "manuelt opprettet"
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-
-        saksbehandler.hentFagsak(saksnummer);
 
         var sisteUttaksperiode = saksbehandler.valgtBehandling.getUttakResultatPerioder()
                 .getPerioderSøker().stream().max(Comparator.comparing(UttakResultatPeriode::getFom)).get();
