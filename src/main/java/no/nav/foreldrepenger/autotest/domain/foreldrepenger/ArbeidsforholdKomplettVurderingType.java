@@ -1,12 +1,9 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ArbeidsforholdKomplettVurderingType {
@@ -25,6 +22,7 @@ public enum ArbeidsforholdKomplettVurderingType {
     ;
     public static final String KODEVERK = "ARBEIDSFORHOLD_KOMPLETT_VURDERING_TYPE";
 
+    @JsonValue
     private final String kode;
 
     ArbeidsforholdKomplettVurderingType() {
@@ -33,14 +31,6 @@ public enum ArbeidsforholdKomplettVurderingType {
 
     ArbeidsforholdKomplettVurderingType(String kode) {
         this.kode = Optional.ofNullable(kode).orElse(name());
-    }
-
-    @JsonCreator
-    public static ArbeidsforholdKomplettVurderingType fraKode(String kode) {
-        return Arrays.stream(ArbeidsforholdKomplettVurderingType.values())
-                .filter(value -> value.getKode().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet ArbeidsforholdKomplettVurderingType " + kode));
     }
 
     public String getKode() {
