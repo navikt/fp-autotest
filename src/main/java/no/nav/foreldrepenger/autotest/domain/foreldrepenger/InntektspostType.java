@@ -1,12 +1,9 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum InntektspostType {
@@ -20,6 +17,7 @@ public enum InntektspostType {
     ;
     public static final String KODEVERK = "INNTEKTSPOST_TYPE";
 
+    @JsonValue
     private final String kode;
 
     InntektspostType() {
@@ -28,14 +26,6 @@ public enum InntektspostType {
 
     InntektspostType(String kode) {
         this.kode = Optional.ofNullable(kode).orElse(name());
-    }
-
-    @JsonCreator
-    public static InntektspostType fraKode(String kode) {
-        return Arrays.stream(InntektspostType.values())
-                .filter(value -> value.getKode().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet InntektspostType " + kode));
     }
 
     public String getKode() {
