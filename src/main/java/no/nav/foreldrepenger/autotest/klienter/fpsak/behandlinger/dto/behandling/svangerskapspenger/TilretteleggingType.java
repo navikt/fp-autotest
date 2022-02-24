@@ -1,22 +1,68 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class TilretteleggingType extends Kode {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    private static final String DISCRIMINATOR = "SVP_TILRETTELEGGING_TYPE";
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.TempAvledeKode;
+import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
 
-    public static final TilretteleggingType HEL_TILRETTELEGGING = new TilretteleggingType("HEL_TILRETTELEGGING",
-            "hel_tilrettelegging");
-    public static final TilretteleggingType DELVIS_TILRETTELEGGING = new TilretteleggingType("DELVIS_TILRETTELEGGING",
-            "delvis_tilrettelegging");
-    public static final TilretteleggingType INGEN_TILRETTELEGGING = new TilretteleggingType("INGEN_TILRETTELEGGING",
-            "ingen_tilrettelegging");
+public enum TilretteleggingType {
 
-    public TilretteleggingType() {
+    HEL_TILRETTELEGGING("HEL_TILRETTELEGGING", "Hel tilrettelegging"),
+    DELVIS_TILRETTELEGGING("DELVIS_TILRETTELEGGING", "Delvis tilrettelegging"),
+    INGEN_TILRETTELEGGING("INGEN_TILRETTELEGGING", "Ingen tilrettelegging"),
+    ;
+
+    private static final Map<String, TilretteleggingType> KODER = new LinkedHashMap<>();
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
-    private TilretteleggingType(String kode, String navn) {
-        super(DISCRIMINATOR, kode, navn);
+    private String navn;
+
+    private String kode;
+
+    TilretteleggingType(String kode) {
+        this.kode = kode;
     }
+
+    TilretteleggingType(String kode, String navn) {
+        this.kode = kode;
+        this.navn = navn;
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static TilretteleggingType fraKode(@JsonProperty(value = "kode") Object node) {
+        if (node == null) {
+            return null;
+        }
+        var kode = TempAvledeKode.getVerdi(TilretteleggingType.class, node, "kode");
+        return Arrays.stream(TilretteleggingType.values())
+                .filter(value -> value.getKode().equalsIgnoreCase(kode))
+                .findFirst()
+                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet TilretteleggingType " + kode));
+    }
+
+    public static Map<String, TilretteleggingType> kodeMap() {
+        return Collections.unmodifiableMap(KODER);
+    }
+
+    public String getNavn() {
+        return navn;
+    }
+
+    public String getKode() {
+        return kode;
+    }
+
 }
