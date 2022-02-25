@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.vtp.openam;
+package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.NewCookie;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.openam.dto.AccessTokenResponseDTO;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.dto.AccessTokenResponseDTO;
 
 public class OpenamJerseyKlient extends VTPJerseyKlient {
 

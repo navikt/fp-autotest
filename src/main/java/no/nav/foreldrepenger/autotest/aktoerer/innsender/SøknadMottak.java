@@ -18,8 +18,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKl
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.MottakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.oauth2.AzureAdJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx.TokenXHenterKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.AktørId;
@@ -49,7 +49,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
 
     private final MottakJerseyKlient mottakKlient;
 
-    private final AzureAdJerseyKlient oauth2Klient;
+    private final TokenXHenterKlient tokenXHenterKlient;
     private final JournalforingJerseyKlient journalpostKlient;
     private final PdlLeesahJerseyKlient pdlLeesahKlient;
 
@@ -61,7 +61,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
 
         mottakKlient = new MottakJerseyKlient();
 
-        oauth2Klient = new AzureAdJerseyKlient();
+        tokenXHenterKlient = new TokenXHenterKlient();
         journalpostKlient = new JournalforingJerseyKlient();
         pdlLeesahKlient = new PdlLeesahJerseyKlient();
     }
@@ -112,7 +112,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
     private Long sendInnSøknad(Fødselsnummer fnr, Søknad søknad) {
         var callId = leggTilCallIdForFnr(fnr);
         LOG.info("Sender inn søknadd for bruker {}", fnr.value());
-        var token = oauth2Klient.hentAccessTokenForBruker(fnr);
+        var token = tokenXHenterKlient.hentAccessTokenForBruker(fnr);
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         if (søknad instanceof Endringssøknad endringssøknad) {
             mottakKlient.sendSøknad(token, endringssøknad);

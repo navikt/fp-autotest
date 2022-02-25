@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.vtp.openam.dto;
+package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
