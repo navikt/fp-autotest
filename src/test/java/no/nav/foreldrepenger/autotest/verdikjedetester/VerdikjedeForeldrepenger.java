@@ -1832,7 +1832,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
     @Test
     @DisplayName("17: Mor happy case - verifiser innsyn har korrekt data")
-    @Description("")
+    @Description("Verifiserer at innsyn har korrekt data og sammenligner med vedtaket med det saksbehandlerene ser")
     void mor_innsyn_verifsere() {
         var familie = new Familie("500");
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
@@ -1846,6 +1846,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
         saksbehandler.ventTilAvsluttetBehandling();
 
+        // Mor går på min side for innsyn på foreldrepengesaken sin. Verifisere innhold
         var mor = familie.mor();
         var saker = mor.innsyn().hentSaker();
         assertThat(saker.engangsstønad()).isEmpty();
@@ -1857,16 +1858,14 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(innsynForeldrepenger.barn()).hasSize(1);
 
         // Sammenlign uttak fra fpfrontend og innsyn for bruker
-        var uttakResultatPeriodes = saksbehandler.valgtBehandling.hentUttaksperioder();
+        var uttakResultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         var vedtaksperioderInnsyn = innsynForeldrepenger.gjeldendeVedtak().perioder();
-        assertThat(uttakResultatPeriodes).hasSize(3);
-        assertThat(uttakResultatPeriodes.size()).isEqualTo(vedtaksperioderInnsyn.size());
+        assertThat(uttakResultatPerioder).hasSize(4);
+        assertThat(uttakResultatPerioder.size()).isEqualTo(vedtaksperioderInnsyn.size());
 
-        var gjeldendeVedtak = innsynForeldrepenger.gjeldendeVedtak().perioder().get(0);
-
-
-
-
+        // Verifisere at alle perioder er innvilget i både uttak og vedtaket i innsyn
+        uttakResultatPerioder.forEach(periode -> assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET));
+        vedtaksperioderInnsyn.forEach(periode -> assertThat(periode.resultat().innvilget()).isTrue());
     }
 
 
