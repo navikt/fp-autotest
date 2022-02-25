@@ -196,11 +196,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
                 .as("Saldo for stønadskontoen FORELDREPENGER")
                 .isEqualTo(70);
-
-
-        var saker = mor.innsyn().hentSaker();
-
-        LOG.info("Saker: {}", saker);
     }
 
     @Test
