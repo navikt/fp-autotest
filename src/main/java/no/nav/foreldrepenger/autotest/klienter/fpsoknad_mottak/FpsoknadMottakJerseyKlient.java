@@ -11,7 +11,7 @@ public abstract class FpsoknadMottakJerseyKlient extends AbstractJerseyRestKlien
 
     protected URI base = BaseUriProvider.FPSOKNAD_MOTTAK_BASE;
 
-    public FpsoknadMottakJerseyKlient() {
+    protected FpsoknadMottakJerseyKlient() {
         super();
     }
 }
