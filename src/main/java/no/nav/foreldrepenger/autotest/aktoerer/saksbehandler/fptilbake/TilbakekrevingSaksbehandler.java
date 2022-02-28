@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -96,7 +97,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     public boolean harBehandlingsstatus(String status) {
-        return valgtBehandling.status.kode.equals(status);
+        return Objects.equals(valgtBehandling.status, status);
     }
 
     // Generisk handling for å hente behandling på nytt

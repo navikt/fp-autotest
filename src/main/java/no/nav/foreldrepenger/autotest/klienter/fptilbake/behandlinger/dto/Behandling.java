@@ -11,10 +11,10 @@ public class Behandling {
     public UUID uuid;
     public int versjon;
     public int fagsakId;
-    public BehandlingType type;
+    public String type;
     public boolean behandlingPaaVent;
     public String venteArsakKode;
-    public BehandlingType status;
+    public String status;
     protected boolean harVerge;
 
     public boolean harVerge() {
