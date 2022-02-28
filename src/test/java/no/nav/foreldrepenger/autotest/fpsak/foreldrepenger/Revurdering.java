@@ -457,13 +457,7 @@ class Revurdering extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFP, termindato.minusWeeks(3));
 
         saksbehandler.hentFagsak(saksnummerFP);
-        saksbehandler.ventPåOgVelgFørstegangsbehandling();
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        beslutter.hentFagsak(saksnummerFP);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        saksbehandler.ventTilAvsluttetBehandling();
 
         // Barn 1: Revurdering skal avslå siste uttaksperiode med rett årsak
         saksbehandler.hentFagsak(saksnummer);
