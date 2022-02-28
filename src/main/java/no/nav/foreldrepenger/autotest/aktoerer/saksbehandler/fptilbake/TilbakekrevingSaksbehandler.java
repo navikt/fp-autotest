@@ -127,7 +127,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     // metoder for å verifisere at aksjonspunktet finnes.
     private AksjonspunktDto hentAksjonspunkt(int kode) {
         for (var aksjonspunktDto : behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid)) {
-            if (aksjonspunktDto.definisjon.kode.equals(String.valueOf(kode))) {
+            if (Objects.equals(aksjonspunktDto.definisjon, String.valueOf(kode))) {
                 return aksjonspunktDto;
             }
         }

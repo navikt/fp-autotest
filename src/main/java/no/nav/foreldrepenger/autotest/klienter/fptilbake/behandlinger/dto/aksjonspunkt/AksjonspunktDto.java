@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AksjonspunktDto {
-    public AksjonspunktDefinisjon definisjon;
+    public String definisjon;
     public boolean erAktivt;
     public boolean kanLoses;
 
