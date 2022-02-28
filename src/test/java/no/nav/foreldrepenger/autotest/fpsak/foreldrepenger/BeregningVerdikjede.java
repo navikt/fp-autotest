@@ -33,7 +33,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLopendeVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
@@ -199,12 +198,6 @@ class BeregningVerdikjede extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        // FAKTA OM FØDSEL: Avklar om søker har mottatt støtte
-        var avklarLopendeVedtakBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarLopendeVedtakBekreftelse.class)
-                .bekreftGodkjent();
-        saksbehandler.bekreftAksjonspunkt(avklarLopendeVedtakBekreftelse);
-
         // FAKTA OM MEDLEMSKAP
         var avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
@@ -225,10 +218,9 @@ class BeregningVerdikjede extends FpsakTestBase {
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
-        var apLopendeVedtak = beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE);
         var apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(List.of(apLopendeVedtak, apFaktaOmBeregning));
+        bekreftelse.godkjennAksjonspunkter(List.of(apFaktaOmBeregning));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
