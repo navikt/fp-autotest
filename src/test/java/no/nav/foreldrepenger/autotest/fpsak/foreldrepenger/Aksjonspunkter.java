@@ -55,20 +55,6 @@ class Aksjonspunkter extends FpsakTestBase {
     }
 
     @Test
-    @DisplayName("AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE")
-    void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5031() {
-        var familie = new Familie("172", fordel);
-        var mor = familie.mor();
-        var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
-
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE);
-    }
-
-    @Test
     @DisplayName("AVKLAR_ADOPSJONSDOKUMENTAJON")
     void aksjonspunkt_ADOPSJONSSOKNAD_FORELDREPENGER_5004() {
         var familie = new Familie("172", fordel);
