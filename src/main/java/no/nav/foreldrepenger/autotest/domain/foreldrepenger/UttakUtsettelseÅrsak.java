@@ -1,22 +1,33 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Brukes i uttaksresultat
  */
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum UttakUtsettelseÅrsak {
 
-    ARBEID,
-    FERIE,
-    SYKDOM_SKADE,
-    SØKER_INNLAGT,
-    BARN_INNLAGT,
-    HV_OVELSE,
-    NAV_TILTAK,
-    FRI,
-    @JsonEnumDefaultValue
-    UDEFINERT
+    ARBEID("ARBEID"),
+    FERIE("FERIE"),
+    SYKDOM_SKADE("SYKDOM_SKADE"),
+    SØKER_INNLAGT("SØKER_INNLAGT"),
+    BARN_INNLAGT("BARN_INNLAGT"),
+    HV_OVELSE("HV_OVELSE"),
+    NAV_TILTAK("NAV_TILTAK"),
+    FRI("FRI"),
+    UDEFINERT("-"),
     ;
 
+    @JsonValue
+    private final String kode;
+
+    UttakUtsettelseÅrsak(String kode) {
+        this.kode = kode;
+    }
+
+    public String getKode() {
+        return kode;
+    }
 }
