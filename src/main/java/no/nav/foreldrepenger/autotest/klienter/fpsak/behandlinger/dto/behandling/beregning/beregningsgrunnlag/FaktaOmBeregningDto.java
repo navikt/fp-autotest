@@ -9,68 +9,15 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FaktaOmBeregningDto {
 
-    protected List<KortvarigeArbeidsforholdDto> kortvarigeArbeidsforhold;
-    protected TilstøtendeYtelseDto tilstøtendeYtelse;
-    protected FaktaOmBeregningAndelDto frilansAndel;
-    protected EndringBeregningsgrunnlagDto endringBeregningsgrunnlag;
-    protected KunYtelseDto kunYtelse;
     protected List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller;
-    protected List<ATogFLISammeOrganisasjonDto> arbeidstakerOgFrilanserISammeOrganisasjonListe;
-    protected List<FaktaOmBeregningAndelDto> arbeidsforholdMedLønnsendringUtenIM;
-    protected List<TilstøtendeYtelseAndelDto> besteberegningAndeler;
-    protected VurderMottarYtelseDto vurderMottarYtelse;
     protected AvklarAktiviteterDto avklarAktiviteter;
-    protected VurderBesteberegning vurderBesteberegning;
-
-    public List<KortvarigeArbeidsforholdDto> getKortvarigeArbeidsforhold() {
-        return kortvarigeArbeidsforhold;
-    }
-
-    public TilstøtendeYtelseDto getTilstøtendeYtelse() {
-        return tilstøtendeYtelse;
-    }
-
-    public FaktaOmBeregningAndelDto getFrilansAndel() {
-        return frilansAndel;
-    }
-
-    public EndringBeregningsgrunnlagDto getEndringBeregningsgrunnlag() {
-        return endringBeregningsgrunnlag;
-    }
-
-    public KunYtelseDto getKunYtelse() {
-        return kunYtelse;
-    }
 
     public List<FaktaOmBeregningTilfelle> getFaktaOmBeregningTilfeller() {
         return faktaOmBeregningTilfeller;
-    }
-
-    public List<ATogFLISammeOrganisasjonDto> getArbeidstakerOgFrilanserISammeOrganisasjonListe() {
-        return arbeidstakerOgFrilanserISammeOrganisasjonListe;
-    }
-
-    public List<FaktaOmBeregningAndelDto> getArbeidsforholdMedLønnsendringUtenIM() {
-        return arbeidsforholdMedLønnsendringUtenIM;
-    }
-
-    public List<TilstøtendeYtelseAndelDto> getBesteberegningAndeler() {
-        return besteberegningAndeler;
-    }
-
-    public VurderMottarYtelseDto getVurderMottarYtelse() {
-        return vurderMottarYtelse;
     }
 
     public AvklarAktiviteterDto getAvklarAktiviteter() {
         return avklarAktiviteter;
     }
 
-    public VurderBesteberegning getVurderBesteberegning() {
-        return vurderBesteberegning;
-    }
-
-    public void setVurderBesteberegning(VurderBesteberegning vurderBesteberegning) {
-        this.vurderBesteberegning = vurderBesteberegning;
-    }
 }

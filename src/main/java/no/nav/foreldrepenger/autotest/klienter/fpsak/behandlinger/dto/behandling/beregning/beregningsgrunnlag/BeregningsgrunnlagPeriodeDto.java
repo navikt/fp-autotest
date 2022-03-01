@@ -9,12 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class BeregningsgrunnlagPeriodeDto {
     protected LocalDate beregningsgrunnlagPeriodeFom;
     protected LocalDate beregningsgrunnlagPeriodeTom;
-    protected double beregnetPrAar;
-    protected double bruttoPrAar;
-    protected double bruttoInkludertBortfaltNaturalytelsePrAar;
-    protected double avkortetPrAar;
     protected double redusertPrAar;
-    protected List<String> periodeAarsaker;
     protected int dagsats;
     protected List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndel;
 
