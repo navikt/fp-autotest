@@ -40,7 +40,7 @@ jobs:
     name: Kjører fpsak spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: 'master'
       - uses: actions/setup-java@v2
@@ -177,7 +177,7 @@ jobs:
     name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: 'master'
       - uses: actions/setup-java@v2
@@ -345,7 +345,7 @@ jobs:
     name: Kjører verdikjedetestene som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: 'master'
       - uses: actions/setup-java@v2

@@ -22,7 +22,7 @@ jobs:
 
       - name: Henter ut historie
         id: slacknotify
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3
         with:
           repository: ${{ env.TRIGGER }}
           path: ${{ env.TRIGGER }}
