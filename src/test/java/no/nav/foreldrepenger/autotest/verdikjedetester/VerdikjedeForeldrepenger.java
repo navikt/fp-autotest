@@ -1467,7 +1467,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getRedusertPrAar())
                 .as("Forventer at beregningsgrunnlaget baserer seg på et grunnlag som er mindre enn 1/2 G")
                 .isLessThan(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getHalvG());
-        assertThat(saksbehandler.vilkårStatus(VilkarTypeKoder.BEREGNINGSGRUNNLAGVILKÅR).kode)
+        assertThat(saksbehandler.vilkårStatus(VilkarTypeKoder.BEREGNINGSGRUNNLAGVILKÅR))
                 .as("Vilkårstatus for beregningsgrunnlag")
                 .isEqualTo("IKKE_OPPFYLT");
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1615,7 +1615,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(uttaksperiode_0.getPeriodeResultatType())
                 .as("Uttaksresultattype for første periode")
                 .isEqualTo(PeriodeResultatType.INNVILGET);
-        assertThat(uttaksperiode_0.getPeriodeType().kode)
+        assertThat(uttaksperiode_0.getPeriodeType())
                 .as("Forventer at første periode er FELLESPERIODE pga dødfødsel etter termin")
                 .isEqualTo(FELLESPERIODE.name());
         assertThat(uttaksperiode_0.getFom())
@@ -1625,7 +1625,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(uttaksperiode_1.getPeriodeResultatType())
                 .as("Uttaksresultattype for andre periode")
                 .isEqualTo(PeriodeResultatType.INNVILGET);
-        assertThat(uttaksperiode_1.getPeriodeType().kode)
+        assertThat(uttaksperiode_1.getPeriodeType())
                 .as("Forventer at første periode er FORELDREPENGER_FØR_FØDSEL pga dødfødsel etter termin")
                 .isEqualTo(FORELDREPENGER_FØR_FØDSEL.name());
         assertThat(uttaksperiode_1.getAktiviteter().get(0).getTrekkdagerDesimaler())
@@ -1636,7 +1636,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(uttaksperiode_2.getPeriodeResultatType())
                 .as("Uttaksresultattype for tredje periode")
                 .isEqualTo(PeriodeResultatType.INNVILGET);
-        assertThat(uttaksperiode_2.getPeriodeType().kode)
+        assertThat(uttaksperiode_2.getPeriodeType())
                 .as("Forventer at første periode er MØDREKVTOEN pga dødfødsel etter termin")
                 .isEqualTo(MØDREKVOTE.name());
         assertThat(uttaksperiode_2.getAktiviteter().get(0).getTrekkdagerDesimaler())

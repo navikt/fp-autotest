@@ -1,17 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.TempAvledeKode;
-import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum HistorikkinnslagType {
 
     BREV_SENT,
@@ -65,30 +53,4 @@ public enum HistorikkinnslagType {
     AVKLART_AKTIVITETSKRAV,
     ;
 
-    private final String kode;
-
-    HistorikkinnslagType() {
-        this(null);
-    }
-
-    HistorikkinnslagType(String kode) {
-        this.kode = Optional.ofNullable(kode).orElse(name());
-    }
-
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static HistorikkinnslagType fraKode(@JsonProperty(value = "kode") Object node) {
-        if (node == null) {
-            return null;
-        }
-        var kode = TempAvledeKode.getVerdi(HistorikkinnslagType.class, node, "kode");
-        return Arrays.stream(HistorikkinnslagType.values())
-                .filter(value -> value.name().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet HistorikkinnslagType " + kode));
-    }
-
-    public String getKode() {
-        return kode;
-    }
 }

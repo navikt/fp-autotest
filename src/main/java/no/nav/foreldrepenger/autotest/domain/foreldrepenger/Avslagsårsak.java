@@ -1,14 +1,7 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Avslagsårsak {
     SØKT_FOR_TIDLIG("1001"),
     SØKER_ER_MEDMOR("1002"),
@@ -55,22 +48,11 @@ public enum Avslagsårsak {
     INGEN_BEREGNINGSREGLER_TILGJENGELIG_I_LØSNINGEN("1099"),
     ;
 
+    @JsonValue
     private final String kode;
 
     Avslagsårsak(String kode) {
         this.kode = kode;
-    }
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static Avslagsårsak fraKode(@JsonProperty(value = "kode") Object node) {
-        if (node == null) {
-            return null;
-        }
-        var kode = TempAvledeKode.getVerdi(Avslagsårsak.class, node, "kode");
-        return Arrays.stream(Avslagsårsak.values())
-                .filter(value -> value.getKode().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet avslagsårsak " + kode));
     }
 
     public String getKode() {

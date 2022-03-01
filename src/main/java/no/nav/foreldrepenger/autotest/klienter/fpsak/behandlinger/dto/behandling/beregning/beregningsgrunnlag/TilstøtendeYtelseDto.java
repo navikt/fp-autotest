@@ -4,15 +4,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TilstøtendeYtelseDto {
 
     protected List<TilstøtendeYtelseAndelDto> tilstøtendeYtelseAndeler;
     protected int dekningsgrad;
-    protected Kode arbeidskategori;
-    protected Kode ytelseType;
+    protected String arbeidskategori;
+    protected String ytelseType;
     protected double bruttoBG;
     protected boolean skalReduseres;
     protected boolean erBesteberegning;

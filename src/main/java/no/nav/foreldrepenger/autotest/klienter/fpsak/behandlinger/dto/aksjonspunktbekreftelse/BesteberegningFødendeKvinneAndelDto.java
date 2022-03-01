@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+
 public class BesteberegningFødendeKvinneAndelDto {
 
     protected int andelsnr;
@@ -10,7 +12,7 @@ public class BesteberegningFødendeKvinneAndelDto {
     public BesteberegningFødendeKvinneAndelDto() {
     }
 
-    public BesteberegningFødendeKvinneAndelDto(double fastsattBeløp, String inntektskategori) {
+    public BesteberegningFødendeKvinneAndelDto(double fastsattBeløp, Inntektskategori inntektskategori) {
         nyAndel = false;
         lagtTilAvSaksbehandler = false;
         fastsatteVerdier = new FastsatteVerdierForBesteberegningDto(fastsattBeløp, inntektskategori);

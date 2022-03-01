@@ -298,7 +298,7 @@ class Klage extends FpsakTestBase {
         assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
-        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer().kode)
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer())
                 .as("Klagevurderingsresultat")
                 .isEqualTo("GUNST_MEDHOLD_I_KLAGE");
 
@@ -345,7 +345,7 @@ class Klage extends FpsakTestBase {
         assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse())
                 .as("begrunnelse2")
                 .isEqualTo(begrunnelse1);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer().kode)
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer())
                 .as("KlageVurderingOmgjoer")
                 .isEqualTo("DELVIS_MEDHOLD_I_KLAGE");
     }

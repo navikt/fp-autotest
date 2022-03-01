@@ -7,7 +7,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.FaktaOmBeregningTilfelle;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.MottarYtelse;
@@ -64,12 +63,12 @@ public class FaktaOmBeregningLagreDto {
         return this;
     }
 
-    public FaktaOmBeregningLagreDto leggTilBesteBeregningAndeler(double beløp, Kode inntektskategori) {
+    public FaktaOmBeregningLagreDto leggTilBesteBeregningAndeler(double beløp, Inntektskategori inntektskategori) {
         if (besteberegningAndeler == null) {
             besteberegningAndeler = new BesteberegningFødendeKvinneDto();
         }
         besteberegningAndeler
-                .leggTilBesteberegningAndel(new BesteberegningFødendeKvinneAndelDto(beløp, inntektskategori.kode));
+                .leggTilBesteberegningAndel(new BesteberegningFødendeKvinneAndelDto(beløp, inntektskategori));
         return this;
     }
 
@@ -93,7 +92,7 @@ public class FaktaOmBeregningLagreDto {
         if (kunYtelseFordeling == null) {
             kunYtelseFordeling = new YtelseForedeling();
         }
-        kunYtelseFordeling.leggTilYtelseAndeler(new YtelseAndeler(beløp, inntektskategori.getKode()));
+        kunYtelseFordeling.leggTilYtelseAndeler(new YtelseAndeler(beløp, inntektskategori));
         return this;
     }
 
@@ -146,7 +145,7 @@ public class FaktaOmBeregningLagreDto {
     public static class YtelseAndeler {
         public int andelsnr;
         public double fastsattBeløp;
-        public String inntektskategori;
+        public Inntektskategori inntektskategori;
         public boolean lagtTilAvSaksbehandler;
         public boolean nyAndel;
 
@@ -154,7 +153,7 @@ public class FaktaOmBeregningLagreDto {
             super();
         }
 
-        public YtelseAndeler(double fastsattBeløp, String inntektskategori) {
+        public YtelseAndeler(double fastsattBeløp, Inntektskategori inntektskategori) {
             super();
             this.fastsattBeløp = fastsattBeløp;
             this.inntektskategori = inntektskategori;

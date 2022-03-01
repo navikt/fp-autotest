@@ -52,7 +52,7 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
 
     private List<OpptjeningAktivitet> hentOpptjeningAktiviteter(String aktivitetType) {
         return opptjeningsaktiviteter.stream()
-                .filter(aktivitet -> aktivitet.getAktivitetType().kode.equals(aktivitetType))
+                .filter(aktivitet -> aktivitet.getAktivitetType().equals(aktivitetType))
                 .collect(Collectors.toList());
     }
 

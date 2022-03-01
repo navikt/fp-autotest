@@ -2,26 +2,24 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Vilkar {
-    protected Kode vilkarType;
-    protected Kode vilkarStatus;
+    protected String vilkarType;
+    protected String vilkarStatus;
 
-    public Kode getVilkarType() {
+    public String getVilkarType() {
         return vilkarType;
     }
 
-    public Kode getVilkarStatus() {
+    public String getVilkarStatus() {
         return vilkarStatus;
     }
 
-    public void setVilkarType(Kode vilkarType) {
+    public void setVilkarType(String vilkarType) {
         this.vilkarType = vilkarType;
     }
 
-    public void setVilkarStatus(Kode vilkarStatus) {
+    public void setVilkarStatus(String vilkarStatus) {
         this.vilkarStatus = vilkarStatus;
     }
 }

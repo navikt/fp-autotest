@@ -13,7 +13,6 @@ import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelseUtenTotrinn;
@@ -63,11 +62,11 @@ class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
         // Mellomlager og tilbakestiller
-        assertThat(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode)
+        assertThat(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus())
                 .as("Status for aksjonspunkt MANUELL_VURDERING_AV_KLAGE_NFP")
                 .isEqualTo("UTFO");
         klagebehandler.mellomlagreKlage();
-        assertThat(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus().kode)
+        assertThat(klagebehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP).getStatus())
                 .as("Status for aksjonspunkt MANUELL_VURDERING_AV_KLAGE_NFP")
                 .isEqualTo("UTFO");
 
@@ -86,7 +85,7 @@ class Klage extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer().kode)
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer())
                 .as("Klagevurderingomgjør fra NFP")
                 .isEqualTo("UGUNST_MEDHOLD_I_KLAGE");
         assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
@@ -98,7 +97,7 @@ class Klage extends FpsakTestBase {
         assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev())
                 .as("Fritekst til brev for klagevurdering NFP")
                 .isEqualTo(fritekstBrev);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageMedholdArsak().kode)
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageMedholdArsak())
                 .as("Årsak til klagevburdering fra NFP")
                 .isEqualTo("ULIK_VURDERING");
     }
@@ -153,7 +152,7 @@ class Klage extends FpsakTestBase {
         assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.HJEMSENDE_UTEN_OPPHEVE);
-        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering().kode)
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering())
                 .as("Klagevurderingsresultat fra NK")
                 .isEqualTo("HJEMSENDE_UTEN_Å_OPPHEVE");
     }
@@ -218,7 +217,7 @@ class Klage extends FpsakTestBase {
         assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
-        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering().kode)
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering())
                 .as("Klagevurderingsresultat NK")
                 .isEqualTo("STADFESTE_YTELSESVEDTAK");
         assertThat(klagebehandler.valgtBehandling.status)
@@ -285,10 +284,10 @@ class Klage extends FpsakTestBase {
         assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer().kode)
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer())
                 .as("Vurdering omgjør til klagervurderingsresultat NK")
                 .isEqualTo("DELVIS_MEDHOLD_I_KLAGE");
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageMedholdArsak().kode)
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageMedholdArsak())
                 .as("KlageMedholdÅrsak til klagevurdering NK")
                 .isEqualTo("ULIK_VURDERING");
     }
@@ -325,7 +324,7 @@ class Klage extends FpsakTestBase {
                 .isEqualTo(BehandlingResultatType.KLAGE_AVVIST);
         assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageFormkravResultatNFP().getAvvistArsaker())
                 .as("Årsak for avvisning")
-                .contains(new Kode("IKKE_KONKRET"));
+                .contains("IKKE_KONKRET");
     }
 
     @Step("Klage: oppretter førstegangsbehandling")

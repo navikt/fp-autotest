@@ -8,7 +8,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OppholdÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
@@ -23,13 +22,13 @@ public class UttakResultatPeriode implements Serializable {
     protected PeriodeResultatType periodeResultatType;
     protected String begrunnelse;
     protected PeriodeResultatÅrsak periodeResultatÅrsak;
-    protected Kode manuellBehandlingÅrsak;
-    protected Kode graderingAvslagÅrsak;
+    protected String manuellBehandlingÅrsak;
+    protected String graderingAvslagÅrsak;
     protected Boolean flerbarnsdager;
     protected Boolean samtidigUttak;
     protected BigDecimal samtidigUttaksprosent;
     protected Boolean graderingInnvilget;
-    protected Kode periodeType;
+    protected String periodeType;
     protected UttakUtsettelseÅrsak utsettelseType;
     protected OppholdÅrsak oppholdÅrsak;
     protected UttakResultatPeriodeAktivitet gradertAktivitet = null;
@@ -86,11 +85,11 @@ public class UttakResultatPeriode implements Serializable {
         this.aktiviteter = aktiviteter;
     }
 
-    public Kode getGraderingAvslagÅrsak() {
+    public String getGraderingAvslagÅrsak() {
         return graderingAvslagÅrsak;
     }
 
-    public void setGraderingAvslagÅrsak(Kode graderingAvslagÅrsak) {
+    public void setGraderingAvslagÅrsak(String graderingAvslagÅrsak) {
         this.graderingAvslagÅrsak = graderingAvslagÅrsak;
     }
 
@@ -114,11 +113,11 @@ public class UttakResultatPeriode implements Serializable {
         return oppholdÅrsak;
     }
 
-    public Kode getPeriodeType() {
+    public String getPeriodeType() {
         return periodeType;
     }
 
-    public void setPeriodeType(Kode periodeType) {
+    public void setPeriodeType(String periodeType) {
         this.periodeType = periodeType;
     }
 
@@ -144,11 +143,11 @@ public class UttakResultatPeriode implements Serializable {
         this.samtidigUttak = samtidigUttak;
     }
 
-    public Kode getManuellBehandlingÅrsak() {
+    public String getManuellBehandlingÅrsak() {
         return manuellBehandlingÅrsak;
     }
 
-    public void setManuellBehandlingÅrsak(Kode manuellBehandlingÅrsak) {
+    public void setManuellBehandlingÅrsak(String manuellBehandlingÅrsak) {
         this.manuellBehandlingÅrsak = manuellBehandlingÅrsak;
     }
 

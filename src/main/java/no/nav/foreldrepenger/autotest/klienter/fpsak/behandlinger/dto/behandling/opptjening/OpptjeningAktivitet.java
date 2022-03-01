@@ -4,12 +4,10 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OpptjeningAktivitet {
 
-    protected Kode aktivitetType;
+    protected String aktivitetType;
     protected String arbeidsforholdRef;
     protected String arbeidsgiver;
     protected String arbeidsgiverIdentifikator;
@@ -41,11 +39,11 @@ public class OpptjeningAktivitet {
         this.arbeidsgiverReferanse = arbeidsgiverReferanse;
     }
 
-    public Kode getAktivitetType() {
+    public String getAktivitetType() {
         return aktivitetType;
     }
 
-    public void setAktivitetType(Kode aktivitetType) {
+    public void setAktivitetType(String aktivitetType) {
         this.aktivitetType = aktivitetType;
     }
 

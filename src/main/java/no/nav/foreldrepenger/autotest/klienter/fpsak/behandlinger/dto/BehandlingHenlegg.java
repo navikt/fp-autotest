@@ -14,7 +14,7 @@ public class BehandlingHenlegg extends BehandlingIdPost {
 
     public BehandlingHenlegg(UUID behandlingUuid, int behandlingVersjon, BehandlingResultatType årsakKode, String begrunnelse) {
         super(behandlingUuid, behandlingVersjon);
-        this.årsakKode = årsakKode.getKode();
+        this.årsakKode = årsakKode.name();
         this.begrunnelse = begrunnelse;
     }
 }

@@ -193,7 +193,7 @@ class Adopsjon extends FpsakTestBase {
         bekreftelse3.bekreftMannAdoptererIkkeAlene();
         saksbehandler.bekreftAksjonspunktbekreftelserer(bekreftelse1, bekreftelse2, bekreftelse3);
 
-        assertThat(saksbehandler.vilkårStatus("FP_VK_4").kode)
+        assertThat(saksbehandler.vilkårStatus("FP_VK_4"))
                 .as("Vilkårstatus for adopsjon")
                 .isEqualTo("IKKE_OPPFYLT");
         assertThat(saksbehandler.valgtBehandling.hentAvslagsarsak())

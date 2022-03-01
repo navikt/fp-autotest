@@ -819,7 +819,7 @@ class Fodsel extends FpsakTestBase {
             assertThat(periode.getAktiviteter()).hasSize(2);
             for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
                 assertThat(aktivitet.getArbeidsgiverReferanse()).isNotNull();
-                assertThat(aktivitet.getUttakArbeidType().kode).isEqualTo("ORDINÆRT_ARBEID");
+                assertThat(aktivitet.getUttakArbeidType()).isEqualTo("ORDINÆRT_ARBEID");
                 var arbeidsforholdFraScenario = mor.arbeidsforholdene();
                 assertThat(aktivitet.getArbeidsgiverReferanse()).isIn(
                         arbeidsforholdFraScenario.get(0).arbeidsgiverIdentifikasjon().value(),
@@ -854,7 +854,7 @@ class Fodsel extends FpsakTestBase {
         assertThat(mødrekvoteEtterUke6.getAktiviteter().get(1).getTrekkdagerDesimaler()).isGreaterThan(BigDecimal.ZERO);
         assertThat(mødrekvoteEtterUke6.getAktiviteter().get(1).getStønadskontoType()).isEqualTo(MØDREKVOTE);
         var gradering = uttaksperioder.get(3);
-        assertThat(gradering.getGraderingAvslagÅrsak().kode).isEqualTo("-");
+        assertThat(gradering.getGraderingAvslagÅrsak()).isEqualTo("-");
         assertThat(gradering.getGraderingInnvilget()).isTrue();
         assertThat(gradering.getGradertArbeidsprosent()).isEqualTo(arbeidstidsprosent);
         assertThat(gradering.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FELLESPERIODE);

@@ -66,7 +66,7 @@ public abstract class AksjonspunktBekreftelse {
     public static AksjonspunktBekreftelse fromAksjonspunkt(Aksjonspunkt aksjonspunkt)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException, SecurityException {
-        return fromKode(aksjonspunkt.getDefinisjon().kode);
+        return fromKode(aksjonspunkt.getDefinisjon());
     }
 
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {

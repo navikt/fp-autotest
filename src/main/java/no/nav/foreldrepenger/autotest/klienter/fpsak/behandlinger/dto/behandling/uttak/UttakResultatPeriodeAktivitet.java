@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -15,7 +14,7 @@ public class UttakResultatPeriodeAktivitet implements Serializable {
     protected BigDecimal trekkdagerDesimaler = null;
     protected BigDecimal prosentArbeid = null;
     protected BigDecimal utbetalingsgrad = null;
-    protected Kode uttakArbeidType = null;
+    protected String uttakArbeidType = null;
     protected String arbeidsgiverReferanse;
 
     protected BigDecimal trekkdager;
@@ -50,7 +49,7 @@ public class UttakResultatPeriodeAktivitet implements Serializable {
         return arbeidsgiverReferanse;
     }
 
-    public Kode getUttakArbeidType() {
+    public String getUttakArbeidType() {
         return uttakArbeidType;
     }
 

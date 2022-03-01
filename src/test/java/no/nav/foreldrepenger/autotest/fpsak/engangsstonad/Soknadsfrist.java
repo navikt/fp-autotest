@@ -56,10 +56,10 @@ class Soknadsfrist extends FpsakTestBase {
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
         saksbehandler.hentFagsak(saksnummer);
-        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode)
+        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus())
                 .as("Aksjonspunktstatus for SJEKK_MANGLENDE_FØDSEL")
                 .isEqualTo("UTFO");
-        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET).getStatus().kode)
+        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET).getStatus())
                 .as("Aksjonspunktstatus for MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET")
                 .isEqualTo("OPPR");
     }
@@ -90,12 +90,12 @@ class Soknadsfrist extends FpsakTestBase {
         beslutter.bekreftAksjonspunkt(vedtakBekreftelse);
 
         saksbehandler.hentFagsak(saksnummer);
-        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus().kode)
+        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL).getStatus())
                 .as("Aksjonspunktstatus for SJEKK_MANGLENDE_FØDSEL")
                 .isEqualTo("OPPR");
 
         var harSøknadsfristAP = saksbehandler.valgtBehandling.getAksjonspunkter().stream()
-                .anyMatch(ap -> ap.getDefinisjon().kode
+                .anyMatch(ap -> ap.getDefinisjon()
                         .equals(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET));
         assertThat(harSøknadsfristAP)
                 .as("Uforventet aksjonspunkt MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET")
