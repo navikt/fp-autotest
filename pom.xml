@@ -18,7 +18,7 @@
 
         <allure.version>2.17.3</allure.version>
         <vtp.versjon>1.1.5</vtp.versjon>
-        <dokumentgenerator.version>3.2.4</dokumentgenerator.version>
+        <dokumentgenerator.version>3.2.5</dokumentgenerator.version>
         <felles.versjon>4.1.18</felles.versjon>
         <aspectj.version>1.9.8</aspectj.version>
         <jackson.version>2.13.1</jackson.version>
