@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Venteårsak {
 
     AAP_DP_ENESTE_AKTIVITET_SVP,
@@ -51,30 +41,4 @@ public enum Venteårsak {
     VENT_MANGLENDE_SYKEMELDING,
     ;
 
-    private final String kode;
-
-    Venteårsak() {
-        this(null);
-    }
-
-    Venteårsak(String kode) {
-        this.kode = Optional.ofNullable(kode).orElse(name());
-    }
-
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static Venteårsak fraKode(@JsonProperty(value = "kode") Object node) {
-        if (node == null) {
-            return null;
-        }
-        var kode = TempAvledeKode.getVerdi(Venteårsak.class, node, "kode");
-        return Arrays.stream(Venteårsak.values())
-                .filter(value -> value.getKode().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet Venteårsak " + kode));
-    }
-
-    public String getKode() {
-        return kode;
-    }
 }

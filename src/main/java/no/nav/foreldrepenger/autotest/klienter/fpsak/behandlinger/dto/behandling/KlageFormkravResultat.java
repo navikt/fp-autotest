@@ -4,11 +4,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KlageFormkravResultat {
-    protected List<Kode> avvistArsaker;
+    protected List<String> avvistArsaker;
     protected Long paKlagdBehandlingId;
     protected String begrunnelse;
     protected boolean erKlagerPart;
@@ -64,7 +62,7 @@ public class KlageFormkravResultat {
         this.erSignert = erSignert;
     }
 
-    public List<Kode> getAvvistArsaker() {
+    public List<String> getAvvistArsaker() {
         return avvistArsaker;
     }
 

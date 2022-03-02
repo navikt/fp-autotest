@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OppholdÅrsak;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøknadUtsettelseÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Arbeidsgiver;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakDokumentasjon;
@@ -21,7 +20,7 @@ public class KontrollerFaktaPeriode {
     protected LocalDate fom;
     protected StønadskontoType uttakPeriodeType;
     protected SøknadUtsettelseÅrsak utsettelseÅrsak;
-    protected Kode overføringÅrsak;
+    protected String overføringÅrsak;
     protected OppholdÅrsak oppholdÅrsak;
     protected UttakPeriodeVurderingType resultat;
     protected List<UttakDokumentasjon> dokumentertePerioder;

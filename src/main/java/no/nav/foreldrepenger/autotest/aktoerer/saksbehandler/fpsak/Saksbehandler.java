@@ -28,7 +28,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
@@ -423,7 +422,7 @@ public class Saksbehandler extends Aktoer {
      */
     public Aksjonspunkt hentAksjonspunkt(String kode) {
         return valgtBehandling.getAksjonspunkter().stream()
-                .filter(ap -> ap.getDefinisjon().kode.equals(kode))
+                .filter(ap -> ap.getDefinisjon().equals(kode))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + "." +
                         "\nAksjonspunkt på behanlding: " + valgtBehandling.getAksjonspunkter().toString()));
@@ -481,12 +480,12 @@ public class Saksbehandler extends Aktoer {
 
     private void verifsierAtAPErFerdigbehandlet(AksjonspunktBekreftelse bekreftelse) {
         var ap = valgtBehandling.getAksjonspunkter().stream()
-                .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().kode.equalsIgnoreCase(bekreftelse.kode()))
+                .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equalsIgnoreCase(bekreftelse.kode()))
                 .findFirst()
                 .orElseThrow(); // Vil ikke inntreffe ettersom hentAksjonspunkt() vil alltid bli kalt først.
-        if (!ap.getStatus().kode.equalsIgnoreCase("UTFO")) {
+        if (!ap.getStatus().equalsIgnoreCase("UTFO")) {
             throw new RuntimeException("AP bekreftelse er sendt inn programatisk for AP [" + bekreftelse.kode() +
-                    "] uten at det løste AP. Forventet status på AP er UTFO, men er [" + ap.getStatus().kode + "]");
+                    "] uten at det løste AP. Forventet status på AP er UTFO, men er [" + ap.getStatus() + "]");
         }
     }
 
@@ -494,9 +493,9 @@ public class Saksbehandler extends Aktoer {
         var avvisteAksjonspunktkoder = bekreftelse.avvisteAksjonspunkt();
         for (var kode : avvisteAksjonspunktkoder) {
             var AP = hentAksjonspunkt(kode);
-            if (!AP.getStatus().kode.equalsIgnoreCase("OPPR")) {
+            if (!AP.getStatus().equalsIgnoreCase("OPPR")) {
                 throw new RuntimeException("AP [" + bekreftelse.kode() + "] skal være avvist av beslutter og " +
-                        "opprettet nytt, men har status [" + AP.getStatus().kode + "]");
+                        "opprettet nytt, men har status [" + AP.getStatus() + "]");
             }
         }
     }
@@ -569,7 +568,7 @@ public class Saksbehandler extends Aktoer {
         return hentHistorikkinnslagPåBehandling().stream()
                 .filter(innslag -> type.equals(innslag.type()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Finner ikke historikkinnslag av typen " + type.getKode()));
+                .orElseThrow(() -> new RuntimeException("Finner ikke historikkinnslag av typen " + type.name()));
     }
 
     public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
@@ -582,7 +581,7 @@ public class Saksbehandler extends Aktoer {
     /*
      * Vilkar
      */
-    private Vilkar hentVilkår(Kode vilkårKode) {
+    private Vilkar hentVilkår(String vilkårKode) {
         for (Vilkar vilkår : valgtBehandling.getVilkar()) {
             if (vilkår.getVilkarType().equals(vilkårKode)) {
                 return vilkår;
@@ -591,11 +590,7 @@ public class Saksbehandler extends Aktoer {
         throw new IllegalStateException("Fant ikke vilkår " + vilkårKode.toString() + "for behandling " + valgtBehandling.uuid);
     }
 
-    private Vilkar hentVilkår(String vilkårKode) {
-        return hentVilkår(new Kode("VILKAR_TYPE", vilkårKode));
-    }
-
-    public Kode vilkårStatus(String vilkårKode) {
+    public String vilkårStatus(String vilkårKode) {
         return hentVilkår(vilkårKode).getVilkarStatus();
     }
 
@@ -643,7 +638,7 @@ public class Saksbehandler extends Aktoer {
     public boolean sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet(String aktivitet) {
         var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
-            if (opptjening.getAktivitetType().kode.equalsIgnoreCase(aktivitet) &&
+            if (opptjening.getAktivitetType().equalsIgnoreCase(aktivitet) &&
                     !opptjening.getOpptjeningTom().isBefore(skjaeringstidspunkt.minusDays(1))) {
                 return true;
             }
@@ -653,7 +648,7 @@ public class Saksbehandler extends Aktoer {
 
     public boolean sjekkOmYtelseLiggerTilGrunnForOpptjening(String ytelse) {
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
-            if (opptjening.getAktivitetType().kode.equalsIgnoreCase(ytelse)) {
+            if (opptjening.getAktivitetType().equalsIgnoreCase(ytelse)) {
                 return true;
             }
         }

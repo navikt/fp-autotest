@@ -5,18 +5,11 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningsgrunnlagPeriodeDto {
     protected LocalDate beregningsgrunnlagPeriodeFom;
     protected LocalDate beregningsgrunnlagPeriodeTom;
-    protected double beregnetPrAar;
-    protected double bruttoPrAar;
-    protected double bruttoInkludertBortfaltNaturalytelsePrAar;
-    protected double avkortetPrAar;
     protected double redusertPrAar;
-    protected List<Kode> periodeAarsaker;
     protected int dagsats;
     protected List<BeregningsgrunnlagPrStatusOgAndelDto> beregningsgrunnlagPrStatusOgAndel;
 

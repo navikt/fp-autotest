@@ -403,7 +403,7 @@ class MorOgFarSammen extends FpsakTestBase {
         // Søkt for tidlig - kan behandles om litt over en uke
         assertThat(saksbehandler.valgtBehandling.getAksjonspunkter()
                 .stream().map(Aksjonspunkt::getDefinisjon)
-                .anyMatch(k -> AksjonspunktKoder.VENT_PGA_FOR_TIDLIG_SØKNAD.equals(k.kode))).isTrue();
+                .anyMatch(AksjonspunktKoder.VENT_PGA_FOR_TIDLIG_SØKNAD::equals)).isTrue();
     }
 
     @Test

@@ -1,14 +1,7 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum PeriodeResultatÅrsak {
 
     UKJENT("-", "Ikke definert"),
@@ -128,22 +121,10 @@ public enum PeriodeResultatÅrsak {
     BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_DOKUMENTERT("4117", "§14-11, jf §21-3: Barnets innleggelse første 6 uker ikke dokumentert"),
     ;
 
-    public static final String KODEVERK = "PERIODE_RESULTAT_AARSAK";
 
+    @JsonValue
     private final String kode;
     private final String navn;
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static PeriodeResultatÅrsak fraKode(@JsonProperty(value = "kode") Object node) {
-        if (node == null) {
-            return null;
-        }
-        var kode = TempAvledeKode.getVerdi(PeriodeResultatÅrsak.class, node, "kode");
-        return Arrays.stream(PeriodeResultatÅrsak.values())
-                .filter(value -> value.getKode().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet PeriodeUtfallÅrsak " + kode));
-    }
 
     public String getKode() {
         return kode;
@@ -151,11 +132,6 @@ public enum PeriodeResultatÅrsak {
 
     public String getNavn() {
         return navn;
-    }
-
-    @JsonProperty
-    public String getKodeverk() {
-        return KODEVERK;
     }
 
     PeriodeResultatÅrsak(String kode, String navn) {

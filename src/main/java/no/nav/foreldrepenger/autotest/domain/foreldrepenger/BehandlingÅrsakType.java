@@ -1,14 +1,7 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BehandlingÅrsakType {
     // MANUELL OPPRETTING - GUI-anvendelse
     RE_FEIL_I_LOVANDVENDELSE("RE-LOV"),
@@ -61,22 +54,11 @@ public enum BehandlingÅrsakType {
     RE_HENDELSE_DØDFØDSEL("RE-HENDELSE-DØDFØD"),
     ;
 
+    @JsonValue
     private final String kode;
 
     BehandlingÅrsakType(String kode) {
         this.kode = kode;
-    }
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static BehandlingÅrsakType fraKode(@JsonProperty(value = "kode") Object node) {
-        if (node == null) {
-            return null;
-        }
-        var kode = TempAvledeKode.getVerdi(BehandlingÅrsakType.class, node, "kode");
-        return Arrays.stream(BehandlingÅrsakType.values())
-                .filter(value -> value.getKode().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet behandlingårsakstype " + kode));
     }
 
     public String getKode() {

@@ -25,7 +25,7 @@ public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
     public VarselOmRevurderingBekreftelse bekreftSendVarsel(Venteårsak årsak, String fritekst) {
         sendVarsel = "" + true;
         this.fritekst = fritekst;
-        ventearsak = årsak.getKode();
+        ventearsak = årsak.name();
         return this;
     }
 

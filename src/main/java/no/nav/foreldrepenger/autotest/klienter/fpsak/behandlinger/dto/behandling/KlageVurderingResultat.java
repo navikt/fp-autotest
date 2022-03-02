@@ -3,25 +3,23 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE, fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class KlageVurderingResultat {
-    private Kode klageVurdering;
+    private String klageVurdering;
     private String begrunnelse;
     private String fritekstTilBrev;
-    private Kode klageMedholdArsak;
+    private String klageMedholdArsak;
     private String klageAvvistArsakNavn;
-    private Kode klageVurderingOmgjoer;
+    private String klageVurderingOmgjoer;
     private String klageVurdertAv;
     private Boolean godkjentAvMedunderskriver;
 
-    public Kode getKlageVurdering() {
+    public String getKlageVurdering() {
         return klageVurdering;
     }
 
-    public void setKlageVurdering(Kode klageVurdering) {
+    public void setKlageVurdering(String klageVurdering) {
         this.klageVurdering = klageVurdering;
     }
 
@@ -41,11 +39,11 @@ public class KlageVurderingResultat {
         this.fritekstTilBrev = fritekstTilBrev;
     }
 
-    public Kode getKlageMedholdArsak() {
+    public String getKlageMedholdArsak() {
         return klageMedholdArsak;
     }
 
-    public void setKlageMedholdArsak(Kode klageMedholdArsak) {
+    public void setKlageMedholdArsak(String klageMedholdArsak) {
         this.klageMedholdArsak = klageMedholdArsak;
     }
 
@@ -57,11 +55,11 @@ public class KlageVurderingResultat {
         this.klageAvvistArsakNavn = klageAvvistArsakNavn;
     }
 
-    public Kode getKlageVurderingOmgjoer() {
+    public String getKlageVurderingOmgjoer() {
         return klageVurderingOmgjoer;
     }
 
-    public void setKlageVurderingOmgjoer(Kode klageVurderingOmgjoer) {
+    public void setKlageVurderingOmgjoer(String klageVurderingOmgjoer) {
         this.klageVurderingOmgjoer = klageVurderingOmgjoer;
     }
 

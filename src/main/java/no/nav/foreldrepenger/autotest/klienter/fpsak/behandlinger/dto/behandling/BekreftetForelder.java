@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BekreftetForelder {
     protected String adresse;
@@ -13,6 +11,6 @@ public class BekreftetForelder {
     protected String navn;
     protected int nummer;
     protected Object oversyrtPersonstatus;
-    protected Kode personstatus;
+    protected String personstatus;
     protected Object utlandsadresse;
 }

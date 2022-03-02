@@ -14,8 +14,6 @@ public class Beregningsgrunnlag {
     private LocalDate skjæringstidspunkt;
     private List<AktivitetStatus> aktivitetStatus;
     private List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
-    private SammenligningsgrunnlagDto sammenligningsgrunnlag;
-    private List<SammenligningsgrunnlagDto> sammenligningsgrunnlagPrStatus;
     private Double halvG;
     private FaktaOmBeregningDto faktaOmBeregning;
     private List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;

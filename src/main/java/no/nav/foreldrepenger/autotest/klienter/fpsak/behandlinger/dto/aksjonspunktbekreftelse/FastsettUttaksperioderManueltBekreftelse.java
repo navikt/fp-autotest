@@ -43,7 +43,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     public FastsettUttaksperioderManueltBekreftelse innvilgManuellePerioder() {
         for (UttakResultatPeriode uttaksperiode : perioder) {
             if ((uttaksperiode.getManuellBehandlingÅrsak() != null)
-                    && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+                    && !uttaksperiode.getManuellBehandlingÅrsak().equals("-")) {
                 innvilgPeriode(uttaksperiode);
             }
         }
@@ -53,7 +53,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     public FastsettUttaksperioderManueltBekreftelse innvilgManuellePerioder(PeriodeResultatÅrsak periodeResultatÅrsak) {
         for (UttakResultatPeriode uttaksperiode : perioder) {
             if ((uttaksperiode.getManuellBehandlingÅrsak() != null)
-                    && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+                    && !uttaksperiode.getManuellBehandlingÅrsak().equals("-")) {
                 innvilgPeriode(uttaksperiode, periodeResultatÅrsak);
             }
         }
@@ -63,7 +63,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     public FastsettUttaksperioderManueltBekreftelse avslåManuellePerioder() {
         for (UttakResultatPeriode uttaksperiode : perioder) {
             if ((uttaksperiode.getManuellBehandlingÅrsak() != null)
-                    && !uttaksperiode.getManuellBehandlingÅrsak().kode.equals("-")) {
+                    && !uttaksperiode.getManuellBehandlingÅrsak().equals("-")) {
                 avslåPeriode(uttaksperiode);
             }
         }
@@ -72,7 +72,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     public FastsettUttaksperioderManueltBekreftelse avslåManuellePerioderMedPeriodeResultatÅrsak(PeriodeResultatÅrsak periodeResultatÅrsak) {
         for (UttakResultatPeriode uttakPeriode : perioder) {
-            if (!uttakPeriode.getManuellBehandlingÅrsak().kode.equals("-")) {
+            if (!uttakPeriode.getManuellBehandlingÅrsak().equals("-")) {
                 avslåPeriode(uttakPeriode, periodeResultatÅrsak, false);
             }
         }

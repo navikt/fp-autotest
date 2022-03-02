@@ -5,8 +5,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Kode;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Soknad {
     // Generelt
@@ -22,7 +20,7 @@ public class Soknad {
     protected Map<Integer, LocalDate> fodselsdatoer;
 
     // adopsjon
-    protected Kode farSokerType;
+    protected String farSokerType;
     protected LocalDate omsorgsovertakelseDato;
     protected Map<Integer, LocalDate> adopsjonFodelsedatoer;
 
