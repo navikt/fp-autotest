@@ -1,14 +1,7 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum AktivitetStatus {
     ARBEIDSAVKLARINGSPENGER("AAP"),
     ARBEIDSTAKER("AT"),
@@ -27,22 +20,11 @@ public enum AktivitetStatus {
     UDEFINERT("-"),
     ;
 
+    @JsonValue
     private final String kode;
 
     AktivitetStatus(String kode) {
         this.kode = kode;
-    }
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static AktivitetStatus fraKode(@JsonProperty(value = "kode") Object node) {
-        if (node == null) {
-            return null;
-        }
-        var kode = TempAvledeKode.getVerdi(AktivitetStatus.class, node, "kode");
-        return Arrays.stream(AktivitetStatus.values())
-                .filter(value -> value.getKode().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet behandlingtype " + kode));
     }
 
     public String getKode() {

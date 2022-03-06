@@ -1,13 +1,10 @@
 package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+
 public enum OpptjeningAktivitetType {
     AAP,
     ARBEID,
@@ -30,6 +27,7 @@ public enum OpptjeningAktivitetType {
     UDEFINERT("-"),
     ;
 
+    @JsonValue
     private final String kode;
 
     OpptjeningAktivitetType() {
@@ -38,18 +36,6 @@ public enum OpptjeningAktivitetType {
 
     OpptjeningAktivitetType(String kode) {
         this.kode = Optional.ofNullable(kode).orElse(name());
-    }
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static OpptjeningAktivitetType fraKode(@JsonProperty(value = "kode") Object node) {
-        if (node == null) {
-            return null;
-        }
-        var kode = TempAvledeKode.getVerdi(OpptjeningAktivitetType.class, node, "kode");
-        return Arrays.stream(OpptjeningAktivitetType.values())
-                .filter(value -> value.getKode().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElse(OpptjeningAktivitetType.UDEFINERT);
     }
 
     public String getKode() {
