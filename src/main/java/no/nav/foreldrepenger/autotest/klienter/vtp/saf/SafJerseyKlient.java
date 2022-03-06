@@ -25,10 +25,7 @@ public class SafJerseyKlient extends VTPJerseyKlient {
     }
 
     public Journalpost hentJournalpost(String journalpostId) {
-        var request = GraphQLRequest.builder()
-                .withQuery(query)
-                .withVariables(Map.of("journalpostId", journalpostId))
-                .build();
+        var request = new GraphQLRequest(query, null, Map.of("journalpostId", journalpostId));
         var graphQlResponse = client.target(base)
                 .path(GRAPHQL_ENDPOINT)
                 .request()

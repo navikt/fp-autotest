@@ -1,14 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import no.nav.foreldrepenger.autotest.util.error.UnexpectedInputException;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum FaktaOmBeregningTilfelle {
 
     VURDER_TIDSBEGRENSET_ARBEIDSFORHOLD,
@@ -31,7 +26,7 @@ public enum FaktaOmBeregningTilfelle {
     UDEFINERT("-"),
     ;
 
-
+    @JsonValue
     private final String kode;
 
     FaktaOmBeregningTilfelle() {
@@ -40,14 +35,6 @@ public enum FaktaOmBeregningTilfelle {
 
     FaktaOmBeregningTilfelle(String kode) {
         this.kode = Optional.ofNullable(kode).orElse(name());
-    }
-
-    @JsonCreator
-    public static FaktaOmBeregningTilfelle fraKode(String kode) {
-        return Arrays.stream(FaktaOmBeregningTilfelle.values())
-                .filter(value -> value.getKode().equalsIgnoreCase(kode))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedInputException("Ikke støttet Inntektskategori " + kode));
     }
 
     public String getKode() {

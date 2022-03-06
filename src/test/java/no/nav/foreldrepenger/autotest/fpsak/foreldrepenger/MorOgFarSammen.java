@@ -36,6 +36,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
+import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
@@ -330,7 +331,7 @@ class MorOgFarSammen extends FpsakTestBase {
     @Description("Sender inn søknad mor. Sender inn søknad far uten overlapp. Sender inn endringssøknad far med kun" +
             "fri utsettelse. Deretter ny førstegang med senere start.")
     void KobletSakFarUtsetterAlt() {
-        var fødselsdato = LocalDate.now().minusMonths(4);
+        var fødselsdato = Virkedager.helgejustertTilMandag(LocalDate.now().minusMonths(4));
         var fkdato = fødselsdato.plusWeeks(10).plusDays(1);
         var farUtsattStartDato = fødselsdato.plusWeeks(20).plusDays(1);
 
@@ -369,7 +370,7 @@ class MorOgFarSammen extends FpsakTestBase {
     @Description("Sender inn søknad mor. Sender inn søknad far uten overlapp. Sender inn endringssøknad far med " +
             "fri utsettelse og uttaksperioder med start senere. Sender inn IM")
     void KobletSakFarUtsetterStartdato() {
-        var fødselsdato = LocalDate.now().minusMonths(4);
+        var fødselsdato = Virkedager.helgejustertTilMandag(LocalDate.now().minusMonths(4));
         var fkdato = fødselsdato.plusWeeks(10).plusDays(1);
         var farUtsattStartDato = LocalDate.now().plusWeeks(5).plusDays(2);
 
