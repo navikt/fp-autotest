@@ -74,13 +74,6 @@
 						"avtaltArbeidstimerPerUke": "40",
 						"stillingsprosent" : 100,
 						"beregnetAntallTimerPerUke": "30"
-					},
-					{
-						"fomGyldighetsperiode": "now() - P4M",
-						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "30",
-						"stillingsprosent" : 50,
-						"beregnetAntallTimerPerUke": "20"
 					}
 				]
 
@@ -99,13 +92,6 @@
 						"avtaltArbeidstimerPerUke": "40",
 						"stillingsprosent" : 100,
 						"beregnetAntallTimerPerUke": "30"
-					},
-					{
-						"fomGyldighetsperiode": "now() - P10M",
-						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "30",
-						"stillingsprosent" : 50,
-						"beregnetAntallTimerPerUke": "20"
 					}
 				]
 			}
