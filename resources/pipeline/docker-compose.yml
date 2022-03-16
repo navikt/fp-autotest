@@ -103,7 +103,6 @@ services:
       - "UFORE_RS_URL=http://vtp:8060/rest/api/pesys"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
-      - "LOADBALANCER_FQDN=localhost:8080"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
     env_file:
       - "fpsak_datasource.list"
@@ -232,7 +231,6 @@ services:
       - "JOURNALPOST_REST_PROXY_V1_URL=https://vtp:8063/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "OPENIDCONNECT_USERNAME=fpformidling-localhost"
       - "LOADBALANCER_URL=http://localhost:8010"
-      - "LOADBALANCER_FQDN=localhost:8010"
     env_file:
       - "fpformidling_datasource.list"
       - "common.env"
