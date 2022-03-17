@@ -12,6 +12,9 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_DØD_FORELDER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.*;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.*;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER;
@@ -79,6 +82,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
@@ -152,10 +156,10 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldo for stønadskontoen FORELDREPENGER_FØR_FØDSEL")
                 .isZero();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
                 .as("Saldoen for stønadskontoen FORELDREPENGER")
                 .isEqualTo(75);
 
@@ -190,10 +194,10 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
         // Verifiser riktig justering av kontoer og uttak.
         saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldo for stønadskontoen FORELDREPENGER_FØR_FØDSEL")
                 .isEqualTo(5);
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
                 .as("Saldo for stønadskontoen FORELDREPENGER")
                 .isEqualTo(70);
     }
@@ -256,13 +260,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .isEqualTo(1);
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL")
                 .isZero();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo())
                 .as("Saldoen for stønadskonton MØDREKVOTE")
                 .isZero();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo())
                 .as("Saldoen for stønadskonton FELLESPERIODE")
                 .isZero();
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
@@ -547,13 +551,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL")
                 .isZero();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo())
                 .as("saldoen for stønadskonton MØDREKVOTE")
                 .isZero();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FEDREKVOTE).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FEDREKVOTE).saldo())
                 .as("saldoen for stønadskonton FEDREKVOTE")
                 .isZero();
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(100))
@@ -686,7 +690,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
         // UTTAK
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER")
                 .isZero();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
@@ -943,13 +947,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
         var saldoerFørstgangsbehandling = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoerFørstgangsbehandling.getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saldoerFørstgangsbehandling.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL")
                 .isZero();
-        assertThat(saldoerFørstgangsbehandling.getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saldoerFørstgangsbehandling.stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo())
                 .as("Saldoen for stønadskonton MØDREKVOTE")
                 .isZero();
-        assertThat(saldoerFørstgangsbehandling.getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo())
+        assertThat(saldoerFørstgangsbehandling.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo())
                 .as("Saldoen for stønadskonton FELLESPERIODE")
                 .isZero();
 
@@ -1056,16 +1060,16 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
 
         var saldoerBerørtSak = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoerBerørtSak.getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saldoerBerørtSak.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL")
                 .isZero();
-        assertThat(saldoerBerørtSak.getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saldoerBerørtSak.stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo())
                 .as("Saldoen for stønadskonton MØDREKVOTE")
                 .isZero();
-        assertThat(saldoerBerørtSak.getStonadskontoer().get(StønadskontoType.FEDREKVOTE).getSaldo())
+        assertThat(saldoerBerørtSak.stonadskontoer().get(SaldoVisningStønadskontoType.FEDREKVOTE).saldo())
                 .as("Saldoen for stønadskonton FEDREKVOTE")
                 .isZero();
-        assertThat(saldoerBerørtSak.getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo())
+        assertThat(saldoerBerørtSak.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo())
                 .as("Saldoen for stønadskonton FELLESPERIODE")
                 .isZero();
 
@@ -1387,7 +1391,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 PeriodeResultatÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER);
         var saldoer = saksbehandler
                 .hentSaldoerGittUttaksperioder(fastsettUttaksperioderManueltBekreftelseMor.getPerioder());
-        var disponibleFellesdager = saldoer.getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo();
+        var disponibleFellesdager = saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo();
         var sisteDagMedFellesperiode = Virkedager.plusVirkedager(fomSistePeriode.plusDays(1), Math.abs(disponibleFellesdager));
         fastsettUttaksperioderManueltBekreftelseMor.splitPeriode(
                 fomSistePeriode,
@@ -1407,7 +1411,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         beslutter.ventTilFagsakLøpende();
 
         // verifisering i uttak
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo())
                 .as("Saldoen for stønadskonton FELLESPERIODE")
                 .isZero();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
@@ -1566,13 +1570,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL")
                 .isZero();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo())
                 .as("Saldoen for stønadskonton MØDREKVOTE")
                 .isZero();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo())
                 .as("Saldoen for stønadskonton FELLESPERIODE")
                 .isZero();
 
@@ -1599,13 +1603,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
 
         var saldoerRevurdering = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoerRevurdering.getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saldoerRevurdering.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL")
                 .isZero();
-        assertThat(saldoerRevurdering.getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saldoerRevurdering.stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo())
                 .as("Saldoen for stønadskonton MØDREKVOTE")
                 .isEqualTo(45);
-        assertThat(saldoerRevurdering.getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo())
+        assertThat(saldoerRevurdering.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo())
                 .as("Saldoen for stønadskonton FELLESPERIODE")
                 .isEqualTo(75);
 
@@ -1691,13 +1695,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
         // UTTAK
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldo for stønadskontoen FORELDREPENGER_FØR_FØDSEL")
                 .isZero();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo())
                 .as("Saldo for stønadskontoen MØDREKVOTE")
                 .isZero();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo())
                 .as("Saldo for stønadskontoen FELLESPERIODE")
                 .isZero();
 
@@ -1756,7 +1760,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo())
                 .as("Saldo for stønadskontoen MØDREKVOTE")
                 .isZero();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
@@ -1775,7 +1779,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var omsorgsovertagelsesdato = LocalDate.now().minusMonths(2);
         var fpStartdato = omsorgsovertagelsesdato.plusWeeks(10);
         var fordeling = FordelingErketyper.generiskFordeling(
-                uttaksperiode(FORELDREPENGER, fpStartdato, fpStartdato.plusWeeks(40).minusDays(1)));
+                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdato, fpStartdato.plusWeeks(40).minusDays(1)));
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon(omsorgsovertagelsesdato, BrukerRolle.FAR, false)
                 .medFordeling(fordeling)
                 .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
@@ -1807,7 +1811,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
 
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
+        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
                 .as("Saldo for stønadskontoen MØDREKVOTE")
                 .isZero();
 

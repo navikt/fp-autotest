@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UFØRE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
@@ -742,7 +743,7 @@ class Fodsel extends FpsakTestBase {
         assertThat(foreldrepengerEtterUke6.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(foreldrepengerEtterUke6.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
 
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer())
                 .as("Stonadskontoer i Saldo")
                 .hasSize(4);
     }
@@ -865,17 +866,17 @@ class Fodsel extends FpsakTestBase {
                 .isEqualByComparingTo(BigDecimal.valueOf(100).subtract(arbeidstidsprosent));
         assertThat(gradertAktivitet.getProsentArbeid()).isEqualTo(arbeidstidsprosent);
 
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer())
                 .as("Antall stønadskonter i saldo")
                 .hasSize(4);
         //TODO ENDRE TIL STØNADSKONTOTYEP!! Er det 4 nå?
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldo igjen på FORELDREPENGER_FØR_FØDSEL")
                 .isNotNegative();
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo())
                 .as("Saldo igjen på FELLESPERIODE")
                 .isNotNegative();
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo())
                 .as("Saldo igjen på MØDREKVOTE")
                 .isNotNegative();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -938,13 +939,13 @@ class Fodsel extends FpsakTestBase {
                 .isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(periodeMerEnn49Uker.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
 
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer())
                 .as("Antall stønadskonter i saldo")
                 .hasSize(2);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldo igjen på FORELDREPENGER_FØR_FØDSEL")
                 .isNotNegative();
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
                 .as("Saldo igjen på FELLESPERIODE")
                 .isNotNegative();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1060,12 +1061,12 @@ class Fodsel extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER")
                 .isZero();
 
         // Tom på konto
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER")
                 .isZero();
         // 5 + 5 + 2 uker innvilget
