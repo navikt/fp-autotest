@@ -200,7 +200,7 @@ services:
       - "KAFKA_USERNAME=vtp"
       - "KAFKA_PASSWORD=vtp"
       - "PDL_GRAPHQL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
-      - "DKIF_BASE_URL=http://vtp:8060/rest/api"
+      - "DIGDIR_BASE_URL=http://vtp:8060/rest/api"
       - "FPINFO_BASE_URL=http://fpinfo:8080"
       - "OPPSLAG_URL=http://vtp:8060/rest/dummy/oppslag"
       - "FPFORDEL_BASE_URL=http://fpfordel:8080"
