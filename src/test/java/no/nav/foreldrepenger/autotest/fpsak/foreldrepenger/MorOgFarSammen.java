@@ -1,6 +1,10 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FEDREKVOTE;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FELLESPERIODE;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MØDREKVOTE;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,8 +13,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
@@ -45,8 +47,6 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Utsettelses�
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class MorOgFarSammen extends FpsakTestBase {
-
-    private static final Logger logger = LoggerFactory.getLogger(MorOgFarSammen.class);
 
     @Test
     @DisplayName("Mor og far koblet sak, kant til kant")
@@ -218,7 +218,7 @@ class MorOgFarSammen extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker())
                 .as("Antall uttkasperioder for søker")
                 .hasSize(3);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer())
                 .as("Antall stønadskontoer i saldo")
                 .hasSize(4);
 
@@ -245,7 +245,7 @@ class MorOgFarSammen extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentUttaksperioder())
                 .as("Antall uttaksperioder")
                 .hasSize(2);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer())
                 .as("Antall stønadskontoer")
                 .hasSize(4);
 
@@ -259,16 +259,16 @@ class MorOgFarSammen extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentUttaksperioder())
                 .as("Antall uttaksperioder")
                 .hasSize(4);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FEDREKVOTE).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(FEDREKVOTE).saldo())
                 .as("Saldo fro stønadskonto FEDREKVOTE")
                 .isPositive();
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.MØDREKVOTE).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(MØDREKVOTE).saldo())
                 .as("Saldo fro stønadskonto MØDREKVOTE")
                 .isPositive();
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FELLESPERIODE).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(FELLESPERIODE).saldo())
                 .as("Saldo fro stønadskonto FELLESPERIODE")
                 .isEqualTo(80);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().getStonadskontoer().get(StønadskontoType.FORELDREPENGER_FØR_FØDSEL).getSaldo())
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldo fro stønadskonto FORELDREPENGER_FØR_FØDSEL")
                 .isNotNegative();
 
