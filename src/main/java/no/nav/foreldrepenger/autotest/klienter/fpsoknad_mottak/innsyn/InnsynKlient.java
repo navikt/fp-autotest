@@ -4,7 +4,7 @@ import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 
 import jakarta.ws.rs.core.MediaType;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.FpsoknadMottakJerseyKlient;
-import no.nav.foreldrepenger.common.innsyn.v2.Saker;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.innsyn.dto.Saker;
 
 public class InnsynKlient extends FpsoknadMottakJerseyKlient {
 

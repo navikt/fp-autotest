@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.innsyn.InnsynKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.innsyn.dto.Saker;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx.TokenXHenterKlient;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.innsyn.v2.Saker;
 
 public class Innsyn {
     private static final Logger LOG = LoggerFactory.getLogger(Innsyn.class);
