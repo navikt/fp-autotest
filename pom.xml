@@ -20,7 +20,7 @@
         <vtp.versjon>1.1.5</vtp.versjon>
         <dokumentgenerator.version>3.2.6</dokumentgenerator.version>
         <felles.versjon>4.1.21</felles.versjon>
-        <aspectj.version>1.9.8</aspectj.version>
+        <aspectj.version>1.9.9</aspectj.version>
         <jackson.version>2.13.2</jackson.version>
         <jersey.version>3.0.4</jersey.version>
         <fp-kontrakter.version>6.1.9</fp-kontrakter.version>
