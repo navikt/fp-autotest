@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.overføringsperiode;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.utsettelsesperiode;
@@ -212,7 +213,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         // Merk: Avviket er G-sensitivt og kan bli påvirket av g-regulering
         var avvikendeNæringsinntekt = næringsinntekt * 1.9; // >25% avvik
         var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, avvikendeNæringsinntekt, true);
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()))
                 .medOpptjening(opptjening)
                 .medMottatdato(fødselsdato.plusWeeks(2));
@@ -927,7 +928,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fpStartdatoFar.minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fpStartdatoFar, fpStartdatoFar.plusWeeks(17).minusDays(1), true, false));
-        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordelingMor)
                 .medRelasjonTilBarn(RelasjonTilBarnErketyper.fødsel(2, fødselsdato))
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()))
@@ -1094,7 +1095,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(31).minusDays(1)));
 
-        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()));
         //TODO: Fjern denne etter debugging er ferdig.
@@ -1672,7 +1673,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 // Opphold uke 6 til 10
                 uttaksperiode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(36).minusDays(1)));
-        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()))
                 .medMottatdato(fødselsdato.minusWeeks(3));
@@ -1874,7 +1875,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(15), fpStartdatoFar.minusDays(1)));
-        var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()))
                 .medFordeling(fordelingMor)
                 .medMottatdato(fpStartdatoMor.minusWeeks(4));

@@ -120,7 +120,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var opprinneligFordeling = no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
-        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(opprinneligFordeling)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
                 .medMottatdato(fpStartdato.minusWeeks(3));

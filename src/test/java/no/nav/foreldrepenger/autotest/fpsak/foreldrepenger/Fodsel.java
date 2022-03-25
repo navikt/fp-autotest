@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
@@ -509,7 +510,7 @@ class Fodsel extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
