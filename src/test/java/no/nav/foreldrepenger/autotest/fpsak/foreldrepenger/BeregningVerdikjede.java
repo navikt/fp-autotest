@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.graderingsperiodeSN;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
@@ -57,7 +57,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -112,7 +112,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -150,7 +150,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -192,7 +192,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var familie = new Familie("172", fordel);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -246,7 +246,7 @@ class BeregningVerdikjede extends FpsakTestBase {
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, graderingFom.minusDays(1)),
                 graderingsperiodeSN(StønadskontoType.FELLESPERIODE, graderingFom, graderingTom, 50));
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medOpptjening(opptjening)
                 .medFordeling(fordeling)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
@@ -325,7 +325,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusMonths(4);
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
                 .medMottatdato(fpStartdato);
         var saksnummer = mor.søk(søknad.build());
@@ -387,7 +387,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var opptjening = OpptjeningErketyper.medFrilansOpptjening();
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medOpptjening(opptjening)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
@@ -425,7 +425,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var familie = new Familie("161", fordel);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -459,7 +459,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
