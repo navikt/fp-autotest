@@ -629,7 +629,7 @@ class MorOgFarSammen extends FpsakTestBase {
 
     private long sendInnSøknadMor(Familie familie, LocalDate fødselsdato) {
         var mor = familie.mor();
-        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordelingMorHappyCase(fødselsdato))
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         return mor.søk(søknad.build());
