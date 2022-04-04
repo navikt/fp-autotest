@@ -1028,34 +1028,8 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         /* Mor: Berørt sak */
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        var fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
-                fpStartdatoFar,
-                fpStartdatoFar.plusWeeks(4).minusDays(1),
-                PeriodeResultatÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
-                true,
-                true,
-                100);
-        fastsettUttaksperioderManueltBekreftelse.splitPeriode(
-                fpStartdatoFar.plusWeeks(4),
-                fpStartdatoFar.plusWeeks(17).minusDays(1),
-                fpStartdatoFar.plusWeeks(13).minusDays(1));
-        fastsettUttaksperioderManueltBekreftelse.innvilgPeriode(
-                fpStartdatoFar.plusWeeks(4),
-                fpStartdatoFar.plusWeeks(13).minusDays(1),
-                PeriodeResultatÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
-                true,
-                true,
-                100);
-        fastsettUttaksperioderManueltBekreftelse.avslåPeriode(
-                fpStartdatoFar.plusWeeks(13),
-                fpStartdatoFar.plusWeeks(17).minusDays(1),
-                PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN);
-        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
-
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerMor, true);
-
+        saksbehandler.ventTilAvsluttetBehandling();
+        
         var saldoerBerørtSak = saksbehandler.valgtBehandling.getSaldoer();
         assertThat(saldoerBerørtSak.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL")
