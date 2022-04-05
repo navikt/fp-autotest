@@ -17,7 +17,7 @@
         <changelist>-SNAPSHOT</changelist>
 
         <allure.version>2.17.3</allure.version>
-        <vtp.versjon>1.1.5</vtp.versjon>
+        <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.2.7</dokumentgenerator.version>
         <felles.versjon>4.1.22</felles.versjon>
         <aspectj.version>1.9.9</aspectj.version>
