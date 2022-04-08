@@ -167,7 +167,7 @@ jobs:
 
       - name: Laste opp logger
         if: failure() && env.STACK_CREATED == 'true'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: logs-autotest
           path: container-logs
@@ -336,7 +336,7 @@ jobs:
 
       - name: Laste opp logger
         if: failure() && env.STACK_CREATED == 'true'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: logs-fptilbake-tester
           path: container-logs
@@ -517,7 +517,7 @@ jobs:
 
       - name: Laste opp logger
         if: failure() && env.STACK_CREATED == 'true'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: logs-verdikjedetester
           path: container-logs
