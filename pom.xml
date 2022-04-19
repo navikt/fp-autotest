@@ -17,14 +17,14 @@
         <changelist>-SNAPSHOT</changelist>
 
         <allure.version>2.17.3</allure.version>
-        <vtp.versjon>1.1.5</vtp.versjon>
+        <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.2.7</dokumentgenerator.version>
-        <felles.versjon>4.1.22</felles.versjon>
-        <aspectj.version>1.9.9</aspectj.version>
+        <felles.versjon>4.1.24</felles.versjon>
+        <aspectj.version>1.9.9.1</aspectj.version>
         <jackson.version>2.13.2</jackson.version>
         <jersey.version>3.0.4</jersey.version>
         <fp-kontrakter.version>6.1.9</fp-kontrakter.version>
-        <selvbetjening-felles.version>0.6.5</selvbetjening-felles.version>
+        <selvbetjening-felles.version>0.6.11</selvbetjening-felles.version>
     </properties>
 
     <profiles>
@@ -97,7 +97,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.0.0-M6</version>
                 <configuration>
                     <argLine>
                         --enable-preview
@@ -274,7 +274,7 @@
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.0.0</version>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.activation</groupId>

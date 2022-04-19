@@ -1,16 +1,16 @@
 {
-  "modeller": [
-    {
-      "orgnummer": "994884174",
-      "navn": {
-        "navnelinje": [
-          "KJELLTECH"
-        ]
-      },
-      "organisasjonDetaljer": {
-        "registreringsDato": "now() - P10Y",
-        "datoSistEndret": "now() - P1Y"
-      }
-    }
-  ]
+    "modeller": [
+        {
+            "orgnummer": "994884174",
+            "navn": {
+                "navnelinje": [
+                    "KJELLTECH"
+                ]
+            },
+            "organisasjonDetaljer": {
+                "registreringsDato": "now() - P10Y",
+                "datoSistEndret": "now() - P1Y"
+            }
+        }
+    ]
 }

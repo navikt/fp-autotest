@@ -2,7 +2,7 @@
 	"arena": {
 		"saker": [
 			{
-				"saksnummer": "${arenasak1}",
+				"saksnummer": "999",
 				"tema": "AAP",
 				"status": "AKTIV",
 				"vedtak": [

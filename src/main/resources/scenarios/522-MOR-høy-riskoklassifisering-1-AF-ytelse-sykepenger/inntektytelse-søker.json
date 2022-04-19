@@ -1,104 +1,104 @@
 {
-	"trex": {
-		"foreldrepenger": [],
-		"svangerskapspenger": [],
-		"sykepenger": [
-			{
-				"status": {
-					"kode": "L",
-					"termnavn": "status"
-				},
-				"tema": {
-					"kode": "SP",
-					"termnavn": "tema"
-				},
-				"dekningsgrad": 80,
-				"foedselsdatoBarn": "now()-P30D",
-				"arbeidskategori": {
-					"kode": "01",
-					"termnavn": "ketegori"
-				},
-				"arbeidsforhold":  [],
-				"periode": {
-					"fom": "now() - P9M",
-					"tom": "now() + P1D"
-				},
-				"behandlingstema": {
-					"kode": "SP",
-					"termnavn": "behandlingstema"
-				},
-				"identdato": "now() - P9M",
-				"iverksatt": "now() - P9M",
-				"opphørFom": "now() + P1D",
-				"gradering": 100,
-				"opprinneligIdentdato": null,
-				"registrert": null,
-				"saksbehandlerId": "ABC",
-				"vedtak": [
-					{
-						"periode": {
-							"fom": "now() - P9M",
-							"tom": "now()"
-						},
-						"utbetalingsgrad": 100
-					}
-				]
-			}
-		],
-		"barnsykdom": []
-	},
-	"inntektskomponent": {
-		"inntektsperioder": [
-			{
-				"fom": "now() - P10M",
-				"tom": "now() - P9M",
-				"beløp": 100000,
-				"orgnr": "910909088",
-				"type": "Lønnsinntekt",
-				"fordel": "kontantytelse",
-				"beskrivelse": "fastloenn"
-			},
-			{
-				"fom": "now() - P9M",
-				"tom": "now() - P8M",
-				"beløp": 10,
-				"orgnr": "910909088",
-				"type": "Lønnsinntekt",
-				"fordel": "kontantytelse",
-				"beskrivelse": "fastloenn"
-			},
-			{
-				"fom": "now() - P8M",
-				"tom": "now()",
-				"beløp": 100000,
-				"orgnr": "910909088",
-				"type": "Lønnsinntekt",
-				"fordel": "kontantytelse",
-				"beskrivelse": "fastloenn"
-			}
-		]
-	},
-	"aareg": {
-		"arbeidsforhold": [
-			{
-				"arbeidsforholdId": "ARB001-001",
-				"ansettelsesperiodeFom": "now() - P10M",
-				"arbeidsforholdstype": "ordinaertArbeidsforhold",
-				"arbeidsgiverOrgnr": "910909088",
+    "trex": {
+        "foreldrepenger": [],
+        "svangerskapspenger": [],
+        "sykepenger": [
+            {
+                "status": {
+                    "kode": "L",
+                    "termnavn": "status"
+                },
+                "tema": {
+                    "kode": "SP",
+                    "termnavn": "tema"
+                },
+                "dekningsgrad": 80,
+                "foedselsdatoBarn": "now()-P30D",
+                "arbeidskategori": {
+                    "kode": "01",
+                    "termnavn": "ketegori"
+                },
+                "arbeidsforhold":  [],
+                "periode": {
+                    "fom": "now() - P9M",
+                    "tom": "now() + P1D"
+                },
+                "behandlingstema": {
+                    "kode": "SP",
+                    "termnavn": "behandlingstema"
+                },
+                "identdato": "now() - P9M",
+                "iverksatt": "now() - P9M",
+                "opphørFom": "now() + P1D",
+                "gradering": 100,
+                "opprinneligIdentdato": null,
+                "registrert": null,
+                "saksbehandlerId": "ABC",
+                "vedtak": [
+                    {
+                        "periode": {
+                            "fom": "now() - P9M",
+                            "tom": "now()"
+                        },
+                        "utbetalingsgrad": 100
+                    }
+                ]
+            }
+        ],
+        "barnsykdom": []
+    },
+    "inntektskomponent": {
+        "inntektsperioder": [
+            {
+                "fom": "now() - P10M",
+                "tom": "now() - P9M",
+                "beløp": 100000,
+                "orgnr": "910909088",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            },
+            {
+                "fom": "now() - P9M",
+                "tom": "now() - P8M",
+                "beløp": 10,
+                "orgnr": "910909088",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            },
+            {
+                "fom": "now() - P8M",
+                "tom": "now()",
+                "beløp": 100000,
+                "orgnr": "910909088",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            }
+        ]
+    },
+    "aareg": {
+        "arbeidsforhold": [
+            {
+                "arbeidsforholdId": "ARB001-001",
+                "ansettelsesperiodeFom": "now() - P10M",
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
+                "arbeidsgiverOrgnr": "910909088",
 
 
-				"arbeidsavtaler" : [
-					{
-						"fomGyldighetsperiode": "now() - P10M",
-						"sisteLønnsendringsdato": "now() - P1M",
-						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "40",
-						"stillingsprosent" : 100,
-						"beregnetAntallTimerPerUke": "40"
-					}
-				]
+                "arbeidsavtaler" : [
+                    {
+                        "fomGyldighetsperiode": "now() - P10M",
+                        "sisteLønnsendringsdato": "now() - P1M",
+                        "avlønningstype": "fastlønn",
+                        "avtaltArbeidstimerPerUke": "40",
+                        "stillingsprosent" : 100,
+                        "beregnetAntallTimerPerUke": "40"
+                    }
+                ]
 
-			}
-		]
-	}
- }
+            }
+        ]
+    }
+}

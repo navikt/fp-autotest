@@ -1,75 +1,75 @@
 {
-	"arena": {
-		"saker": [
-			{
-				"saksnummer": "${arenasak1}",
-				"tema": "DAG",
-				"status": "AKTIV",
-				"vedtak": [
-					{
-						"fom": "now() - P5M",
-						"tom": "now() - P5W1D",
-						"vedtakDato": "now() - P5M",
-						"kravMottattDato": "now() - P5M",
-						"status": "IVERK",
-						"dagsats": 1000,
-						"meldekort": [
-							{
-								"fom": "now() - P5M",
-								"tom": "now() - P4W",
-								"dagsats": 1000,
-								"beløp": 21667,
-								"utbetalingsgrad": 100
-							}
-						]
-					}
-				]
-			}
-		]
-	},
-	"inntektskomponent": {
-		"inntektsperioder": [
-			{
-				"fom": "now() - P10M",
-				"tom": "now() - P5M1D",
-				"beløp": 40000,
-				"orgnr": "910909088",
-				"type": "Lønnsinntekt",
-				"fordel": "kontantytelse",
-				"beskrivelse": "fastloenn"
-			},
-			{
-				"fom": "now() - P5M",
-				"beløp": 21667,
-				"orgnr": "910909088",
-				"type": "YtelseFraOffentlige",
-				"fordel": "kontantytelse",
-				"beskrivelse": "dagpenger ved arbeidsløshet"
-			}
-		]
-	},
-	"aareg": {
-		"arbeidsforhold": [
-			{
-				"arbeidsforholdId": "ARB001-001",
-				"ansettelsesperiodeFom": "now() - P10M",
-				"ansettelsesperiodeTom": "now() - P5M1D",
-				"arbeidsforholdstype": "ordinaertArbeidsforhold",
-				"arbeidsgiverOrgnr": "910909088",
+    "arena": {
+        "saker": [
+            {
+                "saksnummer": "999",
+                "tema": "DAG",
+                "status": "AKTIV",
+                "vedtak": [
+                    {
+                        "fom": "now() - P5M",
+                        "tom": "now() - P5W1D",
+                        "vedtakDato": "now() - P5M",
+                        "kravMottattDato": "now() - P5M",
+                        "status": "IVERK",
+                        "dagsats": 1000,
+                        "meldekort": [
+                            {
+                                "fom": "now() - P5M",
+                                "tom": "now() - P4W",
+                                "dagsats": 1000,
+                                "beløp": 21667,
+                                "utbetalingsgrad": 100
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "inntektskomponent": {
+        "inntektsperioder": [
+            {
+                "fom": "now() - P10M",
+                "tom": "now() - P5M1D",
+                "beløp": 40000,
+                "orgnr": "910909088",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            },
+            {
+                "fom": "now() - P5M",
+                "beløp": 21667,
+                "orgnr": "910909088",
+                "type": "YtelseFraOffentlige",
+                "fordel": "kontantytelse",
+                "beskrivelse": "dagpenger ved arbeidsløshet"
+            }
+        ]
+    },
+    "aareg": {
+        "arbeidsforhold": [
+            {
+                "arbeidsforholdId": "ARB001-001",
+                "ansettelsesperiodeFom": "now() - P10M",
+                "ansettelsesperiodeTom": "now() - P5M1D",
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
+                "arbeidsgiverOrgnr": "910909088",
 
 
-				"arbeidsavtaler" : [
-					{
-						"fomGyldighetsperiode": "now() - P10M",
-						"sisteLønnsendringsdato": "now() - P1M",
-						"avlønningstype": "fastlønn",
-						"avtaltArbeidstimerPerUke": "40",
-						"stillingsprosent" : 100,
-						"beregnetAntallTimerPerUke": "40"
-					}
-				]
+                "arbeidsavtaler" : [
+                    {
+                        "fomGyldighetsperiode": "now() - P10M",
+                        "sisteLønnsendringsdato": "now() - P1M",
+                        "avlønningstype": "fastlønn",
+                        "avtaltArbeidstimerPerUke": "40",
+                        "stillingsprosent" : 100,
+                        "beregnetAntallTimerPerUke": "40"
+                    }
+                ]
 
-			}
-		]
-	}
+            }
+        ]
+    }
 }

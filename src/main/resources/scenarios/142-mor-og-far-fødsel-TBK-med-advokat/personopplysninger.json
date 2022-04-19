@@ -1,125 +1,121 @@
 {
-	"søker": {
-		"@type": "søker",
-		"ident": "${for1}",
-		"fornavn": "Dolly",
-		"etternavn": "Duck",
-		"fødselsdato": "now()-P30Y",
-		"kjønn": "K",
-		"geografiskTilknytning": {
-			"type": "Land",
-			"kode": "NOR"
-		},
-		"adresser": [
-			{
-				"@type": "ref",
-				"fom": "now() - P1Y",
-				"adresseType": "BOSTEDSADRESSE",
-				"land": "NOR"
-			}
-		],
-		"personstatus": [
-			{
-				"kode": "BOSA",
+    "søker": {
+        "@type": "søker",
+        "ident": "${for1}",
+        "fødselsdato": "now()-P30Y",
+        "kjønn": "K",
+        "geografiskTilknytning": {
+            "type": "Land",
+            "kode": "NOR"
+        },
+        "adresser": [
+            {
+                "@type": "ref",
+                "fom": "now() - P1Y",
+                "adresseType": "BOSTEDSADRESSE",
+                "land": "NOR"
+            }
+        ],
+        "personstatus": [
+            {
+                "kode": "BOSA",
                 "fom": "now()-P30Y"
-			}
-		],
-		"sivilstand": [
-			{
-				"kode": "GIFT"
-			}
-		],
-		"medlemskap": {
-			"perioder": [
-				{
-					"fom": "now() - P1Y",
-					"tom": "now() + P3Y",
-					"besluttetDato": "now() - P1Y",
-					"land": "DEU",
-					"trygdedekning": "Full",
-					"kilde": "ANNEN",
-					"lovvalgType": "ENDL",
-					"status": "GYLD"
-				}
-			]
-		}
-	},
-	"annenPart": {
-		"@type": "annenPart",
-		"ident": "${for2}",
-		"fornavn": "Donaldo",
-		"etternavn": "Duck",
-		"fødselsdato": "now()-P35Y",
-		"kjønn": "M",
-		"personstatus": [
-			{
-				"kode": "BOSA",
-				"fom": "now()-P35Y"
-			}
-		],
-		"adresser": [
-			{
-				"@type": "ref",
-				"fom": "now() - P1Y",
-				"adresseType": "BOSTEDSADRESSE",
-				"land": "NOR"
-			}
-		]
-	},
-	"familierelasjoner": [
-		{
-			"rolle": "BARN",
-			"til": {
-				"@type": "barn",
-				"ident": "${barn1}",
-				"fornavn": "${nevø1}",
-				"etternavn": "Duck",
-				"fødselsdato": "now()-P12W"
-			}
-		},
-		{
-			"rolle": "EKTE",
-			"til": {
-				"@type": "annenPart",
-				"ident": "${for2}"
-			}
-		}
-	],
+            }
+        ],
+        "sivilstand": [
+            {
+                "kode": "GIFT"
+            }
+        ],
+        "medlemskap": {
+            "perioder": [
+                {
+                    "fom": "now() - P1Y",
+                    "tom": "now() + P3Y",
+                    "besluttetDato": "now() - P1Y",
+                    "land": "DEU",
+                    "trygdedekning": "Full",
+                    "kilde": "ANNEN",
+                    "lovvalgType": "ENDL",
+                    "status": "GYLD"
+                }
+            ]
+        }
+    },
+    "annenPart": {
+        "@type": "annenPart",
+        "ident": "${for2}",
+        "fødselsdato": "now()-P35Y",
+        "kjønn": "M",
+        "personstatus": [
+            {
+                "kode": "BOSA",
+                "fom": "now()-P35Y"
+            }
+        ],
+        "adresser": [
+            {
+                "@type": "ref",
+                "fom": "now() - P1Y",
+                "adresseType": "BOSTEDSADRESSE",
+                "land": "NOR"
+            }
+        ]
+    },
+    "familierelasjoner": [
+        {
+            "rolle": "BARN",
+            "til": {
+                "@type": "barn",
+                "ident": "${barn1}",
+                "fornavn": "Ole",
+                "etternavn": "Duck",
+                "fødselsdato": "now()-P12W"
+            }
+        },
+        {
+            "rolle": "EKTE",
+            "til": {
+                "@type": "annenPart",
+                "ident": "${for2}"
+            }
+        }
+    ],
 
-	"familierelasjonerAnnenPart": [
-		{
-			"rolle": "BARN",
-			"til": {
-				"@type": "barn",
-				"ident": "${barn1}",
-				"fornavn": "${nevø1}",
-				"etternavn": "Duck",
-				"fødselsdato": "now()-P12W"
-			}
-		},
-		{
-			"rolle": "EKTE",
-			"til": {
-				"@type": "søker",
-				"ident": "${for1}"
-			}
-		}
-	],
+    "familierelasjonerAnnenPart": [
+        {
+            "rolle": "BARN",
+            "til": {
+                "@type": "barn",
+                "ident": "${barn1}",
+                "fornavn": "Ole",
+                "etternavn": "Duck",
+                "fødselsdato": "now()-P12W"
+            }
+        },
+        {
+            "rolle": "EKTE",
+            "til": {
+                "@type": "søker",
+                "ident": "${for1}"
+            }
+        }
+    ],
 
-	"familierelasjonerBarn": [
-		{
-			"rolle": "MORA",
-			"til": {
-				"@type": "søker",
-				"ident": "${for1}"
-			}
-		},
-		{
-			"rolle": "FARA",
-			"til": {
-				"@type": "annenPart",
-				"ident": "${for2}"
-			}
-		}
-	]
+    "familierelasjonerBarn": [
+        {
+            "rolle": "MORA",
+            "til": {
+                "@type": "søker",
+                "ident": "${for1}"
+            }
+        },
+        {
+            "rolle": "FARA",
+            "til": {
+                "@type": "annenPart",
+                "ident": "${for2}"
+            }
+        }
+    ]
 }

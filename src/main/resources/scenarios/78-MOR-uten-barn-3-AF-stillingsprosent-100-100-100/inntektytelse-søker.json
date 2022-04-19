@@ -3,8 +3,7 @@
         "inntektsperioder": [
             {
                 "fom": "now() - P2Y",
-                "tom": "now() - P7D",
-                "beløp": 60000,
+                "beløp": 50000,
                 "orgnr": "910909088",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
@@ -12,18 +11,16 @@
             },
             {
                 "fom": "now() - P2Y",
-                "tom": "now()",
-                "beløp": 60000,
+                "beløp": 50000,
                 "orgnr": "973861778",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
             },
             {
-                "fom": "now() - P6D",
-                "tom": "now()",
-                "beløp": 60000,
-                "orgnr": "342352362",
+                "fom": "now() - P2Y",
+                "beløp": 50000,
+                "orgnr": "991779493",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -34,54 +31,51 @@
         "arbeidsforhold": [
             {
                 "arbeidsforholdId": "ARB001-001",
-                "ansettelsesperiodeFom": "now() - P2Y",
-                "ansettelsesperiodeTom": "now() - P7D",
-                "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "arbeidsgiverOrgnr": "910909088",
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
+                "ansettelsesperiodeFom": "now() - P4Y",
                 "arbeidsavtaler" : [
                     {
                         "fomGyldighetsperiode": "now() - P2Y",
-                        "sisteLønnsendringsdato": "now() - P2Y",
+                        "sisteLønnsendringsdato": "now() - P1M",
                         "avlønningstype": "fastlønn",
                         "avtaltArbeidstimerPerUke": "40",
                         "stillingsprosent" : 100,
-                        "beregnetAntallTimerPerUke": "30"
+                        "beregnetAntallTimerPerUke": "40"
                     }
                 ]
-
             },
             {
                 "arbeidsforholdId": "ARB001-002",
-                "ansettelsesperiodeFom": "now() - P2Y",
+                "arbeidsgiverOrgnr": "9731861778",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "arbeidsgiverOrgnr": "973861778",
+                "ansettelsesperiodeFom": "now() - P4Y",
                 "arbeidsavtaler" : [
                     {
                         "fomGyldighetsperiode": "now() - P2Y",
-                        "sisteLønnsendringsdato": "now() - P2Y",
+                        "sisteLønnsendringsdato": "now() - P1M",
                         "avlønningstype": "fastlønn",
                         "avtaltArbeidstimerPerUke": "40",
                         "stillingsprosent" : 100,
-                        "beregnetAntallTimerPerUke": "30"
+                        "beregnetAntallTimerPerUke": "40"
                     }
                 ]
             },
             {
                 "arbeidsforholdId": "ARB001-003",
-                "ansettelsesperiodeFom": "now() - P6D",
+                "arbeidsgiverOrgnr": "991779493",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "arbeidsgiverOrgnr": "342352362",
+                "ansettelsesperiodeFom": "now() - P4Y",
                 "arbeidsavtaler" : [
                     {
-                        "fomGyldighetsperiode": "now() - P6D",
-                        "sisteLønnsendringsdato": "now() - P6D",
+                        "fomGyldighetsperiode": "now() - P2Y",
+                        "sisteLønnsendringsdato": "now() - P1M",
                         "avlønningstype": "fastlønn",
                         "avtaltArbeidstimerPerUke": "40",
                         "stillingsprosent" : 100,
-                        "beregnetAntallTimerPerUke": "30"
+                        "beregnetAntallTimerPerUke": "40"
                     }
                 ]
-
             }
         ]
     }
