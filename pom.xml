@@ -6,26 +6,28 @@
     <groupId>no.nav.foreldrepenger.autotest</groupId>
     <artifactId>autotest</artifactId>
     <packaging>jar</packaging>
-    <version>${revision}${sha1}${changelist}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>FPSAK :: AutoTest</name>
 
     <properties>
         <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>1.0.0</revision>
-        <sha1/>
-        <changelist>-SNAPSHOT</changelist>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <allure.version>2.17.3</allure.version>
         <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.2.7</dokumentgenerator.version>
         <felles.versjon>4.1.24</felles.versjon>
+        <fp-kontrakter.version>6.1.9</fp-kontrakter.version>
+        <selvbetjening-felles.version>0.6.11</selvbetjening-felles.version>
+
+        <allure.version>2.17.3</allure.version>
         <aspectj.version>1.9.9.1</aspectj.version>
+        <assertj.version>3.22.0</assertj.version>
         <junit.version>5.8.2</junit.version>
         <jackson.version>2.13.2</jackson.version>
         <jersey.version>3.0.4</jersey.version>
-        <fp-kontrakter.version>6.1.9</fp-kontrakter.version>
-        <selvbetjening-felles.version>0.6.11</selvbetjening-felles.version>
     </properties>
 
     <profiles>
@@ -229,7 +231,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.22.0</version>
+            <version>${assertj.version}</version>
         </dependency>
         <dependency>
             <groupId>io.qameta.allure</groupId>
@@ -317,7 +319,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.4.0</version>
+            <version>4.5.0</version>
         </dependency>
     </dependencies>
 
