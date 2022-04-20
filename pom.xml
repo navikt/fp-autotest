@@ -21,6 +21,7 @@
         <dokumentgenerator.version>3.2.7</dokumentgenerator.version>
         <felles.versjon>4.1.24</felles.versjon>
         <aspectj.version>1.9.9.1</aspectj.version>
+        <junit.version>5.8.2</junit.version>
         <jackson.version>2.13.2</jackson.version>
         <jersey.version>3.0.4</jersey.version>
         <fp-kontrakter.version>6.1.9</fp-kontrakter.version>
@@ -218,12 +219,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.8.2</version>
+            <version>${junit.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-engine</artifactId>
-            <version>1.8.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>

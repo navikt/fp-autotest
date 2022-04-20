@@ -47,7 +47,7 @@
             },
             {
                 "arbeidsforholdId": "ARB001-002",
-                "arbeidsgiverOrgnr": "9731861778",
+                "arbeidsgiverOrgnr": "973861778",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "ansettelsesperiodeFom": "now() - P4Y",
                 "arbeidsavtaler" : [
