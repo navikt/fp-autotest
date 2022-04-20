@@ -23,77 +23,12 @@
         <selvbetjening-felles.version>0.6.11</selvbetjening-felles.version>
 
         <allure.version>2.17.3</allure.version>
-        <aspectj.version>1.9.9.1</aspectj.version>
         <assertj.version>3.22.0</assertj.version>
-        <junit.version>5.8.2</junit.version>
+        <aspectj.version>1.9.9.1</aspectj.version>
         <jackson.version>2.13.2</jackson.version>
         <jersey.version>3.0.4</jersey.version>
+        <junit.version>5.8.2</junit.version>
     </properties>
-
-    <profiles>
-        <profile>
-            <id>fpsak</id>
-            <properties>
-                <includeTestsTags>fpsak</includeTestsTags>
-                <excludeTestsTags>test, pending</excludeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
-            <id>fptilbake</id>
-            <properties>
-                <testsTags>fptilbake, tilbakekreving</testsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.fptilbake.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
-            <id>svangerskapspenger</id>
-            <properties>
-                <includeTestsTags>svangerskapspenger</includeTestsTags>
-                <excludeTestsTags>test, pending</excludeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
-            <id>verdikjede</id>
-            <properties>
-                <includeTestsTags>verdikjede</includeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
-            <id>utvikling</id>
-            <properties>
-                <includeTestsTags>utvikling</includeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
-            <id>logger</id>
-            <properties>
-                <includeTestsTags>logger</includeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
-            <id>loggfeil</id>
-            <properties>
-                <includeTestsTags>loggerFeil</includeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
-            </properties>
-        </profile>
-        <profile>
-            <id>internal</id>
-            <properties>
-                <includeTestsTags>internal</includeTestsTags>
-                <excludeTestsTags>pending</excludeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.internal.**</testPackage>
-            </properties>
-            <activation>
-            	<activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>
@@ -120,9 +55,6 @@
                     </includes>
                     <groups>${includeTestsTags}</groups>
                     <excludedGroups>${excludeTestsTags}</excludedGroups>
-                    <systemPropertyVariables>
-                        <application.root>${maven.multiModuleProjectDirectory}</application.root>
-                    </systemPropertyVariables>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -163,7 +95,7 @@
             <plugin>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.18.20.0</version>
+                <version>1.18.24</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -177,7 +109,7 @@
     </build>
 
     <dependencies>
-        <!-- Autotest dokumentgenerator avhengigheter -->
+        <!-- Interne avhengigheter-->
         <dependency>
             <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
             <artifactId>inntektsmelding</artifactId>
@@ -203,9 +135,6 @@
             <artifactId>fpsoknad-felles</artifactId>
             <version>${selvbetjening-felles.version}</version>
         </dependency>
-
-
-        <!-- VTP prosjektavhengigheter -->
         <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>testmodell</artifactId>
@@ -218,16 +147,6 @@
         </dependency>
 
         <!-- External dependencies -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -244,16 +163,22 @@
             <version>${allure.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jboss</groupId>
-            <artifactId>jandex</artifactId>
-            <version>2.4.2.Final</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.5.0</version>
         </dependency>
 
+        <!-- Http klient, jackson og tilhørende avhengigheter -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
@@ -316,12 +241,85 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- Misc -->
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>4.5.0</version>
+            <groupId>org.jboss</groupId>
+            <artifactId>jandex</artifactId>
+            <version>2.4.2.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
         </dependency>
     </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>fpsak</id>
+            <properties>
+                <includeTestsTags>fpsak</includeTestsTags>
+                <excludeTestsTags>test, pending</excludeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>fptilbake</id>
+            <properties>
+                <testsTags>fptilbake, tilbakekreving</testsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.fptilbake.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>svangerskapspenger</id>
+            <properties>
+                <includeTestsTags>svangerskapspenger</includeTestsTags>
+                <excludeTestsTags>test, pending</excludeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>verdikjede</id>
+            <properties>
+                <includeTestsTags>verdikjede</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>utvikling</id>
+            <properties>
+                <includeTestsTags>utvikling</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>logger</id>
+            <properties>
+                <includeTestsTags>logger</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>loggfeil</id>
+            <properties>
+                <includeTestsTags>loggerFeil</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>internal</id>
+            <properties>
+                <includeTestsTags>internal</includeTestsTags>
+                <excludeTestsTags>pending</excludeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.internal.**</testPackage>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
     <distributionManagement>
         <repository>
