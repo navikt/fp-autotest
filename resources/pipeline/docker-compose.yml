@@ -100,7 +100,7 @@ services:
       - "FPFORMIDLING_BASE_URL=http://fpformidling:8080/fpformidling"
       - "FPRISK_URL=http://fprisk:8080/fprisk"
       - "FPFORDEL_BASE_URL=http://fpfordel:8080/fpfordel"
-      - "UFORE_RS_URL=http://vtp:8060/rest/api/pesys"
+      - "UFORE_RS_URL=http://vtp:8060/rest/api/pesys/ufo"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
