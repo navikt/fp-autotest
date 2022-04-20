@@ -6,26 +6,255 @@
     <groupId>no.nav.foreldrepenger.autotest</groupId>
     <artifactId>autotest</artifactId>
     <packaging>jar</packaging>
-    <version>${revision}${sha1}${changelist}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>FPSAK :: AutoTest</name>
 
     <properties>
         <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>1.0.0</revision>
-        <sha1/>
-        <changelist>-SNAPSHOT</changelist>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <vtp.versjon>1.1.6</vtp.versjon>
+        <dokumentgenerator.version>3.2.7</dokumentgenerator.version>
+        <felles.versjon>4.1.24</felles.versjon>
+        <fp-kontrakter.version>6.1.9</fp-kontrakter.version>
+        <selvbetjening-felles.version>0.6.11</selvbetjening-felles.version>
 
         <allure.version>2.17.3</allure.version>
-        <vtp.versjon>1.1.5</vtp.versjon>
-        <dokumentgenerator.version>3.2.7</dokumentgenerator.version>
-        <felles.versjon>4.1.22</felles.versjon>
-        <aspectj.version>1.9.9</aspectj.version>
+        <assertj.version>3.22.0</assertj.version>
+        <aspectj.version>1.9.9.1</aspectj.version>
         <jackson.version>2.13.2</jackson.version>
         <jersey.version>3.0.4</jersey.version>
-        <fp-kontrakter.version>6.1.9</fp-kontrakter.version>
-        <selvbetjening-felles.version>0.6.5</selvbetjening-felles.version>
+        <junit.version>5.8.2</junit.version>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M6</version>
+                <configuration>
+                    <argLine>
+                        --enable-preview
+                        -Dfile.encoding=UTF-8
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                    </argLine>
+                    <properties>
+                        <configurationParameters>
+                            junit.jupiter.execution.parallel.enabled = true
+                            junit.jupiter.execution.parallel.mode.default = concurrent
+                            junit.jupiter.execution.parallel.config.strategy = custom
+                            junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.jupiter.CutstomExecutionStrategy
+                        </configurationParameters>
+                    </properties>
+                    <includes>
+                        <include>${testPackage}</include>
+                    </includes>
+                    <groups>${includeTestsTags}</groups>
+                    <excludedGroups>${excludeTestsTags}</excludedGroups>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.11.2</version>
+                <configuration>
+                    <reportDirectory>target/allure-report</reportDirectory>
+                    <reportingOutputDirectory>target/allure-report</reportingOutputDirectory>
+                    <reportVersion>${allure.version}</reportVersion>
+                    <allureDownloadUrl>
+                        https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/${allure.version}/allure-commandline-${allure.version}.zip
+                    </allureDownloadUrl>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <parameters>true</parameters>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>1.18.24</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Interne avhengigheter-->
+        <dependency>
+            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
+            <artifactId>inntektsmelding</artifactId>
+            <version>${dokumentgenerator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
+            <artifactId>foreldrepengesoknad</artifactId>
+            <version>${dokumentgenerator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-log</artifactId>
+            <version>${felles.versjon}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>risk-v1</artifactId>
+            <version>${fp-kontrakter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger</groupId>
+            <artifactId>fpsoknad-felles</artifactId>
+            <version>${selvbetjening-felles.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.vtp</groupId>
+            <artifactId>testmodell</artifactId>
+            <version>${vtp.versjon}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.vtp</groupId>
+            <artifactId>kontrakter</artifactId>
+            <version>${vtp.versjon}</version>
+        </dependency>
+
+        <!-- External dependencies -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-java-commons</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.5.0</version>
+        </dependency>
+
+        <!-- Http klient, jackson og tilhørende avhengigheter -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-parameter-names</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${jersey.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.connectors</groupId>
+            <artifactId>jersey-apache-connector</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${jersey.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.hk2.external</groupId>
+                    <artifactId>jakarta.inject</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Misc -->
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jandex</artifactId>
+            <version>2.4.2.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+    </dependencies>
+
 
     <profiles>
         <profile>
@@ -87,238 +316,10 @@
                 <testPackage>no.nav.foreldrepenger.autotest.internal.**</testPackage>
             </properties>
             <activation>
-            	<activeByDefault>true</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
     </profiles>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <argLine>
-                        --enable-preview
-                        -Dfile.encoding=UTF-8
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
-                    <properties>
-                        <configurationParameters>
-                            junit.jupiter.execution.parallel.enabled = true
-                            junit.jupiter.execution.parallel.mode.default = concurrent
-                            junit.jupiter.execution.parallel.config.strategy = custom
-                            junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.jupiter.CutstomExecutionStrategy
-                        </configurationParameters>
-                    </properties>
-                    <includes>
-                        <include>${testPackage}</include>
-                    </includes>
-                    <groups>${includeTestsTags}</groups>
-                    <excludedGroups>${excludeTestsTags}</excludedGroups>
-                    <systemPropertyVariables>
-                        <application.root>${maven.multiModuleProjectDirectory}</application.root>
-                    </systemPropertyVariables>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjweaver</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>2.11.2</version>
-                <configuration>
-                    <reportDirectory>target/allure-report</reportDirectory>
-                    <reportingOutputDirectory>target/allure-report</reportingOutputDirectory>
-                    <reportVersion>${allure.version}</reportVersion>
-                    <allureDownloadUrl>
-                        https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/${allure.version}/allure-commandline-${allure.version}.zip
-                    </allureDownloadUrl>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <configuration>
-                    <parameters>true</parameters>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>UTF-8</encoding>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                        <arg>--enable-preview</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.18.20.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>delombok</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-    <dependencies>
-        <!-- Autotest dokumentgenerator avhengigheter -->
-        <dependency>
-            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
-            <artifactId>inntektsmelding</artifactId>
-            <version>${dokumentgenerator.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
-            <artifactId>foreldrepengesoknad</artifactId>
-            <version>${dokumentgenerator.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-log</artifactId>
-            <version>${felles.versjon}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>risk-v1</artifactId>
-            <version>${fp-kontrakter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger</groupId>
-            <artifactId>fpsoknad-felles</artifactId>
-            <version>${selvbetjening-felles.version}</version>
-        </dependency>
-
-
-        <!-- VTP prosjektavhengigheter -->
-        <dependency>
-            <groupId>no.nav.foreldrepenger.vtp</groupId>
-            <artifactId>testmodell</artifactId>
-            <version>${vtp.versjon}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.vtp</groupId>
-            <artifactId>kontrakter</artifactId>
-            <version>${vtp.versjon}</version>
-        </dependency>
-
-        <!-- External dependencies -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.8.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-engine</artifactId>
-            <version>1.8.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.22.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-java-commons</artifactId>
-            <version>${allure.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit5</artifactId>
-            <version>${allure.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss</groupId>
-            <artifactId>jandex</artifactId>
-            <version>2.4.2.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-parameter-names</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.activation</groupId>
-            <artifactId>jakarta.activation-api</artifactId>
-            <version>2.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <version>${jersey.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>jakarta.xml.bind</groupId>
-                    <artifactId>jakarta.xml.bind-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.connectors</groupId>
-            <artifactId>jersey-apache-connector</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>${jersey.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.glassfish.hk2.external</groupId>
-                    <artifactId>jakarta.inject</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>4.4.0</version>
-        </dependency>
-    </dependencies>
 
     <distributionManagement>
         <repository>

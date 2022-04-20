@@ -1,59 +1,76 @@
 {
-	"inntektskomponent": {
-		"inntektsperioder": [
-			{
-				"fom": "now() - P3Y",
-				"beløp": 50000,
-				"orgnr": "910909088",
-				"type": "Lønnsinntekt",
-				"fordel": "kontantytelse",
-
-				"beskrivelse": "fastloenn"
-			}
-		]
-	},
-	"aareg": {
-		"arbeidsforhold": [
-		]
-	},
-	"sigrun": {
-		"inntektsår": [
-			{
-				"år": "2016",
-				"oppføring": [
-					{
-						"tekniskNavn": "personinntektNaering",
-						"beløp": "200000"
-					}
-				]
-			},
-			{
-				"år": "2017",
-				"oppføring": [
-					{
-						"tekniskNavn": "personinntektNaering",
-						"beløp": "300000"
-					}
-				]
-			},
-			{
-				"år": "2018",
-				"oppføring": [
-					{
-						"tekniskNavn": "personinntektNaering",
-						"beløp": "400000"
-					}
-				]
-			},
-			{
-				"år": "2019",
-				"oppføring": [
-					{
-						"tekniskNavn": "personinntektNaering",
-						"beløp": "500000"
-					}
-				]
-			}
-		]
-	}
+    "inntektskomponent": {
+        "inntektsperioder": [
+            {
+                "fom": "now() - P3Y",
+                "beløp": 50000,
+                "orgnr": "910909088",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            }
+        ]
+    },
+    "aareg": {
+        "arbeidsforhold": [
+        ]
+    },
+    "sigrun": {
+        "inntektsår": [
+            {
+                "år": "2016",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "200000"
+                    }
+                ]
+            },
+            {
+                "år": "2017",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "300000"
+                    }
+                ]
+            },
+            {
+                "år": "2018",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "400000"
+                    }
+                ]
+            },
+            {
+                "år": "2019",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "190000"
+                    }
+                ]
+            },
+            {
+                "år": "2020",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "200000"
+                    }
+                ]
+            },
+            {
+                "år": "2021",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "210000"
+                    }
+                ]
+            }
+        ]
+    }
 }

@@ -205,16 +205,9 @@ class Fodsel extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
-        vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(2, LocalDate.now().minusDays(40));
-        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
-
-        AvklarBrukerHarGyldigPeriodeBekreftelse avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class);
-        avklarBrukerHarGyldigPeriodeBekreftelse.setVurdering(
-                MedlemskapManuellVurderingType.MEDLEM,
-                saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
+        var avklarBrukerHarGyldigPeriodeBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarBrukerHarGyldigPeriodeBekreftelse.class)
+                .setVurdering(MedlemskapManuellVurderingType.MEDLEM, saksbehandler.valgtBehandling.getMedlem().getMedlemskapPerioder());
         saksbehandler.bekreftAksjonspunkt(avklarBrukerHarGyldigPeriodeBekreftelse);
         var bosatt = saksbehandler.hentAksjonspunktbekreftelse(AvklarBrukerBosattBekreftelse.class);
         bosatt.getBekreftedePerioder().forEach(p -> p.setBosattVurdering(true));

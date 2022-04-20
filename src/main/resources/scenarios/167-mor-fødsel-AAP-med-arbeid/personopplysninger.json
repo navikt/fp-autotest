@@ -64,7 +64,7 @@
 			"til": {
 				"@type": "barn",
 				"ident": "${barn1}",
-				"fornavn": "${nevø1}",
+				"fornavn": "Ole",
 				"etternavn": "Duck",
 				"fødselsdato": "now()"
 			}
