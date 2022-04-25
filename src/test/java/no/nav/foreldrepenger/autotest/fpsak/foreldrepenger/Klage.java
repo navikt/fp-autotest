@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
@@ -12,14 +11,10 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelseUtenTotrinn;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravKa;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNkBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
@@ -99,196 +94,6 @@ class Klage extends FpsakTestBase {
                 .isEqualTo(fritekstBrev);
         assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageMedholdArsak())
                 .as("Årsak til klagevburdering fra NFP")
-                .isEqualTo("ULIK_VURDERING");
-    }
-
-    @Test
-    @DisplayName("Klage med hjemsende av KA")
-    @Description("Sender inn klage på førstegangsbehandling. NFP sender videre til KA. KA bekrefter hjemsende. Beslutter og avslutter.")
-    void hjemsendeKA() {
-        var familie = new Familie("50", fordel);
-        var mor = familie.mor();
-        var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
-
-        // Motta og behandle klage NFP
-        mor.sendInnKlage();
-        klagebehandler.hentFagsak(saksnummer);
-
-        klagebehandler.ventPåOgVelgKlageBehandling();
-
-        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
-        var klageFormkravNfp = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
-                .godkjennAlleFormkrav()
-                .setPåklagdVedtak(førstegangsbehandling.uuid)
-                .setBegrunnelse("blabla");
-        debugLoggBehandling(klagebehandler.valgtBehandling);
-        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
-        var vurderingAvKlageNfpBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
-                .bekreftStadfestet()
-                .fritekstBrev("Fritekst brev fra nfp")
-                .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
-
-        // KA
-        var klageFormkravKa = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
-                .godkjennAlleFormkrav()
-                .setPåklagdVedtak(førstegangsbehandling.uuid)
-                .setBegrunnelse("blabla begrunnelse");
-        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
-        var vurderingAvKlageNkBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
-                .bekreftHjemsende()
-                .fritekstBrev("Fritekst brev fra KA")
-                .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
-        klagebehandler.ventTilAvsluttetBehandling();
-
-        assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.HJEMSENDE_UTEN_OPPHEVE);
-        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering())
-                .as("Klagevurderingsresultat fra NK")
-                .isEqualTo("HJEMSENDE_UTEN_Å_OPPHEVE");
-    }
-
-    @Test
-    @DisplayName("Klage med stadfestet av KA")
-    @Description("Sender inn klage på førstegangsbehandling. NFP sender videre til KA. KA bekrefter stadfestet. Beslutter og avslutter.")
-    void stadfesteKA() {
-        var familie = new Familie("50", fordel);
-        var mor = familie.mor();
-        var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
-
-        // Motta og behandle klage NFP
-        mor.sendInnKlage();
-        klagebehandler.hentFagsak(saksnummer);
-        klagebehandler.ventPåOgVelgKlageBehandling();
-
-        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
-        var klageFormkravNfp = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
-                .godkjennAlleFormkrav()
-                .setPåklagdVedtak(førstegangsbehandling.uuid)
-                .setBegrunnelse("Begrunnelse NFP.");
-        debugLoggBehandling(klagebehandler.valgtBehandling);
-        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
-        var vurderingAvKlageNfpBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
-                .bekreftStadfestet()
-                .fritekstBrev("Fritekst brev fra nfp")
-                .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
-
-        // KA
-        var klageFormkravKa = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
-                .godkjennAlleFormkrav()
-                .setPåklagdVedtak(førstegangsbehandling.uuid)
-                .setBegrunnelse("blabla begrunnelse");
-        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
-        var vurderingAvKlageNkBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
-                .bekreftStadfestet()
-                .fritekstBrev("Fritekst brev fra KA")
-                .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-        beslutter.hentFagsak(saksnummer);
-        beslutter.ventPåOgVelgKlageBehandling();
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.bekreftAksjonspunkt(bekreftelse);
-
-        klagebehandler.hentFagsak(saksnummer);
-        klagebehandler.ventPåOgVelgKlageBehandling();
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
-        klagebehandler.ventTilAvsluttetBehandling();
-
-        assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
-        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurdering())
-                .as("Klagevurderingsresultat NK")
-                .isEqualTo("STADFESTE_YTELSESVEDTAK");
-        assertThat(klagebehandler.valgtBehandling.status)
-                .as("Behandlingsstatus")
-                .isEqualTo(BehandlingStatus.AVSLUTTET);
-    }
-
-    @Test
-    @DisplayName("Klage med Medhold Delvis Gunst KA")
-    @Description("Sender inn klage på førstegangsbehandling. NFP sender videre til KA. KA bekrefter medhold med delvis gunst. Beslutter og avslutter.")
-    void medholdDelvisGunstKA() {
-        var familie = new Familie("50", fordel);
-        var mor = familie.mor();
-        var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
-
-        // Motta og behandle klage NFP
-        mor.sendInnKlage();
-        klagebehandler.hentFagsak(saksnummer);
-        klagebehandler.ventPåOgVelgKlageBehandling();
-
-        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
-        var klageFormkravNfp = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
-                .godkjennAlleFormkrav()
-                .setPåklagdVedtak(førstegangsbehandling.uuid)
-                .setBegrunnelse("blabla");
-        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
-        var vurderingAvKlageNfpBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
-                .bekreftStadfestet()
-                .fritekstBrev("Fritekst brev fra nfp")
-                .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-        assertThat(klagebehandler.valgtBehandling.behandlingsresultat.getType())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
-
-        // KA
-        var klageFormkravKa = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
-                .godkjennAlleFormkrav()
-                .setPåklagdVedtak(førstegangsbehandling.uuid)
-                .setBegrunnelse("blabla begrunnelse");
-        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
-        var vurderingAvKlageNkBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNkBekreftelse.class)
-                .bekreftMedholdDelvisGunst("ULIK_VURDERING")
-                .fritekstBrev("Fritekst brev fra KA")
-                .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-        beslutter.hentFagsak(saksnummer);
-        beslutter.ventPåOgVelgKlageBehandling();
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.bekreftAksjonspunkt(bekreftelse);
-
-        klagebehandler.hentFagsak(saksnummer);
-        klagebehandler.ventPåOgVelgKlageBehandling();
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
-        klagebehandler.ventTilAvsluttetBehandling();
-
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageVurderingOmgjoer())
-                .as("Vurdering omgjør til klagervurderingsresultat NK")
-                .isEqualTo("DELVIS_MEDHOLD_I_KLAGE");
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNK().getKlageMedholdArsak())
-                .as("KlageMedholdÅrsak til klagevurdering NK")
                 .isEqualTo("ULIK_VURDERING");
     }
 
