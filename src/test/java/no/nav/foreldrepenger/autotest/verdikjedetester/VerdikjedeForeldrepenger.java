@@ -42,18 +42,15 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AnkeVurderingResultatBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakKontrollerOpplysningerOmDødDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravKa;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
@@ -375,75 +372,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
-
-        mor.sendInnKlage();
-        klagebehandler.hentFagsak(saksnummer);
-        klagebehandler.ventPåOgVelgKlageBehandling();
-        var førstegangsbehandling = klagebehandler.førstegangsbehandling();
-        var klageFormkravNfp = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
-                .godkjennAlleFormkrav()
-                .setPåklagdVedtak(førstegangsbehandling.uuid)
-                .setBegrunnelse("Super duper klage!");
-        klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
-
-        var vurderingAvKlageNfpBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse.class)
-                .bekreftStadfestet()
-                .fritekstBrev("Fritektst til brev fra klagebehandler.")
-                .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
-
-        var klageFormkravKa = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravKa.class)
-                .godkjennAlleFormkrav()
-                .setPåklagdVedtak(førstegangsbehandling.uuid)
-                .setBegrunnelse("Super duper klage!");
-        klagebehandler.bekreftAksjonspunkt(klageFormkravKa);
-
-        var vurderingAvKlageNkBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageBekreftelse.VurderingAvKlageNkBekreftelse.class)
-                .bekreftStadfestet()
-                .fritekstBrev("Fritektst til brev fra klagebehandler.")
-                .setBegrunnelse("Fordi");
-        klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNkBekreftelse);
-
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        beslutter.hentFagsak(saksnummer);
-        beslutter.ventPåOgVelgKlageBehandling();
-        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
-
-        klagebehandler.hentFagsak(saksnummer);
-        klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
-        assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.KLAGE_YTELSESVEDTAK_STADFESTET);
-
-        // ANKE
-        mor.sendInnKlage();
-        klagebehandler.opprettBehandling(BehandlingType.ANKE, null);
-        klagebehandler.hentFagsak(saksnummer);
-        klagebehandler.ventPåOgVelgAnkeBehandling();
-        var ankeVurderingResultatBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(AnkeVurderingResultatBekreftelse.class)
-                .omgjørTilGunst(førstegangsbehandling.uuid)
-                .setBegrunnelse("Super duper anke!");
-        klagebehandler.bekreftAksjonspunkt(ankeVurderingResultatBekreftelse);
-
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        beslutter.hentFagsak(saksnummer);
-        beslutter.ventPåOgVelgAnkeBehandling();
-        var fatterVedtakBekreftelseAnke = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        fatterVedtakBekreftelseAnke.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelseAnke);
-
-        klagebehandler.hentFagsak(saksnummer);
-        klagebehandler.fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling();
-        assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.ANKE_OMGJOER);
     }
 
     @Test
@@ -1029,7 +957,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        
+
         var saldoerBerørtSak = saksbehandler.valgtBehandling.getSaldoer();
         assertThat(saldoerBerørtSak.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
                 .as("Saldoen for stønadskonton FORELDREPENGER_FØR_FØDSEL")
