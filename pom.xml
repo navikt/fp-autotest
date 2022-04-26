@@ -17,7 +17,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <vtp.versjon>1.1.6</vtp.versjon>
-        <dokumentgenerator.version>3.2.7</dokumentgenerator.version>
+        <dokumentgenerator.version>3.2.8</dokumentgenerator.version>
         <felles.versjon>4.1.24</felles.versjon>
         <fp-kontrakter.version>6.1.9</fp-kontrakter.version>
         <selvbetjening-felles.version>0.6.11</selvbetjening-felles.version>
