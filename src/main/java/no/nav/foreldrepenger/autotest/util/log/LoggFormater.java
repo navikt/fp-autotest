@@ -18,7 +18,7 @@ public final class LoggFormater {
     public static void leggTilKjørendeTestCaseILogger() {
         var lifecycle = Allure.getLifecycle();
         lifecycle.getCurrentTestCase().ifPresentOrElse(t -> lifecycle.updateTestCase(testResult ->
-                MDCOperations.putCallId("Testcase: " + testNavn(testResult))), MDCOperations::removeCallId);
+                MDCOperations.putCallId(testNavn(testResult))), MDCOperations::removeCallId);
     }
 
     private static String testNavn(io.qameta.allure.model.TestResult testResult) {
@@ -37,16 +37,18 @@ public final class LoggFormater {
         return testnavn.toString();
     }
 
-    public static void leggTilCallIdforSaksnummerForLogging(String callId, Long saksnummer) {
+    public static void leggTilCallIdforSaksnummerForLogging(Fødselsnummer fnr, Long saksnummer) {
         // Legger til Callid for saksnummer slik at vi kan slå opp riktig callid senere
-        MDCOperations.putToMDC(saksnummer.toString(), callId);
+        MDCOperations.putToMDC(saksnummer.toString(), leggTilCallIdForFnr(fnr));
     }
 
     public static String leggTilCallIdForFnr(Fødselsnummer fnr) {
-        // Legger til Callid for fnr slik at vi kan slå opp riktig callid senere
-        var callId = UUID.randomUUID().toString();
-        MDCOperations.putToMDC(fnr.value(), callId);
-        MDCOperations.putToMDC(MDC_CONSUMER_ID, callId);
+        var callId = MDCOperations.getFromMDC(fnr.value());
+        if (callId == null || callId.isEmpty()) {
+            callId = UUID.randomUUID().toString();
+            MDCOperations.putToMDC(fnr.value(), callId);
+            MDCOperations.putToMDC(MDC_CONSUMER_ID, callId);
+        }
         return callId;
     }
 }

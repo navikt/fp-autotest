@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.DokumentIDFraSøknad.dokumentTypeFraRelasjon;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
-import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
-import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummerForLogging;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL;
@@ -133,7 +131,6 @@ public class Fordel extends Aktoer implements Innsender {
         if ((saksnummer != null) && (saksnummer != 0L)) {
             journalpostModell.setSakId(saksnummer.toString());
         }
-        var callId = leggTilCallIdForFnr(fnr);
         String journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
 
         String behandlingstemaOffisiellKode = finnBehandlingstemaKode(dokumenttypeId);
@@ -141,9 +138,7 @@ public class Fordel extends Aktoer implements Innsender {
         debugSenderInnDokument("Foreldrepengesøknad", xml);
         long sakId = sendInnJournalpost(xml, mottattDato, journalpostId, behandlingstemaOffisiellKode,
                 dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
-        leggTilCallIdforSaksnummerForLogging(callId, sakId);
         journalpostModell.setSakId(String.valueOf(sakId));
-        LOG.info("Saksnummer {} Sendt inn søknad", sakId);
 
         Vent.til(() -> {
             List<Behandling> behandlinger = behandlingerKlient.alle(sakId);
@@ -159,7 +154,6 @@ public class Fordel extends Aktoer implements Innsender {
             // TODO: Vent.til fungerer ikke med endringssøknad. Venter ikke til behandlingen er opprettet
             sleep(5000);
         }
-
         return sakId;
     }
 

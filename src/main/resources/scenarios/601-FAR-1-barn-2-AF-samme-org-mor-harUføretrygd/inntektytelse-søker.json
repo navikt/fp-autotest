@@ -2,8 +2,17 @@
     "inntektskomponent": {
         "inntektsperioder": [
             {
-                "fom": "now() - P12M",
-                "tom": "now() - P10M",
+                "fom": "2020-11-01",
+                "tom": "2021-01-01",
+                "beløp": 50000,
+                "orgnr": "910909088",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            },
+            {
+                "fom": "2021-01-01",
+                "tom": "2021-09-01",
                 "beløp": 60000,
                 "orgnr": "910909088",
                 "type": "Lønnsinntekt",
@@ -11,13 +20,13 @@
                 "beskrivelse": "fastloenn"
             },
             {
-                "fom": "now() - P10M",
-                "tom": "now()",
+                "fom": "2021-07-01",
+                "tom": "2021-11-01",
                 "beløp": 60000,
                 "orgnr": "910909088",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
-                "beskrivelse": "fastloenn"
+                "beskrivelse": "testbeskrivelsesomfungererennsålenge"
             }
         ]
     },
@@ -27,29 +36,28 @@
                 "arbeidsforholdId": "ARB001-001",
                 "arbeidsgiverOrgnr": "910909088",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "ansettelsesperiodeFom": "now() - P4M",
+                "ansettelsesperiodeFom": "2021-07-01",
                 "arbeidsavtaler" : [
                     {
-                        "fomGyldighetsperiode": "now() - P2M",
-                        "sisteLønnsendringsdato": "now() - P1M",
+                        "fomGyldighetsperiode": "2021-09-01",
+                        "sisteLønnsendringsdato": "2021-10-01",
                         "avlønningstype": "fastlønn",
                         "avtaltArbeidstimerPerUke": "40",
                         "stillingsprosent" : 100,
                         "beregnetAntallTimerPerUke": "30"
                     }
                 ]
-
             },
             {
                 "arbeidsforholdId": "ARB001-002",
                 "arbeidsgiverOrgnr": "910909088",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "ansettelsesperiodeFom": "now() - P4Y",
-                "ansettelsesperiodeTom": "now() - P4M",
+                "ansettelsesperiodeFom": "2017-11-01",
+                "ansettelsesperiodeTom": "2021-07-01",
                 "arbeidsavtaler" : [
                     {
-                        "fomGyldighetsperiode": "now() - P4Y",
-                        "sisteLønnsendringsdato": "now() - P1Y",
+                        "fomGyldighetsperiode": "2017-11-01",
+                        "sisteLønnsendringsdato": "2020-11-01",
                         "avlønningstype": "fastlønn",
                         "avtaltArbeidstimerPerUke": "40",
                         "stillingsprosent" : 100,

@@ -16,12 +16,11 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -66,7 +65,7 @@ class SammenhengendeUttak extends FpsakTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
-        inntektsmelding.medUtsettelse(SøknadUtsettelseÅrsak.ARBEID.getKode(), fødsel.plusWeeks(15),
+        inntektsmelding.medUtsettelse(UttakresultatUtsettelseÅrsak.ARBEID.getKode(), fødsel.plusWeeks(15),
                 fødsel.plusWeeks(18).minusDays(1));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
@@ -171,7 +170,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         }
         assertThat(UttaksPerioderForSøker.get(4).getUtsettelseType())
                 .as("Uttaksutsettelesårsak")
-                .isEqualTo(UttakUtsettelseÅrsak.ARBEID);
+                .isEqualTo(UttakresultatUtsettelseÅrsak.ARBEID);
 
         // Verifisering tilkjent ytelse
         var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
@@ -268,13 +267,13 @@ class SammenhengendeUttak extends FpsakTestBase {
                 .hasSize(4);
         assertThat(UttaksPerioderForSøker.get(2).getUtsettelseType())
                 .as("Uttaks utsettelsesårsak for periode 3")
-                .isEqualTo(UttakUtsettelseÅrsak.ARBEID);
+                .isEqualTo(UttakresultatUtsettelseÅrsak.ARBEID);
         assertThat(UttaksPerioderForSøker.get(2).getPeriodeResultatType())
                 .as("Perioderesultatstype for periode 3")
                 .isEqualTo(PeriodeResultatType.AVSLÅTT);
         assertThat(UttaksPerioderForSøker.get(3).getUtsettelseType())
                 .as("Uttaks utsettelsesårsak for periode 3")
-                .isEqualTo(UttakUtsettelseÅrsak.ARBEID);
+                .isEqualTo(UttakresultatUtsettelseÅrsak.ARBEID);
         assertThat(UttaksPerioderForSøker.get(3).getPeriodeResultatType())
                 .as("Perioderesultatstype for periode 3")
                 .isEqualTo(PeriodeResultatType.INNVILGET);

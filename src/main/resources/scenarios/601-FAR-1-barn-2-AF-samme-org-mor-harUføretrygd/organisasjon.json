@@ -8,8 +8,8 @@
                 ]
             },
             "organisasjonDetaljer": {
-                "registreringsDato": "now() - P10Y",
-                "datoSistEndret": "now() - P1Y"
+                "registreringsDato": "2000-01-01",
+                "datoSistEndret": "2019-01-01"
             }
         }
     ]

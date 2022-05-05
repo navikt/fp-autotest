@@ -13,7 +13,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
@@ -219,7 +219,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
             setTrekkdager(aktivitet, ordinæreTrekkdagerVedFulltUttak, aktivitet.getUtbetalingsgrad());
         }
         // Utsettelses perioder trenger ikke trekkdager. set dem til 0
-        if (!UttakUtsettelseÅrsak.UDEFINERT.equals(periode.getUtsettelseType())) {
+        if (!UttakresultatUtsettelseÅrsak.UDEFINERT.equals(periode.getUtsettelseType())) {
             aktivitet.setTrekkdagerDesimaler(BigDecimal.ZERO);
         }
     }

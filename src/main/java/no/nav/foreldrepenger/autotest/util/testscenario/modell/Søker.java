@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
+import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
+import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummerForLogging;
 import static no.nav.foreldrepenger.autotest.util.testscenario.modell.Aareg.arbeidsforholdFrilans;
 import static no.nav.foreldrepenger.autotest.util.testscenario.modell.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
@@ -13,6 +15,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.ws.rs.NotSupportedException;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
@@ -29,6 +34,8 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.inntektkomponent.Innte
 
 public abstract class Søker {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Søker.class);
+
     private final Fødselsnummer fødselsnummer;
     private final AktørId aktørId;
     private final InntektYtelseModell inntektYtelseModell;
@@ -38,6 +45,7 @@ public abstract class Søker {
     private Long saksnummer = null;
 
     Søker(Fødselsnummer fødselsnummer, AktørId aktørId, InntektYtelseModell inntektYtelseModell, Innsender innsender) {
+        leggTilCallIdForFnr(fødselsnummer);
         this.fødselsnummer = fødselsnummer;
         this.aktørId = aktørId;
         this.inntektYtelseModell = inntektYtelseModell;
@@ -173,33 +181,44 @@ public abstract class Søker {
     }
 
     public long søk(Søknad søknad) {
+        LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, null);
+        leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
+        LOG.info("Søknad sendt inn og behandling opprettet på {}", this.saksnummer);
         return this.saksnummer;
     }
 
     public long søk(Søknad søknad, Long saksnummer) {
+        LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer);
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, saksnummer);
+        leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
+        LOG.info("Søknad sendt inn og behandling opprettet på {}", saksnummer);
         return this.saksnummer;
     }
 
     public long søk(Endringssøknad søknad) {
-        return innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, saksnummer);
-    }
-
-    // Brukes bare i tilfelle hvor en ønsker å sende IM uten registret arbeidsforhold i Aareg!
-    // TODO: Gjøres på en annen måte?
-    public void sendIMBasertPåInntekskomponenten(InntektsmeldingBuilder inntektsmelding) {
-        innsender.sendInnInntektsmelding(inntektsmelding, aktørId, fødselsnummer, this.saksnummer);
+        LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer);
+        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, saksnummer);
+        leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
+        LOG.info("Søknad sendt inn!");
+        return this.saksnummer;
     }
 
     public long søkPapirsøknadForeldrepenger() {
+        LOG.info("Sender inn papirsøknadd for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer);
+        leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
+        LOG.info("Søknad sendt inn og behandling opprettet på {}", saksnummer);
         return this.saksnummer;
     }
 
     public long sendInnPapirsøknadEEndringForeldrepenger() {
+        LOG.info("Sender inn endringssøknad på papirsøknadd for {} ..", fødselsnummer.value());
         guardTrengerEksisterendeBehandling();
-        return innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, this.saksnummer);
+        this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, this.saksnummer);
+        leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
+        LOG.info("Søknad sendt inn!");
+        return this.saksnummer;
     }
 
     public long søkPapirsøknadEngangsstønad() {
@@ -210,6 +229,12 @@ public abstract class Søker {
     public void sendInnKlage() {
         guardTrengerEksisterendeBehandling();
         innsender.sendInnKlage(aktørId, fødselsnummer, this.saksnummer);
+    }
+
+    // Brukes bare i tilfelle hvor en ønsker å sende IM uten registret arbeidsforhold i Aareg!
+    // TODO: Gjøres på en annen måte?
+    public void sendIMBasertPåInntekskomponenten(InntektsmeldingBuilder inntektsmelding) {
+        innsender.sendInnInntektsmelding(inntektsmelding, aktørId, fødselsnummer, this.saksnummer);
     }
 
     private void guardFlereArbeidsgivere() {

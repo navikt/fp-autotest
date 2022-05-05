@@ -18,8 +18,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Historikkinns
 import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 
 @Tag("verdikjede")
 class VerdikjedeEngangsstonad extends FpsakTestBase {
@@ -31,7 +29,7 @@ class VerdikjedeEngangsstonad extends FpsakTestBase {
         var familie = new Familie("505");
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato)
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.far().fødselsnummer()));
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = familie.mor().søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -62,9 +60,5 @@ class VerdikjedeEngangsstonad extends FpsakTestBase {
         assertThat(Pdf.is_pdf(pdf))
                 .as("Sjekker om byte array er av typen PDF")
                 .isTrue();
-    }
-
-    private NorskForelder lagNorskAnnenforeldre(Fødselsnummer indent) {
-        return new NorskForelder(indent, "");
     }
 }

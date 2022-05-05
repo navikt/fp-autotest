@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Brukes i uttaksresultat
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum UttakUtsettelseÅrsak {
+public enum UttakresultatUtsettelseÅrsak {
 
     ARBEID("ARBEID"),
     FERIE("FERIE"),
@@ -23,7 +23,7 @@ public enum UttakUtsettelseÅrsak {
     @JsonValue
     private final String kode;
 
-    UttakUtsettelseÅrsak(String kode) {
+    UttakresultatUtsettelseÅrsak(String kode) {
         this.kode = kode;
     }
 

@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OppholdÅrsak;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.Stønadskonto;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøknadUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
@@ -19,7 +16,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVur
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 
@@ -69,8 +66,6 @@ class EnumSeraliseringDeserialiseringTest extends SerializationTestBase {
         test(PeriodeResultatÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_DOKUMENTERT);
     }
 
-
-
     @Test
     void MedlemskapManuellVurderingTypeTest() {
         test(MedlemskapManuellVurderingType.MEDLEM);
@@ -82,28 +77,13 @@ class EnumSeraliseringDeserialiseringTest extends SerializationTestBase {
     }
 
     @Test
-    void FagsakTest() {
-        test(OppholdÅrsak.FELLESPERIODE_ANNEN_FORELDER);
-    }
-
-    @Test
-    void StønadskontoTest() {
-        test(Stønadskonto.FEDREKVOTE);
-    }
-
-    @Test
-    void SøknadUtsettelseÅrsakTest() {
-        test(SøknadUtsettelseÅrsak.ARBEID);
-    }
-
-    @Test
     void UttakPeriodeVurderingTypeTest() {
         test(UttakPeriodeVurderingType.PERIODE_OK);
     }
 
     @Test
     void UttakUtsettelseÅrsakTest() {
-        test(UttakUtsettelseÅrsak.BARN_INNLAGT);
+        test(UttakresultatUtsettelseÅrsak.BARN_INNLAGT);
     }
 
     @Test
