@@ -175,12 +175,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .as("Årsakskode til revuderingen")
                 .isEqualTo(RE_HENDELSE_FØDSEL);
 
-        var avklarFaktaAleneomsorgBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
-                .bekreftBrukerHarAleneomsorg()
-                .setBegrunnelse("Bekreftelse sendt fra Autotest.");
-        saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse2);
-
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
