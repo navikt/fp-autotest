@@ -686,7 +686,7 @@ class Fodsel extends FpsakTestBase {
     }
 
     @Test
-    @DisplayName("Far søker fødsel med aleneomsorg men er gift og bor med annenpart")
+    @DisplayName("Far søker fødsel med aleneomsorg som bekreftes at han har (mor forsvunnet)")
     void farSøkerFødselAleneomsorgMenErGiftOgBorMedAnnenpart() {
         var familie = new Familie("550", fordel);
         var far = familie.far();
@@ -706,37 +706,15 @@ class Fodsel extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         var bekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
-                .bekreftBrukerHarIkkeAleneomsorg();
+                .bekreftBrukerHarAleneomsorg();
         saksbehandler.bekreftAksjonspunktbekreftelserer(bekreftelse);
-        var avklarFaktaUttakPerioder = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
-                .delvisGodkjennPeriode(fødselsdato, fødselsdato.plusWeeks(20), fødselsdato, fødselsdato.plusWeeks(20),
-                        UttakPeriodeVurderingType.PERIODE_KAN_IKKE_AVKLARES);  // 20 uker fra erketype
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
-
-        var fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .innvilgManuellePerioder();
-        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-        beslutter.hentFagsak(saksnummer);
-        var fatterVedtakBekreftelse = beslutter
-                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
-        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.INNVILGET);
+        saksbehandler.ventTilAvsluttetBehandling();
 
         // verifiserer uttak
         var uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
-        assertThat(uttaksperioder).hasSize(2);
 
-        // uttak går til manuell behandling
+        /** TODO (jol) TFP-5010 assertThat(uttaksperioder).hasSize(4);
         var foreldrepengerFørste6Ukene = uttaksperioder.get(0);
         assertThat(foreldrepengerFørste6Ukene.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(foreldrepengerFørste6Ukene.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
@@ -746,7 +724,8 @@ class Fodsel extends FpsakTestBase {
 
         assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer())
                 .as("Stonadskontoer i Saldo")
-                .hasSize(4);
+                .hasSize(1);
+         */
     }
 
     @Test
