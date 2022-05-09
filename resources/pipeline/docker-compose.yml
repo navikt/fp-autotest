@@ -3,21 +3,22 @@ services:
   audit.nais:
     image: $AUDIT_NAIS_IMAGE
     container_name: audit.nais
+    mem_limit: 16m
     ports:
       - "6514:6514"
-    mem_limit: 16m
   oracle:
     image: $ORACLE_IMAGE
     container_name: oracle
     restart: on-failure
-    mem_limit: 1gb
     shm_size: 2gb
-    volumes:
-      - ./oracle-init:/docker-entrypoint-initdb.d/
+    environment:
+      - ORACLE_PASSWORD=oracle
     ports:
       - "1521:1521"
+    volumes:
+      - ./oracle-init:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: [ "CMD-SHELL","/opt/oracle/product/18c/dbhomeXE/health_check.sh"]
+      test: [ "CMD-SHELL","/opt/oracle/healthcheck.sh" ]
       interval: 5s
       timeout: 10s
       retries: 10
