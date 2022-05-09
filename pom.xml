@@ -25,7 +25,7 @@
         <allure.version>2.17.3</allure.version>
         <assertj.version>3.22.0</assertj.version>
         <aspectj.version>1.9.9.1</aspectj.version>
-        <jackson.version>2.13.2.1</jackson.version>
+        <jackson.version>2.13.2</jackson.version>
         <jersey.version>3.0.4</jersey.version>
         <junit.version>5.8.2</junit.version>
     </properties>
@@ -187,7 +187,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <version>2.13.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
