@@ -2,15 +2,16 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.SøknadUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UtsettelseÅrsak;
+
 
 public class UtsettelsePeriodeDto {
 
     public final LocalDate periodeFom;
     public final LocalDate periodeTom;
-    public final SøknadUtsettelseÅrsak arsakForUtsettelse;
+    public final UtsettelseÅrsak arsakForUtsettelse;
 
-    public UtsettelsePeriodeDto(LocalDate periodeFom, LocalDate periodeTom, SøknadUtsettelseÅrsak arsakForUtsettelse) {
+    public UtsettelsePeriodeDto(LocalDate periodeFom, LocalDate periodeTom, UtsettelseÅrsak arsakForUtsettelse) {
         this.periodeFom = periodeFom;
         this.periodeTom = periodeTom;
         this.arsakForUtsettelse = arsakForUtsettelse;

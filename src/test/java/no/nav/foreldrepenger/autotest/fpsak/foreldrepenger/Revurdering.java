@@ -5,12 +5,9 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.ARBEID_OG_UTDANNING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -24,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
@@ -37,10 +33,8 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsa
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrMedlemskapsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
@@ -49,7 +43,6 @@ import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -323,108 +316,6 @@ class Revurdering extends FpsakTestBase {
                 .hasSizeGreaterThan(1);
     }
 
-
-    @Test
-    @DisplayName("Bare far har rett. Endringssøknad med utsettelse. Delvis aktivitetskrav")
-    @Description("Bare far har rett (BFHR) sender inn en endringssøknad med 2 utsettelsesperioder. Aktivitetskravet for " +
-            "første utsettesle er oppfylt men ikke for andre perioder. Andre periode avslås og trekker dager.")
-    void bareFarHarRettEndringssøknadMed2UtsettelsesperioderTest() {
-        var familie = new Familie("60", fordel);
-        var far = familie.far();
-        var fødselsdato = familie.barn().fødselsdato();
-        var fpStartdatoFar = Virkedager.helgejustertTilMandag(fødselsdato.plusWeeks(6));
-        var fordeling = generiskFordeling(
-                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(40).minusDays(1), ARBEID_OG_UTDANNING));
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
-                .medFordeling(fordeling)
-                .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottatdato(fødselsdato);
-        var saksnummer = far.søk(søknad.build());
-
-        var arbeidsgiver = far.arbeidsgiver();
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoFar);
-
-        saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaAnnenForeldreHarRett = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
-                .setAnnenforelderHarRett(false)
-                .setBegrunnelse("Mor har ikke rett!");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
-
-        var kontrollerAktivitetskravBekreftelse1 = saksbehandler
-                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
-                .morErIAktivitetForAllePerioder()
-                .setBegrunnelse("Mor er i aktivitet!");
-        saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse1);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        beslutter.hentFagsak(saksnummer);
-        var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFørstegangsbehandling);
-
-        // Verifiseringer førstegangsbehandling
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.INNVILGET);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(FORELDREPENGER).saldo())
-                .as("Saldoen for stønadskonton FORELDREPENGER")
-                .isZero();
-
-        // Endringssøknad
-        var fordelingUtsettelse = generiskFordeling(
-                utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(32), fpStartdatoFar.plusWeeks(35).minusDays(1), ARBEID_OG_UTDANNING),
-                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(35), fpStartdatoFar.plusWeeks(37).minusDays(1), ARBEID_OG_UTDANNING),
-                utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(37), fpStartdatoFar.plusWeeks(38).minusDays(1), ARBEID_OG_UTDANNING),
-                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), ARBEID_OG_UTDANNING));
-        var endretSøknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.FAR, fordelingUtsettelse, saksnummer);
-        var saksnummerE = far.søk(endretSøknad.build());
-
-        saksbehandler.hentFagsak(saksnummerE);
-        var kontrollerAktivitetskravBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
-                .periodeIkkeAktivitetIkkeDokumentert(fpStartdatoFar.plusWeeks(37), fpStartdatoFar.plusWeeks(38).minusDays(1))
-                .periodeIkkeAktivitetIkkeDokumentert(fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1))
-                .setBegrunnelse("Mor er bare delvis i aktivitet!");
-        saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse2);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        beslutter.hentFagsak(saksnummer);
-        var bekreftelseRevurdering = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseRevurdering);
-
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
-                .as("Konsekvenser for ytelse")
-                .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
-
-        // Verifiseringer på uttak
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(FORELDREPENGER).saldo())
-                .as("Saldoen for stønadskonton FORELDREPENGER")
-                .isZero();
-        assertThat(saksbehandler.hentAvslåtteUttaksperioder().size())
-                .as("Forventer at det er 2 avslåtte uttaksperioder")
-                .isEqualTo(2);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak())
-                .as("Perioderesultatårsak")
-                .isEqualTo(PeriodeResultatÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getAktiviteter().get(0).getTrekkdagerDesimaler())
-                .as("Trekkdager")
-                .isNotZero();
-
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getPeriodeResultatÅrsak())
-                .as("Perioderesultatårsak")
-                .isEqualTo(PeriodeResultatÅrsak.AKTIVITETSKRAVET_ARBEID_I_KOMB_UTDANNING_IKKE_DOKUMENTERT);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getAktiviteter().get(0).getTrekkdagerDesimaler())
-                .as("Trekkdager")
-                .isNotZero();
-
-
-    }
-
     @Test
     @DisplayName("Mor innvilges for ny termin - revurder løpende FP")
     @Description("Mor har FP og får innvilget ny FP - revurder tidligste FP og avslå perioder inn i ny stønadsperiode")
@@ -466,8 +357,9 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         //assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
-        var sisteUttaksperiode = saksbehandler.valgtBehandling.getUttakResultatPerioder()
-                .getPerioderSøker().stream().max(Comparator.comparing(UttakResultatPeriode::getFom)).get();
+        var sisteUttaksperiode = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().stream()
+                .max(Comparator.comparing(UttakResultatPeriode::getFom))
+                .orElseThrow();
         assertThat(sisteUttaksperiode.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
                 .isEqualTo(termindato.minusWeeks(3));

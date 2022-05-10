@@ -54,6 +54,12 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         return this;
     }
 
+    public AvklarFaktaUttakBekreftelse kanIkkeAvgjørePeriode(LocalDate fra, LocalDate til) {
+        var periode = finnUttaksperiode(fra, til);
+        periode.bekreftetPeriode.setResultat(UttakPeriodeVurderingType.PERIODE_KAN_IKKE_AVKLARES);
+        return this;
+    }
+
     public AvklarFaktaUttakBekreftelse delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra,
             LocalDate godkjentTil, UttakPeriodeVurderingType godkjenningskode) {
         delvisGodkjennPeriode(fra, til, godkjentFra, godkjentTil, godkjenningskode, false);

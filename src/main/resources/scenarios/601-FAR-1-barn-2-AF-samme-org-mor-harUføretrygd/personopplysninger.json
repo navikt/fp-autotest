@@ -2,7 +2,7 @@
     "søker": {
         "@type": "søker",
         "ident": "${for1}",
-        "fødselsdato": "now()-P50Y",
+        "fødselsdato": "1990-01-01",
         "kjønn": "M",
         "geografiskTilknytning": {
             "type": "Land",
@@ -11,7 +11,7 @@
         "adresser": [
             {
                 "@type": "ref",
-                "fom": "now() - P1Y",
+                "fom": "2018-01-01",
                 "adresseType": "BOSTEDSADRESSE",
                 "land": "NOR"
             }
@@ -19,39 +19,25 @@
         "personstatus": [
             {
                 "kode": "BOSA",
-                "fom": "now()-P50Y"
+                "fom": "1990-01-01"
             }
         ],
         "sivilstand": [
             {
                 "kode": "GIFT"
             }
-        ],
-        "medlemskap": {
-            "perioder": [
-                {
-                    "fom": "now() - P1Y",
-                    "tom": "now() + P3Y",
-                    "besluttetDato": "now() - P1Y",
-                    "land": "DEU",
-                    "trygdedekning": "Full",
-                    "kilde": "ANNEN",
-                    "lovvalgType": "ENDL",
-                    "status": "GYLD"
-                }
-            ]
-        }
+        ]
     },
     "annenPart": {
         "@type": "annenPart",
         "ident": "${for2}",
-        "fødselsdato": "now()-P50Y",
+        "fødselsdato": "1988-04-01",
         "kjønn": "K",
         "harUføretrygd": true,
         "personstatus": [
             {
                 "kode": "BOSA",
-                "fom": "now()-P50Y"
+                "fom": "1988-04-01"
             }
         ]
     },
@@ -63,7 +49,7 @@
                 "ident": "${barn1}",
                 "fornavn": "Ole",
                 "etternavn": "Duck",
-                "fødselsdato": "now()-P30D"
+                "fødselsdato": "2021-10-15"
             }
         },
         {

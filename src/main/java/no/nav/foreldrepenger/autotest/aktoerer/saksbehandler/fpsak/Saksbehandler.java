@@ -155,23 +155,23 @@ public class Saksbehandler extends Aktoer {
     }
 
     public void ventPåOgVelgFørstegangsbehandling() {
-        ventPåOgVelgBehandling(BehandlingType.FØRSTEGANGSSØKNAD);
+        ventPåOgVelgSisteBehandling(BehandlingType.FØRSTEGANGSSØKNAD);
     }
 
     public void ventPåOgVelgÅpenFørstegangsbehandling() {
-        ventPåOgVelgBehandling(BehandlingType.FØRSTEGANGSSØKNAD, true);
+        ventPåOgVelgSisteBehandling(BehandlingType.FØRSTEGANGSSØKNAD, true);
     }
 
     public void ventPåOgVelgKlageBehandling() {
-        ventPåOgVelgBehandling(BehandlingType.KLAGE);
+        ventPåOgVelgSisteBehandling(BehandlingType.KLAGE);
     }
 
     public void ventPåOgVelgRevurderingBehandling() {
-        ventPåOgVelgBehandling(BehandlingType.REVURDERING);
+        ventPåOgVelgSisteBehandling(BehandlingType.REVURDERING);
     }
 
     public void ventPåOgVelgAnkeBehandling() {
-        ventPåOgVelgBehandling(BehandlingType.ANKE);
+        ventPåOgVelgSisteBehandling(BehandlingType.ANKE);
     }
 
     public boolean harRevurderingBehandling() {
@@ -179,21 +179,22 @@ public class Saksbehandler extends Aktoer {
     }
 
     public void ventPåOgVelgDokumentInnsynBehandling() {
-        ventPåOgVelgBehandling(BehandlingType.INNSYN);
+        ventPåOgVelgSisteBehandling(BehandlingType.INNSYN);
     }
 
-    private void ventPåOgVelgBehandling(BehandlingType behandlingstype) {
-        ventPåOgVelgBehandling(behandlingstype, false);
+    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype) {
+        ventPåOgVelgSisteBehandling(behandlingstype, false);
     }
 
     @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
-    private void ventPåOgVelgBehandling(BehandlingType behandlingstype, boolean åpenStatus) {
+    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, boolean åpenStatus) {
         ventTilSakHarBehandling(behandlingstype);
         var behandling = behandlinger.stream()
                 .filter(b -> b.type.equals(behandlingstype))
                 .filter(b -> !åpenStatus || !b.status.equals(BehandlingStatus.AVSLUTTET))
-                .findFirst();
-        behandling.ifPresent(this::velgBehandling);
+                .max(Comparator.comparing(b -> b.opprettet))
+                .orElseThrow();
+        velgBehandling(behandling);
     }
 
 
@@ -213,6 +214,23 @@ public class Saksbehandler extends Aktoer {
         }
         return false;
     }
+
+    // TODO: Fjern eller inkluder
+//    private void ventTilSakHarBehandling(BehandlingType behandlingstype, int forventetAntall) {
+//        if (harBehandling(behandlingstype, forventetAntall)) {
+//            return;
+//        }
+//        Vent.til(() -> harBehandling(behandlingstype, forventetAntall), 30,
+//                "Saken har ikke fått behandling av type: " + behandlingstype);
+//    }
+//
+//    private boolean harBehandling(BehandlingType behandlingType, int forventetAntall) {
+//        refreshFagsak();
+//        var antallBehandlinger = behandlinger.stream()
+//                .filter(behandling -> behandlingType.equals(behandling.type))
+//                .count();
+//        return antallBehandlinger == forventetAntall;
+//    }
 
     /*
      * Behandlingsstatus
@@ -358,11 +376,19 @@ public class Saksbehandler extends Aktoer {
     /*
      * Henting av uttaksperidoer
      */
-    public List<UttakResultatPeriode> hentAvslåtteUttaksperioder() {
+    public List<UttakResultatPeriode> hentInnvilgedeUttaksperioder() {
         return valgtBehandling.hentUttaksperioder().stream()
-                .filter(p -> p.getPeriodeResultatType().equals(PeriodeResultatType.AVSLÅTT))
+                .filter(p -> PeriodeResultatType.INNVILGET.equals(p.getPeriodeResultatType()))
                 .toList();
     }
+
+    public List<UttakResultatPeriode> hentAvslåtteUttaksperioder() {
+        return valgtBehandling.hentUttaksperioder().stream()
+                .filter(p -> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
+                .toList();
+    }
+
+
 
     /*
      * Henting av Saldo
@@ -587,7 +613,7 @@ public class Saksbehandler extends Aktoer {
                 return vilkår;
             }
         }
-        throw new IllegalStateException("Fant ikke vilkår " + vilkårKode.toString() + "for behandling " + valgtBehandling.uuid);
+        throw new IllegalStateException("Fant ikke vilkår " + vilkårKode + "for behandling " + valgtBehandling.uuid);
     }
 
     public String vilkårStatus(String vilkårKode) {

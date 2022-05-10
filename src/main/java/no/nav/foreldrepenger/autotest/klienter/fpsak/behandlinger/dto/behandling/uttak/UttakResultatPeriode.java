@@ -7,10 +7,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.xml.OppholdÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OppholdÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,7 +29,7 @@ public class UttakResultatPeriode implements Serializable {
     protected BigDecimal samtidigUttaksprosent;
     protected Boolean graderingInnvilget;
     protected String periodeType;
-    protected UttakUtsettelseÅrsak utsettelseType;
+    protected UttakresultatUtsettelseÅrsak utsettelseType;
     protected OppholdÅrsak oppholdÅrsak;
     protected UttakResultatPeriodeAktivitet gradertAktivitet = null;
 
@@ -53,11 +53,11 @@ public class UttakResultatPeriode implements Serializable {
         this.periodeResultatÅrsak = periodeResultatÅrsak;
     }
 
-    public UttakUtsettelseÅrsak getUtsettelseType() {
+    public UttakresultatUtsettelseÅrsak getUtsettelseType() {
         return utsettelseType;
     }
 
-    public void setUtsettelseType(UttakUtsettelseÅrsak utsettelseType) {
+    public void setUtsettelseType(UttakresultatUtsettelseÅrsak utsettelseType) {
         this.utsettelseType = utsettelseType;
     }
 

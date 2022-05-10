@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
 import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
-import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdforSaksnummerForLogging;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.ALTINN;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
 
@@ -110,8 +109,6 @@ public class SøknadMottak extends Aktoer implements Innsender {
 
     @Step("[{søknad.søker.søknadsRolle}]: Sender inn søknad: {fnr}")
     private Long sendInnSøknad(Fødselsnummer fnr, Søknad søknad) {
-        var callId = leggTilCallIdForFnr(fnr);
-        LOG.info("Sender inn søknadd for bruker {}", fnr.value());
         var token = tokenXHenterKlient.hentAccessTokenForBruker(fnr);
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         if (søknad instanceof Endringssøknad endringssøknad) {
@@ -119,10 +116,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
         } else {
             mottakKlient.sendSøknad(token, søknad);
         }
-        var saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);
-        leggTilCallIdforSaksnummerForLogging(callId, saksnummer);
-        LOG.info("Innsending av søknad er vellykket!");
-        return saksnummer;
+        return ventTilFagsakOgBehandlingErOpprettet(fnr);
     }
 
     @Override
@@ -141,18 +135,13 @@ public class SøknadMottak extends Aktoer implements Innsender {
     }
 
     private Long sendInnPapirsøknad(Fødselsnummer fnr, DokumenttypeId dokumenttypeId, Long saksnummer) {
-        var callId = leggTilCallIdForFnr(fnr);
-        LOG.info("Sender inn papirsøknadd for bruker {}", fnr);
         var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null,
                 SKAN_IM, "skanIkkeUnik.pdf", dokumenttypeId);
         if (saksnummer != null) {
             journalpostModell.setSakId(saksnummer.toString());
         }
         journalpostKlient.journalførR(journalpostModell);
-        saksnummer = ventTilFagsakOgBehandlingErOpprettet(fnr);
-        LOG.info("Innsending av papirsøknad er vellykket!");
-        leggTilCallIdforSaksnummerForLogging(callId, saksnummer);
-        return saksnummer;
+        return ventTilFagsakOgBehandlingErOpprettet(fnr);
     }
 
     @Override
