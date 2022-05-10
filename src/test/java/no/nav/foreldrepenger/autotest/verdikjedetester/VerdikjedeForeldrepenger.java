@@ -1049,7 +1049,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
             "Mens behandlingen er hos beslutter sender AG en ny korrigert IM. Behandlingen rulles tilbake. På den " +
             "siste IM som AG sender ber AG om full refusjon, men kommer for sent til å få alt. AG får refusjon for" +
             "den inneværende måneden og tre måneder tilbake i tid; tiden før dette skal gå til søker.")
-    // TODO: Verifiser korrekt oppførsel (periode splittingen)
     void FarSøkerAdopsjonAleneomsorgOgRevurderingPgaEndringIRefusjonFraAG() {
         var familie = new Familie("563");
 
@@ -1159,21 +1158,18 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         if (LocalDate.now().getDayOfMonth() == 1) {
             assertThat(perioder)
                     .as("Berørt behandlings tilkjent ytelse perioder")
-                    .hasSize(3);
+                    .hasSize(2);
             assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0))
                     .as("Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!")
                     .isTrue();
             assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(1), 100))
                     .as("Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!")
                     .isTrue();
-            assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(2), 100))
-                    .as("Forventer at hele summen utbetales til AG i andre periode, og derfor ingenting til søker!")
-                    .isTrue();
 
         } else {
             assertThat(perioder)
                     .as("Berørt behandlings tilkjent ytelse perioder")
-                    .hasSize(4);
+                    .hasSize(3);
             assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0))
                     .as("Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!")
                     .isTrue();
@@ -1182,9 +1178,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                     .isTrue();
             assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(2), 100))
                     .as("Forventer at hele summen utbetales til AG i tredje periode, og derfor ingenting til søker!")
-                    .isTrue();
-            assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(3), 100))
-                    .as("Forventer at hele summen utbetales til AG i fjerde periode, og derfor ingenting til søker!")
                     .isTrue();
         }
     }
