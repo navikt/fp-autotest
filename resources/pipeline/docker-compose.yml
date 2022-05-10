@@ -3,21 +3,22 @@ services:
   audit.nais:
     image: $AUDIT_NAIS_IMAGE
     container_name: audit.nais
+    mem_limit: 16m
     ports:
       - "6514:6514"
-    mem_limit: 16m
   oracle:
     image: $ORACLE_IMAGE
     container_name: oracle
     restart: on-failure
-    mem_limit: 1gb
     shm_size: 2gb
-    volumes:
-      - ./oracle-init:/docker-entrypoint-initdb.d/
+    environment:
+      - ORACLE_PASSWORD=oracle
     ports:
       - "1521:1521"
+    volumes:
+      - ./oracle-init:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: [ "CMD-SHELL","/opt/oracle/product/18c/dbhomeXE/health_check.sh"]
+      test: [ "CMD-SHELL","/opt/oracle/healthcheck.sh" ]
       interval: 5s
       timeout: 10s
       retries: 10
@@ -69,7 +70,6 @@ services:
     environment:
       - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
       - "LOADBALANCER_URL=http://localhost:8015"
-      - "LOADBALANCER_FQDN=localhost:8015"
       - "KAFKA_LONNSKOMPENSASJON_TOPIC=privat-permittering-lonnskomp-vedtak-vtp"
     env_file:
       - "fpabakus_datasource.list"
@@ -143,7 +143,6 @@ services:
     mem_limit: 512mb
     environment:
       - "LOADBALANCER_URL=http://localhost:8090"
-      - "LOADBALANCER_FQDN=localhost:8090"
       - "KAFKA_TOPICS_FORDELING=privat-foreldrepenger-historikk-fordeling"
       - "KAFKA_TOPIC_JOURNAL_HENDELSE=aapen-dok-journalfoering-v1-q1"
       - "FPSAK_BASE_URL=http://fpsak:8080"
@@ -171,7 +170,6 @@ services:
     mem_limit: 256mb
     environment:
       - "LOADBALANCER_URL=http://localhost:8040"
-      - "LOADBALANCER_FQDN=localhost:8040"
     env_file:
       - "fpinfo_datasource.list"
       - "common.env"
@@ -192,7 +190,6 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=test"
       - "LOADBALANCER_URL=http://localhost:9001"
-      - "LOADBALANCER_FQDN=localhost:9001"
       - "MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED=true"
       - "AAREG_RS_URL=http://vtp:8060/rest/aareg-services/api"
       - "SECURITYTOKENSERVICE_USERNAME=vtp"
