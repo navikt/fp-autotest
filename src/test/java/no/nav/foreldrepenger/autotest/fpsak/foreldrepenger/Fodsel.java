@@ -692,10 +692,11 @@ class Fodsel extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         // verifiserer uttak
-        var uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
-        assertThat(uttaksperioder).hasSize(4);
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder()).isEmpty();
+
 
         /** TODO (jol) TFP-5010 assertThat(uttaksperioder).hasSize(4);
+        var uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         var foreldrepengerFørste6Ukene = uttaksperioder.get(0);
         assertThat(foreldrepengerFørste6Ukene.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(foreldrepengerFørste6Ukene.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
