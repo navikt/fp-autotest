@@ -10,6 +10,7 @@ services:
     image: $ORACLE_IMAGE
     container_name: oracle
     restart: on-failure
+    mem_limit: 2gb
     shm_size: 2gb
     environment:
       - ORACLE_PASSWORD=oracle
@@ -18,7 +19,7 @@ services:
     volumes:
       - ./oracle-init:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: [ "CMD-SHELL","/opt/oracle/healthcheck.sh" ]
+      test: [ "CMD-SHELL","/opt/oracle/product/18c/dbhomeXE/health_check.sh" ]
       interval: 5s
       timeout: 10s
       retries: 10
