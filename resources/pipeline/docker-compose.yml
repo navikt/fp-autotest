@@ -180,9 +180,12 @@ services:
     ports:
       - "8040:8080"
     depends_on:
-      - oracle
-      - vtp
-      - fpsak
+      fpsak:
+        condition: service_healthy
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
   fpsoknad-mottak:
     image: $FPSOKNAD_MOTTAK_IMAGE
     container_name: fpsoknad-mottak
