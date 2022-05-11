@@ -40,19 +40,20 @@ class Revurdering extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaAdopsjonsdokumentasjonBekreftelse bekreftelse1 = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
-        bekreftelse1.setBarnetsAnkomstTilNorgeDato(LocalDate.now());
-        VurderEktefellesBarnBekreftelse bekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class);
-        bekreftelse2.bekreftBarnErIkkeEktefellesBarn();
-        saksbehandler.bekreftAksjonspunktbekreftelserer(bekreftelse1, bekreftelse2);
+        var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
+        var vurderEktefellesBarnBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                .bekreftBarnErIkkeEktefellesBarn();
+        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
 
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkt(
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);

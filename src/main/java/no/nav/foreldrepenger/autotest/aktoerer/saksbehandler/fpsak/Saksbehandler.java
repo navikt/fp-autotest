@@ -8,7 +8,6 @@ import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -433,10 +432,11 @@ public class Saksbehandler extends Aktoer {
 
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) {
         var aksjonspunktKode = type.getDeclaredAnnotation(BekreftelseKode.class).kode();
+        LOG.info("Henter aksjonspunktbekreftelse for {} ({})", aksjonspunktKode, type.getSimpleName());
         return hentAksjonspunktbekreftelse(aksjonspunktKode);
     }
 
-    public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(String kode) {
+    private <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(String kode) {
         var aksjonspunkt = hentAksjonspunkt(kode);
         var bekreftelse = aksjonspunkt.getBekreftelse();
         bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
@@ -480,21 +480,18 @@ public class Saksbehandler extends Aktoer {
 
     public void bekreftAksjonspunkt(AksjonspunktBekreftelse bekreftelse) {
         bekreftAksjonspunktbekreftelserer(List.of(bekreftelse));
-    }
-
-    public void bekreftAksjonspunktbekreftelserer(AksjonspunktBekreftelse... bekreftelser) {
-        bekreftAksjonspunktbekreftelserer(Arrays.asList(bekreftelser));
+        LOG.info("Aksjonspunktbekreftelse for {} er sendt inn og AP er løst", bekreftelse.kode());
     }
 
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
         debugAksjonspunktbekreftelser(bekreftelser, valgtBehandling.uuid);
-        BekreftedeAksjonspunkter aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling, bekreftelser);
+        var aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling.uuid, valgtBehandling.versjon, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
-        verifsierAP(bekreftelser);
+        verifsierAPErHåndtert(bekreftelser);
     }
 
-    private void verifsierAP(List<AksjonspunktBekreftelse> bekreftelser) {
+    private void verifsierAPErHåndtert(List<AksjonspunktBekreftelse> bekreftelser) {
         for (var bekreftelse : bekreftelser) {
             if (bekreftelse instanceof FatterVedtakBekreftelse f && f.harAvvisteAksjonspunkt()) {
                 verifiserAtAPErOpprettetPåNytt(f);
@@ -538,6 +535,7 @@ public class Saksbehandler extends Aktoer {
 
     public void ventTilAvsluttetBehandling() {
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
+        LOG.info("Alle manuelle aksjonspunkt er løst og behandlingen har status AVSLUTTET");
     }
 
 
