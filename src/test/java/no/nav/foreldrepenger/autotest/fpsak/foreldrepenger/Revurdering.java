@@ -251,9 +251,8 @@ class Revurdering extends FpsakTestBase {
         // Manuell behandling for å få endringssdato satt til første uttaksdag
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
         saksbehandler.velgSisteBehandling();
-        saksbehandler.bekreftAksjonspunktbekreftelserer(
-                saksbehandler.hentAksjonspunktbekreftelse(KontrollerManueltOpprettetRevurdering.class),
-                saksbehandler.hentAksjonspunktbekreftelse(ForeslåVedtakManueltBekreftelse.class));
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
         saksbehandler.ventTilAvsluttetBehandling();
 
         assertThat(saksbehandler.valgtBehandling.hentUttaksperioder())

@@ -684,10 +684,10 @@ class Fodsel extends FpsakTestBase {
 
         // Saksbehandler må avklare aleneomsorgen fordi far er gift og bor på sammested med ektefelle
         saksbehandler.hentFagsak(saksnummer);
-        var bekreftelse = saksbehandler
+        var avklarFaktaAleneomsorgBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
                 .bekreftBrukerHarAleneomsorg();
-        saksbehandler.bekreftAksjonspunktbekreftelserer(bekreftelse);
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
 
         saksbehandler.ventTilAvsluttetBehandling();
 

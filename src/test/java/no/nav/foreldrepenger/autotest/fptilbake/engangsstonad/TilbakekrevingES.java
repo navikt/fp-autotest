@@ -47,13 +47,14 @@ class TilbakekrevingES extends FptilbakeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var bekreftelse1 = saksbehandler
+        var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
                 .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
-        var bekreftelse2 = saksbehandler
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
+        var vurderEktefellesBarnBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
                 .bekreftBarnErIkkeEktefellesBarn();
-        saksbehandler.bekreftAksjonspunktbekreftelserer(bekreftelse1, bekreftelse2);
+        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);

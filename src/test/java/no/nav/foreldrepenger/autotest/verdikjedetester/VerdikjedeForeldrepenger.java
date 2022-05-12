@@ -149,7 +149,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
                 .bekreftBrukerHarAleneomsorg()
                 .setBegrunnelse("Bekreftelse sendt fra Autotest.");
-        saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse);
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1078,7 +1078,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
                 .bekreftBrukerHarAleneomsorg()
                 .setBegrunnelse("Bekreftelse sendt fra Autotest.");
-        saksbehandler.bekreftAksjonspunktbekreftelserer(avklarFaktaAleneomsorgBekreftelse);
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
 
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())

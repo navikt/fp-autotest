@@ -9,11 +9,13 @@ public class MannAdoptererAleneBekreftelse extends AksjonspunktBekreftelse {
         super();
     }
 
-    public void bekreftMannAdoptererAlene() {
+    public MannAdoptererAleneBekreftelse bekreftMannAdoptererAlene() {
         mannAdoptererAlene = true;
+        return this;
     }
 
-    public void bekreftMannAdoptererIkkeAlene() {
+    public MannAdoptererAleneBekreftelse bekreftMannAdoptererIkkeAlene() {
         mannAdoptererAlene = false;
+        return this;
     }
 }

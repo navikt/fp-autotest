@@ -27,8 +27,9 @@ public class AvklarFaktaAdopsjonsdokumentasjonBekreftelse extends AksjonspunktBe
         fodselsdatoer.put(fodselsdatoer.size(), fødselsdato);
     }
 
-    public void endreFødselsdato(Integer index, LocalDate fødselsdato) {
+    public AvklarFaktaAdopsjonsdokumentasjonBekreftelse endreFødselsdato(Integer index, LocalDate fødselsdato) {
         fodselsdatoer.put(index, fødselsdato);
+        return this;
     }
 
     public AvklarFaktaAdopsjonsdokumentasjonBekreftelse setBarnetsAnkomstTilNorgeDato(LocalDate dato) {
