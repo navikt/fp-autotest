@@ -87,7 +87,7 @@
         {
             "rolle": "EKTE",
             "til": {
-                "@type": "annenPart",
+                "@type": "søker",
                 "ident": "${for1}"
             }
         }
