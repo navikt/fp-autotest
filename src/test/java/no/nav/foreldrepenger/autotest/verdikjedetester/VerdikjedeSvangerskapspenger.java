@@ -6,11 +6,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.slf4j.MDC;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -253,8 +253,7 @@ class VerdikjedeSvangerskapspenger extends FpsakTestBase {
                 .isTrue();
 
         /* SØKNAD 2 */
-        var callId = LoggFormater.leggTilCallIdForFnr(mor.fødselsnummer());
-        MDCOperations.putToMDC(MDC_CONSUMER_ID, callId + "_soknad2");
+        MDCOperations.putToMDC(MDC_CONSUMER_ID, UUID.randomUUID().toString());
         var tilrettelegging2 = TilretteleggingsErketyper.ingenTilrettelegging(
                 LocalDate.now(),
                 LocalDate.now(),
