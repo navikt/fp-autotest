@@ -104,7 +104,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     private void hentFagsak(String saksnummer) {
-        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer));
+        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer) + System.currentTimeMillis());
         valgtFagsak = fagsakKlient.getFagsak(saksnummer);
         if (valgtFagsak == null) {
             throw new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer);

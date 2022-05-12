@@ -39,13 +39,14 @@ public final class LoggFormater {
 
     public static void leggTilCallIdforSaksnummerForLogging(Fødselsnummer fnr, Long saksnummer) {
         // Legger til Callid for saksnummer slik at vi kan slå opp riktig callid senere
-        MDCOperations.putToMDC(saksnummer.toString(), leggTilCallIdForFnr(fnr));
+        var saksnr = String.valueOf(saksnummer);
+        MDCOperations.putToMDC(saksnr, leggTilCallIdForFnr(fnr) + "_" + saksnr);
     }
 
     public static String leggTilCallIdForFnr(Fødselsnummer fnr) {
         var callId = MDCOperations.getFromMDC(fnr.value());
         if (callId == null || callId.isEmpty()) {
-            callId = UUID.randomUUID().toString();
+            callId = MDCOperations.generateCallId();
             MDCOperations.putToMDC(fnr.value(), callId);
             MDCOperations.putToMDC(MDC_CONSUMER_ID, callId);
         }
