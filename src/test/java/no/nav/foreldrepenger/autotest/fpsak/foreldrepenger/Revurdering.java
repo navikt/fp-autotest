@@ -92,7 +92,6 @@ class Revurdering extends FpsakTestBase {
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        beslutter.ventTilFagsakAvsluttet();
 
         assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
                 .as("Behandlingsresultat")

@@ -150,7 +150,6 @@ class SammenhengendeUttak extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        saksbehandler.ventTilFagsakAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
@@ -253,7 +252,6 @@ class SammenhengendeUttak extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandling();
-        saksbehandler.ventTilFagsakAvsluttet();
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
