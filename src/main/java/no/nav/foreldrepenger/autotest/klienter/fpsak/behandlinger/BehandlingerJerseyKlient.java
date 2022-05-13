@@ -36,6 +36,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengegrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.medlem.Medlem;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.Opptjening;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilrettelegging;
@@ -62,6 +63,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     private static final String BEHANDLING_PERSON_MEDLEMSKAP = BEHANDLING_URL + "/person/medlemskap-v2";
     private static final String BEHANDLING_ENGANGSSTØNAD_URL = BEHANDLING_URL + "/beregningsresultat/engangsstonad";
     private static final String BEHANDLING_FORELDREPENGER_URL = BEHANDLING_URL + "/beregningsresultat/foreldrepenger";
+    private static final String BEHANDLING_FERIEPENGER_URL = BEHANDLING_URL + "/feriepengegrunnlag";
     private static final String BEHANDLING_BEREGNINGSGRUNNALG_URL = BEHANDLING_URL + "/beregningsgrunnlag";
     private static final String BEHANDLING_VILKAAR_URL = BEHANDLING_URL + "/vilkar-v2";
     private static final String BEHANDLING_AKSJONSPUNKT_URL = BEHANDLING_URL + "/aksjonspunkt";
@@ -202,6 +204,14 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
                 .queryParam(UUID, behandlingUuid)
                 .request(APPLICATION_JSON_TYPE)
                 .get(BeregningsresultatMedUttaksplan.class);
+    }
+
+    public Feriepengegrunnlag behandlingFeriepengegrunnlag(UUID behandlingUuid) {
+        return client.target(base)
+                .path(BEHANDLING_FERIEPENGER_URL)
+                .queryParam(UUID, behandlingUuid)
+                .request(APPLICATION_JSON_TYPE)
+                .get(Feriepengegrunnlag.class);
     }
 
 
