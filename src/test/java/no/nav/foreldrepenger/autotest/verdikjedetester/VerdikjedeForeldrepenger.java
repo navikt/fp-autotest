@@ -1684,7 +1684,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
             + "6 uker med foreldrepenger uten aktivitetskrav. Første uttaksperiode etter utsettelsen innvilges delvis med disse 6 "
             + "gjenværende stønadsukene uten aktivitetskrav. Resten av periode og neste uttaks periode avslås pga av manglede stønadsdager igjen")
     void farBhfrTest() {
-        var familie = new Familie("60", fordel);
+        var familie = new Familie("60");
         var fødselsdato = familie.barn().fødselsdato();
 
         /* Mor's engangsstønad*/
@@ -1716,20 +1716,11 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var arbeidsgiver = far.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
-        // TODO: FIks. Dette skal ikke forekomme...
-        //  sjekk i fpsak debugg -> medOppgittAnnenForelderHarEngangsstønadForSammeBarn(harAnnenForelderES)
-        saksbehandler.hentFagsak(saksnummerFar);
-        var avklarFaktaAnnenForeldreHarRett = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
-                .setAnnenforelderHarRett(false)
-                .setAnnenforelderMottarUføretrygd(false)
-                .setBegrunnelse("Mor har ikke rett");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
-
         /*
         * Skal ikke få AP 5086 hvor saksbehandler må avklare om anneforelder har rett, ettersom mor allerede mottar engangsstønad
         * Mors aktivitet er ikke dokumentert for utsettelsesperioden og første uttaksperiode etter utsettelsen.
         * */
+        saksbehandler.hentFagsak(saksnummerFar);
         var kontrollerAktivitetskravBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
                 .periodeIkkeAktivitetIkkeDokumentert(utsettelsePeriodeFom, utsettelsePeriodeTom)
