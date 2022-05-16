@@ -4,6 +4,7 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.ARBEID;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.INNLAGT;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.TRENGER_HJELP;
@@ -159,7 +160,7 @@ class RegresjonPreWLB extends FpsakTestBase {
         var fordeling = generiskFordeling(
                 uttaksperiode(StønadskontoType.FEDREKVOTE, uttakIfmFødselFom, uttakIfmFødselTom, INNLAGT),
                 uttaksperiode(StønadskontoType.FEDREKVOTE, fpStartdatoFar, fpStartdatoFar.plusWeeks(14).minusDays(1)),
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fpStartdatoFar.plusWeeks(14), fpStartdatoFar.plusWeeks(20).minusDays(1)));
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fpStartdatoFar.plusWeeks(14), fpStartdatoFar.plusWeeks(20).minusDays(1), ARBEID));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(fordeling)
                 .medRettigheter(RettigheterErketyper.beggeForeldreRettIkkeAleneomsorg())
@@ -184,13 +185,13 @@ class RegresjonPreWLB extends FpsakTestBase {
 
         var kontrollerAktivitetskravBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
-                .periodeIkkeAktivitetIkkeDokumentert(uttakIfmFødselFom, uttakIfmFødselTom)
-                .setBegrunnelse("Mor er ikke innlagt!");
+                .morErIAktivitetForAllePerioder()
+                .setBegrunnelse("Mor er i aktivtet!");
         saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .avslåPeriode(uttakIfmFødselFom, uttakIfmFødselTom);
+                .avslåPeriode(uttakIfmFødselFom, uttakIfmFødselTom, DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);

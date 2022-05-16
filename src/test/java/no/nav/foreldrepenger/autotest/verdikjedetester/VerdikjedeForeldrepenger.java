@@ -506,7 +506,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var far = familie.far();
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK),
-                uttaksperiode(FELLESPERIODE, fpStartdatoFellesperiodeFar, fpStartdatoFellesperiodeFar.plusWeeks(4).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fpStartdatoFellesperiodeFar, fpStartdatoFellesperiodeFar.plusWeeks(4).minusDays(1), ARBEID),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFellesperiodeFar.plusWeeks(4), fpStartdatoFellesperiodeFar.plusWeeks(17).minusDays(1)));
         var frilansFom = far.FrilansAnnsettelsesFom();
         var opptjeningFar = OpptjeningErketyper.medFrilansOpptjening(frilansFom, fpStartdatoFellesperiodeFar.minusDays(1));
