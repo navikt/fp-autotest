@@ -23,7 +23,7 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MINSTERETT;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.ARBEID;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UFØRE;
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.IKKE_OPPGITT;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UTDANNING;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
@@ -506,7 +506,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var far = familie.far();
         var fordelingFar = generiskFordeling(
                 uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK),
-                uttaksperiode(FELLESPERIODE, fpStartdatoFellesperiodeFar, fpStartdatoFellesperiodeFar.plusWeeks(4).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fpStartdatoFellesperiodeFar, fpStartdatoFellesperiodeFar.plusWeeks(4).minusDays(1), ARBEID),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFellesperiodeFar.plusWeeks(4), fpStartdatoFellesperiodeFar.plusWeeks(17).minusDays(1)));
         var frilansFom = far.FrilansAnnsettelsesFom();
         var opptjeningFar = OpptjeningErketyper.medFrilansOpptjening(frilansFom, fpStartdatoFellesperiodeFar.minusDays(1));
@@ -1703,7 +1703,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var sisteUttaksperiodeFom = uttakEtterUtsettelseTom.plusDays(1);
         var sisteUttaksperiodeTom = sisteUttaksperiodeFom.plusWeeks(6).minusDays(1);
         var fordeling = generiskFordeling(
-                uttaksperiode(StønadskontoType.FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), UFØRE), // TODO: Erstatt UFØRE med MINSTRETT eller hva som blir implementert i selvbetjeningsapplikasjonene?
+                uttaksperiode(StønadskontoType.FORELDREPENGER, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), IKKE_OPPGITT),
                 utsettelsesperiode(UtsettelsesÅrsak.FRI,  utsettelsePeriodeFom, utsettelsePeriodeTom, UTDANNING),
                 uttaksperiode(StønadskontoType.FORELDREPENGER, uttakEtterUtsettelseFom, uttakEtterUtsettelseTom, ARBEID),
                 uttaksperiode(StønadskontoType.FORELDREPENGER, sisteUttaksperiodeFom, sisteUttaksperiodeTom));
