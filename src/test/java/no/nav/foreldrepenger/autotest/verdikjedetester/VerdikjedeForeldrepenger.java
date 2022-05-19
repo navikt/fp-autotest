@@ -33,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -82,6 +83,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengeandel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
@@ -91,9 +93,7 @@ import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
-import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.UkjentForelder;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Overføringsårsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
@@ -194,6 +194,12 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
                 .as("Saldo for stønadskontoen FORELDREPENGER")
                 .isEqualTo(70);
+
+        var feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        assertThat(feriepenger).isNotNull();
+        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), false);
+        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), true);
+        assertThat(feriepengerTilSøker + feriepengerTilArbeidsgiver).isEqualTo(11297);
     }
 
     @Test
@@ -304,6 +310,9 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats())
                 .as("Dagsats tilkjent ytelse periode #4")
                 .isZero();
+
+        var feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        assertThat(feriepenger).isNull();
     }
 
     @Test
@@ -895,6 +904,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saldoerFørstgangsbehandling.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo())
                 .as("Saldoen for stønadskonton FELLESPERIODE")
                 .isZero();
+
+        var feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        assertThat(feriepenger).isNotNull();
+        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiverMor.arbeidsgiverIdentifikator().value(), false);
+        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiverMor.arbeidsgiverIdentifikator().value(), true);
+        assertThat(feriepengerTilSøker + feriepengerTilArbeidsgiver).isEqualTo(11297);
+
 
         /*
          * FAR: Søker samtidig uttak med flerbansdager. Søker deretter hele fedrekvoten,
@@ -1633,7 +1649,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getFom())
                 .as("Periode etter fri utsettelse fom")
                 .isEqualTo(fødselsdato.plusWeeks(10));
-
     }
 
     @Test
@@ -1673,6 +1688,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
                 .isEmpty();
+
+        var feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
+        assertThat(feriepenger).isNotNull();
+        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), false);
+        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), true);
+        assertThat(feriepengerTilSøker + feriepengerTilArbeidsgiver).isEqualTo(14125);
+
     }
 
     @Test
@@ -1844,9 +1866,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         return saksnummerMor;
     }
 
-    // TODO: Flytt til søknad!
-    private NorskForelder lagNorskAnnenforeldre(Fødselsnummer indent) {
-        return new NorskForelder(indent, "");
+    private int oppsummerFeriepengerForArbeidsgiver(List<Feriepengeandel> andeler,
+                                                    String arbeidsgiverIdentifikator,
+                                                    boolean brukerErMottaker) {
+        return andeler.stream()
+                .filter(andel -> andel.arbeidsgiverId().equals(arbeidsgiverIdentifikator))
+                .filter(andel -> andel.erBrukerMottaker() == brukerErMottaker)
+                .mapToInt(andel -> andel.årsbeløp().intValue())
+                .sum();
     }
-
 }

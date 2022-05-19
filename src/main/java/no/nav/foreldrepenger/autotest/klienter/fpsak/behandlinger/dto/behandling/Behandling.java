@@ -19,6 +19,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengegrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.medlem.Medlem;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.Opptjening;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilrettelegging;
@@ -59,6 +60,7 @@ public class Behandling {
     private Lazy<Beregningsresultat> beregningResultatEngangsstonad;
     private Lazy<BeregningsresultatMedUttaksplan> beregningResultatForeldrepenger;
     private Lazy<UttakResultatPerioder> uttakResultatPerioder;
+    private Lazy<Feriepengegrunnlag> feriepengegrunnlag;
     private Lazy<Soknad> soknad;
     private Lazy<Opptjening> opptjening;
     private Lazy<InntektArbeidYtelse> inntektArbeidYtelse;
@@ -148,6 +150,16 @@ public class Behandling {
             Lazy<BeregningsresultatMedUttaksplan> dBeregningsresultatMedUttaksplan) {
         this.beregningResultatForeldrepenger = dBeregningsresultatMedUttaksplan;
     }
+
+    public void setFeriepengegrunnlag(
+            Lazy<Feriepengegrunnlag> feriepengegrunnlag) {
+        this.feriepengegrunnlag = feriepengegrunnlag;
+    }
+
+    public Feriepengegrunnlag getFeriepengegrunnlag() {
+        return get(feriepengegrunnlag);
+    }
+
 
     public UttakResultatPerioder getUttakResultatPerioder() {
         return get(uttakResultatPerioder);
