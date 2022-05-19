@@ -90,7 +90,7 @@ class Fodsel extends FpsakTestBase {
         var refusjon = BigDecimal.valueOf(overstyrtInntekt / 12);
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medBeregnetInntekt(new ProsentAndel(50))
+                .medBeregnetInntekt(ProsentAndel.valueOf(50))
                 .medRefusjonsBelopPerMnd(refusjon);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 

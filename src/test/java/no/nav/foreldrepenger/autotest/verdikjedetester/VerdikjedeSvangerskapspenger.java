@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
-import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
@@ -223,7 +222,7 @@ class VerdikjedeSvangerskapspenger extends FpsakTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP()
-                .medRefusjonsBelopPerMnd(new ProsentAndel(100));
+                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummer1, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer1);
@@ -285,15 +284,15 @@ class VerdikjedeSvangerskapspenger extends FpsakTestBase {
                 .isTrue();
         var beregningsresultatPerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger().getPerioder();
-        assertThat(beregningsresultatPerioder.get(0).getAndeler().size())
+        assertThat(beregningsresultatPerioder.get(0).getAndeler())
                 .as("Andeler for første periode i tilkjent ytelse")
-                .isEqualTo(1);
+                .hasSize(1);
         assertThat(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(0), AktivitetStatus.ARBEIDSTAKER))
                 .as("Forventer aktivitetsstatus for første andel for første periode er AT")
                 .isTrue();
-        assertThat(beregningsresultatPerioder.get(1).getAndeler().size())
+        assertThat(beregningsresultatPerioder.get(1).getAndeler())
                 .as("Andeler for andre periode i tilkjent ytelse")
-                .isEqualTo(2);
+                .hasSize(2);
         assertThat(saksbehandler.sjekkOmPeriodeITilkjentYtelseInneholderAktivitet(beregningsresultatPerioder.get(1),  AktivitetStatus.ARBEIDSTAKER))
                 .as("Forventer aktivitetsstatus for første andel for andre periode er AT")
                 .isTrue();
@@ -342,11 +341,11 @@ class VerdikjedeSvangerskapspenger extends FpsakTestBase {
         var arbeidsgivere = mor.arbeidsgivere().toList();
         var arbeidsgiver1 = arbeidsgivere.get(0);
         var inntektsmedling1 = arbeidsgiver1.lagInntektsmeldingSVP()
-                .medRefusjonsBelopPerMnd(new ProsentAndel(100));
+                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmedling1);
         var arbeidsgiver2 = arbeidsgivere.get(1);
         var inntektsmedling2 = arbeidsgiver2.lagInntektsmeldingSVP()
-                .medRefusjonsBelopPerMnd(new ProsentAndel(100));
+                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
         arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmedling2);
 
         saksbehandler.hentFagsak(saksnummer);

@@ -295,8 +295,7 @@ class Fodsel extends FpsakTestBase {
         var familie = new Familie("90", fordel);
         var medmor = familie.medmor();
         var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MEDMOR, fødselsdato)
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()));
+        var søknad = lagEngangstønadFødsel(BrukerRolle.MEDMOR, fødselsdato);
         var saksnummer = medmor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

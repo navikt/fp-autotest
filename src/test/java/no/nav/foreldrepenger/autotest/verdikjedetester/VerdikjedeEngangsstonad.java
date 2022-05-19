@@ -28,8 +28,7 @@ class VerdikjedeEngangsstonad extends FpsakTestBase {
     void MorTredjelandsborgerSøkerEngangsStønadTest() {
         var familie = new Familie("505");
         var termindato = LocalDate.now().plusWeeks(3);
-        var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato)
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
+        var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato);
         var saksnummer = familie.mor().søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

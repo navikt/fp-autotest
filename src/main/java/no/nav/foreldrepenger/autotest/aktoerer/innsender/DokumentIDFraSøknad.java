@@ -36,7 +36,7 @@ class DokumentIDFraSøknad {
     }
 
     private static DokumenttypeId dokumentTypeFraRelasjonForEngangsstønad(Søknad søknad) {
-        var relasjon = ((Engangsstønad) søknad.getYtelse()).getRelasjonTilBarn();
+        var relasjon = ((Engangsstønad) søknad.getYtelse()).relasjonTilBarn();
         if (relasjon instanceof Fødsel || relasjon instanceof FremtidigFødsel) {
             return SØKNAD_ENGANGSSTØNAD_FØDSEL;
         }
@@ -47,7 +47,7 @@ class DokumentIDFraSøknad {
     }
 
     private static DokumenttypeId dokumentTypeFraRelasjonForForeldrepenger(Søknad søknad) {
-        var relasjon = ((Foreldrepenger) søknad.getYtelse()).getRelasjonTilBarn();
+        var relasjon = ((Foreldrepenger) søknad.getYtelse()).relasjonTilBarn();
         if (relasjon instanceof Fødsel || relasjon instanceof FremtidigFødsel) {
             return SØKNAD_FORELDREPENGER_FØDSEL;
         }
