@@ -93,9 +93,7 @@ import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
-import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.UkjentForelder;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Overføringsårsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
@@ -199,8 +197,8 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
         var feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
         assertThat(feriepenger).isNotNull();
-        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.getAndeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), false);
-        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.getAndeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), true);
+        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), false);
+        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), true);
         assertThat(feriepengerTilSøker + feriepengerTilArbeidsgiver).isEqualTo(11297);
     }
 
@@ -909,8 +907,8 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
         var feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
         assertThat(feriepenger).isNotNull();
-        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.getAndeler(), arbeidsgiverMor.arbeidsgiverIdentifikator().value(), false);
-        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.getAndeler(), arbeidsgiverMor.arbeidsgiverIdentifikator().value(), true);
+        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiverMor.arbeidsgiverIdentifikator().value(), false);
+        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiverMor.arbeidsgiverIdentifikator().value(), true);
         assertThat(feriepengerTilSøker + feriepengerTilArbeidsgiver).isEqualTo(11297);
 
 
@@ -1693,8 +1691,8 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
         var feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
         assertThat(feriepenger).isNotNull();
-        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.getAndeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), false);
-        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.getAndeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), true);
+        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), false);
+        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), true);
         assertThat(feriepengerTilSøker + feriepengerTilArbeidsgiver).isEqualTo(14125);
 
     }
@@ -1872,15 +1870,9 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                                                     String arbeidsgiverIdentifikator,
                                                     boolean brukerErMottaker) {
         return andeler.stream()
-                .filter(andel -> andel.getArbeidsgiverId().equals(arbeidsgiverIdentifikator))
-                .filter(andel -> andel.getErBrukerMottaker() == brukerErMottaker)
-                .mapToInt(andel -> andel.getÅrsbeløp().intValue())
+                .filter(andel -> andel.arbeidsgiverId().equals(arbeidsgiverIdentifikator))
+                .filter(andel -> andel.erBrukerMottaker() == brukerErMottaker)
+                .mapToInt(andel -> andel.årsbeløp().intValue())
                 .sum();
     }
-
-    // TODO: Flytt til søknad!
-    private NorskForelder lagNorskAnnenforeldre(Fødselsnummer indent) {
-        return new NorskForelder(indent, "");
-    }
-
 }
