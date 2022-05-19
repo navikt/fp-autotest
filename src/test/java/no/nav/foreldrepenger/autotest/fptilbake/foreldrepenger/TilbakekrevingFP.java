@@ -258,7 +258,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         var arbeidsgiver = familie.mor().arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
         if (redusert){
-            inntektsmelding.medBeregnetInntekt(new ProsentAndel(50));
+            inntektsmelding.medBeregnetInntekt(ProsentAndel.valueOf(50));
         }
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
     }

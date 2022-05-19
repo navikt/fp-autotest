@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.FORELDREANSVARSVILKÅRET_2_LEDD;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.OMSORGSVILKÅRET;
-import static no.nav.foreldrepenger.common.domain.felles.relasjontilbarn.OmsorgsOvertakelsesÅrsak.DØDSFALL_ANNEN_FORELDER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -47,7 +46,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
         var papirsøknadAP = saksbehandler.hentAksjonspunktbekreftelse(PapirSoknadEngangstonadBekreftelse.class);
 
 
-        var søknad = lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato, DØDSFALL_ANNEN_FORELDER);
+        var søknad = lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
 //        var saksnummer = medmor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -83,7 +82,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
         var familie = new Familie("55", fordel);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
-        var søknad = lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato, DØDSFALL_ANNEN_FORELDER);
+        var søknad = lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -120,7 +119,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
         var familie = new Familie("61", fordel);
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
-        var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato, DØDSFALL_ANNEN_FORELDER);
+        var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato);
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -156,7 +155,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
         var familie = new Familie("61", fordel);
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
-        var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato, DØDSFALL_ANNEN_FORELDER);
+        var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato);
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

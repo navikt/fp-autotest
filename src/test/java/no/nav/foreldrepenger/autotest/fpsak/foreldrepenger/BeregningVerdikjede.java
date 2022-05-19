@@ -255,7 +255,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medRefusjonsBelopPerMnd(new ProsentAndel(100));
+                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -314,7 +314,7 @@ class BeregningVerdikjede extends FpsakTestBase {
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum();
         assertThat(brutto).isEqualTo(bruttoPrÅr);
-        assertThat(fordelt).isEqualTo(0);
+        assertThat(fordelt).isZero();
         assertThat(dagsats).isPositive();
     }
 
@@ -333,11 +333,11 @@ class BeregningVerdikjede extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medBeregnetInntekt(new ProsentAndel(50))
+                .medBeregnetInntekt(ProsentAndel.valueOf(50))
                 .medRefusjonsBelopPerMnd(29_000);
         var inntektsmeldingTilkommendeArbeidsforhold = arbeidsgiver.lagInntektsmeldingTilkommendeArbeidsforholdEtterFPstartdato(fpStartdato)
-                .medBeregnetInntekt(new ProsentAndel(50))
-                .medRefusjonsBelopPerMnd(new ProsentAndel(100));
+                .medBeregnetInntekt(ProsentAndel.valueOf(50))
+                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding, inntektsmeldingTilkommendeArbeidsforhold);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -466,12 +466,12 @@ class BeregningVerdikjede extends FpsakTestBase {
         var arbeidsgivere = mor.arbeidsgivere();
         var arbeidsgiver1 = arbeidsgivere.toList().get(0);
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(fpStartdato)
-                .medRefusjonsBelopPerMnd(new ProsentAndel(100));
+                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmelding1);
 
         var arbeidsgiver2 = arbeidsgivere.toList().get(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(fpStartdato)
-                .medRefusjonsBelopPerMnd(new ProsentAndel(100));
+                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
         arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmelding2);
 
         saksbehandler.hentFagsak(saksnummer);
