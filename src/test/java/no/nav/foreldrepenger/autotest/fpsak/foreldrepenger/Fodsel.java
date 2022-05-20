@@ -643,15 +643,15 @@ class Fodsel extends FpsakTestBase {
         // Assert refusjon
         var resultatPerioder = saksbehandler.valgtBehandling
                 .getBeregningResultatForeldrepenger().getPerioder();
-        assertThat(resultatPerioder).hasSize(5);
+        assertThat(resultatPerioder).hasSize(6);
         var forventetDagsats = BigDecimal.valueOf(overstyrtInntekt).divide(BigDecimal.valueOf(260),
                 RoundingMode.HALF_EVEN);
         assertThat(resultatPerioder.get(0).getAndeler().get(0).getRefusjon()).isEqualTo(forventetDagsats.intValue());
         assertThat(resultatPerioder.get(1).getAndeler().get(0).getRefusjon()).isEqualTo(forventetDagsats.intValue());
         var forventetRefusjon = BigDecimal.valueOf(endret_refusjon * 12).divide(BigDecimal.valueOf(260),
                 RoundingMode.HALF_EVEN);
-        assertThat(resultatPerioder.get(2).getAndeler().get(0).getRefusjon()).isEqualTo(forventetRefusjon.intValue());
         assertThat(resultatPerioder.get(3).getAndeler().get(0).getRefusjon()).isEqualTo(forventetRefusjon.intValue());
+        assertThat(resultatPerioder.get(4).getAndeler().get(0).getRefusjon()).isEqualTo(forventetRefusjon.intValue());
 
         // Foreslå vedtak
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -985,11 +985,12 @@ class Fodsel extends FpsakTestBase {
     //  Denne verifisering kan bare brukes hvis fordeling = fordelingMorHappyCaseLong
     @Step("Verifiserer utttaksperioder")
     private void verifiserUttak(int antallAktiviteter, List<UttakResultatPeriode> perioder) {
-        assertThat(perioder).hasSize(4);
+        assertThat(perioder).hasSize(5);
         verifiserUttaksperiode(perioder.get(0), FORELDREPENGER_FØR_FØDSEL, antallAktiviteter);
         verifiserUttaksperiode(perioder.get(1), MØDREKVOTE, antallAktiviteter);
         verifiserUttaksperiode(perioder.get(2), MØDREKVOTE, antallAktiviteter);
-        verifiserUttaksperiode(perioder.get(3), FELLESPERIODE, antallAktiviteter);
+        verifiserUttaksperiode(perioder.get(3), MØDREKVOTE, antallAktiviteter);
+        verifiserUttaksperiode(perioder.get(4), FELLESPERIODE, antallAktiviteter);
     }
 
     private void verifiserUttaksperiode(UttakResultatPeriode uttakResultatPeriode, StønadskontoType stønadskonto,
