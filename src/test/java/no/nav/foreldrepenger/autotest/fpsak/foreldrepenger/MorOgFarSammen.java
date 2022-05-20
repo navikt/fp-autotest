@@ -270,7 +270,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 .isEqualTo(BehandlingResultatType.INNVILGET);
         assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker())
                 .as("Antall uttkasperioder for søker")
-                .hasSize(4);
+                .hasSize(3);
         assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer())
                 .as("Antall stønadskontoer i saldo")
                 .hasSize(4);
