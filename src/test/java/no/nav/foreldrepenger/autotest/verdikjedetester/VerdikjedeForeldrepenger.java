@@ -301,13 +301,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .hasSize(3);
 
         var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats())
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats())
                 .as("Dagsats tilkjent ytelse periode #2")
                 .isZero();
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats())
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats())
                 .as("Dagsats tilkjent ytelse periode #3")
                 .isZero();
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(5).getDagsats())
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats())
                 .as("Dagsats tilkjent ytelse periode #4")
                 .isZero();
 
@@ -827,19 +827,19 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Forventer at det er 2 avslåtte uttaksperioder")
                 .hasSize(2);
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak().isAvslåttÅrsak())
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak().isAvslåttÅrsak())
                 .as("Perioden burde være avslått fordi annenpart har overlappende uttak!")
                 .isTrue();
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(4).getPeriodeResultatÅrsak().isAvslåttÅrsak())
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak().isAvslåttÅrsak())
                 .as("Perioden burde være avslått fordi annenpart har overlappende uttak!")
                 .isTrue();
 
 
         var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats())
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats())
                 .as("Siden perioden er avslått, forventes det 0 i dagsats")
                 .isZero();
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(4).getDagsats())
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats())
                 .as("Siden perioden er avslått, forventes det 0 i dagsats")
                 .isZero();
 
@@ -1631,22 +1631,22 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
                 .isEmpty();
-        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(3).getPeriodeResultatÅrsak())
+        assertThat(saksbehandler.valgtBehandling.hentUttaksperiode(2).getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
                 .isEqualTo(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_SEKS_UKER_FRI_SYKDOM);
 
         // Tilkjent ytelse
         var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getFom())
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(2).getFom())
                 .as("Utsettelsesperiode fom")
                 .isEqualTo(fødselsdato.plusWeeks(5));
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getTom())
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(2).getTom())
                 .as("Utsettelsesperiode tom")
                 .isEqualTo(fødselsdato.plusWeeks(6).minusDays(1));
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats())
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats())
                 .as("Utsettelsesperiode dagsats")
                 .isZero();
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(4).getFom())
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getFom())
                 .as("Periode etter fri utsettelse fom")
                 .isEqualTo(fødselsdato.plusWeeks(10));
     }
@@ -1835,7 +1835,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var vedtaksperioderInnsyn = innsynForeldrepenger.gjeldendeVedtak().perioder();
         assertThat(uttakResultatPerioder)
                 .hasSameSizeAs(vedtaksperioderInnsyn)
-                .hasSize(5);
+                .hasSize(4);
 
         // Verifisere at alle perioder er innvilget i både uttak og vedtaket i innsyn
         uttakResultatPerioder.forEach(periode -> assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET));
