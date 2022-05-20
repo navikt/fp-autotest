@@ -163,30 +163,30 @@ class Termin extends FpsakTestBase {
                 .getPerioderSøker();
         assertThat(resultatPerioder)
                 .as("Uttaksperioder (resultat)")
-                .hasSize(7)
+                .hasSize(8)
                 .allMatch(p -> p.getPeriodeResultatType().equals(PeriodeResultatType.INNVILGET));
-        assertThat(resultatPerioder.get(2).getGraderingInnvilget())
+        assertThat(resultatPerioder.get(3).getGraderingInnvilget())
                 .as("Gradering innvilget")
                 .isTrue();
-        assertThat(resultatPerioder.get(2).getGradertArbeidsprosent())
+        assertThat(resultatPerioder.get(3).getGradertArbeidsprosent())
                 .as("Graderingsprosent i periode")
                 .isEqualByComparingTo(BigDecimal.valueOf(40));
-        assertThat(resultatPerioder.get(4).getGraderingInnvilget())
-                .as("Gradering innvilget")
-                .isTrue();
-        assertThat(resultatPerioder.get(4).getGradertArbeidsprosent())
-                .as("Graderingsprosent i periode")
-                .isEqualByComparingTo(BigDecimal.valueOf(10));
         assertThat(resultatPerioder.get(5).getGraderingInnvilget())
                 .as("Gradering innvilget")
                 .isTrue();
         assertThat(resultatPerioder.get(5).getGradertArbeidsprosent())
                 .as("Graderingsprosent i periode")
-                .isEqualByComparingTo(BigDecimal.valueOf(20));
+                .isEqualByComparingTo(BigDecimal.valueOf(10));
         assertThat(resultatPerioder.get(6).getGraderingInnvilget())
                 .as("Gradering innvilget")
                 .isTrue();
         assertThat(resultatPerioder.get(6).getGradertArbeidsprosent())
+                .as("Graderingsprosent i periode")
+                .isEqualByComparingTo(BigDecimal.valueOf(20));
+        assertThat(resultatPerioder.get(7).getGraderingInnvilget())
+                .as("Gradering innvilget")
+                .isTrue();
+        assertThat(resultatPerioder.get(7).getGradertArbeidsprosent())
                 .as("Graderingsprosent i periode")
                 .isEqualByComparingTo(BigDecimal.valueOf(30));
     }
