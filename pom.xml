@@ -17,10 +17,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <vtp.versjon>1.1.6</vtp.versjon>
-        <dokumentgenerator.version>3.3.0</dokumentgenerator.version>
+        <dokumentgenerator.version>3.3.1</dokumentgenerator.version>
         <felles.versjon>4.1.25</felles.versjon>
         <fp-kontrakter.version>6.1.21</fp-kontrakter.version>
-        <selvbetjening-felles.version>0.8.0</selvbetjening-felles.version>
+        <selvbetjening-felles.version>0.8.4</selvbetjening-felles.version>
 
         <allure.version>2.18.0</allure.version>
         <assertj.version>3.22.0</assertj.version>
