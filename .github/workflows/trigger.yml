@@ -118,7 +118,7 @@ jobs:
 
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.6.0
+        uses: crazy-max/ghaction-github-pages@v3.0.0
         with:
           build_dir: gh-pages
         env:
@@ -287,7 +287,7 @@ jobs:
 
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.6.0
+        uses: crazy-max/ghaction-github-pages@v3.0.0
         with:
           build_dir: gh-pages
         env:
@@ -467,7 +467,7 @@ jobs:
 
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.6.0
+        uses: crazy-max/ghaction-github-pages@v3.0.0
         with:
           build_dir: gh-pages
         env:
