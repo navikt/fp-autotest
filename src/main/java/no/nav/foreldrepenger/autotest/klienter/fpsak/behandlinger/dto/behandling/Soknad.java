@@ -9,9 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Soknad {
     // Generelt
     protected LocalDate mottattDato;
-    protected String tilleggsopplysninger;
     protected String begrunnelseForSenInnsending;
-    protected String annenPartNavn;
 
     // Fødsel
     protected LocalDate utstedtdato;
