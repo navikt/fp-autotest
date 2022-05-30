@@ -1039,7 +1039,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var bekreftKorrektBesteberegninging = saksbehandler
                 .hentAksjonspunktbekreftelse(KontrollerBesteberegningBekreftelse.class)
                 .godkjenn()
-                .setBegrunnelse("Adopsjon behandlet av Autotest.");
+                .setBegrunnelse("Besteberegning godkjent av autotest.");
         saksbehandler.bekreftAksjonspunkt(bekreftKorrektBesteberegninging);
 
         saksbehandler.ventTilAvsluttetBehandling();
