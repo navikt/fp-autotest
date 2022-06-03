@@ -352,21 +352,9 @@ class MorOgFarSammen extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventTilAvsluttetBehandling();
 
-        var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
-                .bekreftHarGyldigGrunn(fødselsdato);
-        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-
-        beslutter.hentFagsak(saksnummerMor);
-        beslutter.ventPåOgVelgRevurderingBehandling();
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INGEN_ENDRING);
 
@@ -468,25 +456,24 @@ class MorOgFarSammen extends FpsakTestBase {
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
 
-        sendInnEndringssøknadforMor(familie, saksnummerMor);
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
 
         overstyrer.hentFagsak(saksnummerMor);
-        overstyrer.ventPåOgVelgRevurderingBehandling();
+        overstyrer.velgSisteBehandling();
 
         var overstyr = new OverstyrFodselsvilkaaret();
         overstyr.avvis(Avslagsårsak.SØKER_ER_FAR);
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        var vurderSoknadsfristForeldrepengerBekreftelse = overstyrer
-                .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
-                .bekreftHarGyldigGrunn(fødselsdato);
-        overstyrer.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummerMor);
-        beslutter.ventPåOgVelgRevurderingBehandling();
+        beslutter.velgSisteBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
