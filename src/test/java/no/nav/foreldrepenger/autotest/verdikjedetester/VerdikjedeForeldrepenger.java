@@ -559,16 +559,17 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var familie = new Familie("570");
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
+        var førsteUttakDatoFødsel = Virkedager.helgejustertTilMandag(fødselsdato);
         var arbeidsforholdene = far.arbeidsforholdene();
         var arbeidsforhold1 = arbeidsforholdene.get(0);
         var orgNummerFar1 = arbeidsforhold1.arbeidsgiverIdentifikasjon();
         var stillingsprosent1 = arbeidsforhold1.stillingsprosent();
-        var fpStartdatoIfmFødselFar = fødselsdato.minusWeeks(2);
+        var fpStartdatoIfmFødselFar = førsteUttakDatoFødsel.minusWeeks(2);
         var fpStartdatoEtterUke6Far = Virkedager.helgejustertTilMandag(fødselsdato.plusWeeks(6));
         var fordelingFar = generiskFordeling(
                 graderingsperiodeArbeidstaker(StønadskontoType.FORELDREPENGER,
                         fpStartdatoIfmFødselFar,
-                        fødselsdato.plusWeeks(2).minusDays(1),
+                        førsteUttakDatoFødsel.plusWeeks(2).minusDays(1),
                         orgNummerFar1,
                         50),
                 graderingsperiodeArbeidstaker(StønadskontoType.FORELDREPENGER,
