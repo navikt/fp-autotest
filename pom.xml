@@ -76,6 +76,13 @@
             <version>1.70</version>
         </dependency>
 
+        <!-- Trenger denne siden fpsoknad-felles bruker fortsatt javax -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.3</version>
+        </dependency>
+
         <!-- Interne avhengigheter-->
         <dependency>
             <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
