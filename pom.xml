@@ -18,22 +18,64 @@
 
         <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.3.1</dokumentgenerator.version>
-        <felles.versjon>4.1.25</felles.versjon>
+        <felles.versjon>4.1.28</felles.versjon>
         <fp-kontrakter.version>6.1.21</fp-kontrakter.version>
-        <selvbetjening-felles.version>0.8.5</selvbetjening-felles.version>
+        <selvbetjening-felles.version>0.8.10</selvbetjening-felles.version>
 
+        <junit.version>5.8.2</junit.version>
+        <mockito.version>4.5.1</mockito.version>
         <allure.version>2.18.0</allure.version>
         <assertj.version>3.22.0</assertj.version>
         <aspectj.version>1.9.9.1</aspectj.version>
         <apache-commons.version>3.12.0</apache-commons.version>
-        <jackson.version>2.13.3</jackson.version>
         <jboss-jandex.version>2.4.2.Final</jboss-jandex.version>
+
+        <jakarta.version>9.1.0</jakarta.version>
+        <jackson.version>2.13.3</jackson.version>
         <jersey.version>3.0.4</jersey.version>
-        <junit.version>5.8.2</junit.version>
-        <mockito.version>4.5.1</mockito.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <version>${jakarta.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey</groupId>
+                <artifactId>jersey-bom</artifactId>
+                <version>${jersey.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <!-- Fikser https://security.snyk.io/vuln/SNYK-JAVA-COMMONSCODEC-561518 -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+        </dependency>
+        <!-- Fikser  https://security.snyk.io/vuln/SNYK-JAVA-ORGBOUNCYCASTLE-1296075
+            Kan fikses også ved å fjerne jose4j i vtp kontrakter -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
+
         <!-- Interne avhengigheter-->
         <dependency>
             <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
@@ -107,42 +149,34 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-parameter-names</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.activation</groupId>
             <artifactId>jakarta.activation-api</artifactId>
-            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>${jersey.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>jakarta.xml.bind</groupId>
@@ -153,12 +187,10 @@
         <dependency>
             <groupId>org.glassfish.jersey.connectors</groupId>
             <artifactId>jersey-apache-connector</artifactId>
-            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
-            <version>${jersey.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish.hk2.external</groupId>
@@ -231,7 +263,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.8.1</version>
                 <configuration>
                     <parameters>true</parameters>
                     <source>${java.version}</source>
