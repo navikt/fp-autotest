@@ -554,7 +554,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
             "I dette arbeidsforholdet gjennopptar han full deltidsstilling og AG vil har full refusjon i hele perioden." +
             "I det andre arbeidsforholdet vil AG bare ha refusjon i to måneder. Søker også gradert uttak ifm fødsel." +
             "Far sender dermed inn endringssøknad og gir fra seg alle periodene.")
-    // TODO: Oppstykking til de grader?
     void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var familie = new Familie("570");
         var far = familie.far();
@@ -636,7 +635,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .as("Avslåtte uttaksperioder")
                 .isEmpty();
         // Utsettelse skal være innvilget, riktig årsak og skal ikke trekke dager
-        var uttakResultatPeriode = saksbehandler.valgtBehandling.hentUttaksperiode(9);
+        var uttakResultatPeriode = saksbehandler.valgtBehandling.hentUttaksperiode(4);
         assertThat(uttakResultatPeriode.getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
                 .isEqualTo(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT);
@@ -648,22 +647,11 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .isZero();
 
         // TILKJENT YTELSE
-        // TODO: Skal uttaket delet opp i så mange perioder? Nå har vi 17 uttaksperioder. Skriver ikke noe er tester enn dette
-        //  uten avklaring og finner deretter hva som er lurt å sjekke på. Midlertidig hardkodede sjekker lagt til.
         var beregningsresultatPerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
-//        assertThat(beregningsresultatPerioder)
-//                .as("Beregningsresultatperidoer")
-//                .hasSize(5);
-//        assertThat(beregningsresultatPerioder.get(0).getTom())
-//                .as("Forventer at lengden på første peridoe har tom dato som matcher tom dato angitt i IM#2")
-//                .isEqualTo(opphørsDatoForRefusjon);
-//        assertThat(beregningsresultatPerioder.get(1).getTom())
-//                .as("Forventer den andre periden avsluttes etter 40 uker")
-//                .isEqualTo(fpStartdatoEtterUke6Far.plusWeeks(40).minusDays(1));
-//        assertThat(beregningsresultatPerioder.get(4).getFom())
-//                .as("Forventer at siste periode starter etter utsettelsen")
-//                .isEqualTo(fpStartdatoEtterUke6Far.plusWeeks(54));
+        assertThat(beregningsresultatPerioder)
+                .as("Beregningsresultatperidoer")
+                .hasSize(7);
 
         var orgNummerFar2 = arbeidsforholdene.get(1).arbeidsgiverIdentifikasjon();
         var andelerForAT1 = saksbehandler.hentBeregningsresultatPerioderMedAndelIArbeidsforhold(orgNummerFar1);
@@ -691,38 +679,38 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .isEqualTo(923);
 
         // Endring i refusjon, flyttes til søker.
-        assertThat(beregningsresultatPerioder.get(5).getDagsats())
+        assertThat(beregningsresultatPerioder.get(3).getDagsats())
                 .as("Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel")
                 .isEqualTo(1477);
-        assertThat(andelerForAT1.get(5).getTilSoker())
+        assertThat(andelerForAT1.get(3).getTilSoker())
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(554);
-        assertThat(andelerForAT2.get(5).getTilSoker())
+        assertThat(andelerForAT2.get(3).getTilSoker())
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(923);
 
         // Opphører IM med refusjon
-        assertThat(beregningsresultatPerioder.get(8).getDagsats())
+        assertThat(beregningsresultatPerioder.get(4).getDagsats())
                 .as("Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel")
                 .isEqualTo(554);
-        assertThat(andelerForAT1.get(8).getTilSoker())
+        assertThat(andelerForAT1.get(4).getTilSoker())
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(554);
-        assertThat(andelerForAT2.get(8).getTilSoker())
+        assertThat(andelerForAT2.get(4).getTilSoker())
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isZero();
 
-        assertThat(beregningsresultatPerioder.get(10).getDagsats())
+        assertThat(beregningsresultatPerioder.get(5).getDagsats())
                 .as("Forventer at dagsatsen for utsettelsen er null")
                 .isZero();
 
-        assertThat(beregningsresultatPerioder.get(11).getDagsats())
+        assertThat(beregningsresultatPerioder.get(6).getDagsats())
                 .as("Forventer at dagsatsen for perioden matcher summen av den kalkulerte dagsatsen for hver andel")
                 .isEqualTo(554);
-        assertThat(andelerForAT1.get(11).getTilSoker())
+        assertThat(andelerForAT1.get(6).getTilSoker())
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(554);
-        assertThat(andelerForAT2.get(11).getTilSoker())
+        assertThat(andelerForAT2.get(6).getTilSoker())
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isZero();
 
