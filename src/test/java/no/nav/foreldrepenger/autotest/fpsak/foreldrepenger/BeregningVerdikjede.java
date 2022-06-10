@@ -31,7 +31,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
@@ -39,10 +38,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
-import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
@@ -401,15 +398,8 @@ class BeregningVerdikjede extends FpsakTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
-        // FAKTA OM ARBEIDSFORHOLD
-        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
-            saksbehandler.fortsettUteninntektsmeldinger();
-        } else {
-            var avklarArbeidsforholdBekreftelse = saksbehandler
-                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                    .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
-            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
-        }
+        // Løs 5085, ikke vent på inntektsmeldinger
+        saksbehandler.fortsettUteninntektsmeldinger();
 
         // FAKTA OM BEREGNING
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
@@ -437,14 +427,8 @@ class BeregningVerdikjede extends FpsakTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
-        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
-            saksbehandler.fortsettUteninntektsmeldinger();
-        } else {
-            var avklarArbeidsforholdBekreftelse = saksbehandler
-                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                    .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
-            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
-        }
+        // Løs 5085, ikke vent på inntektsmeldinger
+        saksbehandler.fortsettUteninntektsmeldinger();
 
         var aksjonspunkt = saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
         assertThat(aksjonspunkt.erUbekreftet())

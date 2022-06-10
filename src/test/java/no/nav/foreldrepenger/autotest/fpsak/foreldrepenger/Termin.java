@@ -21,13 +21,8 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
-import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -89,32 +84,15 @@ class Termin extends FpsakTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
         saksbehandler.gjenopptaBehandling();
 
-
-        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
-            saksbehandler.fortsettUteninntektsmeldinger();
-        } else {
-            var ab = saksbehandler
-                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                    .bekreftArbeidsforholdErAktivt(new Orgnummer("910909088"), true);
-            saksbehandler.bekreftAksjonspunkt(ab);
-        }
+        // Løs 5085, ikke vent på inntektsmeldinger
+        saksbehandler.fortsettUteninntektsmeldinger();
 
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
 
-        if (!ArbeidInnteksmeldingToggle.erTogglePå()) {
-            saksbehandler.hentFagsak(saksnummer);
-            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-            beslutter.hentFagsak(saksnummer);
-            var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-            fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-            beslutter.fattVedtakOgVentTilAvsluttetBehandling(fatterVedtakBekreftelse);
-        } else {
-            saksbehandler.ventTilAvsluttetBehandling();
-        }
+        saksbehandler.ventTilAvsluttetBehandling();
 
         saksbehandler.velgSisteBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
