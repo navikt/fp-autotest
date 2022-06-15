@@ -73,7 +73,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
@@ -91,7 +90,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInns
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
-import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.UkjentForelder;
@@ -340,12 +338,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                 .hentAksjonspunktbekreftelse(PapirSoknadForeldrepengerBekreftelse.class)
                 .morSøkerTermin(fordelingDtoMor, termindato, fpMottatDato, DekningsgradDto.AATI);
         saksbehandler.bekreftAksjonspunkt(papirSoknadForeldrepengerBekreftelse);
-
-        if (!ArbeidInnteksmeldingToggle.erTogglePå()) {
-            var avklarArbeidsforholdBekreftelse = saksbehandler
-                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
-        }
 
         var avklarFaktaTerminBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class)
@@ -1362,12 +1354,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        if (!ArbeidInnteksmeldingToggle.erTogglePå()) {
-            var avklarArbeidsforholdBekreftelse = saksbehandler
-                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
-        }
-
         assertThat(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"))
                 .as("Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +
                         "er forut for permisjonen på skjæringstidspunktet!")
@@ -1425,12 +1411,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
                 .as("Behandlingsårsakstype")
                 .isEqualTo(BehandlingÅrsakType.RE_KLAGE_MED_END_INNTEKT);
-
-        if (!ArbeidInnteksmeldingToggle.erTogglePå()) {
-            var avklarArbeidsforholdBekreftelse = saksbehandler
-                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class);
-            saksbehandler.bekreftAksjonspunkt(avklarArbeidsforholdBekreftelse);
-        }
 
         assertThat(saksbehandler.sjekkOmYtelseLiggerTilGrunnForOpptjening("SYKEPENGER"))
                 .as("Forventer at det er registert en opptjeningsaktivitet med aktivitettype SYKEPENGER som " +

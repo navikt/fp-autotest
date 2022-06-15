@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -28,12 +27,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.ArbeidInntektsmeldingBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarArbeidsforholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
-import no.nav.foreldrepenger.autotest.util.toggle.ArbeidInnteksmeldingToggle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 
@@ -60,25 +57,15 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        // LØSER AKSJONSPUNKT 5080 ELLER 5085 AVHENGIG AV TOGGLE //
-        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
-            opprettArbeidsforholdFraIM5085(orgnummer);
-        } else {
-            var ab = saksbehandler
-                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                    .bekreftArbeidsforholdErBasertPåInntektsmelding(new Orgnummer("910909088"), LocalDate.now().minusYears(3),
-                            LocalDate.now().plusYears(2), BigDecimal.valueOf(100));
-            saksbehandler.bekreftAksjonspunkt(ab);
-        }
+        // LØSER AKSJONSPUNKT 5085 //
+        opprettArbeidsforholdFraIM5085(orgnummer);
 
         // FORESLÅ VEDTAK //
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
-        var ap = ArbeidInnteksmeldingToggle.erTogglePå()
-                ? beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING)
-                : beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
+        var ap = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING);
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(Collections.singletonList(ap));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
@@ -107,22 +94,14 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
 
         saksbehandler.gjenopptaBehandling();
 
-        if (ArbeidInnteksmeldingToggle.erTogglePå()) {
-            if (!saksbehandler.harAksjonspunkt("5089")) {
-                throw new IllegalStateException();
-            }
-            var dto = new BehandlingIdPost(saksbehandler.valgtBehandling.uuid, saksbehandler.valgtBehandling.versjon);
-            overstyrer.hentFagsak(saksnummer);
-            overstyrer.åpneForNyArbeidsforholdVurdering(dto);
-            opprettManueltArbeidsforhold5085();
-            saksbehandler.velgSisteBehandling();
-        } else {
-            // VURDER ARBEIDSFORHOLD: Legg til fikivt arbeidsforhold //
-            var apBekreftelse = saksbehandler
-                    .hentAksjonspunktbekreftelse(AvklarArbeidsforholdBekreftelse.class)
-                    .leggTilArbeidsforhold("Ambassade", LocalDate.now().minusYears(2), LocalDate.now().plusYears(1), 100);
-            saksbehandler.bekreftAksjonspunkt(apBekreftelse);
+        if (!saksbehandler.harAksjonspunkt("5089")) {
+            throw new IllegalStateException("Forventer å ha havnet i opptjeningsvilkåret her");
         }
+        var dto = new BehandlingIdPost(saksbehandler.valgtBehandling.uuid, saksbehandler.valgtBehandling.versjon);
+        overstyrer.hentFagsak(saksnummer);
+        overstyrer.åpneForNyArbeidsforholdVurdering(dto);
+        opprettManueltArbeidsforhold5085();
+        saksbehandler.velgSisteBehandling();
 
 
         // VURDER OPPTJENING: Godkjenn fiktivt arbeidsforhold i opptjening //
@@ -152,15 +131,13 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
+        var apArbeid = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING);
         var apAvvikBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
         var apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        var apVurderArbeidsforhold = ArbeidInnteksmeldingToggle.erTogglePå()
-                ? beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING)
-                : beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_ARBEIDSFORHOLD);
         var apVurderOpptjening = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING);
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(
-                List.of(apAvvikBeregning, apFaktaOmBeregning, apVurderArbeidsforhold, apVurderOpptjening));
+                List.of(apAvvikBeregning, apFaktaOmBeregning, apArbeid, apVurderOpptjening));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
