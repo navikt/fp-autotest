@@ -36,8 +36,8 @@ env:
 
 jobs:
   fpsak-autotester:
-    if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.event.inputs.trigger)
     name: Kjører fpsak spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+    if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.event.inputs.trigger)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -64,8 +64,9 @@ jobs:
           ./make-dummy-keystore.sh
           cd ../../lokal-utvikling
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
+          cd docker-compose-lokal
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose -f docker-compose-lokal/docker-compose.yml up --quiet-pull --detach fpsak
+          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpsak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
       - name: Venter på stacken og sjekker status
         run: |
@@ -118,7 +119,7 @@ jobs:
 
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.6.0
+        uses: crazy-max/ghaction-github-pages@v3.0.0
         with:
           build_dir: gh-pages
         env:
@@ -201,7 +202,7 @@ jobs:
           ./make-dummy-keystore.sh
           cd ../pipeline
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak
+          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpoppdrag fptilbake fprisk fpdokgen fpabonnent fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
       - name: Venter på stacken og sjekker status
         run: |
@@ -287,7 +288,7 @@ jobs:
 
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.6.0
+        uses: crazy-max/ghaction-github-pages@v3.0.0
         with:
           build_dir: gh-pages
         env:
@@ -369,7 +370,7 @@ jobs:
           ./make-dummy-keystore.sh
           cd ../pipeline
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak
+          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
       - name: Venter på stacken og sjekker status
         run: |
@@ -467,7 +468,7 @@ jobs:
 
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v2.6.0
+        uses: crazy-max/ghaction-github-pages@v3.0.0
         with:
           build_dir: gh-pages
         env:
@@ -487,9 +488,8 @@ jobs:
 
       - name: Notify slack
         if: |
-          always() &&
+          always() && !cancelled() &&
           github.event_name == 'workflow_dispatch' &&
-          steps.tester.outcome != 'cancelled' &&
           github.event.inputs.trigger != null &&
           github.event.inputs.version != null
         run: |

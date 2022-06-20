@@ -1,0 +1,40 @@
+version: '2.4'
+services:
+  audit.nais:
+    mem_limit: 16m
+  oracle:
+    mem_limit: 2gb
+    shm_size: 2gb
+  postgres:
+    mem_limit: 128mb
+    shm_size: 128mb
+  vtp:
+    mem_limit: 1gb
+    shm_size: 512mb
+  fpabakus:
+    mem_limit: 512mb
+  fpsak:
+    mem_limit: 1gb
+    shm_size: 256mb
+  fpfrontend:
+    mem_limit: 64mb
+  fpfordel:
+    mem_limit: 512mb
+  fpinfo:
+    mem_limit: 256mb
+  fpsoknad-mottak:
+    mem_limit: 512mb
+  fpformidling:
+    mem_limit: 512mb
+  fpdokgen:
+    mem_limit: 512mb
+  fpoppdrag:
+    mem_limit: 512mb
+  fptilbake:
+    mem_limit: 512mb
+    shm_size: 256mb
+  fprisk:
+    mem_limit: 512mb
+  fpabonnent:
+    mem_limit: 512mb
+

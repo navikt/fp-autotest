@@ -9,11 +9,8 @@ services:
   oracle:
     image: $ORACLE_IMAGE
     container_name: oracle
-    restart: on-failure
-    mem_limit: 2gb
-    shm_size: 2gb
     environment:
-      - ORACLE_PASSWORD=oracle
+      - "ORACLE_PASSWORD=oracle"
     ports:
       - "1521:1521"
     volumes:
@@ -26,30 +23,34 @@ services:
   postgres:
     image: $POSTGRES_IMAGE
     container_name: postgres
-    restart: on-failure
     mem_limit: 128mb
     shm_size: 128mb
     environment:
       - "TZ=Europe/Oslo"
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_USER=admin
+      - "POSTGRES_PASSWORD=admin"
+      - "POSTGRES_USER=admin"
     volumes:
       - ./postgres-init:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "while ! /usr/bin/pg_isready -U admin -t 1; do sleep 1; done" ]
+      interval: 2s
+      retries: 1
+      timeout: 30s
+      start_period: 10s
   vtp:
     image: $VTP_IMAGE
     container_name: vtp
     restart: on-failure
     mem_limit: 1gb
     shm_size: 512mb
-    hostname: "vtp"
     environment:
-      - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/var/run/secrets/naisd.io/keystore.jks"
-      - "JAVAX_NET_SSL_TRUSTSTORE=/var/run/secrets/naisd.io/truststore.jks"
+      - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/app/.modig/keystore.jks"
+      - "JAVAX_NET_SSL_TRUSTSTORE=/app/.modig/truststore.jks"
       - "CREATE_TOPICS=privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp,privat-foreldrepenger-historikk-fordeling,aapen-dok-journalfoering-v1-q1,privat-permittering-lonnskomp-vedtak-vtp,privat-tilbakekreving-dvh-saksstatistikk-v1-vtp,privat-tilbakekreving-dvh-vedtak-v1-vtp,tilbakekreving-brukerdialog-local"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
     ports:
       - "8060:8060"
       - "8063:8063"
@@ -76,14 +77,19 @@ services:
       - "fpabakus_datasource.list"
       - "common.env"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
     ports:
       - "8015:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpabakus/internal/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     depends_on:
       audit.nais:
         condition: service_started
       postgres:
-        condition: service_started
+        condition: service_healthy
       vtp:
         condition: service_healthy
   fpsak:
@@ -109,7 +115,7 @@ services:
       - "fpsak_datasource.list"
       - "common.env"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
     ports:
       - "8080:8080"
     healthcheck:
@@ -125,7 +131,7 @@ services:
       vtp:
         condition: service_healthy
       fpabakus:
-        condition: service_started
+        condition: service_healthy
   fpfrontend:
     image: $FPFRONTEND_IMAGE
     container_name: fpfrontend
@@ -140,8 +146,14 @@ services:
       - "APP_URL_FPTILBAKE=http://fptilbake:8080"
     ports:
       - "9000:9000"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9000/fpsak/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
     depends_on:
-      - fpsak
+      fpsak:
+        condition: service_healthy
   fpfordel:
     image: $FPFORDEL_IMAGE
     container_name: fpfordel
@@ -161,14 +173,22 @@ services:
       - "fpfordel_datasource.list"
       - "common.env"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
       - "./tokenx:/tokenx"
     ports:
       - "8090:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpfordel/internal/health/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
     depends_on:
-      - oracle
-      - vtp
-      - fpsak
+      fpsak:
+        condition: service_healthy
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
   fpinfo:
     image: $FPINFO_IMAGE
     container_name: fpinfo
@@ -180,10 +200,15 @@ services:
       - "fpinfo_datasource.list"
       - "common.env"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
       - "./tokenx:/tokenx"
     ports:
       - "8040:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpinfo/internal/health/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
     depends_on:
       fpsak:
         condition: service_healthy
@@ -217,7 +242,7 @@ services:
     env_file:
       - "common.env"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
       - "./tokenx:/tokenx"
     ports:
       - "9001:9001"
@@ -242,9 +267,14 @@ services:
       - "fpformidling_datasource.list"
       - "common.env"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
     ports:
       - "8010:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpformidling/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     depends_on:
       - postgres
       - vtp
@@ -257,9 +287,14 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
     ports:
       - "8291:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/actuator/info" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     depends_on:
       - fpformidling
   fpoppdrag:
@@ -276,9 +311,14 @@ services:
       - "LOADBALANCER_FQDN=localhost:8070"
       - "OPENIDCONNECT_USERNAME=fpoppdrag-localhost"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
     ports:
       - "8070:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpoppdrag/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     depends_on:
       - oracle
       - vtp
@@ -313,9 +353,14 @@ services:
       - "ABAC_ATTRIBUTT_VENTEFRIST=no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist"
       - "ABAC_ATTRIBUTT_BATCH=no.nav.abac.attributter.foreldrepenger.batch"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
     ports:
       - "8030:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fptilbake/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     depends_on:
       - oracle
       - vtp
@@ -333,9 +378,14 @@ services:
       - "OPENIDCONNECT_USERNAME=fprisk-localhost"
       - "BRREG_PROXY=https://vtp:8063/rest/brreg/proxy/not/implemented"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
     ports:
       - "8075:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fprisk/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     depends_on:
       - oracle
       - vtp
@@ -355,9 +405,14 @@ services:
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
       - "FPSAKHENDELSER_V1_URL=http://fpsak:8080/fpsak/api/hendelser/"
     volumes:
-      - "~/.modig:/var/run/secrets/naisd.io"
+      - "~/.modig:/app/.modig"
     ports:
       - "8065:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpabonnent/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     depends_on:
       - oracle
       - vtp
