@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.ArbeidsforholdId;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -13,7 +12,6 @@ public class Arbeidsforhold {
 
     protected String id = null;
     protected String navn = null;
-    protected ArbeidsforholdId arbeidsgiverIdentifikator = null;
     protected Orgnummer arbeidsgiverReferanse = null;
     protected String arbeidsforholdId = null;
     protected LocalDate fomDato = null;
@@ -35,19 +33,6 @@ public class Arbeidsforhold {
     protected LocalDate overstyrtTom = null;
     protected Boolean lagtTilAvSaksbehandler;
     protected Boolean basertPaInntektsmelding;
-
-    public Arbeidsforhold() {
-        // jaxb
-    }
-
-    public Arbeidsforhold(String navn, LocalDate fomDato, LocalDate tomDato, BigDecimal stillingsprosent,
-            Boolean lagtTilAvSaksbehandler) {
-        this.navn = navn;
-        this.fomDato = fomDato;
-        this.tomDato = tomDato;
-        this.stillingsprosent = stillingsprosent;
-        this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
-    }
 
     public Boolean getBrukArbeidsforholdet() {
         return brukArbeidsforholdet;
@@ -75,10 +60,6 @@ public class Arbeidsforhold {
 
     public void setNavn(String navn) {
         this.navn = navn;
-    }
-
-    public String getArbeidsgiverIdentifikator() {
-        return arbeidsgiverIdentifikator != null ? arbeidsgiverIdentifikator.value() : arbeidsgiverReferanse.value();
     }
 
     public Orgnummer getArbeidsgiverReferanse() {

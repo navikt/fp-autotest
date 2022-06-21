@@ -14,6 +14,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import com.neovisionaries.i18n.CountryCode;
+
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper;
@@ -187,7 +189,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var termindato = LocalDate.now().plusWeeks(3);
         var fpStartdato = termindato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medOpptjening(OpptjeningErketyper.medUtenlandskArbeidsforhold("NOR"))
+                .medOpptjening(OpptjeningErketyper.medUtenlandskArbeidsforhold(CountryCode.NO))
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
