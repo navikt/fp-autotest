@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak;
 
+import static no.nav.foreldrepenger.common.mapper.DefaultJsonMapper.MAPPER;
+
 import java.net.URI;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
@@ -12,6 +14,6 @@ public abstract class FpsoknadMottakJerseyKlient extends AbstractJerseyRestKlien
     protected URI base = BaseUriProvider.FPSOKNAD_MOTTAK_BASE;
 
     protected FpsoknadMottakJerseyKlient() {
-        super();
+        super(MAPPER);
     }
 }
