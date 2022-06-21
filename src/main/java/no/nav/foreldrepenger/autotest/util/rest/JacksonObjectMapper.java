@@ -24,7 +24,7 @@ public class JacksonObjectMapper {
     public static ObjectMapper getObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-        mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
+        mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.DEFAULT));
 
         mapper.setVisibility(PropertyAccessor.GETTER, Visibility.NONE);
         mapper.setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
