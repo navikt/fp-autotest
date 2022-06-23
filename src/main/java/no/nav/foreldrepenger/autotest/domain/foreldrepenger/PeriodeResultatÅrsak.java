@@ -113,6 +113,8 @@ public enum PeriodeResultatÅrsak {
     MOR_FØRSTE_SEKS_UKER_IKKE_SØKT("4103", "§14-9 sjette ledd: Mangler søknad for første 6 uker etter fødsel"),
     STØNADSPERIODE_NYTT_BARN("4104", "§14-10 tredje ledd: Stønadsperiode for nytt barn"),
     FAR_SØKT_FØR_FØDSEL("4105", "§14-9 sjette ledd: Far/medmor søker uttak før fødsel/omsorg"),
+    FAR_MER_ENN_TI_DAGER_FEDREKVOTE_IFM_FØDSEL("4106", "§14-10 første ledd: Far/medmor søker mer enn 10 dager ifm fødsel"),
+    BARE_FAR_RETT_MANGLER_MORS_AKTIVITET("4107", "§14-14, jf 14-13: Bare far har rett, aktivitetskravet ikke oppgitt eller ikke dokumentert"),
     SØKERS_SYKDOM_SKADE_SEKS_UKER_IKKE_OPPFYLT("4110", "§14-11: Søkers sykdom/skade første 6 uker ikke oppfylt"),
     SØKERS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT("4111", "§14-11: Søkers innleggelse første 6 uker ikke oppfylt"),
     BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_OPPFYLT("4112", "§14-11: Barnets innleggelse første 6 uker ikke oppfylt"),
