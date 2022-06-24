@@ -568,7 +568,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                         fpStartdatoEtterUke6Far.plusWeeks(50).minusDays(1),
                         orgNummerFar1,
                         stillingsprosent1),
-                utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoEtterUke6Far.plusWeeks(50), fpStartdatoEtterUke6Far.plusWeeks(54).minusDays(1)),
+                utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoEtterUke6Far.plusWeeks(50), fpStartdatoEtterUke6Far.plusWeeks(54).minusDays(1), UTDANNING),
                 graderingsperiodeArbeidstaker(StønadskontoType.FORELDREPENGER,
                         fpStartdatoEtterUke6Far.plusWeeks(54),
                         fpStartdatoEtterUke6Far.plusWeeks(99).minusDays(1),
