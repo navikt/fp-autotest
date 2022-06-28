@@ -692,11 +692,8 @@ class Fodsel extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         // verifiserer uttak
-        assertThat(saksbehandler.hentAvslåtteUttaksperioder()).isEmpty();
-
-
-        /** TODO (jol) TFP-5010 assertThat(uttaksperioder).hasSize(4);
         var uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
+        assertThat(uttaksperioder).hasSize(2);
         var foreldrepengerFørste6Ukene = uttaksperioder.get(0);
         assertThat(foreldrepengerFørste6Ukene.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(foreldrepengerFørste6Ukene.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FORELDREPENGER);
@@ -707,7 +704,8 @@ class Fodsel extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer())
                 .as("Stonadskontoer i Saldo")
                 .hasSize(1);
-         */
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(0).stonadskontoType())
+                .isEqualTo(SaldoVisningStønadskontoType.FORELDREPENGER);
     }
 
     @Test
