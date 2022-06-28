@@ -704,8 +704,8 @@ class Fodsel extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer())
                 .as("Stonadskontoer i Saldo")
                 .hasSize(1);
-        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(0).stonadskontoType())
-                .isEqualTo(SaldoVisningStønadskontoType.FORELDREPENGER);
+        assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER))
+                .isNotNull();
     }
 
     @Test
