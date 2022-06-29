@@ -326,7 +326,8 @@ class Revurdering extends FpsakTestBase {
         var fordeling = generiskFordeling(
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(31).minusDays(1)));
+                // Her har mor utsettet uttaket sitt i 20 uker.
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(45), fødselsdato.plusWeeks(61).minusDays(1)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
@@ -339,7 +340,13 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandling();
 
+
+
+        // Barn 2: Før uke 48. Vi ønsker å ha noe igjen av minsteretten. Minsteretten til MOR er 15
+        // Barn 2: Har termin 25 + 6 uker = 31 UKER
+        //
         // Barn 2: Søker for barn 2 med termin om 6 uker og blir innvilget med start om 3 uker.
+
         var termindato = Virkedager.helgejustertTilMandag(LocalDate.now().plusWeeks(6));
         var søknadFP = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));

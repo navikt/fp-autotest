@@ -2,17 +2,16 @@ package no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering;
 
 import static jakarta.ws.rs.client.Entity.json;
 
+import java.util.UUID;
+
 import jakarta.ws.rs.client.ClientRequestFilter;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.FpriskJerseyKlient;
 import no.nav.foreldrepenger.kontrakter.risk.v1.HentRisikovurderingDto;
 import no.nav.foreldrepenger.kontrakter.risk.v1.RisikovurderingResultatDto;
 
-import java.util.UUID;
-
 public class RisikovurderingJerseyKlient extends FpriskJerseyKlient {
 
-    private static final String RISIKOVURDERING_URL = "/risikovurdering";
-    private static final String RISIKOVURDERING_HENT_URL = RISIKOVURDERING_URL + "/hentResultat";
+    private static final String RISIKOVURDERING_HENT_URL = "/risikovurdering/hentResultat";
 
     public RisikovurderingJerseyKlient(ClientRequestFilter filter) {
         super(filter);
