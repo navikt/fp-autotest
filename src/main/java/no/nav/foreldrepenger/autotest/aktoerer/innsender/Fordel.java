@@ -7,7 +7,6 @@ import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumen
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL;
 
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -23,7 +22,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostId;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostKnyttning;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.JournalpostMottak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.OpprettSak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.dto.Saksnummer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
@@ -42,12 +40,15 @@ import no.nav.foreldrepenger.common.innsending.mappers.V1SvangerskapspengerDomai
 import no.nav.foreldrepenger.common.innsending.mappers.V3EngangsstønadDomainMapper;
 import no.nav.foreldrepenger.common.innsending.mappers.V3ForeldrepengerDomainMapper;
 import no.nav.foreldrepenger.common.oppslag.Oppslag;
+import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGenerator;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
 public class Fordel extends Aktoer implements Innsender {
+
+    private static int inkrementForEksternReferanse = 0;
 
     // TODO: Finn bedre plass for denne
     public Oppslag oppslag = Mockito.mock(Oppslag.class);
@@ -296,25 +297,27 @@ public class Fordel extends Aktoer implements Innsender {
         JournalpostKnyttning journalpostKnyttning = new JournalpostKnyttning(new Saksnummer(saksnummer), idDto);
         fordelKlient.fagsakKnyttJournalpost(journalpostKnyttning);
 
-        JournalpostMottak journalpostMottak = new JournalpostMottak("" + saksnummer, journalpostId, mottattDato,
-                behandlingstemaOffisiellKode);
-        journalpostMottak.setDokumentTypeIdOffisiellKode(dokumentTypeIdOffisiellKode);
-        journalpostMottak.setForsendelseId(UUID.randomUUID().toString());
+        var journalpostMottak = new JournalpostMottakDto(
+                "" + saksnummer,
+                journalpostId,
+                behandlingstemaOffisiellKode,
+                dokumentTypeIdOffisiellKode,
+                mottattDato.atStartOfDay(),
+                xml);
+        journalpostMottak.setForsendelseId(UUID.randomUUID());
         journalpostMottak.setDokumentKategoriOffisiellKode(dokumentKategori);
-        if (dokumentTypeIdOffisiellKode.equalsIgnoreCase(DokumenttypeId.INNTEKTSMELDING.getKode())) {
-            journalpostMottak.setEksternReferanseId(journalpostMottak.lagUnikEksternReferanseId());
-        }
 
-        if (null != xml) {
-            journalpostMottak.setPayloadXml(new String(Base64.getUrlEncoder().withoutPadding().encode(xml.getBytes())));
-            journalpostMottak.setPayloadLength(xml.length());
-        } else {
-            journalpostMottak.setPayloadLength(1);
+        if (dokumentTypeIdOffisiellKode.equalsIgnoreCase(DokumenttypeId.INNTEKTSMELDING.getKode())) {
+            journalpostMottak.setEksternReferanseId(lagUnikEksternReferanseId());
         }
 
         fordelKlient.journalpost(journalpostMottak);
-
         return saksnummer;
+    }
+
+    private String lagUnikEksternReferanseId() {
+        inkrementForEksternReferanse++;
+        return "AR" + String.format("%08d", inkrementForEksternReferanse);
     }
 
     /* SAF */

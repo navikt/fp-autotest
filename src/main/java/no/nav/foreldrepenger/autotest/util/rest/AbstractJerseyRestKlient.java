@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.util.rest;
 
-import static no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper.mapper;
+import static no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper.DEFAULT_MAPPER_VTP;
 import static no.nav.foreldrepenger.autotest.util.rest.RestClientSupportProdusent.connectionManager;
 import static no.nav.foreldrepenger.autotest.util.rest.RestClientSupportProdusent.createKeepAliveStrategy;
 import static no.nav.foreldrepenger.autotest.util.rest.RestClientSupportProdusent.defaultRequestConfig;
@@ -27,13 +27,13 @@ public abstract class AbstractJerseyRestKlient {
     protected final Client client;
 
     protected AbstractJerseyRestKlient() {
-        this(mapper, Set.of());
+        this(DEFAULT_MAPPER_VTP, Set.of());
     }
     protected AbstractJerseyRestKlient(ObjectMapper mapper) {
         this(mapper, Set.of());
     }
     protected AbstractJerseyRestKlient(ClientRequestFilter... filters) {
-        this(mapper, filters);
+        this(DEFAULT_MAPPER_VTP, filters);
     }
     protected AbstractJerseyRestKlient(ObjectMapper mapper, ClientRequestFilter... filters) {
         this(mapper, Set.of(filters));

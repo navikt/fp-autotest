@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingss
 import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -62,13 +61,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKl
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public class Saksbehandler extends Aktoer {
@@ -290,10 +288,10 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
             var prosessTasker = hentProsesstaskerForBehandling(behandling);
             var prosessTaskList = new StringBuilder();
-            for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
-                prosessTaskList.append(prosessTaskListItemDto.taskType())
+            for (ProsessTaskDataDto prosessTaskListItemDto : prosessTasker) {
+                prosessTaskList.append(prosessTaskListItemDto.getTaskType())
                         .append(" - ")
-                        .append(prosessTaskListItemDto.status())
+                        .append(prosessTaskListItemDto.getStatus())
                         .append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
@@ -317,6 +315,12 @@ public class Saksbehandler extends Aktoer {
         } else {
             throw new RuntimeException("Status for behandling " + behandling.uuid + " feilet: " + status.getMessage());
         }
+    }
+
+    private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(Behandling behandling) {
+        return prosesstaskKlient.prosesstaskMedKlarEllerVentStatus().stream()
+                .filter(p -> Objects.equals(behandling.uuid.toString(), p.getTaskParametre().getProperty("behandlingId")))
+                .toList();
     }
 
     private void populateBehandling(Behandling behandling) {
@@ -631,14 +635,6 @@ public class Saksbehandler extends Aktoer {
 
     public String vilkårStatus(String vilkårKode) {
         return hentVilkår(vilkårKode).getVilkarStatus();
-    }
-
-    private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
-        var filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
-        var prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream()
-                .filter(p -> Objects.equals(behandling.uuid.toString(), p.taskParametre().behandlingId()))
-                .toList();
     }
 
     public boolean sakErKobletTilAnnenpart() {

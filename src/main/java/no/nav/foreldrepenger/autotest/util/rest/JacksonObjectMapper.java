@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.vtp.testmodell.util.VariabelContainer;
 
 public class JacksonObjectMapper {
 
-    public static final ObjectMapper mapper = getObjectMapper();
+    public static final ObjectMapper DEFAULT_MAPPER_VTP = getObjectMapper();
 
     private JacksonObjectMapper() {
     }

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.internal.klienter.fpsak.historikk;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,6 @@ import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Hendelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslagDokumentLinkDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagDel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 
 @Execution(ExecutionMode.SAME_THREAD)
@@ -26,21 +26,9 @@ class HistorikkDtoSeraliseringDeserialiseringTest extends SerializationTestBase 
     }
 
     @Test
-    void HistorikkInnslagTest() {
-        test(new HistorikkInnslag(UUID.randomUUID(),
-                HistorikkinnslagType.BREV_BESTILT,
-                "SBH",
-                "M",
-                List.of(new HistorikkInnslagDokumentLinkDto("1", null, "1234567", "123456", true)),
-                List.of(new HistorikkinnslagDel(new Hendelse("BREV_SENT")))));
+    void HistorikkInnslagTst() {
+        test(new HistorikkInnslag(UUID.randomUUID(), HistorikkinnslagType.BREV_SENT, "SØKER", "M",
+                List.of(new HistorikkInnslagDokumentLinkDto("Test", URI.create("http://fpsak/fpsak"), "1234567", "122345", false))));
     }
-
-    @Test
-    void HistorikkinnslagDelTest() {
-        test(new HistorikkinnslagDel(new Hendelse("BREV_SENT")));
-    }
-
-
-
 
 }

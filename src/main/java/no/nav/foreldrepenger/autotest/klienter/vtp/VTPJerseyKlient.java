@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp;
 
-import static no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper.mapper;
+import static no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper.DEFAULT_MAPPER_VTP;
 
 import java.net.URI;
 
@@ -12,6 +12,6 @@ public abstract class VTPJerseyKlient extends AbstractJerseyRestKlient {
     protected URI base = BaseUriProvider.VTP_BASE;
 
     public VTPJerseyKlient() {
-        super(mapper);
+        super(DEFAULT_MAPPER_VTP);
     }
 }
