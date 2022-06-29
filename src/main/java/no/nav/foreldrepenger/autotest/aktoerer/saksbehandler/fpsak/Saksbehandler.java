@@ -169,12 +169,16 @@ public class Saksbehandler extends Aktoer {
         ventPåOgVelgSisteBehandling(BehandlingType.REVURDERING);
     }
 
+    public void ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType behandlingÅrsakType) {
+        ventPåOgVelgSisteBehandling(BehandlingType.REVURDERING, false, behandlingÅrsakType);
+    }
+
     public void ventPåOgVelgAnkeBehandling() {
         ventPåOgVelgSisteBehandling(BehandlingType.ANKE);
     }
 
     public boolean harRevurderingBehandling() {
-        return harBehandling(BehandlingType.REVURDERING);
+        return harBehandling(BehandlingType.REVURDERING, null);
     }
 
     public void ventPåOgVelgDokumentInnsynBehandling() {
@@ -187,7 +191,14 @@ public class Saksbehandler extends Aktoer {
 
     @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
     private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, boolean åpenStatus) {
-        ventTilSakHarBehandling(behandlingstype);
+        ventPåOgVelgSisteBehandling(behandlingstype, åpenStatus, null);
+    }
+
+    @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
+    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype,
+                                             boolean åpenStatus,
+                                             BehandlingÅrsakType behandlingÅrsakType) {
+        ventTilSakHarBehandling(behandlingstype, behandlingÅrsakType);
         var behandling = behandlinger.stream()
                 .filter(b -> b.type.equals(behandlingstype))
                 .filter(b -> !åpenStatus || !b.status.equals(BehandlingStatus.AVSLUTTET))
@@ -197,17 +208,20 @@ public class Saksbehandler extends Aktoer {
     }
 
 
-    private void ventTilSakHarBehandling(BehandlingType behandlingType) {
-        if (harBehandling(behandlingType)) {
+    private void ventTilSakHarBehandling(BehandlingType behandlingType, BehandlingÅrsakType behandlingÅrsakType) {
+        if (harBehandling(behandlingType, behandlingÅrsakType)) {
             return;
         }
-        Vent.til(() -> harBehandling(behandlingType), 30, "Saken har ikke fått behandling av type: " + behandlingType);
+        Vent.til(() -> harBehandling(behandlingType, behandlingÅrsakType), 30, "Saken har ikke fått behandling av type: " + behandlingType);
     }
 
-    private boolean harBehandling(BehandlingType behandlingType) {
+    private boolean harBehandling(BehandlingType behandlingType, BehandlingÅrsakType behandlingÅrsakType) {
         refreshFagsak();
         for (Behandling behandling : behandlinger) {
-            if (behandling.type.equals(behandlingType)) {
+            var harÅrsak = behandlingÅrsakType == null || behandling.getBehandlingÅrsaker()
+                    .stream()
+                    .anyMatch(bå -> Objects.equals(bå.getBehandlingArsakType(), behandlingÅrsakType));
+            if (behandling.type.equals(behandlingType) && harÅrsak) {
                 return true;
             }
         }
