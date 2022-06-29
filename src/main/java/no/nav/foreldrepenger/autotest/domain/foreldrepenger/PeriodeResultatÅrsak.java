@@ -41,6 +41,7 @@ public enum PeriodeResultatÅrsak {
     FORELDREPENGER_KUN_FAR_HAR_RETT_MOR_UFØR("2036", "§14-14 tredje ledd: Innvilget foreldrepenger, kun far har rett og mor er ufør"),
     FORELDREPENGER_FELLESPERIODE_TIL_FAR("2037", "§14-9, jf. §14-13: Innvilget fellesperiode til far"),
     FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK("2038", "§14-10 sjette ledd: Samtidig uttak"),
+    MSP_INNVILGET_FØRSTE_6_UKENE("2039", "§14-9 sjette ledd: Innvilget første 6 uker etter fødsel"),
 
     // Regel ikke oppfylt, resultat = avslått
     IKKE_STØNADSDAGER_IGJEN("4002", "§14-9: Ikke stønadsdager igjen på stønadskonto"),
