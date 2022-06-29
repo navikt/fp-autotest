@@ -29,6 +29,7 @@ import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Støn
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak.FRI;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -81,6 +82,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.KontrollerBesteberegningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengeandel;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
@@ -1809,6 +1811,71 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         // Verifisere at alle perioder er innvilget i både uttak og vedtaket i innsyn
         uttakResultatPerioder.forEach(periode -> assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET));
         vedtaksperioderInnsyn.forEach(periode -> assertThat(periode.resultat().innvilget()).isTrue());
+    }
+
+    @Test
+    @DisplayName("Koblet sak. Far utsetter oppstart rundt fødsel, søker termin og med fødselshendelse")
+    @Description("Far søker og får innvilget før termin. Fødselshendelse med fødsel etter termin. Far utsetter oppstart for å matche"
+            + "fødselsdato")
+    void farUtsetterOppstartRundtFødselSøkerTermin() {
+        var familie = new Familie("83", fordel);
+        var termindato = Virkedager.helgejustertTilMandag(LocalDate.now().minusWeeks(2));
+
+        var far = familie.far();
+        var søknadMor = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
+                .medFordeling(FordelingErketyper.fordelingMorHappyCase(termindato))
+                .medAnnenForelder(lagNorskAnnenforeldre(far));
+        var mor = familie.mor();
+        var saksnummerMor = mor.søk(søknadMor.build());
+
+        mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(3));
+
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
+                .medFordeling(generiskFordeling(uttaksperiode(FEDREKVOTE, termindato.minusWeeks(1), termindato.plusWeeks(1).minusDays(1),
+                        SAMTIDIGUTTAK)))
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()));
+        var saksnummerFar = far.søk(søknadFar.build());
+
+        far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato.minusWeeks(1));
+
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        // Fødselshendelse
+        var fødselsdato = termindato.plusWeeks(1);
+        var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, mor.fødselsnummer().value(), far.fødselsnummer().value(), null,
+                fødselsdato);
+        innsender.opprettHendelsePåKafka(fødselshendelseDto);
+
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        var endringssøknad = lagEndringssøknadFødsel(termindato, BrukerRolle.FAR,
+                generiskFordeling(
+                        utsettelsesperiode(FRI, termindato.minusWeeks(1), fødselsdato.minusDays(1)),
+                        uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK)
+                ),
+                saksnummerFar);
+        far.søk(endringssøknad.build());
+
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
+        assertThat(uttak).hasSize(1);
+        assertThat(uttak.get(0).getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
+        assertThat(uttak.get(0).getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FEDREKVOTE);
+        assertThat(uttak.get(0).getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
+
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAvsluttetBehandling();
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getBehandlingArsakType))
+                .doesNotContain(BehandlingÅrsakType.BERØRT_BEHANDLING);
     }
 
 
