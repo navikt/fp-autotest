@@ -1864,6 +1864,13 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
+        if (saksbehandler.harAksjonspunkt("5084")) {
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
+                    hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+            vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
+            saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+        }
+
         saksbehandler.ventTilAvsluttetBehandling();
 
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
