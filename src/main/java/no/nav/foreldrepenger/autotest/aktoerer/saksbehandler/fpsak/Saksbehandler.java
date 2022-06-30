@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
-import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CONSUMER_ID;
+import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     public void hentFagsak(String saksnummer) {
-        MDCOperations.putToMDC(NAV_CONSUMER_ID, MDC.get(saksnummer));
+        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer)); // Må være satt! Trenger unik referanse ved journalføring (?)
         valgtFagsak = fagsakKlient.hentFagsak(saksnummer);
         if (valgtFagsak == null) {
             throw new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer);
@@ -140,10 +140,6 @@ public class Saksbehandler extends Aktoer {
     /*
      * Behandling
      */
-    public List<Behandling> hentAlleBehandlingerForFagsak(long saksnummer) {
-        return hentAlleBehandlingerForFagsak(String.valueOf(saksnummer));
-    }
-
     public List<Behandling> hentAlleBehandlingerForFagsak(String saksnummer) {
         return behandlingerKlient.alle(saksnummer);
     }
