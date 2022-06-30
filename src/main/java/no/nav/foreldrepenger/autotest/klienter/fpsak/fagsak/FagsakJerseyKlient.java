@@ -27,7 +27,7 @@ public class FagsakJerseyKlient extends FpsakJerseyKlient {
     public Fagsak hentFagsak(Saksnummer saksnummer) {
         return client.target(base)
                 .path(FAGSAK_URL)
-                .queryParam("saksnummer", saksnummer)
+                .queryParam("saksnummer", saksnummer.value())
                 .request()
                 .get(Fagsak.class);
     }

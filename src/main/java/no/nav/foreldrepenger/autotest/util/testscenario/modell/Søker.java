@@ -185,7 +185,7 @@ public abstract class Søker {
         LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, null);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
-        LOG.info("Søknad sendt inn og behandling opprettet på {}", this.saksnummer);
+        LOG.info("Søknad sendt inn og behandling opprettet på {}", this.saksnummer.value());
         return this.saksnummer;
     }
 
@@ -209,7 +209,7 @@ public abstract class Søker {
         LOG.info("Sender inn papirsøknadd for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
-        LOG.info("Søknad sendt inn og behandling opprettet på {}", saksnummer);
+        LOG.info("Søknad sendt inn og behandling opprettet på {}", saksnummer.value());
         return this.saksnummer;
     }
 

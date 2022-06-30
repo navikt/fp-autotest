@@ -155,7 +155,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     public List<Behandling> alle(Saksnummer saksnummer) {
         return Optional.ofNullable(client.target(base)
                 .path(BEHANDLINGER_ALLE_URL)
-                .queryParam(SAKSNUMMER, saksnummer)
+                .queryParam(SAKSNUMMER, saksnummer.value())
                 .request()
                 .get(Response.class)
                 .readEntity(new GenericType<List<Behandling>>() {}))
