@@ -143,7 +143,7 @@ class SammenhengendeUttak extends FpsakTestBase {
                 UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, utsettelseFom, utsettelseFom.plusWeeks(2).minusDays(1)),
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.FELLESPERIODE, utsettelseFom.plusWeeks(2), utsettelseFom.plusWeeks(16).minusDays(1)));
         var endretSøknad = SøknadEndringErketyper.lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR,
-                fordelingUtsettelseEndring, Long.valueOf(saksnummer))
+                fordelingUtsettelseEndring, saksnummer)
                 .medMottattDato(utsettelseFom.minusWeeks(3));
         var saksnummerE = mor.søk(endretSøknad.build());
 
@@ -228,7 +228,7 @@ class SammenhengendeUttak extends FpsakTestBase {
                 UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, startUtsettelse,
                         startUtsettelse.plusWeeks(4).minusDays(1)));
         // TODO: Bekreft at det er endringssøknad med mottatt dato frem i tid som er tanken her. 4 uker etter endring ok?
-        var søknadE = SøknadEndringErketyper.lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordelingEndring, Long.valueOf(saksnummer))
+        var søknadE = SøknadEndringErketyper.lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordelingEndring, saksnummer)
                 .medMottattDato(startUtsettelse.plusWeeks(2));
         var saksnummerE = mor.søk(søknadE.build());
 
@@ -314,7 +314,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var fordelingEndringssøknad = FordelingErketyper.generiskFordeling(
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.FELLESPERIODE, utsettelseStart, utsettelseStart.plusWeeks(1).minusDays(1)));
         var søknadE = SøknadEndringErketyper.lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR,
-                fordelingEndringssøknad, Long.valueOf(saksnummer))
+                fordelingEndringssøknad, saksnummer)
                 .medMottattDato(utsettelseStart.minusWeeks(3));
         mor.søk(søknadE.build());
 

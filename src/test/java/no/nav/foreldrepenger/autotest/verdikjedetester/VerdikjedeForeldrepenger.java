@@ -93,6 +93,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Historikkinns
 import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.UkjentForelder;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Overføringsårsak;
@@ -712,7 +713,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         // Endringssøknad: Far bestemmer seg for å gi fra seg alle periodene
         var fordelingGiFraSegAlt = generiskFordeling(utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoIfmFødselFar, fpStartdatoIfmFødselFar.plusDays(1)));
         var endringssøknadBuilder = lagEndringssøknadFødsel(familie.barn().fødselsdato(), BrukerRolle.FAR,
-                fordelingGiFraSegAlt, Long.valueOf(saksnummerFar)); // TODO
+                fordelingGiFraSegAlt, saksnummerFar);
         far.søk(endringssøknadBuilder.build());
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -1859,7 +1860,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                         utsettelsesperiode(FRI, termindato.minusWeeks(1), fødselsdato.minusDays(1)),
                         uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK)
                 ),
-                Long.valueOf(saksnummerFar));
+                saksnummerFar);
         far.søk(endringssøknad.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1886,10 +1887,10 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
     }
 
 
-    private String sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
-                                                                                        LocalDate fødselsdato,
-                                                                                        LocalDate fpStartdatoMor,
-                                                                                        LocalDate fpStartdatoFar) {
+    private Saksnummer sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
+                                                                                              LocalDate fødselsdato,
+                                                                                              LocalDate fpStartdatoMor,
+                                                                                              LocalDate fpStartdatoFar) {
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
         var mor = familie.mor();
         var fordelingMor = generiskFordeling(

@@ -19,6 +19,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -160,7 +161,7 @@ class Klage extends FpsakTestBase {
     }
 
     @Step("Oppretter førstegangsvedtak")
-    private void opprettForstegangssoknadVedtak(String saksnummer) {
+    private void opprettForstegangssoknadVedtak(Saksnummer saksnummer) {
         // Opprette førstegangssøknad engangsstønad
         saksbehandler.hentFagsak(saksnummer);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())

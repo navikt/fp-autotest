@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto;
 
-public record Fagsak(String saksnummer, FagsakStatus status) {
+import no.nav.foreldrepenger.common.domain.Saksnummer;
+
+public record Fagsak(Saksnummer saksnummer, FagsakStatus status) {
 
 }

@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Søker;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 
@@ -40,7 +41,7 @@ public abstract class FpsakTestBase {
         LoggFormater.leggTilKjørendeTestCaseILogger();
     }
 
-    public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(String saksnummer,
+    public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(Saksnummer saksnummer,
                                                                                          boolean revurdering) {
         if (!revurdering) {
             saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);

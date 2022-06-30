@@ -44,6 +44,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.autotest.util.rest.StatusRange;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
 
@@ -151,7 +152,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     }
 
 
-    public List<Behandling> alle(String saksnummer) {
+    public List<Behandling> alle(Saksnummer saksnummer) {
         return Optional.ofNullable(client.target(base)
                 .path(BEHANDLINGER_ALLE_URL)
                 .queryParam(SAKSNUMMER, saksnummer)
@@ -162,10 +163,10 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     }
 
 
-    public Behandling annenPartBehandling(String saksnummer) {
+    public Behandling annenPartBehandling(Saksnummer saksnummer) {
         return client.target(base)
                 .path(BEHANDLINGER_ANNEN_PART_BEHANDLING_URL)
-                .queryParam(SAKSNUMMER, saksnummer)
+                .queryParam(SAKSNUMMER, saksnummer.value())
                 .request(APPLICATION_JSON_TYPE)
                 .get(Behandling.class);
     }

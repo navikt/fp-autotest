@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.util.rest.StatusRange;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class BehandlingerJerseyKlient extends FptilbakeJerseyKlient {
 
@@ -85,10 +86,10 @@ public class BehandlingerJerseyKlient extends FptilbakeJerseyKlient {
     }
 
     @Step("Henter ut alle behandlinger fra fptilbake på gitt saksnummer")
-    public List<Behandling> hentAlleTbkBehandlinger(String saksnummer) {
+    public List<Behandling> hentAlleTbkBehandlinger(Saksnummer saksnummer) {
         return client.target(base)
                 .path(BEHANDLINGER_ALLE_URL)
-                .queryParam(SAKSNUMMER, saksnummer)
+                .queryParam(SAKSNUMMER, saksnummer.value())
                 .request()
                 .get(Response.class)
                 .readEntity(new GenericType<>() {});

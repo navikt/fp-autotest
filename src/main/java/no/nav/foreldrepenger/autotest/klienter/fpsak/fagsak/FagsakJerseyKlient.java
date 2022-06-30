@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Sok;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class FagsakJerseyKlient extends FpsakJerseyKlient {
 
@@ -23,7 +24,7 @@ public class FagsakJerseyKlient extends FpsakJerseyKlient {
         super(MAPPER, filter);
     }
 
-    public Fagsak hentFagsak(String saksnummer) {
+    public Fagsak hentFagsak(Saksnummer saksnummer) {
         return client.target(base)
                 .path(FAGSAK_URL)
                 .queryParam("saksnummer", saksnummer)

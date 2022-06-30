@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPJerseyKlient;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.TilbakekrevingKonsistensDto;
 
 public class VTPTilbakekrevingJerseyKlient extends VTPJerseyKlient {
@@ -19,12 +20,12 @@ public class VTPTilbakekrevingJerseyKlient extends VTPJerseyKlient {
     }
 
     @Step("Oppdaterer VTPs tilbakekrevingsmock med siste saksnummer og behandling")
-    public void oppdaterTilbakekrevingKonsistens(String saksnummer, int behandlingId) {
-        LOG.info("Oppdaterer VTPs tilbakekrevingsmock med saksnummer {} og behandling {} for konsistens", saksnummer, behandlingId);
+    public void oppdaterTilbakekrevingKonsistens(Saksnummer saksnummer, int behandlingId) {
+        LOG.info("Oppdaterer VTPs tilbakekrevingsmock med saksnummer {} og behandling {} for konsistens", saksnummer.value(), behandlingId);
 
         client.target(base)
                 .path(TILBAKEKREVING_KONSISTENS)
                 .request()
-                .post(json(new TilbakekrevingKonsistensDto(saksnummer, ""+behandlingId)));
+                .post(json(new TilbakekrevingKonsistensDto(saksnummer.value(), ""+behandlingId)));
     }
 }

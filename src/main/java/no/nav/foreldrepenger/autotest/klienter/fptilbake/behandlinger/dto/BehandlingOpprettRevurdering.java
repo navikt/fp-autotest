@@ -2,18 +2,20 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto;
 
 import java.util.UUID;
 
+import no.nav.foreldrepenger.common.domain.Saksnummer;
+
 public class BehandlingOpprettRevurdering {
-    protected Long saksnummer;
+    protected Saksnummer saksnummer;
     protected int behandlingId;
     protected UUID eksternUuid;
     protected String behandlingType;
     protected RevurderingArsak behandlingArsakType;
     protected String fagsakYtelseType;
 
-    public BehandlingOpprettRevurdering(String saksnummer, int behandlingId, UUID eksternUuid, String behandlingType,
-            String fagsakYtelseType, RevurderingArsak behandlingArsakType) {
+    public BehandlingOpprettRevurdering(Saksnummer saksnummer, int behandlingId, UUID eksternUuid, String behandlingType,
+                                        String fagsakYtelseType, RevurderingArsak behandlingArsakType) {
         super();
-        this.saksnummer = Long.valueOf(saksnummer);
+        this.saksnummer = saksnummer;
         this.behandlingId = behandlingId;
         this.eksternUuid = eksternUuid;
         this.behandlingType = behandlingType;

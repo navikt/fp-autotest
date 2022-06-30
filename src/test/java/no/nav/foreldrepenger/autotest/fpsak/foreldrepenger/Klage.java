@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Mor;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -133,7 +134,7 @@ class Klage extends FpsakTestBase {
     }
 
     @Step("Klage: oppretter førstegangsbehandling")
-    private String opprettForstegangsbehandlingMor(Mor mor, Familie familie) {
+    private Saksnummer opprettForstegangsbehandlingMor(Mor mor, Familie familie) {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
