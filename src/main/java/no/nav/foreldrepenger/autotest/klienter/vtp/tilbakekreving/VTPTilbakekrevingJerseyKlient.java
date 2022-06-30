@@ -19,12 +19,12 @@ public class VTPTilbakekrevingJerseyKlient extends VTPJerseyKlient {
     }
 
     @Step("Oppdaterer VTPs tilbakekrevingsmock med siste saksnummer og behandling")
-    public void oppdaterTilbakekrevingKonsistens(Long saksnummer, int behandlingId) {
+    public void oppdaterTilbakekrevingKonsistens(String saksnummer, int behandlingId) {
         LOG.info("Oppdaterer VTPs tilbakekrevingsmock med saksnummer {} og behandling {} for konsistens", saksnummer, behandlingId);
 
         client.target(base)
                 .path(TILBAKEKREVING_KONSISTENS)
                 .request()
-                .post(json(new TilbakekrevingKonsistensDto(""+saksnummer, ""+behandlingId)));
+                .post(json(new TilbakekrevingKonsistensDto(saksnummer, ""+behandlingId)));
     }
 }

@@ -151,7 +151,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     }
 
 
-    public List<Behandling> alle(long saksnummer) {
+    public List<Behandling> alle(String saksnummer) {
         return Optional.ofNullable(client.target(base)
                 .path(BEHANDLINGER_ALLE_URL)
                 .queryParam(SAKSNUMMER, saksnummer)
@@ -162,7 +162,7 @@ public class BehandlingerJerseyKlient extends FpsakJerseyKlient {
     }
 
 
-    public Behandling annenPartBehandling(long saksnummer) {
+    public Behandling annenPartBehandling(String saksnummer) {
         return client.target(base)
                 .path(BEHANDLINGER_ANNEN_PART_BEHANDLING_URL)
                 .queryParam(SAKSNUMMER, saksnummer)

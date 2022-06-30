@@ -66,21 +66,21 @@ public class SøknadMottak extends Aktoer implements Innsender {
     }
 
     @Override
-    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
+    public String sendInnInntektsmelding(InntektsmeldingBuilder inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, String saksnummer) {
         // aktørId ignoreres ettersom det trengs bare i xmlen
         return sendInnInntektsmelding(List.of(inntektsmeldingBuilder), fnr, saksnummer);
     }
 
-    public long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmeldingBuilder, Fødselsnummer fnr, Long saksnummer) {
+    public String sendInnInntektsmelding(InntektsmeldingBuilder inntektsmeldingBuilder, Fødselsnummer fnr, String saksnummer) {
         return sendInnInntektsmelding(List.of(inntektsmeldingBuilder), fnr, saksnummer);
     }
 
     @Override
-    public long sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
+    public String sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, String saksnummer) {
         return sendInnInntektsmelding(inntektsmeldingBuilder, fnr, saksnummer);
     }
     @Step("Sender inn IM for bruker {fnr}")
-    public long sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr, Long saksnummer) {
+    public String sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr, String saksnummer) {
         var antallGamleInntekstmeldinger = hentAntallHistorikkInnslagAvTypenVedleggMottatt(saksnummer);
         journalførInnteksmeldinger(inntektsmeldinger, fnr);
         return ventTilInntekstmeldingErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallGamleInntekstmeldinger);
@@ -98,17 +98,17 @@ public class SøknadMottak extends Aktoer implements Innsender {
     }
 
     @Override
-    public long sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
+    public String sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, String saksnummer) {
         return sendInnSøknad(fnr, søknad);
     }
 
     @Override
-    public long sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
+    public String sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, String saksnummer) {
         return sendInnSøknad(fnr, søknad);
     }
 
     @Step("[{søknad.søker.søknadsRolle}]: Sender inn søknad: {fnr}")
-    private Long sendInnSøknad(Fødselsnummer fnr, Søknad søknad) {
+    private String sendInnSøknad(Fødselsnummer fnr, Søknad søknad) {
         var token = tokenXHenterKlient.hentAccessTokenForBruker(fnr);
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         if (søknad instanceof Endringssøknad endringssøknad) {
@@ -120,32 +120,32 @@ public class SøknadMottak extends Aktoer implements Innsender {
     }
 
     @Override
-    public long sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr) {
+    public String sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr) {
         return sendInnPapirsøknad(fnr, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL, null);
     }
 
     @Override
-    public long sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
+    public String sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, String saksnummer) {
         return sendInnPapirsøknad(fnr, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL, saksnummer);
     }
 
     @Override
-    public long sendInnPapirsøknadEngangsstønad(AktørId aktørId, Fødselsnummer fnr) {
+    public String sendInnPapirsøknadEngangsstønad(AktørId aktørId, Fødselsnummer fnr) {
         return sendInnPapirsøknad(fnr, DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL, null);
     }
 
-    private Long sendInnPapirsøknad(Fødselsnummer fnr, DokumenttypeId dokumenttypeId, Long saksnummer) {
+    private String sendInnPapirsøknad(Fødselsnummer fnr, DokumenttypeId dokumenttypeId, String saksnummer) {
         var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null,
                 SKAN_IM, "skanIkkeUnik.pdf", dokumenttypeId);
         if (saksnummer != null) {
-            journalpostModell.setSakId(saksnummer.toString());
+            journalpostModell.setSakId(saksnummer);
         }
         journalpostKlient.journalførR(journalpostModell);
         return ventTilFagsakOgBehandlingErOpprettet(fnr);
     }
 
     @Override
-    public void sendInnKlage(AktørId aktørId, Fødselsnummer fnr, Long saksnummer) {
+    public void sendInnKlage(AktørId aktørId, Fødselsnummer fnr, String saksnummer) {
         sendInnKlage(fnr);
     }
 
@@ -190,7 +190,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
         return dokumentModell;
     }
 
-    private Integer hentAntallHistorikkInnslagAvTypenVedleggMottatt(Long saksnummer) {
+    private Integer hentAntallHistorikkInnslagAvTypenVedleggMottatt(String saksnummer) {
         if (saksnummer == null) {
             return 0;
         }
@@ -199,7 +199,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
                 .count();
     }
 
-    private long ventTilInntekstmeldingErMottatt(Fødselsnummer fnr, Long saksnummer,
+    private String ventTilInntekstmeldingErMottatt(Fødselsnummer fnr, String saksnummer,
                                                  Integer antallNyeInntektsmeldinger,
                                                  Integer antallGamleInntekstmeldinger) {
         if (saksnummer != null) {
@@ -217,7 +217,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
         }
     }
 
-    private Long ventTilFagsakOgBehandlingErOpprettet(Fødselsnummer fnr) {
+    private String ventTilFagsakOgBehandlingErOpprettet(Fødselsnummer fnr) {
         Vent.til(() -> !fagsakKlient.søk(fnr).isEmpty(), 30,
                 "Fagsak for bruker " + fnr.value() + " har ikke blitt opprettet!");
         var saksnummer = fagsakKlient.søk(fnr).get(0).saksnummer();

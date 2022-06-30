@@ -42,7 +42,7 @@ public abstract class Søker {
     private final Innsender innsender;
 
     private Innsyn innsyn;
-    private Long saksnummer = null;
+    private String saksnummer = null;
 
     Søker(Fødselsnummer fødselsnummer, AktørId aktørId, InntektYtelseModell inntektYtelseModell, Innsender innsender) {
         leggTilCallIdForFnr(fødselsnummer);
@@ -180,7 +180,7 @@ public abstract class Søker {
         throw new NotSupportedException();
     }
 
-    public long søk(Søknad søknad) {
+    public String søk(Søknad søknad) {
         LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, null);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
@@ -188,7 +188,7 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
-    public long søk(Søknad søknad, Long saksnummer) {
+    public String søk(Søknad søknad, String saksnummer) {
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer);
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, saksnummer);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
@@ -196,7 +196,7 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
-    public long søk(Endringssøknad søknad) {
+    public String søk(Endringssøknad søknad) {
         LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer);
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, saksnummer);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
@@ -204,7 +204,7 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
-    public long søkPapirsøknadForeldrepenger() {
+    public String søkPapirsøknadForeldrepenger() {
         LOG.info("Sender inn papirsøknadd for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
@@ -212,7 +212,7 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
-    public long sendInnPapirsøknadEEndringForeldrepenger() {
+    public String sendInnPapirsøknadEEndringForeldrepenger() {
         LOG.info("Sender inn endringssøknad på papirsøknadd for {} ..", fødselsnummer.value());
         guardTrengerEksisterendeBehandling();
         this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, this.saksnummer);
@@ -221,7 +221,7 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
-    public long søkPapirsøknadEngangsstønad() {
+    public String søkPapirsøknadEngangsstønad() {
         this.saksnummer = innsender.sendInnPapirsøknadEngangsstønad(aktørId, fødselsnummer);
         return this.saksnummer;
     }

@@ -7,12 +7,12 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingNy {
-    protected Long saksnummer;
+    protected String saksnummer;
     protected BehandlingType behandlingType;
     protected BehandlingÅrsakType behandlingArsakType;
     protected Boolean nyBehandlingEtterKlage = null;
 
-    public BehandlingNy(Long saksnummer, BehandlingType behandlingType, BehandlingÅrsakType behandlingArsakType) {
+    public BehandlingNy(String saksnummer, BehandlingType behandlingType, BehandlingÅrsakType behandlingArsakType) {
         super();
         this.saksnummer = saksnummer;
         this.behandlingType = behandlingType;

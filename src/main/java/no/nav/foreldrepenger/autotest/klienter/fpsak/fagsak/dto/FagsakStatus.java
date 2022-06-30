@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.domain.foreldrepenger;
+package no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

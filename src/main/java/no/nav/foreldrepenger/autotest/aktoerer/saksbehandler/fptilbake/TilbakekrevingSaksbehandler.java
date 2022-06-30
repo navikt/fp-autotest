@@ -54,11 +54,11 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     // Behandlinger actions
     // Oppretter ny tilbakekreving tilsvarende Manuell Opprettelse via
     // behandlingsmenyen.
-    public void opprettTilbakekreving(Long saksnummer, UUID uuid, String ytelseType) {
+    public void opprettTilbakekreving(String saksnummer, UUID uuid, String ytelseType) {
         behandlingerKlient.putTilbakekreving(new BehandlingOpprett(saksnummer, uuid, "BT-007", ytelseType));
     }
 
-    public void opprettTilbakekrevingRevurdering(Long saksnummer, UUID uuid, int behandlingId, String ytelseType,
+    public void opprettTilbakekrevingRevurdering(String saksnummer, UUID uuid, int behandlingId, String ytelseType,
             RevurderingArsak behandlingArsakType) {
         behandlingerKlient.putTilbakekreving(new BehandlingOpprettRevurdering(saksnummer, behandlingId, uuid,
                 "BT-009", ytelseType, behandlingArsakType));
@@ -85,7 +85,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     // Henter siste behandlingen fra fptilbake på gitt saksnummer.
-    public void hentSisteBehandling(Long saksnummer) {
+    public void hentSisteBehandling(String saksnummer) {
         this.saksnummer = String.valueOf(saksnummer);
 
         Vent.til(() -> !behandlingerKlient.hentAlleTbkBehandlinger(saksnummer).isEmpty(),
@@ -103,7 +103,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.uuid);
     }
 
-    public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag, Long saksnummer, int fpsakBehandlingId) {
+    public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag, String saksnummer, int fpsakBehandlingId) {
         vtpTilbakekrevingJerseyKlient.oppdaterTilbakekrevingKonsistens(saksnummer, fpsakBehandlingId);
         okonomiKlient.putGrunnlag(kravgrunnlag, valgtBehandling.id);
     }

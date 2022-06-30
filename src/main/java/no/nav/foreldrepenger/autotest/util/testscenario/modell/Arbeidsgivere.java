@@ -34,12 +34,12 @@ public class Arbeidsgivere {
                 .orElseThrow(() -> new IllegalArgumentException("Scenario har ikke private arbeidsforhold"));
     }
 
-    public void sendDefaultInntektsmeldingerFP(long saksnummer, LocalDate startdatoForeldrepenger) {
+    public void sendDefaultInntektsmeldingerFP(String saksnummer, LocalDate startdatoForeldrepenger) {
         alleArbeidsgivere.forEach(arbeidsgiver ->
                 arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startdatoForeldrepenger));
     }
 
-    public void sendDefaultInnteksmeldingerSVP(long saksnummer) {
+    public void sendDefaultInnteksmeldingerSVP(String saksnummer) {
         alleArbeidsgivere.forEach(arbeidsgiver ->
                 arbeidsgiver.sendInntektsmeldingerSVP(saksnummer));
     }

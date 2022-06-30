@@ -19,7 +19,7 @@ public class HistorikkJerseyKlient extends FpsakJerseyKlient {
         super(MAPPER, filter);
     }
 
-    public List<HistorikkInnslag> hentHistorikk(long saksnummer) {
+    public List<HistorikkInnslag> hentHistorikk(String saksnummer) {
         return Optional.ofNullable(client.target(base)
                 .path(HISTORIKK_URL_FORMAT)
                 .queryParam("saksnummer", saksnummer)

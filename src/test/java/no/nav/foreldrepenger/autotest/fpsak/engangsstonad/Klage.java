@@ -160,7 +160,7 @@ class Klage extends FpsakTestBase {
     }
 
     @Step("Oppretter førstegangsvedtak")
-    private void opprettForstegangssoknadVedtak(long saksnummer) {
+    private void opprettForstegangssoknadVedtak(String saksnummer) {
         // Opprette førstegangssøknad engangsstønad
         saksbehandler.hentFagsak(saksnummer);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())

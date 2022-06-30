@@ -10,13 +10,12 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.Endringssøknad;
 
 public interface Innsender {
 
-    long sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, Long saksnummer);
-    long sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, Long saksnummer);
-    long sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr);
-    long sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, Long saksnummer);
-    long sendInnPapirsøknadEngangsstønad(AktørId aktørId, Fødselsnummer fnr);
-    void sendInnKlage(AktørId aktørId, Fødselsnummer fnr, Long saksnummer);
-
-    long sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, AktørId aktørId, Fødselsnummer fnr, Long saksnummer);
-    long sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, Long saksnummer);
+    String sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, String saksnummer);
+    String sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, String saksnummer);
+    String sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr);
+    String sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, String saksnummer);
+    String sendInnPapirsøknadEngangsstønad(AktørId aktørId, Fødselsnummer fnr);
+    void sendInnKlage(AktørId aktørId, Fødselsnummer fnr, String saksnummer);
+    String sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, AktørId aktørId, Fødselsnummer fnr, String saksnummer);
+    String sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, String saksnummer);
 }

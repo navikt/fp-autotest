@@ -133,7 +133,7 @@ class Klage extends FpsakTestBase {
     }
 
     @Step("Klage: oppretter førstegangsbehandling")
-    private long opprettForstegangsbehandlingMor(Mor mor, Familie familie) {
+    private String opprettForstegangsbehandlingMor(Mor mor, Familie familie) {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
