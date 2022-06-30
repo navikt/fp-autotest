@@ -52,7 +52,7 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
         var fordeling = generiskFordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
         var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling,
-                saksnummer);
+                Long.valueOf(saksnummer)); // TODO: Streng
         var saksnummerE = mor.søk(søknadE.build());
 
         saksbehandler.hentFagsak(saksnummerE);

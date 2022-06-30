@@ -40,7 +40,7 @@ public abstract class FpsakTestBase {
         LoggFormater.leggTilKjørendeTestCaseILogger();
     }
 
-    public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(long saksnummer,
+    public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(String saksnummer,
                                                                                          boolean revurdering) {
         if (!revurdering) {
             saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);

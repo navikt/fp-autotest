@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnsynResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
@@ -19,6 +18,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderin
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
 
 @Execution(ExecutionMode.SAME_THREAD)
 @Tag("internal")

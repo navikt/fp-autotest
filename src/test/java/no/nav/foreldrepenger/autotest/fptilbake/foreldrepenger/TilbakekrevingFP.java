@@ -55,7 +55,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         var fordeling = generiskFordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, saksnummer);
+        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, Long.valueOf(saksnummer)); // TODO: long -> string
         mor.søk(søknadE.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -251,10 +251,10 @@ class TilbakekrevingFP extends FptilbakeTestBase {
                 .isZero();
     }
 
-    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, Long saksnummer) {
+    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, String saksnummer) {
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, false);
     }
-    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, Long saksnummer, Boolean redusert) {
+    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, String saksnummer, Boolean redusert) {
         var arbeidsgiver = familie.mor().arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
         if (redusert){

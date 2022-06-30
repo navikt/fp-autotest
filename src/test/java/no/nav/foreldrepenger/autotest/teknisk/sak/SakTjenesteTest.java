@@ -29,7 +29,7 @@ class SakTjenesteTest {
                 .uri(URI.create(vtp))
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .build();
-        var samlResponse = JacksonObjectMapper.mapper.readValue(
+        var samlResponse = JacksonObjectMapper.DEFAULT_MAPPER_VTP.readValue(
                 client.send(samlTokenRequest, HttpResponse.BodyHandlers.ofString()).body(), SAMLResponse.class);
 
         var authHeader = samlResponse.token_type() + " " + samlResponse.access_token();
@@ -46,5 +46,5 @@ class SakTjenesteTest {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private static record SAMLResponse(String access_token, String token_type) { }
+    private record SAMLResponse(String access_token, String token_type) { }
 }

@@ -10,10 +10,10 @@ public class BehandlingOpprettRevurdering {
     protected RevurderingArsak behandlingArsakType;
     protected String fagsakYtelseType;
 
-    public BehandlingOpprettRevurdering(Long saksnummer, int behandlingId, UUID eksternUuid, String behandlingType,
+    public BehandlingOpprettRevurdering(String saksnummer, int behandlingId, UUID eksternUuid, String behandlingType,
             String fagsakYtelseType, RevurderingArsak behandlingArsakType) {
         super();
-        this.saksnummer = saksnummer;
+        this.saksnummer = Long.valueOf(saksnummer);
         this.behandlingId = behandlingId;
         this.eksternUuid = eksternUuid;
         this.behandlingType = behandlingType;

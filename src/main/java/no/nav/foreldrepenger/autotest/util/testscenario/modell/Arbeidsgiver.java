@@ -104,19 +104,19 @@ public abstract class Arbeidsgiver {
         return im;
     }
 
-    public long sendInntektsmeldingerSVP(Long saksnummer) {
+    public String sendInntektsmeldingerSVP(String saksnummer) {
         return innsender.sendInnInntektsmelding(lagInntektsmeldingerSVP(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public long sendInntektsmeldingerFP(Long saksnummer, LocalDate startdatoForeldrepenger) {
+    public String sendInntektsmeldingerFP(String saksnummer, LocalDate startdatoForeldrepenger) {
         return innsender.sendInnInntektsmelding(lagInntektsmeldingerFP(startdatoForeldrepenger), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public long sendInntektsmeldinger(Long saksnummer, InntektsmeldingBuilder... inntektsmelding) {
+    public String sendInntektsmeldinger(String saksnummer, InntektsmeldingBuilder... inntektsmelding) {
         return innsender.sendInnInntektsmelding(List.of(inntektsmelding), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public long sendInntektsmeldinger(Long saksnummer, List<InntektsmeldingBuilder> inntektsmeldinger) {
+    public String sendInntektsmeldinger(String saksnummer, List<InntektsmeldingBuilder> inntektsmeldinger) {
         return innsender.sendInnInntektsmelding(inntektsmeldinger, arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 

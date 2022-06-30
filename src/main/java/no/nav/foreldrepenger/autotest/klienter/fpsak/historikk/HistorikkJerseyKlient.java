@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk;
 
+import static no.nav.foreldrepenger.common.mapper.DefaultJsonMapper.MAPPER;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +16,10 @@ public class HistorikkJerseyKlient extends FpsakJerseyKlient {
     private static final String HISTORIKK_URL_FORMAT = "/historikk";
 
     public HistorikkJerseyKlient(ClientRequestFilter filter) {
-        super(filter);
+        super(MAPPER, filter);
     }
 
-    public List<HistorikkInnslag> hentHistorikk(long saksnummer) {
+    public List<HistorikkInnslag> hentHistorikk(String saksnummer) {
         return Optional.ofNullable(client.target(base)
                 .path(HISTORIKK_URL_FORMAT)
                 .queryParam("saksnummer", saksnummer)
@@ -26,5 +28,4 @@ public class HistorikkJerseyKlient extends FpsakJerseyKlient {
                 .readEntity(new GenericType<List<HistorikkInnslag>>() {}))
                 .orElse(List.of());
     }
-
 }

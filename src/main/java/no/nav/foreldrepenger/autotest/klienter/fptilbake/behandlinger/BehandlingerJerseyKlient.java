@@ -85,7 +85,7 @@ public class BehandlingerJerseyKlient extends FptilbakeJerseyKlient {
     }
 
     @Step("Henter ut alle behandlinger fra fptilbake på gitt saksnummer")
-    public List<Behandling> hentAlleTbkBehandlinger(long saksnummer) {
+    public List<Behandling> hentAlleTbkBehandlinger(String saksnummer) {
         return client.target(base)
                 .path(BEHANDLINGER_ALLE_URL)
                 .queryParam(SAKSNUMMER, saksnummer)

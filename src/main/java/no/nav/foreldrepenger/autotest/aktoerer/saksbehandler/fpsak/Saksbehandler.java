@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingss
 import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,7 +25,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.FagsakStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
@@ -58,17 +56,17 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public class Saksbehandler extends Aktoer {
@@ -103,9 +101,9 @@ public class Saksbehandler extends Aktoer {
         hentFagsak("" + saksnummer);
     }
 
-    private void hentFagsak(String saksnummer) {
-        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer));
-        valgtFagsak = fagsakKlient.getFagsak(saksnummer);
+    public void hentFagsak(String saksnummer) {
+        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer)); // Må være satt! Trenger unik referanse ved journalføring (?)
+        valgtFagsak = fagsakKlient.hentFagsak(saksnummer);
         if (valgtFagsak == null) {
             throw new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer);
         }
@@ -136,15 +134,16 @@ public class Saksbehandler extends Aktoer {
     }
 
     private void refreshFagsak() {
-        hentFagsak(valgtFagsak.saksnummer().toString());
+        hentFagsak(valgtFagsak.saksnummer());
     }
 
     /*
      * Behandling
      */
-    public List<Behandling> hentAlleBehandlingerForFagsak(long saksnummer) {
+    public List<Behandling> hentAlleBehandlingerForFagsak(String saksnummer) {
         return behandlingerKlient.alle(saksnummer);
     }
+
 
     public void velgSisteBehandling() {
         var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer()).stream()
@@ -290,10 +289,10 @@ public class Saksbehandler extends Aktoer {
         Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
             var prosessTasker = hentProsesstaskerForBehandling(behandling);
             var prosessTaskList = new StringBuilder();
-            for (ProsessTaskListItemDto prosessTaskListItemDto : prosessTasker) {
-                prosessTaskList.append(prosessTaskListItemDto.taskType())
+            for (ProsessTaskDataDto prosessTaskListItemDto : prosessTasker) {
+                prosessTaskList.append(prosessTaskListItemDto.getTaskType())
                         .append(" - ")
-                        .append(prosessTaskListItemDto.status())
+                        .append(prosessTaskListItemDto.getStatus())
                         .append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
@@ -317,6 +316,12 @@ public class Saksbehandler extends Aktoer {
         } else {
             throw new RuntimeException("Status for behandling " + behandling.uuid + " feilet: " + status.getMessage());
         }
+    }
+
+    private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(Behandling behandling) {
+        return prosesstaskKlient.prosesstaskMedKlarEllerVentStatus().stream()
+                .filter(p -> Objects.equals(behandling.uuid.toString(), p.getTaskParametre().getProperty("behandlingId")))
+                .toList();
     }
 
     private void populateBehandling(Behandling behandling) {
@@ -371,7 +376,7 @@ public class Saksbehandler extends Aktoer {
      */
     public void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak) {
         opprettBehandling(behandlingstype, årsak, valgtFagsak);
-        hentFagsak(valgtFagsak.saksnummer().toString());
+        hentFagsak(valgtFagsak.saksnummer());
     }
 
     @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {fagsak.saksnummer}")
@@ -631,14 +636,6 @@ public class Saksbehandler extends Aktoer {
 
     public String vilkårStatus(String vilkårKode) {
         return hentVilkår(vilkårKode).getVilkarStatus();
-    }
-
-    private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
-        var filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
-        var prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream()
-                .filter(p -> Objects.equals(behandling.uuid.toString(), p.taskParametre().behandlingId()))
-                .toList();
     }
 
     public boolean sakErKobletTilAnnenpart() {

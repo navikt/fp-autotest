@@ -712,7 +712,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         // Endringssøknad: Far bestemmer seg for å gi fra seg alle periodene
         var fordelingGiFraSegAlt = generiskFordeling(utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoIfmFødselFar, fpStartdatoIfmFødselFar.plusDays(1)));
         var endringssøknadBuilder = lagEndringssøknadFødsel(familie.barn().fødselsdato(), BrukerRolle.FAR,
-                fordelingGiFraSegAlt, saksnummerFar);
+                fordelingGiFraSegAlt, Long.valueOf(saksnummerFar)); // TODO
         far.søk(endringssøknadBuilder.build());
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -1859,7 +1859,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                         utsettelsesperiode(FRI, termindato.minusWeeks(1), fødselsdato.minusDays(1)),
                         uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK)
                 ),
-                saksnummerFar);
+                Long.valueOf(saksnummerFar));
         far.søk(endringssøknad.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1886,7 +1886,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
     }
 
 
-    private Long sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
+    private String sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
                                                                                         LocalDate fødselsdato,
                                                                                         LocalDate fpStartdatoMor,
                                                                                         LocalDate fpStartdatoFar) {

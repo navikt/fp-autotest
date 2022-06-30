@@ -19,6 +19,7 @@
         <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.3.2</dokumentgenerator.version>
         <felles.versjon>4.1.30</felles.versjon>
+        <fp-prosesstask.version>3.1.8</fp-prosesstask.version>
         <fp-kontrakter.version>6.1.21</fp-kontrakter.version>
         <selvbetjening-felles.version>0.8.13</selvbetjening-felles.version>
 
@@ -55,6 +56,16 @@
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-log</artifactId>
             <version>${felles.versjon}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.vedtak.prosesstask</groupId>
+            <artifactId>prosesstask-rest-api</artifactId>
+            <version>${fp-prosesstask.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>fordel-v1</artifactId>
+            <version>${fp-kontrakter.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>

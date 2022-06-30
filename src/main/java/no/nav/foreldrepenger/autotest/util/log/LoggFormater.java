@@ -37,9 +37,9 @@ public final class LoggFormater {
         return testnavn.toString();
     }
 
-    public static void leggTilCallIdforSaksnummerForLogging(Fødselsnummer fnr, Long saksnummer) {
+    public static void leggTilCallIdforSaksnummerForLogging(Fødselsnummer fnr, String saksnummer) {
         // Legger til Callid for saksnummer slik at vi kan slå opp riktig callid senere
-        MDCOperations.putToMDC(saksnummer.toString(), leggTilCallIdForFnr(fnr));
+        MDCOperations.putToMDC(saksnummer, leggTilCallIdForFnr(fnr));
     }
 
     public static String leggTilCallIdForFnr(Fødselsnummer fnr) {

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -8,8 +7,6 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.ProsessTaskListItemDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.dto.SokeFilterDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
@@ -29,10 +26,11 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiJerseyKl
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.dto.NewProsessTaskDto;
 import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 
 public class TilbakekrevingSaksbehandler extends Aktoer {
 
@@ -56,11 +54,11 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     // Behandlinger actions
     // Oppretter ny tilbakekreving tilsvarende Manuell Opprettelse via
     // behandlingsmenyen.
-    public void opprettTilbakekreving(Long saksnummer, UUID uuid, String ytelseType) {
+    public void opprettTilbakekreving(String saksnummer, UUID uuid, String ytelseType) {
         behandlingerKlient.putTilbakekreving(new BehandlingOpprett(saksnummer, uuid, "BT-007", ytelseType));
     }
 
-    public void opprettTilbakekrevingRevurdering(Long saksnummer, UUID uuid, int behandlingId, String ytelseType,
+    public void opprettTilbakekrevingRevurdering(String saksnummer, UUID uuid, int behandlingId, String ytelseType,
             RevurderingArsak behandlingArsakType) {
         behandlingerKlient.putTilbakekreving(new BehandlingOpprettRevurdering(saksnummer, behandlingId, uuid,
                 "BT-009", ytelseType, behandlingArsakType));
@@ -87,7 +85,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     // Henter siste behandlingen fra fptilbake på gitt saksnummer.
-    public void hentSisteBehandling(Long saksnummer) {
+    public void hentSisteBehandling(String saksnummer) {
         this.saksnummer = String.valueOf(saksnummer);
 
         Vent.til(() -> !behandlingerKlient.hentAlleTbkBehandlinger(saksnummer).isEmpty(),
@@ -105,7 +103,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.uuid);
     }
 
-    public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag, Long saksnummer, int fpsakBehandlingId) {
+    public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag, String saksnummer, int fpsakBehandlingId) {
         vtpTilbakekrevingJerseyKlient.oppdaterTilbakekrevingKonsistens(saksnummer, fpsakBehandlingId);
         okonomiKlient.putGrunnlag(kravgrunnlag, valgtBehandling.id);
     }
@@ -224,9 +222,9 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             var prosessTaskList = new StringBuilder();
             for (var prosessTaskListItemDto : hentProsesstaskerForBehandling(behandling)) {
                 prosessTaskList
-                        .append(prosessTaskListItemDto.taskType())
+                        .append(prosessTaskListItemDto.getTaskType())
                         .append(" - ")
-                        .append(prosessTaskListItemDto.status()).append("\n");
+                        .append(prosessTaskListItemDto.getStatus()).append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
         });
@@ -254,16 +252,16 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         }
     }
 
-    private List<ProsessTaskListItemDto> hentProsesstaskerForBehandling(Behandling behandling) {
-        var filter = new SokeFilterDto(List.of(), LocalDateTime.now().minusMinutes(5), LocalDateTime.now());
-        var prosesstasker = prosesstaskKlient.list(filter);
-        return prosesstasker.stream()
-                .filter(p -> p.taskParametre().behandlingId().equalsIgnoreCase("" + behandling.id))
+    private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(Behandling behandling) {
+        return prosesstaskKlient.prosesstaskMedKlarEllerVentStatus().stream()
+                .filter(p -> Objects.equals("" + behandling.id, p.getTaskParametre().getProperty("behandlingId")))
                 .toList();
     }
 
     //Batch trigger
     public void startAutomatiskBehandlingBatch(){
-        prosesstaskKlient.create(new NewProsessTaskDto("batch.automatisk.saksbehandling"));
+        var prosessTaskOpprettInputDto = new ProsessTaskOpprettInputDto();
+        prosessTaskOpprettInputDto.setTaskType("batch.automatisk.saksbehandling");
+        prosesstaskKlient.create(prosessTaskOpprettInputDto);
     }
 }
