@@ -1859,7 +1859,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
                         utsettelsesperiode(FRI, termindato.minusWeeks(1), fødselsdato.minusDays(1)),
                         uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK)
                 ),
-                saksnummerFar);
+                Long.valueOf(saksnummerFar));
         far.søk(endringssøknad.build());
 
         saksbehandler.hentFagsak(saksnummerFar);

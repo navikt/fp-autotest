@@ -52,7 +52,6 @@ import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
-import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -453,7 +452,7 @@ class MorOgFarSammen extends FpsakTestBase {
                         utsettelsesperiode(FRI, fødselsdato, fødselsdato.plusWeeks(1).minusDays(1)),
                         uttaksperiode(FEDREKVOTE, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), SAMTIDIGUTTAK)
                 ),
-                saksnummerFar);
+                Long.valueOf(saksnummerFar));
         far.søk(endringssøknad.build());
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
