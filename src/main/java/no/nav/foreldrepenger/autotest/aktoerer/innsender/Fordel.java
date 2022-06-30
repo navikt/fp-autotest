@@ -311,7 +311,7 @@ public class Fordel extends Aktoer implements Innsender {
         return saksnummer;
     }
 
-    private String lagUnikEksternReferanseId() {
+    private static String lagUnikEksternReferanseId() {
         inkrementForEksternReferanse++;
         return "AR" + String.format("%08d", inkrementForEksternReferanse);
     }
