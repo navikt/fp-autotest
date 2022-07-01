@@ -1,11 +1,13 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto;
 
+import no.nav.foreldrepenger.common.domain.Saksnummer;
+
 public class Kravgrunnlag {
 
     protected KravgrunnlagDetaljert kravGrunnlag;
 
-    public Kravgrunnlag(String saksnummer, String ident, int behandlingId, String ytelseType, String kravStatusKode) {
-        this.kravGrunnlag = new KravgrunnlagDetaljert(Long.valueOf(saksnummer), ident, String.valueOf(behandlingId), ytelseType,
+    public Kravgrunnlag(Saksnummer saksnummer, String ident, int behandlingId, String ytelseType, String kravStatusKode) {
+        this.kravGrunnlag = new KravgrunnlagDetaljert(saksnummer, ident, String.valueOf(behandlingId), ytelseType,
                 kravStatusKode);
     }
 

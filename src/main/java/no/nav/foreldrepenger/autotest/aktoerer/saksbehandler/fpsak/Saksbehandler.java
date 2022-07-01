@@ -65,6 +65,7 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.log.mdc.MDCOperations;
@@ -97,12 +98,8 @@ public class Saksbehandler extends Aktoer {
     /*
      * Fagsak
      */
-    public void hentFagsak(long saksnummer) {
-        hentFagsak("" + saksnummer);
-    }
-
-    public void hentFagsak(String saksnummer) {
-        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer)); // Må være satt! Trenger unik referanse ved journalføring (?)
+    public void hentFagsak(Saksnummer saksnummer) {
+        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer.value())); // Må være satt! Trenger unik referanse ved journalføring (?)
         valgtFagsak = fagsakKlient.hentFagsak(saksnummer);
         if (valgtFagsak == null) {
             throw new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer);
@@ -140,7 +137,7 @@ public class Saksbehandler extends Aktoer {
     /*
      * Behandling
      */
-    public List<Behandling> hentAlleBehandlingerForFagsak(String saksnummer) {
+    public List<Behandling> hentAlleBehandlingerForFagsak(Saksnummer saksnummer) {
         return behandlingerKlient.alle(saksnummer);
     }
 

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import no.nav.foreldrepenger.common.domain.Saksnummer;
+
 public class KravgrunnlagDetaljert {
 
     protected Long vedtakId;
@@ -33,8 +35,8 @@ public class KravgrunnlagDetaljert {
 
     protected List<KravgrunnlagPeriode> perioder;
 
-    public KravgrunnlagDetaljert(Long saksnummer, String ident, String behandlingId, String ytelseType,
-            String kravStatusKode) {
+    public KravgrunnlagDetaljert(Saksnummer saksnummer, String ident, String behandlingId, String ytelseType,
+                                 String kravStatusKode) {
         this.vedtakId = Long.parseLong(behandlingId) - 11111;
         this.kravgrunnlagId = 10000L + (long) (Math.random() * (9999999L - 10000L));
         this.kravStatusKode = kravStatusKode;
@@ -43,7 +45,7 @@ public class KravgrunnlagDetaljert {
         } else {
             this.fagOmrådeKode = ytelseType;
         }
-        this.fagSystemId = saksnummer.toString() + "100";
+        this.fagSystemId = saksnummer.value() + "100";
         this.vedtakFagSystemDato = LocalDate.now().toString();
         this.omgjortVedtakId = 0;
         this.gjelderVedtakId = ident;

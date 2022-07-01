@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnla
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
@@ -55,7 +56,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         var fordeling = generiskFordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, Long.valueOf(saksnummer)); // TODO: long -> string
+        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, saksnummer);
         mor.søk(søknadE.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -251,10 +252,10 @@ class TilbakekrevingFP extends FptilbakeTestBase {
                 .isZero();
     }
 
-    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, String saksnummer) {
+    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, Saksnummer saksnummer) {
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, false);
     }
-    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, String saksnummer, Boolean redusert) {
+    private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, Saksnummer saksnummer, Boolean redusert) {
         var arbeidsgiver = familie.mor().arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
         if (redusert){

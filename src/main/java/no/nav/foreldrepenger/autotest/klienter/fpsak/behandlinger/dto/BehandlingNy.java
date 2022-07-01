@@ -4,15 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingNy {
-    protected String saksnummer;
+    protected Saksnummer saksnummer;
     protected BehandlingType behandlingType;
     protected BehandlingÅrsakType behandlingArsakType;
     protected Boolean nyBehandlingEtterKlage = null;
 
-    public BehandlingNy(String saksnummer, BehandlingType behandlingType, BehandlingÅrsakType behandlingArsakType) {
+    public BehandlingNy(Saksnummer saksnummer, BehandlingType behandlingType, BehandlingÅrsakType behandlingArsakType) {
         super();
         this.saksnummer = saksnummer;
         this.behandlingType = behandlingType;

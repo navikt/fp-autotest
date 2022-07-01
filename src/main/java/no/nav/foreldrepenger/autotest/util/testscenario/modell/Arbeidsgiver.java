@@ -9,6 +9,7 @@ import java.util.List;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public abstract class Arbeidsgiver {
 
@@ -104,19 +105,19 @@ public abstract class Arbeidsgiver {
         return im;
     }
 
-    public String sendInntektsmeldingerSVP(String saksnummer) {
+    public Saksnummer sendInntektsmeldingerSVP(Saksnummer saksnummer) {
         return innsender.sendInnInntektsmelding(lagInntektsmeldingerSVP(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public String sendInntektsmeldingerFP(String saksnummer, LocalDate startdatoForeldrepenger) {
+    public Saksnummer sendInntektsmeldingerFP(Saksnummer saksnummer, LocalDate startdatoForeldrepenger) {
         return innsender.sendInnInntektsmelding(lagInntektsmeldingerFP(startdatoForeldrepenger), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public String sendInntektsmeldinger(String saksnummer, InntektsmeldingBuilder... inntektsmelding) {
+    public Saksnummer sendInntektsmeldinger(Saksnummer saksnummer, InntektsmeldingBuilder... inntektsmelding) {
         return innsender.sendInnInntektsmelding(List.of(inntektsmelding), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public String sendInntektsmeldinger(String saksnummer, List<InntektsmeldingBuilder> inntektsmeldinger) {
+    public Saksnummer sendInntektsmeldinger(Saksnummer saksnummer, List<InntektsmeldingBuilder> inntektsmeldinger) {
         return innsender.sendInnInntektsmelding(inntektsmeldinger, arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 

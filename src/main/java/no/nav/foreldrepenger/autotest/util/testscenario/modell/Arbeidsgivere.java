@@ -5,6 +5,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class Arbeidsgivere {
 
@@ -34,12 +35,12 @@ public class Arbeidsgivere {
                 .orElseThrow(() -> new IllegalArgumentException("Scenario har ikke private arbeidsforhold"));
     }
 
-    public void sendDefaultInntektsmeldingerFP(String saksnummer, LocalDate startdatoForeldrepenger) {
+    public void sendDefaultInntektsmeldingerFP(Saksnummer saksnummer, LocalDate startdatoForeldrepenger) {
         alleArbeidsgivere.forEach(arbeidsgiver ->
                 arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startdatoForeldrepenger));
     }
 
-    public void sendDefaultInnteksmeldingerSVP(String saksnummer) {
+    public void sendDefaultInnteksmeldingerSVP(Saksnummer saksnummer) {
         alleArbeidsgivere.forEach(arbeidsgiver ->
                 arbeidsgiver.sendInntektsmeldingerSVP(saksnummer));
     }

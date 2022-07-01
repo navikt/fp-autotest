@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.common.mapper.DefaultJsonMapper.MAPPER;
 
 import jakarta.ws.rs.client.ClientRequestFilter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
 import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
@@ -30,11 +31,22 @@ public class FordelJerseyKlient extends FpsakJerseyKlient {
                 .post(json(journalpostMottak));
     }
 
-    public SaksnummerDto fagsakOpprett(OpprettSakDto opprettSakDto) {
+    public Saksnummer fagsakOpprett(OpprettSakDto opprettSakDto) {
+        return tilSaksnummer(opprettFagsak(opprettSakDto));
+    }
+
+    private SaksnummerDto opprettFagsak(OpprettSakDto opprettSakDto) {
         return client.target(base)
                 .path(FAGSAK_OPPRETT_URL)
                 .request()
                 .post(json(opprettSakDto), SaksnummerDto.class);
+    }
+
+    private Saksnummer tilSaksnummer(SaksnummerDto saksnummer) {
+        if (saksnummer != null) {
+            return Saksnummer.valueOf(saksnummer.getSaksnummer());
+        }
+        return null;
     }
 
     public void fagsakKnyttJournalpost(JournalpostKnyttningDto knyttJournalpost) {

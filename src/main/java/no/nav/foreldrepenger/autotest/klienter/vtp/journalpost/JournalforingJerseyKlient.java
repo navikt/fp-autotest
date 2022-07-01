@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import no.nav.foreldrepenger.autotest.klienter.vtp.VTPJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.dto.JournalpostIdDto;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
 
 public class JournalforingJerseyKlient extends VTPJerseyKlient {
@@ -38,11 +39,11 @@ public class JournalforingJerseyKlient extends VTPJerseyKlient {
                 .invoke(JournalpostIdDto.class);
     }
 
-    public JournalpostIdDto knyttSakTilJournalpost(String journalpostId, String saksnummer) {
+    public JournalpostIdDto knyttSakTilJournalpost(String journalpostId, Saksnummer saksnummer) {
         return client.target(base)
                 .path(KNYTT_SAK_TIL_JOURNALPOST)
                 .resolveTemplate("journalpostid", Optional.ofNullable(journalpostId).orElseThrow())
-                .resolveTemplate("saksnummer", Optional.ofNullable(saksnummer).orElseThrow())
+                .resolveTemplate("saksnummer", Optional.ofNullable(saksnummer).map(Saksnummer::value).orElseThrow())
                 .request(APPLICATION_JSON_TYPE)
                 .buildPost(json(""))
                 .invoke(JournalpostIdDto.class);

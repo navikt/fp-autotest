@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.FpsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class HistorikkJerseyKlient extends FpsakJerseyKlient {
 
@@ -19,10 +20,10 @@ public class HistorikkJerseyKlient extends FpsakJerseyKlient {
         super(MAPPER, filter);
     }
 
-    public List<HistorikkInnslag> hentHistorikk(String saksnummer) {
+    public List<HistorikkInnslag> hentHistorikk(Saksnummer saksnummer) {
         return Optional.ofNullable(client.target(base)
                 .path(HISTORIKK_URL_FORMAT)
-                .queryParam("saksnummer", saksnummer)
+                .queryParam("saksnummer", saksnummer.value())
                 .request()
                 .get(Response.class)
                 .readEntity(new GenericType<List<HistorikkInnslag>>() {}))

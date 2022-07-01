@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import io.qameta.allure.Allure;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
 public final class LoggFormater {
@@ -37,9 +38,9 @@ public final class LoggFormater {
         return testnavn.toString();
     }
 
-    public static void leggTilCallIdforSaksnummerForLogging(Fødselsnummer fnr, String saksnummer) {
+    public static void leggTilCallIdforSaksnummerForLogging(Fødselsnummer fnr, Saksnummer saksnummer) {
         // Legger til Callid for saksnummer slik at vi kan slå opp riktig callid senere
-        MDCOperations.putToMDC(saksnummer, leggTilCallIdForFnr(fnr));
+        MDCOperations.putToMDC(saksnummer.value(), leggTilCallIdForFnr(fnr));
     }
 
     public static String leggTilCallIdForFnr(Fødselsnummer fnr) {

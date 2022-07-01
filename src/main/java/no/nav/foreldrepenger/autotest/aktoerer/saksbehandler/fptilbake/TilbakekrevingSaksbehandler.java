@@ -29,6 +29,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.Prosesstask
 import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 
@@ -36,7 +37,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     public List<Behandling> behandlingList;
     public Behandling valgtBehandling;
-    public String saksnummer;
+    public Saksnummer saksnummer;
 
     private final BehandlingerJerseyKlient behandlingerKlient;
     private final OkonomiJerseyKlient okonomiKlient;
@@ -54,11 +55,11 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     // Behandlinger actions
     // Oppretter ny tilbakekreving tilsvarende Manuell Opprettelse via
     // behandlingsmenyen.
-    public void opprettTilbakekreving(String saksnummer, UUID uuid, String ytelseType) {
+    public void opprettTilbakekreving(Saksnummer saksnummer, UUID uuid, String ytelseType) {
         behandlingerKlient.putTilbakekreving(new BehandlingOpprett(saksnummer, uuid, "BT-007", ytelseType));
     }
 
-    public void opprettTilbakekrevingRevurdering(String saksnummer, UUID uuid, int behandlingId, String ytelseType,
+    public void opprettTilbakekrevingRevurdering(Saksnummer saksnummer, UUID uuid, int behandlingId, String ytelseType,
             RevurderingArsak behandlingArsakType) {
         behandlingerKlient.putTilbakekreving(new BehandlingOpprettRevurdering(saksnummer, behandlingId, uuid,
                 "BT-009", ytelseType, behandlingArsakType));
@@ -85,8 +86,8 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     }
 
     // Henter siste behandlingen fra fptilbake på gitt saksnummer.
-    public void hentSisteBehandling(String saksnummer) {
-        this.saksnummer = String.valueOf(saksnummer);
+    public void hentSisteBehandling(Saksnummer saksnummer) {
+        this.saksnummer = saksnummer;
 
         Vent.til(() -> !behandlingerKlient.hentAlleTbkBehandlinger(saksnummer).isEmpty(),
                 30, "Behandling ble ikke opprettet");
@@ -103,7 +104,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.uuid);
     }
 
-    public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag, String saksnummer, int fpsakBehandlingId) {
+    public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag, Saksnummer saksnummer, int fpsakBehandlingId) {
         vtpTilbakekrevingJerseyKlient.oppdaterTilbakekrevingKonsistens(saksnummer, fpsakBehandlingId);
         okonomiKlient.putGrunnlag(kravgrunnlag, valgtBehandling.id);
     }

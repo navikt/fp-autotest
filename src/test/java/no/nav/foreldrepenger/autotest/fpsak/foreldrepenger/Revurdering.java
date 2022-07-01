@@ -137,7 +137,7 @@ class Revurdering extends FpsakTestBase {
         // Endringssøknad
         var fordeling = generiskFordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, Long.valueOf(saksnummer));
+        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, saksnummer);
         var saksnummerE = mor.søk(søknadE.build());
 
         saksbehandler.hentFagsak(saksnummerE);
@@ -185,7 +185,7 @@ class Revurdering extends FpsakTestBase {
         var fordelingGradering = fordelingEndringssøknadGradering(StønadskontoType.FELLESPERIODE, graderingFom, graderingTom,
                 arbeidsgiveridentifikator, 40);
         var endretSøknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR,
-                fordelingGradering, Long.valueOf(saksnummer));
+                fordelingGradering, saksnummer);
         var saksnummerE = mor.søk(endretSøknad.build());
 
         saksbehandler.hentFagsak(saksnummerE);
@@ -240,7 +240,7 @@ class Revurdering extends FpsakTestBase {
         // Sender endringssøknad for å gi fagsaken en ny søknad mottatt dato
         var fordelingEndringssøknad = generiskFordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(14).minusDays(1)));
-        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordelingEndringssøknad, Long.valueOf(saksnummer))
+        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordelingEndringssøknad, saksnummer)
                 .medMottattDato(fødselsdato.plusWeeks(10));
         mor.søk(søknadE.build());
 
@@ -299,7 +299,7 @@ class Revurdering extends FpsakTestBase {
 
         var fordelingEndringssøknad = generiskFordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(12).plusWeeks(2)));
-        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordelingEndringssøknad, Long.valueOf(saksnummer))
+        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordelingEndringssøknad, saksnummer)
                 .medMottattDato(fødselsdato.plusWeeks(10));
         mor.søk(søknadE.build());
 

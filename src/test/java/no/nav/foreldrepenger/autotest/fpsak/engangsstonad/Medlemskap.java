@@ -38,7 +38,6 @@ class Medlemskap extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
         var saksnummer = mor.søk(søknad.build());
-        logger.info("Opprettet sak med saksnummer: {}", saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarBrukerBosattBekreftelse.class);
