@@ -200,9 +200,8 @@ public class SøknadMottak extends Aktoer implements Innsender {
                 .count();
     }
 
-    private Saksnummer ventTilInntekstmeldingErMottatt(Fødselsnummer fnr, Saksnummer saksnummer,
-                                                 Integer antallNyeInntektsmeldinger,
-                                                 Integer antallGamleInntekstmeldinger) {
+    private Saksnummer ventTilInntekstmeldingErMottatt(Fødselsnummer fnr, Saksnummer saksnummer, Integer antallNyeInntektsmeldinger,
+                                                       Integer antallGamleInntekstmeldinger) {
         if (saksnummer != null) {
             var forventetAntallInnteksmeldinger = antallGamleInntekstmeldinger + antallNyeInntektsmeldinger;
             var antallIM = new AtomicReference<>(antallGamleInntekstmeldinger);
@@ -211,7 +210,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
                 return antallIM.get() == forventetAntallInnteksmeldinger;
             }, 60, "Forventet at det ble mottatt " + antallNyeInntektsmeldinger +
                     " ny(e) innteksmeldinge(r), men det ble mottatt " + (antallIM.get() - antallGamleInntekstmeldinger) +
-                    " på saksnummer " + saksnummer);
+                    " på saksnummer " + saksnummer.value());
             return saksnummer;
         } else {
             return ventTilFagsakOgBehandlingErOpprettet(fnr);
@@ -228,7 +227,7 @@ public class SøknadMottak extends Aktoer implements Innsender {
             var behandlingStartet = historikkKlient.hentHistorikk(saksnummer).stream()
                     .anyMatch(h -> HistorikkinnslagType.BEH_STARTET.equals(h.type()));
             return !behandlinger.isEmpty() && behandlingStartet;
-        }, 30, "Ingen behandlinger er opprettet på saksnummer " + saksnummer);
+        }, 30, "Ingen behandlinger er opprettet på saksnummer " + saksnummer.value());
 
         return saksnummer;
     }
