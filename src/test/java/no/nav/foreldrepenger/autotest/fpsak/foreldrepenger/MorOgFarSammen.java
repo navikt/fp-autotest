@@ -561,7 +561,7 @@ class MorOgFarSammen extends FpsakTestBase {
     @Description("Mor får revurdering fra endringssøknad endring av uttak - fører til revurdering hos far")
     void berørtSakEndringAvUttak() {
         var familie = new Familie("84", fordel);
-        var fødselsdato = LocalDate.now().minusMonths(4);
+        var fødselsdato = LocalDate.now().minusMonths(4).plusDays(2);
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
         sendInnEndringssøknadforMorMedEndretUttak(familie, saksnummerMor);
