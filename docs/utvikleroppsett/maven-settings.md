@@ -29,6 +29,9 @@
     <profiles>
         <profile>
             <id>github</id>
+             <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <repositories>
                 <repository>
                     <id>github</id>
