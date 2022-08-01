@@ -28,31 +28,18 @@
     </servers>
     <profiles>
         <profile>
-            <id>default</id>
+            <id>github</id>
             <repositories>
                 <repository>
-                    <id>central</id>
-                    <url>https://repo1.maven.org/maven2</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
+                    <id>github</id>
+                    <url>https://maven.pkg.github.com/navikt/fp-felles</url>
                 </repository>
                 <repository>
-                    <id>github-package-registry-navikt</id>
-                    <url>https://maven.pkg.github.com/navikt/maven-release</url>
-                </repository>
-                <repository>
-                    <id>confluent</id>
-                    <url>https://packages.confluent.io/maven/</url>
+                     <id>confluent</id>
+                     <url>https://packages.confluent.io/maven/</url>
                 </repository>
             </repositories>
         </profile>
     </profiles>
-    <activeProfiles>
-        <activeProfile>default</activeProfile>
-    </activeProfiles>
 </settings>
 ```
