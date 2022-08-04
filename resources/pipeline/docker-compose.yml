@@ -48,7 +48,7 @@ services:
     environment:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/app/.modig/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/app/.modig/truststore.jks"
-      - "CREATE_TOPICS=privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp,privat-foreldrepenger-historikk-fordeling,aapen-dok-journalfoering-v1-q1,privat-permittering-lonnskomp-vedtak-vtp,privat-tilbakekreving-dvh-saksstatistikk-v1-vtp,privat-tilbakekreving-dvh-vedtak-v1-vtp,tilbakekreving-brukerdialog-local"
+      - "CREATE_TOPICS=fpsoknad-mottak-innsendinghendelse,privat-familie-vedtakFattet-v1-vtp,aapen-sob-oppgaveHendelse-v1,tilbakebetaling-aksjonspunkthendelse,aapen-person-pdl-leesah-v1-vtp,privat-foreldrepenger-historikk-fordeling,aapen-dok-journalfoering-v1-q1,privat-permittering-lonnskomp-vedtak-vtp,privat-tilbakekreving-dvh-saksstatistikk-v1-vtp,privat-tilbakekreving-dvh-vedtak-v1-vtp,tilbakekreving-brukerdialog-local"
     volumes:
       - "~/.modig:/app/.modig"
     ports:
