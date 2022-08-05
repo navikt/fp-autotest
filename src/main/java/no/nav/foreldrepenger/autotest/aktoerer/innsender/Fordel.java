@@ -9,27 +9,17 @@ import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumen
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.mockito.Mockito;
 
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahJerseyKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafJerseyKlient;
 import no.nav.foreldrepenger.autotest.util.ControllerHelper;
-import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -45,7 +35,7 @@ import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
-public class Fordel extends Aktoer implements Innsender {
+public class Fordel extends DokumentVenter {
 
     private static int inkrementForEksternReferanse = 0;
 
@@ -56,26 +46,13 @@ public class Fordel extends Aktoer implements Innsender {
      * Klienter
      */
     FordelJerseyKlient fordelKlient;
-    BehandlingerJerseyKlient behandlingerKlient;
-    FagsakJerseyKlient fagsakKlient;
-    HistorikkJerseyKlient historikkKlient;
-
-    // Vtp Klienter
-    PdlLeesahJerseyKlient pdlLeesahKlient;
-    JournalforingJerseyKlient journalpostKlient;
     SafJerseyKlient safKlient;
 
 
     public Fordel(Rolle rolle) {
         super(rolle);
         fordelKlient = new FordelJerseyKlient(cookieRequestFilter);
-        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
-        fagsakKlient = new FagsakJerseyKlient(cookieRequestFilter);
-        historikkKlient = new HistorikkJerseyKlient(cookieRequestFilter);
-
-        journalpostKlient = new JournalforingJerseyKlient();
         safKlient = new SafJerseyKlient();
-        pdlLeesahKlient = new PdlLeesahJerseyKlient();
     }
 
     /*
@@ -115,8 +92,7 @@ public class Fordel extends Aktoer implements Innsender {
     }
 
     @Step("Sender inn søknad [{dokumenttypeId}]")
-    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, DokumenttypeId dokumenttypeId,
-                                    Saksnummer saksnummer) {
+    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, DokumenttypeId dokumenttypeId, Saksnummer saksnummer) {
         String xml = "";
         LocalDate mottattDato;
         if (null != søknad) {
@@ -125,35 +101,19 @@ public class Fordel extends Aktoer implements Innsender {
         } else {
             mottattDato = LocalDate.now();
         }
+        debugSenderInnDokument("Foreldrepengesøknad", xml);
 
         var journalpostModell = lagJournalpostStrukturertDokument(xml, fnr.value(), dokumenttypeId);
         if (saksnummer != null) {
             journalpostModell.setSakId(saksnummer.value());
         }
+
+        var skjæringsTidspunktForNyBehandling  = LocalDateTime.now().minusSeconds(1); // Legger inn slack på 1 sekund
+        var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
         var journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
-
-        var behandlingstemaOffisiellKode = finnBehandlingstemaKode(dokumenttypeId);
-        var dokumentTypeIdOffisiellKode = dokumenttypeId.getKode();
-        debugSenderInnDokument("Foreldrepengesøknad", xml);
-        final var sakId = sendInnJournalpost(xml, mottattDato, journalpostId, behandlingstemaOffisiellKode,
-                dokumentTypeIdOffisiellKode, "SOK", aktørId, saksnummer);
-        journalpostModell.setSakId(sakId.value());
-
-        Vent.til(() -> {
-            List<Behandling> behandlinger = behandlingerKlient.alle(sakId);
-            // TODO: Gjøre denne asynkron
-            if (behandlinger.size() > 1) {
-                sleep(5000);
-            }
-            return !behandlinger.isEmpty()
-                    && (behandlingerKlient.statusAsObject(behandlinger.get(0).uuid) == null);
-        }, 60, "Saken hadde ingen behandlinger");
-
-        if (DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD.equals(dokumenttypeId)) {
-            // TODO: Vent.til fungerer ikke med endringssøknad. Venter ikke til behandlingen er opprettet
-            sleep(5000);
-        }
-        return sakId;
+        knyttJournalpostTilFagsak(xml, mottattDato, journalpostId, finnBehandlingstemaKode(dokumenttypeId),
+                dokumenttypeId.getKode(), "SOK", aktørId, saksnummer);
+        return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
     private String tilSøknadXML(Søknad søknad, AktørId aktørId, DokumenttypeId dokumenttypeId) {
@@ -181,104 +141,59 @@ public class Fordel extends Aktoer implements Innsender {
         }
     }
 
-    private void sleep(int i) {
-        try {
-            Thread.sleep(i);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     /*
      * Sender inn inntektsmelding og returnerer saksnummer
      */
     @Override
     @Step("Sender inn IM for fnr {fnr}")
     public Saksnummer sendInnInntektsmelding(InntektsmeldingBuilder inntektsmelding, AktørId aktørId, Fødselsnummer fnr, Saksnummer gammeltSaksnummer) {
-        var xml = inntektsmelding.createInntektesmeldingXML();
-        debugSenderInnDokument("Inntektsmelding", xml);
-        var behandlingstemaOffisiellKode = "ab0047";
-        var dokumentKategori = Dokumentkategori.IKKE_TOLKBART_SKJEMA.getKode();
-        var dokumentTypeIdOffisiellKode = DokumenttypeId.INNTEKTSMELDING.getKode();
-
-        var journalpostModell = lagJournalpostStrukturertDokument(xml, fnr.value(), DokumenttypeId.INNTEKTSMELDING);
-        var journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
-
-        var nyttSaksnummer = sendInnJournalpost(xml, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode,
-                dokumentKategori, aktørId, gammeltSaksnummer);
-        journalpostModell.setSakId(nyttSaksnummer.value());
-
-        // vent til inntektsmelding er mottatt
-        if (gammeltSaksnummer != null) {
-            AtomicReference<List<HistorikkInnslag>> historikkRef = new AtomicReference<>();
-            Vent.til(() -> {
-                historikkRef.set(historikkKlient.hentHistorikk(gammeltSaksnummer));
-                return historikkRef.get().stream()
-                        .anyMatch(h -> HistorikkinnslagType.VEDLEGG_MOTTATT.equals(h.type()));
-            }, 40, "Saken har ikke mottatt inntektsmeldingen.\nHar historikk: " + historikkRef.get());
-        } else {
-            Vent.til(() -> !fagsakKlient.søk(nyttSaksnummer.value()).isEmpty(),
-                    40, "Opprettet ikke fagsak for inntektsmelding");
-        }
-
-        return nyttSaksnummer;
+        return sendInnInntektsmelding(List.of(inntektsmelding), aktørId, fnr, gammeltSaksnummer);
     }
 
     @Override
-    public Saksnummer sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldinger, AktørId aktørId, Fødselsnummer fnr,
-                                         Saksnummer saksnummer) {
-        int gammelAntallIM = 0;
-        if (saksnummer != null) {
-            gammelAntallIM = antallInntektsmeldingerMottatt(saksnummer);
-        }
-        for (var builder : inntektsmeldinger) {
-            saksnummer = sendInnInntektsmelding(builder, aktørId, fnr, saksnummer);
-            if (inntektsmeldinger.size() > 1) {
-                // Innteksmeldinger etter den førte returneres med en gang fordi det allerede finnes et historikkinnslag
-                // VEDLEGG_MOTTATT fra den tidligere. Vi må derfor vente litt.
-                sleep(4000); // TODO finn en bedre måte å gjøre dette på...
-            }
-        }
-        final var gammelAntallIMF = gammelAntallIM;
-        final var saksnummerF = saksnummer;
-        Vent.til(() -> (antallInntektsmeldingerMottatt(saksnummerF) - gammelAntallIMF) == inntektsmeldinger.size(),
-                20, "har ikke mottat alle inntektsmeldinger. Sak: " + saksnummer);
-        return saksnummer;
+    public Saksnummer sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldinger, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
+        var antallEksisterendeInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
+        journalførKnyttIM(inntektsmeldinger, aktørId, fnr, saksnummer);
+        return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallEksisterendeInntekstmeldinger);
     }
 
-    private int antallInntektsmeldingerMottatt(Saksnummer saksnummer) {
-        return (int) historikkKlient.hentHistorikk(saksnummer).stream()
-                .filter(h -> HistorikkinnslagType.VEDLEGG_MOTTATT.equals(h.type()))
-                .count();
+    private void journalførKnyttIM(List<InntektsmeldingBuilder> inntektsmeldinger, AktørId aktørId, Fødselsnummer fnr, Saksnummer eksisterendeSaksnummer) {
+        LOG.info("Sender inn {} IM(er) for søker {} ...", inntektsmeldinger.size(), fnr.value());
+        for (var inntektsmelding : inntektsmeldinger) {
+            var xml = inntektsmelding.createInntektesmeldingXML();
+            debugSenderInnDokument("Inntektsmelding", xml);
+            var journalpostModell = lagJournalpostStrukturertDokument(xml, fnr.value(), DokumenttypeId.INNTEKTSMELDING);
+            var journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
+
+            var dokumentKategori = Dokumentkategori.IKKE_TOLKBART_SKJEMA.getKode();
+            var dokumentTypeIdOffisiellKode = DokumenttypeId.INNTEKTSMELDING.getKode();
+            knyttJournalpostTilFagsak(xml, journalpostId,  dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, eksisterendeSaksnummer);
+        }
     }
 
     @Override
     @Step("Sender inn klage på saksnummer {saksnummer}")
     public void sendInnKlage(AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
-        var behandlingstemaOffisiellKode = "ab0047";
         var dokumentKategori = Dokumentkategori.KLAGE_ANKE.getKode();
         var dokumentTypeIdOffisiellKode = DokumenttypeId.KLAGE_DOKUMENT.getKode();
 
         var journalpostModell = lagJournalpostUstrukturertDokument(fnr.value(), DokumenttypeId.KLAGE_DOKUMENT);
         var journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
-
-        saksnummer = sendInnJournalpost(null, journalpostId, behandlingstemaOffisiellKode, dokumentTypeIdOffisiellKode,
-                dokumentKategori, aktørId, saksnummer);
-        journalpostModell.setSakId(saksnummer.value());
+        knyttJournalpostTilFagsak(null, journalpostId, dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
     }
 
     /*
      * Sender inn journalpost og returnerer saksnummer
      */
-    private Saksnummer sendInnJournalpost(String xml, String journalpostId, String behandlingstemaOffisiellKode,
-            String dokumentTypeIdOffisiellKode, String dokumentKategori, AktørId aktørId, Saksnummer saksnummer) {
-        return sendInnJournalpost(xml, LocalDate.now(), journalpostId, behandlingstemaOffisiellKode,
-                dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
+    private void knyttJournalpostTilFagsak(String xml, String journalpostId, String dokumentTypeIdOffisiellKode,
+                                                 String dokumentKategori, AktørId aktørId, Saksnummer saksnummer) {
+        knyttJournalpostTilFagsak(xml, LocalDate.now(), journalpostId, "ab0047", dokumentTypeIdOffisiellKode,
+                dokumentKategori, aktørId, saksnummer);
     }
 
-    private Saksnummer sendInnJournalpost(String xml, LocalDate mottattDato, String journalpostId,
-            String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode,
-            String dokumentKategori, AktørId aktørId, Saksnummer saksnummer) {
+    private void knyttJournalpostTilFagsak(String xml, LocalDate mottattDato, String journalpostId,
+                                                String behandlingstemaOffisiellKode, String dokumentTypeIdOffisiellKode,
+                                                String dokumentKategori, AktørId aktørId, Saksnummer saksnummer) {
 
         if (saksnummer == null) {
             var opprettSak = new OpprettSakDto(journalpostId, behandlingstemaOffisiellKode, aktørId.value());
@@ -303,7 +218,6 @@ public class Fordel extends Aktoer implements Innsender {
         }
 
         fordelKlient.journalpost(journalpostMottak);
-        return saksnummer;
     }
 
     private static String lagUnikEksternReferanseId() {

@@ -214,18 +214,17 @@ class Førstegangsbehandling extends FpsakTestBase {
                 termindato.minusWeeks(3).minusDays(3),
                 ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsforhold1));
         var søknad = lagSvangerskapspengerSøknad(BrukerRolle.MOR, termindato, List.of(forsteTilrettelegging));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummerSVP = mor.søk(søknad.build());
 
         var arbeidsgivere = mor.arbeidsgivere();
-        arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummer);
+        arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
 
-        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.hentFagsak(saksnummerSVP);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.hentFagsak(saksnummer);
-
+        beslutter.hentFagsak(saksnummerSVP);
         var bekreftelse = beslutter
                 .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
@@ -238,24 +237,23 @@ class Førstegangsbehandling extends FpsakTestBase {
         var søknadFP = lagSøknadForeldrepengerTermin(termindato.minusWeeks(1), BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummerFP = mor.søk(søknadFP.build());
-
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFP, termindato.minusWeeks(4));
+        saksbehandler.hentFagsak(saksnummerFP);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        beslutter.hentFagsak(saksnummerFP);
-        beslutter.ventTilAvsluttetBehandling();
 
-        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.hentFagsak(saksnummerSVP);
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN);
 
         // Revurder SVP - siste periode skal bli avslått i uttak og tilkjent dagsats = 0
-        overstyrer.hentFagsak(saksnummer);
+        overstyrer.hentFagsak(saksnummerSVP);
         overstyrer.ventPåOgVelgRevurderingBehandling();
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-        beslutter.hentFagsak(saksnummer);
+        beslutter.hentFagsak(saksnummerSVP);
 
         var bekreftelse2 = beslutter
                 .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
@@ -266,9 +264,9 @@ class Førstegangsbehandling extends FpsakTestBase {
         //assertThat(beslutter.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
         var tilkjentYtelsePerioder = beslutter.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
-        assertThat(tilkjentYtelsePerioder.size())
+        assertThat(tilkjentYtelsePerioder)
                 .as("Antall tilkjent ytelses peridoer")
-                .isGreaterThan(1);
+                .hasSizeGreaterThan(1);
         // Litt datogamble
         assertThat(tilkjentYtelsePerioder.get(1).getFom())
                 .as("Avslått tilkjent ytelse Fom")

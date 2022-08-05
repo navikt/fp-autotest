@@ -11,10 +11,9 @@ public class Aktoer {
     protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     protected final CookieRequestFilter cookieRequestFilter;
-    private final OpenamJerseyKlient openamJerseyKlient;
 
     public Aktoer(Rolle rolle) {
-        openamJerseyKlient = new OpenamJerseyKlient();
+        var openamJerseyKlient = new OpenamJerseyKlient();
         var cookie = openamJerseyKlient.logInnMedRolle(rolle.getKode());
         cookieRequestFilter = new CookieRequestFilter(cookie);
     }

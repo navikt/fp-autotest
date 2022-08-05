@@ -67,7 +67,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
 //        saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
 //        saksbehandler.velgRevurderingBehandling();

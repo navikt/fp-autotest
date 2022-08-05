@@ -9,6 +9,7 @@ import static org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJa
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.apache.connector.ApacheHttpClientBuilderConfigurator;
 import org.glassfish.jersey.client.ClientConfig;
@@ -26,9 +27,6 @@ public abstract class AbstractJerseyRestKlient {
 
     protected final Client client;
 
-    protected AbstractJerseyRestKlient() {
-        this(DEFAULT_MAPPER_VTP, Set.of());
-    }
     protected AbstractJerseyRestKlient(ObjectMapper mapper) {
         this(mapper, Set.of());
     }
@@ -44,9 +42,9 @@ public abstract class AbstractJerseyRestKlient {
         cfg.register(jacksonProvider(mapper));
         cfg.connectorProvider(new ApacheConnectorProvider());
         cfg.register((ApacheHttpClientBuilderConfigurator) b ->
-                b.setKeepAliveStrategy(createKeepAliveStrategy(30))
+                b.setKeepAliveStrategy(createKeepAliveStrategy(5))
                 .setDefaultRequestConfig(defaultRequestConfig())
-                .setRetryHandler(new HttpRequestRetryHandler())
+                .setRetryHandler(new StandardHttpRequestRetryHandler())
                 .setConnectionManager(connectionManager()));
         cfg.register(new HeaderLoggingFilter());
         cfg.register(new CallIdRequestFilter());

@@ -254,7 +254,7 @@ class Fodsel extends FpsakTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -279,7 +279,7 @@ class Fodsel extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -304,7 +304,7 @@ class Fodsel extends FpsakTestBase {
         arbeidsgivere.sendDefaultInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -376,7 +376,7 @@ class Fodsel extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -411,7 +411,7 @@ class Fodsel extends FpsakTestBase {
         aksjonspunktBekreftelse.morSøkerFødsel(fordeling, fødselsdato, fpff.periodeFom.minusWeeks(3));
 
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -438,7 +438,7 @@ class Fodsel extends FpsakTestBase {
         aksjonspunktBekreftelseEndringssøknad.setFordeling(fordelingEndringssøknad);
         aksjonspunktBekreftelseEndringssøknad.setAnnenForelderInformert(true);
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelseEndringssøknad);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
@@ -689,7 +689,7 @@ class Fodsel extends FpsakTestBase {
                 .bekreftBrukerHarAleneomsorg();
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
 
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // verifiserer uttak
         var uttaksperioder = saksbehandler.valgtBehandling.hentUttaksperioder();
@@ -766,7 +766,7 @@ class Fodsel extends FpsakTestBase {
         arbeidsgivere.sendDefaultInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         debugLoggBehandling(saksbehandler.valgtBehandling);
         // hackForÅKommeForbiØkonomi(saksnummer);
 
@@ -861,7 +861,7 @@ class Fodsel extends FpsakTestBase {
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         // saksbehandler.ventTilØkonomioppdragFerdigstilles();
 
         // verifiserer uttak

@@ -193,7 +193,7 @@ public abstract class Søker {
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, saksnummer);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
-        LOG.info("Søknad sendt inn og behandling opprettet på {}", saksnummer.value());
+        LOG.info("Søknad sendt inn og behandling opprettet på fagsak {}", saksnummer.value());
         return this.saksnummer;
     }
 
@@ -201,7 +201,7 @@ public abstract class Søker {
         LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, saksnummer);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
-        LOG.info("Søknad sendt inn!");
+        LOG.info("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
         return this.saksnummer;
     }
 
@@ -209,7 +209,7 @@ public abstract class Søker {
         LOG.info("Sender inn papirsøknadd for {} ..", fødselsnummer.value());
         this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
-        LOG.info("Søknad sendt inn og behandling opprettet på {}", saksnummer.value());
+        LOG.info("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
         return this.saksnummer;
     }
 
@@ -218,7 +218,7 @@ public abstract class Søker {
         guardTrengerEksisterendeBehandling();
         this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, this.saksnummer);
         leggTilCallIdforSaksnummerForLogging(fødselsnummer, saksnummer);
-        LOG.info("Søknad sendt inn!");
+        LOG.info("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
         return this.saksnummer;
     }
 

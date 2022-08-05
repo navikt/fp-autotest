@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.util.rest;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.http.Consts;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
@@ -43,15 +41,16 @@ public class RestClientSupportProdusent {
 
     public static RequestConfig defaultRequestConfig() {
         return RequestConfig.custom()
+                .setConnectTimeout(30_000)
+                .setSocketTimeout(30_000)
                 .build();
     }
 
     public static PoolingHttpClientConnectionManager connectionManager() {
-        var defaultConnectionConfig = defaultConnectionConfig();
-        var connManager = new PoolingHttpClientConnectionManager(55, TimeUnit.MINUTES);
-        connManager.setMaxTotal(100);
-        connManager.setDefaultConnectionConfig(defaultConnectionConfig);
-        connManager.setValidateAfterInactivity(100);
+        var connManager = new PoolingHttpClientConnectionManager();
+        connManager.setDefaultConnectionConfig(defaultConnectionConfig());
+        connManager.setDefaultMaxPerRoute(40);
+        connManager.setMaxTotal(80);
         return connManager;
     }
 

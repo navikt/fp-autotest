@@ -23,6 +23,8 @@ public final class Vent {
         var advarsel = start.plusSeconds((int) (timeoutInSeconds * 0.75));
         var logget = false;
 
+        long progressivVentetidMs = 50;
+
         try {
             while (Boolean.FALSE.equals(callable.call())) {
                 var now = LocalDateTime.now();
@@ -35,7 +37,8 @@ public final class Vent {
                     throw new IllegalStateException("Async venting timet ut etter " + timeoutInSeconds +
                             " sekunder fordi: " + errorMessageProducer.call());
                 }
-                Thread.sleep(1000);
+                Thread.sleep(progressivVentetidMs);
+                progressivVentetidMs = Math.min(750, 2 * progressivVentetidMs);
             }
         } catch (Exception e) {
             throw new IllegalStateException(e);

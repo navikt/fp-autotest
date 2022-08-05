@@ -130,7 +130,7 @@ class SammenhengendeUttak extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -149,7 +149,7 @@ class SammenhengendeUttak extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
@@ -221,7 +221,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var startUtsettelse = fødselsdato.plusWeeks(6);
         var fordelingEndring = FordelingErketyper.generiskFordeling(
@@ -251,7 +251,7 @@ class SammenhengendeUttak extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
@@ -304,7 +304,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
@@ -319,14 +319,13 @@ class SammenhengendeUttak extends FpsakTestBase {
         mor.søk(søknadE.build());
 
         saksbehandler.velgSisteBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
                 .isEmpty();
 
         // Manuell behandling for å få endringssdato satt til første uttaksdag
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
-        saksbehandler.velgSisteBehandling();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
                 .isEmpty();

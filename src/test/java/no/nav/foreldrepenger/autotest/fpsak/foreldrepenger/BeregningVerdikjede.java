@@ -77,7 +77,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -221,7 +221,6 @@ class BeregningVerdikjede extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
-        saksbehandler.ventTilAvsluttetBehandling();
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
                 lagBGAndelMedBesteberegning("BA", 120_000));
@@ -281,7 +280,6 @@ class BeregningVerdikjede extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
-        saksbehandler.ventTilAvsluttetBehandling();
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
                 lagBGAndel(arbeidsgiverIdentifikator, 720_000, 720_000, 0, 720_000));
@@ -459,7 +457,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmelding2);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);

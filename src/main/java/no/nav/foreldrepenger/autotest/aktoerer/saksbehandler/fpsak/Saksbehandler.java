@@ -45,6 +45,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManglendeOpplysningerVurderingDto;
@@ -104,7 +105,7 @@ public class Saksbehandler extends Aktoer {
         if (valgtFagsak == null) {
             throw new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer);
         }
-        behandlinger = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer());
+        behandlinger = hentAlleBehandlingerForFagsak(saksnummer);
         velgSisteBehandling();
     }
 
@@ -116,18 +117,18 @@ public class Saksbehandler extends Aktoer {
         ventTilFagsakstatus(FagsakStatus.LØPENDE);
     }
 
-    private void ventTilFagsakstatus(FagsakStatus status) {
+    private void ventTilFagsakstatus(FagsakStatus... status) {
         if (harFagsakstatus(status)) {
             return;
         }
         Vent.til(() -> {
             refreshFagsak();
             return harFagsakstatus(status);
-        }, 10, "Fagsak har ikke status [" + status + "]");
+        }, 10, "Fagsak har ikke status " + Set.of(status));
     }
 
-    private boolean harFagsakstatus(FagsakStatus status) {
-        return valgtFagsak.status().equals(status);
+    private boolean harFagsakstatus(FagsakStatus... status) {
+        return Set.of(status).contains(valgtFagsak.status());
     }
 
     private void refreshFagsak() {
@@ -197,6 +198,9 @@ public class Saksbehandler extends Aktoer {
         ventTilSakHarBehandling(behandlingstype, behandlingÅrsakType);
         var behandling = behandlinger.stream()
                 .filter(b -> b.type.equals(behandlingstype))
+                .filter(b -> behandlingÅrsakType == null || b.behandlingÅrsaker.stream()
+                        .map(BehandlingÅrsak::getBehandlingArsakType)
+                        .anyMatch(årsak -> årsak.equals(behandlingÅrsakType)))
                 .filter(b -> !åpenStatus || !b.status.equals(BehandlingStatus.AVSLUTTET))
                 .max(Comparator.comparing(b -> b.opprettet))
                 .orElseThrow();
@@ -283,7 +287,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     private void ventPåProsessering(Behandling behandling) {
-        Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
+        Vent.til(() -> verifiserProsesseringFerdig(behandling.uuid), 90, () -> {
             var prosessTasker = hentProsesstaskerForBehandling(behandling);
             var prosessTaskList = new StringBuilder();
             for (ProsessTaskDataDto prosessTaskListItemDto : prosessTasker) {
@@ -296,8 +300,8 @@ public class Saksbehandler extends Aktoer {
         });
     }
 
-    private boolean verifiserProsesseringFerdig(Behandling behandling) {
-        var status = behandlingerKlient.statusAsObject(behandling.uuid);
+    private boolean verifiserProsesseringFerdig(UUID behandlingsuuid) {
+        var status = behandlingerKlient.statusAsObject(behandlingsuuid);
 
         if ((status == null) || (status.getStatus() == null)) {
             return true;
@@ -311,7 +315,7 @@ public class Saksbehandler extends Aktoer {
         } else if (status.isPending()) {
             return false;
         } else {
-            throw new RuntimeException("Status for behandling " + behandling.uuid + " feilet: " + status.getMessage());
+            throw new RuntimeException("Status for behandling " + behandlingsuuid + " feilet: " + status.getMessage());
         }
     }
 
@@ -371,15 +375,6 @@ public class Saksbehandler extends Aktoer {
     /*
      * Opretter behandling på nåværende fagsak
      */
-    public void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak) {
-        opprettBehandling(behandlingstype, årsak, valgtFagsak);
-        hentFagsak(valgtFagsak.saksnummer());
-    }
-
-    @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {fagsak.saksnummer}")
-    private void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak, Fagsak fagsak) {
-        behandlingerKlient.putBehandlinger(new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak));
-    }
 
     public void opprettBehandlingRevurdering(BehandlingÅrsakType årsak) {
         opprettBehandling(BehandlingType.REVURDERING, årsak);
@@ -387,6 +382,19 @@ public class Saksbehandler extends Aktoer {
 
     public void oprettBehandlingInnsyn(BehandlingÅrsakType årsak) {
         opprettBehandling(BehandlingType.INNSYN, årsak);
+    }
+
+
+    public void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak) {
+        opprettBehandling(behandlingstype, årsak, valgtFagsak);
+    }
+
+    @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {fagsak.saksnummer}")
+    private void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak, Fagsak fagsak) {
+        LOG.info("Oppretter behandling {}|{} på fagsak {} ...", behandlingstype, årsak, fagsak.saksnummer().value());
+        behandlingerKlient.putBehandlinger(new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak));
+        ventPåOgVelgSisteBehandling(behandlingstype, false, årsak);
+        LOG.info("Behandling {}|{} opprettet", behandlingstype, årsak);
     }
 
     /*
@@ -403,7 +411,6 @@ public class Saksbehandler extends Aktoer {
                 .filter(p -> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
                 .toList();
     }
-
 
 
     /*
@@ -468,7 +475,7 @@ public class Saksbehandler extends Aktoer {
                 .filter(ap -> ap.getDefinisjon().equals(kode))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + "." +
-                        "\nAksjonspunkt på behanlding: " + valgtBehandling.getAksjonspunkter().toString()));
+                        "\nAksjonspunkt på behandling: " + valgtBehandling.getAksjonspunkter().toString()));
     }
 
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
@@ -542,17 +549,22 @@ public class Saksbehandler extends Aktoer {
 
     public void fattVedtakOgVentTilAvsluttetBehandling(FatterVedtakBekreftelse bekreftelse) {
         bekreftAksjonspunkt(bekreftelse);
-        ventTilAvsluttetBehandling();
+        ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
     }
 
     public void fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling() {
         bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
-        ventTilAvsluttetBehandling();
+        ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
     }
 
     public void ventTilAvsluttetBehandling() {
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
         LOG.info("Alle manuelle aksjonspunkt er løst og behandlingen har status AVSLUTTET");
+    }
+
+    public void ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet() {
+        ventTilAvsluttetBehandling();
+        ventTilFagsakstatus(FagsakStatus.LØPENDE, FagsakStatus.AVSLUTTET);
     }
 
 
