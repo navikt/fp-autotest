@@ -3,13 +3,17 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 public class AksjonspunktKoder {
 
     public static final String AUTO_MANUELT_SATT_PÅ_VENT = "7001";
-    public static final String AUTO_VENTER_PÅ_KOMPLETT_SØKNAD = "7003";
-    public static final String AUTO_SATT_PÅ_VENT_REVURDERING = "7005";
     public static final String AUTO_VENT_PÅ_FØDSELREGISTRERING = "7002";
+    public static final String AUTO_VENTER_PÅ_KOMPLETT_SØKNAD = "7003"; // IM
+    public static final String AUTO_VENT_PÅ_FØDSEL = "7004";
+    public static final String AUTO_SATT_PÅ_VENT_REVURDERING = "7005";
     public static final String AUTO_VENT_PÅ_OPPTJENINGSOPPLYSNINGER = "7006";
+    public static final String AUTO_VENT_PÅ_SCANNING = "7007";
+    public static final String AUTO_VENT_PGA_FOR_TIDLIG_SØKNAD = "7008";
     public static final String AUTO_VENT_KOMPLETT_OPPDATERING = "7009";
     public static final String AUTO_VENT_PÅ_REGISTEROPPLYSNINGER = "7010";
     public static final String AUTO_KØET_BEHANDLING = "7011";
+    public static final String AUTO_VENT_PÅ_SØKNAD = "7013";
     public static final String AUTO_VENT_PÅ_INNTEKT_RAPPORTERINGSFRIST = "7014";
     public static final String AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE = "7030";
 
@@ -66,11 +70,6 @@ public class AksjonspunktKoder {
     public static final String SJEKK_MANGLENDE_FØDSEL = "5027";
 
     public static final String VEDTAK_UTEN_TOTRINNSKONTROLL = "5018";
-
-    public static final String VENT_PÅ_FØDSEL = "7004";
-    public static final String VENT_PÅ_SCANNING = "7007";
-    public static final String VENT_PGA_FOR_TIDLIG_SØKNAD = "7008";
-    public static final String VENT_PÅ_SØKNAD = "7013";
 
     public static final String VURDERE_ANNEN_YTELSE_FØR_VEDTAK = "5033";
     public static final String VURDERE_DOKUMENT_FØR_VEDTAK = "5034";

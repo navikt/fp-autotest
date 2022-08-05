@@ -5,10 +5,11 @@ import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigura
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
 /**
- * Fixed strategy vil ikke garantere antall threads opprette:
- * https://github.com/junit-team/junit5/issues/2273#issuecomment-623850954
+ * Midlertidig workaround for https://github.com/SeleniumHQ/selenium/issues/10113
+ * -> getMinimumRunnable settes til 0.
  */
 class CutstomExecutionStrategy implements ParallelExecutionConfiguration, ParallelExecutionConfigurationStrategy {
+
     @Override
     public int getParallelism() {
         return 4;
@@ -16,7 +17,7 @@ class CutstomExecutionStrategy implements ParallelExecutionConfiguration, Parall
 
     @Override
     public int getMinimumRunnable() {
-        return 2;
+        return 0; // https://github.com/SeleniumHQ/selenium/issues/10113
     }
 
     @Override
@@ -31,7 +32,7 @@ class CutstomExecutionStrategy implements ParallelExecutionConfiguration, Parall
 
     @Override
     public int getKeepAliveSeconds() {
-        return 30;
+        return 60;
     }
 
     @Override

@@ -13,6 +13,41 @@ public final class Vent {
     private Vent() {
     }
 
+    public static <T> T på(Callable<T> callable, int timeoutInSeconds, String failReason) {
+        return på(callable, timeoutInSeconds, () -> failReason);
+    }
+
+    public static <T> T på(Callable<T> callable, int timeoutInSeconds, Callable<String> errorMessageProducer) {
+        var start = LocalDateTime.now();
+        var end = start.plusSeconds(timeoutInSeconds);
+        var advarsel = start.plusSeconds((int) (timeoutInSeconds * 0.75));
+        var logget = false;
+
+        long progressivVentetidMs = 50;
+
+        try {
+            var objektReturnert = callable.call();
+            while (objektReturnert == null) {
+                var now = LocalDateTime.now();
+                if (!logget && now.isAfter(advarsel)) {
+                    logget = true;
+                    var ste = getCallerCallerClassName();
+                    LOG.warn("Async venting av {} har tatt mer enn 75% av timeout på {} sekunder!", ste, timeoutInSeconds);
+                }
+                if (now.isAfter(end)) {
+                    throw new IllegalStateException("Async venting timet ut etter " + timeoutInSeconds +
+                            " sekunder fordi: " + errorMessageProducer.call());
+                }
+                Thread.sleep(progressivVentetidMs);
+                progressivVentetidMs = Math.min(750, 2 * progressivVentetidMs);
+                objektReturnert = callable.call();
+            }
+            return objektReturnert;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     public static void til(Callable<Boolean> callable, int timeoutInSeconds, String failReason) {
         til(callable, timeoutInSeconds, () -> failReason);
     }
@@ -22,6 +57,8 @@ public final class Vent {
         var end = start.plusSeconds(timeoutInSeconds);
         var advarsel = start.plusSeconds((int) (timeoutInSeconds * 0.75));
         var logget = false;
+
+        long progressivVentetidMs = 50;
 
         try {
             while (Boolean.FALSE.equals(callable.call())) {
@@ -35,7 +72,8 @@ public final class Vent {
                     throw new IllegalStateException("Async venting timet ut etter " + timeoutInSeconds +
                             " sekunder fordi: " + errorMessageProducer.call());
                 }
-                Thread.sleep(1000);
+                Thread.sleep(progressivVentetidMs);
+                progressivVentetidMs = Math.min(750, 2 * progressivVentetidMs);
             }
         } catch (Exception e) {
             throw new IllegalStateException(e);

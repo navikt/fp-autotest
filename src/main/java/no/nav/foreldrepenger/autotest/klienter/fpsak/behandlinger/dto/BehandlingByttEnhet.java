@@ -5,7 +5,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BehandlingByttEnhet extends BehandlingIdPost {
+public class BehandlingByttEnhet extends BehandlingIdVersjonDto {
 
     protected String enhetNavn;
     protected String enhetId;

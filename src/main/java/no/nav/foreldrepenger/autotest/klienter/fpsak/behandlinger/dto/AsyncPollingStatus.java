@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -20,7 +21,11 @@ public class AsyncPollingStatus {
     private final boolean readOnly;
 
     @JsonCreator
-    public AsyncPollingStatus(Status status, LocalDateTime eta, String message, URI cancelUri, Long pollIntervalMillis) {
+    public AsyncPollingStatus(@JsonProperty("status") Status status,
+                              @JsonProperty("eta") LocalDateTime eta,
+                              @JsonProperty("message") String message,
+                              @JsonProperty("cancelUri") URI cancelUri,
+                              @JsonProperty("pollIntervalMillis") Long pollIntervalMillis) {
         this.status = status;
         this.eta = eta;
         this.message = message;

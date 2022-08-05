@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper;
+import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 
 
 public class SerializationTestBase {
@@ -20,7 +20,7 @@ public class SerializationTestBase {
 
     @BeforeAll
     public static void beforeAll() {
-        mapper = JacksonObjectMapper.getObjectMapper();
+        mapper = JacksonBodyHandlers.getObjectmapper();
     }
 
     protected static void test(Object obj) {

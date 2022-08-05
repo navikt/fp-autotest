@@ -62,8 +62,6 @@ class Revurdering extends FpsakTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        saksbehandler.ventTilAvsluttetBehandling();
-
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_FEIL_ELLER_ENDRET_FAKTA);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.REVURD_OPPR);

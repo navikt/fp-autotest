@@ -41,7 +41,7 @@ class Termin extends FpsakTestBase {
         var saksnummer = arbeidsgiver.sendInntektsmeldingerFP(null, startDatoForeldrepenger);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VENT_PÅ_SØKNAD);
+        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_PÅ_SØKNAD);
         var behandlinger = saksbehandler.hentAlleBehandlingerForFagsak(saksnummer);
         assertThat(behandlinger)
                 .as("Antall behandlinger")
@@ -51,7 +51,7 @@ class Termin extends FpsakTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         mor.søk(søknad.build(), saksnummer);
 
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -92,7 +92,7 @@ class Termin extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
 
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.velgSisteBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -133,7 +133,7 @@ class Termin extends FpsakTestBase {
         mor.arbeidsgivere().sendDefaultInntektsmeldingerFP(saksnummer, fpstartdato);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -188,7 +188,7 @@ class Termin extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);

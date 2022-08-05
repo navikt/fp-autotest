@@ -11,7 +11,6 @@ public class BehandlingNy {
     protected Saksnummer saksnummer;
     protected BehandlingType behandlingType;
     protected BehandlingÅrsakType behandlingArsakType;
-    protected Boolean nyBehandlingEtterKlage = null;
 
     public BehandlingNy(Saksnummer saksnummer, BehandlingType behandlingType, BehandlingÅrsakType behandlingArsakType) {
         super();

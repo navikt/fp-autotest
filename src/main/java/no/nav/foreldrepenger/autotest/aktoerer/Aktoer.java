@@ -1,22 +1,25 @@
 package no.nav.foreldrepenger.autotest.aktoerer;
 
+import java.net.URI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.OpenamJerseyKlient;
-import no.nav.foreldrepenger.autotest.util.rest.CookieRequestFilter;
+import no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.OpenamKlient;
 
 public class Aktoer {
 
-    protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOG = LoggerFactory.getLogger(Aktoer.class);
 
-    protected final CookieRequestFilter cookieRequestFilter;
-    private final OpenamJerseyKlient openamJerseyKlient;
+    private static final OpenamKlient openamKlientTest = new OpenamKlient();
 
-    public Aktoer(Rolle rolle) {
-        openamJerseyKlient = new OpenamJerseyKlient();
-        var cookie = openamJerseyKlient.logInnMedRolle(rolle.getKode());
-        cookieRequestFilter = new CookieRequestFilter(cookie);
+    // TODO: Finn en bedre måte å gjøre dette (?)
+    public static void loggInn(Rolle rolle) {
+        LOG.info("Logger inn med rolle {}", rolle);
+        var cookie = openamKlientTest.logInnMedRolle(rolle.getKode());
+        JavaHttpKlient.getInstance().cookieManager().getCookieStore()
+                .add(URI.create(cookie.getPath()), cookie);
     }
 
     public enum Rolle {

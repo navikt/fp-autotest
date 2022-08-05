@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BehandlingPaVent extends BehandlingIdPost {
+public class BehandlingPaVent extends BehandlingIdVersjonDto {
 
     protected LocalDate frist;
     protected Venteårsak ventearsak;

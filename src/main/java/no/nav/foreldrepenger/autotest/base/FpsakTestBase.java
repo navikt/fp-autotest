@@ -32,8 +32,9 @@ public abstract class FpsakTestBase {
 
     @BeforeEach
     public void setUp() {
-        innsender = new SøknadMottak(Aktoer.Rolle.SAKSBEHANDLER);
-        fordel = new Fordel(Aktoer.Rolle.SAKSBEHANDLER);
+        innsender = new SøknadMottak();
+        fordel = new Fordel();
+        // TODO: Gjør om til å bruke et felles objekt med saksbehandling. Logg inn for hver type.
         saksbehandler = new Saksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
         overstyrer = new Saksbehandler(Aktoer.Rolle.OVERSTYRER);
         beslutter = new Saksbehandler(Aktoer.Rolle.BESLUTTER);
@@ -48,14 +49,14 @@ public abstract class FpsakTestBase {
         }
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-         beslutter.hentFagsak(saksnummer);
+        beslutter.hentFagsak(saksnummer);
         if (beslutter.harRevurderingBehandling() && revurdering) {
             beslutter.ventPåOgVelgRevurderingBehandling();
         }
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        if (saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.BREV_BESTILT, saksbehandler.valgtBehandling.uuid)) {
+        if (saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.BREV_BESTILT)) {
             saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_SENT);
         }
     }

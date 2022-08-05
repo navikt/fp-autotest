@@ -51,7 +51,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         var fordeling = generiskFordeling(
@@ -61,7 +61,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
         tbksaksbehandler.hentSisteBehandling(saksnummer);
@@ -116,7 +116,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, true);
@@ -214,7 +214,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, true);

@@ -6,6 +6,8 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperiodeType.SAMTIDIGUTTAK;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.BERØRT_BEHANDLING;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MØDREKVOTE;
@@ -22,6 +24,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
@@ -58,6 +62,9 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Stønadskont
 @Tag("foreldrepenger")
 class MorOgFarSammen extends FpsakTestBase {
 
+    private final Logger LOG = LoggerFactory.getLogger(MorOgFarSammen.class);
+
+
     @Test
     @DisplayName("Mor og far koblet sak, kant til kant")
     @Description("Mor søker, får aksjonspunkt slik at behandling stopper opp. " +
@@ -81,7 +88,7 @@ class MorOgFarSammen extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.harAksjonspunkt("5070");
         assertThat(saksbehandler.valgtFagsak.status())
-                .as("Fagsak stauts")
+                .as("Fagsak status")
                 .isEqualTo(FagsakStatus.UNDER_BEHANDLING);
 
         var far = familie.far();
@@ -94,7 +101,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var saksnummerFar = far.søk(søknadFar.build());
         saksbehandler.hentFagsak(saksnummerFar);
         assertThat(saksbehandler.valgtFagsak.status())
-                .as("Fagsak stauts")
+                .as("Fagsak status")
                 .isEqualTo(FagsakStatus.UNDER_BEHANDLING);
         assertThat(saksbehandler.valgtBehandling.erSattPåVent())
                 .as("Behandling er satt på vent")
@@ -124,7 +131,7 @@ class MorOgFarSammen extends FpsakTestBase {
         assertThat(saksbehandler.sakErKobletTilAnnenpart())
                 .as("Saken er koblet til en annen behandling")
                 .isTrue();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -165,7 +172,7 @@ class MorOgFarSammen extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(morSaksnummer, fpStartdatoMor);
 
         saksbehandler.hentFagsak(morSaksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var fpStartdatoFar = periodeFomBasedato.minusWeeks(2);
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
@@ -198,7 +205,7 @@ class MorOgFarSammen extends FpsakTestBase {
 
         saksbehandler.hentFagsak(morSaksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder()).isEmpty();
 
         /*
@@ -210,7 +217,7 @@ class MorOgFarSammen extends FpsakTestBase {
          */
         far.arbeidsgivere().sendDefaultInntektsmeldingerFP(farSaksnummer, fødselsdato.minusWeeks(2));
         saksbehandler.hentFagsak(farSaksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         var avslåttUttaksperiode = saksbehandler.hentAvslåtteUttaksperioder();
         assertThat(avslåttUttaksperiode).hasSize(1);
         assertThat(avslåttUttaksperiode.get(0).getFom()).isEqualTo(fomEndringssøknad1Mor);
@@ -218,7 +225,7 @@ class MorOgFarSammen extends FpsakTestBase {
 
         // Mor's uttak
         saksbehandler.hentFagsak(morSaksnummer);
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling(BERØRT_BEHANDLING);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder()).hasSize(1);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().get(0).getFom()).isEqualTo(fomFellesperiodeMorFørstegangssøknad);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().get(0).getTom()).isEqualTo(tomFellesperiodeMorFørstegangssøknad);
@@ -237,12 +244,12 @@ class MorOgFarSammen extends FpsakTestBase {
                 .medMottattDato(fødselsdato.plusWeeks(3));
         mor.søk(endringssøknadMor2.build());
 
-        saksbehandler.hentFagsak(morSaksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER, 2);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder()).isEmpty();
 
         saksbehandler.hentFagsak(farSaksnummer);
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling(BERØRT_BEHANDLING);
         var avslåttePerioderFarRevurdering = saksbehandler.hentAvslåtteUttaksperioder();
         assertThat(avslåttePerioderFarRevurdering).hasSize(1);
         assertThat(avslåttePerioderFarRevurdering.get(0).getFom()).isEqualTo(fomFellesperiodeMorFørstegangssøknad);
@@ -276,7 +283,7 @@ class MorOgFarSammen extends FpsakTestBase {
         arbeidsgivere.sendDefaultInntektsmeldingerFP(saksnummerMor, fpstartdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         debugFritekst("Ferdig med første behandling mor");
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -302,7 +309,7 @@ class MorOgFarSammen extends FpsakTestBase {
         far.arbeidsgivere().sendDefaultInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         debugFritekst("Ferdig med første behandling til far");
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -365,7 +372,7 @@ class MorOgFarSammen extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -402,11 +409,11 @@ class MorOgFarSammen extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.velgSisteBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Har fått tømt uttaket
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -431,22 +438,18 @@ class MorOgFarSammen extends FpsakTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(far));
         var mor = familie.mor();
         var saksnummerMor = mor.søk(søknadMor.build());
-
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, fødselsdato.minusWeeks(3));
-
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(generiskFordeling(uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1),
                         SAMTIDIGUTTAK)))
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()));
         var saksnummerFar = far.søk(søknadFar.build());
-
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, fødselsdato);
-
         saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var endringssøknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.FAR,
                 generiskFordeling(
@@ -456,9 +459,8 @@ class MorOgFarSammen extends FpsakTestBase {
                 saksnummerFar);
         far.søk(endringssøknad.build());
 
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
-
+        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
         assertThat(uttak).hasSize(1);
         assertThat(uttak.get(0).getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
@@ -466,9 +468,9 @@ class MorOgFarSammen extends FpsakTestBase {
         assertThat(uttak.get(0).getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
 
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getBehandlingArsakType))
-                .doesNotContain(BehandlingÅrsakType.BERØRT_BEHANDLING);
+                .doesNotContain(BERØRT_BEHANDLING);
     }
 
     @Test
@@ -498,20 +500,18 @@ class MorOgFarSammen extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_SENERE);
 
-        saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgÅpenFørstegangsbehandling();
         saksbehandler.harBehandlingsstatus(BehandlingStatus.UTREDES);
 
         // Søkt for tidlig - kan behandles om litt over en uke
         assertThat(saksbehandler.valgtBehandling.getAksjonspunkter()
                 .stream().map(Aksjonspunkt::getDefinisjon)
-                .anyMatch(AksjonspunktKoder.VENT_PGA_FOR_TIDLIG_SØKNAD::equals)).isTrue();
+                .anyMatch(AksjonspunktKoder.AUTO_VENT_PGA_FOR_TIDLIG_SØKNAD::equals)).isTrue();
     }
 
     @Test
@@ -564,31 +564,22 @@ class MorOgFarSammen extends FpsakTestBase {
         var fødselsdato = LocalDate.now().minusMonths(4).plusDays(2);
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
+
         sendInnEndringssøknadforMorMedEndretUttak(familie, saksnummerMor);
-
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
-
+        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
         var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
                 .bekreftHarGyldigGrunn(LocalDate.now());
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
-
         beslutter.hentFagsak(saksnummerMor);
-        beslutter.ventPåOgVelgRevurderingBehandling();
+        beslutter.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         assertThat(beslutter.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
-                .as("Konsekvenser for ytelsen")
-                .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
-
-        saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
                 .as("Konsekvenser for ytelsen")
                 .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
     }
@@ -609,7 +600,7 @@ class MorOgFarSammen extends FpsakTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
     }
 
     @Step("Behandle søknad for mor uregistrert")

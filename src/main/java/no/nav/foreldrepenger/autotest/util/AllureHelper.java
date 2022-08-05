@@ -1,10 +1,9 @@
 package no.nav.foreldrepenger.autotest.util;
 
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
+
 import java.util.List;
 import java.util.UUID;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.qameta.allure.Attachment;
 import io.qameta.allure.Step;
@@ -13,7 +12,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper;
 
 public final class AllureHelper {
 
@@ -91,15 +89,4 @@ public final class AllureHelper {
         return xml;
     }
 
-    private static ObjectMapper hentObjectMapper() {
-        return JacksonObjectMapper.getObjectMapper();
-    }
-
-    private static String toJson(Object object) {
-        try {
-            return hentObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

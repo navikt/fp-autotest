@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
@@ -22,34 +22,34 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ForeslåVedtak;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
-
+// TODO: FIX
 public class TilbakekrevingSaksbehandler extends Aktoer {
 
     public List<Behandling> behandlingList;
     public Behandling valgtBehandling;
     public Saksnummer saksnummer;
 
-    private final BehandlingerJerseyKlient behandlingerKlient;
-    private final OkonomiJerseyKlient okonomiKlient;
-    private final ProsesstaskJerseyKlient prosesstaskKlient;
-    private final VTPTilbakekrevingJerseyKlient vtpTilbakekrevingJerseyKlient;
+    private final BehandlingerKlient behandlingerKlient;
+    private final OkonomiKlient okonomiKlient;
+    private final ProsesstaskKlient prosesstaskKlient;
+    private final VTPTilbakekrevingKlient vtpTilbakekrevingJerseyKlient;
 
     public TilbakekrevingSaksbehandler(Rolle rolle) {
-        super(rolle);
-        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
-        okonomiKlient = new OkonomiJerseyKlient(cookieRequestFilter);
-        prosesstaskKlient = new ProsesstaskJerseyKlient(cookieRequestFilter);
-        vtpTilbakekrevingJerseyKlient = new VTPTilbakekrevingJerseyKlient();
+//        super(rolle); // TODO: FIX
+        behandlingerKlient = new BehandlingerKlient();
+        okonomiKlient = new OkonomiKlient();
+        prosesstaskKlient = new ProsesstaskKlient();
+        vtpTilbakekrevingJerseyKlient = new VTPTilbakekrevingKlient();
     }
 
     // Behandlinger actions
@@ -89,6 +89,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
     public void hentSisteBehandling(Saksnummer saksnummer) {
         this.saksnummer = saksnummer;
 
+        // TODO: Timeouts burde være så lav som mulig i pipeline, men veldig høy lokalt pga forskjellig typer PCer.
         Vent.til(() -> !behandlingerKlient.hentAlleTbkBehandlinger(saksnummer).isEmpty(),
                 30, "Behandling ble ikke opprettet");
         behandlingList = behandlingerKlient.hentAlleTbkBehandlinger(saksnummer);
@@ -231,6 +232,7 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
         });
     }
 
+    // TODO: Fiks dette
     private boolean verifiserProsesseringFerdig(Behandling behandling) {
         var status = behandlingerKlient.hentStatus(behandling.id);
 

@@ -24,7 +24,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.autotest.util.DockerUtils;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
@@ -116,7 +116,7 @@ class LoggTest {
     }
 
     private List<SensitivInformasjon> hentSensitiveStrengerFraVTP() {
-        var scenarioKlient = new TestscenarioJerseyKlient();
+        var scenarioKlient = new TestscenarioKlient();
         var testscenarioDtos = scenarioKlient.hentAlleScenarier();
         List<SensitivInformasjon> sensitiveStrenger = new ArrayList<>();
 

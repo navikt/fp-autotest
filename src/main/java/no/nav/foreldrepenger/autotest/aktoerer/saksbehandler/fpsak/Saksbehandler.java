@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak;
 
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.AUTO_KØET_BEHANDLING;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
@@ -10,10 +11,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import io.qameta.allure.Step;
@@ -27,11 +31,11 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
-import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
+import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdPost;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdVersjonDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.KlageVurderingResultatAksjonspunktMellomlagringDto;
@@ -45,6 +49,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManglendeOpplysningerVurderingDto;
@@ -54,14 +59,13 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.BehandlingMedUttaksperioderDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskJerseyKlient;
-import no.nav.foreldrepenger.autotest.util.AllureHelper;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
@@ -70,7 +74,9 @@ import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
-public class Saksbehandler extends Aktoer {
+public class Saksbehandler {
+
+    private final Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
 
     public Fagsak valgtFagsak;
     public Behandling valgtBehandling;
@@ -79,34 +85,50 @@ public class Saksbehandler extends Aktoer {
     private Lazy<List<HistorikkInnslag>> historikkInnslag;
     private Lazy<Behandling> annenPartBehandling;
 
-    private final FagsakJerseyKlient fagsakKlient;
-    private final BehandlingerJerseyKlient behandlingerKlient;
-    private final HistorikkJerseyKlient historikkKlient;
-    private final ProsesstaskJerseyKlient prosesstaskKlient;
-    private final RisikovurderingJerseyKlient risikovurderingKlient;
+    private final Aktoer.Rolle rolle;
+    private final FagsakKlient fagsakKlient;
+    private final BehandlingerKlient behandlingerKlient;
+    private final HistorikkKlient historikkKlient;
+    private final ProsesstaskKlient prosesstaskKlient;
+    private final RisikovurderingKlient risikovurderingKlient;
 
 
-    public Saksbehandler(Rolle rolle) {
-        super(rolle);
-        fagsakKlient = new FagsakJerseyKlient(cookieRequestFilter);
-        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
-        historikkKlient = new HistorikkJerseyKlient(cookieRequestFilter);
-        prosesstaskKlient = new ProsesstaskJerseyKlient(cookieRequestFilter);
-        risikovurderingKlient = new RisikovurderingJerseyKlient(cookieRequestFilter);
+    public Saksbehandler(Aktoer.Rolle rolle) {
+        this.rolle = rolle;
+        fagsakKlient = new FagsakKlient();
+        behandlingerKlient = new BehandlingerKlient();
+        historikkKlient = new HistorikkKlient();
+        prosesstaskKlient = new ProsesstaskKlient();
+        risikovurderingKlient = new RisikovurderingKlient();
     }
+
+    // TODO: Vurder felles klasser.. En for saksbehandler, beslutter, overstyrer.. (?)
+//    @Override
+//    public Aktoer.Rolle rolle() {
+//        return Aktoer.Rolle.SAKSBEHANDLER;
+//    }
 
     /*
      * Fagsak
      */
     public void hentFagsak(Saksnummer saksnummer) {
-        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer.value())); // Må være satt! Trenger unik referanse ved journalføring (?)
+        Aktoer.loggInn(rolle); // TODO: Greit? eller gjøre det på en annen måte?
+        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer.value()));// Må være satt! Trenger unik referanse ved journalføring (?)
+        hentFagsakUtenInnlogging(saksnummer);
+    }
+
+    private void hentFagsakUtenInnlogging(Saksnummer saksnummer) {
+        hentFagsakPåSaksnummer(saksnummer);
+        velgSisteBehandling();
+    }
+
+    private void hentFagsakPåSaksnummer(Saksnummer saksnummer) {
         valgtFagsak = fagsakKlient.hentFagsak(saksnummer);
         if (valgtFagsak == null) {
             throw new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer);
         }
-        behandlinger = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer());
-        velgSisteBehandling();
     }
+
 
     public void ventTilFagsakAvsluttet() {
         ventTilFagsakstatus(FagsakStatus.AVSLUTTET);
@@ -116,23 +138,20 @@ public class Saksbehandler extends Aktoer {
         ventTilFagsakstatus(FagsakStatus.LØPENDE);
     }
 
-    private void ventTilFagsakstatus(FagsakStatus status) {
+    private void ventTilFagsakstatus(FagsakStatus... status) {
         if (harFagsakstatus(status)) {
             return;
         }
         Vent.til(() -> {
-            refreshFagsak();
+            hentFagsakPåSaksnummer(valgtFagsak.saksnummer());
             return harFagsakstatus(status);
-        }, 10, "Fagsak har ikke status [" + status + "]");
+        }, 10, "Fagsak har ikke status " + Set.of(status));
     }
 
-    private boolean harFagsakstatus(FagsakStatus status) {
-        return valgtFagsak.status().equals(status);
+    private boolean harFagsakstatus(FagsakStatus... status) {
+        return Set.of(status).contains(valgtFagsak.status());
     }
 
-    private void refreshFagsak() {
-        hentFagsak(valgtFagsak.saksnummer());
-    }
 
     /*
      * Behandling
@@ -143,18 +162,23 @@ public class Saksbehandler extends Aktoer {
 
 
     public void velgSisteBehandling() {
-        var behandling = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer()).stream()
-                .max(Comparator.comparing(b -> b.opprettet))
+        behandlinger = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer());
+        var behandling = behandlinger.stream()
+                .max(Comparator.comparing(Behandling::getOpprettet))
                 .orElseThrow(() -> new RuntimeException("Fant ingen behandlinger for saksnummer: " + valgtFagsak.saksnummer()));
-        velgBehandling(behandling);
+        venterPåFerdigProssesseringOgOppdaterBehandling(behandling);
     }
 
     public void ventPåOgVelgFørstegangsbehandling() {
         ventPåOgVelgSisteBehandling(BehandlingType.FØRSTEGANGSSØKNAD);
     }
 
+    public void ventPåOgVelgFørstegangsbehandling(Integer antallBehandlingerSomMatcherType) {
+        ventPåOgVelgSisteBehandling(BehandlingType.FØRSTEGANGSSØKNAD, null, null, antallBehandlingerSomMatcherType);
+    }
+
     public void ventPåOgVelgÅpenFørstegangsbehandling() {
-        ventPåOgVelgSisteBehandling(BehandlingType.FØRSTEGANGSSØKNAD, true);
+        ventPåOgVelgSisteBehandling(BehandlingType.FØRSTEGANGSSØKNAD, null, true);
     }
 
     public void ventPåOgVelgKlageBehandling() {
@@ -166,7 +190,11 @@ public class Saksbehandler extends Aktoer {
     }
 
     public void ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType behandlingÅrsakType) {
-        ventPåOgVelgSisteBehandling(BehandlingType.REVURDERING, false, behandlingÅrsakType);
+        ventPåOgVelgSisteBehandling(BehandlingType.REVURDERING, behandlingÅrsakType, null, null);
+    }
+
+    public void ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType behandlingÅrsakType, Integer antallBehandlingerSomMatcherType) {
+        ventPåOgVelgSisteBehandling(BehandlingType.REVURDERING, behandlingÅrsakType, null, antallBehandlingerSomMatcherType);
     }
 
     public void ventPåOgVelgAnkeBehandling() {
@@ -174,7 +202,7 @@ public class Saksbehandler extends Aktoer {
     }
 
     public boolean harRevurderingBehandling() {
-        return harBehandling(BehandlingType.REVURDERING, null);
+        return harBehandling(BehandlingType.REVURDERING, null, null, null);
     }
 
     public void ventPåOgVelgDokumentInnsynBehandling() {
@@ -182,82 +210,105 @@ public class Saksbehandler extends Aktoer {
     }
 
     public void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype) {
-        ventPåOgVelgSisteBehandling(behandlingstype, false);
+        ventPåOgVelgSisteBehandling(behandlingstype, null);
+    }
+    public void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType) {
+        ventPåOgVelgSisteBehandling(behandlingstype, behandlingÅrsakType, null, null);
     }
 
+    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType, Boolean åpenStatus) {
+        ventPåOgVelgSisteBehandling(behandlingstype, behandlingÅrsakType, åpenStatus, null);
+    }
+
+
+    /**
+     * For å sikre at vi venter på riktig behandling og behandlingen er ferdig prossessert for konsistens venter vi på følgende:
+     *  1) Vi venter til det er opprettet en behandling ved forventet type, årsak, status og antall
+     *  2) Hvis vi venter på en REVURDERING, vent til behandlingen er tatt av kø (AP 7011).
+     *      - Hvis vi ikke gjør dette så kan punkt 3) returnere behandlingen mens den er på kø, uten at prosseseringen er ferdig
+     *  3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
+     */
     @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
-    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, boolean åpenStatus) {
-        ventPåOgVelgSisteBehandling(behandlingstype, åpenStatus, null);
-    }
+    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType,
+                                             Boolean åpenStatus, Integer antallBehandlingerSomMatcherType) {
+        LOG.info("Venter til fagsak {} har behandling av type {} {} ...", valgtFagsak.saksnummer().value(), behandlingstype,
+                Optional.ofNullable(behandlingÅrsakType).map(Objects::toString).orElse(""));
+        Objects.requireNonNull(valgtFagsak);
 
-    @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
-    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype,
-                                             boolean åpenStatus,
-                                             BehandlingÅrsakType behandlingÅrsakType) {
-        ventTilSakHarBehandling(behandlingstype, behandlingÅrsakType);
-        var behandling = behandlinger.stream()
-                .filter(b -> b.type.equals(behandlingstype))
-                .filter(b -> !åpenStatus || !b.status.equals(BehandlingStatus.AVSLUTTET))
-                .max(Comparator.comparing(b -> b.opprettet))
-                .orElseThrow();
-        velgBehandling(behandling);
-    }
-
-
-    private void ventTilSakHarBehandling(BehandlingType behandlingType, BehandlingÅrsakType behandlingÅrsakType) {
-        if (harBehandling(behandlingType, behandlingÅrsakType)) {
-            return;
-        }
-        Vent.til(() -> harBehandling(behandlingType, behandlingÅrsakType), 30, "Saken har ikke fått behandling av type: " + behandlingType);
-    }
-
-    private boolean harBehandling(BehandlingType behandlingType, BehandlingÅrsakType behandlingÅrsakType) {
-        refreshFagsak();
-        for (Behandling behandling : behandlinger) {
-            var harÅrsak = behandlingÅrsakType == null || behandling.getBehandlingÅrsaker()
-                    .stream()
-                    .anyMatch(bå -> Objects.equals(bå.getBehandlingArsakType(), behandlingÅrsakType));
-            if (behandling.type.equals(behandlingType) && harÅrsak) {
-                return true;
+        // 1) Vi venter til det er opprettet en behandling ved forventet type, årsak, status og antall
+        var behandling = Vent.på(() -> {
+            var matchedeBehandlinger = hentAlleBehandlingerAvTypen(behandlingstype, behandlingÅrsakType, åpenStatus);
+            if (matchedeBehandlinger == null || matchedeBehandlinger.isEmpty()) {
+                return null;
             }
+
+            if (antallBehandlingerSomMatcherType == null || antallBehandlingerSomMatcherType == matchedeBehandlinger.size()) {
+                return matchedeBehandlinger.stream()
+                        .max(Comparator.comparing(b -> b.opprettet))
+                        .orElseThrow();
+            }
+            return null; // Vi har matchede behandlinger, men ikke av forventet antall!
+            }, 30, "Saken har ikke fått behandling av type: " + behandlingstype);
+
+        // 2) Hvis vi venter på en REVURDERING og behandling er køet, men ikke gjennopptatt venter vi til AP 7011 er utført.
+        if (BehandlingType.REVURDERING.equals(behandlingstype) && erBehandlingKøetOgIkkeGjenopptatt(behandling.uuid)) {
+            Vent.til(() -> behandlingerKlient.getBehandlingAksjonspunkt(behandling.uuid).stream()
+                            .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equals(AUTO_KØET_BEHANDLING))
+                            .findFirst()
+                            .orElseThrow()
+                            .getStatus()
+                            .equals("UTFO")
+                    , 30, "Køet behandling er ikke gjenopptatt av fpsak!");
         }
-        return false;
+
+        // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
+        venterPåFerdigProssesseringOgOppdaterBehandling(behandling);
+        LOG.info("Behandling opprettet og oppdatert!");
     }
 
-    // TODO: Fjern eller inkluder
-//    private void ventTilSakHarBehandling(BehandlingType behandlingstype, int forventetAntall) {
-//        if (harBehandling(behandlingstype, forventetAntall)) {
-//            return;
-//        }
-//        Vent.til(() -> harBehandling(behandlingstype, forventetAntall), 30,
-//                "Saken har ikke fått behandling av type: " + behandlingstype);
-//    }
-//
-//    private boolean harBehandling(BehandlingType behandlingType, int forventetAntall) {
-//        refreshFagsak();
-//        var antallBehandlinger = behandlinger.stream()
-//                .filter(behandling -> behandlingType.equals(behandling.type))
-//                .count();
-//        return antallBehandlinger == forventetAntall;
-//    }
+    private boolean erBehandlingKøetOgIkkeGjenopptatt(UUID behandlingsuuid) {
+        return behandlingerKlient.getBehandlingAksjonspunkt(behandlingsuuid).stream()
+                .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equals(AUTO_KØET_BEHANDLING))
+                .anyMatch(Aksjonspunkt::erUbekreftet);
+    }
+
+    private Set<Behandling> hentAlleBehandlingerAvTypen(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType, Boolean åpenStatus) {
+        return hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer()).stream()
+                .filter(b -> b.type.equals(behandlingstype))
+                .filter(b -> behandlingÅrsakType == null || b.behandlingÅrsaker.stream()
+                        .map(BehandlingÅrsak::getBehandlingArsakType)
+                        .anyMatch(årsak -> årsak.equals(behandlingÅrsakType)))
+                .filter(b -> åpenStatus == null || !b.status.equals(BehandlingStatus.AVSLUTTET))
+                .collect(Collectors.toSet());
+    }
+
+
+    private boolean harBehandling(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType,
+                                  Boolean åpenStatus, Integer antallBehandlingerSomMatcherType) {
+        var matchedeBehandlinger = hentAlleBehandlingerAvTypen(behandlingstype, behandlingÅrsakType, åpenStatus);
+        if (matchedeBehandlinger == null || matchedeBehandlinger.isEmpty()) {
+            return false;
+        }
+        return antallBehandlingerSomMatcherType == null || antallBehandlingerSomMatcherType == matchedeBehandlinger.size();
+    }
 
     /*
      * Behandlingsstatus
      */
-    public void ventTilBehandlingsstatus(BehandlingStatus status) {
-        debugBehandlingsstatus(status, valgtBehandling.uuid);
-        if (harBehandlingsstatus(status)) {
+    public void ventTilBehandlingsstatus(BehandlingStatus forventetStatus) {
+        debugBehandlingsstatus(forventetStatus, valgtBehandling.uuid);
+        venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling.uuid);
+        var behandlingsstatus = getBehandlingsstatus();
+        if (forventetStatus.equals(behandlingsstatus)) {
             return;
         }
-        Vent.til(() -> {
-            refreshBehandling();
-            return harBehandlingsstatus(status);
-        }, 60, "Behandlingsstatus var ikke " + status + " men var " + getBehandlingsstatus() + " i sak: "
-                + valgtFagsak.saksnummer());
+        LOG.warn("Valgt Behandling {}", valgtBehandling);
+        throw new IllegalStateException(String.format("Behandlingsstatus for behandling %s på fagsak %s var ikke %s, men var %s",
+                valgtBehandling.uuid, valgtFagsak.saksnummer(), forventetStatus, behandlingsstatus));
     }
 
     private void refreshBehandling() {
-        velgBehandling(valgtBehandling);
+        venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling);
     }
 
     public boolean harBehandlingsstatus(BehandlingStatus status) {
@@ -268,23 +319,37 @@ public class Saksbehandler extends Aktoer {
         return valgtBehandling.status;
     }
 
+    private void venterPåFerdigProssesseringOgOppdaterBehandling(Behandling behandling) {
+        venterPåFerdigProssesseringOgOppdaterBehandling(behandling.uuid);
+    }
 
-    private void velgBehandling(Behandling behandling) {
+    private void venterPåFerdigProssesseringOgOppdaterBehandling(UUID behandlingsuuid) {
         // Sjekker om behandlingen prosesserer. Siden vi vil vente på at den er ferdig for å få den siste
         // behandling.versjon. Og å hindre at tester henter data fra behandlingen som kan endre seg ettersom
         // behandlingen ikke har stoppet opp
-        ventPåProsessering(behandling);
 
-        valgtBehandling = behandlingerKlient.getBehandling(behandling.uuid);
+        valgtBehandling = ventTilBehandlingErFerdigProsessertOgReturner(behandlingsuuid);
+
+        // TODO: fiks dette!
+        oppdaterLazyFelterForBehandling();
+
+        LOG.info("Behandling {} er prossessert og valgt!", valgtBehandling.uuid);
+    }
+
+    private void oppdaterLazyFelterForBehandling() {
         populateBehandling(valgtBehandling);
-
         this.historikkInnslag = new Lazy<>(() -> historikkKlient.hentHistorikk(valgtFagsak.saksnummer()));
         this.annenPartBehandling = new Lazy<>(() -> behandlingerKlient.annenPartBehandling(valgtFagsak.saksnummer()));
     }
 
-    private void ventPåProsessering(Behandling behandling) {
-        Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
-            var prosessTasker = hentProsesstaskerForBehandling(behandling);
+
+    /**
+     * Status endepunktet i fpsak fungerer med unntak når saken er satt på vent. Hvis vi sjekke status før behandlingen er
+     * gjenopptatt, vil den bare returnere behandlingen før prosesseringene er ferdig. Må legge inn noe spesiallokikk for håndtering av dette.
+     */
+    private Behandling ventTilBehandlingErFerdigProsessertOgReturner(UUID behandlinguuid) {
+        return Vent.på(() -> behandlingerKlient.hentBehandlingHvisTilgjenglig(behandlinguuid), 90, () -> {
+            var prosessTasker = hentProsesstaskerForBehandling(behandlinguuid);
             var prosessTaskList = new StringBuilder();
             for (ProsessTaskDataDto prosessTaskListItemDto : prosessTasker) {
                 prosessTaskList.append(prosessTaskListItemDto.getTaskType())
@@ -296,28 +361,9 @@ public class Saksbehandler extends Aktoer {
         });
     }
 
-    private boolean verifiserProsesseringFerdig(Behandling behandling) {
-        var status = behandlingerKlient.statusAsObject(behandling.uuid);
-
-        if ((status == null) || (status.getStatus() == null)) {
-            return true;
-        } else if (status.getStatus().getHttpStatus() == 418) {
-            if (status.getStatus() != AsyncPollingStatus.Status.DELAYED) {
-                AllureHelper.debugFritekst("Prosesstask feilet i behandlingsverifisering: " + status.getMessage());
-                throw new IllegalStateException("Prosesstask i vrang tilstand: " + status.getMessage());
-            } else {
-                return false;
-            }
-        } else if (status.isPending()) {
-            return false;
-        } else {
-            throw new RuntimeException("Status for behandling " + behandling.uuid + " feilet: " + status.getMessage());
-        }
-    }
-
-    private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(Behandling behandling) {
-        return prosesstaskKlient.prosesstaskMedKlarEllerVentStatus().stream()
-                .filter(p -> Objects.equals(behandling.uuid.toString(), p.getTaskParametre().getProperty("behandlingId")))
+    private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(UUID behandlingsuuid) {
+        return prosesstaskKlient.alleProsesstaskPåBehandling().stream()
+                .filter(p -> Objects.equals(behandlingsuuid.toString(), p.getTaskParametre().getProperty("behandlingId")))
                 .toList();
     }
 
@@ -353,33 +399,24 @@ public class Saksbehandler extends Aktoer {
     @Step("Setter behandling på vent")
     public void settBehandlingPåVent(LocalDate frist, Venteårsak årsak) {
         behandlingerKlient.settPaVent(new BehandlingPaVent(valgtBehandling, frist, årsak));
-        refreshBehandling();
+        ventTilHistorikkinnslag(HistorikkinnslagType.BEH_VENT);
     }
 
     @Step("Gjenopptar Behandling")
     public void gjenopptaBehandling() {
-        behandlingerKlient.gjenoppta(new BehandlingIdPost(valgtBehandling));
-        refreshBehandling();
+        valgtBehandling = behandlingerKlient.gjenoppta(new BehandlingIdVersjonDto(valgtBehandling));
+        venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling);
     }
 
     @Step("Henlegger behandling")
     public void henleggBehandling(BehandlingResultatType årsak) {
         behandlingerKlient.henlegg(new BehandlingHenlegg(valgtBehandling.uuid, valgtBehandling.versjon, årsak, "Henlagt"));
-        refreshBehandling();
+        ventTilHistorikkinnslag(HistorikkinnslagType.AVBRUTT_BEH);
     }
 
     /*
      * Opretter behandling på nåværende fagsak
      */
-    public void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak) {
-        opprettBehandling(behandlingstype, årsak, valgtFagsak);
-        hentFagsak(valgtFagsak.saksnummer());
-    }
-
-    @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {fagsak.saksnummer}")
-    private void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak, Fagsak fagsak) {
-        behandlingerKlient.putBehandlinger(new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak));
-    }
 
     public void opprettBehandlingRevurdering(BehandlingÅrsakType årsak) {
         opprettBehandling(BehandlingType.REVURDERING, årsak);
@@ -387,6 +424,23 @@ public class Saksbehandler extends Aktoer {
 
     public void oprettBehandlingInnsyn(BehandlingÅrsakType årsak) {
         opprettBehandling(BehandlingType.INNSYN, årsak);
+    }
+
+
+    public void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak) {
+        opprettBehandling(behandlingstype, årsak, valgtFagsak);
+    }
+
+    @Step("Oppretter {behandlingstype} på fagsak med saksnummer: {fagsak.saksnummer}")
+    private void opprettBehandling(BehandlingType behandlingstype, BehandlingÅrsakType årsak, Fagsak fagsak) {
+        if (behandlingstype.equals(BehandlingType.FØRSTEGANGSSØKNAD)) {
+            throw new UnsupportedOperationException("Ikke implementert enda. Gi beskjed om det er ønskelig.");
+        }
+
+        LOG.info("Oppretter behandling {} {} på fagsak {} ...", behandlingstype, årsak, fagsak.saksnummer().value());
+        valgtBehandling = behandlingerKlient.opprettBehandlingManuelt(new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak));
+        oppdaterLazyFelterForBehandling();
+        LOG.info("Behandling {}|{} opprettet", behandlingstype, årsak);
     }
 
     /*
@@ -403,7 +457,6 @@ public class Saksbehandler extends Aktoer {
                 .filter(p -> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
                 .toList();
     }
-
 
 
     /*
@@ -443,8 +496,8 @@ public class Saksbehandler extends Aktoer {
                 .collect(Collectors.toSet());
     }
 
-    /*
-     * Henter aksjonspunkt bekreftelse av gitt klasse
+    /**
+     * AKSJONSPUNKT
      */
 
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) {
@@ -468,7 +521,7 @@ public class Saksbehandler extends Aktoer {
                 .filter(ap -> ap.getDefinisjon().equals(kode))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + "." +
-                        "\nAksjonspunkt på behanlding: " + valgtBehandling.getAksjonspunkter().toString()));
+                        "\nAksjonspunkt på behandling: " + valgtBehandling.getAksjonspunkter().toString()));
     }
 
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
@@ -542,17 +595,35 @@ public class Saksbehandler extends Aktoer {
 
     public void fattVedtakOgVentTilAvsluttetBehandling(FatterVedtakBekreftelse bekreftelse) {
         bekreftAksjonspunkt(bekreftelse);
-        ventTilAvsluttetBehandling();
+        ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
     }
 
     public void fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling() {
         bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
-        ventTilAvsluttetBehandling();
+        ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
     }
 
     public void ventTilAvsluttetBehandling() {
+        LOG.info("Venter til behandling er avsluttet ...");
+
+        /**
+         * Hvis vi har en BEH_VENT på behandlingen OG saken IKKE er GJENOPPRETTET da er vi enten i
+         * 1) En feiltilstand og behandlingen kan ikke avsluttes
+         * 2) Behandlingen er ikke tatt av vent enda og vi venter på at behandlingen GJENOPPRETTET
+         *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
+         */
+        if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_VENT))) {
+            Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_GJEN))
+                    ,10, "Behandlingen er på vent og er ikke blitt gjenopptatt!");
+        }
+
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
         LOG.info("Alle manuelle aksjonspunkt er løst og behandlingen har status AVSLUTTET");
+    }
+
+    public void ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet() {
+        ventTilAvsluttetBehandling();
+        ventTilFagsakstatus(FagsakStatus.LØPENDE, FagsakStatus.AVSLUTTET);
     }
 
 
@@ -605,11 +676,18 @@ public class Saksbehandler extends Aktoer {
     }
 
     public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkinnslagType type) {
-        ventTilHistorikkinnslag(type);
-        return hentHistorikkinnslagPåBehandling().stream()
+        return hentHistorikkinnslagAvType(type, valgtBehandling.uuid);
+    }
+
+    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkinnslagType type, UUID behandlingsId) {
+        venterPåFerdigProssesseringOgOppdaterBehandling(behandlingsId);
+        if (List.of(HistorikkinnslagType.VEDLEGG_MOTTATT, HistorikkinnslagType.REVURD_OPPR).contains(type)) {
+            behandlingsId = null;
+        }
+        return hentHistorikkinnslagPåBehandling(behandlingsId).stream()
                 .filter(innslag -> type.equals(innslag.type()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Finner ikke historikkinnslag av typen " + type.name()));
+                .orElse(null);
     }
 
     public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
@@ -768,7 +846,7 @@ public class Saksbehandler extends Aktoer {
         refreshBehandling();
     }
 
-    public void åpneForNyArbeidsforholdVurdering(BehandlingIdPost behandlingIdDto) {
+    public void åpneForNyArbeidsforholdVurdering(BehandlingIdDto behandlingIdDto) {
         behandlingerKlient.behandlingArbeidInntektsmeldingNyVurdering(behandlingIdDto);
         refreshBehandling();
     }

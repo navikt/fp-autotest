@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.util.testscenario;
+package no.nav.foreldrepenger.autotest.klienter.vtp.testscenario;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,10 +17,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper;
 
-
-public class TestscenarioHenter {
+class TestscenarioHenter {
 
     private static final String PATH_TIL_SCENARIO = "scenarios/";
     private static final String PERSONOPPLYSNING_JSON_FIL_NAVN = "personopplysninger.json";
@@ -29,7 +27,7 @@ public class TestscenarioHenter {
     private static final String ORGANISASJON_JSON_FIL_NAVN = "organisasjon.json";
     private static final String VARS_JSON_FIL_NAVN = "vars.json";
 
-    private static final ObjectMapper MAPPER = JacksonObjectMapper.getObjectMapper();
+    private static final ObjectMapper MAPPER = TestscenarioObjectMapper.DEFAULT_MAPPER_VTP;
 
     private final Map<String, Object> scenarioObjects = new ConcurrentHashMap<>();
 

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.internal.klienter.fpsak.historikk;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Hendelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkAktør;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslagDokumentLinkDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
@@ -27,7 +29,7 @@ class HistorikkDtoSeraliseringDeserialiseringTest extends SerializationTestBase 
 
     @Test
     void HistorikkInnslagTst() {
-        test(new HistorikkInnslag(UUID.randomUUID(), HistorikkinnslagType.BREV_SENT, "SØKER", "M",
+        test(new HistorikkInnslag(UUID.randomUUID(), HistorikkinnslagType.BREV_SENT, HistorikkAktør.SØKER, "M", LocalDateTime.now(),
                 List.of(new HistorikkInnslagDokumentLinkDto("Test", URI.create("http://fpsak/fpsak"), "1234567", "122345", false))));
     }
 
