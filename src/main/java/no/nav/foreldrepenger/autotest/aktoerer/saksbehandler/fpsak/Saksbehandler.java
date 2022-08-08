@@ -181,7 +181,7 @@ public class Saksbehandler extends Aktoer {
         ventPåOgVelgSisteBehandling(BehandlingType.INNSYN);
     }
 
-    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype) {
+    public void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype) {
         ventPåOgVelgSisteBehandling(behandlingstype, false);
     }
 
