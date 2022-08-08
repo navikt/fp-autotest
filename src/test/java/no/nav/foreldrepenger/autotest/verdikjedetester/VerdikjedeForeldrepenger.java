@@ -36,7 +36,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -55,6 +54,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperiodeType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
@@ -1816,7 +1816,6 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
     }
 
     @Test
-    @Disabled
     @DisplayName("Koblet sak. Far utsetter oppstart rundt fødsel, søker termin og med fødselshendelse")
     @Description("Far søker og får innvilget før termin. Fødselshendelse med fødsel etter termin. Far utsetter oppstart for å matche"
             + "fødselsdato")
@@ -1874,6 +1873,9 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
 
+        saksbehandler.ventTilAvsluttetBehandling();
+
+        saksbehandler.ventPåOgVelgSisteBehandling(BehandlingType.FØRSTEGANGSSØKNAD); //Ny førstegangs
         saksbehandler.ventTilAvsluttetBehandling();
 
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
