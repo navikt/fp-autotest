@@ -23,7 +23,7 @@
         <fp-kontrakter.version>6.1.21</fp-kontrakter.version>
         <selvbetjening-felles.version>0.8.14</selvbetjening-felles.version>
 
-        <allure.version>2.18.1</allure.version>
+        <allure.version>2.19.0</allure.version>
         <allure.maven.version>2.11.2</allure.maven.version>
         <assertj.version>3.23.1</assertj.version>
         <aspectj.version>1.9.9.1</aspectj.version>
