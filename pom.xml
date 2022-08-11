@@ -18,7 +18,7 @@
 
         <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.3.3</dokumentgenerator.version>
-        <felles.versjon>4.1.30</felles.versjon>
+        <felles.versjon>4.1.33</felles.versjon>
         <fp-prosesstask.version>3.1.8</fp-prosesstask.version>
         <fp-kontrakter.version>6.1.21</fp-kontrakter.version>
         <selvbetjening-felles.version>0.8.14</selvbetjening-felles.version>
