@@ -747,7 +747,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var familie = new Familie("562");
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
-        var fødselsdato = familie.barn().fødselsdato();
+        var fødselsdato = Virkedager.helgejustertTilMandag(familie.barn().fødselsdato());
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fpStartdatoFarOrdinær = fødselsdato.plusWeeks(23);
         var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(familie,
@@ -1819,7 +1819,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
     @DisplayName("Koblet sak. Far utsetter oppstart rundt fødsel, søker termin og med fødselshendelse")
     @Description("Far søker og får innvilget før termin. Fødselshendelse med fødsel etter termin. Far utsetter oppstart for å matche"
             + "fødselsdato")
-    void farUtsetterOppstartRundtFødselSøkerTermin() {
+    void farUtsetterOppstartRundtFødselSøkerTermin() throws InterruptedException {
         var familie = new Familie("83", fordel);
         var termindato = Virkedager.helgejustertTilMandag(LocalDate.now().minusWeeks(2));
 
@@ -1847,6 +1847,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         // Fødselshendelse
+        Thread.sleep(200);
         var fødselsdato = termindato.plusWeeks(1);
         var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, mor.fødselsnummer().value(), far.fødselsnummer().value(), null,
                 fødselsdato);
