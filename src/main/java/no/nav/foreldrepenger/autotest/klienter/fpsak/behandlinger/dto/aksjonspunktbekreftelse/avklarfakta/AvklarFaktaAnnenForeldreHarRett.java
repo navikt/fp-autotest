@@ -7,8 +7,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 public class AvklarFaktaAnnenForeldreHarRett extends AksjonspunktBekreftelse {
 
     protected boolean annenforelderHarRett;
-
-    private Boolean annenforelderMottarUføretrygd;
+    protected Boolean annenforelderMottarUføretrygd;
+    protected Boolean annenforelderMottarStønadEØS;
 
     public AvklarFaktaAnnenForeldreHarRett() {
         super();
@@ -21,6 +21,11 @@ public class AvklarFaktaAnnenForeldreHarRett extends AksjonspunktBekreftelse {
 
     public AvklarFaktaAnnenForeldreHarRett setAnnenforelderMottarUføretrygd(Boolean annenforelderMottarUføretrygd) {
         this.annenforelderMottarUføretrygd = annenforelderMottarUføretrygd;
+        return this;
+    }
+
+    public AvklarFaktaAnnenForeldreHarRett setAnnenforelderMottarStønadEØS(boolean annenforelderMottarStønadEØS) {
+        this.annenforelderMottarStønadEØS = annenforelderMottarStønadEØS;
         return this;
     }
 }
