@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.saf;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.getRequestBuilder;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.send;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.sendOgHentByteArray;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.sendOgHentByteArray;
 
 import java.net.http.HttpRequest;
 import java.util.Map;

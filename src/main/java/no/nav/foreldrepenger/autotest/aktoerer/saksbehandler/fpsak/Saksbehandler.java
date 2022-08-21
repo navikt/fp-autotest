@@ -142,6 +142,7 @@ public class Saksbehandler {
         if (harFagsakstatus(status)) {
             return;
         }
+        // TODO: Timeouts burde være så lav som mulig i pipeline, men veldig høy lokalt pga forskjellig typer PCer.
         Vent.til(() -> {
             hentFagsakPåSaksnummer(valgtFagsak.saksnummer());
             return harFagsakstatus(status);
@@ -302,7 +303,6 @@ public class Saksbehandler {
         if (forventetStatus.equals(behandlingsstatus)) {
             return;
         }
-        LOG.warn("Valgt Behandling {}", valgtBehandling);
         throw new IllegalStateException(String.format("Behandlingsstatus for behandling %s på fagsak %s var ikke %s, men var %s",
                 valgtBehandling.uuid, valgtFagsak.saksnummer(), forventetStatus, behandlingsstatus));
     }

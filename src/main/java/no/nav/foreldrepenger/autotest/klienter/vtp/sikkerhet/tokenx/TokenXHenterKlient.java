@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx;
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestBodyPublishers.buildFormDataFromMap;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.send;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
 import java.util.Map;

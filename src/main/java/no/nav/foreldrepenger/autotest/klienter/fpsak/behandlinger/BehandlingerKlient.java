@@ -4,9 +4,9 @@ import static jakarta.ws.rs.core.HttpHeaders.LOCATION;
 import static jakarta.ws.rs.core.Response.Status.ACCEPTED;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPSAK_BASE;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.getRequestBuilder;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.send;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.sendStringRequest;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.sendStringRequest;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus.Status.CANCELLED;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus.Status.HALTED;
 

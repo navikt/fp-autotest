@@ -27,18 +27,6 @@ public final class LoggFormater {
         var fullName = testResult.getFullName();
         var split = Arrays.asList(fullName.split("\\."));
         return split.get(split.size() - 1);
-//
-//        var size = split.size();
-//        var testnavn = new StringBuilder();
-//        for (var i = 0; i < size - 2; i++) {
-//            testnavn.append(split.get(i).charAt(0));
-//            testnavn.append(".");
-//        }
-//        testnavn.append(split.get(size - 2));
-//        testnavn.append(".");
-//        testnavn.append(split.get(size - 1));
-//
-//        return testnavn.toString();
     }
 
     public static void leggTilCallIdforSaksnummerForLogging(Fødselsnummer fnr, Saksnummer saksnummer) {

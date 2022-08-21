@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.getRequestBuilder;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.send;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
 

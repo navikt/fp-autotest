@@ -12,21 +12,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.vedtak.exception.TekniskException;
 
 
-public class JacksonBodyHandlers {
+public final class JacksonBodyHandlers {
     private static final ObjectMapper fellesObjectmapper = MAPPER
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
+    private JacksonBodyHandlers() {
+    }
 
     public static ObjectMapper getObjectmapper() {
         return fellesObjectmapper;
     }
 
     public static <T> T fromJson(String json, Class<T> clazz) {
-        try {
-            return fellesObjectmapper.readValue(json, clazz);
-        } catch (IOException e) {
-            throw new TekniskException("FP-713328", "Fikk IO exception ved deserialisering av JSON", e);
-        }
+        return fromJson(json, clazz, fellesObjectmapper);
     }
 
     public static <T> T fromJson(String json, Class<T> clazz, ObjectMapper mapper) {

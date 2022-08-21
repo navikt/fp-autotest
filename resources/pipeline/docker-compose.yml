@@ -328,7 +328,7 @@ services:
     image: $FPTILBAKE_IMAGE
     container_name: fptilbake
     restart: on-failure
-    mem_limit: 512mb
+    mem_limit: 768mb
     shm_size: 256mb
     env_file:
       - "fptilbake_datasource.list"

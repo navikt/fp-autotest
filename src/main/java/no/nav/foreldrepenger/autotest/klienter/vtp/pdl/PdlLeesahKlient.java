@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.pdl;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.getRequestBuilder;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.send;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.tilJsonOgPubliserIAllureRapport;
 
 import java.net.http.HttpRequest;

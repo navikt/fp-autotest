@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam;
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestBodyPublishers.buildFormDataFromMap;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.send;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.HttpCookie;
 import java.net.http.HttpRequest;

@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.getRequestBuilder;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestSender.send;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
+import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
 import java.util.List;
