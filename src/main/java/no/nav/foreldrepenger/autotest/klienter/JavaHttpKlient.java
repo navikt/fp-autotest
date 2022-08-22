@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
+import static jakarta.ws.rs.core.HttpHeaders.ACCEPT;
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
 import static no.nav.vedtak.log.mdc.MDCOperations.HTTP_HEADER_ALT_CALL_ID;
@@ -18,7 +20,6 @@ import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.apache.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -137,8 +138,8 @@ public class JavaHttpKlient {
         var consumerID = MDC.get(MDC_CONSUMER_ID);
         var callid = consumerID != null ? consumerID : generateCallId();
         return HttpRequest.newBuilder()
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(ACCEPT, MediaType.APPLICATION_JSON)
+                .header(CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HTTP_HEADER_ALT_CALL_ID, callid)
                 .header(NAV_CALL_ID, callid)
                 .timeout(Duration.ofSeconds(20));
