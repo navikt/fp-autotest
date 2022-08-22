@@ -96,7 +96,6 @@
                 <artifactId>jakarta.ws.rs-api</artifactId>
                 <version>${jakarta.vs.rs.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -150,7 +149,7 @@
             <artifactId>inntektsmelding</artifactId>
         </dependency>
 
-        <!-- Http klient, jackson og tilhørende avhengigheter -->
+        <!-- Eksterne avhengigheter (Http klient, jackson og tilhørende avhengigheter) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
@@ -184,8 +183,7 @@
             <artifactId>jandex</artifactId>
         </dependency>
 
-
-        <!-- Test avhengigheter (brukes også i scr) -->
+        <!-- Testavhengigheter (brukes også i scr) -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
