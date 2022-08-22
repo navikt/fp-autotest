@@ -28,7 +28,7 @@
         <allure.maven.version>2.11.2</allure.maven.version>
         <assertj.version>3.23.1</assertj.version>
         <aspectj.version>1.9.9.1</aspectj.version>
-        <jersey.version>3.0.5</jersey.version>
+        <jersey.version>3.0.6</jersey.version>
         <apache-commons.version>3.12.0</apache-commons.version>
         <jackson.version>2.13.3</jackson.version>
         <jboss-jandex.version>2.4.3.Final</jboss-jandex.version>
