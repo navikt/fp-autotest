@@ -114,7 +114,7 @@ jobs:
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fpsak/history target/allure-results
-          mvn allure:report --batch-mode --file pom.xml
+          mvn allure:report --batch-mode --settings .github/.m2/settings.xml
           cp -a target/allure-report/. gh-pages/fpsak/
 
       - name: Deploy testrapport
@@ -463,7 +463,7 @@ jobs:
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/verdikjede/history target/allure-results
-          mvn allure:report --batch-mode --file pom.xml
+          mvn allure:report --batch-mode --settings .github/.m2/settings.xml
           cp -a target/allure-report/. gh-pages/verdikjede/
 
       - name: Deploy testrapport
