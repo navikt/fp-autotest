@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -17,7 +19,6 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
@@ -300,7 +301,6 @@ class SammenhengendeUttak extends FpsakTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
                 .medMottatdato(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
-
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -318,14 +318,14 @@ class SammenhengendeUttak extends FpsakTestBase {
                 .medMottattDato(utsettelseStart.minusWeeks(3));
         mor.søk(søknadE.build());
 
-        saksbehandler.velgSisteBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
                 .isEmpty();
 
         // Manuell behandling for å få endringssdato satt til første uttaksdag
-        saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
+        saksbehandler.opprettBehandlingRevurdering(RE_OPPLYSNINGER_OM_FORDELING);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
                 .isEmpty();

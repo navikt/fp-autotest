@@ -197,7 +197,6 @@ public class Fordel extends DokumentVenter {
         if (saksnummer == null) {
             var opprettSak = new OpprettSakDto(journalpostId, behandlingstemaOffisiellKode, aktørId.value());
             saksnummer = fordelKlient.fagsakOpprett(opprettSak);
-            LOG.info("Oppretter sak med saksnummer {}", saksnummer.value());
         }
 
         journalpostKlient.knyttSakTilJournalpost(journalpostId, saksnummer);
