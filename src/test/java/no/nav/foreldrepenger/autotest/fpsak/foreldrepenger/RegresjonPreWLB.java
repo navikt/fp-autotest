@@ -99,7 +99,6 @@ class RegresjonPreWLB extends FpsakTestBase {
         var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFørstegangsbehandling);
-        saksbehandler.ventTilAvsluttetBehandling();
 
         // Verifiseringer førstegangsbehandling
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -199,7 +198,6 @@ class RegresjonPreWLB extends FpsakTestBase {
         var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                 .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFørstegangsbehandling);
-        saksbehandler.ventTilAvsluttetBehandling();
 
         // Verifiseringer førstegangsbehandling
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())

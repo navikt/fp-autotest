@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.ws.rs.core.HttpHeaders;
-import no.nav.foreldrepenger.autotest.util.rest.JacksonObjectMapper;
+import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -29,7 +29,7 @@ class SakTjenesteTest {
                 .uri(URI.create(vtp))
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .build();
-        var samlResponse = JacksonObjectMapper.DEFAULT_MAPPER_VTP.readValue(
+        var samlResponse = JacksonBodyHandlers.getObjectmapper().readValue(
                 client.send(samlTokenRequest, HttpResponse.BodyHandlers.ofString()).body(), SAMLResponse.class);
 
         var authHeader = samlResponse.token_type() + " " + samlResponse.access_token();

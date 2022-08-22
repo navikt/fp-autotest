@@ -147,7 +147,7 @@ class Klage extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
 
         return saksnummer;

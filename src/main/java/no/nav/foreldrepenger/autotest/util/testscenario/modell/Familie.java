@@ -1,9 +1,8 @@
 package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.SøknadMottak;
-import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
@@ -11,7 +10,7 @@ import no.nav.foreldrepenger.vtp.testmodell.personopplysning.BrukerModell;
 
 public class Familie {
 
-    private static final TestscenarioJerseyKlient TESTSCENARIO_JERSEY_KLIENT = new TestscenarioJerseyKlient();
+    private static final TestscenarioKlient TESTSCENARIO_JERSEY_KLIENT = new TestscenarioKlient();
 
     private final TestscenarioDto scenario;
     private final Innsender innsender;
@@ -21,7 +20,7 @@ public class Familie {
     private Mor medmor;
 
     public Familie(String scenarioId) {
-        this(scenarioId, new SøknadMottak(Aktoer.Rolle.SAKSBEHANDLER));
+        this(scenarioId, new SøknadMottak());
     }
 
     public Familie(String scenarioId, Innsender innsender) {

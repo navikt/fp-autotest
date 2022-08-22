@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BehandlingHenlegg extends BehandlingIdPost {
+public class BehandlingHenlegg extends BehandlingIdVersjonDto {
 
     protected String årsakKode;
     protected String begrunnelse;

@@ -10,7 +10,4 @@ public class BehandlingIdBasicDto {
         this.behandlingId = behandlingId;
     }
 
-    public BehandlingIdBasicDto(UUID uuid) {
-        this.uuid = uuid;
-    }
 }

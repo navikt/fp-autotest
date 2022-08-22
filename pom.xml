@@ -15,6 +15,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
         <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.3.4</dokumentgenerator.version>
@@ -27,16 +28,24 @@
         <allure.maven.version>2.11.2</allure.maven.version>
         <assertj.version>3.23.1</assertj.version>
         <aspectj.version>1.9.9.1</aspectj.version>
+        <jersey.version>3.0.5</jersey.version>
         <apache-commons.version>3.12.0</apache-commons.version>
         <jackson.version>2.13.3</jackson.version>
-        <jboss-jandex.version>2.4.2.Final</jboss-jandex.version>
-        <jersey.version>3.0.5</jersey.version>
-        <junit.version>5.8.2</junit.version>
+        <jboss-jandex.version>2.4.3.Final</jboss-jandex.version>
+        <junit.version>5.9.0</junit.version>
         <mockito.version>4.6.1</mockito.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- TODO: legg til pom her for consistens på tvers av avhengigheter -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>net.minidev</groupId>
                 <artifactId>json-smart</artifactId>
@@ -117,12 +126,10 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -193,7 +200,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <!-- Misc -->
         <dependency>
             <groupId>org.jboss</groupId>
@@ -209,24 +215,25 @@
 
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M7</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M7</version>
                 <configuration>
                     <argLine>
+                        -Duser.timezone="Europe/Oslo"
                         -Dfile.encoding=UTF-8
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
-                    <properties>
-                        <configurationParameters>
-                            junit.jupiter.execution.parallel.enabled = true
-                            junit.jupiter.execution.parallel.mode.default = concurrent
-                            junit.jupiter.execution.parallel.config.strategy = custom
-                            junit.jupiter.execution.parallel.config.custom.class = no.nav.foreldrepenger.autotest.util.jupiter.CutstomExecutionStrategy
-                        </configurationParameters>
-                    </properties>
                     <includes>
                         <include>${testPackage}</include>
                     </includes>
@@ -263,9 +270,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
@@ -285,6 +289,22 @@
             <properties>
                 <testsTags>fptilbake, tilbakekreving</testsTags>
                 <testPackage>no.nav.foreldrepenger.autotest.fptilbake.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>foreldrepenger</id>
+            <properties>
+                <includeTestsTags>foreldrepenger</includeTestsTags>
+                <excludeTestsTags>test, pending</excludeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>engangsstonad</id>
+            <properties>
+                <includeTestsTags>engangsstonad</includeTestsTags>
+                <excludeTestsTags>test, pending</excludeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
             </properties>
         </profile>
         <profile>

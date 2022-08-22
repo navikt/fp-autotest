@@ -1,13 +1,24 @@
 package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake;
 
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType.REVURDERING_TILBAKEKREVING;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerJerseyKlient;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
@@ -22,47 +33,50 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ForeslåVedtak;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiJerseyKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskJerseyKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingJerseyKlient;
-import no.nav.foreldrepenger.autotest.util.AllureHelper;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 
-public class TilbakekrevingSaksbehandler extends Aktoer {
+// TODO: FIX
+public class TilbakekrevingSaksbehandler {
+
+    private final Logger LOG = LoggerFactory.getLogger(TilbakekrevingSaksbehandler.class);
 
     public List<Behandling> behandlingList;
     public Behandling valgtBehandling;
     public Saksnummer saksnummer;
 
-    private final BehandlingerJerseyKlient behandlingerKlient;
-    private final OkonomiJerseyKlient okonomiKlient;
-    private final ProsesstaskJerseyKlient prosesstaskKlient;
-    private final VTPTilbakekrevingJerseyKlient vtpTilbakekrevingJerseyKlient;
+    private final Aktoer.Rolle rolle;
+    private final BehandlingerKlient behandlingerKlient;
+    private final OkonomiKlient okonomiKlient;
+    private final ProsesstaskKlient prosesstaskKlient;
+    private final VTPTilbakekrevingKlient vtpTilbakekrevingJerseyKlient;
 
-    public TilbakekrevingSaksbehandler(Rolle rolle) {
-        super(rolle);
-        behandlingerKlient = new BehandlingerJerseyKlient(cookieRequestFilter);
-        okonomiKlient = new OkonomiJerseyKlient(cookieRequestFilter);
-        prosesstaskKlient = new ProsesstaskJerseyKlient(cookieRequestFilter);
-        vtpTilbakekrevingJerseyKlient = new VTPTilbakekrevingJerseyKlient();
+    public TilbakekrevingSaksbehandler(Aktoer.Rolle rolle) {
+        this.rolle = rolle;
+        behandlingerKlient = new BehandlingerKlient();
+        okonomiKlient = new OkonomiKlient();
+        prosesstaskKlient = new ProsesstaskKlient();
+        vtpTilbakekrevingJerseyKlient = new VTPTilbakekrevingKlient();
     }
 
     // Behandlinger actions
     // Oppretter ny tilbakekreving tilsvarende Manuell Opprettelse via
     // behandlingsmenyen.
     public void opprettTilbakekreving(Saksnummer saksnummer, UUID uuid, String ytelseType) {
-        behandlingerKlient.putTilbakekreving(new BehandlingOpprett(saksnummer, uuid, "BT-007", ytelseType));
+        valgtBehandling = behandlingerKlient.opprettTilbakekrevingManuelt(new BehandlingOpprett(saksnummer, uuid, "BT-007", ytelseType));
     }
 
     public void opprettTilbakekrevingRevurdering(Saksnummer saksnummer, UUID uuid, int behandlingId, String ytelseType,
             RevurderingArsak behandlingArsakType) {
-        behandlingerKlient.putTilbakekreving(new BehandlingOpprettRevurdering(saksnummer, behandlingId, uuid,
-                "BT-009", ytelseType, behandlingArsakType));
+        valgtBehandling = behandlingerKlient.opprettTilbakekrevingManuelt(new BehandlingOpprettRevurdering(saksnummer, behandlingId, uuid,
+                REVURDERING_TILBAKEKREVING.getKode(), ytelseType, behandlingArsakType));
     }
 
     // Brukerrespons action
@@ -75,24 +89,60 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
 
     // Verge actions
     public void leggTilVerge() {
-        behandlingerKlient.addVerge(new BehandlingIdBasicDto(valgtBehandling.id));
-        ventPåProsessering(valgtBehandling);
+        valgtBehandling = behandlingerKlient.addVerge(new BehandlingIdBasicDto(valgtBehandling.id));
     }
 
     public void fjernVerge() {
-        behandlingerKlient.removeVerge(new BehandlingIdBasicDto(valgtBehandling.id));
-        ventPåProsessering(valgtBehandling);
-        refreshBehandling();
+        valgtBehandling = behandlingerKlient.removeVerge(new BehandlingIdBasicDto(valgtBehandling.id));
     }
 
     // Henter siste behandlingen fra fptilbake på gitt saksnummer.
     public void hentSisteBehandling(Saksnummer saksnummer) {
         this.saksnummer = saksnummer;
+        ventPåOgVelgSisteBehandling(BehandlingType.TILBAKEKREVING);
+    }
 
-        Vent.til(() -> !behandlingerKlient.hentAlleTbkBehandlinger(saksnummer).isEmpty(),
-                30, "Behandling ble ikke opprettet");
-        behandlingList = behandlingerKlient.hentAlleTbkBehandlinger(saksnummer);
-        valgtBehandling = behandlingList.get(behandlingList.size() - 1);
+    public void hentSisteBehandling(Saksnummer saksnummer, BehandlingType behandlingstype) {
+        Aktoer.loggInn(rolle); // TODO: Greit? eller gjøre det på en annen måte?
+        this.saksnummer = saksnummer; // TODO.. fiks dette her
+        ventPåOgVelgSisteBehandling(behandlingstype);
+    }
+
+    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype) {
+        ventPåOgVelgSisteBehandling(behandlingstype, null, null);
+    }
+
+    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, Integer antallBehandlingerSomMatcherType) {
+        ventPåOgVelgSisteBehandling(behandlingstype, null, antallBehandlingerSomMatcherType);
+    }
+
+    @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
+    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType,
+                                             Integer antallBehandlingerSomMatcherType) {
+        // 1) Vi venter til det er opprettet en behandling ved forventet type, årsak, status og antall
+        var behandling = Vent.på(() -> {
+            var matchedeBehandlinger = hentAlleBehandlingerAvTypen(behandlingstype, behandlingÅrsakType);
+            if (matchedeBehandlinger == null || matchedeBehandlinger.isEmpty()) {
+                return null;
+            }
+
+            if (antallBehandlingerSomMatcherType == null || antallBehandlingerSomMatcherType == matchedeBehandlinger.size()) {
+                return matchedeBehandlinger.stream()
+                        .max(Comparator.comparing(b -> b.opprettet))
+                        .orElseThrow();
+            }
+            return null; // Vi har matchede behandlinger, men ikke av forventet antall!
+        }, 30, "Saken har ikke fått behandling av type: " + behandlingstype);
+
+        // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
+        venterPåFerdigProssesseringOgOppdaterBehandling(behandling.uuid);
+        LOG.info("Behandling opprettet og oppdatert!");
+    }
+
+    private Set<Behandling> hentAlleBehandlingerAvTypen(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType) {
+        return behandlingerKlient.hentAlleTbkBehandlinger(saksnummer).stream()
+                .filter(b -> b.type.equals(behandlingstype))
+                .collect(Collectors.toSet());
     }
 
     public boolean harBehandlingsstatus(String status) {
@@ -197,65 +247,49 @@ public class TilbakekrevingSaksbehandler extends Aktoer {
             return;
         }
         Vent.til(() -> {
-            ventPåProsessering(valgtBehandling);
-            refreshBehandling();
+            venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling.uuid);
             return harAktivtAksjonspunkt(aksjonspunktKode);
         }, 60, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
     }
 
-    public void ventTilBehandlingsstatus(String status) {
-        if (harBehandlingsstatus(status)) {
+    public void ventTilBehandlingsstatus(BehandlingStatus forventetStatus) {
+        venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling.uuid);
+        var behandlingsstatus = valgtBehandling.status;
+        if (forventetStatus.equals(behandlingsstatus)) {
             return;
         }
-        Vent.til(() -> {
-            ventPåProsessering(valgtBehandling);
-            refreshBehandling();
-            return harBehandlingsstatus(status);
-        }, 30, "Saken har ikke fått behanldingsstatus " + status);
+        throw new IllegalStateException(String.format("Behandlingsstatus for behandling %s var ikke %s, men var %s",
+                valgtBehandling.uuid, forventetStatus, behandlingsstatus));
     }
 
     public void ventTilAvsluttetBehandling() {
-        ventTilBehandlingsstatus("AVSLU");
+        ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
     }
 
-    private void ventPåProsessering(Behandling behandling) {
-        Vent.til(() -> verifiserProsesseringFerdig(behandling), 90, () -> {
+    private void venterPåFerdigProssesseringOgOppdaterBehandling(UUID behandlingsuuid) {
+        valgtBehandling = ventTilBehandlingErFerdigProsessertOgReturner(behandlingsuuid);
+    }
+
+    /**
+     * Status endepunktet i fpsak fungerer med unntak når saken er satt på vent. Hvis vi sjekke status før behandlingen er
+     * gjenopptatt, vil den bare returnere behandlingen før prosesseringene er ferdig. Må legge inn noe spesiallokikk for håndtering av dette.
+     */
+    private Behandling ventTilBehandlingErFerdigProsessertOgReturner(UUID behandlinguuid) {
+        return Vent.på(() -> behandlingerKlient.hentBehandlingHvisTilgjenglig(behandlinguuid), 90, () -> {
+            var prosessTasker = hentProsesstaskerForBehandling(behandlinguuid);
             var prosessTaskList = new StringBuilder();
-            for (var prosessTaskListItemDto : hentProsesstaskerForBehandling(behandling)) {
-                prosessTaskList
-                        .append(prosessTaskListItemDto.getTaskType())
+            for (ProsessTaskDataDto prosessTaskListItemDto : prosessTasker) {
+                prosessTaskList.append(prosessTaskListItemDto.getTaskType())
                         .append(" - ")
-                        .append(prosessTaskListItemDto.getStatus()).append("\n");
+                        .append(prosessTaskListItemDto.getStatus())
+                        .append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
         });
     }
-
-    private boolean verifiserProsesseringFerdig(Behandling behandling) {
-        var status = behandlingerKlient.hentStatus(behandling.id);
-
-        if ((status == null) || (status.getStatus() == null)) {
-            return true;
-        } else if (status.getStatus().getHttpStatus() == 418) {
-            if (status.getStatus() != AsyncPollingStatus.Status.DELAYED) {
-                AllureHelper.debugFritekst("Prosesstask feilet i behandlingsverifisering: " + status.getMessage());
-                throw new IllegalStateException("Prosesstask i vrang tilstand: " + status.getMessage());
-            } else {
-                AllureHelper.debugFritekst("Prossesstask DELAYED: " + status.getMessage());
-                return false;
-            }
-        } else if (status.isPending()) {
-            return false;
-        } else {
-            AllureHelper.debugFritekst("Prosesstask feilet for behandling[" + behandling.id
-                    + "] i behandlingsverifisering: " + status.getMessage());
-            throw new RuntimeException("Status for behandling " + behandling.id + " feilet: " + status.getMessage());
-        }
-    }
-
-    private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(Behandling behandling) {
+    private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(UUID behandlingsuuid) {
         return prosesstaskKlient.prosesstaskMedKlarEllerVentStatus().stream()
-                .filter(p -> Objects.equals("" + behandling.id, p.getTaskParametre().getProperty("behandlingId")))
+                .filter(p -> Objects.equals(behandlingsuuid.toString(), p.getTaskParametre().getProperty("behandlingId")))
                 .toList();
     }
 

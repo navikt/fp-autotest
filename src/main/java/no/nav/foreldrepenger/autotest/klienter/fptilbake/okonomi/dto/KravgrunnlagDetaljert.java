@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 public class KravgrunnlagDetaljert {
 
     protected Long vedtakId;
-    protected Long kravgrunnlagId;
+    protected Long kravgrunnlagId; // TODO: Erstatt med uuid
     protected String kravStatusKode;
     protected String fagOmrådeKode;
     protected String fagSystemId;

@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.internal.klienter.fpsak.fagsak;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
@@ -17,7 +19,7 @@ class FagsakDtoSeraliseringDeserialiseringTest extends SerializationTestBase {
 
     @Test
     void FagsakTest() {
-        test(new Fagsak(Saksnummer.valueOf("123456789"), FagsakStatus.LØPENDE));
+        test(new Fagsak(Saksnummer.valueOf("123456789"), FagsakStatus.LØPENDE, LocalDate.now()));
     }
 
     @Test

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
@@ -46,7 +47,7 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         var fordeling = generiskFordeling(
@@ -56,7 +57,7 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
         tbksaksbehandler.hentSisteBehandling(saksnummer);
@@ -95,7 +96,7 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
 
         tbksaksbehandler.opprettTilbakekrevingRevurdering(saksnummer, saksbehandler.valgtBehandling.uuid,
                 tbksaksbehandler.valgtBehandling.id, ytelseType, RevurderingArsak.RE_FORELDELSE);
-        tbksaksbehandler.hentSisteBehandling(saksnummer);
+        tbksaksbehandler.hentSisteBehandling(saksnummer, BehandlingType.REVURDERING_TILBAKEKREVING);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
         vurderFakta = (ApFaktaFeilutbetaling) tbksaksbehandler.hentAksjonspunktbehandling(7003);
         vurderFakta.addGeneriskVurdering(ytelseType);

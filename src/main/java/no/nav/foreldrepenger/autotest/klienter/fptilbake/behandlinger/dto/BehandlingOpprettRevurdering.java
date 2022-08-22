@@ -4,22 +4,14 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
-public class BehandlingOpprettRevurdering {
-    protected Saksnummer saksnummer;
+public class BehandlingOpprettRevurdering extends BehandlingOpprett{
     protected int behandlingId;
-    protected UUID eksternUuid;
-    protected String behandlingType;
     protected RevurderingArsak behandlingArsakType;
-    protected String fagsakYtelseType;
 
     public BehandlingOpprettRevurdering(Saksnummer saksnummer, int behandlingId, UUID eksternUuid, String behandlingType,
                                         String fagsakYtelseType, RevurderingArsak behandlingArsakType) {
-        super();
-        this.saksnummer = saksnummer;
+        super(saksnummer, eksternUuid, behandlingType, fagsakYtelseType);
         this.behandlingId = behandlingId;
-        this.eksternUuid = eksternUuid;
-        this.behandlingType = behandlingType;
         this.behandlingArsakType = behandlingArsakType;
-        this.fagsakYtelseType = fagsakYtelseType;
     }
 }

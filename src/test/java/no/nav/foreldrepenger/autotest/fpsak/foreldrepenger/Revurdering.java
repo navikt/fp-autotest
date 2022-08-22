@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,7 +70,7 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -124,14 +125,14 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
         saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.VEDLEGG_MOTTATT);
         debugLoggBehandling(saksbehandler.valgtBehandling);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.behandlinger)
                 .as("Antall behandlinger")
                 .hasSize(1);
         assertThat(saksbehandler.valgtBehandling.type)
                 .as("Behandlingstype")
                 .isEqualTo(BehandlingType.FØRSTEGANGSSØKNAD);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         debugFritekst("Ferdig med første behandling");
 
         // Endringssøknad
@@ -142,7 +143,7 @@ class Revurdering extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getType())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
@@ -152,7 +153,7 @@ class Revurdering extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         assertThat(saksbehandler.valgtFagsak.status())
-                .as("Fagsak stauts")
+                .as("Fagsak status")
                 .isEqualTo(FagsakStatus.LØPENDE);
     }
 
@@ -173,7 +174,7 @@ class Revurdering extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker())
                 .as("Antall uttaksperioder")
                 .hasSize(4);
@@ -190,9 +191,9 @@ class Revurdering extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtFagsak.status())
-                .as("Fagsak stauts")
+                .as("Fagsak status")
                 .isEqualTo(FagsakStatus.LØPENDE);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -235,7 +236,7 @@ class Revurdering extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Sender endringssøknad for å gi fagsaken en ny søknad mottatt dato
         var fordelingEndringssøknad = generiskFordeling(
@@ -245,14 +246,14 @@ class Revurdering extends FpsakTestBase {
         mor.søk(søknadE.build());
 
         saksbehandler.velgSisteBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Manuell behandling for å få endringssdato satt til første uttaksdag
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
         saksbehandler.velgSisteBehandling();
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentUttaksperioder())
                 .as("Forventer at alle uttaksperioder er innvilget")
@@ -292,7 +293,7 @@ class Revurdering extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(bekreftelse);
 
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
                 .hasSizeGreaterThan(1);
@@ -303,12 +304,11 @@ class Revurdering extends FpsakTestBase {
                 .medMottattDato(fødselsdato.plusWeeks(10));
         mor.søk(søknadE.build());
 
-        saksbehandler.velgSisteBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Manuell behandling for å få endringssdato satt til første uttaksdag
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
-        saksbehandler.velgSisteBehandling();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
                 .hasSizeGreaterThan(1);
@@ -327,40 +327,39 @@ class Revurdering extends FpsakTestBase {
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(31).minusDays(1)));
-        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
+        var søknadBarn1 = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
                 .medMottatdato(fødselsdato.minusWeeks(2));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummerBarn1 = mor.søk(søknadBarn1.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummerBarn1, fpStartdato);
 
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.hentFagsak(saksnummerBarn1);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Barn 2: Søker for barn 2 med termin om 6 uker og blir innvilget med start om 3 uker.
-        var termindato = Virkedager.helgejustertTilMandag(LocalDate.now().plusWeeks(6));
-        var søknadFP = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
+        var termindatoBarn2 = Virkedager.helgejustertTilMandag(LocalDate.now().plusWeeks(6));
+        var søknadBarn2 = lagSøknadForeldrepengerTermin(termindatoBarn2, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
-        var saksnummerFP = mor.søk(søknadFP.build());
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummerFP, termindato.minusWeeks(3));
+        var saksnummerBarn2 = mor.søk(søknadBarn2.build());
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummerBarn2, termindatoBarn2.minusWeeks(3));
 
-        saksbehandler.hentFagsak(saksnummerFP);
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.hentFagsak(saksnummerBarn2);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Barn 1: Revurdering skal avslå siste uttaksperiode med rett årsak
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
-
-        //assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
+        saksbehandler.hentFagsak(saksnummerBarn1);
+        saksbehandler.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
         var sisteUttaksperiode = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().stream()
                 .max(Comparator.comparing(UttakResultatPeriode::getFom))
                 .orElseThrow();
         assertThat(sisteUttaksperiode.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
-                .isEqualTo(termindato.minusWeeks(3));
+                .isEqualTo(termindatoBarn2.minusWeeks(3));
         assertThat(sisteUttaksperiode.getPeriodeResultatÅrsak())
                 .as("Siste periode avslått med årsak ny stønadsperiode")
                 .isEqualTo(PeriodeResultatÅrsak.STØNADSPERIODE_NYTT_BARN);

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.util.rest;
+package no.nav.foreldrepenger.autotest.klienter.vtp.testscenario;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -14,14 +14,14 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import no.nav.foreldrepenger.vtp.testmodell.identer.LokalIdentIndeks;
 import no.nav.foreldrepenger.vtp.testmodell.util.VariabelContainer;
 
-public class JacksonObjectMapper {
+public class TestscenarioObjectMapper {
 
     public static final ObjectMapper DEFAULT_MAPPER_VTP = getObjectMapper();
 
-    private JacksonObjectMapper() {
+    private TestscenarioObjectMapper() {
     }
 
-    public static ObjectMapper getObjectMapper() {
+    private static ObjectMapper getObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.DEFAULT));

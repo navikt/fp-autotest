@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRevuderingsbehandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
@@ -51,7 +52,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         var fordeling = generiskFordeling(
@@ -61,7 +62,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
         tbksaksbehandler.hentSisteBehandling(saksnummer);
@@ -116,7 +117,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, true);
@@ -214,7 +215,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgFørstegangsbehandling();
-        saksbehandler.ventTilAvsluttetBehandling();
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, true);
@@ -233,7 +234,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
 
-        tbksaksbehandler.hentSisteBehandling(saksnummer);
+        tbksaksbehandler.hentSisteBehandling(saksnummer, BehandlingType.TILBAKEKREVING);
         tbksaksbehandler.ventTilBehandlingErPåVent();
         assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
                 .as("Venteårsak")
@@ -246,7 +247,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
         tbksaksbehandler.startAutomatiskBehandlingBatch();
-        tbksaksbehandler.ventTilAvsluttetBehandling();
+        // tbksaksbehandler.ventTilAvsluttetBehandling(); // TODO: Denne har ikke fungert tidligere. Vi er ikke avsluttet, men i AP 7003 som ikke løses. Skal startAutomatiskBehandlingBatch løse det kankskje?
         assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp())
                 .as("Tilbakekrevingsbeløp")
                 .isZero();

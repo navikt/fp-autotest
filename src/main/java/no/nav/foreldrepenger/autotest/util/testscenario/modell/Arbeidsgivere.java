@@ -36,12 +36,10 @@ public class Arbeidsgivere {
     }
 
     public void sendDefaultInntektsmeldingerFP(Saksnummer saksnummer, LocalDate startdatoForeldrepenger) {
-        alleArbeidsgivere.forEach(arbeidsgiver ->
-                arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startdatoForeldrepenger));
+        alleArbeidsgivere.forEach(arbeidsgiver -> arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startdatoForeldrepenger));
     }
 
     public void sendDefaultInnteksmeldingerSVP(Saksnummer saksnummer) {
-        alleArbeidsgivere.forEach(arbeidsgiver ->
-                arbeidsgiver.sendInntektsmeldingerSVP(saksnummer));
+        alleArbeidsgivere.forEach(arbeidsgiver -> arbeidsgiver.sendInntektsmeldingerSVP(saksnummer));
     }
 }
