@@ -21,7 +21,7 @@
 <settings>
     <servers>
         <server>
-            <id>github-package-registry-navikt</id>
+            <id>github</id>
             <username>DITT_GITHUBBRUKERNAVN_HER</username>
             <password>DITT_KRYPTERT_PAT_FRA_STEG_2_HER</password>
         </server>
