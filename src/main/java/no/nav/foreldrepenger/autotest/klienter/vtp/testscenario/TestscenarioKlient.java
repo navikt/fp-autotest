@@ -30,32 +30,26 @@ public class TestscenarioKlient {
     public TestscenarioDto opprettTestscenarioMedAktorId(String key, String aktorId, String ident) {
         var testscenarioObject = testscenarioHenter.hentScenario(key);
 
+        var uriBuilder = fromUri(BaseUriProvider.VTP_BASE).path(TESTSCENARIO_I_AUTOTEST_POST_URL);
+        if (aktorId != null) {
+            uriBuilder = uriBuilder.queryParam("aktor1", aktorId);
+        }
+        if (ident != null) {
+            uriBuilder = uriBuilder.queryParam("ident1", ident);
+        }
         var request = getRequestBuilder()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
-                        .path(TESTSCENARIO_I_AUTOTEST_POST_URL)
-                        .queryParam("aktor1", aktorId)
-                        .queryParam("ident1", ident)
-                        .build())
+                .uri(uriBuilder.build())
                 .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(testscenarioObject)));
         var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
         tilJsonOgPubliserIAllureRapport(testscenarioObject);
-        LOG.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key,
-                testscenarioDto.personopplysninger().søkerIdent());
+        LOG.info("Testscenario opprettet: [{}] med hovedsøker: {} annenpart: {}", key,
+                testscenarioDto.personopplysninger().søkerIdent(), testscenarioDto.personopplysninger().annenpartIdent());
         return testscenarioDto;
     }
 
     @Step("Oppretter familie/scenario #{key}")
     public TestscenarioDto opprettTestscenario(String key) {
-        var testscenarioObject = testscenarioHenter.hentScenario(key);
-        var request = getRequestBuilder()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
-                        .path(TESTSCENARIO_I_AUTOTEST_POST_URL)
-                        .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(testscenarioObject)));
-        var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
-        tilJsonOgPubliserIAllureRapport(testscenarioObject);
-        LOG.info("Testscenario opprettet: [{}] med hovedsøker: [{}]", key, testscenarioDto.personopplysninger().søkerIdent());
-        return testscenarioDto;
+        return opprettTestscenarioMedAktorId(key, null, null);
     }
 
     public List<TestscenarioDto> hentAlleScenarier() {

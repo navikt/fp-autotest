@@ -179,7 +179,7 @@ public class BehandlingerKlient {
         if (asyncPollingStatus.getStatus().equals(HALTED) || asyncPollingStatus.getStatus().equals(CANCELLED)) {
             throw new IllegalStateException("Prosesstask i vrang tilstand: " + asyncPollingStatus.getMessage());
         }
-        LOG.info("Behandlingen er ikke ferdig prosessert, men har status {}", asyncPollingStatus.getStatus());
+        LOG.debug("Behandlingen er ikke ferdig prosessert, men har status {}", asyncPollingStatus.getStatus());
         return null;
     }
 
