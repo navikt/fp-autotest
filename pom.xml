@@ -28,7 +28,7 @@
         <dokumentgenerator.version>3.3.5</dokumentgenerator.version>
         <fp-felles.versjon>4.1.34</fp-felles.versjon>
         <fp-prosesstask.version>3.1.9</fp-prosesstask.version>
-        <fp-kontrakter.version>6.1.23</fp-kontrakter.version>
+        <fp-kontrakter.version>6.1.24</fp-kontrakter.version>
 
         <allure.version>2.19.0</allure.version>
         <allure.maven.version>2.11.2</allure.maven.version>
