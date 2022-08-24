@@ -49,5 +49,14 @@
                 "ident": "${for2}"
             }
         }
+    ],
+    "familierelasjonerAnnenPart": [
+        {
+            "rolle": "EKTE",
+            "til": {
+                "@type": "annenPart",
+                "ident": "${for1}"
+            }
+        }
     ]
 }

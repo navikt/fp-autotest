@@ -73,12 +73,39 @@
             }
         }
     ],
+    "familierelasjonerAnnenPart": [
+        {
+            "rolle": "BARN",
+            "til": {
+                "@type": "barn",
+                "ident": "${barn1}",
+                "fornavn": "Ole",
+                "etternavn": "Duck",
+                "fødselsdato": "now()-P2W"
+            }
+        },
+        {
+            "rolle": "EKTE",
+            "til": {
+                "@type": "annenPart",
+                "ident": "${for1}"
+            }
+        }
+    ],
+
     "familierelasjonerBarn": [
         {
-            "rolle": "FARA",
+            "rolle": "MORA",
             "til": {
                 "@type": "søker",
                 "ident": "${for1}"
+            }
+        },
+        {
+            "rolle": "FARA",
+            "til": {
+                "@type": "annenPart",
+                "ident": "${for2}"
             }
         }
     ]
