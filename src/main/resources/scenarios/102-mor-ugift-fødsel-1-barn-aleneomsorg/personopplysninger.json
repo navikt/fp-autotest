@@ -65,5 +65,14 @@
                 "fødselsdato": "now()-P2D"
             }
         }
+    ],
+    "familierelasjonerBarn": [
+        {
+            "rolle": "MORA",
+            "til": {
+                "@type": "søker",
+                "ident": "${for1}"
+            }
+        }
     ]
 }
