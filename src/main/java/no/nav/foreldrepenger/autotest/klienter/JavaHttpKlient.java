@@ -141,8 +141,8 @@ public class JavaHttpKlient {
                 .header(ACCEPT, MediaType.APPLICATION_JSON)
                 .header(CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HTTP_HEADER_ALT_CALL_ID, callid)
-                .header(NAV_CALL_ID, callid)
-                .timeout(Duration.ofSeconds(20));
+                .header(NAV_CALL_ID, callid);
+                // .timeout(Duration.ofSeconds(20));
     }
 
 
