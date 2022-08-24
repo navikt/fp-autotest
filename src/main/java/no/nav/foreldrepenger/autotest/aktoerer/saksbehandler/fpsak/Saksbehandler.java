@@ -32,7 +32,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering.RisikovurderingKlient;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdVersjonDto;
@@ -42,6 +42,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.KlageVurde
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelseUtenTotrinn;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.OverstyrAksjonspunkter;
@@ -65,7 +66,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskFpsakKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
@@ -87,18 +88,18 @@ public class Saksbehandler {
 
     private final Aktoer.Rolle rolle;
     private final FagsakKlient fagsakKlient;
-    private final BehandlingerKlient behandlingerKlient;
+    private final BehandlingFpsakKlient behandlingerKlient;
     private final HistorikkKlient historikkKlient;
-    private final ProsesstaskKlient prosesstaskKlient;
+    private final ProsesstaskFpsakKlient prosesstaskKlient;
     private final RisikovurderingKlient risikovurderingKlient;
 
 
     public Saksbehandler(Aktoer.Rolle rolle) {
         this.rolle = rolle;
         fagsakKlient = new FagsakKlient();
-        behandlingerKlient = new BehandlingerKlient();
+        behandlingerKlient = new BehandlingFpsakKlient();
         historikkKlient = new HistorikkKlient();
-        prosesstaskKlient = new ProsesstaskKlient();
+        prosesstaskKlient = new ProsesstaskFpsakKlient();
         risikovurderingKlient = new RisikovurderingKlient();
     }
 
@@ -253,7 +254,7 @@ public class Saksbehandler {
 
         // 2) Hvis vi venter på en REVURDERING og behandling er køet, men ikke gjennopptatt venter vi til AP 7011 er utført.
         if (BehandlingType.REVURDERING.equals(behandlingstype) && erBehandlingKøetOgIkkeGjenopptatt(behandling.uuid)) {
-            Vent.til(() -> behandlingerKlient.getBehandlingAksjonspunkt(behandling.uuid).stream()
+            Vent.til(() -> behandlingerKlient.hentAlleAksjonspunkter(behandling.uuid).stream()
                             .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equals(AUTO_KØET_BEHANDLING))
                             .findFirst()
                             .orElseThrow()
@@ -268,7 +269,7 @@ public class Saksbehandler {
     }
 
     private boolean erBehandlingKøetOgIkkeGjenopptatt(UUID behandlingsuuid) {
-        return behandlingerKlient.getBehandlingAksjonspunkt(behandlingsuuid).stream()
+        return behandlingerKlient.hentAlleAksjonspunkter(behandlingsuuid).stream()
                 .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equals(AUTO_KØET_BEHANDLING))
                 .anyMatch(Aksjonspunkt::erUbekreftet);
     }
@@ -368,7 +369,7 @@ public class Saksbehandler {
     }
 
     private void populateBehandling(Behandling behandling) {
-        behandling.setAksjonspunkter(new Lazy<>(() -> behandlingerKlient.getBehandlingAksjonspunkt(behandling.uuid)));
+        behandling.setAksjonspunkter(new Lazy<>(() -> behandlingerKlient.hentAlleAksjonspunkter(behandling.uuid)));
         behandling.setVilkar(new Lazy<>(() -> behandlingerKlient.behandlingVilkår(behandling.uuid)));
 
         if (behandling.type.equals(BehandlingType.INNSYN)) {
@@ -405,6 +406,7 @@ public class Saksbehandler {
     @Step("Gjenopptar Behandling")
     public void gjenopptaBehandling() {
         valgtBehandling = behandlingerKlient.gjenoppta(new BehandlingIdVersjonDto(valgtBehandling));
+        // TODO: Fjern denne venten
         venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling);
     }
 
@@ -508,7 +510,7 @@ public class Saksbehandler {
 
     private <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(String kode) {
         var aksjonspunkt = hentAksjonspunkt(kode);
-        var bekreftelse = aksjonspunkt.getBekreftelse();
+        var bekreftelse = aksjonspunkt.getBekreftelse(Fagsystem.FPSAK); // TODO: fpsak spesifikk
         bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
         return (T) bekreftelse;
     }

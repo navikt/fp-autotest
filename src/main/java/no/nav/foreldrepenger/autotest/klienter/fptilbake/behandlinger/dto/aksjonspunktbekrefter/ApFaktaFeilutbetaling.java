@@ -4,17 +4,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 
-@AksjonspunktKode(kode = "7003", fagsystem = Fagsystem.FPTILBAKE)
-public class ApFaktaFeilutbetaling extends AksjonspunktBehandling {
+@BekreftelseKode(kode = "7003", fagsystem = Fagsystem.FPTILBAKE)
+public class ApFaktaFeilutbetaling extends AksjonspunktBekreftelse {
 
-    protected final String begrunnelse;
     protected final List<ApFaktaFeilutbetalingDetaljer> feilutbetalingFakta = new ArrayList<>();
 
     public ApFaktaFeilutbetaling() {
-        this.kode = "7003";
-        this.begrunnelse = "Dette er en begrunnelse dannet av Autotest!";
+        setBegrunnelse("Dette er en begrunnelse dannet av Autotest!");
     }
 
     public void addFaktaPeriode(LocalDate fom, LocalDate tom) {

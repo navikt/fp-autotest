@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidInntektsmeldingAksjonspunktÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidsforholdKomplettVurderingType;
@@ -172,7 +171,6 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
     }
 
     private void opprettManueltArbeidsforhold5085() {
-        Aktoer.loggInn(Aktoer.Rolle.OVERSTYRER);
         overstyrer.åpneForNyArbeidsforholdVurdering(new BehandlingIdVersjonDto(overstyrer.valgtBehandling));
         var ab = overstyrer.hentAksjonspunktbekreftelse(ArbeidInntektsmeldingBekreftelse.class);
         var dto = new ManueltArbeidsforholdDto(

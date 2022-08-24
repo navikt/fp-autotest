@@ -9,6 +9,8 @@ public enum BehandlingType {
     REVURDERING("BT-004"),
     INNSYN("BT-006"),
     ANKE("BT-008"),
+
+    // Tilbakekrevinger
     TILBAKEKREVING("BT-007"),
     REVURDERING_TILBAKEKREVING("BT-009"),
     ;

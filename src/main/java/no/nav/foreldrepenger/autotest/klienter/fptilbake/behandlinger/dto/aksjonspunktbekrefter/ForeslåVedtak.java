@@ -3,14 +3,13 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjo
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 
-@AksjonspunktKode(kode = "5004", fagsystem = Fagsystem.FPTILBAKE)
-public class ForeslåVedtak extends AksjonspunktBehandling {
+@BekreftelseKode(kode = "5004", fagsystem = Fagsystem.FPTILBAKE)
+public class ForeslåVedtak extends AksjonspunktBekreftelse {
 
     protected List<VedtakPerioderMedTekst> perioderMedTekst = new ArrayList<>();
 
-    public ForeslåVedtak() {
-        this.kode = "5004";
-    }
 }

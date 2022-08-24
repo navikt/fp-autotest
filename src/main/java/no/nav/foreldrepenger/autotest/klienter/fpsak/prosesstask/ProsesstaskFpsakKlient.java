@@ -1,0 +1,34 @@
+package no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask;
+
+import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPSAK_BASE;
+
+import java.util.List;
+
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
+import no.nav.vedtak.felles.prosesstask.rest.dto.StatusFilterDto;
+
+public class ProsesstaskFpsakKlient implements ProsessTaskKlient {
+
+    private final ProsesstaskKlientFelles prosesstaskKlient = new ProsesstaskKlientFelles(FPSAK_BASE);
+
+    @Override
+    public List<ProsessTaskDataDto> alleProsesstaskPåBehandling() {
+        return prosesstaskKlient.alleProsesstaskPåBehandling();
+    }
+
+    @Override
+    public List<ProsessTaskDataDto> prosesstaskMedKlarEllerVentStatus() {
+        return prosesstaskKlient.prosesstaskMedKlarEllerVentStatus();
+    }
+
+    @Override
+    public List<ProsessTaskDataDto> list(StatusFilterDto statusFilterDto) {
+        return prosesstaskKlient.list(statusFilterDto);
+    }
+
+    @Override
+    public void create(ProsessTaskOpprettInputDto prosessTaskOpprettInputDto) {
+        prosesstaskKlient.create(prosessTaskOpprettInputDto);
+    }
+}
