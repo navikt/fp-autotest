@@ -114,13 +114,11 @@ mkdir $folder
 cd ../resources/pipeline
 settPorterSomSkalErstattes ${applikasjoner[0]}
 for f in {.*,*}; do
-  if [[ $f != .env ]]  && [[ $f != *.sh ]] && [[ $f != fpsak-docker-compose.yml ]] && [[ $f != autotest.list ]]; then
     if [[ -f "$f" ]]; then
       cp "$f" "${relativ_path}/$f"
-    elif [[ $f == frontend ]] || [[ $f == oracle-init ]] || [[ $f == postgres-init ]] || [[ $f == tokenx ]]; then
+    elif [[ $f == oracle-init ]] || [[ $f == postgres-init ]] || [[ $f == tokenx ]]; then
       cp -r "$f" "${relativ_path}"
     fi
-  fi
 done
 
 
@@ -128,7 +126,7 @@ cd $relativ_path
 for applikasjon in "${applikasjoner[@]}"; do
   settPorterSomSkalErstattes $applikasjon
   for f in {.*,*}; do
-    if [ -f "$f" ] && [[ $f != .env ]]  && [[ $f != *.sh ]] && [[ $f != fpsak-docker-compose.yml ]] && [[ $f != autotest.list ]]; then
+    if [ -f "$f" ] && [[ $f != .env ]]  && [[ $f != *.sh ]]; then
       for ((i=0;i<${#replace_port_array[@]};++i)); do
         sed -i.bak "s/${applikasjon}:${replace_port_array[i]}/host.docker.internal:${with_port_array[i]}/g" "$f"
         rm $f.bak

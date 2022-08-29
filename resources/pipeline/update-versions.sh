@@ -21,15 +21,19 @@ echo AUDIT_NAIS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-audit-nais-mock")" >> .
 echo VTP_IMAGE="$(imageVersion "ghcr.io/navikt/vtp")" >> .env
 echo FPABAKUS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-abakus")" >> .env
 echo FPSAK_IMAGE="$(imageVersion "ghcr.io/navikt/fp-sak")" >> .env
-echo FPTILBAKE_IMAGE="$(imageVersion "ghcr.io/navikt/fptilbake")" >> .env
-echo FPSOKNAD_MOTTAK_IMAGE="$(imageVersion "ghcr.io/navikt/fpsoknad-mottak")" >> .env
-echo FPFORDEL_IMAGE="$(imageVersion "ghcr.io/navikt/fpfordel")" >> .env
-echo FPINFO_IMAGE="$(imageVersion "ghcr.io/navikt/fpinfo")" >> .env
 echo FPFRONTEND_IMAGE="$(imageVersion "ghcr.io/navikt/fp-frontend")" >> .env
 echo FPFORMIDLING_IMAGE="$(imageVersion "ghcr.io/navikt/fp-formidling")" >> .env
 echo FPDOKGEN_IMAGE="$(imageVersion "ghcr.io/navikt/fp-dokgen")" >> .env
 echo FPOPPDRAG_IMAGE="$(imageVersion "ghcr.io/navikt/fpoppdrag")" >> .env
+echo FPTILBAKE_IMAGE="$(imageVersion "ghcr.io/navikt/fptilbake")" >> .env
 echo FPRISK_IMAGE="$(imageVersion "ghcr.io/navikt/fp-risk")" >> .env
 echo FPABONNENT_IMAGE="$(imageVersion "ghcr.io/navikt/fpabonnent")" >> .env
+echo FPFORDEL_IMAGE="$(imageVersion "ghcr.io/navikt/fpfordel")" >> .env
+echo FPINFO_IMAGE="$(imageVersion "ghcr.io/navikt/fpinfo")" >> .env
+echo FPSOKNAD_MOTTAK_IMAGE="$(imageVersion "ghcr.io/navikt/fpsoknad-mottak")" >> .env
+echo FPINFO_HISTORIKK_IMAGE="$(imageVersion "ghcr.io/navikt/fpinfo-historikk")" >> .env
+echo FORELDREPENGESOKNADAPI_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad-api")" >> .env
+echo FORELDREPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad")" >> .env
+echo FORELDREPENGEOVERSIKT_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengeoversikt")" >> .env
 
 echo ".env fil opprettet - Klart for docker-compose up"
