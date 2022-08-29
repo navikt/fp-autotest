@@ -13,6 +13,5 @@ else
     else
         cp docker-compose-lokal/.env .env
     fi
-    # docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps foreldrepengesoknad-api
-    docker-compose -f docker-compose-lokal/docker-compose.yml up --detach foreldrepengesoknad-api
+    docker-compose -f docker-compose-lokal/docker-compose.yml up --detach fpfrontend foreldrepengesoknad foreldrepengeoversikt
 fi

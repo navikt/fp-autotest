@@ -461,6 +461,7 @@ services:
       - "9002:9002"
     depends_on:
       - fpsoknad-mottak
+      - fpinfo-historikk
   foreldrepengeoversikt:
     image: $FORELDREPENGEOVERSIKT_IMAGE
     container_name: foreldrepengeoversikt
