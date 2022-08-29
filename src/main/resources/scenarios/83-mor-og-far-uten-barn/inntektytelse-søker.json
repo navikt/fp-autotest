@@ -3,16 +3,6 @@
         "inntektsperioder": [
             {
                 "fom": "now() - P12M",
-                "tom": "now() - P10M",
-                "beløp": 60000,
-                "orgnr": "910909088",
-                "type": "Lønnsinntekt",
-                "fordel": "kontantytelse",
-                "beskrivelse": "fastloenn"
-            },
-            {
-                "fom": "now() - P10M",
-                "tom": "now()",
                 "beløp": 60000,
                 "orgnr": "910909088",
                 "type": "Lønnsinntekt",
@@ -24,35 +14,18 @@
     "aareg": {
         "arbeidsforhold": [
             {
-                "arbeidsforholdId": "ARB001-001",
+                "arbeidsforholdId": "ARB001-002",
                 "arbeidsgiverOrgnr": "910909088",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "ansettelsesperiodeFom": "now() - P4M",
+                "ansettelsesperiodeFom": "now() - P12M",
                 "arbeidsavtaler" : [
                     {
-                        "fomGyldighetsperiode": "now() - P2M",
+                        "fomGyldighetsperiode": "now() - P12M",
                         "sisteLønnsendringsdato": "now() - P1M",
                         "avlønningstype": "fastlønn",
                         "avtaltArbeidstimerPerUke": "40",
                         "stillingsprosent" : 100,
-                        "beregnetAntallTimerPerUke": "30"
-                    }
-                ]
-            },
-            {
-                "arbeidsforholdId": "ARB001-002",
-                "arbeidsgiverOrgnr": "910909088",
-                "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "ansettelsesperiodeFom": "now() - P4Y",
-                "ansettelsesperiodeTom": "now() - P4M",
-                "arbeidsavtaler" : [
-                    {
-                        "fomGyldighetsperiode": "now() - P4Y",
-                        "sisteLønnsendringsdato": "now() - P1Y",
-                        "avlønningstype": "fastlønn",
-                        "avtaltArbeidstimerPerUke": "40",
-                        "stillingsprosent" : 100,
-                        "beregnetAntallTimerPerUke": "30"
+                        "beregnetAntallTimerPerUke": "40"
                     }
                 ]
             }
