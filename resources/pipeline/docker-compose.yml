@@ -407,6 +407,7 @@ services:
       - "FPFORDEL_BASE_URL=http://fpfordel:8080"
       - "FPFORDEL_MAX=20"
       - "FPINFO_MAX=20"
+      - "AZURE_OPENID_CONFIG_TOKEN_ENDPOINT=http://vtp:8060/rest/AzureAd/aadb2b/oauth2/v2.0/token"
       - "OIDC_STS_ISSUER_URL=http://vtp:8060" # TODO Erstat med samme syntax som resten av applikasjonene
     env_file:
       - "common.env"
