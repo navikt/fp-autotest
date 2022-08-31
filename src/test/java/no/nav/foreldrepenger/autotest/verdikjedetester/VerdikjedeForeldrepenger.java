@@ -19,7 +19,6 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅr
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_DØD_FORELDER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.FELLESPERIODE_ELLER_FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
@@ -94,7 +93,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
-import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -1291,31 +1289,14 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
          */
         var fastsettUttaksperioderManueltBekreftelseMor = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
-        fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
-                fellesperiodeStartMor,
-                fellesperiodeStartFar.minusDays(1),
-                PeriodeResultatÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
-                false,
-                true,
-                100);
-        fastsettUttaksperioderManueltBekreftelseMor.innvilgPeriode(
-                fellesperiodeStartFar,
-                fellesperiodeSluttMor,
-                PeriodeResultatÅrsak.FORELDREPENGER_REDUSERT_GRAD_PGA_SAMTIDIG_UTTAK,
-                false,
-                true,
-                60);
 
         // Siste periode skal slippes og delvis innvilges med resterende saldo
         var fastsatteUttaksperioder = fastsettUttaksperioderManueltBekreftelseMor.getPerioder();
-        var fomSistePeriodeSomSkalVurderesManuelt = fastsatteUttaksperioder.get(fastsatteUttaksperioder.size() - 1).getFom();
+        var sistePeriode = fastsatteUttaksperioder.get(fastsatteUttaksperioder.size() - 1);
         var saldoer = saksbehandler.hentSaldoerGittUttaksperioder(fastsatteUttaksperioder);
         var disponibleFellesdager = saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo();
-        var sisteDagMedFellesperiode = Virkedager.plusVirkedager(fomSistePeriodeSomSkalVurderesManuelt.plusDays(1), Math.abs(disponibleFellesdager));
         fastsettUttaksperioderManueltBekreftelseMor
-                .splitPeriode(fomSistePeriodeSomSkalVurderesManuelt, fellesperiodeSluttFar, sisteDagMedFellesperiode)
-                .innvilgPeriode(fomSistePeriodeSomSkalVurderesManuelt, sisteDagMedFellesperiode, FELLESPERIODE_ELLER_FORELDREPENGER)
-                .avslåPeriode(sisteDagMedFellesperiode.plusDays(1), fellesperiodeSluttFar, IKKE_STØNADSDAGER_IGJEN);
+                .avslåPeriode(sistePeriode.getFom(), sistePeriode.getTom(), IKKE_STØNADSDAGER_IGJEN, false);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
@@ -1338,8 +1319,8 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getDagsats())
                 .as("Forventer at dagsatsen blir redusert fra 100% til 60% for periode 3 i tilkjent ytelse")
                 .isEqualTo((int) Math.round(tilkjentYtelsePerioder.getPerioder().get(2).getDagsats() * 0.6));
-        assertThat(tilkjentYtelsePerioder.getPerioder().get(6).getDagsats())
-                .as("Tilkjent ytelses periode 7")
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(5).getDagsats())
+                .as("Tilkjent ytelses periode 6")
                 .isZero();
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
