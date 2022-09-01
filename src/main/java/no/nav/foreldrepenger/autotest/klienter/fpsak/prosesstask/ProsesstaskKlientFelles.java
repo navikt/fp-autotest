@@ -12,6 +12,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskStatusDto;
@@ -31,15 +32,16 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
         this.baseUrl = baseUrl;
     }
 
+    //    @Pattern(regexp = "FEILET|VENTER_SVAR|SUSPENDERT|VETO|KLAR")
     private static StatusFilterDto getStatusFilterDto() {
         var statusFilterDto = new StatusFilterDto();
         statusFilterDto.setProsessTaskStatuser(List.of(
-                new ProsessTaskStatusDto("FEILET"),
-                new ProsessTaskStatusDto("VENTER_SVAR,"),
-                new ProsessTaskStatusDto("SUSPENDERT"),
-                new ProsessTaskStatusDto("VETO"),
-                new ProsessTaskStatusDto("KLAR")
-                ));
+                new ProsessTaskStatusDto(ProsessTaskStatus.FEILET.name()),
+                new ProsessTaskStatusDto(ProsessTaskStatus.VENTER_SVAR.name()),
+                new ProsessTaskStatusDto(ProsessTaskStatus.SUSPENDERT.name()),
+                new ProsessTaskStatusDto(ProsessTaskStatus.VETO.name()),
+                new ProsessTaskStatusDto(ProsessTaskStatus.KLAR.name())
+        ));
         return statusFilterDto;
     }
 

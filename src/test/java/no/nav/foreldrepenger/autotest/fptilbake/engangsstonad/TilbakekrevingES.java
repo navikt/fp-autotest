@@ -45,17 +45,18 @@ class TilbakekrevingES extends FptilbakeTestBase {
     void opprettTilbakekrevingManuelt() {
         var familie = new Familie("55");
         var mor = familie.mor();
-        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
-        var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1).plusWeeks(1);
+        var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false)
+                .medMottatdato(LocalDate.now().minusMonths(1));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
-                .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
+                .setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedato);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
         var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                   .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
                 .bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -80,7 +81,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
         saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
-                .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
+                .setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedato);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering);
         var vurderEktefellesBarnBekreftelseRevurdering = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)

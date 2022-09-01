@@ -63,7 +63,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskFpsakKlient;
@@ -89,7 +89,7 @@ public class Saksbehandler {
     private final Aktoer.Rolle rolle;
     private final FagsakKlient fagsakKlient;
     private final BehandlingFpsakKlient behandlingerKlient;
-    private final HistorikkKlient historikkKlient;
+    private final HistorikkFpsakKlient historikkKlient;
     private final ProsesstaskFpsakKlient prosesstaskKlient;
     private final RisikovurderingKlient risikovurderingKlient;
 
@@ -98,7 +98,7 @@ public class Saksbehandler {
         this.rolle = rolle;
         fagsakKlient = new FagsakKlient();
         behandlingerKlient = new BehandlingFpsakKlient();
-        historikkKlient = new HistorikkKlient();
+        historikkKlient = new HistorikkFpsakKlient();
         prosesstaskKlient = new ProsesstaskFpsakKlient();
         risikovurderingKlient = new RisikovurderingKlient();
     }
