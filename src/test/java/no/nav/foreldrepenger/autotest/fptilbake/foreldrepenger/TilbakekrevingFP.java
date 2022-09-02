@@ -246,8 +246,8 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
 
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
-        tbksaksbehandler.startAutomatiskBehandlingBatch();
-        // tbksaksbehandler.ventTilAvsluttetBehandling(); // TODO: Denne har ikke fungert tidligere. Vi er ikke avsluttet, men i AP 7003 som ikke løses. Skal startAutomatiskBehandlingBatch løse det kankskje?
+        tbksaksbehandler.startAutomatiskBehandlingBatchOgVentTilAutoPunktErKjørt(7003); // TODO: Litt hacky.
+        tbksaksbehandler.ventTilAvsluttetBehandling();
         assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp())
                 .as("Tilbakekrevingsbeløp")
                 .isZero();

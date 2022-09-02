@@ -10,10 +10,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
@@ -22,16 +22,16 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 abstract class DokumentVenter implements Innsender {
 
-    protected final BehandlingerKlient behandlingerKlient;
+    protected final BehandlingFpsakKlient behandlingerKlient;
     protected final FagsakKlient fagsakKlient;
-    protected final HistorikkKlient historikkKlient;
+    protected final HistorikkFpsakKlient historikkKlient;
 
     protected final JournalforingKlient journalpostKlient;
 
     protected DokumentVenter() {
         fagsakKlient = new FagsakKlient();
-        behandlingerKlient = new BehandlingerKlient();
-        historikkKlient = new HistorikkKlient();
+        behandlingerKlient = new BehandlingFpsakKlient();
+        historikkKlient = new HistorikkFpsakKlient();
         journalpostKlient = new JournalforingKlient();
     }
 

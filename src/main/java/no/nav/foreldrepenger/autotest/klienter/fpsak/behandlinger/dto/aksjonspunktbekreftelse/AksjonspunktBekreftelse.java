@@ -44,9 +44,8 @@ public abstract class AksjonspunktBekreftelse {
         kode = this.getClass().getAnnotation(BekreftelseKode.class).kode();
     }
 
-    public static AksjonspunktBekreftelse fromKode(String kode) throws InstantiationException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-
+    public static AksjonspunktBekreftelse fromKode(String kode, Fagsystem gjeldendeFagsystem) throws InstantiationException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         for (var klasse : aksjonspunktBekreftelseClasses) {
             var annotation = klasse.getDeclaredAnnotation(BekreftelseKode.class);
 
@@ -55,7 +54,7 @@ public abstract class AksjonspunktBekreftelse {
             }
             if (annotation == null) {
                 LOG.warn("Aksjonspunkt mangler annotasjon='{}'", klasse.getName());
-            } else if (annotation.kode().equals(kode)) {
+            } else if (annotation.kode().equals(kode) && annotation.fagsystem().equals(gjeldendeFagsystem)) {
                 return klasse.getConstructor().newInstance();
             }
         }
@@ -63,10 +62,9 @@ public abstract class AksjonspunktBekreftelse {
         return null;
     }
 
-    public static AksjonspunktBekreftelse fromAksjonspunkt(Aksjonspunkt aksjonspunkt)
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-            NoSuchMethodException, SecurityException {
-        return fromKode(aksjonspunkt.getDefinisjon());
+    public static AksjonspunktBekreftelse fromAksjonspunkt(Aksjonspunkt aksjonspunkt, Fagsystem fagsystem) throws InstantiationException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return fromKode(aksjonspunkt.getDefinisjon(), fagsystem);
     }
 
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {

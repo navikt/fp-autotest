@@ -104,6 +104,10 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5003);
 
         // mangler resten av revurderingsbehandlingen med aksjonpunkt for foreldelse
-        // 5003
+        // 5003: Velg Perioden er ikke foreldet, regel om tilleggsfrist (10 år) benyttes, frist settes tilbake i tid
+
+
+        // 5002:
+
     }
 }

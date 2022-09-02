@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.fptilbake.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType.TILBAKEKREVING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -21,7 +22,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaVergeBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVerge;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
@@ -37,22 +37,23 @@ class TilbakekrevingES extends FptilbakeTestBase {
     private static final String ytelseType = "ES";
 
     @Test
-    @DisplayName("1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
+    @DisplayName("1. Førstegangssøknad innvilges. Revurdering opprettes som fører til avslag. Saksbehandler oppretter tilbakekreving.")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     void opprettTilbakekrevingManuelt() {
         var familie = new Familie("55");
         var mor = familie.mor();
-        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
-        var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
+        var omsorgsovertakelsedato = LocalDate.now().plusMonths(1).plusWeeks(1);
+        var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false)
+                .medMottatdato(LocalDate.now().minusMonths(1));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
-                .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
+                .setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedato);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
         var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                   .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
                 .bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -61,7 +62,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
 
         var bekreftelse = beslutter
                 .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
+                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -69,13 +70,31 @@ class TilbakekrevingES extends FptilbakeTestBase {
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-//        saksbehandler.opprettBehandlingRevurdering("RE-FEFAKTA");
-//        saksbehandler.velgRevurderingBehandling();
+//        saksbehandler.opprettBehandlingRevurdering(RE_FEIL_ELLER_ENDRET_FAKTA);
+//        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_FEIL_ELLER_ENDRET_FAKTA);
+//
+//        var varselOmRevurderingBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
+//        varselOmRevurderingBekreftelse.bekreftIkkeSendVarsel();
+//        saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
+//        var avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering = saksbehandler
+//                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+//                .setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedato);
+//        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering);
+//        var vurderEktefellesBarnBekreftelseRevurdering = saksbehandler
+//                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+//                .bekreftBarnErEktefellesBarn();
+//        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelseRevurdering);
+//
+//        var vurderTilbakekrevingVedNegativSimulering = saksbehandler
+//                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+//        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+//        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+//        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+        //Her mangler behandling av Engangsstønad revurderingen!!
 
-        // Her mangler behandling av Engangsstønad revurderingen!!
 
         tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
-        tbksaksbehandler.hentSisteBehandling(saksnummer);
+        tbksaksbehandler.hentSisteBehandling(saksnummer, TILBAKEKREVING);
         tbksaksbehandler.ventTilBehandlingErPåVent();
         assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
                 .as("Venteårsak")
@@ -111,7 +130,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
 
         assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp())
                 .as("Tilbakekrevingsbeløp")
-                .isEqualTo(83140);
+                .isEqualTo(83_140);
     }
 
     @Test
@@ -154,7 +173,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
         assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
                 .as("Venteårsak")
                 .isEqualTo("VENT_PÅ_TILBAKEKREVINGSGRUNNLAG");
-        assertThat(tbksaksbehandler.valgtBehandling.harVerge())
+        assertThat(tbksaksbehandler.valgtBehandling.harVerge)
                 .as("Behandling har verge")
                 .isTrue();
         var kravgrunnlag = new Kravgrunnlag(saksnummer, mor.fødselsnummer().value(),
@@ -163,18 +182,20 @@ class TilbakekrevingES extends FptilbakeTestBase {
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 
+        // Sjekk om menyvalget om å fjerne verge fungere
         tbksaksbehandler.fjernVerge();
-        assertThat(tbksaksbehandler.valgtBehandling.harVerge())
+        assertThat(tbksaksbehandler.valgtBehandling.harVerge)
                 .as("Behandling har verge")
                 .isFalse();
         tbksaksbehandler.leggTilVerge();
+
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5030);
         var vergeFakta = (ApVerge) tbksaksbehandler.hentAksjonspunktbehandling(5030);
         var vergeFamilie = new Familie("01", fordel);
         vergeFakta.setVerge(vergeFamilie);
         tbksaksbehandler.behandleAksjonspunkt(vergeFakta);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
-        assertThat(tbksaksbehandler.valgtBehandling.harVerge())
+        assertThat(tbksaksbehandler.valgtBehandling.harVerge)
                 .as("Behandling har verge")
                 .isTrue();
 

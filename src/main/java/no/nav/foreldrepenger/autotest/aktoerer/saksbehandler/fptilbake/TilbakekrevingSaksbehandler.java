@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake;
 
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType.REVURDERING_TILBAKEKREVING;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -18,26 +18,30 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingerKlient;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingFptilbakeKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprettRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BrukerresponsDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.RevurderingArsak;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.AksjonspunktDto;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.AksjonspunktBehandling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVerge;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.BehandledeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ForeslåVedtak;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.historikk.HistorikkFptilbakeKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskFptilbakeKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingKlient;
+import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
@@ -52,17 +56,21 @@ public class TilbakekrevingSaksbehandler {
     public Behandling valgtBehandling;
     public Saksnummer saksnummer;
 
+    private Lazy<List<HistorikkInnslag>> historikkInnslag;
+
     private final Aktoer.Rolle rolle;
-    private final BehandlingerKlient behandlingerKlient;
+    private final BehandlingFptilbakeKlient behandlingerKlient;
+    private final HistorikkFptilbakeKlient historikkKlient;
     private final OkonomiKlient okonomiKlient;
-    private final ProsesstaskKlient prosesstaskKlient;
+    private final ProsesstaskFptilbakeKlient prosesstaskKlient;
     private final VTPTilbakekrevingKlient vtpTilbakekrevingJerseyKlient;
 
     public TilbakekrevingSaksbehandler(Aktoer.Rolle rolle) {
         this.rolle = rolle;
-        behandlingerKlient = new BehandlingerKlient();
+        behandlingerKlient = new BehandlingFptilbakeKlient();
+        historikkKlient = new HistorikkFptilbakeKlient();
         okonomiKlient = new OkonomiKlient();
-        prosesstaskKlient = new ProsesstaskKlient();
+        prosesstaskKlient = new ProsesstaskFptilbakeKlient();
         vtpTilbakekrevingJerseyKlient = new VTPTilbakekrevingKlient();
     }
 
@@ -108,7 +116,7 @@ public class TilbakekrevingSaksbehandler {
         ventPåOgVelgSisteBehandling(behandlingstype);
     }
 
-    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype) {
+    public void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype) {
         ventPåOgVelgSisteBehandling(behandlingstype, null, null);
     }
 
@@ -140,7 +148,7 @@ public class TilbakekrevingSaksbehandler {
     }
 
     private Set<Behandling> hentAlleBehandlingerAvTypen(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType) {
-        return behandlingerKlient.hentAlleTbkBehandlinger(saksnummer).stream()
+        return behandlingerKlient.alle(saksnummer).stream()
                 .filter(b -> b.type.equals(behandlingstype))
                 .collect(Collectors.toSet());
     }
@@ -151,7 +159,7 @@ public class TilbakekrevingSaksbehandler {
 
     // Generisk handling for å hente behandling på nytt
     private void refreshBehandling() {
-        valgtBehandling = behandlingerKlient.hentTbkBehandling(valgtBehandling.uuid);
+        venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling.uuid);
     }
 
     public void sendNyttKravgrunnlag(Kravgrunnlag kravgrunnlag, Saksnummer saksnummer, int fpsakBehandlingId) {
@@ -174,9 +182,9 @@ public class TilbakekrevingSaksbehandler {
     // Aksjonspunkt actions
     // Henter aksjonspunkt for en gitt kode, brukes ikke direkte i test men av
     // metoder for å verifisere at aksjonspunktet finnes.
-    private AksjonspunktDto hentAksjonspunkt(int kode) {
+    private Aksjonspunkt hentAksjonspunkt(int kode) {
         for (var aksjonspunktDto : behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid)) {
-            if (Objects.equals(aksjonspunktDto.definisjon, String.valueOf(kode))) {
+            if (Objects.equals(aksjonspunktDto.getDefinisjon(), String.valueOf(kode))) {
                 return aksjonspunktDto;
             }
         }
@@ -188,10 +196,11 @@ public class TilbakekrevingSaksbehandler {
         if (aksjonspunktDto == null) {
             return false;
         }
-        return (aksjonspunktDto.kanLoses && aksjonspunktDto.erAktivt);
+        return (aksjonspunktDto.getKanLoses() && aksjonspunktDto.getErAktivt());
     }
 
-    public AksjonspunktBehandling hentAksjonspunktbehandling(int aksjonspunktkode) {
+    // TODO: Gjør det samme som i fpsak saksbehandler
+    public AksjonspunktBekreftelse hentAksjonspunktbehandling(int aksjonspunktkode) {
         if (!harAktivtAksjonspunkt(aksjonspunktkode)) {
             throw new IllegalStateException("Behandlingen har ikke nådd aksjonspunkt " + aksjonspunktkode);
         }
@@ -222,11 +231,9 @@ public class TilbakekrevingSaksbehandler {
     }
 
     // Metode for å sende inn og behandle et aksjonspunkt
-    public void behandleAksjonspunkt(AksjonspunktBehandling aksjonspunktdata) {
-        List<AksjonspunktBehandling> aksjonspunktdataer = new ArrayList<>();
-        aksjonspunktdataer.add(aksjonspunktdata);
-        var aksjonspunkter = new BehandledeAksjonspunkter(valgtBehandling, saksnummer, aksjonspunktdataer);
-        behandlingerKlient.postAksjonspunkt(aksjonspunkter);
+    public void behandleAksjonspunkt(AksjonspunktBekreftelse aksjonspunktBekreftelse) {
+        var aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling.uuid, valgtBehandling.versjon, List.of(aksjonspunktBekreftelse));
+        behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
     }
 
@@ -262,12 +269,42 @@ public class TilbakekrevingSaksbehandler {
                 valgtBehandling.uuid, forventetStatus, behandlingsstatus));
     }
 
+    public List<HistorikkInnslag> hentHistorikkinnslagPåFagsak() {
+        refreshBehandling();
+        return get(historikkInnslag);
+    }
+
+    public List<HistorikkInnslag> hentHistorikkinnslagPåBehandling() {
+        return hentHistorikkinnslagPåBehandling(valgtBehandling.uuid);
+    }
+
+    public List<HistorikkInnslag> hentHistorikkinnslagPåBehandling(UUID uuid) {
+        return hentHistorikkinnslagPåFagsak().stream()
+                .filter(innslag -> Objects.equals(uuid, innslag.behandlingUuid()))
+                .toList();
+    }
+
     public void ventTilAvsluttetBehandling() {
+        LOG.info("Venter til behandling er avsluttet ...");
+
+        /**
+         * Hvis vi har en BEH_VENT på behandlingen OG saken IKKE er GJENOPPRETTET da er vi enten i
+         * 1) En feiltilstand og behandlingen kan ikke avsluttes
+         * 2) Behandlingen er ikke tatt av vent enda og vi venter på at behandlingen GJENOPPRETTET
+         *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
+         */
+        if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_VENT))) {
+            Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_GJEN))
+                    ,10, "Behandlingen er på vent og er ikke blitt gjenopptatt!");
+        }
+
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
+        LOG.info("Alle manuelle aksjonspunkt er løst og behandlingen har status AVSLUTTET");
     }
 
     private void venterPåFerdigProssesseringOgOppdaterBehandling(UUID behandlingsuuid) {
         valgtBehandling = ventTilBehandlingErFerdigProsessertOgReturner(behandlingsuuid);
+        this.historikkInnslag = new Lazy<>(() -> historikkKlient.hentHistorikk(this.saksnummer));
     }
 
     /**
@@ -287,6 +324,7 @@ public class TilbakekrevingSaksbehandler {
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
         });
     }
+
     private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(UUID behandlingsuuid) {
         return prosesstaskKlient.prosesstaskMedKlarEllerVentStatus().stream()
                 .filter(p -> Objects.equals(behandlingsuuid.toString(), p.getTaskParametre().getProperty("behandlingId")))
@@ -294,9 +332,10 @@ public class TilbakekrevingSaksbehandler {
     }
 
     //Batch trigger
-    public void startAutomatiskBehandlingBatch(){
+    public void startAutomatiskBehandlingBatchOgVentTilAutoPunktErKjørt(int autopunkt){
         var prosessTaskOpprettInputDto = new ProsessTaskOpprettInputDto();
         prosessTaskOpprettInputDto.setTaskType("batch.automatisk.saksbehandling");
         prosesstaskKlient.create(prosessTaskOpprettInputDto);
+        Vent.til(() -> hentAksjonspunkt(autopunkt) == null, 10, "Kravgrunnlag skal være sendt og plukket opp av batch!");
     }
 }

@@ -170,7 +170,6 @@ class MorOgFarSammen extends FpsakTestBase {
         var morSaksnummer = mor.søk(søknadMor.build());
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(morSaksnummer, fpStartdatoMor);
-
         saksbehandler.hentFagsak(morSaksnummer);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
@@ -183,6 +182,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
                 .medMottatdato(fødselsdato.plusWeeks(1));
         var farSaksnummer = far.søk(søknadFar.build());
+
         saksbehandler.hentFagsak(farSaksnummer);
         saksbehandler.ventPåOgVelgÅpenFørstegangsbehandling();
         saksbehandler.harBehandlingsstatus(BehandlingStatus.UTREDES);

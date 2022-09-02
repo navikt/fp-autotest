@@ -4,15 +4,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.Fagsystem;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 
-@AksjonspunktKode(kode = "5002", fagsystem = Fagsystem.FPTILBAKE)
-public class ApVilkårsvurdering extends AksjonspunktBehandling {
+@BekreftelseKode(kode = "5002", fagsystem = Fagsystem.FPTILBAKE)
+public class ApVilkårsvurdering extends AksjonspunktBekreftelse {
 
     protected List<ApVilkårsvurderingDetaljer> vilkarsVurdertePerioder = new ArrayList<>();
 
     public ApVilkårsvurdering() {
-        this.kode = "5002";
+        setBegrunnelse("Dette er en begrunnelse dannet av Autotest!");
     }
 
     public void addVilkårPeriode(LocalDate fom, LocalDate tom) {

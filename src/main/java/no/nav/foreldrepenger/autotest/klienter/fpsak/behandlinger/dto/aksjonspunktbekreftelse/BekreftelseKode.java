@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface BekreftelseKode {
 
     String kode();
+
+    Fagsystem fagsystem() default Fagsystem.FPSAK;
 }

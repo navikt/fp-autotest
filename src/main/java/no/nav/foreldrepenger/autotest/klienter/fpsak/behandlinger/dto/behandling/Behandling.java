@@ -53,8 +53,12 @@ public class Behandling {
     public String behandlendeEnhetNavn;
     public Boolean behandlingHenlagt;
     public Boolean behandlingPaaVent;
+    public String venteArsakKode;
     public Behandlingsresultat behandlingsresultat;
     public List<BehandlingÅrsak> behandlingÅrsaker;
+
+    // TODO: Spesifikk for fptilbake
+    public boolean harVerge;
 
     private Lazy<List<Vilkar>> vilkar;
     private Lazy<List<Aksjonspunkt>> aksjonspunkter;
