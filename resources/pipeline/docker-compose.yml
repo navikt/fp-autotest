@@ -487,6 +487,7 @@ services:
     restart: on-failure
     environment:
       - "FEATURE_VIS_PERIODER_SOM_SENDES_INN=on"
+      - "FEATURE_BRUK_SAKER_V2=on"
       - "FAMILIE=https://familie.nav.no"
       - "APPRES_CMS_URL=https://www.nav.no/dekoratoren"
       - "FORELDREPENGESOKNAD_API_URL=http://localhost:9002/rest"
