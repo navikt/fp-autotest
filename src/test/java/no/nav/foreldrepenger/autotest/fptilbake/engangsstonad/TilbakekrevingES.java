@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.fptilbake.engangsstonad;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType.TILBAKEKREVING;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_FEIL_ELLER_ENDRET_FAKTA;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -18,9 +17,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VarselOmRevurderingBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderEktefellesBarnBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerBosattBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerHarGyldigPeriodeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
@@ -73,27 +70,30 @@ class TilbakekrevingES extends FptilbakeTestBase {
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        saksbehandler.opprettBehandlingRevurdering(RE_FEIL_ELLER_ENDRET_FAKTA);
-        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_FEIL_ELLER_ENDRET_FAKTA);
+//        saksbehandler.opprettBehandlingRevurdering(RE_FEIL_ELLER_ENDRET_FAKTA);
+//        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_FEIL_ELLER_ENDRET_FAKTA);
+//
+//        var varselOmRevurderingBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
+//        varselOmRevurderingBekreftelse.bekreftIkkeSendVarsel();
+//        saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
+//        var avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering = saksbehandler
+//                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+//                .setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedato);
+//        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering);
+//        var vurderEktefellesBarnBekreftelseRevurdering = saksbehandler
+//                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+//                .bekreftBarnErEktefellesBarn();
+//        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelseRevurdering);
+//
+//        var vurderTilbakekrevingVedNegativSimulering = saksbehandler
+//                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+//        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+//        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+//        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+        //Her mangler behandling av Engangsstønad revurderingen!!
 
-        var varselOmRevurderingBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
-        varselOmRevurderingBekreftelse.bekreftIkkeSendVarsel();
-        saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
-                .setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedato);
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering);
-        var vurderEktefellesBarnBekreftelseRevurdering = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
-                .bekreftBarnErEktefellesBarn();
-        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelseRevurdering);
 
-        var vurderTilbakekrevingVedNegativSimulering = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
-        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
-
+        tbksaksbehandler.opprettTilbakekreving(saksnummer, saksbehandler.valgtBehandling.uuid, ytelseType);
         tbksaksbehandler.hentSisteBehandling(saksnummer, TILBAKEKREVING);
         tbksaksbehandler.ventTilBehandlingErPåVent();
         assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)
