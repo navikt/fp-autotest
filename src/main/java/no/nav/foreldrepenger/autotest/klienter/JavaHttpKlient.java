@@ -4,6 +4,7 @@ import static jakarta.ws.rs.core.HttpHeaders.ACCEPT;
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.vedtak.log.mdc.MDCOperations.HTTP_HEADER_ALT_CALL_ID;
 import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CALL_ID;
@@ -47,7 +48,7 @@ public class JavaHttpKlient {
         CookieHandler.setDefault(new CookieManager());
         this.cookieHandler = CookieHandler.getDefault();
         this.klient = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_2)
+                .version(HttpClient.Version.HTTP_1_1)
                 .cookieHandler(cookieHandler)
                 .build();
     }
@@ -66,22 +67,22 @@ public class JavaHttpKlient {
 
     public static void send(HttpRequest request) {
         handleResponse(sendStringRequest(request), stringHttpResponse -> null,
-                null); // TODO
+                getDefualtErrorConsumer());
     }
 
     public static <T> T send(HttpRequest request, Class<T> clazz) {
         return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), clazz),
-                null); // TODO
+                getDefualtErrorConsumer());
     }
 
     public static <T> T send(HttpRequest request, Class<T> clazz, ObjectMapper mapper) {
         return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), clazz, mapper),
-                null); // TODO
+                getDefualtErrorConsumer());
     }
 
     public static <T> T send(HttpRequest request, TypeReference<T> typeReference) {
         return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), typeReference),
-                null); // TODO
+                getDefualtErrorConsumer());
     }
 
     public static byte[] sendOgHentByteArray(HttpRequest request) {
@@ -129,9 +130,17 @@ public class JavaHttpKlient {
         if (statusCode == HttpURLConnection.HTTP_BAD_REQUEST && errorConsumer != null) {
             errorConsumer.accept(response);
         }
-        throw new IntegrasjonException("REST-FEIL", String.format("[HTTP %s] Uventet respons fra %s", statusCode, endpoint));
+        throw new IntegrasjonException("REST-FEIL", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", statusCode, endpoint,
+                toJson(response.body())));
     }
 
+    private static Consumer<HttpResponse<String>> getDefualtErrorConsumer() {
+        return httpResponse -> {
+            throw new IntegrasjonException("FP-468820", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", httpResponse.statusCode(),
+                    httpResponse.uri(), toJson(httpResponse.body())));
+        };
+
+    }
 
     public static HttpRequest.Builder getRequestBuilder() {
         var consumerID = MDC.get(MDC_CONSUMER_ID);
@@ -141,7 +150,6 @@ public class JavaHttpKlient {
                 .header(CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .header(HTTP_HEADER_ALT_CALL_ID, callid)
                 .header(NAV_CALL_ID, callid);
-                // .timeout(Duration.ofSeconds(20));
     }
 
 
