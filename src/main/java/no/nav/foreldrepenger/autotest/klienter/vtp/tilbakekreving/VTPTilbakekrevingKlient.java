@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
@@ -11,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.TilbakekrevingKonsistensDto;
 
@@ -29,7 +29,7 @@ public class VTPTilbakekrevingKlient {
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(TILBAKEKREVING_KONSISTENS)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(
                         new TilbakekrevingKonsistensDto(saksnummer.value(), ""+behandlingId))));
         send(request.build());
     }

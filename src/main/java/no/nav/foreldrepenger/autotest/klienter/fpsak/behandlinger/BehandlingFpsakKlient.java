@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPSAK_BASE;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.BEHANDLINGER_URL;
@@ -18,7 +19,6 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
@@ -140,7 +140,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLINGER_URL)
                         .build())
-                .PUT(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(behandling)));
+                .PUT(HttpRequest.BodyPublishers.ofString(toJson(behandling)));
         return følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
     }
 
@@ -229,7 +229,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_AKSJONSPUNKT_OVERSTYR_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(aksjonspunkter)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(aksjonspunkter)));
         send(request.build());
     }
 
@@ -283,7 +283,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_KLAGE_MELLOMLAGRE_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(vurdering)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(vurdering)));
         send(request.build());
     }
 
@@ -308,7 +308,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_UTTAK_STONADSKONTOER_GITT_UTTAKSPERIODER_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(uttaksperioderDto)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(uttaksperioderDto)));
         return send(request.build(), Saldoer.class);
     }
 
@@ -383,7 +383,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_ARBEID_INNTEKTSMELDING_OPPRETT_ARBEIDSFORHOLD)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(arbeidsforhold)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(arbeidsforhold)));
         send(request.build());
     }
 
@@ -392,7 +392,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_ARBEID_INNTEKTSMELDING_NY_VURDERING)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(behandlingIdDto)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(behandlingIdDto)));
         send(request.build());
     }
 
@@ -401,7 +401,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_ARBEID_INNTEKTSMELDING_VURDERING)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(manglendeOpplysningerVurderingDto)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(manglendeOpplysningerVurderingDto)));
         send(request.build());
     }
 

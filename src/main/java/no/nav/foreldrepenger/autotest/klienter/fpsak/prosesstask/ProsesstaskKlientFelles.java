@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
@@ -11,7 +12,6 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
@@ -61,7 +61,7 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
                 .uri(fromUri(baseUrl)
                         .path(PROSESSTASK_LIST_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(statusFilterDto)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(statusFilterDto)));
         return Optional.ofNullable(
                 send(request.build(), new TypeReference<List<ProsessTaskDataDto>>() {}))
                 .orElse(List.of());
@@ -73,7 +73,7 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
                 .uri(fromUri(baseUrl)
                         .path(PROSESSTASK_CREATE_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(prosessTaskOpprettInputDto)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(prosessTaskOpprettInputDto)));
         send(request.build());
     }
 }

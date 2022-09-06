@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.saf;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.sendOgHentByteArray;
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.graphql.GraphQLRequest;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.graphql.GraphQlResponse;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.modell.Journalpost;
@@ -30,7 +30,7 @@ public class SafKlient {
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(GRAPHQL_ENDPOINT)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(body)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(body)));
         var graphQlResponse = send(request.build(), GraphQlResponse.class);
         return graphQlResponse.data().journalpost();
     }

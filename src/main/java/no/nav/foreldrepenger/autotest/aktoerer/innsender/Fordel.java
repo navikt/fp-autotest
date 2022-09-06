@@ -20,7 +20,6 @@ import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
-import no.nav.foreldrepenger.autotest.util.ControllerHelper;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -33,6 +32,7 @@ import no.nav.foreldrepenger.common.oppslag.Oppslag;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
 import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
+import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.BehandlingsTema;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
@@ -112,7 +112,7 @@ public class Fordel extends DokumentVenter {
         var skjæringsTidspunktForNyBehandling  = LocalDateTime.now().minusSeconds(1); // Legger inn slack på 1 sekund
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
         var journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
-        knyttJournalpostTilFagsak(xml, mottattDato, journalpostId, finnBehandlingstemaKode(dokumenttypeId),
+        knyttJournalpostTilFagsak(xml, mottattDato, journalpostId, finnBehandlingstemaKode(dokumenttypeId).getOffisiellKode(),
                 dokumenttypeId.getKode(), "SOK", aktørId, saksnummer);
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
@@ -132,11 +132,21 @@ public class Fordel extends DokumentVenter {
         }
     }
 
-    private String finnBehandlingstemaKode(DokumenttypeId dokumenttypeId) {
-        try {
-            return ControllerHelper.translateSøknadDokumenttypeToBehandlingstema(dokumenttypeId).getOffisiellKode();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    private static BehandlingsTema finnBehandlingstemaKode(DokumenttypeId dokumenttypeId) {
+        if (dokumenttypeId == DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL) {
+            return BehandlingsTema.FORELDREPENGER_FØDSEL;
+        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_FORELDREPENGER_ADOPSJON) {
+            return BehandlingsTema.FORELDREPENGER_ADOPSJON;
+        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL) {
+            return BehandlingsTema.ENGANGSSTØNAD_FØDSEL;
+        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON) {
+            return BehandlingsTema.ENGANGSSTØNAD_ADOPSJON;
+        } else if (dokumenttypeId == DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD) {
+            return BehandlingsTema.FORELDREPENGER;
+        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER){
+            return BehandlingsTema.SVANGERSKAPSPENGER;
+        } else {
+            throw new RuntimeException("Kunne ikke matche på dokumenttype.");
         }
     }
 

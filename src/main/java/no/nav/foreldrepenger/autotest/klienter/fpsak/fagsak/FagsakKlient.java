@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
@@ -11,7 +12,6 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Sok;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
@@ -45,7 +45,7 @@ public class FagsakKlient {
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_SØK_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(søk)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(søk)));
         return Optional.ofNullable(send(request.build(), new TypeReference<List<Fagsak>>() {}))
                 .orElse(List.of());
     }

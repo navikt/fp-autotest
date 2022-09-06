@@ -2,13 +2,13 @@ package no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak;
 
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx.TokenXHenterKlient;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Kvittering;
@@ -31,7 +31,7 @@ public class MottakKlient {
                         .path(MOTTAK_SEND_PATH)
                         .build())
                 .header(AUTHORIZATION, OIDC_AUTH_HEADER_PREFIX + fetchToken(fnr)) // TODO: Bedre måte å gjøre det på? Felles cookie vs header?
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(søknad)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));
         return send(request.build(), Kvittering.class);
     }
 
@@ -41,7 +41,7 @@ public class MottakKlient {
                         .path(MOTTAK_ENDRE_PATH)
                         .build())
                 .header(AUTHORIZATION, OIDC_AUTH_HEADER_PREFIX + fetchToken(fnr))
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(søknad)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));
         return send(request.build(), Kvittering.class);
     }
 

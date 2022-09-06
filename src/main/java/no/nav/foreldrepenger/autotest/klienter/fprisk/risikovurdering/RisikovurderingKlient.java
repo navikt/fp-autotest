@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fprisk.risikovurdering;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
@@ -8,7 +9,6 @@ import java.net.http.HttpRequest;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.kontrakter.risk.v1.HentRisikovurderingDto;
 import no.nav.foreldrepenger.kontrakter.risk.v1.RisikovurderingResultatDto;
 
@@ -22,7 +22,7 @@ public class RisikovurderingKlient {
                 .uri(fromUri(BaseUriProvider.FPRISK_BASE)
                         .path(RISIKOVURDERING_HENT_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(new HentRisikovurderingDto(uuid))));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(new HentRisikovurderingDto(uuid))));
         return send(request.build(), RisikovurderingResultatDto.class);
     }
 }

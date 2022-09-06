@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.testscenario;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.tilJsonOgPubliserIAllureRapport;
@@ -16,7 +17,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 
 public class TestscenarioKlient {
@@ -39,7 +39,7 @@ public class TestscenarioKlient {
         }
         var request = getRequestBuilder()
                 .uri(uriBuilder.build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(testscenarioObject)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(testscenarioObject)));
         var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
         tilJsonOgPubliserIAllureRapport(testscenarioObject);
         LOG.info("Testscenario opprettet: [{}] med hovedsøker: {} annenpart: {}", key,
