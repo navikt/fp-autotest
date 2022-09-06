@@ -1293,10 +1293,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         // Siste periode skal slippes og delvis innvilges med resterende saldo
         var fastsatteUttaksperioder = fastsettUttaksperioderManueltBekreftelseMor.getPerioder();
         var sistePeriode = fastsatteUttaksperioder.get(fastsatteUttaksperioder.size() - 1);
-        var saldoer = saksbehandler.hentSaldoerGittUttaksperioder(fastsatteUttaksperioder);
-        var disponibleFellesdager = saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FELLESPERIODE).saldo();
-        fastsettUttaksperioderManueltBekreftelseMor
-                .avslåPeriode(sistePeriode.getFom(), sistePeriode.getTom(), IKKE_STØNADSDAGER_IGJEN, false);
+        fastsettUttaksperioderManueltBekreftelseMor.avslåPeriode(sistePeriode.getFom(), sistePeriode.getTom(), IKKE_STØNADSDAGER_IGJEN, false);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
@@ -1969,7 +1966,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         return saksnummerMor;
     }
 
-    private void  assertFeriepenger(int faktiskBeløp, int forventetBeløp) {
+    private void assertFeriepenger(int faktiskBeløp, int forventetBeløp) {
         // Grunnet dynamiske perioder / oppslitting av perioder er det vanskelig å få valideringen 100% rett.
         // Legger derfor inn en liten buffer for å unngå knekte tester
         assertThat(faktiskBeløp).isGreaterThan(forventetBeløp - 10);

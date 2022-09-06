@@ -7,7 +7,7 @@ import java.util.List;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
-public class HistorikkFpsakKlient implements HistorikkKlientINF {
+public class HistorikkFpsakKlient implements HistorikkKlient {
 
     private final HistorikkKlientFelles historikkKlientFelles = new HistorikkKlientFelles(FPSAK_BASE);
 

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.journalpost;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
@@ -8,7 +9,6 @@ import java.net.http.HttpRequest;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.dto.JournalpostIdDto;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.JournalpostModell;
@@ -25,7 +25,7 @@ public class JournalforingKlient {
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(JOURNALFØR_JOURNALPOST)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(journalpostModell)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(journalpostModell)));
         return send(request.build(), JournalpostIdDto.class);
     }
 
@@ -36,7 +36,7 @@ public class JournalforingKlient {
                         .resolveTemplate("fnr", Optional.ofNullable(journalpostModell.getAvsenderFnr()).orElseThrow())
                         .resolveTemplate("dokumenttypeid", Optional.ofNullable(journalpostModell.getDokumentModellList().get(0).getDokumentType().getKode()).orElseThrow())
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(journalpostModell.getDokumentModellList().get(0).getInnhold())));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(journalpostModell.getDokumentModellList().get(0).getInnhold())));
         return send(request.build(), JournalpostIdDto.class);
     }
 

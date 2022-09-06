@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fordel;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
@@ -26,7 +26,7 @@ public class FordelKlient {
     public void journalpost(JournalpostMottakDto journalpostMottak) {
         var request = getRequestBuilder()
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE).path(JOURNALPOST_URL).build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(journalpostMottak)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(journalpostMottak)));
         send(request.build());
     }
 
@@ -39,7 +39,7 @@ public class FordelKlient {
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_OPPRETT_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(opprettSakDto)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(opprettSakDto)));
         return send(request.build(), SaksnummerDto.class);
     }
 
@@ -55,7 +55,7 @@ public class FordelKlient {
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_KNYTT_JOURNALPOST_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(JacksonBodyHandlers.toJson(knyttJournalpost)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(knyttJournalpost)));
         send(request.build());
     }
 }
