@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
-import static no.nav.foreldrepenger.autotest.util.log.LoggFormater.leggTilCallIdForFnr;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.ALTINN;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
 
@@ -32,7 +31,7 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalstatus;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
-public class SøknadMottak extends DokumentVenter {
+public class SøknadMottak extends DokumentInnsendingHjelper {
 
     private final MottakKlient mottakKlient;
     private final PdlLeesahKlient pdlLeesahKlient;
@@ -128,7 +127,6 @@ public class SøknadMottak extends DokumentVenter {
     }
 
     public void sendInnKlage(Fødselsnummer fnr) {
-        leggTilCallIdForFnr(fnr);
         var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null,
                 SKAN_IM, null, DokumenttypeId.KLAGE_DOKUMENT);
         journalpostKlient.journalførR(journalpostModell);

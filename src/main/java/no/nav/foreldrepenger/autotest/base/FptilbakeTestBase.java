@@ -5,7 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
 
-public class FptilbakeTestBase extends FpsakTestBase {
+// TODO: Fiks opp i testbasene
+public class FptilbakeTestBase extends VerdikjedeTestBase {
 
     protected TilbakekrevingSaksbehandler tbksaksbehandler;
     protected TilbakekrevingSaksbehandler tbkbeslutter;
