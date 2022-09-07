@@ -9,7 +9,7 @@ import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import java.net.http.HttpRequest;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx.TokenXHenterKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx.TokenXVekslingKlient;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Kvittering;
 import no.nav.foreldrepenger.common.domain.Søknad;
@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.Endringssøknad;
 
 public class MottakKlient {
 
-    private static final TokenXHenterKlient tokenXHenterKlient = new TokenXHenterKlient();
+    private static final TokenXVekslingKlient tokenXHenterKlient = new TokenXVekslingKlient();
 
     public static final String OIDC_AUTH_HEADER_PREFIX = "Bearer ";
     private static final String MOTTAK_PATH= "/mottak";

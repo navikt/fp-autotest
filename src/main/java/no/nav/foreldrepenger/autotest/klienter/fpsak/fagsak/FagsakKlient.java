@@ -29,7 +29,8 @@ public class FagsakKlient {
                         .queryParam("saksnummer", saksnummer.value())
                         .build())
                 .GET();
-        return send(request.build(), Fagsak.class);
+        return Optional.ofNullable(send(request.build(), Fagsak.class))
+                .orElseThrow(() -> new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer));
     }
 
     public List<Fagsak> søk(Fødselsnummer fnr) {

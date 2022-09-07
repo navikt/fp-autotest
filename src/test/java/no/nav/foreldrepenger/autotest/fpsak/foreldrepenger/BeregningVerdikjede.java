@@ -465,10 +465,6 @@ class BeregningVerdikjede extends FpsakTestBase {
 
     }
 
-    // @Test for å kunne teste automatisk besteberegning TODO?
-    void skal_teste_automatisk_besteberegning() {
-    }
-
     private void verifiserAndelerIPeriode(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
             BGAndelHelper BGAndelHelper) {
         assertThat(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndel().stream()

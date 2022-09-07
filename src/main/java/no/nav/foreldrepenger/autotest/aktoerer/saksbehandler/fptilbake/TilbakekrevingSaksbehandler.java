@@ -47,7 +47,7 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 
-// TODO: FIX
+// TODO: Se på hva som kan være felles på tvers av Saksbhenalder for fpska og fptiblaek
 public class TilbakekrevingSaksbehandler {
 
     private final Logger LOG = LoggerFactory.getLogger(TilbakekrevingSaksbehandler.class);

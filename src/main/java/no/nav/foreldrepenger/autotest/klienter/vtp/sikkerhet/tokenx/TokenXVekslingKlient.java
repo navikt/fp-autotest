@@ -13,7 +13,7 @@ import jakarta.ws.rs.core.MediaType;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
-public class TokenXHenterKlient {
+public class TokenXVekslingKlient {
 
     private static final Map<Fødselsnummer, String> subjectTokens = new ConcurrentHashMap<>();
     private static final Map<Fødselsnummer, String> accessTokens = new ConcurrentHashMap<>();

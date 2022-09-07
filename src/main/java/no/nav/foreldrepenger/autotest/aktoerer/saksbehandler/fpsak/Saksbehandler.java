@@ -80,12 +80,12 @@ public class Saksbehandler {
     protected Lazy<List<HistorikkInnslag>> historikkInnslag;
     protected Lazy<Behandling> annenPartBehandling;
 
+    protected final SafKlient safKlient;
     protected final FagsakKlient fagsakKlient;
     protected final BehandlingFpsakKlient behandlingerKlient;
     protected final HistorikkFpsakKlient historikkKlient;
     protected final ProsesstaskFpsakKlient prosesstaskKlient;
     protected final RisikovurderingKlient risikovurderingKlient;
-    protected final SafKlient safKlient;
 
     public Saksbehandler() {
         this(Aktoer.Rolle.SAKSBEHANDLER);
@@ -93,34 +93,31 @@ public class Saksbehandler {
 
     protected Saksbehandler(Aktoer.Rolle rolle) {
         this.rolle = rolle;
+        safKlient = new SafKlient(); // TODO: Flytte denne?
         fagsakKlient = new FagsakKlient();
         behandlingerKlient = new BehandlingFpsakKlient();
         historikkKlient = new HistorikkFpsakKlient();
         prosesstaskKlient = new ProsesstaskFpsakKlient();
         risikovurderingKlient = new RisikovurderingKlient();
-        safKlient = new SafKlient(); // TODO: Flytte denne?
     }
 
     /*
      * Fagsak
      */
-    public void hentFagsak(Saksnummer saksnummer) {
+    public Fagsak hentFagsak(Saksnummer saksnummer) {
         Aktoer.loggInn(rolle);
-        hentFagsakUtenInnlogging(saksnummer);
+        return hentFagsakOgSisteBehandling(saksnummer);
     }
 
-    private void hentFagsakUtenInnlogging(Saksnummer saksnummer) {
-        hentFagsakPåSaksnummer(saksnummer);
+    private Fagsak hentFagsakOgSisteBehandling(Saksnummer saksnummer) {
+        refreshFagsak(saksnummer);
         velgSisteBehandling();
+        return valgtFagsak;
     }
 
-    private void hentFagsakPåSaksnummer(Saksnummer saksnummer) {
+    private void refreshFagsak(Saksnummer saksnummer) {
         valgtFagsak = fagsakKlient.hentFagsak(saksnummer);
-        if (valgtFagsak == null) {
-            throw new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer);
-        }
     }
-
 
     public void ventTilFagsakAvsluttet() {
         ventTilFagsakstatus(FagsakStatus.AVSLUTTET);
@@ -136,7 +133,7 @@ public class Saksbehandler {
         }
         // TODO: Timeouts burde være så lav som mulig i pipeline, men veldig høy lokalt pga forskjellig typer PCer.
         Vent.til(() -> {
-            hentFagsakPåSaksnummer(valgtFagsak.saksnummer());
+            refreshFagsak(valgtFagsak.saksnummer());
             return harFagsakstatus(status);
         }, 10, "Fagsak har ikke status " + Set.of(status));
     }
@@ -144,7 +141,6 @@ public class Saksbehandler {
     private boolean harFagsakstatus(FagsakStatus... status) {
         return Set.of(status).contains(valgtFagsak.status());
     }
-
 
     /*
      * Behandling
@@ -156,10 +152,10 @@ public class Saksbehandler {
 
     public void velgSisteBehandling() {
         behandlinger = hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer());
-        var behandling = behandlinger.stream()
+        valgtBehandling = behandlinger.stream()
                 .max(Comparator.comparing(Behandling::getOpprettet))
                 .orElseThrow(() -> new RuntimeException("Fant ingen behandlinger for saksnummer: " + valgtFagsak.saksnummer()));
-        venterPåFerdigProssesseringOgOppdaterBehandling(behandling);
+        refreshBehandling();
     }
 
     public void ventPåOgVelgFørstegangsbehandling() {
@@ -397,8 +393,7 @@ public class Saksbehandler {
     @Step("Gjenopptar Behandling")
     public void gjenopptaBehandling() {
         valgtBehandling = behandlingerKlient.gjenoppta(new BehandlingIdVersjonDto(valgtBehandling));
-        // TODO: Fjern denne venten
-        venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling);
+        ventTilHistorikkinnslag(HistorikkinnslagType.BEH_GJEN);
     }
 
     @Step("Henlegger behandling")
@@ -501,7 +496,7 @@ public class Saksbehandler {
 
     private <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(String kode) {
         var aksjonspunkt = hentAksjonspunkt(kode);
-        var bekreftelse = aksjonspunkt.getBekreftelse(Fagsystem.FPSAK); // TODO: fpsak spesifikk
+        var bekreftelse = aksjonspunkt.getBekreftelse(Fagsystem.FPSAK);
         bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
         return (T) bekreftelse;
     }

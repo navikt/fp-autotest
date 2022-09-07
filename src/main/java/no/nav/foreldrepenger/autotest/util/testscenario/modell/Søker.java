@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
+import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
 import static no.nav.foreldrepenger.autotest.util.testscenario.modell.Aareg.arbeidsforholdFrilans;
 import static no.nav.foreldrepenger.autotest.util.testscenario.modell.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
@@ -7,14 +8,9 @@ import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CONSUMER_ID;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +40,7 @@ public abstract class Søker {
     private final InntektYtelseModell inntektYtelseModell;
     private final Innsender innsender;
 
-    private Innsyn innsyn; // TODO: Flytt?
+    private Innsyn innsyn;
     private Saksnummer saksnummer = null;
 
     Søker(Fødselsnummer fødselsnummer, AktørId aktørId, AktørId aktørIdAnnenpart, InntektYtelseModell inntektYtelseModell, Innsender innsender) {
@@ -258,20 +254,6 @@ public abstract class Søker {
         if (this.saksnummer == null) {
             throw new IllegalStateException("For å sende endringssøknad eller klage så trengs det en eksistrende behandling!");
         }
-    }
-
-    private static <T> Predicate<T> distinctByKeys(Function<? super T, ?>... keyExtractors)
-    {
-        final Map<List<?>, Boolean> seen = new ConcurrentHashMap<>();
-
-        return t ->
-        {
-            final List<?> keys = Arrays.stream(keyExtractors)
-                    .map(ke -> ke.apply(t))
-                    .toList();
-
-            return seen.putIfAbsent(keys, Boolean.TRUE) == null;
-        };
     }
 
     // Fpfordel stiller krav til at Nav-ConsumerId er unik på tvers av ulike dokumenter!

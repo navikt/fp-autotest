@@ -233,7 +233,6 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
         send(request.build());
     }
 
-    // TODO: Dette noe som er nødvendig?
     public Soknad behandlingSøknad(UUID behandlingUuid) {
         var request = getRequestBuilder()
                 .uri(fromUri(FPSAK_BASE)

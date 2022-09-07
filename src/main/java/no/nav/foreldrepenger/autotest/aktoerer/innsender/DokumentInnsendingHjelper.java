@@ -33,7 +33,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
         behandlingerKlient = new BehandlingFpsakKlient();
         historikkKlient = new HistorikkFpsakKlient();
         journalpostKlient = new JournalforingKlient();
-        Aktoer.loggInn(Aktoer.Rolle.SAKSBEHANDLER); // TODO: Litt rart å logge inn som saksbehandler kanskje?
+        Aktoer.loggInn(Aktoer.Rolle.SAKSBEHANDLER);
     }
 
     /**
