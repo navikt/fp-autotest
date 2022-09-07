@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +32,7 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon - godkjent")
     @Description("Mor søker adopsjon - godkjent happy case")
     void morSøkerAdopsjonGodkjent() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
@@ -62,7 +63,7 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon - avvist - barn er over 15 år")
     @Description("Mor søker adopsjon - avvist - barn er over 15 år og blir dermed avlått")
     void morSøkerAdopsjonAvvist() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
@@ -97,7 +98,7 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon med overstyrt vilkår")
     @Description("Mor søker adopsjon med overstyrt vilkår som tar behandlingen fra innvilget til avslått")
     void morSøkerAdopsjonOverstyrt() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
@@ -142,7 +143,7 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Far søker adopsjon - godkjent")
     @Description("Far søker adopsjon - godkjent happy case")
     void farSøkerAdopsjonGodkjent() {
-        var familie = new Familie("61", fordel);
+        var familie = new Familie("61", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.FAR, omsorgsovertakelsedato, false);
@@ -178,7 +179,7 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Far søker adopsjon av ektefelles barn")
     @Description("Far søker adopsjon av ektefelles barn fører til avvist behandling")
     void farSøkerAdopsjonAvvist() {
-        var familie = new Familie("61", fordel);
+        var familie = new Familie("61", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.FAR, omsorgsovertakelsedato, false);

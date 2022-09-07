@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
@@ -48,7 +49,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
     @Description("Mor søker fødsel. Har ikke arbeidsforhold i AAREG, men det blir sendt inn en " +
             "innteksmelding. Saksbehandler legger til arbeidsforhold basert på motatt inntektsmelding")
     void utenArbeidsforholdMenMedInntektsmelding() {
-        var familie = new Familie("171", fordel);
+        var familie = new Familie("171", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -87,7 +88,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
     @DisplayName("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Legger til fiktivt arbeidsforhold.")
     @Description("Mor søker termin, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til fiktivt arbeidsforhold")
     void morSøkerTerminUtenAktiviteterIAareg() {
-        var familie = new Familie("168", fordel);
+        var familie = new Familie("168", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var termindato = fødselsdato.plusDays(2);

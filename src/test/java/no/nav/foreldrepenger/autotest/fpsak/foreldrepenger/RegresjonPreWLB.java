@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.utsettelsesperiode;
@@ -47,7 +48,7 @@ class RegresjonPreWLB extends FpsakTestBase {
             + "fra de 15 ukene uten aktivitetskrav, mens utsettelsen trekker dager. Far prøver å ta ut foreldrepenger uten aktivitetskrav"
             + "etter uke 46 og for avslag pga manglende stønadsdager igjen på konto.")
     void BFHRMorUføreTrekkerDagerFortløpendeNårVilkårIkkeErOppfylt() {
-        var familie = new Familie("601", fordel);
+        var familie = new Familie("601", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var fødselsdato = Virkedager.helgejustertTilMandag(familie.barn().fødselsdato());
         var fpStartdatoFar = fødselsdato.plusWeeks(6);
@@ -149,7 +150,7 @@ class RegresjonPreWLB extends FpsakTestBase {
     @Description("Far søker rundt fødsel hvor han oppgir at mor er trenger hjelp. Saksbehanlder velger at sykdom ikke er dokumentert"
             + "og avslå perioden ifm fødel. Resten skal innvilges automatisk.")
     void farSøkerImfFødselMenMorErIkkeSykEllerInnlagt() {
-        var familie = new Familie("601", fordel);
+        var familie = new Familie("601", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var fødselsdato = Virkedager.helgejustertTilMandag(familie.barn().fødselsdato());
         var uttakIfmFødselFom = fødselsdato;

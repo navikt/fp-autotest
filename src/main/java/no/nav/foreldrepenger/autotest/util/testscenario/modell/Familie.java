@@ -1,10 +1,21 @@
 package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_MED_SELVBETJENING;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import no.nav.foreldrepenger.autotest.aktoerer.innsender.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
+import no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.SøknadMottak;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
+import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.personopplysning.BrukerModell;
 
@@ -20,16 +31,20 @@ public class Familie {
     private Mor medmor;
 
     public Familie(String scenarioId) {
-        this(scenarioId, new SøknadMottak());
+        this(scenarioId, SEND_DOKUMENTER_MED_SELVBETJENING);
     }
 
-    public Familie(String scenarioId, Innsender innsender) {
-        this(scenarioId, false, innsender);
+    public Familie(String scenarioId, InnsenderType innsenderType) {
+        this(scenarioId, false, innsenderType);
     }
 
-    public Familie(String scenarioId, boolean privatArbeidsgiver, Innsender innsender) {
+    public Familie(String scenarioId, boolean privatArbeidsgiver, InnsenderType innsenderType) {
+
         this.scenario = opprettTestscenario(scenarioId, privatArbeidsgiver);
-        this.innsender = innsender;
+        this.innsender = switch (innsenderType) {
+            case SEND_DOKUMENTER_MED_SELVBETJENING -> new SøknadMottak();
+            case SEND_DOKUMENTER_UTEN_SELVBETJENING -> new Fordel();
+        };
     }
 
     public Mor mor() {
@@ -38,6 +53,7 @@ public class Familie {
                 mor = new Mor(
                         new Fødselsnummer(scenario.personopplysninger().søkerIdent()),
                         new AktørId(scenario.personopplysninger().søkerAktørIdent()),
+                        new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
                         scenario.scenariodataDto(),
                         innsender);
                 return mor;
@@ -45,6 +61,7 @@ public class Familie {
                 mor = new Mor(
                         new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
+                        new AktørId(scenario.personopplysninger().søkerAktørIdent()),
                         scenario.scenariodataAnnenpartDto(),
                         innsender);
                 return mor;
@@ -64,6 +81,7 @@ public class Familie {
                 medmor = new Mor(
                         new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
+                        new AktørId(scenario.personopplysninger().søkerAktørIdent()),
                         scenario.scenariodataAnnenpartDto(),
                         innsender);
                 return medmor;
@@ -81,6 +99,7 @@ public class Familie {
                 far = new Far(
                         new Fødselsnummer(scenario.personopplysninger().søkerIdent()),
                         new AktørId(scenario.personopplysninger().søkerAktørIdent()),
+                        new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
                         scenario.scenariodataDto(),
                         innsender);
                 return far;
@@ -88,6 +107,7 @@ public class Familie {
                 far = new Far(
                         new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
+                        new AktørId(scenario.personopplysninger().søkerAktørIdent()),
                         scenario.scenariodataAnnenpartDto(),
                         innsender);
                 return far;
@@ -104,6 +124,28 @@ public class Familie {
             throw new IllegalStateException("Barn er enda ikke født for familie");
         }
         return new Barn(scenario.personopplysninger().fødselsdato());
+    }
+
+    public void sendInnDødshendelse(Fødselsnummer fnr, LocalDate dødsdato) {
+        sendInnHendelse(new DødshendelseDto("OPPRETTET", null, fnr.value(), dødsdato));
+    }
+
+    public void sendInnDødfødselhendelse(LocalDate dødfødselsdato) {
+        sendInnHendelse(new DødfødselhendelseDto("OPPRETTET", null, mor.fødselsnummer().value(), dødfødselsdato));
+    }
+
+    public void sendInnFødselshendelse(LocalDate fødselsdato) {
+        var farEllerMedmor = far != null ? far : medmor;
+        var fødselshendelseDto = new FødselshendelseDto(
+                "OPPRETTET", null,
+                Optional.ofNullable(mor).map(m -> m.fødselsnummer().value()).orElse(null),
+                Optional.ofNullable(farEllerMedmor).map(a -> a.fødselsnummer().value()).orElse(null),
+                null, fødselsdato);
+        sendInnHendelse(fødselshendelseDto);
+    }
+
+    private void sendInnHendelse(PersonhendelseDto personhendelseDto) {
+        innsender.sendInnHendelse(personhendelseDto);
     }
 
     private TestscenarioDto opprettTestscenario(String id, boolean privatArbeidsgiver) {

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,7 +31,7 @@ class Klage extends FpsakTestBase {
     @DisplayName("Klage med Medhold Ugunst NFP")
     @Description("Sender inn klage på førstegangsbehandling. Bekrefter medhold i Ugunst hos NFP. Beslutter og avslutter.")
     void klageMedholUgunstNFP() {
-        var familie = new Familie("50", fordel);
+        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
 
@@ -102,7 +103,7 @@ class Klage extends FpsakTestBase {
     @DisplayName("Klage avvist i formkrav av NFP")
     @Description("Sender inn klage på førstegangsbehandling. NFP avslår formkrav (ikke konkret). Beslutter og avslutter.")
     void avvisFormkravNFP() {
-        var familie = new Familie("50", fordel);
+        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
 

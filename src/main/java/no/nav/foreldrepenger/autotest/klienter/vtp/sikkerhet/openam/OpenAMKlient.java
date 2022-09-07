@@ -14,7 +14,7 @@ import jakarta.ws.rs.core.MediaType;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.dto.AccessTokenResponseDTO;
 
-public class OpenamKlient {
+public class OpenAMKlient {
 
     private static final String ACCESS_TOKEN_PATH = "/rest/isso/oauth2/access_token";
 

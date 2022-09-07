@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +28,7 @@ class Soknadsfrist extends FpsakTestBase {
     @DisplayName("Behandle søknadsfrist og sent tilbake")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist. Manglende fødsel.")
     void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusMonths(7);
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -68,7 +69,7 @@ class Soknadsfrist extends FpsakTestBase {
     @DisplayName("Behandle søknadsfrist og sent tilbake på grunn av fødsel")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av fødsel - tester tilbakesending")
     void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusMonths(7);
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);

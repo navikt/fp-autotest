@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadTermin;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +33,7 @@ class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin - godkjent")
     @Description("Mor søker termin - godkjent happy case")
     void morSøkerTerminGodkjent() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato);
@@ -65,7 +66,7 @@ class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin overstyrt vilkår")
     @Description("Mor søker termin overstyrt vilkår fødsel fra oppfylt til avvist")
     void morSøkerTerminOvertyrt() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato);
@@ -108,7 +109,7 @@ class Termin extends FpsakTestBase {
     @DisplayName("Far søker termin")
     @Description("Far søker termin avslått pga søker er far")
     void farSøkerTermin() {
-        var familie = new Familie("61", fordel);
+        var familie = new Familie("61", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(BrukerRolle.FAR, termindato);
@@ -132,7 +133,7 @@ class Termin extends FpsakTestBase {
     @DisplayName("Setter behandling på vent og gjennoptar og henlegger")
     @Description("Setter behandling på vent og gjennoptar og henlegger")
     void settBehandlingPåVentOgGjenopptaOgHenlegg() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato);
@@ -163,7 +164,7 @@ class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin 25 dager etter fødsel")
     @Description("Mor søker termin 25 dager etter fødsel - Får aksjonpunkt om manglende fødsel - godkjent")
     void morSøkerTermin25DagerTilbakeITid() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().minusDays(26);
         var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato)

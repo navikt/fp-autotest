@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,7 +34,7 @@ class Revurdering extends FpsakTestBase {
     @DisplayName("Manuelt opprettet revurdering")
     @Description("Manuelt opprettet revurdering etter avsluttet behandling med utsendt varsel")
     void manueltOpprettetRevurderingSendVarsel() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
