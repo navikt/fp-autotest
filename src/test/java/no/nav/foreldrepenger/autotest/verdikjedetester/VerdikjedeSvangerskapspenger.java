@@ -1,19 +1,17 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
-import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadSvangerskapspengerErketyper;
@@ -26,10 +24,9 @@ import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
-import no.nav.vedtak.log.mdc.MDCOperations;
 
 @Tag("verdikjede")
-class VerdikjedeSvangerskapspenger extends FpsakTestBase {
+class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
     @Test
     @DisplayName("1: Mor søker fullt uttak med inntekt under 6G")
@@ -252,7 +249,6 @@ class VerdikjedeSvangerskapspenger extends FpsakTestBase {
                 .isTrue();
 
         /* SØKNAD 2 */
-        MDCOperations.putToMDC(MDC_CONSUMER_ID, UUID.randomUUID().toString());
         var tilrettelegging2 = TilretteleggingsErketyper.ingenTilrettelegging(
                 LocalDate.now(),
                 LocalDate.now(),

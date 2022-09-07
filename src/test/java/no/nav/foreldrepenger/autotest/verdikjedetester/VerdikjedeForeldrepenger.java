@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.RelasjonTilBarnErketyper;
@@ -109,7 +109,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 
 @Tag("verdikjede")
-class VerdikjedeForeldrepenger extends FpsakTestBase {
+class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(VerdikjedeForeldrepenger.class);
 
@@ -1802,25 +1802,26 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
     @Description("Far søker og får innvilget før termin. Fødselshendelse med fødsel etter termin. Far utsetter oppstart for å matche"
             + "fødselsdato")
     void farUtsetterOppstartRundtFødselSøkerTermin() {
-        var familie = new Familie("83", fordel);
-        var termindato = helgejustertTilMandag(LocalDate.now().minusWeeks(2));
+        var familie = new Familie("83");
+        var termindato = helgejustertTilMandag(LocalDate.now().minusWeeks(2).minusDays(2));
 
-        var far = familie.far();
+        var mor = familie.mor();
         var søknadMor = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medFordeling(FordelingErketyper.fordelingMorHappyCase(termindato))
-                .medAnnenForelder(lagNorskAnnenforeldre(far));
-        var mor = familie.mor();
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummerMor = mor.søk(søknadMor.build());
 
-        mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(3));
+        mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(1));
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
+        // TODO: Vi trenger unik referanse id for hver innsending! Både for FS og endring!
+        var far = familie.far();
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
-                .medFordeling(generiskFordeling(uttaksperiode(FEDREKVOTE, termindato.minusWeeks(1), termindato.plusWeeks(1).minusDays(1),
-                        SAMTIDIGUTTAK)))
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()));
+                .medFordeling(generiskFordeling(uttaksperiode(FEDREKVOTE, termindato.minusWeeks(1), termindato.plusWeeks(1).minusDays(1), SAMTIDIGUTTAK)))
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
+                .medMottatdato(termindato.minusWeeks(1));
         var saksnummerFar = far.søk(søknadFar.build());
 
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato.minusWeeks(1));
@@ -1884,7 +1885,7 @@ class VerdikjedeForeldrepenger extends FpsakTestBase {
         var mor = familie.mor();
         var saksnummerMor = mor.søk(lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medFordeling(FordelingErketyper.fordelingMorHappyCase(termindato))
-                        .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
                 .build());
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(3));
 

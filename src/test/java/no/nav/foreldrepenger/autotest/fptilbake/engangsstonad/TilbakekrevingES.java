@@ -191,7 +191,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
 
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5030);
         var vergeFakta = (ApVerge) tbksaksbehandler.hentAksjonspunktbehandling(5030);
-        var vergeFamilie = new Familie("01", fordel);
+        var vergeFamilie = new Familie("01");
         vergeFakta.setVerge(vergeFamilie);
         tbksaksbehandler.behandleAksjonspunkt(vergeFakta);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);

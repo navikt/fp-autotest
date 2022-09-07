@@ -16,10 +16,8 @@ import java.util.UUID;
 import org.mockito.Mockito;
 
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -36,7 +34,7 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.BehandlingsTem
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 
-public class Fordel extends DokumentVenter {
+public class Fordel extends DokumentInnsendingHjelper {
 
     private static int inkrementForEksternReferanse = 0;
 
@@ -47,13 +45,10 @@ public class Fordel extends DokumentVenter {
      * Klienter
      */
     FordelKlient fordelKlient;
-    SafKlient safKlient;
 
 
     public Fordel() {
-        Aktoer.loggInn(Aktoer.Rolle.SAKSBEHANDLER);
         fordelKlient = new FordelKlient();
-        safKlient = new SafKlient();
     }
 
     /*
@@ -231,10 +226,5 @@ public class Fordel extends DokumentVenter {
 
     private static String lagUnikEksternReferanseId() {
         return "AR" + String.format("%08d", ++inkrementForEksternReferanse);
-    }
-
-    /* SAF */
-    public byte[] hentJournalførtDokument(String dokumentId, String variantFormat) {
-        return safKlient.hentDokumenter(null, dokumentId, variantFormat);
     }
 }

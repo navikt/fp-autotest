@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
-import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
@@ -38,17 +36,13 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.Behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdVersjonDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.KlageVurderingResultatAksjonspunktMellomlagringDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelseUtenTotrinn;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.OverstyrAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.ArbeidInntektsmeldingBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
@@ -67,54 +61,51 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkFpsakKli
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskFpsakKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
-import no.nav.vedtak.log.mdc.MDCOperations;
 
 public class Saksbehandler {
 
     private final Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
+    private final Aktoer.Rolle rolle;
 
     public Fagsak valgtFagsak;
     public Behandling valgtBehandling;
     public List<Behandling> behandlinger;
+    protected Lazy<List<HistorikkInnslag>> historikkInnslag;
+    protected Lazy<Behandling> annenPartBehandling;
 
-    private Lazy<List<HistorikkInnslag>> historikkInnslag;
-    private Lazy<Behandling> annenPartBehandling;
+    protected final FagsakKlient fagsakKlient;
+    protected final BehandlingFpsakKlient behandlingerKlient;
+    protected final HistorikkFpsakKlient historikkKlient;
+    protected final ProsesstaskFpsakKlient prosesstaskKlient;
+    protected final RisikovurderingKlient risikovurderingKlient;
+    protected final SafKlient safKlient;
 
-    private final Aktoer.Rolle rolle;
-    private final FagsakKlient fagsakKlient;
-    private final BehandlingFpsakKlient behandlingerKlient;
-    private final HistorikkFpsakKlient historikkKlient;
-    private final ProsesstaskFpsakKlient prosesstaskKlient;
-    private final RisikovurderingKlient risikovurderingKlient;
+    public Saksbehandler() {
+        this(Aktoer.Rolle.SAKSBEHANDLER);
+    }
 
-
-    public Saksbehandler(Aktoer.Rolle rolle) {
+    protected Saksbehandler(Aktoer.Rolle rolle) {
         this.rolle = rolle;
         fagsakKlient = new FagsakKlient();
         behandlingerKlient = new BehandlingFpsakKlient();
         historikkKlient = new HistorikkFpsakKlient();
         prosesstaskKlient = new ProsesstaskFpsakKlient();
         risikovurderingKlient = new RisikovurderingKlient();
+        safKlient = new SafKlient(); // TODO: Flytte denne?
     }
-
-    // TODO: Vurder felles klasser.. En for saksbehandler, beslutter, overstyrer.. (?)
-//    @Override
-//    public Aktoer.Rolle rolle() {
-//        return Aktoer.Rolle.SAKSBEHANDLER;
-//    }
 
     /*
      * Fagsak
      */
     public void hentFagsak(Saksnummer saksnummer) {
-        Aktoer.loggInn(rolle); // TODO: Greit? eller gjøre det på en annen måte?
-        MDCOperations.putToMDC(MDC_CONSUMER_ID, MDC.get(saksnummer.value()));// Må være satt! Trenger unik referanse ved journalføring (?)
+        Aktoer.loggInn(rolle);
         hentFagsakUtenInnlogging(saksnummer);
     }
 
@@ -308,7 +299,7 @@ public class Saksbehandler {
                 valgtBehandling.uuid, valgtFagsak.saksnummer(), forventetStatus, behandlingsstatus));
     }
 
-    private void refreshBehandling() {
+    protected void refreshBehandling() {
         venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling);
     }
 
@@ -526,11 +517,7 @@ public class Saksbehandler {
                         "\nAksjonspunkt på behandling: " + valgtBehandling.getAksjonspunkter().toString()));
     }
 
-    public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
-        return valgtBehandling.getAksjonspunkter().stream()
-                .filter(Aksjonspunkt::skalTilToTrinnsBehandling)
-                .toList();
-    }
+
 
     /*
      * Sjekker om aksjonspunkt av gitt kode er på behandlingen
@@ -595,16 +582,6 @@ public class Saksbehandler {
         }
     }
 
-    public void fattVedtakOgVentTilAvsluttetBehandling(FatterVedtakBekreftelse bekreftelse) {
-        bekreftAksjonspunkt(bekreftelse);
-        ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-    }
-
-    public void fattVedtakUtenTotrinnOgVentTilAvsluttetBehandling() {
-        bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelseUtenTotrinn.class);
-        ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-    }
-
     public void ventTilAvsluttetBehandling() {
         LOG.info("Venter til behandling er avsluttet ...");
 
@@ -630,26 +607,8 @@ public class Saksbehandler {
 
 
     /*
-     * Oversyring
-     */
-    public void overstyr(AksjonspunktBekreftelse bekreftelse) {
-        List<AksjonspunktBekreftelse> bekreftelser = new ArrayList<>();
-        bekreftelser.add(bekreftelse);
-        overstyr(bekreftelser);
-    }
-
-    @Step("Overstyrer aksjonspunkter")
-    public void overstyr(List<AksjonspunktBekreftelse> bekreftelser) {
-        OverstyrAksjonspunkter aksjonspunkter = new OverstyrAksjonspunkter(valgtFagsak, valgtBehandling, bekreftelser);
-        behandlingerKlient.overstyr(aksjonspunkter);
-        refreshBehandling();
-    }
-
-
-    /*
      * Historikkinnslag
      */
-
     public List<HistorikkInnslag> hentHistorikkinnslagPåFagsak() {
         refreshBehandling();
         return get(historikkInnslag);
@@ -698,7 +657,6 @@ public class Saksbehandler {
                         + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
     }
 
-
     /*
      * Vilkar
      */
@@ -721,13 +679,6 @@ public class Saksbehandler {
 
     private Behandling getAnnenPartBehandling() {
         return get(annenPartBehandling);
-    }
-
-    public void mellomlagreKlage() {
-        behandlingerKlient.mellomlagre(
-                new KlageVurderingResultatAksjonspunktMellomlagringDto(valgtBehandling,
-                        hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP)));
-        refreshBehandling();
     }
 
 
@@ -867,5 +818,10 @@ public class Saksbehandler {
         dtoer.forEach(this::lagreArbeidsforholdValg);
         var ab = hentAksjonspunktbekreftelse(ArbeidInntektsmeldingBekreftelse.class);
         bekreftAksjonspunkt(ab);
+    }
+
+    /* SAF */
+    public byte[] hentJournalførtDokument(String dokumentId, String variantFormat) {
+        return safKlient.hentDokumenter(null, dokumentId, variantFormat);
     }
 }

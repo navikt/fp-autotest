@@ -11,6 +11,18 @@
                 "registreringsDato": "now() - P10Y",
                 "datoSistEndret": "now() - P1Y"
             }
+        },
+        {
+            "orgnummer": "994884174",
+            "navn": {
+                "navnelinje": [
+                    "KJELLTECH FAKE AS"
+                ]
+            },
+            "organisasjonDetaljer": {
+                "registreringsDato": "now() - P10Y",
+                "datoSistEndret": "now() - P1Y"
+            }
         }
     ]
 }

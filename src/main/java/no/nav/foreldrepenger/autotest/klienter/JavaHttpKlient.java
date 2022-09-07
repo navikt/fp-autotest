@@ -6,8 +6,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.vedtak.log.mdc.MDCOperations.HTTP_HEADER_ALT_CALL_ID;
-import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CALL_ID;
+import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CONSUMER_ID;
 import static no.nav.vedtak.log.mdc.MDCOperations.generateCallId;
 
 import java.io.IOException;
@@ -143,7 +143,7 @@ public class JavaHttpKlient {
     }
 
     public static HttpRequest.Builder getRequestBuilder() {
-        var consumerID = MDC.get(MDC_CONSUMER_ID);
+        var consumerID = MDC.get(NAV_CONSUMER_ID);
         var callid = consumerID != null ? consumerID : generateCallId();
         return HttpRequest.newBuilder()
                 .header(ACCEPT, MediaType.APPLICATION_JSON)
