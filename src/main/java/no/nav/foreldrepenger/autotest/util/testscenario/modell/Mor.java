@@ -6,7 +6,7 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 
 public class Mor extends Søker {
-    Mor(Fødselsnummer ident, AktørId aktørId, InntektYtelseModell inntektYtelseModell, Innsender innsenderType) {
-        super(ident, aktørId, inntektYtelseModell, innsenderType);
+    Mor(Fødselsnummer ident, AktørId aktørId, AktørId aktørIdAnnenpart, InntektYtelseModell inntektYtelseModell, Innsender innsenderType) {
+        super(ident, aktørId, aktørIdAnnenpart, inntektYtelseModell, innsenderType);
     }
 }

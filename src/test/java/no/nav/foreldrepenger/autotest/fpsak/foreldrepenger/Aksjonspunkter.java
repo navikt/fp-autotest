@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
@@ -40,7 +41,7 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("REGISTRER_PAPIRSØKNAD_FORELDREPENGER")
     void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5040() {
-        var familie = new Familie("500", fordel);
+        var familie = new Familie("500", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -56,7 +57,7 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("AVKLAR_ADOPSJONSDOKUMENTAJON")
     void aksjonspunkt_ADOPSJONSSOKNAD_FORELDREPENGER_5004() {
-        var familie = new Familie("172", fordel);
+        var familie = new Familie("172", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var adopsjon = Adopsjon.builder()
@@ -81,7 +82,7 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("MANUELL_VURDERING_AV_OMSORGSVILKÅRET")
     void aksjonspunkt_ADOPSJONSSOKNAD_ENGANGSSTONAD_5011() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = SøknadEngangsstønadErketyper.lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
@@ -100,7 +101,7 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("VURDER_OPPTJENINGSVILKÅRET")
     void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5089() {
-        var familie = new Familie("01", fordel);
+        var familie = new Familie("01", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
@@ -117,7 +118,7 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("5058 – VURDER_FAKTA_FOR_ATFL_SN")
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER() {
-        var familie = new Familie("501", fordel);
+        var familie = new Familie("501", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(3);
         var næringOpptjening = OpptjeningErketyper.medEgenNaeringOpptjening(true, 30_000, false);
@@ -152,7 +153,7 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("VURDER_OM_VILKÅR_FOR_SYKDOM_OPPFYLT")
     void aksjonspunkt_FAR_FOEDSELSSOKNAD_FORELDREPENGER_5044() {
-        var familie = new Familie("86", fordel);
+        var familie = new Familie("86", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var termindato = LocalDate.now().plusWeeks(2);
         var fordeling = generiskFordeling(
@@ -184,7 +185,7 @@ class Aksjonspunkter extends FpsakTestBase {
     @DisplayName("AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE")
     @Test
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_() {
-        var familie = new Familie("75", fordel);
+        var familie = new Familie("75", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var fpStartdato = termindato.minusWeeks(3);
@@ -203,7 +204,7 @@ class Aksjonspunkter extends FpsakTestBase {
     @DisplayName("SJEKK_MANGLENDE_FØDSEL")
     @Test
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_5027() {
-        var familie = new Familie("501", fordel);
+        var familie = new Familie("501", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(3);
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -222,7 +223,7 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("5095 – VURDER_FARESIGNALER_KODE")
     void aksjonspunkt_VURDER_FARESIGNALER_KODE_5095() {
-        var familie = new Familie("522", fordel);
+        var familie = new Familie("522", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,7 +34,7 @@ class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker fødsel er utvandret")
     @Description("Mor søker fødsel og er utvandret. Skal føre til aksjonspunkt angående medlemskap - avslått")
     void morSøkerFødselErUtvandret() {
-        var familie = new Familie("51", fordel);
+        var familie = new Familie("51", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -76,7 +77,7 @@ class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker med personstatus uregistrert")
     @Description("Mor søker med personstatus uregistrert, får askjonspunkt så hennlegges")
     void morSøkerFødselUregistrert() {
-        var familie = new Familie("120", fordel);
+        var familie = new Familie("120", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -98,7 +99,7 @@ class Medlemskap extends FpsakTestBase {
     @DisplayName("Mor søker med utenlandsk adresse og ingen registert inntekt")
     @Description("Mor søker med utelandsk adresse og ingen registret inntekt")
     void morSøkerFødselUtenlandsadresse() {
-        var familie = new Familie("121", fordel);
+        var familie = new Familie("121", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);

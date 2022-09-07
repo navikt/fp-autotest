@@ -104,9 +104,6 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Stønadskont
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
-import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.DødshendelseDto;
-import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 
 @Tag("verdikjede")
 class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
@@ -120,7 +117,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     void testcase_mor_fødsel() {
         var familie = new Familie("501");
         var mor = familie.mor();
-        var identSøker = mor.fødselsnummer();
         var termindato = LocalDate.now().plusWeeks(1);
         var fpStartdato = termindato.minusWeeks(3);
         var fordeling = FordelingErketyper.generiskFordeling(
@@ -176,9 +172,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isTrue();
 
         // Fødselshendelse
-        var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, identSøker.value(),
-                null, null, termindato.minusWeeks(1));
-        innsender.opprettHendelsePåKafka(fødselshendelseDto);
+        familie.sendInnFødselshendelse(termindato.minusWeeks(1));
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -215,7 +209,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var familie = new Familie("510");
         var fødselsdato = familie.barn().fødselsdato();
         var mor = familie.mor();
-        var identSøker = mor.fødselsnummer();
         var næringsinntekt = mor.næringsinntekt(2018);
         // Merk: Avviket er G-sensitivt og kan bli påvirket av g-regulering
         var avvikendeNæringsinntekt = næringsinntekt * 1.9; // >25% avvik
@@ -274,9 +267,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
 
-        var dødshendelseDto = new DødshendelseDto("OPPRETTET", null, identSøker.value(),
-                LocalDate.now().minusDays(1));
-        innsender.opprettHendelsePåKafka(dødshendelseDto);
+        familie.sendInnDødshendelse(mor.fødselsnummer(), LocalDate.now().minusDays(1));
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -1459,9 +1450,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isZero();
 
         var differanseFødselTermin = 7;
-        var dødfødselshendelseDto = new DødfødselhendelseDto("OPPRETTET", null, søkerIdent.value(),
-                termindato.plusDays(differanseFødselTermin));
-        innsender.opprettHendelsePåKafka(dødfødselshendelseDto);
+        familie.sendInnDødfødselhendelse(termindato.plusDays(differanseFødselTermin));
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -1816,7 +1805,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        // TODO: Vi trenger unik referanse id for hver innsending! Både for FS og endring!
         var far = familie.far();
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
                 .medFordeling(generiskFordeling(uttaksperiode(FEDREKVOTE, termindato.minusWeeks(1), termindato.plusWeeks(1).minusDays(1), SAMTIDIGUTTAK)))
@@ -1836,9 +1824,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         // Fødselshendelse
         var fødselsdato = termindato.plusWeeks(1);
-        var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, mor.fødselsnummer().value(), far.fødselsnummer().value(), null,
-                fødselsdato);
-        innsender.opprettHendelsePåKafka(fødselshendelseDto);
+        familie.sendInnFødselshendelse(fødselsdato);
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
@@ -1918,9 +1904,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         // Fødselshendelse
         var fødselsdato = termindato.plusWeeks(1);
-        var fødselshendelseDto = new FødselshendelseDto("OPPRETTET", null, familie.mor().fødselsnummer().value(), far.fødselsnummer().value(), null,
-                fødselsdato);
-        innsender.opprettHendelsePåKafka(fødselshendelseDto);
+        familie.sendInnFødselshendelse(fødselsdato);
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);

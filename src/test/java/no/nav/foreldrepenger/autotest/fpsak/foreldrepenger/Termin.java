@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
@@ -33,7 +34,7 @@ class Termin extends FpsakTestBase {
     @Description("Mor med ett arbeidsforhold sender inn inntektsmelding før søknad. " +
             "Forventer at vedtak bli fattet og det blir bare opprettet en behandling")
     void MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var startDatoForeldrepenger = termindato.minusWeeks(3);
@@ -66,7 +67,7 @@ class Termin extends FpsakTestBase {
     @Description("Mor søker og saken blir behandlet før inntektsmelding er mottat basert på data fra " +
             "inntektskomponenten, så mottas inntektsmeldingen")
     void MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().minusWeeks(1);
         var startDatoForeldrepenger = termindato.minusWeeks(3);
@@ -106,7 +107,7 @@ class Termin extends FpsakTestBase {
             "fht IM, en periode som har feil graderingsprosent i fht IM, en periode som har feil orgnr i fht IM og " +
             "en periode som er ok.")
     void morSøkerTerminEttArbeidsforhold_avvikIGradering() {
-        var familie = new Familie("77", fordel);
+        var familie = new Familie("77", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(6);
         var fpstartdato = termindato.minusWeeks(3);
@@ -173,7 +174,7 @@ class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin uten FPFF")
     @Description("Mor søker termin uten periode for foreldrepenger før fødsel. Skjæringstidspunkt skal være 3 uker før termindato.")
     void morSokerTerminUtenFPFFperiode() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var startDatoForeldrepenger = termindato;

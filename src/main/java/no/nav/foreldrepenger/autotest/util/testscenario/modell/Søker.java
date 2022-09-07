@@ -40,15 +40,17 @@ public abstract class Søker {
 
     private final Fødselsnummer fødselsnummer;
     private final AktørId aktørId;
+    private final AktørId aktørIdAnnenpart;
     private final InntektYtelseModell inntektYtelseModell;
     private final Innsender innsender;
 
-    private Innsyn innsyn;
+    private Innsyn innsyn; // TODO: Flytt?
     private Saksnummer saksnummer = null;
 
-    Søker(Fødselsnummer fødselsnummer, AktørId aktørId, InntektYtelseModell inntektYtelseModell, Innsender innsender) {
+    Søker(Fødselsnummer fødselsnummer, AktørId aktørId, AktørId aktørIdAnnenpart, InntektYtelseModell inntektYtelseModell, Innsender innsender) {
         this.fødselsnummer = fødselsnummer;
         this.aktørId = aktørId;
+        this.aktørIdAnnenpart = aktørIdAnnenpart;
         this.inntektYtelseModell = inntektYtelseModell;
         this.innsender = innsender;
     }
@@ -184,7 +186,7 @@ public abstract class Søker {
     public Saksnummer søk(Søknad søknad) {
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
-        saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, null);
+        saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, null);
         LOG.info("Søknad sendt inn og behandling opprettet på {}", this.saksnummer.value());
         return this.saksnummer;
     }
@@ -192,7 +194,7 @@ public abstract class Søker {
     public Saksnummer søk(Søknad søknad, Saksnummer saksnummer) {
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
-        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, saksnummer);
+        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
         LOG.info("Søknad sendt inn og behandling opprettet på fagsak {}", saksnummer.value());
         return this.saksnummer;
     }
@@ -200,7 +202,7 @@ public abstract class Søker {
     public Saksnummer søk(Endringssøknad søknad) {
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
-        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, saksnummer);
+        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
         LOG.info("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
         return this.saksnummer;
     }
@@ -208,7 +210,7 @@ public abstract class Søker {
     public Saksnummer søkPapirsøknadForeldrepenger() {
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn papirsøknadd for {} ..", fødselsnummer.value());
-        this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer);
+        this.saksnummer = innsender.sendInnPapirsøknadForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart);
         LOG.info("Papirsøknad sendt inn og behandling opprettet på {}", saksnummer.value());
         return this.saksnummer;
     }
@@ -217,7 +219,7 @@ public abstract class Søker {
         guardTrengerEksisterendeBehandling();
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn endringssøknad på papirsøknadd for {} ..", fødselsnummer.value());
-        this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, this.saksnummer);
+        this.saksnummer = innsender.sendInnPapirsøknadEEndringForeldrepenger(aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
         LOG.info("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
         return this.saksnummer;
     }

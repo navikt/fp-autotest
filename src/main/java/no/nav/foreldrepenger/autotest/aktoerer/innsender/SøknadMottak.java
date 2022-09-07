@@ -70,12 +70,12 @@ public class SøknadMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
-    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
+    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         return sendInnSøknad(fnr, søknad);
     }
 
     @Override
-    public Saksnummer sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
+    public Saksnummer sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         return sendInnSøknad(fnr, søknad);
     }
 
@@ -94,12 +94,12 @@ public class SøknadMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
-    public Saksnummer sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr) {
+    public Saksnummer sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart) {
         return sendInnPapirsøknad(fnr, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL, null);
     }
 
     @Override
-    public Saksnummer sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
+    public Saksnummer sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         return sendInnPapirsøknad(fnr, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL, saksnummer);
     }
 
@@ -169,7 +169,8 @@ public class SøknadMottak extends DokumentInnsendingHjelper {
     /*
      * Opretter en personhendelse
      */
-    public void opprettHendelsePåKafka(PersonhendelseDto personhendelseDto) {
+    @Override
+    public void sendInnHendelse(PersonhendelseDto personhendelseDto) {
         pdlLeesahKlient.opprettHendelse(personhendelseDto);
     }
 }

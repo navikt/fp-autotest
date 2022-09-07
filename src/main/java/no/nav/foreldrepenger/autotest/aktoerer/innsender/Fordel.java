@@ -7,6 +7,7 @@ import static no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGen
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +23,12 @@ import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.Søknad;
+import no.nav.foreldrepenger.common.domain.engangsstønad.Engangsstønad;
+import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.Endringssøknad;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.Foreldrepenger;
+import no.nav.foreldrepenger.common.domain.svangerskapspenger.Svangerskapspenger;
+import no.nav.foreldrepenger.common.innsending.mappers.DomainMapper;
 import no.nav.foreldrepenger.common.innsending.mappers.V1SvangerskapspengerDomainMapper;
 import no.nav.foreldrepenger.common.innsending.mappers.V3EngangsstønadDomainMapper;
 import no.nav.foreldrepenger.common.innsending.mappers.V3ForeldrepengerDomainMapper;
@@ -30,6 +36,7 @@ import no.nav.foreldrepenger.common.oppslag.Oppslag;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
 import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
+import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.BehandlingsTema;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
@@ -38,61 +45,51 @@ public class Fordel extends DokumentInnsendingHjelper {
 
     private static int inkrementForEksternReferanse = 0;
 
-    // TODO: Finn bedre plass for denne
-    public Oppslag oppslag = Mockito.mock(Oppslag.class);
-
-    /*
-     * Klienter
-     */
-    FordelKlient fordelKlient;
-
-
-    public Fordel() {
-        fordelKlient = new FordelKlient();
-    }
+    private final FordelKlient fordelKlient = new FordelKlient();
 
     /*
      * Sender inn søkand og returnerer saksinformasjon
      */
     @Override
-    public Saksnummer sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
-        return sendInnSøknad(søknad, aktørId, fnr, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+    public Saksnummer sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+        return sendInnSøknad(søknad, aktørId, fnr, aktørIdAnnenpart, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
     }
 
-    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, DokumenttypeId dokumenttypeId) {
-        return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, null);
+    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, DokumenttypeId dokumenttypeId) {
+        return sendInnSøknad(søknad, aktørId, fnr, aktørIdAnnenpart, dokumenttypeId, null);
     }
 
     @Override
     @Step("Sender inn papirsøknad foreldrepenger")
-    public Saksnummer sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr) {
-        return sendInnSøknad(null, aktørId, fnr, SØKNAD_FORELDREPENGER_FØDSEL);
+    public Saksnummer sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart) {
+        return sendInnSøknad(null, aktørId, fnr, aktørIdAnnenpart, SØKNAD_FORELDREPENGER_FØDSEL);
     }
 
     @Override
     @Step("Sender inn endringssøknad på papir")
-    public Saksnummer sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
-        return sendInnSøknad(null, aktørId, fnr, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+    public Saksnummer sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+        return sendInnSøknad(null, aktørId, fnr, aktørIdAnnenpart, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
     }
 
     @Override
     @Step("Sender inn papirsøknad engangsstønad")
     public Saksnummer sendInnPapirsøknadEngangsstønad(AktørId aktørId, Fødselsnummer fnr) {
-        return sendInnSøknad(null, aktørId, fnr, SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        return sendInnSøknad(null, aktørId, fnr, null, SØKNAD_ENGANGSSTØNAD_FØDSEL);
     }
 
     @Override
-    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
+    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         var dokumenttypeId = dokumentTypeFraRelasjon(søknad);
-        return sendInnSøknad(søknad, aktørId, fnr, dokumenttypeId, saksnummer);
+        return sendInnSøknad(søknad, aktørId, fnr, aktørIdAnnenpart, dokumenttypeId, saksnummer);
     }
 
     @Step("Sender inn søknad [{dokumenttypeId}]")
-    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, DokumenttypeId dokumenttypeId, Saksnummer saksnummer) {
+    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart,
+                                    DokumenttypeId dokumenttypeId, Saksnummer saksnummer) {
         String xml = "";
         LocalDate mottattDato;
         if (null != søknad) {
-            xml = tilSøknadXML(søknad, aktørId, dokumenttypeId);
+            xml = tilSøknadXML(søknad, aktørId, aktørIdAnnenpart);
             mottattDato = søknad.getMottattdato();
         } else {
             mottattDato = LocalDate.now();
@@ -112,13 +109,27 @@ public class Fordel extends DokumentInnsendingHjelper {
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
-    private String tilSøknadXML(Søknad søknad, AktørId aktørId, DokumenttypeId dokumenttypeId) {
-        var mapper = switch (dokumenttypeId) {
-            case SØKNAD_FORELDREPENGER_FØDSEL, SØKNAD_FORELDREPENGER_ADOPSJON, FORELDREPENGER_ENDRING_SØKNAD -> new V3ForeldrepengerDomainMapper(oppslag);
-            case SØKNAD_SVANGERSKAPSPENGER -> new V1SvangerskapspengerDomainMapper();
-            case SØKNAD_ENGANGSSTØNAD_FØDSEL, SØKNAD_ENGANGSSTØNAD_ADOPSJON -> new V3EngangsstønadDomainMapper(oppslag);
-            default -> throw new IllegalArgumentException("Ikke støttet dokumenttypeid: " + dokumenttypeId);
-        };
+    private String tilSøknadXML(Søknad søknad, AktørId aktørId, AktørId aktørIdAnnenpart) {
+        // TODO: Litt hacky måte å få det til, men marginalt bedre enn tidligere...
+        //  aktørIdAnnenpart trengs av domainmapperen hvor den gjør oppslag på fødselsnummer
+        //  Kan nå flytte lagNorskAnnenpart bort og ut (uten å trekke med fordel objektet)
+        DomainMapper mapper;
+        var ytelse = søknad.getYtelse();
+        if (ytelse instanceof Foreldrepenger foreldrepenger) {
+            if (foreldrepenger.annenForelder() instanceof NorskForelder norskForelder) {
+                var oppslag = Mockito.mock(Oppslag.class);
+                when(oppslag.aktørId(norskForelder.getFnr())).thenReturn(aktørIdAnnenpart);
+                mapper = new V3ForeldrepengerDomainMapper(oppslag);
+            } else {
+                mapper = new V3ForeldrepengerDomainMapper(null);
+            }
+        } else if (ytelse instanceof Svangerskapspenger) {
+            mapper = new V1SvangerskapspengerDomainMapper();
+        } else if (ytelse instanceof Engangsstønad) {
+            mapper = new V3EngangsstønadDomainMapper(null);
+        } else {
+            throw new IllegalArgumentException("Søknad har ytelse er hverken fp, svp eller es... noe er feil!s");
+        }
 
         if (søknad instanceof Endringssøknad endringssøknad) {
             return mapper.tilXML(endringssøknad, aktørId, null);
@@ -173,6 +184,11 @@ public class Fordel extends DokumentInnsendingHjelper {
             var dokumentTypeIdOffisiellKode = DokumenttypeId.INNTEKTSMELDING.getKode();
             knyttJournalpostTilFagsak(xml, journalpostId,  dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, eksisterendeSaksnummer);
         }
+    }
+
+    @Override
+    public void sendInnHendelse(PersonhendelseDto personhendelseDto) {
+        throw new UnsupportedOperationException("Fpabonnent kjører ikke i fpsak context. Innsending av fødelsehendelse vil da ikke bli plukket opp.");
     }
 
     @Override

@@ -6,13 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.OpenamKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.OpenAMKlient;
 
 public class Aktoer {
 
     private static final Logger LOG = LoggerFactory.getLogger(Aktoer.class);
 
-    private static final OpenamKlient openamKlientTest = new OpenamKlient();
+    private static final OpenAMKlient openamKlientTest = new OpenAMKlient();
 
     // TODO: Finn en bedre måte å gjøre dette (?)
     public static void loggInn(Rolle rolle) {

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.FORELDREANSVARSVILKÅRET_2_LEDD;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.OMSORGSVILKÅRET;
@@ -37,7 +38,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Mor søker Omsorgsovertakelse - godkjent")
     @Description("Mor søker Omsorgsovertakelse - godkjent happy case")
     void MorSøkerOmsorgsovertakelseGodkjent() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var medmor = familie.medmor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var saksnummer = medmor.søkPapirsøknadForeldrepenger();
@@ -79,7 +80,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Mor søker Omsorgsovertakelse - avvist")
     @Description("Mor søker Omsorgsovertakelse - avvist fordi mor ikke er død")
     void morSøkerOmsorgsovertakelseAvvist() {
-        var familie = new Familie("55", fordel);
+        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
@@ -116,7 +117,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Far søker Omsorgsovertakelse - godkjent")
     @Description("Far søker Omsorgsovertakelse - får godkjent aksjonspunkt og blir invilget")
     void farSøkerOmsorgsovertakelseGodkjent() {
-        var familie = new Familie("61", fordel);
+        var familie = new Familie("61", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato);
@@ -152,7 +153,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
     @DisplayName("Far søker Foreldreansvar 2. ledd - godkjent")
     @Description("Far søker Foreldreansvar 2. ledd - får godkjent aksjonspunkt og blir invilget")
     void farSøkerForeldreansvarGodkjent() {
-        var familie = new Familie("61", fordel);
+        var familie = new Familie("61", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato);
