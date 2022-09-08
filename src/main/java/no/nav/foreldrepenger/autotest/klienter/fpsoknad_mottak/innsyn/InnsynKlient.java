@@ -20,7 +20,7 @@ public class InnsynKlient {
                 .uri(fromUri(BaseUriProvider.FPSOKNAD_MOTTAK_BASE)
                         .path(SAKER_PATH)
                         .build())
-                .timeout(Duration.ofSeconds(10))
+                .timeout(Duration.ofSeconds(30))
                 .GET();
         return send(request.build(), Saker.class);
     }
