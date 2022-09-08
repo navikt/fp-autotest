@@ -60,7 +60,6 @@ public final class JavaHttpKlient {
                 null); // TODO
     }
 
-
     public static HttpResponse<String> sendStringRequest(HttpRequest request) {
         return send(request, HttpResponse.BodyHandlers.ofString(UTF_8));
     }
@@ -73,6 +72,7 @@ public final class JavaHttpKlient {
         try {
             return klient.send(request, responseHandler);
         } catch (IOException e) {
+            logRequest(request);
             throw new TekniskException("F-432937", String.format("Kunne ikke sende request %s", request), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -88,6 +88,7 @@ public final class JavaHttpKlient {
             return null;
         }
         if (statusCode == HttpURLConnection.HTTP_UNAUTHORIZED || statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
+            logRequest(response.request());
             throw new ManglerTilgangException("NO-AUTH", String.format("[HTTP %s] Mangler tilgang. Feilet mot %s", statusCode, endpoint));
         }
         if ((statusCode >= HttpURLConnection.HTTP_OK && statusCode < HttpURLConnection.HTTP_MULT_CHOICE)) {
@@ -97,8 +98,10 @@ public final class JavaHttpKlient {
             throw new TekniskException("NOT-FOUND", String.format("[HTTP %s] Feilet mot %s.", statusCode, endpoint));
         }
         if (statusCode == HttpURLConnection.HTTP_BAD_REQUEST && errorConsumer != null) {
+            logRequest(response.request());
             errorConsumer.accept(response);
         }
+        logRequest(response.request());
         throw new IntegrasjonException("REST-FEIL", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", statusCode, endpoint,
                 toJson(response.body())));
     }
@@ -108,6 +111,10 @@ public final class JavaHttpKlient {
             throw new IntegrasjonException("FP-468820", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", httpResponse.statusCode(),
                     httpResponse.uri(), toJson(httpResponse.body())));
         };
+    }
+
+    private static void logRequest(HttpRequest request) {
+        LOG.warn("REST-FEIL: Prøvde å sende request {} med headere \n{}", request, request.headers());
     }
 
 }

@@ -20,7 +20,7 @@ public final class TokenProvider {
         return OpenAMKlient.logInnMedRolle(saksbehandlerRolle);
     }
 
-    public static String brukertokenSelvbetjening(Fødselsnummer fnr) {
+    public static String tokenXToken(Fødselsnummer fnr) {
         return TokenXVekslingKlient.hentAccessTokenForBruker(fnr);
     }
 
