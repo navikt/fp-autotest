@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
+import java.time.Duration;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
@@ -24,6 +25,7 @@ public class MottakKlient {
                 .uri(fromUri(BaseUriProvider.FPSOKNAD_MOTTAK_BASE)
                         .path(MOTTAK_SEND_PATH)
                         .build())
+                .timeout(Duration.ofSeconds(30))
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));
         return send(request.build(), Kvittering.class);
     }
@@ -33,6 +35,7 @@ public class MottakKlient {
                 .uri(fromUri(BaseUriProvider.FPSOKNAD_MOTTAK_BASE)
                         .path(MOTTAK_ENDRE_PATH)
                         .build())
+                .timeout(Duration.ofSeconds(30))
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));
         return send(request.build(), Kvittering.class);
     }

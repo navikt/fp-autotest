@@ -28,7 +28,7 @@ public final class JavaHttpKlient {
 
     private static final HttpClient klient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_1_1)
-            .connectTimeout(Duration.ofSeconds(20))
+            .connectTimeout(Duration.ofSeconds(30))
             .build();
 
     private JavaHttpKlient() {
