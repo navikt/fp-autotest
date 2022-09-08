@@ -4,13 +4,19 @@ import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPSAK_BASE
 
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.StatusFilterDto;
 
 public class ProsesstaskFpsakKlient implements ProsessTaskKlient {
 
-    private final ProsesstaskKlientFelles prosesstaskKlient = new ProsesstaskKlientFelles(FPSAK_BASE);
+    private final ProsesstaskKlientFelles prosesstaskKlient;
+
+    public ProsesstaskFpsakKlient(SaksbehandlerRolle saksbehandlerRolle) {
+        prosesstaskKlient = new ProsesstaskKlientFelles(FPSAK_BASE, saksbehandlerRolle);
+    }
+
 
     @Override
     public List<ProsessTaskDataDto> alleProsesstaskPåBehandling() {

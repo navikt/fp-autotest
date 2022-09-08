@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -45,7 +46,12 @@ public class Fordel extends DokumentInnsendingHjelper {
 
     private static int inkrementForEksternReferanse = 0;
 
-    private final FordelKlient fordelKlient = new FordelKlient();
+    private final FordelKlient fordelKlient;
+
+    public Fordel() {
+        super(SaksbehandlerRolle.SAKSBEHANDLER);
+        fordelKlient = new FordelKlient(SaksbehandlerRolle.SAKSBEHANDLER);
+    }
 
     /*
      * Sender inn søkand og returnerer saksinformasjon

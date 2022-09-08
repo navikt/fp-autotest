@@ -2,13 +2,12 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPTILBAKE_BASE;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.BEHANDLINGER_URL;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.BEHANDLING_URL;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.UUID_NAME;
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig;
 
 import java.net.http.HttpRequest;
 import java.util.List;
@@ -28,11 +27,10 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behand
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BrukerresponsDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingDto;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class BehandlingFptilbakeKlient implements BehandlingerKlient {
-
-    private final BehandlingKlientFelles behandlingKlientFelles = new BehandlingKlientFelles(FPTILBAKE_BASE, BEHANDLINGER_STATUS_FPTILBAKE_URL, AKSJONSPUNKT_FPTILBAKE_PATH);
 
     private static final String BEHANDLINGER_OPPRETT = BEHANDLINGER_URL + "/opprett";
     private static final String BEHANDLINGER_STATUS_FPTILBAKE_URL = BEHANDLINGER_URL + "/status";
@@ -47,6 +45,15 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
 
     private static final String FEILUTBETALING_FAKTA_URL = "/behandlingfakta/hent-fakta/feilutbetaling";
 
+
+    private final SaksbehandlerRolle saksbehandlerRolle;
+    private final BehandlingKlientFelles behandlingKlientFelles;
+
+
+    public BehandlingFptilbakeKlient(SaksbehandlerRolle saksbehandlerRolle) {
+        this.saksbehandlerRolle = saksbehandlerRolle;
+        behandlingKlientFelles = new BehandlingKlientFelles(saksbehandlerRolle, FPTILBAKE_BASE, BEHANDLINGER_STATUS_FPTILBAKE_URL, AKSJONSPUNKT_FPTILBAKE_PATH);
+    }
 
     @Override
     public Behandling getBehandling(UUID behandlingUuid) {
@@ -85,35 +92,35 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
 
     @Step("Oppretter ny tilbakekreving")
     public Behandling opprettTilbakekrevingManuelt(BehandlingOpprett behandlingOpprett) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(BEHANDLINGER_OPPRETT)
                         .build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(behandlingOpprett)));
 
-        return følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
+        return behandlingKlientFelles.følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
     }
 
     public Behandling addVerge(BehandlingIdBasicDto behandlingIdBasicDto) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(LEGG_TIL_VERGE_URL)
                         .build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(behandlingIdBasicDto)));
-        return følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
+        return behandlingKlientFelles.følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
     }
 
     public Behandling removeVerge(BehandlingIdBasicDto behandlingIdBasicDto) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(FJERN_VERGE_URL)
                         .build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(behandlingIdBasicDto)));
-        return følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
+        return behandlingKlientFelles.følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
     }
 
     public void registrerBrukerrespons(BrukerresponsDto brukerresponsDto){
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(REGISTRER_BRUKERRESPONS)
                         .build())
@@ -123,7 +130,7 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
 
     @Description("Henter faktaer som trengs for behandling av Fakta - aksjonspunkt 7003")
     public FeilutbetalingDto hentFeilutbetalingFakta(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(FEILUTBETALING_FAKTA_URL)
                         .queryParam(UUID_NAME, behandlingUuid)

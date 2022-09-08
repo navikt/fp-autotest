@@ -21,16 +21,20 @@ public class TokenXVekslingKlient {
     private static final String TOKEN_ENDPOINT_AZURE_AD = "/rest/AzureAd/loginservice/oauth2/v2.0/token";
     private static final String TOKEN_ENDPOINT_TOKENX = "/rest/tokenx/token";
 
-    public String hentAccessTokenForBruker(Fødselsnummer fnr) {
-        return accessTokens.computeIfAbsent(fnr, this::hentAccessTokenFraVtp);
+    private TokenXVekslingKlient() {
+        // Statisk implementasjon
     }
 
-    private String hentAccessTokenFraVtp(Fødselsnummer fnr) {
-        var subjectToken = subjectTokens.computeIfAbsent(fnr, this::hentSubjectTokenFraLoginserviceVtp);
+    public static String hentAccessTokenForBruker(Fødselsnummer fnr) {
+        return accessTokens.computeIfAbsent(fnr, TokenXVekslingKlient::hentAccessTokenFraVtp);
+    }
+
+    private static String hentAccessTokenFraVtp(Fødselsnummer fnr) {
+        var subjectToken = subjectTokens.computeIfAbsent(fnr, TokenXVekslingKlient::hentSubjectTokenFraLoginserviceVtp);
         return vekslerInnSubjectTokenForEtAccessTokenFraTokenDings(subjectToken);
     }
 
-    private String hentSubjectTokenFraLoginserviceVtp(Fødselsnummer fnr) {
+    private static String hentSubjectTokenFraLoginserviceVtp(Fødselsnummer fnr) {
         var request = HttpRequest.newBuilder()
                 .uri(fromUri(BaseUriProvider.VTP_ROOT)
                         .path(TOKEN_ENDPOINT_AZURE_AD)
@@ -44,7 +48,7 @@ public class TokenXVekslingKlient {
         return tokenResponse.id_token();
     }
 
-    private String vekslerInnSubjectTokenForEtAccessTokenFraTokenDings(String subjectToken) {
+    private static String vekslerInnSubjectTokenForEtAccessTokenFraTokenDings(String subjectToken) {
         var request = HttpRequest.newBuilder()
                 .uri(fromUri(BaseUriProvider.VTP_ROOT)
                         .path(TOKEN_ENDPOINT_TOKENX)

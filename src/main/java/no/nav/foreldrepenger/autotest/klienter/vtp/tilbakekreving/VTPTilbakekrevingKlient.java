@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedBasicHeadere;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
@@ -25,7 +25,7 @@ public class VTPTilbakekrevingKlient {
     public void oppdaterTilbakekrevingKonsistens(Saksnummer saksnummer, int behandlingId) {
         LOG.info("Oppdaterer VTPs tilbakekrevingsmock med saksnummer {} og behandling {} for konsistens", saksnummer.value(), behandlingId);
 
-        var request = getRequestBuilder()
+        var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(TILBAKEKREVING_KONSISTENS)
                         .build())

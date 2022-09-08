@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.journalpost;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedBasicHeadere;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
@@ -21,7 +21,7 @@ public class JournalforingKlient {
     private static final String KNYTT_SAK_TIL_JOURNALPOST = JOURNALFØRING_URL + "/knyttsaktiljournalpost/journalpostid/{journalpostid}/saksnummer/{saksnummer}";
 
     public JournalpostIdDto journalførR(JournalpostModell journalpostModell) {
-        var request = getRequestBuilder()
+        var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(JOURNALFØR_JOURNALPOST)
                         .build())
@@ -30,7 +30,7 @@ public class JournalforingKlient {
     }
 
     public JournalpostIdDto journalfør(JournalpostModell journalpostModell) {
-        var request = getRequestBuilder()
+        var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(JOURNALFØR_FORELDREPENGER_SØKNAD_URL_FORMAT)
                         .resolveTemplate("fnr", Optional.ofNullable(journalpostModell.getAvsenderFnr()).orElseThrow())
@@ -41,7 +41,7 @@ public class JournalforingKlient {
     }
 
     public JournalpostIdDto knyttSakTilJournalpost(String journalpostId, Saksnummer saksnummer) {
-        var request = getRequestBuilder()
+        var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(KNYTT_SAK_TIL_JOURNALPOST)
                         .resolveTemplate("journalpostid", Optional.ofNullable(journalpostId).orElseThrow())

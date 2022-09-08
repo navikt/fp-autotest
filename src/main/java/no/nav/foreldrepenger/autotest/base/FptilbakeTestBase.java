@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.autotest.base;
 
 import org.junit.jupiter.api.BeforeEach;
 
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 
 // TODO: Fiks opp i testbasene
 public class FptilbakeTestBase extends VerdikjedeTestBase {
@@ -13,7 +13,7 @@ public class FptilbakeTestBase extends VerdikjedeTestBase {
 
     @BeforeEach
     public void setUpTbkSaksbehandler() {
-        tbksaksbehandler = new TilbakekrevingSaksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
-        tbkbeslutter = new TilbakekrevingSaksbehandler(Aktoer.Rolle.BESLUTTER);
+        tbksaksbehandler = new TilbakekrevingSaksbehandler(SaksbehandlerRolle.SAKSBEHANDLER);
+        tbkbeslutter = new TilbakekrevingSaksbehandler(SaksbehandlerRolle.BESLUTTER);
     }
 }

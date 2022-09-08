@@ -10,13 +10,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -29,11 +29,14 @@ abstract class DokumentInnsendingHjelper implements Innsender {
     protected final JournalforingKlient journalpostKlient;
 
     protected DokumentInnsendingHjelper() {
-        fagsakKlient = new FagsakKlient();
-        behandlingerKlient = new BehandlingFpsakKlient();
-        historikkKlient = new HistorikkFpsakKlient();
-        journalpostKlient = new JournalforingKlient();
-        Aktoer.loggInn(Aktoer.Rolle.SAKSBEHANDLER);
+        this(SaksbehandlerRolle.SAKSBEHANDLER);
+    }
+
+    protected DokumentInnsendingHjelper(SaksbehandlerRolle saksbehandlerRolle) {
+            fagsakKlient = new FagsakKlient(saksbehandlerRolle);
+            behandlingerKlient = new BehandlingFpsakKlient(saksbehandlerRolle);
+            historikkKlient = new HistorikkFpsakKlient(saksbehandlerRolle);
+            journalpostKlient = new JournalforingKlient();
     }
 
     /**

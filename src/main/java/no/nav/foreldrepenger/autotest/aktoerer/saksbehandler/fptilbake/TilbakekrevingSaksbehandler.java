@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
@@ -40,6 +39,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskFptilbakeKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
@@ -58,19 +58,17 @@ public class TilbakekrevingSaksbehandler {
 
     private Lazy<List<HistorikkInnslag>> historikkInnslag;
 
-    private final Aktoer.Rolle rolle;
     private final BehandlingFptilbakeKlient behandlingerKlient;
     private final HistorikkFptilbakeKlient historikkKlient;
     private final OkonomiKlient okonomiKlient;
     private final ProsesstaskFptilbakeKlient prosesstaskKlient;
     private final VTPTilbakekrevingKlient vtpTilbakekrevingJerseyKlient;
 
-    public TilbakekrevingSaksbehandler(Aktoer.Rolle rolle) {
-        this.rolle = rolle;
-        behandlingerKlient = new BehandlingFptilbakeKlient();
-        historikkKlient = new HistorikkFptilbakeKlient();
-        okonomiKlient = new OkonomiKlient();
-        prosesstaskKlient = new ProsesstaskFptilbakeKlient();
+    public TilbakekrevingSaksbehandler(SaksbehandlerRolle saksbehandlerRolle) {
+        behandlingerKlient = new BehandlingFptilbakeKlient(saksbehandlerRolle);
+        historikkKlient = new HistorikkFptilbakeKlient(saksbehandlerRolle);
+        okonomiKlient = new OkonomiKlient(saksbehandlerRolle);
+        prosesstaskKlient = new ProsesstaskFptilbakeKlient(saksbehandlerRolle);
         vtpTilbakekrevingJerseyKlient = new VTPTilbakekrevingKlient();
     }
 
@@ -111,7 +109,6 @@ public class TilbakekrevingSaksbehandler {
     }
 
     public void hentSisteBehandling(Saksnummer saksnummer, BehandlingType behandlingstype) {
-        Aktoer.loggInn(rolle); // TODO: Greit? eller gjøre det på en annen måte?
         this.saksnummer = saksnummer; // TODO.. fiks dette her
         ventPåOgVelgSisteBehandling(behandlingstype);
     }
@@ -239,7 +236,7 @@ public class TilbakekrevingSaksbehandler {
 
     // Vent actions
     public void ventTilBehandlingErPåVent() {
-        if (valgtBehandling.behandlingPaaVent) {
+        if (Boolean.TRUE.equals(valgtBehandling.behandlingPaaVent)) {
             return;
         }
         Vent.til(() -> {

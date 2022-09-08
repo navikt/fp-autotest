@@ -1,13 +1,14 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fordel;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
@@ -18,14 +19,21 @@ public class FordelKlient {
 
     private static final String FORDEL_URL = "/fordel";
     private static final String JOURNALPOST_URL = FORDEL_URL + "/journalpost";
-
     private static final String FAGSAK_URL = FORDEL_URL + "/fagsak";
     private static final String FAGSAK_OPPRETT_URL = FAGSAK_URL + "/opprett";
     private static final String FAGSAK_KNYTT_JOURNALPOST_URL = FAGSAK_URL + "/knyttJournalpost";
 
+    private final SaksbehandlerRolle saksbehandlerRolle;
+
+    public FordelKlient(SaksbehandlerRolle saksbehandlerRolle) {
+        this.saksbehandlerRolle = saksbehandlerRolle;
+    }
+
     public void journalpost(JournalpostMottakDto journalpostMottak) {
-        var request = getRequestBuilder()
-                .uri(fromUri(BaseUriProvider.FPSAK_BASE).path(JOURNALPOST_URL).build())
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+                .uri(fromUri(BaseUriProvider.FPSAK_BASE)
+                        .path(JOURNALPOST_URL)
+                        .build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(journalpostMottak)));
         send(request.build());
     }
@@ -35,7 +43,7 @@ public class FordelKlient {
     }
 
     private SaksnummerDto opprettFagsak(OpprettSakDto opprettSakDto) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_OPPRETT_URL)
                         .build())
@@ -51,7 +59,7 @@ public class FordelKlient {
     }
 
     public void fagsakKnyttJournalpost(JournalpostKnyttningDto knyttJournalpost) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_KNYTT_JOURNALPOST_URL)
                         .build())

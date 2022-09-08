@@ -1,68 +1,38 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
-import static jakarta.ws.rs.core.HttpHeaders.ACCEPT;
-import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.vedtak.log.mdc.MDCOperations.HTTP_HEADER_ALT_CALL_ID;
-import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CALL_ID;
-import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CONSUMER_ID;
-import static no.nav.vedtak.log.mdc.MDCOperations.generateCallId;
 
 import java.io.IOException;
-import java.net.CookieHandler;
-import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.ws.rs.core.MediaType;
 import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.exception.TekniskException;
 
-public class JavaHttpKlient {
+public final class JavaHttpKlient {
     private static final Logger LOG = LoggerFactory.getLogger(JavaHttpKlient.class);
 
-    private static final ThreadLocal<JavaHttpKlient> instances;
-
-    static {
-        instances = ThreadLocal.withInitial(JavaHttpKlient::new);
-    }
-
-    private final HttpClient klient;
-    private final CookieHandler cookieHandler;
+    private static final HttpClient klient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_1_1)
+            .connectTimeout(Duration.ofSeconds(20))
+            .build();
 
     private JavaHttpKlient() {
-        CookieHandler.setDefault(new CookieManager());
-        this.cookieHandler = CookieHandler.getDefault();
-        this.klient = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)
-                .cookieHandler(cookieHandler)
-                .build();
-    }
-
-    public HttpClient klient() {
-        return klient;
-    }
-
-    public CookieManager cookieManager() {
-        return (CookieManager) cookieHandler;
-    }
-
-    public static JavaHttpKlient getInstance() {
-        return instances.get();
+        // Statisk implementasjon
     }
 
     public static void send(HttpRequest request) {
@@ -90,7 +60,6 @@ public class JavaHttpKlient {
                 null); // TODO
     }
 
-
     public static HttpResponse<String> sendStringRequest(HttpRequest request) {
         return send(request, HttpResponse.BodyHandlers.ofString(UTF_8));
     }
@@ -101,15 +70,15 @@ public class JavaHttpKlient {
 
     private static <T> HttpResponse<T> send(HttpRequest request, HttpResponse.BodyHandler<T> responseHandler) {
         try {
-            return getInstance().klient().send(request, responseHandler);
+            return klient.send(request, responseHandler);
         } catch (IOException e) {
-            throw new TekniskException("F-432937", String.format("Kunne ikke sende request mot %s", request.uri().toString()), e);
+            logRequest(request);
+            throw new TekniskException("F-432937", String.format("Kunne ikke sende request %s", request), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new TekniskException("F-432938", "InterruptedException ved henting av data.", e);
         }
     }
-
 
     private static <T, R> R handleResponse(HttpResponse<T> response, Function<HttpResponse<T>, R> responseFunction, Consumer<HttpResponse<T>> errorConsumer) {
         var statusCode = response.statusCode();
@@ -119,6 +88,7 @@ public class JavaHttpKlient {
             return null;
         }
         if (statusCode == HttpURLConnection.HTTP_UNAUTHORIZED || statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
+            logRequest(response.request());
             throw new ManglerTilgangException("NO-AUTH", String.format("[HTTP %s] Mangler tilgang. Feilet mot %s", statusCode, endpoint));
         }
         if ((statusCode >= HttpURLConnection.HTTP_OK && statusCode < HttpURLConnection.HTTP_MULT_CHOICE)) {
@@ -128,8 +98,10 @@ public class JavaHttpKlient {
             throw new TekniskException("NOT-FOUND", String.format("[HTTP %s] Feilet mot %s.", statusCode, endpoint));
         }
         if (statusCode == HttpURLConnection.HTTP_BAD_REQUEST && errorConsumer != null) {
+            logRequest(response.request());
             errorConsumer.accept(response);
         }
+        logRequest(response.request());
         throw new IntegrasjonException("REST-FEIL", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", statusCode, endpoint,
                 toJson(response.body())));
     }
@@ -139,19 +111,10 @@ public class JavaHttpKlient {
             throw new IntegrasjonException("FP-468820", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", httpResponse.statusCode(),
                     httpResponse.uri(), toJson(httpResponse.body())));
         };
-
     }
 
-    public static HttpRequest.Builder getRequestBuilder() {
-        var consumerID = MDC.get(NAV_CONSUMER_ID);
-        var callid = consumerID != null ? consumerID : generateCallId();
-        return HttpRequest.newBuilder()
-                .header(ACCEPT, MediaType.APPLICATION_JSON)
-                .header(CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HTTP_HEADER_ALT_CALL_ID, callid)
-                .header(NAV_CALL_ID, callid);
+    private static void logRequest(HttpRequest request) {
+        LOG.warn("REST-FEIL: Prøvde å sende request {} med headere \n{}", request, request.headers());
     }
-
-
 
 }

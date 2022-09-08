@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidInntektsmeldingAksjonspunktÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidsforholdKomplettVurderingType;
@@ -62,6 +61,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInns
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
@@ -70,9 +70,7 @@ import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 
 public class Saksbehandler {
-
     private final Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
-    private final Aktoer.Rolle rolle;
 
     public Fagsak valgtFagsak;
     public Behandling valgtBehandling;
@@ -88,24 +86,22 @@ public class Saksbehandler {
     protected final RisikovurderingKlient risikovurderingKlient;
 
     public Saksbehandler() {
-        this(Aktoer.Rolle.SAKSBEHANDLER);
+        this(SaksbehandlerRolle.SAKSBEHANDLER);
     }
 
-    protected Saksbehandler(Aktoer.Rolle rolle) {
-        this.rolle = rolle;
-        safKlient = new SafKlient(); // TODO: Flytte denne?
-        fagsakKlient = new FagsakKlient();
-        behandlingerKlient = new BehandlingFpsakKlient();
-        historikkKlient = new HistorikkFpsakKlient();
-        prosesstaskKlient = new ProsesstaskFpsakKlient();
-        risikovurderingKlient = new RisikovurderingKlient();
+    protected Saksbehandler(SaksbehandlerRolle saksbehandlerRolle) {
+        safKlient = new SafKlient();
+        fagsakKlient = new FagsakKlient(saksbehandlerRolle);
+        behandlingerKlient = new BehandlingFpsakKlient(saksbehandlerRolle);
+        historikkKlient = new HistorikkFpsakKlient(saksbehandlerRolle);
+        prosesstaskKlient = new ProsesstaskFpsakKlient(saksbehandlerRolle);
+        risikovurderingKlient = new RisikovurderingKlient(saksbehandlerRolle);
     }
 
     /*
      * Fagsak
      */
     public Fagsak hentFagsak(Saksnummer saksnummer) {
-        Aktoer.loggInn(rolle);
         return hentFagsakOgSisteBehandling(saksnummer);
     }
 
