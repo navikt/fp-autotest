@@ -2,15 +2,14 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPSAK_BASE;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.BEHANDLINGER_URL;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.BEHANDLING_AKSJONSPUNKT_URL;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.BEHANDLING_URL;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.SAKSNUMMER_NAME;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.UUID_NAME;
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlientFelles.følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig;
 
 import java.net.http.HttpRequest;
 import java.util.List;
@@ -47,10 +46,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.BehandlingMedUttaksperioderDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class BehandlingFpsakKlient implements BehandlingerKlient {
-    private final BehandlingKlientFelles behandlingerBasicKlient = new BehandlingKlientFelles(FPSAK_BASE, BEHANDLINGER_STATUS_FPSAK_URL, BEHANDLING_AKSJONSPUNKT_GET_FPSAK_URL);
 
     private static final String BEHANDLINGER_ANNEN_PART_BEHANDLING_URL = BEHANDLINGER_URL + "/annen-part-behandling";
 
@@ -83,6 +82,14 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     private static final String BEHANDLING_ARBEID_INNTEKTSMELDING_VURDERING = BEHANDLING_ARBEID_INNTEKTSMELDING + "/lagre-vurdering";
     private static final String BEHANDLING_ARBEID_INNTEKTSMELDING_OPPRETT_ARBEIDSFORHOLD = BEHANDLING_ARBEID_INNTEKTSMELDING + "/lagre-arbeidsforhold";
     private static final String BEHANDLING_ARBEID_INNTEKTSMELDING_NY_VURDERING = BEHANDLING_ARBEID_INNTEKTSMELDING + "/apne-for-ny-vurdering";
+
+    private final SaksbehandlerRolle saksbehandlerRolle;
+    private final BehandlingKlientFelles behandlingerBasicKlient;
+
+    public BehandlingFpsakKlient(SaksbehandlerRolle saksbehandlerRolle) {
+        this.saksbehandlerRolle = saksbehandlerRolle;
+        behandlingerBasicKlient = new BehandlingKlientFelles(saksbehandlerRolle, FPSAK_BASE, BEHANDLINGER_STATUS_FPSAK_URL, BEHANDLING_AKSJONSPUNKT_GET_FPSAK_URL);
+    }
 
     @Override
     public Behandling getBehandling(UUID behandlingUuid) {
@@ -136,17 +143,17 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
      * @param behandling
      */
     public Behandling opprettBehandlingManuelt(BehandlingNy behandling) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLINGER_URL)
                         .build())
                 .PUT(HttpRequest.BodyPublishers.ofString(toJson(behandling)));
-        return følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
+        return behandlingerBasicKlient.følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(request);
     }
 
 
     public Behandling annenPartBehandling(Saksnummer saksnummer) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLINGER_ANNEN_PART_BEHANDLING_URL)
                         .queryParam(SAKSNUMMER_NAME, saksnummer.value())
@@ -157,7 +164,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public Medlem behandlingMedlemskap(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_PERSON_MEDLEMSKAP)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -168,7 +175,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public Beregningsgrunnlag behandlingBeregningsgrunnlag(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_BEREGNINGSGRUNNALG_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -179,7 +186,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public Beregningsresultat behandlingBeregningsresultatEngangsstønad(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_ENGANGSSTØNAD_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -190,7 +197,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public BeregningsresultatMedUttaksplan behandlingBeregningsresultatForeldrepenger(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_FORELDREPENGER_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -200,7 +207,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     }
 
     public Feriepengegrunnlag behandlingFeriepengegrunnlag(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_FERIEPENGER_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -211,7 +218,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public List<Vilkar> behandlingVilkår(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_VILKAAR_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -225,7 +232,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public void overstyr(OverstyrAksjonspunkter aksjonspunkter) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_AKSJONSPUNKT_OVERSTYR_URL)
                         .build())
@@ -234,7 +241,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     }
 
     public Soknad behandlingSøknad(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_SOKNAD_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -245,7 +252,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public Opptjening behandlingOpptjening(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_OPPTJENING_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -256,7 +263,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public InntektArbeidYtelse behandlingInntektArbeidYtelse(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_INNTEKT_ARBEID_YTELSE_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -267,7 +274,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public KlageInfo klage(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_KLAGE_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -278,7 +285,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
 
 
     public void mellomlagre(KlageVurderingResultatAksjonspunktMellomlagringDto vurdering) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_KLAGE_MELLOMLAGRE_URL)
                         .build())
@@ -290,7 +297,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
      * hent stønadskontoer for behandling
      */
     public Saldoer behandlingUttakStonadskontoer(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_UTTAK_STONADSKONTOER_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -303,7 +310,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
      * hent stønadskontoer for behandling gitt uttaksperioder
      */
     public Saldoer behandlingUttakStonadskontoerGittUttaksperioder(BehandlingMedUttaksperioderDto uttaksperioderDto) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_UTTAK_STONADSKONTOER_GITT_UTTAKSPERIODER_URL)
                         .build())
@@ -315,7 +322,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
      * hent kontroller fakta for behandling
      */
     public KontrollerFaktaData behandlingKontrollerFaktaPerioder(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_UTTAK_KONTROLLER_FAKTA_PERIODER_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -328,7 +335,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
      * hent kontroller fakta for behandling
      */
     public List<KontrollerAktiviteskravPeriode> behandlingKontrollerAktivitetskrav(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_UTTAK_KONTROLLER_AKTIVITETSKRAV_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -342,7 +349,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
      * hent resultat perioder for behandling
      */
     public UttakResultatPerioder behandlingUttakResultatPerioder(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_UTTAK_RESULTAT_PERIODER_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -355,7 +362,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
      * hent tilrettelegging for behandling
      */
     public Tilrettelegging behandlingTilrettelegging(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_SVANGERSKAPSPENGER_TILRETTELEGGING_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -368,7 +375,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
      * hent arbeid, inntekt og inntektsmeldinger
      */
     public ArbeidOgInntektsmeldingDto behandlingArbeidInntektsmelding(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_ARBEID_INNTEKTSMELDING)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -378,7 +385,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     }
 
     public void behandlingArbeidInntektsmeldingLagreArbfor(ManueltArbeidsforholdDto arbeidsforhold) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_ARBEID_INNTEKTSMELDING_OPPRETT_ARBEIDSFORHOLD)
                         .build())
@@ -387,7 +394,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     }
 
     public void behandlingArbeidInntektsmeldingNyVurdering(BehandlingIdDto behandlingIdDto) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_ARBEID_INNTEKTSMELDING_NY_VURDERING)
                         .build())
@@ -396,7 +403,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     }
 
     public void behandlingArbeidInntektsmeldingLagreValg(ManglendeOpplysningerVurderingDto manglendeOpplysningerVurderingDto) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(FPSAK_BASE)
                         .path(BEHANDLING_ARBEID_INNTEKTSMELDING_VURDERING)
                         .build())

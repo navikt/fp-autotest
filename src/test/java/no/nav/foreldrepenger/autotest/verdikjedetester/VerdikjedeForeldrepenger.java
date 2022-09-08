@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.Aktoer;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper;
@@ -93,6 +92,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -822,7 +822,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isZero();
 
         if (forventerNegativSimuleringForBehandling(fpStartdatoFarEndret)) {
-            var tbksaksbehandler = new TilbakekrevingSaksbehandler(Aktoer.Rolle.SAKSBEHANDLER);
+            var tbksaksbehandler = new TilbakekrevingSaksbehandler(SaksbehandlerRolle.SAKSBEHANDLER);
             tbksaksbehandler.hentSisteBehandling(saksnummerMor);
             tbksaksbehandler.ventTilBehandlingErPåVent();
             assertThat(tbksaksbehandler.valgtBehandling.venteArsakKode)

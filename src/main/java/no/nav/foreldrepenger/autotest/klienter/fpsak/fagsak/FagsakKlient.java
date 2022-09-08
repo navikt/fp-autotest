@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Sok;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
@@ -22,8 +23,14 @@ public class FagsakKlient {
     private static final String FAGSAK_URL = "/fagsak";
     private static final String FAGSAK_SØK_URL = FAGSAK_URL + "/sok";
 
+    private final SaksbehandlerRolle saksbehandlerRolle;
+
+    public FagsakKlient(SaksbehandlerRolle saksbehandlerRolle) {
+        this.saksbehandlerRolle = saksbehandlerRolle;
+    }
+
     public Fagsak hentFagsak(Saksnummer saksnummer) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_URL)
                         .queryParam("saksnummer", saksnummer.value())
@@ -42,7 +49,7 @@ public class FagsakKlient {
     }
 
     private List<Fagsak> søk(Sok søk) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_SØK_URL)
                         .build())
@@ -50,6 +57,5 @@ public class FagsakKlient {
         return Optional.ofNullable(send(request.build(), new TypeReference<List<Fagsak>>() {}))
                 .orElse(List.of());
     }
-
 
 }

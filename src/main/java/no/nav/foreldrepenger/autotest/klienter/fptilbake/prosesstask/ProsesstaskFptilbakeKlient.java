@@ -6,15 +6,20 @@ import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsessTaskKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskKlientFelles;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.StatusFilterDto;
 
 public class ProsesstaskFptilbakeKlient implements ProsessTaskKlient {
 
-    private final ProsesstaskKlientFelles prosesstaskKlient = new ProsesstaskKlientFelles(FPTILBAKE_BASE);
+    private final ProsesstaskKlientFelles prosesstaskKlient;
 
-   @Override
+    public ProsesstaskFptilbakeKlient(SaksbehandlerRolle saksbehandlerRolle) {
+        prosesstaskKlient = new ProsesstaskKlientFelles(FPTILBAKE_BASE, saksbehandlerRolle);
+    }
+
+    @Override
     public List<ProsessTaskDataDto> alleProsesstaskPåBehandling() {
         return prosesstaskKlient.alleProsesstaskPåBehandling();
     }

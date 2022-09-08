@@ -7,12 +7,16 @@ import java.util.List;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlientFelles;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class HistorikkFptilbakeKlient implements HistorikkKlient {
 
-    private final HistorikkKlientFelles historikkKlientFelles = new HistorikkKlientFelles(FPTILBAKE_BASE);
+    private final HistorikkKlientFelles historikkKlientFelles;
 
+    public HistorikkFptilbakeKlient(SaksbehandlerRolle saksbehandlerRolle) {
+        historikkKlientFelles = new HistorikkKlientFelles(FPTILBAKE_BASE, saksbehandlerRolle);
+    }
 
     @Override
     public List<HistorikkInnslag> hentHistorikk(Saksnummer saksnummer) {

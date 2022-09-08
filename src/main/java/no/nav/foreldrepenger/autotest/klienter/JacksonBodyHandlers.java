@@ -17,6 +17,7 @@ public final class JacksonBodyHandlers {
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
     private JacksonBodyHandlers() {
+        // Statisk implementasjon
     }
 
     public static ObjectMapper getObjectmapper() {

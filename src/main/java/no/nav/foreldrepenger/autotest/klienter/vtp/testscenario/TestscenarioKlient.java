@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.testscenario;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedBasicHeadere;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.tilJsonOgPubliserIAllureRapport;
 
@@ -37,7 +37,7 @@ public class TestscenarioKlient {
         if (ident != null) {
             uriBuilder = uriBuilder.queryParam("ident1", ident);
         }
-        var request = getRequestBuilder()
+        var request = requestMedBasicHeadere()
                 .uri(uriBuilder.build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(testscenarioObject)));
         var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
@@ -53,7 +53,7 @@ public class TestscenarioKlient {
     }
 
     public List<TestscenarioDto> hentAlleScenarier() {
-        var request = getRequestBuilder()
+        var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(TESTSCENARIO_I_AUTOTEST_POST_URL)
                         .build())

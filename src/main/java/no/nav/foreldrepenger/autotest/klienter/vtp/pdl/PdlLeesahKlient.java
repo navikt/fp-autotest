@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.pdl;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedBasicHeadere;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.tilJsonOgPubliserIAllureRapport;
 
@@ -24,7 +24,7 @@ public class PdlLeesahKlient {
     public void opprettHendelse(PersonhendelseDto personhendelseDto) {
         tilJsonOgPubliserIAllureRapport(personhendelseDto);
         LOG.info("Legger til hendelse av type: {} i PDL", personhendelseDto.getType());
-        var request = getRequestBuilder()
+        var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(PDL_LEESAH)
                         .build())

@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.saf;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedBasicHeadere;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.sendOgHentByteArray;
 
@@ -26,7 +26,7 @@ public class SafKlient {
 
     public Journalpost hentJournalpost(String journalpostId) {
         var body = new GraphQLRequest(query, null, Map.of("journalpostId", journalpostId));
-        var request = getRequestBuilder()
+        var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(GRAPHQL_ENDPOINT)
                         .build())
@@ -36,7 +36,7 @@ public class SafKlient {
     }
 
     public byte[] hentDokumenter(String journalpostId, String dokumentId, String variantFormat) {
-        var request = getRequestBuilder()
+        var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(HENT_DOKUMENT)
                         .resolveTemplate("journalpostId", Optional.ofNullable(journalpostId).orElse("null"))

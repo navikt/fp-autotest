@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger;
 import static jakarta.ws.rs.core.HttpHeaders.LOCATION;
 import static jakarta.ws.rs.core.Response.Status.ACCEPTED;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.sendStringRequest;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus.Status.CANCELLED;
@@ -30,6 +30,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.Behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
@@ -46,11 +47,13 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
     private static final String BEHANDLINGER_GJENOPPTA_URL = BEHANDLINGER_URL + "/gjenoppta";
     private static final String BEHANDLINGER_ALLE_URL = BEHANDLINGER_URL + "/alle";
 
+    private final SaksbehandlerRolle saksbehandlerRolle;
     private final URI baseUrl;
     private final String behandlingStatusPath;
     private final String aksjonspunktPath;
 
-    public BehandlingKlientFelles(URI baseUrl, String behandlingStatusPath, String aksjonspunktPath) {
+    public BehandlingKlientFelles(SaksbehandlerRolle saksbehandlerRolle, URI baseUrl, String behandlingStatusPath, String aksjonspunktPath) {
+        this.saksbehandlerRolle = saksbehandlerRolle;
         this.baseUrl = baseUrl;
         this.behandlingStatusPath = behandlingStatusPath;
         this.aksjonspunktPath = aksjonspunktPath;
@@ -58,7 +61,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
 
     @Override
     public Behandling getBehandling(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(BEHANDLINGER_URL)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -69,7 +72,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
 
     @Override
     public List<Behandling> alle(Saksnummer saksnummer) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(BEHANDLINGER_ALLE_URL)
                         .queryParam(SAKSNUMMER_NAME, saksnummer.value())
@@ -81,7 +84,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
 
     @Override
     public void settPaVent(BehandlingPaVent behandling) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(BEHANDLINGER_SETT_PA_VENT_URL)
                         .build())
@@ -91,7 +94,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
 
     @Override
     public void henlegg(BehandlingHenlegg behandling) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(BEHANDLINGER_HENLEGG_URL)
                         .build())
@@ -101,7 +104,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
 
     @Override
     public Behandling gjenoppta(BehandlingIdDto behandling) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(BEHANDLINGER_GJENOPPTA_URL)
                         .build())
@@ -113,7 +116,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
     // Sjekk om vi kan bruke en async klient her istedenfor.
     @Override
     public Behandling hentBehandlingHvisTilgjenglig(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(behandlingStatusPath)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -129,7 +132,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
      */
     @Override
     public List<Aksjonspunkt> hentAlleAksjonspunkter(UUID behandlingUuid) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(aksjonspunktPath)
                         .queryParam(UUID_NAME, behandlingUuid)
@@ -141,7 +144,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
 
     @Override
     public void postBehandlingAksjonspunkt(BekreftedeAksjonspunkter aksjonspunkter) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(BEHANDLING_AKSJONSPUNKT_URL)
                         .build())
@@ -150,10 +153,10 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
     }
 
 
-    public static Behandling følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(HttpRequest.Builder request) {
+    public Behandling følgRedirectTilStatusOgReturnerBehandlingNårTilgjenglig(HttpRequest.Builder request) {
         var response = sendStringRequest(request.build());
         if (response.statusCode() == ACCEPTED.getStatusCode()) {
-            var requestTilStatusEndepunkt = getRequestBuilder()
+            var requestTilStatusEndepunkt = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                     .uri(URI.create(hentRedirectUriFraLocationHeader(response)))
                     .GET();
             return Vent.på(() -> getBehandlingHvisTilgjenglig(requestTilStatusEndepunkt), 30,
@@ -162,7 +165,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
         throw new RuntimeException("Uventet tilstand. Skal ikke være mulig!");
     }
 
-    private static Behandling getBehandlingHvisTilgjenglig(HttpRequest.Builder request) {
+    private Behandling getBehandlingHvisTilgjenglig(HttpRequest.Builder request) {
         var response = sendStringRequest(request.build());
         if (response.statusCode() == 303) {
             return followRedirectOgHentBehandling(URI.create(hentRedirectUriFraLocationHeader(response)));
@@ -176,8 +179,8 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
         return null;
     }
 
-    private static Behandling followRedirectOgHentBehandling(URI redirectUri) {
-        var redirect = getRequestBuilder()
+    private Behandling followRedirectOgHentBehandling(URI redirectUri) {
+        var redirect = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(redirectUri)
                 .GET();
         return send(redirect.build(), Behandling.class);

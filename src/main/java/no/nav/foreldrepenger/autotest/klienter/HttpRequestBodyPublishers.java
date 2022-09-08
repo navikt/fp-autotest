@@ -7,8 +7,8 @@ import java.util.Map;
 
 public final class HttpRequestBodyPublishers {
 
-
     private HttpRequestBodyPublishers() {
+        // Statisk implementasjon
     }
 
     public static HttpRequest.BodyPublisher buildFormDataFromMap(Map<String, String> data) {

@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
-import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.getRequestBuilder;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.URI;
@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
@@ -27,12 +28,14 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
     private static final StatusFilterDto ALLE_PROSESSTASK = getStatusFilterDto();
 
     private final URI baseUrl;
+    private final SaksbehandlerRolle saksbehandlerRolle;
 
-    public ProsesstaskKlientFelles(URI baseUrl) {
+    public ProsesstaskKlientFelles(URI baseUrl, SaksbehandlerRolle saksbehandlerRolle) {
         this.baseUrl = baseUrl;
+        this.saksbehandlerRolle = saksbehandlerRolle;
     }
 
-    //    @Pattern(regexp = "FEILET|VENTER_SVAR|SUSPENDERT|VETO|KLAR")
+    // @Pattern(regexp = "FEILET|VENTER_SVAR|SUSPENDERT|VETO|KLAR")
     private static StatusFilterDto getStatusFilterDto() {
         var statusFilterDto = new StatusFilterDto();
         statusFilterDto.setProsessTaskStatuser(List.of(
@@ -57,7 +60,7 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
 
     @Override
     public List<ProsessTaskDataDto> list(StatusFilterDto statusFilterDto) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(PROSESSTASK_LIST_URL)
                         .build())
@@ -69,7 +72,7 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
 
     @Override
     public void create(ProsessTaskOpprettInputDto prosessTaskOpprettInputDto) {
-        var request = getRequestBuilder()
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(PROSESSTASK_CREATE_URL)
                         .build())
