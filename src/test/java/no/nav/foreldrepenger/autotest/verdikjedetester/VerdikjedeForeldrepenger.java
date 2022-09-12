@@ -25,6 +25,7 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MINSTERETT;
 import static no.nav.foreldrepenger.autotest.util.localdate.Virkedager.beregnAntallVirkedager;
 import static no.nav.foreldrepenger.autotest.util.localdate.Virkedager.helgejustertTilMandag;
+import static no.nav.foreldrepenger.autotest.util.localdate.Virkedager.plusVirkedager;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.ARBEID;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.IKKE_OPPGITT;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UTDANNING;
@@ -39,7 +40,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -1791,7 +1791,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @DisplayName("Koblet sak. Far utsetter oppstart rundt fødsel, søker termin og med fødselshendelse")
     @Description("Far søker og får innvilget før termin. Fødselshendelse med fødsel etter termin. Far utsetter oppstart for å matche"
             + "fødselsdato")
-    @Disabled
     void farUtsetterOppstartRundtFødselSøkerTermin() {
         var familie = new Familie("83");
         var termindato = helgejustertTilMandag(LocalDate.now().minusWeeks(2).minusDays(2));
@@ -1802,14 +1801,15 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummerMor = mor.søk(søknadMor.build());
 
-        mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(1));
+        mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(3));
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var far = familie.far();
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
-                .medFordeling(generiskFordeling(uttaksperiode(FEDREKVOTE, termindato.minusWeeks(1), termindato.plusWeeks(1).minusDays(1), SAMTIDIGUTTAK)))
+                .medFordeling(generiskFordeling(uttaksperiode(FEDREKVOTE, termindato.minusDays(4),
+                        plusVirkedager(termindato.minusDays(4), 9), SAMTIDIGUTTAK)))
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
                 .medMottatdato(termindato.minusWeeks(1));
         var saksnummerFar = far.søk(søknadFar.build());
@@ -1852,10 +1852,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
-        assertThat(uttak).hasSize(1);
-        assertThat(uttak.get(0).getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
-        assertThat(uttak.get(0).getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FEDREKVOTE);
-        assertThat(uttak.get(0).getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
+        for (var periode : uttak) {
+            assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
+            assertThat(periode.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FEDREKVOTE);
+            assertThat(periode.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
+        }
+        var trekkdager = uttak.stream().mapToInt(p -> p.getAktiviteter().get(0).getTrekkdagerDesimaler().intValue()).sum();
+        assertThat(trekkdager).isEqualTo(10);
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
