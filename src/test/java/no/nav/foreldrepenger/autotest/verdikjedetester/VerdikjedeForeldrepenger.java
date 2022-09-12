@@ -39,6 +39,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -1790,6 +1791,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @DisplayName("Koblet sak. Far utsetter oppstart rundt fødsel, søker termin og med fødselshendelse")
     @Description("Far søker og får innvilget før termin. Fødselshendelse med fødsel etter termin. Far utsetter oppstart for å matche"
             + "fødselsdato")
+    @Disabled
     void farUtsetterOppstartRundtFødselSøkerTermin() {
         var familie = new Familie("83");
         var termindato = helgejustertTilMandag(LocalDate.now().minusWeeks(2).minusDays(2));
