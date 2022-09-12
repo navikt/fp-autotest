@@ -23,7 +23,6 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResult
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MINSTERETT;
-import static no.nav.foreldrepenger.autotest.util.localdate.Virkedager.beregnAntallVirkedager;
 import static no.nav.foreldrepenger.autotest.util.localdate.Virkedager.helgejustertTilMandag;
 import static no.nav.foreldrepenger.autotest.util.localdate.Virkedager.plusVirkedager;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.ARBEID;
@@ -1924,14 +1923,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
-        assertThat(uttak).hasSize(1);
-        var uttakperiode = uttak.get(0);
-        assertThat(uttakperiode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
-        assertThat(uttakperiode.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FEDREKVOTE);
-        assertThat(uttakperiode.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
-        assertThat(uttakperiode.getFom()).isEqualTo(helgejustertTilMandag(fødselsdato));
-        assertThat(beregnAntallVirkedager(farsPeriodeRundtFødsel.getFom(), farsPeriodeRundtFødsel.getTom()))
-                .isEqualTo(beregnAntallVirkedager(uttakperiode.getFom(), uttakperiode.getTom()));
+        for (var periode : uttak) {
+            assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
+            assertThat(periode.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FEDREKVOTE);
+            assertThat(periode.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
+        }
+        var trekkdager = uttak.stream().mapToInt(p -> p.getAktiviteter().get(0).getTrekkdagerDesimaler().intValue()).sum();
+        assertThat(trekkdager).isEqualTo(10);
+        assertThat(uttak.get(0).getFom()).isEqualTo(fødselsdato);
     }
 
     private Saksnummer sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
