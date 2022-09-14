@@ -341,6 +341,7 @@ services:
       - "common.env"
     environment:
       - "LOADBALANCER_URL=http://localhost:8065"
+      - "NAIS_CLUSTER_NAME=vtp"
       - "KAFKA_PDL_LEESAH_TOPIC=aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
