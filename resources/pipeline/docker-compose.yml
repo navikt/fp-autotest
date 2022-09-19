@@ -100,6 +100,7 @@ services:
     mem_limit: 1gb
     shm_size: 256mb
     environment:
+      - "NAIS_CLUSTER_NAME=vtp"
       - "FPABAKUS_URL=http://fpabakus:8080/fpabakus"
       - "ABAKUS_CALLBACK_URL=http://fpsak:8080/fpsak/api/registerdata/iay/callback"
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
@@ -161,6 +162,7 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
+      - "NAIS_CLUSTER_NAME=vtp"
       - "LOADBALANCER_URL=http://localhost:8090"
       - "KAFKA_TOPICS_FORDELING=privat-foreldrepenger-historikk-fordeling"
       - "KAFKA_TOPIC_JOURNAL_HENDELSE=aapen-dok-journalfoering-v1-q1"
@@ -275,6 +277,7 @@ services:
       - "common.env"
     environment:
       - "CONTEXT_PATH=/fptilbake"
+      - "NAIS_CLUSTER_NAME=vtp"
       - "FPSAK_OVERRIDE_URL=http://fpsak:8080"
       - "FPOPPDRAG_OVERRIDE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "JOURNALPOSTAPI_OVERRIDE_URL=https://vtp:8063/rest/dokarkiv/"
