@@ -21,7 +21,7 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
 
     public AvklarAktiviteterBekreftelse setSkalBrukes(boolean skalBrukes, ArbeidsgiverIdentifikator orgnr) {
         BeregningsaktivitetLagreDto vurdering = beregningsaktivitetLagreDtoList.stream()
-                .filter(a -> a.oppdragsgiverOrg.equalsIgnoreCase(orgnr.value()))
+                .filter(a -> a.oppdragsgiverOrg != null && a.oppdragsgiverOrg.equalsIgnoreCase(orgnr.value()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ingen beregningsaktivitet med orgnummer " + orgnr));
         vurdering.skalBrukes = skalBrukes;
