@@ -369,7 +369,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 .as("Har revurdert behandling")
                 .isFalse();
 
-        sendInnEndringssøknadforMor(familie, saksnummerMor);
+        sendInnEndringssøknadforMor(familie, fødselsdato, saksnummerMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -524,7 +524,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
 
-        sendInnEndringssøknadforMorMedEndretUttak(familie, saksnummerMor);
+        sendInnEndringssøknadforMorMedEndretUttak(familie, fødselsdato, saksnummerMor);
 
         overstyrer.hentFagsak(saksnummerMor);
         overstyrer.ventPåOgVelgRevurderingBehandling();
@@ -566,12 +566,12 @@ class MorOgFarSammen extends FpsakTestBase {
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
 
-        sendInnEndringssøknadforMorMedEndretUttak(familie, saksnummerMor);
+        sendInnEndringssøknadforMorMedEndretUttak(familie, fødselsdato, saksnummerMor);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
         var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
-                .bekreftHarGyldigGrunn(LocalDate.now());
+                .bekreftHarGyldigGrunn(fødselsdato);
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
@@ -695,19 +695,15 @@ class MorOgFarSammen extends FpsakTestBase {
 
     }
 
-    private void sendInnEndringssøknadforMor(Familie familie, Saksnummer saksnummerMor) {
-        // TODO: Matcher ikke scenario!
-        var fødselsdato = LocalDate.now().minusMonths(4);
-        var fordeling = FordelingErketyper.fordelingMorHappyCase(fødselsdato);
-        var søknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, saksnummerMor);
+    private void sendInnEndringssøknadforMor(Familie familie, LocalDate fødselsdatoBarn, Saksnummer saksnummerMor) {
+        var fordeling = FordelingErketyper.fordelingMorHappyCase(fødselsdatoBarn);
+        var søknad = lagEndringssøknadFødsel(fødselsdatoBarn, BrukerRolle.MOR, fordeling, saksnummerMor);
         familie.mor().søk(søknad.build());
     }
 
-    private void sendInnEndringssøknadforMorMedEndretUttak(Familie familie, Saksnummer saksnummerMor) {
-        // TODO: Matcher ikke scenario!
-        var fødselsdato = LocalDate.now().minusMonths(4);
-        var fordeling = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
-        var søknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, saksnummerMor);
+    private void sendInnEndringssøknadforMorMedEndretUttak(Familie familie, LocalDate fødselsdatoBarn, Saksnummer saksnummerMor) {
+        var fordeling = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdatoBarn);
+        var søknad = lagEndringssøknadFødsel(fødselsdatoBarn, BrukerRolle.MOR, fordeling, saksnummerMor);
         familie.mor().søk(søknad.build());
     }
 

@@ -287,8 +287,9 @@ public class Saksbehandler {
         if (forventetStatus.equals(behandlingsstatus)) {
             return;
         }
-        throw new IllegalStateException(String.format("Behandlingsstatus for behandling %s på fagsak %s var ikke %s, men var %s",
-                valgtBehandling.uuid, valgtFagsak.saksnummer(), forventetStatus, behandlingsstatus));
+        throw new IllegalStateException(String.format("Behandlingsstatus for behandling %s på fagsak %s var ikke %s, men var %s."
+                        + "Har følgende aksjonspunkt: \n%s", valgtBehandling.uuid, valgtFagsak.saksnummer(),
+                forventetStatus, behandlingsstatus, valgtBehandling.getAksjonspunkter()));
     }
 
     protected void refreshBehandling() {
