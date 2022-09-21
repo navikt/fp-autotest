@@ -107,6 +107,11 @@ services:
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
+      - "FPABAKUS_OVERRIDE_URL=http://fpabakus:8080/fpabakus"
+      - "FPOPPDRAG_OVERRIDE_URL=http://fpoppdrag:8080/fpoppdrag"
+      - "FPTILBAKE_OVERRIDE_URL=http://fptilbake:8080/fptilbake"
+      - "FPFORMIDLING_OVERRIDE_URL=http://fpformidling:8080/fpformidling"
+      - "FPRISK_OVERRIDE_URL=http://fprisk:8080/fprisk"
     env_file:
       - "fpsak_datasource.list"
       - "common.env"
