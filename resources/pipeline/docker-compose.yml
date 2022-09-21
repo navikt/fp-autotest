@@ -101,14 +101,8 @@ services:
     shm_size: 256mb
     environment:
       - "NAIS_CLUSTER_NAME=vtp"
-      - "FPABAKUS_URL=http://fpabakus:8080/fpabakus"
       - "ABAKUS_CALLBACK_URL=http://fpsak:8080/fpsak/api/registerdata/iay/callback"
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
-      - "FPOPPDRAG_OVERRIDE_DIREKTE_URL=http://fpoppdrag:8080/fpoppdrag/api"
-      - "FPTILBAKE_OVERRIDE_DIREKTE_URL=http://fptilbake:8080/fptilbake/api"
-      - "FPFORMIDLING_BASE_URL=http://fpformidling:8080/fpformidling"
-      - "FPRISK_URL=http://fprisk:8080/fprisk"
-      - "FPFORDEL_BASE_URL=http://fpfordel:8080/fpfordel"
       - "UFORE_RS_URL=http://vtp:8060/rest/api/pesys/ufo"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
@@ -278,10 +272,7 @@ services:
     environment:
       - "CONTEXT_PATH=/fptilbake"
       - "NAIS_CLUSTER_NAME=vtp"
-      - "FPSAK_OVERRIDE_URL=http://fpsak:8080"
-      - "FPOPPDRAG_OVERRIDE_URL=http://fpoppdrag:8080/fpoppdrag/api"
       - "FPSAK_BASE_URL=http://fpsak:8080"
-      - "FPOPPDRAG_BASE_URL=http://fpoppdrag:8080"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
       - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
