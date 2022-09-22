@@ -197,8 +197,8 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
-      - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
-      - "FPSAK_REST_BASE_URL=http://fpsak:8080"
+      - "NAIS_CLUSTER_NAME=vtp"
+      - "FPSAK_OVERRIDE_URL=http://fpsak:8080/fpsak"
       - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
       - "DOKDIST_REST_BASE_URL=https://vtp:8063/rest/dokdist/v1"
       - "JOURNALPOST_REST_V1_URL=https://vtp:8063/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
@@ -343,7 +343,6 @@ services:
       - "KAFKA_PDL_LEESAH_TOPIC=aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
-      - "FPSAKHENDELSER_V1_URL=http://fpsak:8080/fpsak/api/hendelser/"
     volumes:
       - "~/.modig:/app/.modig"
     ports:
