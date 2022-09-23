@@ -71,7 +71,6 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
-      - "NAIS_CLUSTER_NAME=LOCALHOST-FSS" #omgår avhengighet til vault
       - "LOADBALANCER_URL=http://localhost:8015"
       - "KAFKA_LONNSKOMPENSASJON_TOPIC=privat-permittering-lonnskomp-vedtak-vtp"
     env_file:
@@ -100,18 +99,12 @@ services:
     mem_limit: 1gb
     shm_size: 256mb
     environment:
-      - "NAIS_CLUSTER_NAME=vtp"
       - "ABAKUS_CALLBACK_URL=http://fpsak:8080/fpsak/api/registerdata/iay/callback"
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
       - "UFORE_RS_URL=http://vtp:8060/rest/api/pesys/ufo"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
       - "LOADBALANCER_URL=http://localhost:8080"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
-      - "FPABAKUS_OVERRIDE_URL=http://fpabakus:8080/fpabakus"
-      - "FPOPPDRAG_OVERRIDE_URL=http://fpoppdrag:8080/fpoppdrag"
-      - "FPTILBAKE_OVERRIDE_URL=http://fptilbake:8080/fptilbake"
-      - "FPFORMIDLING_OVERRIDE_URL=http://fpformidling:8080/fpformidling"
-      - "FPRISK_OVERRIDE_URL=http://fprisk:8080/fprisk"
     env_file:
       - "fpsak_datasource.list"
       - "common.env"
@@ -161,13 +154,10 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
-      - "NAIS_CLUSTER_NAME=vtp"
       - "LOADBALANCER_URL=http://localhost:8090"
       - "KAFKA_TOPICS_FORDELING=privat-foreldrepenger-historikk-fordeling"
       - "KAFKA_TOPIC_JOURNAL_HENDELSE=aapen-dok-journalfoering-v1-q1"
-      - "FPSAK_OVERRIDE_URL=http://fpsak:8080/fpsak"
-      - "FPINFO_BASE_URL=http://fpinfo:8080"
-      - "FPTILBAKE_OVERRIDE_URL=http://fptilbake:8080/fptilbake"
+      - "FPINFO_BASE_URL=http://fpinfo:8080" # TODO Bruk fpinfo.override.url istedenfor
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "FPFORDEL_IT_FP_URL=https://vtp:8063/rest/infotrygd/saker/foreldrepenger"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.mottak.hendelse.test.VtpKafkaAvroSerde"
@@ -197,8 +187,6 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
-      - "NAIS_CLUSTER_NAME=vtp"
-      - "FPSAK_OVERRIDE_URL=http://fpsak:8080/fpsak"
       - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
       - "DOKDIST_REST_BASE_URL=https://vtp:8063/rest/dokdist/v1"
       - "JOURNALPOST_REST_V1_URL=https://vtp:8063/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
@@ -276,8 +264,6 @@ services:
       - "common.env"
     environment:
       - "CONTEXT_PATH=/fptilbake"
-      - "NAIS_CLUSTER_NAME=vtp"
-      - "FPSAK_OVERRIDE_URL=http://fpsak:8080/fpsak"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
       - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
@@ -339,7 +325,6 @@ services:
       - "common.env"
     environment:
       - "LOADBALANCER_URL=http://localhost:8065"
-      - "NAIS_CLUSTER_NAME=vtp"
       - "KAFKA_PDL_LEESAH_TOPIC=aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
@@ -390,6 +375,7 @@ services:
     mem_limit: 512mb
     environment:
       - "SPRING_PROFILES_ACTIVE=test"
+      - "NAIS_CLUSTER_NAME=test"
       - "LOADBALANCER_URL=http://localhost:9001"
       - "MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED=true"
       - "AAREG_RS_URL=http://vtp:8060/rest/aareg-services/api"
@@ -400,9 +386,9 @@ services:
       - "PDL_GRAPHQL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
       - "DIGDIR_BASE_URL=http://vtp:8060/rest/digdir"
       - "ORGANISASJON_RS_BASE_URL=https://vtp:8063/rest/ereg/api"
-      - "FPINFO_BASE_URL=http://fpinfo:8080"
       - "OPPSLAG_URL=http://vtp:8060/rest/dummy/oppslag"
-      - "FPFORDEL_BASE_URL=http://fpfordel:8080"
+      - "FPINFO_BASE_URL=http://fpinfo:8080" # TODO: ta i bruk ovverride url felles
+      - "FPFORDEL_BASE_URL=http://fpfordel:8080" # TODO: ta i bruk ovverride url felles
       - "FPFORDEL_MAX=20"
       - "FPINFO_MAX=20"
       - "AZURE_OPENID_CONFIG_TOKEN_ENDPOINT=http://vtp:8060/rest/AzureAd/aadb2b/oauth2/v2.0/token"
@@ -428,7 +414,7 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=test"
       - "LOADBALANCER_URL=http://localhost:9002"
-      - "FPSOKNAD_MOTTAK_URL=http://fpsoknad-mottak:9001/api/"
+      - "FPSOKNAD_MOTTAK_URL=http://fpsoknad-mottak:9001/api/" # TODO: ta i bruk override url felles
       - "LOGINSERVICE_IDPORTEN_DISCOVERY_URL=http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration"
       - "LOGINSERVICE_IDPORTEN_AUDIENCE=OIDC"
     env_file:
@@ -448,9 +434,10 @@ services:
     mem_limit: 512mb
     environment:
       - "SPRING_PROFILES_ACTIVE=test"
+      - "NAIS_CLUSTER_NAME=test"
       - "LOADBALANCER_URL=http://localhost:9002"
-      - "FPINFO_HISTORIKK_URL=http://fpinfo-historikk:9003/api/"
-      - "FPSOKNAD_MOTTAK_URL=http://fpsoknad-mottak:9001/api/"
+      - "FPINFO_HISTORIKK_URL=http://fpinfo-historikk:9003/api/" # TODO: ta i bruk override url felles
+      - "FPSOKNAD_MOTTAK_URL=http://fpsoknad-mottak:9001/api/" # TODO: ta i bruk override url felles
       - "LOGINSERVICE_IDPORTEN_DISCOVERY_URL=http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration"
       - "LOGINSERVICE_IDPORTEN_AUDIENCE=OIDC"
     env_file:
