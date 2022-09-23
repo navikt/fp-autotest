@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+## FUNCTIONS
 settPorterSomSkalErstattes () {
   applikasjon=$1
   case $applikasjon in
@@ -70,6 +71,7 @@ settPorterSomSkalErstattes () {
   esac
 }
 
+## MAIN SCRIPT
 host_adresse="host.docker.internal"
 while [ -n "$1" ]; do # while loop starts
     case "$1" in

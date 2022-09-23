@@ -387,8 +387,6 @@ services:
       - "DIGDIR_BASE_URL=http://vtp:8060/rest/digdir"
       - "ORGANISASJON_RS_BASE_URL=https://vtp:8063/rest/ereg/api"
       - "OPPSLAG_URL=http://vtp:8060/rest/dummy/oppslag"
-      - "FPINFO_BASE_URL=http://fpinfo:8080" # TODO: ta i bruk ovverride url felles
-      - "FPFORDEL_BASE_URL=http://fpfordel:8080" # TODO: ta i bruk ovverride url felles
       - "FPFORDEL_MAX=20"
       - "FPINFO_MAX=20"
       - "AZURE_OPENID_CONFIG_TOKEN_ENDPOINT=http://vtp:8060/rest/AzureAd/aadb2b/oauth2/v2.0/token"
@@ -414,7 +412,6 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=test"
       - "LOADBALANCER_URL=http://localhost:9002"
-      - "FPSOKNAD_MOTTAK_URL=http://fpsoknad-mottak:9001/api/" # TODO: ta i bruk override url felles
       - "LOGINSERVICE_IDPORTEN_DISCOVERY_URL=http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration"
       - "LOGINSERVICE_IDPORTEN_AUDIENCE=OIDC"
     env_file:
@@ -436,8 +433,6 @@ services:
       - "SPRING_PROFILES_ACTIVE=test"
       - "NAIS_CLUSTER_NAME=test"
       - "LOADBALANCER_URL=http://localhost:9002"
-      - "FPINFO_HISTORIKK_URL=http://fpinfo-historikk:9003/api/" # TODO: ta i bruk override url felles
-      - "FPSOKNAD_MOTTAK_URL=http://fpsoknad-mottak:9001/api/" # TODO: ta i bruk override url felles
       - "LOGINSERVICE_IDPORTEN_DISCOVERY_URL=http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration"
       - "LOGINSERVICE_IDPORTEN_AUDIENCE=OIDC"
     env_file:
