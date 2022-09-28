@@ -22,6 +22,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
@@ -32,7 +34,7 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeids
 
 @Tag("logger")
 class LoggTest {
-
+    private static final Logger LOG = LoggerFactory.getLogger(LoggTest.class);
     private static final List<String> UNWANTED_STRINGS = List.of(
         "Server Error",
         "deadlock detected",
@@ -46,6 +48,10 @@ class LoggTest {
 //        SQLException.class.getSimpleName(),
         ConstraintViolationException.class.getSimpleName(),
         "javax.persistence.PersistenceException");
+
+    private static final List<String> IGNORE_EXCEPTION_IF_CONTAINS = List.of(
+            "taskName=behandlingskontroll.tilbakeTilStart",
+            "Vil automatisk prøve igjen");
 
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend");
     private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend", "fpsoknad-mottak");
@@ -112,7 +118,7 @@ class LoggTest {
     }
 
     private boolean isUnwantedString(String currentLine, String unwantedString) {
-        return currentLine.contains(unwantedString) && !currentLine.contains("taskName=behandlingskontroll.tilbakeTilStart");
+        return currentLine.contains(unwantedString) && IGNORE_EXCEPTION_IF_CONTAINS.stream().noneMatch(currentLine::contains);
     }
 
     private List<SensitivInformasjon> hentSensitiveStrengerFraVTP() {
