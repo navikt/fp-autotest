@@ -72,7 +72,6 @@ public final class JavaHttpKlient {
         try {
             return klient.send(request, responseHandler);
         } catch (IOException e) {
-            logRequest(request);
             throw new TekniskException("F-432937", String.format("Kunne ikke sende request %s", request), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -88,7 +87,7 @@ public final class JavaHttpKlient {
             return null;
         }
         if (statusCode == HttpURLConnection.HTTP_UNAUTHORIZED || statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
-            logRequest(response.request());
+            logRequest(response);
             throw new ManglerTilgangException("NO-AUTH", String.format("[HTTP %s] Mangler tilgang. Feilet mot %s", statusCode, endpoint));
         }
         if ((statusCode >= HttpURLConnection.HTTP_OK && statusCode < HttpURLConnection.HTTP_MULT_CHOICE)) {
@@ -98,10 +97,10 @@ public final class JavaHttpKlient {
             throw new TekniskException("NOT-FOUND", String.format("[HTTP %s] Feilet mot %s.", statusCode, endpoint));
         }
         if (statusCode == HttpURLConnection.HTTP_BAD_REQUEST && errorConsumer != null) {
-            logRequest(response.request());
+            logRequest(response);
             errorConsumer.accept(response);
         }
-        logRequest(response.request());
+        logRequest(response);
         throw new IntegrasjonException("REST-FEIL", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", statusCode, endpoint,
                 toJson(response.body())));
     }
@@ -113,8 +112,17 @@ public final class JavaHttpKlient {
         };
     }
 
-    private static void logRequest(HttpRequest request) {
-        LOG.warn("REST-FEIL: Prøvde å sende request {} med headere \n{}", request, request.headers());
+
+    private static <T> void logRequest(HttpResponse<T> response) {
+        var request = response.request();
+        if (response.body() != null && response.body() instanceof String body) {
+            LOG.warn("REST-FEIL: Prøvde å sende request {} med headere {} og body {}", request, request.headers(), body);
+        } else {
+            logRequest(request);
+        }
     }
 
+    private static void logRequest(HttpRequest request) {
+        LOG.warn("REST-FEIL: Prøvde å sende request {}, med headere {} og uten body", request, request.headers());
+    }
 }

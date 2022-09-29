@@ -44,10 +44,6 @@ public class FagsakKlient {
         return søk(new Sok(fnr.value()));
     }
 
-    public List<Fagsak> søk(String søk) {
-        return søk(new Sok(søk));
-    }
-
     private List<Fagsak> søk(Sok søk) {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
