@@ -411,6 +411,7 @@ services:
     mem_limit: 512mb
     environment:
       - "SPRING_PROFILES_ACTIVE=test"
+      - "NAIS_CLUSTER_NAME=test"
       - "LOADBALANCER_URL=http://localhost:9002"
       - "LOGINSERVICE_IDPORTEN_DISCOVERY_URL=http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration"
       - "LOGINSERVICE_IDPORTEN_AUDIENCE=OIDC"
