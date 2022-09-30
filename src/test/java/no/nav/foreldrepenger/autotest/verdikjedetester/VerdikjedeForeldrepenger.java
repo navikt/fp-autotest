@@ -84,6 +84,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.KontrollerBesteberegningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengeandel;
@@ -282,7 +283,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
 
-        if (saksbehandler.harAksjonspunkt("5084")) {
+        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
                     hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
             vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
@@ -1841,7 +1842,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
-        if (saksbehandler.harAksjonspunkt("5084")) {
+        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
                     hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
             vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
@@ -1913,7 +1914,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
 
-        if (saksbehandler.harAksjonspunkt("5084")) {
+        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
                     hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
             vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
