@@ -562,18 +562,17 @@ class MorOgFarSammen extends FpsakTestBase {
     @Description("Mor får revurdering fra endringssøknad endring av uttak - fører til revurdering hos far")
     void berørtSakEndringAvUttak() {
         var familie = new Familie("84", SEND_DOKUMENTER_UTEN_SELVBETJENING);
-        var fødselsdato = Virkedager.helgejustertTilMandag(LocalDate.now().minusMonths(4).plusDays(2));
+        var fødselsdato = Virkedager.helgejustertTilMandag(LocalDate.now().minusMonths(4).withDayOfMonth(15));
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
 
         sendInnEndringssøknadforMorMedEndretUttak(familie, fødselsdato, saksnummerMor);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
-        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRIST_FORELDREPENGER)) {
-            var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(
-                    VurderSoknadsfristForeldrepengerBekreftelse.class).bekreftHarGyldigGrunn(fødselsdato);
-            saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-        }
+        var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(
+                VurderSoknadsfristForeldrepengerBekreftelse.class).bekreftHarGyldigGrunn(fødselsdato);
+        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
+
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummerMor);
