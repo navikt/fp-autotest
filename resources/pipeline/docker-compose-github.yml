@@ -23,6 +23,7 @@ services:
   fpinfo:
     mem_limit: 256mb
   fpsoknad-mottak:
+    cpus: 0.5
     mem_limit: 512mb
   fpformidling:
     mem_limit: 512mb
