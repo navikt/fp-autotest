@@ -117,6 +117,7 @@ public class AksjonspunktKoder {
     public static final String VURDER_PERIODER_MED_OPPTJENING = "5051";
     public static final String VURDER_ARBEIDSFORHOLD = "5080";
     public static final String VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING = "5085";
+    public static final String VURDER_FEILUTBETALING_KODE = "5084";
 
     private AksjonspunktKoder() {
     }

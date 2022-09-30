@@ -97,7 +97,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        if (!saksbehandler.harAksjonspunkt("5089")) {
+        if (!saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_OPPTJENINGSVILKÅRET)) {
             throw new IllegalStateException("Forventer å ha havnet i opptjeningsvilkåret her");
         }
 
