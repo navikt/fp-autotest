@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
+import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
@@ -25,6 +26,7 @@ import no.nav.vedtak.exception.TekniskException;
 
 public final class JavaHttpKlient {
     private static final Logger LOG = LoggerFactory.getLogger(JavaHttpKlient.class);
+    private static final int MAX_RETRY = 3;
 
     private static final HttpClient klient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_1_1)
@@ -70,13 +72,25 @@ public final class JavaHttpKlient {
 
     private static <T> HttpResponse<T> send(HttpRequest request, HttpResponse.BodyHandler<T> responseHandler) {
         try {
-            return klient.send(request, responseHandler);
+            var response = klient.send(request, responseHandler);
+            var antallForsøk = 1;
+            while (retryOn5xxFailures(response, antallForsøk)) {
+                LOG.warn("5xx feil mot {} for {}. gang. Prøver på nytt.", request.uri(), antallForsøk);
+                int ventSekunder = Math.min(2000, 1000 * antallForsøk++);
+                sleep(ventSekunder);
+                response = klient.send(request, responseHandler);
+            }
+            return response;
         } catch (IOException e) {
             throw new TekniskException("F-432937", String.format("Kunne ikke sende request %s", request), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new TekniskException("F-432938", "InterruptedException ved henting av data.", e);
         }
+    }
+
+    private static <T> boolean retryOn5xxFailures(HttpResponse<T> response, int antallForsøk) {
+        return antallForsøk > MAX_RETRY || 500 <= response.statusCode() && response.statusCode() <= 599;
     }
 
     private static <T, R> R handleResponse(HttpResponse<T> response, Function<HttpResponse<T>, R> responseFunction, Consumer<HttpResponse<T>> errorConsumer) {
