@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageBekreftelse.VurderingAvKlageNfpBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageNfpBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
@@ -87,7 +87,7 @@ class Klage extends FpsakTestBase {
                 .isEqualTo("UGUNST_MEDHOLD_I_KLAGE");
         assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
                 .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
+                .isEqualTo(BehandlingResultatType.KLAGE_OMGJORT_UGUNST);
         assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse())
                 .as("Begrunnelse klagevurdering NFP")
                 .isEqualTo(begrunnelse);

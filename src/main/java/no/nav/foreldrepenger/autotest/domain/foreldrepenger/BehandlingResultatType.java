@@ -30,6 +30,8 @@ public enum BehandlingResultatType {
     // Klage
     KLAGE_AVVIST,
     KLAGE_MEDHOLD,
+    KLAGE_DELVIS_MEDHOLD,
+    KLAGE_OMGJORT_UGUNST,
     KLAGE_YTELSESVEDTAK_OPPHEVET,
     KLAGE_YTELSESVEDTAK_STADFESTET,
     KLAGE_TILBAKEKREVING_VEDTAK_STADFESTET, // Brukes av kun Tilbakekreving eller Tilbakekreving Revurdering
@@ -38,10 +40,13 @@ public enum BehandlingResultatType {
 
     // Anke
     ANKE_AVVIST,
-    ANKE_OMGJOER,
+    ANKE_MEDHOLD,
+    ANKE_DELVIS_MEDHOLD,
+    ANKE_OMGJORT_UGUNST,
     ANKE_OPPHEVE_OG_HJEMSENDE,
     ANKE_HJEMSENDE_UTEN_OPPHEV,
     ANKE_YTELSESVEDTAK_STADFESTET,
+    HENLAGT_ANKE_TRUKKET,
 
     // Innsyn
     INNSYN_INNVILGET,
