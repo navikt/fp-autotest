@@ -51,6 +51,7 @@ class LoggTest {
 
     private static final List<String> IGNORE_EXCEPTION_IF_CONTAINS = List.of(
             "taskName=behandlingskontroll.tilbakeTilStart",
+            "Error while loading kafka-streams-version.properties",
             "Vil automatisk prøve igjen");
 
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend");
