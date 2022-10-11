@@ -534,11 +534,6 @@ class MorOgFarSammen extends FpsakTestBase {
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        var vurderSoknadsfristForeldrepengerBekreftelse = overstyrer
-                .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
-                .bekreftHarGyldigGrunn(fødselsdato);
-        overstyrer.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummerMor);
@@ -569,18 +564,8 @@ class MorOgFarSammen extends FpsakTestBase {
         sendInnEndringssøknadforMorMedEndretUttak(familie, fødselsdato, saksnummerMor);
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
-        var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(
-                VurderSoknadsfristForeldrepengerBekreftelse.class).bekreftHarGyldigGrunn(fødselsdato);
-        saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-
-        beslutter.hentFagsak(saksnummerMor);
-        beslutter.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+        saksbehandler.ventTilAvsluttetBehandling();
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
                 .as("Konsekvenser for ytelsen")
                 .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
     }
