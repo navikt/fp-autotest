@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.base;
 import org.junit.jupiter.api.BeforeEach;
 
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.SaksbehandlerRolle;
 
 // TODO: Fiks opp i testbasene
 public class FptilbakeTestBase extends VerdikjedeTestBase {

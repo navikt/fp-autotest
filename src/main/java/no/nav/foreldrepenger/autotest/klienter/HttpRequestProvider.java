@@ -12,7 +12,8 @@ import java.time.Duration;
 import java.util.Optional;
 
 import jakarta.ws.rs.core.MediaType;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.TokenProvider;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
@@ -26,12 +27,12 @@ public final class HttpRequestProvider {
 
     public static HttpRequest.Builder requestMedInnloggetBruker(Fødselsnummer søker) {
         var requestBuilder = requestMedBasicHeadere();
-        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.tokenXToken(søker));
+        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.tokenXToken(søker, "lokal"));
     }
 
     public static HttpRequest.Builder requestMedInnloggetSaksbehandler(SaksbehandlerRolle saksbehandlerRolle) {
         var requestBuilder = requestMedBasicHeadere();
-        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.openAMToken(saksbehandlerRolle));
+        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.azureAdToken(saksbehandlerRolle, "fpsak-localhost")); // TODO: Audience
     }
 
     public static HttpRequest.Builder requestMedBasicHeadere() {

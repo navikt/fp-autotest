@@ -27,7 +27,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.Behand
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BrukerresponsDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunkt.FeilutbetalingDto;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class BehandlingFptilbakeKlient implements BehandlingerKlient {

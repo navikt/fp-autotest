@@ -7,7 +7,7 @@ import java.util.List;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkKlientFelles;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class HistorikkFptilbakeKlient implements HistorikkKlient {

@@ -112,6 +112,11 @@
             <version>${fp-felles.versjon}</version>
         </dependency>
         <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-oidc</artifactId>
+            <version>${fp-felles.versjon}</version>
+        </dependency>
+        <dependency>
             <groupId>no.nav.vedtak.prosesstask</groupId>
             <artifactId>prosesstask-rest-api</artifactId>
             <version>${fp-prosesstask.version}</version>
