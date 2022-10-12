@@ -17,6 +17,7 @@ public class Overstyrer extends Saksbehandler {
     /*
      * Oversyring
      */
+    // TODO: Legg på sjekk om behandling er ferdigbehandlet eller ei
     public void overstyr(AksjonspunktBekreftelse bekreftelse) {
         List<AksjonspunktBekreftelse> bekreftelser = new ArrayList<>();
         bekreftelser.add(bekreftelse);

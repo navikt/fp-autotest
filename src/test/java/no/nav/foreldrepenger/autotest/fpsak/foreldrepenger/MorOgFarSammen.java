@@ -37,7 +37,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -524,7 +523,15 @@ class MorOgFarSammen extends FpsakTestBase {
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
 
-        sendInnEndringssøknadforMorMedEndretUttak(familie, fødselsdato, saksnummerMor);
+        // Endringssøknad med aksjonspunkt
+        var fordeling = generiskFordeling(
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.minusWeeks(4), fødselsdato.minusWeeks(3).minusDays(1)),
+                uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
+                uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(17), fødselsdato.plusWeeks(30).minusDays(1))
+        );
+        var søknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling, saksnummerMor);
+        familie.mor().søk(søknad.build());
 
         overstyrer.hentFagsak(saksnummerMor);
         overstyrer.ventPåOgVelgRevurderingBehandling();
@@ -533,6 +540,12 @@ class MorOgFarSammen extends FpsakTestBase {
         overstyr.avvis(Avslagsårsak.SØKER_ER_FAR);
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
+
+        var vurderSoknadsfristForeldrepengerBekreftelse = overstyrer
+                .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
+                .bekreftHarGyldigGrunn(fødselsdato);
+        overstyrer.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
+
 
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
@@ -552,23 +565,6 @@ class MorOgFarSammen extends FpsakTestBase {
                 .isEqualTo(BehandlingResultatType.INGEN_ENDRING);
     }
 
-    @Test
-    @DisplayName("Mor får revurdering fra endringssøknad endring av uttak")
-    @Description("Mor får revurdering fra endringssøknad endring av uttak - fører til revurdering hos far")
-    void berørtSakEndringAvUttak() {
-        var familie = new Familie("84", SEND_DOKUMENTER_UTEN_SELVBETJENING);
-        var fødselsdato = Virkedager.helgejustertTilMandag(LocalDate.now().minusMonths(4).withDayOfMonth(15));
-        var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
-        var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
-
-        sendInnEndringssøknadforMorMedEndretUttak(familie, fødselsdato, saksnummerMor);
-        saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
-        saksbehandler.ventTilAvsluttetBehandling();
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
-                .as("Konsekvenser for ytelsen")
-                .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
-    }
 
     @Test
     @DisplayName("Koblet sak mor søker etter far og sniker i køen")
@@ -682,12 +678,6 @@ class MorOgFarSammen extends FpsakTestBase {
 
     private void sendInnEndringssøknadforMor(Familie familie, LocalDate fødselsdatoBarn, Saksnummer saksnummerMor) {
         var fordeling = FordelingErketyper.fordelingMorHappyCase(fødselsdatoBarn);
-        var søknad = lagEndringssøknadFødsel(fødselsdatoBarn, BrukerRolle.MOR, fordeling, saksnummerMor);
-        familie.mor().søk(søknad.build());
-    }
-
-    private void sendInnEndringssøknadforMorMedEndretUttak(Familie familie, LocalDate fødselsdatoBarn, Saksnummer saksnummerMor) {
-        var fordeling = FordelingErketyper.fordelingMorHappyCaseLong(fødselsdatoBarn);
         var søknad = lagEndringssøknadFødsel(fødselsdatoBarn, BrukerRolle.MOR, fordeling, saksnummerMor);
         familie.mor().søk(søknad.build());
     }
