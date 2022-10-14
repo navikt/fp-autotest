@@ -490,6 +490,18 @@ services:
       - "APPRES_CMS_URL=https://www.nav.no/dekoratoren"
       - "FORELDREPENGESOKNAD_API_URL=http://localhost:9002/rest"
       - "FP_UTTAK_SERVICE_URL=http://localhost:9002"
-      - "LOGINSERVICE_URL=http://localhost:8060/rest/loginservice/login"
+      - "LOGINSERVICE_URL=http://localhost:8060/rest/login/borger"
+    depends_on:
+      - foreldrepengesoknad-api
+  svangerskapspengesoknad:
+    image: $SVANGERSKAPSPENGESOKNAD_IMAGE
+    container_name: svangerskapspengesoknad
+    ports:
+      - "9068:8080"
+    restart: on-failure
+    environment:
+      - "APPRES_CMS_URL=https://www.nav.no/dekoratoren"
+      - "FORELDREPENGESOKNAD_API_URL=http://localhost:9002/rest"
+      - "LOGINSERVICE_URL=http://localhost:8060/rest/login/borger"
     depends_on:
       - foreldrepengesoknad-api

@@ -22,8 +22,8 @@ import no.nav.vedtak.sikkerhet.oidc.token.impl.OidcTokenResponse;
 public final class TokenProvider {
 
     private static final String TOKEN_PROVIDER_BASE_PATH = "/rest/token/provider";
-    private static final String TOKENX_ENDPOINT = TOKEN_PROVIDER_BASE_PATH + "/tokenx";
-    private static final String AZUREAD_ENDPOINT = TOKEN_PROVIDER_BASE_PATH + "/azuread";
+    private static final String TOKENX_ENDPOINT = TOKEN_PROVIDER_BASE_PATH + "/borger/tokenx";
+    private static final String AZUREAD_ENDPOINT = TOKEN_PROVIDER_BASE_PATH + "/ansatt/azuread";
 
     private static final Map<SaksbehandlerRolle, Map<String, String>> saksbehandlerTokenAzureAD = new ConcurrentHashMap<>();
     private static final Map<Fødselsnummer, String> accessTokensTokenX = new ConcurrentHashMap<>();
@@ -39,10 +39,10 @@ public final class TokenProvider {
     }
 
     public static String tokenXToken(Fødselsnummer fnr, String audience) { // Vi bruker det bare til å kalle fpsoknad-mottak ATM
-        return accessTokensTokenX.computeIfAbsent(fnr, TokenProvider::hentNyttTokenXTokenFor);
+        return accessTokensTokenX.computeIfAbsent(fnr, ident -> hentNyttTokenXTokenFor(ident, audience));
     }
 
-    private static String hentNyttAzureAdTokenForSaksbehandler(SaksbehandlerRolle saksbehandlerRolle, String audience) {
+    private static String hentNyttAzureAdTokenForSaksbehandler(SaksbehandlerRolle saksbehandlerRolle, String scope) {
         var request =  HttpRequest.newBuilder()
                 .uri(fromUri(BaseUriProvider.VTP_ROOT)
                         .path(AZUREAD_ENDPOINT)
@@ -51,21 +51,22 @@ public final class TokenProvider {
                 .POST(buildFormDataFromMap(Map.of(
                         "tenant", "aadb2c", // TODO
                         "grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                        "client_id", audience,
+                        "scope", scope,
+                        "client_id", "autotest",
                         "ansatt_id", saksbehandlerRolle.getKode()))
                 );
         var accessTokenResponseDTO = send(request.build(), OidcTokenResponse.class);
         return accessTokenResponseDTO.access_token();
     }
 
-    private static String hentNyttTokenXTokenFor(Fødselsnummer fnr) {
+    private static String hentNyttTokenXTokenFor(Fødselsnummer fnr, String audience) {
         var request =  HttpRequest.newBuilder()
                 .uri(fromUri(BaseUriProvider.VTP_ROOT)
                         .path(TOKENX_ENDPOINT)
                         .build())
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .POST(buildFormDataFromMap(Map.of(
-                        "audience", "lokal",
+                        "audience", "lokal", // TODO
                         "fnr", fnr.value()))
                 );
         var accessTokenResponseDTO = send(request.build(), OidcTokenResponse.class);
