@@ -431,7 +431,7 @@ class MorOgFarSammen extends FpsakTestBase {
             + "og blir innvilget uten berørt behandling hos mor.")
     void farUtsetterOppstartRundtFødsel() {
         var familie = new Familie("82", SEND_DOKUMENTER_UTEN_SELVBETJENING);
-        var fødselsdato = familie.barn().fødselsdato();
+        var fødselsdato = helgejustertTilMandag(familie.barn().fødselsdato());
 
         var far = familie.far();
         var søknadMor = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
