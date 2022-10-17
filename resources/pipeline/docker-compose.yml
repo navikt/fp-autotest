@@ -138,6 +138,7 @@ services:
       - "APP_URL_FPOPPDRAG=http://fpoppdrag:8080"
       - "APP_URL_FPFORMIDLING=http://fpformidling:8080"
       - "APP_URL_FPTILBAKE=http://fptilbake:8080"
+      - "APP_URL_LOS=http://localhost:8071"
     ports:
       - "9000:9000"
     healthcheck:
