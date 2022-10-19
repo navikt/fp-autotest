@@ -359,7 +359,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 "førstegangsbehandlingen. Verifiserer at det ikke blir berørt sak på far.")
     void kobletSakIngenEndring() {
         var familie = new Familie("84", SEND_DOKUMENTER_UTEN_SELVBETJENING);
-        var fødselsdato = LocalDate.now().minusMonths(4);
+        var fødselsdato = Virkedager.helgejustertTilMandag(LocalDate.now().minusMonths(4));
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
 
