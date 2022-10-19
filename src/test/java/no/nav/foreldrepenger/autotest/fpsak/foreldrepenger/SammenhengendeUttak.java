@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
@@ -119,8 +120,9 @@ class SammenhengendeUttak extends FpsakTestBase {
         var familie = new Familie("600", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var fpStartdato = fødselsdato.minusWeeks(3);
-        var opprinneligFordeling = no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordelingMorHappyCaseLong(fødselsdato);
+        var søknadsBaseDato = Virkedager.helgejustertTilMandag(fødselsdato);
+        var fpStartdato = søknadsBaseDato.minusWeeks(3);
+        var opprinneligFordeling = no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordelingMorHappyCaseLong(søknadsBaseDato);
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(opprinneligFordeling)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
@@ -140,7 +142,7 @@ class SammenhengendeUttak extends FpsakTestBase {
                 .as("Antall uttaksperioder")
                 .hasSize(4);
 
-        var utsettelseFom = fødselsdato.plusWeeks(16);
+        var utsettelseFom = søknadsBaseDato.plusWeeks(16);
         var fordelingUtsettelseEndring = no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling(
                 UttaksperioderErketyper.utsettelsesperiode(UtsettelsesÅrsak.ARBEID, utsettelseFom, utsettelseFom.plusWeeks(2).minusDays(1)),
                 UttaksperioderErketyper.uttaksperiode(StønadskontoType.FELLESPERIODE, utsettelseFom.plusWeeks(2), utsettelseFom.plusWeeks(16).minusDays(1)));
@@ -163,7 +165,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var UttaksPerioderForSøker = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker();
         assertThat(UttaksPerioderForSøker)
                 .as("Antall uttaksperioder for søker")
-                .hasSize(6);
+                .hasSize(7);
         for (UttakResultatPeriode periode : UttaksPerioderForSøker) {
             assertThat(periode.getAktiviteter())
                     .as("Antall aktiviteter for hver uttaksperiode")
@@ -177,7 +179,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger();
         assertThat(tilkjentYtelsePerioder.getPerioder())
                 .as("Antall perioder i tilkjent ytelse")
-                .hasSize(6);
+                .hasSize(7);
         assertThat(tilkjentYtelsePerioder.getPerioder().get(0).getDagsats())
                 .as("Dagsats i tilkjent ytelse periode")
                 .isPositive();
@@ -194,6 +196,9 @@ class SammenhengendeUttak extends FpsakTestBase {
                 .as("Dagsats i tilkjent ytelse periode")
                 .isZero();
         assertThat(tilkjentYtelsePerioder.getPerioder().get(5).getDagsats())
+                .as("Dagsats i tilkjent ytelse periode")
+                .isPositive();
+        assertThat(tilkjentYtelsePerioder.getPerioder().get(6).getDagsats())
                 .as("Dagsats i tilkjent ytelse periode")
                 .isPositive();
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
