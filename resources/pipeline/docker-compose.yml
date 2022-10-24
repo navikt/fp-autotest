@@ -126,29 +126,6 @@ services:
         condition: service_healthy
       fpabakus:
         condition: service_healthy
-  fpfrontend:
-    image: $FPFRONTEND_IMAGE
-    container_name: fpfrontend
-    restart: on-failure
-    mem_limit: 64mb
-    environment:
-      - "APP_PORT=9000"
-      - "APP_URL=http://fpsak:8080"
-      - "APP_URL_FPSAK=http://fpsak:8080"
-      - "APP_URL_FPOPPDRAG=http://fpoppdrag:8080"
-      - "APP_URL_FPFORMIDLING=http://fpformidling:8080"
-      - "APP_URL_FPTILBAKE=http://fptilbake:8080"
-      - "APP_URL_LOS=http://localhost:8071"
-    ports:
-      - "9000:9000"
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9000/fpsak/isReady" ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-    depends_on:
-      fpsak:
-        condition: service_healthy
   fpfordel:
     image: $FPFORDEL_IMAGE
     container_name: fpfordel
@@ -463,6 +440,100 @@ services:
     depends_on:
       - fpsoknad-mottak
       - fpinfo-historikk
+  fpfrontend:
+    image: $FPFRONTEND_IMAGE
+    container_name: fpfrontend
+    restart: on-failure
+    mem_limit: 128mb
+    environment:
+      PORT: 9090
+      HOST: localhost
+      NODE_ENV: development
+      AZURE_APP_CLIENT_ID: fpfrontend
+      PROXY_CONFIG: |
+        {
+            "apis": [
+                {
+                    "path": "/fpsak/api",
+                    "scopes": "api://fpsak/.default",
+                    "url": "http://fpsak:8080"
+                },
+                {
+                    "path": "/fpoppdrag",
+                    "scopes": "api://fpoppdrag/.default",
+                    "url": "http://fpoppdrag:8080"
+                },
+                {
+                    "path": "/fptilbake",
+                    "scopes": "api://fptilbake/.default",
+                    "url": "http://fptilbake:8080"
+                },
+                {
+                    "path": "/fpformidling",
+                    "scopes": "api://fpformidling/.default",
+                    "url": "http://fpformidling:8080"
+                },
+                {
+                    "path": "/fplos/api",
+                    "scopes": "api://fplos/.default",
+                    "url": "http://fplos:8081"
+                }
+            ]
+        }
+    env_file:
+      - "common.env"
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8000/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      fpsak:
+        condition: service_healthy
+      wonderwall:
+        condition: service_started
+  wonderwall:
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall
+    command: |
+      --openid.provider=azure
+      --openid.scopes api://fpfrontend/.default
+      --ingress=http://localhost:9000
+      --bind-address=0.0.0.0:9000
+      --upstream-host=fpfrontend:9090
+      --auto-login=true
+      --log-level=debug
+    ports:
+      - "9000:9000"
+    environment:
+      AZURE_APP_CLIENT_ID: wonderwall
+    env_file:
+      - "common.env"
+    depends_on:
+      vtp:
+        condition: service_healthy
+  wonderwall-selvbetjening:
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-selvbetjening
+    command: |
+      --openid.provider=azure
+      --openid.scopes api://foreldrepengesoknad/.default
+      --ingress=http://localhost:9167
+      --bind-address=0.0.0.0:9167
+      --upstream-host=foreldrepengesoknad:8080
+      --auto-login=true
+      --log-level=debug
+    ports:
+      - "9167:9167"
+    environment:
+      AZURE_APP_CLIENT_ID: loginservice
+    env_file:
+      - "common.env"
+    depends_on:
+      vtp:
+        condition: service_healthy
   foreldrepengeoversikt:
     image: $FORELDREPENGEOVERSIKT_IMAGE
     container_name: foreldrepengeoversikt
@@ -474,9 +545,10 @@ services:
       - "APPRES_CMS_URL=https://www.nav.no/dekoratoren"
       - "FORELDREPENGESOKNAD_API_URL=http://localhost:9002/rest"
       - "FP_UTTAK_SERVICE_URL=http://localhost:9002"
-      - "LOGINSERVICE_URL=http://localhost:8060/rest/loginservice/login"
+      - "LOGINSERVICE_URL=http://localhost:9167/oauth2/login"
     depends_on:
       - foreldrepengesoknad-api
+      - wonderwall
   foreldrepengesoknad:
     image: $FORELDREPENGESOKNAD_IMAGE
     container_name: foreldrepengesoknad
@@ -490,18 +562,7 @@ services:
       - "APPRES_CMS_URL=https://www.nav.no/dekoratoren"
       - "FORELDREPENGESOKNAD_API_URL=http://localhost:9002/rest"
       - "FP_UTTAK_SERVICE_URL=http://localhost:9002"
-      - "LOGINSERVICE_URL=http://localhost:8060/rest/login/borger"
+      - "LOGINSERVICE_URL=http://localhost:9167/oauth2/login"
     depends_on:
       - foreldrepengesoknad-api
-  svangerskapspengesoknad:
-    image: $SVANGERSKAPSPENGESOKNAD_IMAGE
-    container_name: svangerskapspengesoknad
-    ports:
-      - "9068:8080"
-    restart: on-failure
-    environment:
-      - "APPRES_CMS_URL=https://www.nav.no/dekoratoren"
-      - "FORELDREPENGESOKNAD_API_URL=http://localhost:9002/rest"
-      - "LOGINSERVICE_URL=http://localhost:8060/rest/login/borger"
-    depends_on:
-      - foreldrepengesoknad-api
+      - wonderwall
