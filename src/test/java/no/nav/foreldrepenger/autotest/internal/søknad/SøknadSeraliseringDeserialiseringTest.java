@@ -53,7 +53,7 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
                 .medMedlemsskap(MedlemsskapErketyper.medlemskapUtlandetForrige12mnd())
                 .build());
         test(lagSøknadForeldrepengerAdopsjon(LocalDate.now(), MOR, true)
-                .medOpptjening(OpptjeningErketyper.medEgenNaeringOgFrilansOpptjening())
+                .medOpptjening(OpptjeningErketyper.egenNaeringOgFrilansOpptjening())
                 .build());
     }
 

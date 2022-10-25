@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.overføringsperiode;
@@ -67,11 +67,11 @@ class Aksjonspunkter extends FpsakTestBase {
                 .ankomstDato(fødselsdato)
                 .omsorgsovertakelsesdato(fødselsdato)
                 .build();
-        var fordeling = generiskFordeling(
+        var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medRelasjonTilBarn(adopsjon)
-                .medFordeling(fordeling)
+                .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -121,14 +121,14 @@ class Aksjonspunkter extends FpsakTestBase {
         var familie = new Familie("501", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(3);
-        var næringOpptjening = OpptjeningErketyper.medEgenNaeringOpptjening(true, 30_000, false);
+        var næringOpptjening = OpptjeningErketyper.egenNaeringOpptjening(true, 30_000, false);
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var fordeling = generiskFordeling(
+        var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10)),
                 uttaksperiode(StønadskontoType.FEDREKVOTE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(30)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medFordeling(fordeling)
+                .medFordeling(fordeling.build())
                 .medOpptjening(næringOpptjening)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
@@ -156,12 +156,12 @@ class Aksjonspunkter extends FpsakTestBase {
         var familie = new Familie("86", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var termindato = LocalDate.now().plusWeeks(2);
-        var fordeling = generiskFordeling(
+        var fordeling = fordeling(
                 overføringsperiode(Overføringsårsak.SYKDOM_ANNEN_FORELDER, StønadskontoType.MØDREKVOTE,
                         termindato, termindato.plusWeeks(10)),
                 uttaksperiode(StønadskontoType.FEDREKVOTE, termindato.plusWeeks(20), termindato.plusWeeks(30)));
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
-                .medFordeling(fordeling)
+                .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()));
         var saksnummer = far.søk(søknad.build());
 
@@ -190,7 +190,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var termindato = LocalDate.now().plusWeeks(3);
         var fpStartdato = termindato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medOpptjening(OpptjeningErketyper.medUtenlandskArbeidsforhold(CountryCode.NO))
+                .medOpptjening(OpptjeningErketyper.utenlandskArbeidsforhold(CountryCode.NO))
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 

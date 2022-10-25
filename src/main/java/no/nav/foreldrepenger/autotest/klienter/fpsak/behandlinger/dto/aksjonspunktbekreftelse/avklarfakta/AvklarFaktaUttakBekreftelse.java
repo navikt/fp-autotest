@@ -12,11 +12,11 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerFaktaPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakDokumentasjon;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.LukketPeriodeMedVedlegg;
 
 public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<BekreftetUttakPeriode> bekreftedePerioder = new ArrayList<>();
-    protected List<BekreftetUttakPeriode> slettedePerioder = new ArrayList<>();
 
     protected AvklarFaktaUttakBekreftelse() {
         super();
@@ -30,53 +30,25 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
                     periode.getArbeidstidsprosent(),
                     periode.getBegrunnelse(),
                     periode);
-
             periode.setBekreftet(true);
-
             bekreftedePerioder.add(bekreftetUttakPeriode);
         }
     }
 
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til) {
-        return godkjennPeriode(fra, til, UttakPeriodeVurderingType.PERIODE_OK, true);
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fom, LocalDate tom) {
+        return godkjennPeriode(fom, tom, UttakPeriodeVurderingType.PERIODE_OK, true);
+    }
+    public AvklarFaktaUttakBekreftelse godkjennPeriode(LukketPeriodeMedVedlegg periode) {
+        return godkjennPeriode(periode.getFom(), periode.getTom(), UttakPeriodeVurderingType.PERIODE_OK, true);
     }
 
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, UttakPeriodeVurderingType godkjenningskode) {
-        return godkjennPeriode(fra, til, godkjenningskode, false);
-    }
-
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, boolean dokumenterPeriode) {
-        return godkjennPeriode(fra, til, UttakPeriodeVurderingType.PERIODE_OK, dokumenterPeriode);
-    }
-
-    public AvklarFaktaUttakBekreftelse godkjennPeriode(KontrollerFaktaPeriode faktaPeriode) {
-        godkjennPeriode(faktaPeriode.getFom(), faktaPeriode.getTom(), UttakPeriodeVurderingType.PERIODE_OK, true);
+    public AvklarFaktaUttakBekreftelse kanIkkeAvgjørePeriode(LukketPeriodeMedVedlegg periode) {
+        var bekreftetUttakPeriode = finnUttaksperiode(periode.getFom(), periode.getTom());
+        bekreftetUttakPeriode.bekreftetPeriode.setResultat(UttakPeriodeVurderingType.PERIODE_KAN_IKKE_AVKLARES);
         return this;
     }
 
-    public AvklarFaktaUttakBekreftelse kanIkkeAvgjørePeriode(LocalDate fra, LocalDate til) {
-        var periode = finnUttaksperiode(fra, til);
-        periode.bekreftetPeriode.setResultat(UttakPeriodeVurderingType.PERIODE_KAN_IKKE_AVKLARES);
-        return this;
-    }
-
-    public AvklarFaktaUttakBekreftelse delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra,
-            LocalDate godkjentTil, UttakPeriodeVurderingType godkjenningskode) {
-        delvisGodkjennPeriode(fra, til, godkjentFra, godkjentTil, godkjenningskode, false);
-        return this;
-    }
-
-    public AvklarFaktaUttakBekreftelse delvisGodkjennPeriode(LocalDate fra, LocalDate til, LocalDate godkjentFra,
-            LocalDate godkjentTil, UttakPeriodeVurderingType godkjenningskode, boolean dokumenterPeriode) {
-        var periode = finnUttaksperiode(fra, til);
-        godkjennPeriode(periode, godkjenningskode, dokumenterPeriode);
-        periode.bekreftetPeriode.setFom(godkjentFra);
-        periode.bekreftetPeriode.setTom(godkjentTil);
-        return this;
-    }
-
-    private AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, UttakPeriodeVurderingType godkjenningskode,
-            boolean dokumenterPeriode) {
+    private AvklarFaktaUttakBekreftelse godkjennPeriode(LocalDate fra, LocalDate til, UttakPeriodeVurderingType godkjenningskode, boolean dokumenterPeriode) {
         var periode = finnUttaksperiode(fra, til);
         godkjennPeriode(periode, godkjenningskode, dokumenterPeriode);
         return this;
@@ -100,23 +72,10 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         throw new IllegalStateException("Fant ikke uttaksperiode fra som går fra " + fra + " til " + til);
     }
 
-    public static class BekreftetUttakPeriode {
-
-        protected LocalDate orginalFom;
-        protected LocalDate orginalTom;
-        protected BigDecimal originalArbeidstidsprosent;
-        protected String originalBegrunnelse;
-        protected KontrollerFaktaPeriode bekreftetPeriode;
-
-        public BekreftetUttakPeriode(LocalDate orginalFom, LocalDate orginalTom, BigDecimal originalArbeidstidsprosent,
-                String originalBegrunnelse, KontrollerFaktaPeriode bekreftetPeriode) {
-            super();
-            this.orginalFom = orginalFom;
-            this.orginalTom = orginalTom;
-            this.originalArbeidstidsprosent = originalArbeidstidsprosent;
-            this.originalBegrunnelse = originalBegrunnelse;
-            this.bekreftetPeriode = bekreftetPeriode;
-        }
+    public record BekreftetUttakPeriode(LocalDate orginalFom, LocalDate orginalTom,
+                                        BigDecimal originalArbeidstidsprosent,
+                                        String originalBegrunnelse,
+                                        KontrollerFaktaPeriode bekreftetPeriode) {
     }
 
     @BekreftelseKode(kode = "5070")
@@ -130,18 +89,9 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
             bekreftedePerioder.stream()
                     .map(periode -> periode.bekreftetPeriode)
                     .filter(kontrollerFaktaPeriode -> kontrollerFaktaPeriode.getResultat().equals(UttakPeriodeVurderingType.PERIODE_IKKE_VURDERT))
-                    .forEach(this::godkjennPeriode);
+                    .forEach(periode -> godkjennPeriode(periode.getFom(), periode.getTom()));
             return this;
         }
 
     }
-
-    @BekreftelseKode(kode = "5081")
-    public static class AvklarFaktaUttakFørsteUttakDato extends AvklarFaktaUttakBekreftelse {
-
-        public AvklarFaktaUttakFørsteUttakDato() {
-            super();
-        }
-    }
-
 }
