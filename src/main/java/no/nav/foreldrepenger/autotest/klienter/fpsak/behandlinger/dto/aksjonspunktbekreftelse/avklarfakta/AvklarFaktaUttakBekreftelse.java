@@ -18,10 +18,6 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
 
     protected List<BekreftetUttakPeriode> bekreftedePerioder = new ArrayList<>();
 
-    protected AvklarFaktaUttakBekreftelse() {
-        super();
-    }
-
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         for (KontrollerFaktaPeriode periode : behandling.getKontrollerFaktaData().getPerioder()) {

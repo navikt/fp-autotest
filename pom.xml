@@ -26,8 +26,8 @@
 
         <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.4.0</dokumentgenerator.version>
-        <fp-felles.versjon>4.1.51</fp-felles.versjon>
-        <fp-prosesstask.version>3.1.10</fp-prosesstask.version>
+        <fp-felles.versjon>4.2.7</fp-felles.versjon>
+        <fp-prosesstask.version>3.1.13</fp-prosesstask.version>
         <fp-kontrakter.version>6.1.27</fp-kontrakter.version>
 
         <allure.version>2.19.0</allure.version>
@@ -35,7 +35,7 @@
         <assertj.version>3.23.1</assertj.version>
         <aspectj.version>1.9.9.1</aspectj.version>
         <junit.version>5.9.1</junit.version>
-        <mockito.version>4.8.0</mockito.version>
+        <mockito.version>4.8.1</mockito.version>
         <jackson.version>2.13.4</jackson.version>
         <jakarta.vs.rs.version>3.1.0</jakarta.vs.rs.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
