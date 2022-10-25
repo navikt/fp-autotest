@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
@@ -30,7 +30,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
-import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
@@ -50,7 +49,7 @@ class RegresjonPreWLB extends FpsakTestBase {
     void BFHRMorUføreTrekkerDagerFortløpendeNårVilkårIkkeErOppfylt() {
         var familie = new Familie("601", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
-        var fødselsdato = Virkedager.helgejustertTilMandag(familie.barn().fødselsdato());
+        var fødselsdato = familie.barn().fødselsdato();
         var fpStartdatoFar = fødselsdato.plusWeeks(6);
 
         /*
@@ -60,15 +59,20 @@ class RegresjonPreWLB extends FpsakTestBase {
         * Han skal få innvilge totalt 12 av 15 uker med foreldrepenger uten aktivitetskrav, men får avslag på de siste 3 fordi
         *   disse dagene må tas ut innen uke 46 (+ eventuelle innvilgede utsettelser).
         * */
-        var fordeling = generiskFordeling(
-                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(5).minusDays(1), ARBEID),
-                utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(5), fpStartdatoFar.plusWeeks(10).minusDays(1), TRENGER_HJELP),
-                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(10), fpStartdatoFar.plusWeeks(15).minusDays(1), ARBEID),
-                utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(15), fpStartdatoFar.plusWeeks(38).minusDays(1), TRENGER_HJELP),
-                uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), UFØRE)
+        var uttaksperiode1 = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(5).minusDays(1), ARBEID);
+        var utsettelsesperiode1 = utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(5), fpStartdatoFar.plusWeeks(10).minusDays(1), TRENGER_HJELP);
+        var uttaksperiode2 = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(10), fpStartdatoFar.plusWeeks(15).minusDays(1), ARBEID);
+        var utsettelsesperiode2 = utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(15), fpStartdatoFar.plusWeeks(38).minusDays(1), TRENGER_HJELP);
+        var uttaksperiode3 = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(38), fpStartdatoFar.plusWeeks(43).minusDays(1), UFØRE);
+        var fordeling = fordeling(
+                uttaksperiode1,
+                utsettelsesperiode1,
+                uttaksperiode2,
+                utsettelsesperiode2,
+                uttaksperiode3
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
-                .medFordeling(fordeling)
+                .medFordeling(fordeling.build())
                 .medRettigheter(RettigheterErketyper.annenpartIkkeRettOgMorHarUføretrygd())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
                 .medMottatdato(fødselsdato);
@@ -87,10 +91,10 @@ class RegresjonPreWLB extends FpsakTestBase {
 
         var kontrollerAktivitetskravBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
-                .periodeIkkeAktivitetIkkeDokumentert(fpStartdatoFar, fpStartdatoFar.plusWeeks(5).minusDays(1))
-                .periodeIkkeAktivitetIkkeDokumentert(fpStartdatoFar.plusWeeks(5), fpStartdatoFar.plusWeeks(10).minusDays(1))
-                .periodeIkkeAktivitetIkkeDokumentert(fpStartdatoFar.plusWeeks(10), fpStartdatoFar.plusWeeks(15).minusDays(1))
-                .periodeIkkeAktivitetIkkeDokumentert(fpStartdatoFar.plusWeeks(15), fpStartdatoFar.plusWeeks(38).minusDays(1))
+                .periodeIkkeAktivitetIkkeDokumentert(uttaksperiode1)
+                .periodeIkkeAktivitetIkkeDokumentert(utsettelsesperiode1)
+                .periodeIkkeAktivitetIkkeDokumentert(uttaksperiode2)
+                .periodeIkkeAktivitetIkkeDokumentert(utsettelsesperiode2)
                 .setBegrunnelse("Mor er ikke i aktivtet i perioden som det søkes om, med unntak av siste periode som søkes uten aktivitetskrav");
         saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
 
@@ -152,15 +156,13 @@ class RegresjonPreWLB extends FpsakTestBase {
     void farSøkerImfFødselMenMorErIkkeSykEllerInnlagt() {
         var familie = new Familie("601", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
-        var fødselsdato = Virkedager.helgejustertTilMandag(familie.barn().fødselsdato());
-        var uttakIfmFødselFom = fødselsdato;
-        var uttakIfmFødselTom = fødselsdato.plusWeeks(1).minusDays(1);
-        var fpStartdatoFar = fødselsdato.plusWeeks(6);
-
-        var fordeling = generiskFordeling(
-                uttaksperiode(StønadskontoType.FEDREKVOTE, uttakIfmFødselFom, uttakIfmFødselTom, INNLAGT),
-                uttaksperiode(StønadskontoType.FEDREKVOTE, fpStartdatoFar, fpStartdatoFar.plusWeeks(14).minusDays(1)),
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fpStartdatoFar.plusWeeks(14), fpStartdatoFar.plusWeeks(20).minusDays(1), ARBEID));
+        var fødselsdato = familie.barn().fødselsdato();
+        var uttaksperiodeIfmFødsel = uttaksperiode(StønadskontoType.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLAGT);
+        var fordeling = fordeling(
+                uttaksperiodeIfmFødsel,
+                uttaksperiode(StønadskontoType.FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(20).minusDays(1)),
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(26).minusDays(1), ARBEID))
+                .build();
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(fordeling)
                 .medRettigheter(RettigheterErketyper.beggeForeldreRettIkkeAleneomsorg())
@@ -168,8 +170,7 @@ class RegresjonPreWLB extends FpsakTestBase {
                 .medMottatdato(fødselsdato);
         var saksnummer = far.søk(søknad.build());
         var arbeidsgiver = far.arbeidsgiver();
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoFar);
-
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fødselsdato);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
@@ -180,7 +181,7 @@ class RegresjonPreWLB extends FpsakTestBase {
 
         var avklarFaktaUttakPerioder = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
-                .kanIkkeAvgjørePeriode(uttakIfmFødselFom, uttakIfmFødselTom);
+                .kanIkkeAvgjørePeriode(uttaksperiodeIfmFødsel);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         var kontrollerAktivitetskravBekreftelse = saksbehandler
@@ -191,7 +192,7 @@ class RegresjonPreWLB extends FpsakTestBase {
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .avslåPeriode(uttakIfmFødselFom, uttakIfmFødselTom, DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
+                .avslåPeriode(uttaksperiodeIfmFødsel.getFom(), uttaksperiodeIfmFødsel.getTom(), DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);

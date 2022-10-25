@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.graderingsperiodeSN;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
@@ -236,13 +236,12 @@ class BeregningVerdikjede extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var opptjening = OpptjeningErketyper.medEgenNaeringOpptjening(false, 30_000, false);
-        var graderingFom = fødselsdato.plusWeeks(6);
-        var graderingTom = fødselsdato.plusWeeks(10);
-        var fordeling = generiskFordeling(
+        var opptjening = OpptjeningErketyper.egenNaeringOpptjening(false, 30_000, false);
+        var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, graderingFom.minusDays(1)),
-                graderingsperiodeSN(StønadskontoType.FELLESPERIODE, graderingFom, graderingTom, 50));
+                uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
+                graderingsperiodeSN(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), 50))
+                .build();
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medOpptjening(opptjening)
                 .medFordeling(fordeling)
@@ -260,14 +259,15 @@ class BeregningVerdikjede extends FpsakTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
         // FORDEL BEREGNINGSGRUNNLAG //
+        var graderingsperiode = fordeling.perioder().get(2);
         var fordelBeregningsgrunnlagBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class)
-                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingFom, 500_000, 500_000,
+                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.getFom(), 500_000, 500_000,
                         Inntektskategori.ARBEIDSTAKER, 1)
-                .settFastsattBeløpOgInntektskategori(graderingFom, 235_138, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2)
-                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingTom.plusDays(1), 720_000, 720_000,
+                .settFastsattBeløpOgInntektskategori(graderingsperiode.getFom(), 235_138, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2)
+                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.getTom().plusDays(1), 720_000, 720_000,
                         Inntektskategori.ARBEIDSTAKER, 1)
-                .settFastsattBeløpOgInntektskategori(graderingTom.plusDays(1), 0, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2);
+                .settFastsattBeløpOgInntektskategori(graderingsperiode.getTom().plusDays(1), 0, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2);
         saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
 
         // FORESLÅ VEDTAK //
@@ -382,7 +382,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var familie = new Familie("163", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var opptjening = OpptjeningErketyper.medFrilansOpptjening();
+        var opptjening = OpptjeningErketyper.frilansOpptjening();
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medOpptjening(opptjening)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));

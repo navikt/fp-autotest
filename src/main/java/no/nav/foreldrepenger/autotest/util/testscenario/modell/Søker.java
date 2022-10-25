@@ -187,6 +187,8 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
+
+
     public Saksnummer søk(Søknad søknad, Saksnummer saksnummer) {
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());

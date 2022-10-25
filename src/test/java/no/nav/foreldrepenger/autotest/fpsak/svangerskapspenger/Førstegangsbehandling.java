@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
-import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
@@ -208,7 +207,7 @@ class Førstegangsbehandling extends FpsakTestBase {
         // Innvilg SVP fra nå til Termin-3uker - tom fredag
         var familie = new Familie("502", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
-        var termindato = Virkedager.helgejustertTilMandag(LocalDate.now().plusWeeks(6));
+        var termindato = LocalDate.now().plusWeeks(6);
         var arbeidsforholdene = mor.arbeidsforholdene();
         var arbeidsforhold1 = arbeidsforholdene.get(0).arbeidsgiverIdentifikasjon();
         var forsteTilrettelegging = TilretteleggingsErketyper.helTilrettelegging(

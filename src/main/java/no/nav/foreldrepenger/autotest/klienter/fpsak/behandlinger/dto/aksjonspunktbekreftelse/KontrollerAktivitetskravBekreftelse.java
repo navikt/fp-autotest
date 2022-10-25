@@ -8,6 +8,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerAktiviteskravPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerAktivitetskravAvklaring;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.LukketPeriodeMedVedlegg;
 
 @BekreftelseKode(kode = "5099")
 public class KontrollerAktivitetskravBekreftelse extends AksjonspunktBekreftelse {
@@ -28,12 +29,12 @@ public class KontrollerAktivitetskravBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
-    public KontrollerAktivitetskravBekreftelse periodeIkkeAktivitetIkkeDokumentert(LocalDate fom, LocalDate tom) {
-        setAvklaringForPeriode(fom, tom, KontrollerAktivitetskravAvklaring.IKKE_I_AKTIVITET_IKKE_DOKUMENTERT);
+    public KontrollerAktivitetskravBekreftelse periodeIkkeAktivitetIkkeDokumentert(LukketPeriodeMedVedlegg periode) {
+        setAvklaringForPeriode(periode.getFom(), periode.getTom(), KontrollerAktivitetskravAvklaring.IKKE_I_AKTIVITET_IKKE_DOKUMENTERT);
         return this;
     }
 
-    public KontrollerAktivitetskravBekreftelse setAvklaringForPeriode(LocalDate fom, LocalDate tom, KontrollerAktivitetskravAvklaring avklaring) {
+    private KontrollerAktivitetskravBekreftelse setAvklaringForPeriode(LocalDate fom, LocalDate tom, KontrollerAktivitetskravAvklaring avklaring) {
         avklartePerioder.stream()
                 .filter(p -> p.getFom().equals(fom))
                 .filter(p -> p.getTom().equals(tom))

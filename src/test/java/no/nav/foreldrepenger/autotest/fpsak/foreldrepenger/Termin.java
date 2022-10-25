@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.generiskFordeling;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
@@ -114,7 +114,7 @@ class Termin extends FpsakTestBase {
         var arbeidsforholdene = mor.arbeidsforholdene();
         var arbeidsgiveridentifikator1 = arbeidsforholdene.get(0).arbeidsgiverIdentifikasjon();
         var arbeidsgiveridentifikator2 = arbeidsforholdene.get(1).arbeidsgiverIdentifikasjon();
-        var fordeling = generiskFordeling(
+        var fordeling = fordeling(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpstartdato, fpstartdato.plusWeeks(3).minusDays(1)),
                 uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1)),
                 graderingsperiodeArbeidstaker(MØDREKVOTE, termindato.plusWeeks(6),
@@ -127,7 +127,7 @@ class Termin extends FpsakTestBase {
                 graderingsperiodeArbeidstaker(FELLESPERIODE, termindato.plusWeeks(18),
                         termindato.plusWeeks(21).minusDays(1), arbeidsgiveridentifikator1, 30));
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
-                .medFordeling(fordeling)
+                .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -178,10 +178,10 @@ class Termin extends FpsakTestBase {
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var startDatoForeldrepenger = termindato;
-        var fordeling = generiskFordeling(
+        var fordeling = fordeling(
                 uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1)));
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
-                .medFordeling(fordeling)
+                .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
