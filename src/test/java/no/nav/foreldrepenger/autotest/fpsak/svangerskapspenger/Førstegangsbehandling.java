@@ -258,7 +258,7 @@ class Førstegangsbehandling extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse2);
 
         assertThat(beslutter.valgtBehandling.getBehandlingÅrsaker())
-                .map(BehandlingÅrsak::getBehandlingArsakType)
+                .map(BehandlingÅrsak::behandlingArsakType)
                 .containsExactly(BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN);
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
         var tilkjentYtelsePerioder = beslutter.valgtBehandling.getBeregningResultatForeldrepenger()

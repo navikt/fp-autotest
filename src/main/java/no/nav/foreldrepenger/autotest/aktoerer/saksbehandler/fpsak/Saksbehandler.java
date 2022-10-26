@@ -34,7 +34,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.Behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdVersjonDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingNy;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.SettBehandlingPaVentDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
@@ -261,7 +261,7 @@ public class Saksbehandler {
         return hentAlleBehandlingerForFagsak(valgtFagsak.saksnummer()).stream()
                 .filter(b -> b.type.equals(behandlingstype))
                 .filter(b -> behandlingÅrsakType == null || b.behandlingÅrsaker.stream()
-                        .map(BehandlingÅrsak::getBehandlingArsakType)
+                        .map(BehandlingÅrsak::behandlingArsakType)
                         .anyMatch(årsak -> årsak.equals(behandlingÅrsakType)))
                 .filter(b -> åpenStatus == null || !b.status.equals(BehandlingStatus.AVSLUTTET))
                 .collect(Collectors.toSet());
@@ -383,7 +383,7 @@ public class Saksbehandler {
      */
     @Step("Setter behandling på vent")
     public void settBehandlingPåVent(LocalDate frist, Venteårsak årsak) {
-        behandlingerKlient.settPaVent(new BehandlingPaVent(valgtBehandling, frist, årsak));
+        behandlingerKlient.settPaVent(new SettBehandlingPaVentDto(valgtBehandling, frist, årsak));
         ventTilHistorikkinnslag(HistorikkinnslagType.BEH_VENT);
     }
 
@@ -423,7 +423,7 @@ public class Saksbehandler {
         }
 
         LOG.info("Oppretter behandling {} {} på fagsak {} ...", behandlingstype, årsak, fagsak.saksnummer().value());
-        valgtBehandling = behandlingerKlient.opprettBehandlingManuelt(new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak));
+        valgtBehandling = behandlingerKlient.opprettBehandlingManuelt(new BehandlingNy(fagsak.saksnummer(), behandlingstype, årsak, false));
         oppdaterLazyFelterForBehandling();
         LOG.info("Behandling {}|{} opprettet", behandlingstype, årsak);
     }
@@ -654,7 +654,7 @@ public class Saksbehandler {
      */
     private Vilkar hentVilkår(String vilkårKode) {
         for (Vilkar vilkår : valgtBehandling.getVilkar()) {
-            if (vilkår.getVilkarType().equals(vilkårKode)) {
+            if (vilkår.vilkarType().equals(vilkårKode)) {
                 return vilkår;
             }
         }
@@ -662,7 +662,7 @@ public class Saksbehandler {
     }
 
     public String vilkårStatus(String vilkårKode) {
-        return hentVilkår(vilkårKode).getVilkarStatus();
+        return hentVilkår(vilkårKode).vilkarStatus();
     }
 
     public boolean sakErKobletTilAnnenpart() {
@@ -692,7 +692,7 @@ public class Saksbehandler {
     }
 
     public boolean sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet(String aktivitet) {
-        var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato();
+        var skjaeringstidspunkt = valgtBehandling.behandlingsresultat.skjæringstidspunkt().dato();
         for (var opptjening : valgtBehandling.getOpptjening().getOpptjeningAktivitetList()) {
             if (opptjening.getAktivitetType().equalsIgnoreCase(aktivitet) &&
                     !opptjening.getOpptjeningTom().isBefore(skjaeringstidspunkt.minusDays(1))) {

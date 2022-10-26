@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingKlie
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingerKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.SettBehandlingPaVentDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -71,7 +71,7 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
     }
 
     @Override
-    public void settPaVent(BehandlingPaVent behandling) {
+    public void settPaVent(SettBehandlingPaVentDto behandling) {
         behandlingKlientFelles.settPaVent(behandling);
     }
 

@@ -84,7 +84,7 @@ class Revurdering extends FpsakTestBase {
         overstyrer.overstyr(overstyrMedlemskapsvilkaaret);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(KontrollerManueltOpprettetRevurdering.class);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        assertThat(overstyrer.valgtBehandling.behandlingsresultat.getType())
+        assertThat(overstyrer.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.OPPHØR);
 
@@ -94,7 +94,7 @@ class Revurdering extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.OPPHØR);
         assertThat(beslutter.valgtBehandling.hentAvslagsarsak())
@@ -144,10 +144,10 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getType())
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.konsekvenserForYtelsen())
                 .as("konsekvensForYtelsen")
                 .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
 
@@ -198,7 +198,7 @@ class Revurdering extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.konsekvenserForYtelsen())
                 .as("Konsekvenser for ytelse")
                 .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
         assertThat(saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker())

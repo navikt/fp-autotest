@@ -82,19 +82,19 @@ class Klage extends FpsakTestBase {
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageVurderingOmgjoer())
                 .as("Klagevurderingomgjør fra NFP")
                 .isEqualTo("UGUNST_MEDHOLD_I_KLAGE");
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_OMGJORT_UGUNST);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().begrunnelse())
                 .as("Begrunnelse klagevurdering NFP")
                 .isEqualTo(begrunnelse);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().fritekstTilBrev())
                 .as("Fritekst til brev for klagevurdering NFP")
                 .isEqualTo(fritekstBrev);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageMedholdArsak())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageMedholdArsak())
                 .as("Årsak til klagevburdering fra NFP")
                 .isEqualTo("ULIK_VURDERING");
     }
@@ -126,10 +126,10 @@ class Klage extends FpsakTestBase {
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_AVVIST);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageFormkravResultatNFP().getAvvistArsaker())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageFormkravResultatNFP().avvistArsaker())
                 .as("Årsak for avvisning")
                 .contains("IKKE_KONKRET");
     }

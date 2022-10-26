@@ -210,7 +210,7 @@ class Termin extends FpsakTestBase {
                 .as("Stønadskontotype for uttaksperiode i aktivitet")
                 .isEqualTo(MØDREKVOTE);
         var skjaeringstidspunkt = termindato.minusWeeks(3);
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getSkjæringstidspunkt().getDato())
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.skjæringstidspunkt().dato())
                 .as("Skjæringstidspunkt")
                 .isEqualTo(skjaeringstidspunkt);
     }

@@ -2,18 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+public record KontrollerFaktaData(List<KontrollerFaktaPeriode> perioder) {
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class KontrollerFaktaData {
-
-    protected List<KontrollerFaktaPeriode> perioder;
-
-    public List<KontrollerFaktaPeriode> getPerioder() {
-        return perioder;
-    }
-
-    public void setPerioder(List<KontrollerFaktaPeriode> perioder) {
-        this.perioder = perioder;
-    }
 }

@@ -2,18 +2,18 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import javax.validation.constraints.NotNull;
 
-@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE, fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class BehandlingIdDto {
 
-    protected UUID behandlingUuid;
+    @NotNull
+    private final UUID behandlingUuid;
 
     public BehandlingIdDto(UUID behandlingUuid) {
         this.behandlingUuid = behandlingUuid;
     }
 
-    public UUID getBehandlingUuid() {
+    public UUID behandlingUuid() {
         return behandlingUuid;
     }
 

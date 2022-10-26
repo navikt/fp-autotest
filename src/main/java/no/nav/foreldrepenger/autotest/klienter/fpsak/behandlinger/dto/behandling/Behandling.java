@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -96,11 +95,11 @@ public class Behandling {
     }
 
     public BehandlingResultatType hentBehandlingsresultat() {
-        return behandlingsresultat.getType();
+        return behandlingsresultat.type();
     }
 
     public Avslagsårsak hentAvslagsarsak() {
-        return behandlingsresultat.getAvslagsarsak();
+        return behandlingsresultat.avslagsarsak();
     }
 
     public List<KontrollerAktiviteskravPeriode> getKontrollerAktiviteskrav() {
@@ -114,8 +113,8 @@ public class Behandling {
         sb.append("{Behandlingsid: ").append(this.uuid).append("}\n");
         sb.append("{Behandlingsstatus: ").append(this.status.getKode()).append("}\n");
         sb.append("{Behandlingstype: ").append(this.type.getKode()).append("}");
-        if ((this.behandlingsresultat != null) && (this.behandlingsresultat.getAvslagsarsak() != null)) {
-            sb.append("{Årsak avslag: ").append(this.behandlingsresultat.getAvslagsarsak().getKode()).append("}\n");
+        if ((this.behandlingsresultat != null) && (this.behandlingsresultat.avslagsarsak() != null)) {
+            sb.append("{Årsak avslag: ").append(this.behandlingsresultat.avslagsarsak().getKode()).append("}\n");
         }
         return sb.toString();
     }
@@ -201,12 +200,6 @@ public class Behandling {
 
     public KontrollerFaktaData getKontrollerFaktaData() {
         return get(kontrollerFaktaData);
-    }
-
-    public List<KontrollerFaktaPeriode> getKontrollerFaktaPerioderManuell() {
-        return Objects.requireNonNull(get(kontrollerFaktaData)).getPerioder().stream()
-                .filter(perioder -> perioder.bekreftet.equals(false))
-                .collect(Collectors.toList());
     }
 
     public void setKontrollerFaktaData(Lazy<KontrollerFaktaData> dKontrollerFaktaData) {
