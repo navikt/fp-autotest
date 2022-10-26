@@ -20,7 +20,7 @@ env:
 jobs:
   build:
     name: Utfør verdikjede-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04-8core
 
     steps:
       - uses: actions/checkout@v3
