@@ -71,7 +71,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
     }
@@ -108,7 +108,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
     }
@@ -144,7 +144,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
     }
@@ -180,7 +180,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_FORELDREANSVARSVILKÅRET_2_LEDD));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
     }

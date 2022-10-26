@@ -57,7 +57,7 @@ class Medlemskap extends FpsakTestBase {
         overstyr.setBegrunnelse("avvist");
         overstyrer.overstyr(overstyr);
 
-        assertThat(overstyrer.valgtBehandling.behandlingsresultat.getType())
+        assertThat(overstyrer.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -68,7 +68,7 @@ class Medlemskap extends FpsakTestBase {
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_MEDLEMSKAPSVILKÅRET));
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
-        assertThat(beslutter.valgtBehandling.behandlingsresultat.getType())
+        assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
     }

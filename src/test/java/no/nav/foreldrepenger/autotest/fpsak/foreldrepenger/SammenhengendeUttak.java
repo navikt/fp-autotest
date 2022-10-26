@@ -173,7 +173,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.konsekvenserForYtelsen())
                 .as("Konsekvenser for ytelse")
                 .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
 
@@ -278,7 +278,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.konsekvenserForYtelsen())
                 .as("Konsekvenser for ytelse")
                 .contains(KonsekvensForYtelsen.ENDRING_I_UTTAK);
 

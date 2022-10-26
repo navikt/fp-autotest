@@ -20,7 +20,7 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        for (KontrollerFaktaPeriode periode : behandling.getKontrollerFaktaData().getPerioder()) {
+        for (KontrollerFaktaPeriode periode : behandling.getKontrollerFaktaData().perioder()) {
             var bekreftetUttakPeriode = new BekreftetUttakPeriode(periode.getFom(),
                     periode.getTom(),
                     periode.getArbeidstidsprosent(),
@@ -68,7 +68,8 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
         throw new IllegalStateException("Fant ikke uttaksperiode fra som går fra " + fra + " til " + til);
     }
 
-    public record BekreftetUttakPeriode(LocalDate orginalFom, LocalDate orginalTom,
+    public record BekreftetUttakPeriode(LocalDate orginalFom,
+                                        LocalDate orginalTom,
                                         BigDecimal originalArbeidstidsprosent,
                                         String originalBegrunnelse,
                                         KontrollerFaktaPeriode bekreftetPeriode) {
@@ -83,7 +84,7 @@ public abstract class AvklarFaktaUttakBekreftelse extends AksjonspunktBekreftels
 
         public AvklarFaktaUttakPerioder sykdomErDokumentertForPeriode() {
             bekreftedePerioder.stream()
-                    .map(periode -> periode.bekreftetPeriode)
+                    .map(BekreftetUttakPeriode::bekreftetPeriode)
                     .filter(kontrollerFaktaPeriode -> kontrollerFaktaPeriode.getResultat().equals(UttakPeriodeVurderingType.PERIODE_IKKE_VURDERT))
                     .forEach(periode -> godkjennPeriode(periode.getFom(), periode.getTom()));
             return this;

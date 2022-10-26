@@ -178,7 +178,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).behandlingArsakType())
                 .as("Årsakskode til revuderingen")
                 .isEqualTo(RE_HENDELSE_FØDSEL);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -272,7 +272,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).behandlingArsakType())
                 .as("Behandlingsårsakstype")
                 .isEqualTo(RE_HENDELSE_DØD_FORELDER);
 
@@ -1394,7 +1394,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgSisteBehandling();
 
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).behandlingArsakType())
                 .as("Behandlingsårsakstype")
                 .isEqualTo(BehandlingÅrsakType.RE_KLAGE_MED_END_INNTEKT);
 
@@ -1413,7 +1413,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
 
 
-        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.getKonsekvenserForYtelsen())
+        assertThat(saksbehandler.valgtBehandling.behandlingsresultat.konsekvenserForYtelsen())
                 .as("Konsekvens for ytelse")
                 .contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1464,7 +1464,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).getBehandlingArsakType())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).behandlingArsakType())
                 .as("Behandlingsårsak revurdering")
                 .isEqualTo(BehandlingÅrsakType.RE_HENDELSE_DØDFØDSEL);
 
@@ -1866,7 +1866,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getBehandlingArsakType))
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().stream().map(BehandlingÅrsak::behandlingArsakType))
                 .doesNotContain(BehandlingÅrsakType.BERØRT_BEHANDLING);
     }
 

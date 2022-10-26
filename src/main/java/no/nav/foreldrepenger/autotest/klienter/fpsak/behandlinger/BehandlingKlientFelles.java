@@ -4,6 +4,7 @@ import static jakarta.ws.rs.core.HttpHeaders.LOCATION;
 import static jakarta.ws.rs.core.Response.Status.ACCEPTED;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.sendStringRequest;
@@ -22,11 +23,10 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPollingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.SettBehandlingPaVentDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -83,7 +83,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
     }
 
     @Override
-    public void settPaVent(BehandlingPaVent behandling) {
+    public void settPaVent(SettBehandlingPaVentDto behandling) {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
                 .uri(fromUri(baseUrl)
                         .path(BEHANDLINGER_SETT_PA_VENT_URL)
@@ -171,11 +171,11 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
             return followRedirectOgHentBehandling(URI.create(hentRedirectUriFraLocationHeader(response)));
         }
 
-        var asyncPollingStatus = JacksonBodyHandlers.fromJson(response.body(), AsyncPollingStatus.class);
-        if (asyncPollingStatus.getStatus().equals(HALTED) || asyncPollingStatus.getStatus().equals(CANCELLED)) {
-            throw new IllegalStateException("Prosesstask i vrang tilstand: " + asyncPollingStatus.getMessage());
+        var asyncPollingStatus = fromJson(response.body(), AsyncPollingStatus.class);
+        if (asyncPollingStatus.status().equals(HALTED) || asyncPollingStatus.status().equals(CANCELLED)) {
+            throw new IllegalStateException("Prosesstask i vrang tilstand: " + asyncPollingStatus.message());
         }
-        LOG.debug("Behandlingen er ikke ferdig prosessert, men har status {}", asyncPollingStatus.getStatus());
+        LOG.debug("Behandlingen er ikke ferdig prosessert, men har status {}", asyncPollingStatus.status());
         return null;
     }
 

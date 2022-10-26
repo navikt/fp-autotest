@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingPaVent;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.SettBehandlingPaVentDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -18,7 +18,7 @@ public interface BehandlingerKlient {
 
     List<Behandling> alle(Saksnummer saksnummer);
 
-    void settPaVent(BehandlingPaVent behandling);
+    void settPaVent(SettBehandlingPaVentDto behandling);
 
     void henlegg(BehandlingHenlegg behandling);
 

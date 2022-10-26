@@ -109,7 +109,7 @@ class Klage extends FpsakTestBase {
         assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
-        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer())
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageVurderingOmgjoer())
                 .as("Klagevurderingsresultat")
                 .isEqualTo("GUNST_MEDHOLD_I_KLAGE");
 
@@ -124,10 +124,10 @@ class Klage extends FpsakTestBase {
 
         klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
-        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev())
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().fritekstTilBrev())
                 .as("Fritekst")
                 .isEqualTo(fritekstbrev1);
-        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse())
+        assertThat(klagebehandler.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().begrunnelse())
                 .as("Begrunnelse")
                 .isEqualTo(begrunnelse1);
         var fritekstbrev2 = "Fritekst brev nr 2 .";
@@ -150,13 +150,13 @@ class Klage extends FpsakTestBase {
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_DELVIS_MEDHOLD);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getFritekstTilBrev())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().fritekstTilBrev())
                 .as("Fritekst")
                 .isEqualTo(fritekstbrev2);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getBegrunnelse())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().begrunnelse())
                 .as("begrunnelse2")
                 .isEqualTo(begrunnelse1);
-        assertThat(beslutter.valgtBehandling.getKlagevurdering().getKlageVurderingResultatNFP().getKlageVurderingOmgjoer())
+        assertThat(beslutter.valgtBehandling.getKlagevurdering().klageVurderingResultatNFP().klageVurderingOmgjoer())
                 .as("KlageVurderingOmgjoer")
                 .isEqualTo("DELVIS_MEDHOLD_I_KLAGE");
     }

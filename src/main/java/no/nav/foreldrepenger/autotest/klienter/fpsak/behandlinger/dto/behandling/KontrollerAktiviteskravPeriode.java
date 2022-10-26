@@ -1,16 +1,16 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KontrollerAktiviteskravPeriode {
 
-    protected LocalDate fom;
-    protected LocalDate tom;
-    protected KontrollerAktivitetskravAvklaring avklaring;
-    protected String begrunnelse;
+    private LocalDate fom;
+    private LocalDate tom;
+    private KontrollerAktivitetskravAvklaring avklaring;
+    private String begrunnelse;
 
     public LocalDate getFom() {
         return fom;
