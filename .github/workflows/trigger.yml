@@ -252,6 +252,9 @@ jobs:
           echo "Tester om fpinfo er oppe"
           timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8040/fpinfo/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
+          echo "Tester om fpsoknad-mottak er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:9001/api/actuator)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
           echo "STACK_STARTED=true" >> $GITHUB_ENV
 
       - name: Sjekker minneforbruk
@@ -419,6 +422,9 @@ jobs:
           echo
           echo "Tester om fpinfo er oppe"
           timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8040/fpinfo/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+          echo Oppe!
+          echo "Tester om fpsoknad-mottak er oppe"
+          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:9001/api/actuator)" != "200" ]]; do sleep 2; done' || false
           echo Oppe!
           echo "STACK_STARTED=true" >> $GITHUB_ENV
 
