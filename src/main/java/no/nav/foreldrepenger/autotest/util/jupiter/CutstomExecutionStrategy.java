@@ -12,7 +12,7 @@ class CutstomExecutionStrategy implements ParallelExecutionConfiguration, Parall
 
     @Override
     public int getParallelism() {
-        return 4;
+        return 8;
     }
 
     @Override
@@ -22,12 +22,12 @@ class CutstomExecutionStrategy implements ParallelExecutionConfiguration, Parall
 
     @Override
     public int getMaxPoolSize() {
-        return 4;
+        return 8;
     }
 
     @Override
     public int getCorePoolSize() {
-        return 4;
+        return 8;
     }
 
     @Override
