@@ -400,6 +400,11 @@ services:
       - "./tokenx:/tokenx"
     ports:
       - "9001:9001"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9001/api/actuator" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
     depends_on:
       - fpinfo
       - fpfordel
@@ -423,6 +428,11 @@ services:
       - "./tokenx:/tokenx"
     ports:
       - "9003:9003"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9003/api/actuator" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
     depends_on:
       - fpsoknad-mottak
   foreldrepengesoknad-api:
@@ -443,6 +453,11 @@ services:
       - "./tokenx:/tokenx"
     ports:
       - "9002:9002"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9002/api/actuator" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
     depends_on:
       - fpsoknad-mottak
       - fpinfo-historikk
