@@ -135,6 +135,8 @@ jobs:
         run: |
           echo '${{ github.jobs.sucess-jobb.outputs }}'
           echo '${{ github.jobs.failing-jobb.outputs }}'
+          echo '${{ github.jobs.failing-jobb.steps.ghpages.outcome }}'
+
       - name: successfull run
         if: contains(github.jobs.sucess-jobb.outputs, 'success')
         run: |
