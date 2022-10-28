@@ -536,19 +536,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Henter testresultat for fpsak
-#        if: github.jobs.fpsak-autotest.outputs
+        if: needs.fpsak-autotester.result == 'success'
         uses: actions/download-artifact@v3
         with:
           name: fpsak-testresultat
           path: .
       - name: Henter testresultat for fptilbake
-        if: always()
+        if: needs.fptilbake-tester.result == 'success'
         uses: actions/download-artifact@v3
         with:
           name: fptilbake-testresultat
           path: .
       - name: Henter testresultat for verdikjede
-        if: always()
+        if: needs.verdikjedetestene.result == 'success'
         uses: actions/download-artifact@v3
         with:
           name: verdikjede-testresultat

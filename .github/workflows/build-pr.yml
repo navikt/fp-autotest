@@ -118,11 +118,6 @@ jobs:
           distribution: 'temurin'
           java-version: 17
           cache: 'maven'
-      - name: Henter testresultat for fpsak
-        uses: actions/download-artifact@v3
-        with:
-          name: fpsak-testresultat
-          path: .
 
   rapport:
     name: Lager og publiserer test rapport
@@ -131,6 +126,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        run: echo ${{needs.failing-jobb.result}}
       - name: print status
         run: |
           echo ${{needs.failing-jobb.result}}
