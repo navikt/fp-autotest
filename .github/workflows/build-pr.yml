@@ -134,6 +134,15 @@ jobs:
       - name: successfull run
         if: github.jobs.sucess-jobb.outputs == 'success'
         run: |
+          echo '${{ github.jobs.sucess-jobb.outputs }}'
+          echo '${{ github.jobs.failing-jobb.outputs }}'
+      - name: successfull run
+        if: contains(github.jobs.sucess-jobb.outputs, 'success')
+        run: |
+          echo 'success'
+      - name: successfull run
+        if: github.jobs.sucess-jobb.outputs == 'success'
+        run: |
           echo 'success'
       - name: successfull run av feila tas
         if: github.jobs.failing-jobb.outputs == 'success'
