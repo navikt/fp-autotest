@@ -106,24 +106,24 @@ jobs:
         run: |
           git fetch origin gh-pages
           mkdir gh-pages
-          git --work-tree=gh-pages checkout origin/gh-pages -- index.html
-          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede
-          git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake
           git --work-tree=gh-pages checkout origin/gh-pages -- fpsak/history
           resources/allure/set-environment-variables-fpsak.sh ${{ github.event.inputs.trigger }}
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fpsak/history target/allure-results
           mvn allure:report --batch-mode --settings .github/.m2/settings.xml
-          cp -a target/allure-report/. gh-pages/fpsak/
 
-      - name: Deploy testrapport
+      - name: Tar testresultat
         if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+        run: tar -czf fpsak.tar.gz -C target/allure-report .
+
+      - name: Laste opp testresultat
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: actions/upload-artifact@v3
         with:
-          build_dir: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: fpsak-testresultat
+          path: fpsak.tar.gz
+          retention-days: 1
 
       - name: Henter testresultat og setter outcome
         if: |
@@ -278,24 +278,24 @@ jobs:
         run: |
           git fetch origin gh-pages
           mkdir gh-pages
-          git --work-tree=gh-pages checkout origin/gh-pages -- index.html
-          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede
-          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
           git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake/history
           resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }}
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fptilbake/history target/allure-results
           mvn allure:report --batch-mode --settings .github/.m2/settings.xml
-          cp -a target/allure-report/. gh-pages/fptilbake/
 
-      - name: Deploy testrapport
+      - name: Tar testresultat
         if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+        run: tar -czf fptilbake.tar.gz -C target/allure-report .
+
+      - name: Laste opp testresultat
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: actions/upload-artifact@v3
         with:
-          build_dir: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: fptilbake-testresultat
+          path: fptilbake.tar.gz
+          retention-days: 1
 
       - name: Henter testresultat og setter outcome
         if: |
@@ -461,24 +461,24 @@ jobs:
         run: |
           git fetch origin gh-pages
           mkdir gh-pages
-          git --work-tree=gh-pages checkout origin/gh-pages -- index.html
-          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak
-          git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake
           git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
           resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }}
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/verdikjede/history target/allure-results
           mvn allure:report --batch-mode --settings .github/.m2/settings.xml
-          cp -a target/allure-report/. gh-pages/verdikjede/
 
-      - name: Deploy testrapport
+      - name: Tar testresultat
         if: always() && steps.ghpages.outcome == 'success'
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+        run: tar -czf verdikjede.tar.gz -C target/allure-report .
+
+      - name: Laste opp testresultat
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: actions/upload-artifact@v3
         with:
-          build_dir: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: verdikjede-testresultat
+          path: verdikjede.tar.gz
+          retention-days: 1
 
       - name: Henter testresultat
         if: |
@@ -527,6 +527,59 @@ jobs:
         with:
           name: logs-verdikjedetester
           path: container-logs
+
+  rapport:
+    name: Lager og publiserer test rapport
+    if: |
+      always() && !cancelled() &&
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.issue_number != null
+    needs: [ fpsak-autotester, verdikjedetestene, fptilbake ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Henter testresultat for fpsak
+        uses: actions/download-artifact@v3
+        with:
+          name: fpsak-testresultat
+          path: .
+      - name: Henter testresultat for fptilbake
+        uses: actions/download-artifact@v3
+        with:
+          name: fptilbake-testresultat
+          path: .
+      - name: Henter testresultat for verdikjede
+        uses: actions/download-artifact@v3
+        with:
+          name: verdikjede-testresultat
+          path: .
+      - name: Pakk ut testresultat
+        if: always() && !cancelled()
+        shell: bash
+        run: |
+          mkdir fpsak && tar -xzf fpsak.tar.gz --directory fpsak
+          mkdir fptilbake && tar -xzf fptilbake.tar.gz --directory fptilbake
+          mkdir verdikjede && tar -xzf verdikjede.tar.gz --directory verdikjede
+      - name: Hent eksistrende testrapport og overskriv med nytt test resultat
+        if: always() && !cancelled()
+        id: ghpages
+        run: |
+          git fetch origin gh-pages
+          mkdir gh-pages && git --work-tree=gh-pages checkout origin/gh-pages
+          cp -r fpsak gh-pages/fpsak
+          cp -r fptilbake gh-pages/fptilbake
+          cp -r verdikjede gh-pages/verdikjede
+
+      - name: Deploy testrapport
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          target_branch: gh-pages
+          build_dir: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 
   deploy-fpsak:
     if: |
