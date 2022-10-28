@@ -133,9 +133,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: print status
         run: |
-          echo '${{ jobs.sucess-jobb.result }}'
-          echo "${{ jobs.sucess-jobb.result }}"
-          echo '${{ github.jobs.sucess-jobb.result }}'
+          echo ${{needs.failing-jobb.result}}
+          echo ${{needs.failing-jobb.result}}
+          echo ${{ github.jobs.sucess-jobb.result }}k
           echo "${{ github.jobs.sucess-jobb.result }}"
 
       - name: successfull run
