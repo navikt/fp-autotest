@@ -172,7 +172,6 @@ jobs:
         with:
           name: logs-autotest
           path: container-logs
-
   fptilbake-tester:
     if: github.event.inputs.trigger == 'navikt/fptilbake'
     name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
@@ -344,7 +343,6 @@ jobs:
         with:
           name: logs-fptilbake-tester
           path: container-logs
-
   verdikjedetestene:
     name: Kjører verdikjedetestene som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest-8-cores
@@ -527,7 +525,6 @@ jobs:
         with:
           name: logs-verdikjedetester
           path: container-logs
-
   rapport:
     name: Lager og publiserer test rapport
     if: |
@@ -539,16 +536,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Henter testresultat for fpsak
+#        if: github.jobs.fpsak-autotest.outputs
         uses: actions/download-artifact@v3
         with:
           name: fpsak-testresultat
           path: .
       - name: Henter testresultat for fptilbake
+        if: always()
         uses: actions/download-artifact@v3
         with:
           name: fptilbake-testresultat
           path: .
       - name: Henter testresultat for verdikjede
+        if: always()
         uses: actions/download-artifact@v3
         with:
           name: verdikjede-testresultat

@@ -18,10 +18,9 @@ env:
   GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
 jobs:
-  build:
+  sucess-jobb:
     name: Utfør verdikjede-test
-    runs-on: ubuntu-latest-8-cores
-
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -33,75 +32,110 @@ jobs:
           java-version: 17
           cache: 'maven'
 
-      - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
+#      - name: Login to GitHub Packages Docker Registry
+#        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
+#        with:
+#          registry: ghcr.io
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Setup fpsak og dens avhengigheter
+#        shell: bash
+#        run: |
+#          echo "STACK_STARTED=false" >> $GITHUB_ENV
+#          echo "Oppretter dummy keystore for testing"
+#          cd resources/keystore
+#          ./make-dummy-keystore.sh
+#          cd ../../lokal-utvikling
+#          ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
+#          cd docker-compose-lokal
+#          ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
+#          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpsak
+#
+#      - name: Venter på stacken og sjekker status
+#        shell: bash
+#        run: |
+#          echo "STACK_CREATED=true" >> $GITHUB_ENV
+#          docker ps -a
+#          echo
+#          echo "Tester om VTP er oppe"
+#          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
+#          echo Oppe!
+#          echo
+#          echo "Tester om fpabakus er oppe"
+#          timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
+#          echo Oppe!
+#          echo
+#          echo "Tester om fp-sak er oppe"
+#          timeout 180 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
+#          echo Oppe!
+#          echo "STACK_STARTED=true" >> $GITHUB_ENV
+#
+#      - name: Kjører enhetstester for autotest
+#        shell: bash
+#        run: |
+#          mvn clean install --settings .github/.m2/settings.xml
+#
+#      - name: Utfører autotestene for fpsak
+#        shell: bash
+#        run: |
+#          mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
+#          docker stats --no-stream
+#          free -m
+#
+#      - name: Dumper logger for feilsøking
+#        if: failure() && env.STACK_CREATED == 'true'
+#        run: |
+#          mkdir container-logs
+#          cd container-logs
+#          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+#
+#      - name: Laste opp logger
+#        if: failure()
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: logs
+#          path: container-logs
+#
+#      - name: Sjekker storage
+#        if: failure()
+#        shell: bash
+#        run: |
+#          docker stats --no-stream
+#          docker system df -v
+#          df -h
+
+  failing-jobb:
+    name: Utfør verdikjede-testasdasdas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup fpsak og dens avhengigheter
-        shell: bash
-        run: |
-          echo "STACK_STARTED=false" >> $GITHUB_ENV
-          echo "Oppretter dummy keystore for testing"
-          cd resources/keystore
-          ./make-dummy-keystore.sh
-          cd ../../lokal-utvikling
-          ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
-          cd docker-compose-lokal
-          ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpsak
-
-      - name: Venter på stacken og sjekker status
-        shell: bash
-        run: |
-          echo "STACK_CREATED=true" >> $GITHUB_ENV
-          docker ps -a
-          echo
-          echo "Tester om VTP er oppe"
-          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabakus er oppe"
-          timeout 120 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fp-sak er oppe"
-          timeout 180 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "STACK_STARTED=true" >> $GITHUB_ENV
-
-      - name: Kjører enhetstester for autotest
-        shell: bash
-        run: |
-          mvn clean install --settings .github/.m2/settings.xml
-
-      - name: Utfører autotestene for fpsak
-        shell: bash
-        run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
-          docker stats --no-stream
-          free -m
-
-      - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
-        run: |
-          mkdir container-logs
-          cd container-logs
-          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
-
-      - name: Laste opp logger
-        if: failure()
-        uses: actions/upload-artifact@v3
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+      - uses: actions/setup-java@v3
         with:
-          name: logs
-          path: container-logs
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'maven'
+      - name: Henter testresultat for fpsak
+        if: github.jobs.fpsak-autotest.outputs
+        uses: actions/download-artifact@v3
+        with:
+          name: fpsak-testresultat
+          path: .
 
-      - name: Sjekker storage
-        if: failure()
-        shell: bash
+  rapport:
+    name: Lager og publiserer test rapport
+    needs: [ failing-jobb, sucess-jobb ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: successfull run
+        if: github.jobs.sucess-jobb.outputs = 'success'
         run: |
-          docker stats --no-stream
-          docker system df -v
-          df -h
+          echo 'success'
+      - name: successfull run av feila tas
+        if: github.jobs.failing-jobb.outputs = 'success'
+        run: |
+          echo 'success'
