@@ -126,6 +126,7 @@ jobs:
 
   rapport:
     name: Lager og publiserer test rapport
+    if: always()
     needs: [ failing-jobb, sucess-jobb ]
     runs-on: ubuntu-latest
     steps:
