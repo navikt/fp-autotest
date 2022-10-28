@@ -132,10 +132,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: successfull run
-        if: github.jobs.sucess-jobb.outputs = 'success'
+        if: github.jobs.sucess-jobb.outputs == 'success'
         run: |
           echo 'success'
       - name: successfull run av feila tas
-        if: github.jobs.failing-jobb.outputs = 'success'
+        if: github.jobs.failing-jobb.outputs == 'success'
         run: |
           echo 'success'
