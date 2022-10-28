@@ -135,7 +135,7 @@ jobs:
         run: |
           echo ${{needs.failing-jobb.result}}
           echo ${{needs.failing-jobb.result}}
-          echo ${{ github.jobs.sucess-jobb.result }}k
+          echo ${{ github.jobs.sucess-jobb.result }}
           echo "${{ github.jobs.sucess-jobb.result }}"
 
       - name: successfull run
@@ -143,10 +143,10 @@ jobs:
         run: |
           echo 'success'
       - name: successfull run
-        if: github.jobs.sucess-jobb.outputs == 'success'
+        if: needs.sucess-jobb.result == 'success'
         run: |
           echo 'success'
       - name: successfull run av feila tas
-        if: github.jobs.failing-jobb.outputs == 'success'
+        if: needs.failing-jobb.result == 'success'
         run: |
           echo 'success'
