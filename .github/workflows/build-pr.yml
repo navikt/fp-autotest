@@ -119,7 +119,6 @@ jobs:
           java-version: 17
           cache: 'maven'
       - name: Henter testresultat for fpsak
-        if: github.jobs.fpsak-autotest.outputs
         uses: actions/download-artifact@v3
         with:
           name: fpsak-testresultat
@@ -131,8 +130,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: successfull run
-        if: github.jobs.sucess-jobb.outputs == 'success'
+      - name: print status
         run: |
           echo '${{ github.jobs.sucess-jobb.outputs }}'
           echo '${{ github.jobs.failing-jobb.outputs }}'
