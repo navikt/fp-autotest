@@ -534,7 +534,7 @@ jobs:
       always() && !cancelled() &&
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.issue_number != null
-    needs: [ fpsak-autotester, verdikjedetestene, fptilbake ]
+    needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
