@@ -172,7 +172,6 @@ jobs:
         with:
           name: logs-autotest
           path: container-logs
-
   fptilbake-tester:
     if: github.event.inputs.trigger == 'navikt/fptilbake'
     name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
@@ -344,7 +343,6 @@ jobs:
         with:
           name: logs-fptilbake-tester
           path: container-logs
-
   verdikjedetestene:
     name: Kjører verdikjedetestene som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest-8-cores
@@ -527,7 +525,6 @@ jobs:
         with:
           name: logs-verdikjedetester
           path: container-logs
-
   rapport:
     name: Lager og publiserer test rapport
     if: |
@@ -539,37 +536,39 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Henter testresultat for fpsak
+        if: needs.fpsak-autotester.result == 'success'
         uses: actions/download-artifact@v3
         with:
           name: fpsak-testresultat
           path: .
       - name: Henter testresultat for fptilbake
+        if: needs.fptilbake-tester.result == 'success'
         uses: actions/download-artifact@v3
         with:
           name: fptilbake-testresultat
           path: .
       - name: Henter testresultat for verdikjede
+        if: needs.verdikjedetestene.result == 'success'
         uses: actions/download-artifact@v3
         with:
           name: verdikjede-testresultat
           path: .
       - name: Pakk ut testresultat
-        if: always() && !cancelled()
-        shell: bash
+        if: success()
         run: |
-          mkdir fpsak && tar -xzf fpsak.tar.gz --directory fpsak
-          mkdir fptilbake && tar -xzf fptilbake.tar.gz --directory fptilbake
-          mkdir verdikjede && tar -xzf verdikjede.tar.gz --directory verdikjede
+          if [ -f "fpsak.tar.gz" ]; then mkdir fpsak && tar -xzf fpsak.tar.gz --directory fpsak; fi
+          if [ -f "fptilbake.tar.gz" ]; then mkdir fptilbake && tar -xzf fptilbake.tar.gz --directory fptilbake; fi
+          if [ -f "verdikjede.tar.gz" ]; then mkdir verdikjede && tar -xzf verdikjede.tar.gz --directory verdikjede; fi
       - name: Hent eksistrende testrapport og overskriv med nytt test resultat
-        if: always() && !cancelled()
+        if: success()
         id: ghpages
         run: |
           git fetch origin gh-pages
-          mkdir gh-pages && git --work-tree=gh-pages checkout origin/gh-pages
-          cp -r fpsak gh-pages/fpsak
-          cp -r fptilbake gh-pages/fptilbake
-          cp -r verdikjede gh-pages/verdikjede
-
+          mkdir gh-pages
+          git --work-tree=gh-pages checkout origin/gh-pages
+          if [ -d "fpsak" ]; then cp -r fpsak gh-pages/fpsak; fi
+          if [ -d "fptilbake" ]; then cp -r fptilbake gh-pages/fptilbake; fi
+          if [ -d "verdikjede" ]; then cp -r verdikjede gh-pages/verdikjede; fi
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v3.1.0
