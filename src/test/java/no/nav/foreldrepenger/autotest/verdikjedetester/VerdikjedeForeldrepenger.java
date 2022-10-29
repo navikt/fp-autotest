@@ -552,8 +552,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var arbeidsforhold1 = arbeidsforholdene.get(0);
         var orgNummerFar1 = arbeidsforhold1.arbeidsgiverIdentifikasjon();
         var stillingsprosent1 = arbeidsforhold1.stillingsprosent();
-        var fpStartdatoIfmFødselFar = fødselsdato.minusWeeks(2);
-        var fpStartdatoEtterUke6Far = fødselsdato.plusWeeks(6);
+        var fpStartdatoIfmFødselFar = VirkedagUtil.helgejustertTilMandag(fødselsdato.minusWeeks(2));
+        var fpStartdatoEtterUke6Far = VirkedagUtil.helgejustertTilMandag(fødselsdato.plusWeeks(6));
         var fordelingFar = fordeling(
                 graderingsperiodeArbeidstaker(StønadskontoType.FORELDREPENGER,
                         fpStartdatoIfmFødselFar,
