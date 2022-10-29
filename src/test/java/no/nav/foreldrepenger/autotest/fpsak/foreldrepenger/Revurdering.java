@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.util.VirkedagUtil;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
@@ -359,7 +360,7 @@ class Revurdering extends FpsakTestBase {
                 .orElseThrow();
         assertThat(sisteUttaksperiode.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
-                .isEqualTo(termindatoBarn2.minusWeeks(3));
+                .isEqualTo(VirkedagUtil.helgejustertTilMandag(termindatoBarn2.minusWeeks(3)));
         assertThat(sisteUttaksperiode.getPeriodeResultatÅrsak())
                 .as("Siste periode avslått med årsak ny stønadsperiode")
                 .isEqualTo(PeriodeResultatÅrsak.STØNADSPERIODE_NYTT_BARN);

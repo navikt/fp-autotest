@@ -19,6 +19,7 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.TilretteleggingsErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.util.VirkedagUtil;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -269,7 +270,7 @@ class Førstegangsbehandling extends FpsakTestBase {
         // Litt datogamble
         assertThat(tilkjentYtelsePerioder.get(1).getFom())
                 .as("Avslått tilkjent ytelse Fom")
-                .isEqualTo(termindato.minusWeeks(4));
+                .isEqualTo(VirkedagUtil.helgejustertTilMandag(termindato.minusWeeks(4)));
         assertThat(tilkjentYtelsePerioder.get(1).getDagsats())
                 .as("Avslått tilkjent ytelse med dagsats 0")
                 .isZero();

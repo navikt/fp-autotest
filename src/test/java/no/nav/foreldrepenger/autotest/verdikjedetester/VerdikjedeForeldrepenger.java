@@ -55,6 +55,7 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperiodeType;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.util.VirkedagUtil;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
@@ -901,8 +902,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var far = familie.far();
         var næringsinntekt = far.næringsinntekt(2018);
         var opptjeningFar = egenNaeringOpptjening(
-                LocalDate.now().minusYears(4),
-                fpStartdatoFar,
+                fpStartdatoFar.minusYears(4),
+                VirkedagUtil.helgejustertTilMandag(fpStartdatoFar),
                 false,
                 næringsinntekt,
                 false);
@@ -1605,7 +1606,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isZero();
         assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getFom())
                 .as("Periode etter fri utsettelse fom")
-                .isEqualTo(fødselsdato.plusWeeks(10));
+                .isEqualTo(VirkedagUtil.helgejustertTilMandag(fødselsdato.plusWeeks(10)));
     }
 
     @Test

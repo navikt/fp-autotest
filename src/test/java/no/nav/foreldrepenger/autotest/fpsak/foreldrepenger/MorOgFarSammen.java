@@ -32,6 +32,7 @@ import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
+import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.util.VirkedagUtil;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
@@ -51,6 +52,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
+import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -329,7 +331,7 @@ class MorOgFarSammen extends FpsakTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Antall avslåtte uttaksperioder")
                 .hasSize(1);
-        assertThat(saksbehandler.hentAvslåtteUttaksperioder().get(0).getFom()).isEqualTo(fpStartdatoFar.plusWeeks(8));
+        assertThat(saksbehandler.hentAvslåtteUttaksperioder().get(0).getFom()).isEqualTo(VirkedagUtil.helgejustertTilMandag(fpStartdatoFar.plusWeeks(8)));
         assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(Saldoer.SaldoVisningStønadskontoType.FEDREKVOTE).saldo())
                 .as("Saldo fro stønadskonto FEDREKVOTE")
                 .isPositive();
