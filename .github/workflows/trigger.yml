@@ -556,9 +556,12 @@ jobs:
       - name: Pakk ut testresultat
         if: success()
         run: |
-          if [ -f "fpsak.tar.gz" ]; then mkdir fpsak && tar -xzf fpsak.tar.gz --directory fpsak; fi
-          if [ -f "fptilbake.tar.gz" ]; then mkdir fptilbake && tar -xzf fptilbake.tar.gz --directory fptilbake; fi
-          if [ -f "verdikjede.tar.gz" ]; then mkdir verdikjede && tar -xzf verdikjede.tar.gz --directory verdikjede; fi
+          ls -l
+          if [ -f "fpsak.tar.gz" ]; then echo "Testresultat fpsak funnet" && mkdir fpsak && tar -xzf fpsak.tar.gz --directory fpsak; fi
+          if [ -f "fptilbake.tar.gz" ]; then echo "Testresultat fptilbake funnet" && mkdir fptilbake && tar -xzf fptilbake.tar.gz --directory fptilbake; fi
+          if [ -f "verdikjede.tar.gz" ]; then echo "Testresultat verdikjede funnet" && mkdir verdikjede && tar -xzf verdikjede.tar.gz --directory verdikjede; fi
+          ls -l
+          ls verdikjede-testresultat
       - name: Hent eksistrende testrapport og overskriv med nytt test resultat
         if: success()
         id: ghpages
