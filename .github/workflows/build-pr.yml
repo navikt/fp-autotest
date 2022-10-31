@@ -81,7 +81,7 @@ jobs:
       - name: Utfører autotestene for fpsak
         shell: bash
         run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_TEST_PARALLELISM }} -P fpsak
+          mvn test --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM }} -P fpsak
           docker stats --no-stream
           free -m
 
