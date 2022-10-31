@@ -556,12 +556,9 @@ jobs:
       - name: Pakk ut testresultat
         if: success()
         run: |
-          ls -l
           if [ -f "fpsak.tar.gz" ]; then echo "Testresultat fpsak funnet" && mkdir fpsak && tar -xzf fpsak.tar.gz --directory fpsak; fi
           if [ -f "fptilbake.tar.gz" ]; then echo "Testresultat fptilbake funnet" && mkdir fptilbake && tar -xzf fptilbake.tar.gz --directory fptilbake; fi
           if [ -f "verdikjede.tar.gz" ]; then echo "Testresultat verdikjede funnet" && mkdir verdikjede && tar -xzf verdikjede.tar.gz --directory verdikjede; fi
-          ls -l
-          ls verdikjede-testresultat
       - name: Hent eksistrende testrapport og overskriv med nytt test resultat
         if: success()
         id: ghpages
@@ -569,9 +566,9 @@ jobs:
           git fetch origin gh-pages
           mkdir gh-pages
           git --work-tree=gh-pages checkout origin/gh-pages
-          if [ -d "fpsak" ]; then cp -r fpsak gh-pages/fpsak; fi
-          if [ -d "fptilbake" ]; then cp -r fptilbake gh-pages/fptilbake; fi
-          if [ -d "verdikjede" ]; then cp -r verdikjede gh-pages/verdikjede; fi
+          if [ -d "fpsak" ]; then echo "Oppdatere testresultat for fpsak" && cp -a fpsak/. gh-pages/fpsak; fi
+          if [ -d "fptilbake" ]; then echo "Oppdatere testresultat for fptilbake" && cp -a fptilbake/. gh-pages/fptilbake; fi
+          if [ -d "verdikjede" ]; then echo "Oppdatere testresultat for verdikjede" && cp -a verdikjede/. gh-pages/verdikjede; fi
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v3.1.0
