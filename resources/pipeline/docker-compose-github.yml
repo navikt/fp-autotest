@@ -37,4 +37,3 @@ services:
     mem_limit: 512mb
   fpabonnent:
     mem_limit: 1gb
-

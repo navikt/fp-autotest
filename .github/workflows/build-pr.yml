@@ -15,11 +15,12 @@ on:
       - 'lokalutvikling/*'
 
 env:
+  JUIPTER_PARALLELISM: 16
   GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
 jobs:
   build:
-    name: Utfør verdikjede-test
+    name: Utfør testene til fpsak
     runs-on: ubuntu-latest-8-cores
 
     steps:
@@ -80,7 +81,7 @@ jobs:
       - name: Utfører autotestene for fpsak
         shell: bash
         run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -P fpsak
+          mvn test --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM }} -P fpsak
           docker stats --no-stream
           free -m
 
