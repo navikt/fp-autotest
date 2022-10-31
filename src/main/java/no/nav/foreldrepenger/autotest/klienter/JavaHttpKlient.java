@@ -90,7 +90,11 @@ public final class JavaHttpKlient {
     }
 
     private static <T> boolean retryOn5xxFailures(HttpResponse<T> response, int antallForsøk) {
-        return antallForsøk > MAX_RETRY || 500 <= response.statusCode() && response.statusCode() <= 599;
+        return antallForsøk < MAX_RETRY && is5xxStatus(response);
+    }
+
+    private static <T> boolean is5xxStatus(HttpResponse<T> response) {
+        return response.statusCode() >= 500 && response.statusCode() < 600;
     }
 
     private static <T, R> R handleResponse(HttpResponse<T> response, Function<HttpResponse<T>, R> responseFunction, Consumer<HttpResponse<T>> errorConsumer) {
