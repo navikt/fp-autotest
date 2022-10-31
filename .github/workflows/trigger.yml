@@ -536,19 +536,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Henter testresultat for fpsak
-        if: needs.fpsak-autotester.result == 'success'
+        if: contains(fromJson('["success", "failure"]'), needs.fpsak-autotester.result)
         uses: actions/download-artifact@v3
         with:
           name: fpsak-testresultat
           path: .
       - name: Henter testresultat for fptilbake
-        if: needs.fptilbake-tester.result == 'success'
+        if: contains(fromJson('["success", "failure"]'), needs.fptilbake-tester.result)
         uses: actions/download-artifact@v3
         with:
           name: fptilbake-testresultat
           path: .
       - name: Henter testresultat for verdikjede
-        if: needs.verdikjedetestene.result == 'success'
+        if: contains(fromJson('["success", "failure"]'), needs.verdikjedetestene.result)
         uses: actions/download-artifact@v3
         with:
           name: verdikjede-testresultat

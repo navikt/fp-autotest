@@ -552,33 +552,36 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var arbeidsforhold1 = arbeidsforholdene.get(0);
         var orgNummerFar1 = arbeidsforhold1.arbeidsgiverIdentifikasjon();
         var stillingsprosent1 = arbeidsforhold1.stillingsprosent();
-        var fpStartdatoIfmFødselFar = VirkedagUtil.helgejustertTilMandag(fødselsdato.minusWeeks(2));
-        var fpStartdatoEtterUke6Far = VirkedagUtil.helgejustertTilMandag(fødselsdato.plusWeeks(6));
+        var førsteGradertUttaksPeriodeEtterUke6 =
+                graderingsperiodeArbeidstaker(StønadskontoType.FORELDREPENGER,
+                        fødselsdato.plusWeeks(6),
+                        fødselsdato.plusWeeks(56).minusDays(1),
+                        orgNummerFar1,
+                        stillingsprosent1);
+        var fpStartdatoEtterUke6Far = førsteGradertUttaksPeriodeEtterUke6.getFom();
         var fordelingFar = fordeling(
                 graderingsperiodeArbeidstaker(StønadskontoType.FORELDREPENGER,
-                        fpStartdatoIfmFødselFar,
-                        fpStartdatoIfmFødselFar.plusWeeks(4).minusDays(1),
+                        fødselsdato.minusWeeks(2),
+                        fødselsdato.plusWeeks(2).minusDays(1),
                         orgNummerFar1,
                         50),
-                graderingsperiodeArbeidstaker(StønadskontoType.FORELDREPENGER,
-                        fpStartdatoEtterUke6Far,
-                        fpStartdatoEtterUke6Far.plusWeeks(50).minusDays(1),
-                        orgNummerFar1,
-                        stillingsprosent1),
+                førsteGradertUttaksPeriodeEtterUke6,
                 utsettelsesperiode(UtsettelsesÅrsak.FRI,
-                        fpStartdatoEtterUke6Far.plusWeeks(50),
-                        fpStartdatoEtterUke6Far.plusWeeks(54).minusDays(1),
+                        førsteGradertUttaksPeriodeEtterUke6.getTom().plusDays(1),
+                        førsteGradertUttaksPeriodeEtterUke6.getTom().plusWeeks(4),
                         UTDANNING),
                 graderingsperiodeArbeidstaker(StønadskontoType.FORELDREPENGER,
-                        fpStartdatoEtterUke6Far.plusWeeks(54),
-                        fpStartdatoEtterUke6Far.plusWeeks(64).minusDays(1),
+                        førsteGradertUttaksPeriodeEtterUke6.getTom().plusWeeks(4).plusDays(1),
+                        førsteGradertUttaksPeriodeEtterUke6.getTom().plusWeeks(14),
                         orgNummerFar1,
-                        stillingsprosent1));
+                        stillingsprosent1))
+                .build();
+        var fpStartdatoIfmFødselFar = fordelingFar.getFørsteUttaksdag();
         var søknadFar = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
-                        .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
-                        .medFordeling(fordelingFar.build())
-                        .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                        .medMottatdato(fødselsdato.minusWeeks(2));
+                .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
+                .medFordeling(fordelingFar)
+                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
+                .medMottatdato(fødselsdato.minusWeeks(2));
         var saksnummerFar = far.søk(søknadFar.build());
 
         var arbeidsgivere = far.arbeidsgivere().toList();
@@ -1545,18 +1548,18 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var familie = new Familie("500");
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var fpStartdato = fødselsdato.minusWeeks(3);
-
         var utsettelsesperiodeMidtIMødrekvoten = utsettelsesperiode(UtsettelsesÅrsak.SYKDOM,
                 fødselsdato.plusWeeks(5), fødselsdato.plusWeeks(6).minusDays(1));
+        var uttaksperiodeEtterUtsettelseOgOpphold = uttaksperiode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1));
         var fordeling = fordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(5).minusDays(1)),
                 utsettelsesperiodeMidtIMødrekvoten,
                 // Opphold uke 6 til 10
-                uttaksperiode(MØDREKVOTE, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(20).minusDays(1)),
+                uttaksperiodeEtterUtsettelseOgOpphold,
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(36).minusDays(1)))
                 .build();
+        var fpStartdato = fordeling.getFørsteUttaksdag();
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
@@ -1606,7 +1609,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isZero();
         assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getFom())
                 .as("Periode etter fri utsettelse fom")
-                .isEqualTo(VirkedagUtil.helgejustertTilMandag(fødselsdato.plusWeeks(10)));
+                .isEqualTo(uttaksperiodeEtterUtsettelseOgOpphold.getFom());
     }
 
     @Test
