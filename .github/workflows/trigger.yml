@@ -32,6 +32,7 @@ on:
     - cron:  '15 0 * * *'
 
 env:
+  JUIPTER_PARALLELISM: 16
   GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
 jobs:
