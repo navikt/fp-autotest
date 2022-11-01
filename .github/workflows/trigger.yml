@@ -355,7 +355,7 @@ jobs:
 
   rapport:
     name: Lager og publiserer test rapport
-    if: env.TEST_TRIGGERED_BY_SUT == true && always() && !cancelled()
+    if: always() && !cancelled() && ${{ env.TEST_TRIGGERED_BY_SUT == true }}
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -408,7 +408,7 @@ jobs:
 
   deploy-fpsak:
     if: |
-      env.TEST_TRIGGERED_BY_SUT == true &&
+      ${{ env.TEST_TRIGGERED_BY_SUT == true }} &&
       github.event.inputs.trigger != 'navikt/fp-abakus'
     needs: [fpsak-autotester, verdikjedetestene]
     runs-on: ubuntu-latest
