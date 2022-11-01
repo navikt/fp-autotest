@@ -50,6 +50,7 @@ jobs:
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
           docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach --wait fpsak
           docker ps
+          docker-compose --version
 
       - name: Kjører enhetstester for autotest
         run: mvn clean install --settings .github/.m2/settings.xml
