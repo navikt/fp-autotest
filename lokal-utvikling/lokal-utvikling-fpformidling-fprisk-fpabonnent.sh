@@ -23,7 +23,7 @@ if [[ "${SUPPORTED_APPLIACTIONS[@]}" =~ "$ARGUMENT" ]]; then
   fi
 
   docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps fpfrontend
-  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach fpfrontend
+  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --wait fpfrontend
 
 elif [[ $ARGUMENT == down ]]; then
   docker-compose -f docker-compose-lokal/docker-compose.yml down
