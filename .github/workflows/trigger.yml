@@ -115,7 +115,7 @@ jobs:
           rm test-result-log.txt
 
       - name: Notify slack
-        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome) &&
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         run: |
           curl -XPOST -u "x-access-token:${{ secrets.GH_ACCESS_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
@@ -355,10 +355,7 @@ jobs:
 
   rapport:
     name: Lager og publiserer test rapport
-    if: |
-      always() && !cancelled() &&
-      github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue_number != null
+    if: always() && !cancelled() && env.TEST_TRIGGERED_BY_SUT == true
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
