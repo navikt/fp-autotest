@@ -2,13 +2,13 @@ name: Kjører Autotestene for verdikjeden PR
 
 on:
   pull_request:
+    brances:
+      - master
     paths-ignore:
       - '**.md'
       - '**.MD'
       - '.gitignore'
       - 'CODEOWNERS'
-      - '.github/workflows/deprecated-verdikjede-trigger.yml'
-      - '.github/workflows/deprecated-fpsak-trigger.yml'
       - '.github/workflows/trigger.yml.yml'
       - 'lokalutvikling/*'
 
