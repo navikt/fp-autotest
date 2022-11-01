@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -38,7 +36,7 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
 
     protected Integer antallBarnFraTerminbekreftelse = 1;
 
-    protected List<LocalDate> foedselsDato = Collections.singletonList(LocalDate.now().minusDays(1));
+    protected LocalDate foedselsDato = LocalDate.now().minusDays(1);
 
     protected LocalDate mottattDato = LocalDate.now().minusDays(10);
 
@@ -58,7 +56,7 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
 
     public PapirSoknadForeldrepengerBekreftelse morSøkerFødsel(FordelingDto fordeling, LocalDate fødselsdato, LocalDate mottattDato) {
         this.tidsromPermisjon = fordeling;
-        this.foedselsDato = Collections.singletonList(fødselsdato);
+        this.foedselsDato = fødselsdato;
         this.mottattDato = mottattDato;
         return this;
     }
