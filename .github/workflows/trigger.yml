@@ -355,7 +355,7 @@ jobs:
 
   rapport:
     name: Lager og publiserer test rapport
-    if: always() && !cancelled() && env.TEST_TRIGGERED_BY_SUT == true
+    if: env.TEST_TRIGGERED_BY_SUT == true && always() && !cancelled()
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
