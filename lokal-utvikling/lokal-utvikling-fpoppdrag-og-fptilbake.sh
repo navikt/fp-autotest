@@ -15,5 +15,5 @@ else
   fi
 
   docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps fpformidling fprisk fpabonnent
-  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --wait --scale fptilbake=0 --scale fpoppdrag=0 --scale fpfrontend=0
+  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --scale fptilbake=0 --scale fpoppdrag=0 --scale fpfrontend=0
 fi

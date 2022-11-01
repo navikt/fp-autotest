@@ -16,7 +16,7 @@ else
   fi
 
   docker-compose -f docker-compose-lokal/docker-compose.yml pull --include-deps oracle fpabakus fpsoknad-mottak
-  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --wait --scale fpfrontend=0 --scale fptilbake=0 --scale fpoppdrag=0 --scale fprisk=0
-  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --wait --scale fpformidling=0 fpsoknad-mottak
+  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --scale fpfrontend=0 --scale fptilbake=0 --scale fpoppdrag=0 --scale fprisk=0
+  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --scale fpformidling=0 fpsoknad-mottak
 fi
 

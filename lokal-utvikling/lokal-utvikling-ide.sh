@@ -23,5 +23,5 @@ else
   fi
 
   docker-compose -f docker-compose-lokal/docker-compose.yml pull
-  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --wait ${scale}
+  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach ${scale}
 fi
