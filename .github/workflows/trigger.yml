@@ -35,12 +35,18 @@ env:
   JUIPTER_PARALLELISM_VK: 8
   JUIPTER_PARALLELISM_FP: 16
   GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+  TEST_TRIGGERED_BY_SUT: |
+    github.event_name == 'workflow_dispatch' &&
+    github.event.inputs.trigger != null &&
+    github.event.inputs.version != null &&
+    github.event.inputs.issue_number != null
 
 jobs:
   fpsak-autotester:
     name: Kjører fpsak spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.event.inputs.trigger)
     runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
         with:
@@ -58,52 +64,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup fpsak og dens avhengigheter
+      - name: Setup system under test (SUT)
+        id: setup-sut
         run: |
-          echo "STACK_STARTED=false" >> $GITHUB_ENV
-          echo "Oppretter dummy keystore for testing"
-          cd resources/keystore
-          ./make-dummy-keystore.sh
-          cd ../../lokal-utvikling
+          ./resources/keystore/make-dummy-keystore.sh
+          cd lokal-utvikling
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
           cd docker-compose-lokal
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpsak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
-
-      - name: Venter på stacken og sjekker status
-        run: |
-          echo "STACK_CREATED=true" >> $GITHUB_ENV
-          docker ps -a
-          echo
-          echo "Tester om VTP er oppe"
-          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabakus er oppe"
-          timeout 180 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpsak er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "STACK_STARTED=true" >> $GITHUB_ENV
+          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach --wait fpsak|| (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
       - name: Utfører foreldrepengetestene for fpsak
         id: tester
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P fpsak > >(tee test-result-log.txt)
 
       - name: Sjekker loggen etter feil
-        if: always() && env.STACK_STARTED == 'true'
+        if: always() && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         id: logger
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil
 
       - name: Generer testrapport
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         id: ghpages
         run: |
           git fetch origin gh-pages
@@ -128,23 +109,13 @@ jobs:
           retention-days: 1
 
       - name: Henter testresultat og setter outcome
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         run: |
           echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
           rm test-result-log.txt
 
       - name: Notify slack
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          steps.tester.outcome != 'cancelled' &&
-          github.event.inputs.trigger != null &&
-          github.event.inputs.version != null
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome) &&
         run: |
           curl -XPOST -u "x-access-token:${{ secrets.GH_ACCESS_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
@@ -153,7 +124,7 @@ jobs:
                 "client_payload":{
                     "trigger": "${{ github.event.inputs.trigger }}",
                     "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "stack_started": "${{ steps.setup-sut.outcome == 'cancelled' }}",
                     "test_outcome": "${{ steps.tester.outcome }}",
                     "loggtest_outcome": "${{ steps.logger.outcome }}",
                     "test_resultat": "${{ env.TEST_RESULTAT }}",
@@ -162,22 +133,25 @@ jobs:
                   }}'
 
       - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup-sut.outcome != 'cancelled'
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup-sut.outcome != 'cancelled'
         uses: actions/upload-artifact@v3
         with:
           name: logs-autotest
           path: container-logs
+
+
   fptilbake-tester:
     if: github.event.inputs.trigger == 'navikt/fptilbake'
     name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
         with:
@@ -195,86 +169,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup verdikjeden
+      - name: Setup system under test (SUT)
+        id: setup-sut
         run: |
-          echo "STACK_STARTED=false" >> $GITHUB_ENV
-          echo "Oppretter dummy keystore for testing"
-          cd resources/keystore
-          ./make-dummy-keystore.sh
-          cd ../pipeline
+          ./resources/keystore/make-dummy-keystore.sh
+          cd resources/pipeline
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpoppdrag fptilbake fprisk fpdokgen fpabonnent fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
-
-      - name: Venter på stacken og sjekker status
-        run: |
-          echo "STACK_CREATED=true" >> $GITHUB_ENV
-          docker ps -a
-          echo
-          echo "Tester om VTP er oppe"
-          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabakus er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpsak er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpformidling er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8010/fpformidling/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpdokgen er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8291)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpoppdrag er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8070/fpoppdrag/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fptilbake er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8030/fptilbake/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fprisk er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8075/fprisk/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabonnent er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8065/fpabonnent/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpfordel er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8090/fpfordel/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpinfo er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8040/fpinfo/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "Tester om fpsoknad-mottak er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:9001/api/actuator)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "STACK_STARTED=true" >> $GITHUB_ENV
-
-      - name: Sjekker minneforbruk
-        if: always()
-        run: |
-          docker stats --no-stream
-          free -m
+          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach --wait fpoppdrag fptilbake fprisk fpdokgen fpabonnent fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
       - name: Utfører testene for fptilbake
         id: tester
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P fptilbake > >(tee test-result-log.txt)
 
       - name: Generer testrapport
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         id: ghpages
         run: |
           git fetch origin gh-pages
@@ -299,23 +207,13 @@ jobs:
           retention-days: 1
 
       - name: Henter testresultat og setter outcome
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         run: |
           echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
           rm test-result-log.txt
 
       - name: Notify slack
-        if: |
-          always() &&
-          steps.tester.outcome != 'cancelled' &&
-          github.event_name == 'workflow_dispatch' &&
-          github.event.inputs.trigger != null &&
-          github.event.inputs.version != null
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         run: |
           curl -XPOST -u "x-access-token:${{ secrets.GH_ACCESS_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
@@ -324,7 +222,7 @@ jobs:
                 "client_payload":{
                     "trigger": "${{ github.event.inputs.trigger }}",
                     "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "stack_started": "${{ steps.setup-sut.outcome == 'cancelled' }}",
                     "test_outcome": "${{ steps.tester.outcome }}",
                     "loggtest_outcome": "success",
                     "test_resultat": "${{ env.TEST_RESULTAT }}",
@@ -333,21 +231,24 @@ jobs:
                   }}'
 
       - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup-sut.outcome != 'cancelled'
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup-sut.outcome != 'cancelled'
         uses: actions/upload-artifact@v3
         with:
           name: logs-fptilbake-tester
           path: container-logs
+
+
   verdikjedetestene:
     name: Kjører verdikjedetestene som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
         with:
@@ -365,98 +266,30 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup verdikjeden
+      - name: Setup system under test (SUT)
+        id: setup-sut
         run: |
-          echo "STACK_STARTED=false" >> $GITHUB_ENV
-          echo "Oppretter dummy keystore for testing"
-          cd resources/keystore
-          ./make-dummy-keystore.sh
-          cd ../pipeline
+          ./resources/keystore/make-dummy-keystore.sh
+          cd resources/pipeline
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach --wait fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
-      - name: Venter på stacken og sjekker status
-        run: |
-          echo "STACK_CREATED=true" >> $GITHUB_ENV
-          docker ps -a
-          echo
-          echo "Tester om VTP er oppe"
-          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabakus er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpsak er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpformidling er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8010/fpformidling/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpdokgen er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8291)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpoppdrag er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8070/fpoppdrag/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fptilbake er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8030/fptilbake/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fprisk er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8075/fprisk/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabonnent er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8065/fpabonnent/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpfordel er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8090/fpfordel/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpinfo er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8040/fpinfo/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "Tester om fpsoknad-mottak er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:9001/api/actuator)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "STACK_STARTED=true" >> $GITHUB_ENV
-
-      - name: Sjekker minneforbruk
-        if: always()
-        run: |
-          docker stats --no-stream
-          free -m
 
       - name: Utfører verdikjedetestene
         id: tester
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P verdikjede > >(tee test-result-log.txt)
 
-      - name: Sjekker loggen etter feil og lekket sensitiv data.
-        if: always() && env.STACK_STARTED == 'true'
-        id: logger
-        run: |
-          mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger
-
       - name: Sjekker minneforbruk
         if: always()
-        run: |
-          docker stats --no-stream
-          free -m
+        run: docker stats --no-stream
+
+      - name: Sjekker loggen etter feil og lekket sensitiv data.
+        if: always() && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
+        id: logger
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger
 
       - name: Generer testrapport
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         id: ghpages
         run: |
           git fetch origin gh-pages
@@ -481,23 +314,14 @@ jobs:
           retention-days: 1
 
       - name: Henter testresultat
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         shell: bash
         run: |
           echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
           rm test-result-log.txt
 
       - name: Notify slack
-        if: |
-          always() && !cancelled() &&
-          github.event_name == 'workflow_dispatch' &&
-          github.event.inputs.trigger != null &&
-          github.event.inputs.version != null
+        if: always() && env.TEST_TRIGGERED_BY_SUT == true && !contains(fromJson('["skipped", cancelled]'), steps.tester.outcome)
         run: |
           curl -XPOST -u "x-access-token:${{ secrets.GH_ACCESS_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
@@ -506,7 +330,7 @@ jobs:
                 "client_payload":{
                     "trigger": "${{ github.event.inputs.trigger }}",
                     "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "stack_started": "${{ steps.setup-sut.outcome == 'cancelled' }}",
                     "test_outcome": "${{ steps.tester.outcome }}",
                     "loggtest_outcome": "${{ steps.logger.outcome }}",
                     "test_resultat": "${{ env.TEST_RESULTAT }}",
@@ -515,18 +339,20 @@ jobs:
                   }}'
 
       - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup-sut.outcome != 'cancelled'
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup-sut.outcome != 'cancelled'
         uses: actions/upload-artifact@v3
         with:
           name: logs-verdikjedetester
           path: container-logs
+
+
   rapport:
     name: Lager og publiserer test rapport
     if: |
@@ -535,6 +361,7 @@ jobs:
       github.event.inputs.issue_number != null
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v3
       - name: Henter testresultat for fpsak
@@ -584,11 +411,11 @@ jobs:
 
   deploy-fpsak:
     if: |
-      github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue_number != null &&
+      env.TEST_TRIGGERED_BY_SUT == true &&
       github.event.inputs.trigger != 'navikt/fp-abakus'
     needs: [fpsak-autotester, verdikjedetestene]
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - uses: navikt/github-app-token-generator@v1
         id: get-token
@@ -618,11 +445,10 @@ jobs:
               }'
 
   deploy-fptilbake:
-    if: |
-      github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue_number != null
+    if: env.TEST_TRIGGERED_BY_SUT == true
     needs: [fptilbake-tester, verdikjedetestene]
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - uses: navikt/github-app-token-generator@v1
         id: get-token
@@ -654,11 +480,11 @@ jobs:
 
   deploy-rest:
     if: |
-      github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue_number != null &&
+      env.TEST_TRIGGERED_BY_SUT == true &&
       !contains(fromJson('["navikt/fptilbake", "navikt/fp-sak", "navikt/fp-abakus"]'), github.event.inputs.trigger)
     needs: [verdikjedetestene]
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
       - uses: navikt/github-app-token-generator@v1
         id: get-token

@@ -1,20 +1,20 @@
 version: '2.4'
 services:
   audit.nais:
-    mem_limit: 16m
+    mem_limit: 32m
   oracle:
-    mem_limit: 3gb
-    shm_size: 3gb
+    mem_limit: 4gb
+    shm_size: 4gb
   postgres:
-    mem_limit: 256mb
+    mem_limit: 512mb
     shm_size: 256mb
   vtp:
-    mem_limit: 2gb
-    shm_size: 1gb
+    mem_limit: 3gb
+    shm_size: 2gb
   fpabakus:
     mem_limit: 1gb
   fpsak:
-    mem_limit: 2gb
+    mem_limit: 3gb
     shm_size: 512mb
   fpfrontend:
     mem_limit: 64mb
@@ -27,13 +27,13 @@ services:
   fpformidling:
     mem_limit: 1gb
   fpdokgen:
-    mem_limit: 512mb
+    mem_limit: 1gb
   fpoppdrag:
     mem_limit: 1gb
   fptilbake:
     mem_limit: 1gb
     shm_size: 512mb
   fprisk:
-    mem_limit: 512mb
+    mem_limit: 1gb
   fpabonnent:
     mem_limit: 1gb

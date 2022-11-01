@@ -15,5 +15,5 @@ else
   fi
 
   docker-compose -f docker-compose-lokal/docker-compose.yml pull
-  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --scale fpfrontend=0
+  docker-compose -f docker-compose-lokal/docker-compose.yml up --detach --wait --scale fpfrontend=0
 fi
