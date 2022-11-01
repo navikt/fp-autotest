@@ -363,6 +363,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+
       - uses: actions/checkout@v3
       - name: Henter testresultat for fpsak
         if: contains(fromJson('["success", "failure"]'), needs.fpsak-autotester.result)
