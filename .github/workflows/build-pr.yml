@@ -1,7 +1,7 @@
 name: Kjører Autotestene for verdikjeden PR
 
 on:
-  pull_request_target:
+  pull_request:
     paths-ignore:
       - '**.md'
       - '**.MD'
@@ -48,7 +48,8 @@ jobs:
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
           cd docker-compose-lokal
           ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach --wait fpsak|| (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach --wait fpsak
+          docker ps
 
       - name: Kjører enhetstester for autotest
         run: mvn clean install --settings .github/.m2/settings.xml
