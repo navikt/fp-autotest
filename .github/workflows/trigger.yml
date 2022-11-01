@@ -124,7 +124,7 @@ jobs:
                 "client_payload":{
                     "trigger": "${{ github.event.inputs.trigger }}",
                     "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "stack_started": "${{ steps.setup-sut.outcome == 'cancelled' }}",
                     "test_outcome": "${{ steps.tester.outcome }}",
                     "loggtest_outcome": "${{ steps.logger.outcome }}",
                     "test_resultat": "${{ env.TEST_RESULTAT }}",
@@ -222,7 +222,7 @@ jobs:
                 "client_payload":{
                     "trigger": "${{ github.event.inputs.trigger }}",
                     "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "stack_started": "${{ steps.setup-sut.outcome == 'cancelled' }}",
                     "test_outcome": "${{ steps.tester.outcome }}",
                     "loggtest_outcome": "success",
                     "test_resultat": "${{ env.TEST_RESULTAT }}",
@@ -330,7 +330,7 @@ jobs:
                 "client_payload":{
                     "trigger": "${{ github.event.inputs.trigger }}",
                     "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "stack_started": "${{ steps.setup-sut.outcome == 'cancelled' }}",
                     "test_outcome": "${{ steps.tester.outcome }}",
                     "loggtest_outcome": "${{ steps.logger.outcome }}",
                     "test_resultat": "${{ env.TEST_RESULTAT }}",
