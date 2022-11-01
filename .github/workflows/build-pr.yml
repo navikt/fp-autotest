@@ -42,6 +42,7 @@ jobs:
       - name: Setup system under test (SUT)
         id: setup-sut
         run: |
+          brew upgrade docker-compose
           ./resources/keystore/make-dummy-keystore.sh
           cd lokal-utvikling
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
