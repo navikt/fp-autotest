@@ -59,8 +59,9 @@ public class Behandling {
     // TODO: Spesifikk for fptilbake
     public boolean harVerge;
 
-    private Lazy<List<Vilkar>> vilkar;
-    private Lazy<List<Aksjonspunkt>> aksjonspunkter;
+    private List<Vilkar> vilkår;
+    private List<Aksjonspunkt> aksjonspunktene;
+
     private Lazy<Beregningsgrunnlag> beregningsgrunnlag;
     private Lazy<Beregningsresultat> beregningResultatEngangsstonad;
     private Lazy<BeregningsresultatMedUttaksplan> beregningResultatForeldrepenger;
@@ -123,12 +124,12 @@ public class Behandling {
         return behandlingÅrsaker;
     }
 
-    public List<Vilkar> getVilkar() {
-        return get(vilkar);
+    public List<Vilkar> getVilkår() {
+        return vilkår;
     }
 
-    public void setVilkar(Lazy<List<Vilkar>> dVilkår) {
-        this.vilkar = dVilkår;
+    public void setVilkår(List<Vilkar> vilkår) {
+        this.vilkår = vilkår;
     }
 
     public Beregningsgrunnlag getBeregningsgrunnlag() {
@@ -234,12 +235,12 @@ public class Behandling {
         this.saldoer = dStonadskontoer;
     }
 
-    public List<Aksjonspunkt> getAksjonspunkter() {
-        return get(aksjonspunkter);
+    public List<Aksjonspunkt> getAksjonspunktene() {
+        return aksjonspunktene;
     }
 
-    public void setAksjonspunkter(Lazy<List<Aksjonspunkt>> dAksjonspunkter) {
-        this.aksjonspunkter = dAksjonspunkter;
+    public void setAksjonspunktene(List<Aksjonspunkt> aksjonspunktene) {
+        this.aksjonspunktene = aksjonspunktene;
     }
 
     public Tilrettelegging getTilrettelegging() {
