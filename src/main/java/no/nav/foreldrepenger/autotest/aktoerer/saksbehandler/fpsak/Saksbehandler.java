@@ -236,7 +236,7 @@ public class Saksbehandler {
             }, 30, "Saken har ikke fått behandling av type: " + behandlingstype);
 
         // 2) Hvis vi venter på en REVURDERING og behandling er køet, men ikke gjennopptatt venter vi til AP 7011 er utført.
-        if (BehandlingType.REVURDERING.equals(behandlingstype) && erBehandlingKøetOgIkkeGjenopptatt(behandling)) {
+        if (BehandlingType.REVURDERING.equals(behandlingstype) && erBehandlingKøetOgIkkeGjenopptatt(behandling.uuid)) {
             Vent.til(() -> behandlingerKlient.hentAlleAksjonspunkter(behandling.uuid).stream()
                             .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equals(AUTO_KØET_BEHANDLING))
                             .findFirst()
@@ -251,8 +251,8 @@ public class Saksbehandler {
         LOG.info("Behandling opprettet og oppdatert!");
     }
 
-    private boolean erBehandlingKøetOgIkkeGjenopptatt(Behandling behandling) {
-        return behandling.getAksjonspunktene().stream()
+    private boolean erBehandlingKøetOgIkkeGjenopptatt(UUID behandlingsuuid) {
+        return behandlingerKlient.hentAlleAksjonspunkter(behandlingsuuid).stream()
                 .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equals(AUTO_KØET_BEHANDLING))
                 .anyMatch(Aksjonspunkt::erUbekreftet);
     }
