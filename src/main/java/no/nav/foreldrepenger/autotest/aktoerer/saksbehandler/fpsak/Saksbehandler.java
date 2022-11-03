@@ -289,7 +289,7 @@ public class Saksbehandler {
         }
         throw new IllegalStateException(String.format("Behandlingsstatus for behandling %s på fagsak %s var ikke %s, men var %s."
                         + "Har følgende aksjonspunkt: \n%s", valgtBehandling.uuid, valgtFagsak.saksnummer(),
-                forventetStatus, behandlingsstatus, valgtBehandling.getAksjonspunkter()));
+                forventetStatus, behandlingsstatus, valgtBehandling.getAksjonspunktene()));
     }
 
     protected void refreshBehandling() {
@@ -353,8 +353,6 @@ public class Saksbehandler {
     }
 
     private void populateBehandling(Behandling behandling) {
-        behandling.setAksjonspunkter(new Lazy<>(() -> behandlingerKlient.hentAlleAksjonspunkter(behandling.uuid)));
-        behandling.setVilkar(new Lazy<>(() -> behandlingerKlient.behandlingVilkår(behandling.uuid)));
 
         if (behandling.type.equals(BehandlingType.INNSYN)) {
             // Gjør ingenting
@@ -502,11 +500,11 @@ public class Saksbehandler {
      * Henter aksjonspunkt av gitt kode
      */
     public Aksjonspunkt hentAksjonspunkt(String kode) {
-        return valgtBehandling.getAksjonspunkter().stream()
+        return valgtBehandling.getAksjonspunktene().stream()
                 .filter(ap -> ap.getDefinisjon().equals(kode))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + "." +
-                        "\nAksjonspunkt på behandling: " + valgtBehandling.getAksjonspunkter().toString()));
+                        "\nAksjonspunkt på behandling: " + valgtBehandling.getAksjonspunktene().toString()));
     }
 
 
@@ -553,7 +551,7 @@ public class Saksbehandler {
     }
 
     private void verifsierAtAPErFerdigbehandlet(AksjonspunktBekreftelse bekreftelse) {
-        var ap = valgtBehandling.getAksjonspunkter().stream()
+        var ap = valgtBehandling.getAksjonspunktene().stream()
                 .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equalsIgnoreCase(bekreftelse.kode()))
                 .findFirst()
                 .orElseThrow(); // Vil ikke inntreffe ettersom hentAksjonspunkt() vil alltid bli kalt først.
@@ -653,7 +651,7 @@ public class Saksbehandler {
      * Vilkar
      */
     private Vilkar hentVilkår(String vilkårKode) {
-        for (Vilkar vilkår : valgtBehandling.getVilkar()) {
+        for (Vilkar vilkår : valgtBehandling.getVilkår()) {
             if (vilkår.vilkarType().equals(vilkårKode)) {
                 return vilkår;
             }

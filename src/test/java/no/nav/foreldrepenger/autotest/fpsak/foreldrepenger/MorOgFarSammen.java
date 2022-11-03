@@ -52,7 +52,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
-import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -508,7 +507,7 @@ class MorOgFarSammen extends FpsakTestBase {
         saksbehandler.harBehandlingsstatus(BehandlingStatus.UTREDES);
 
         // Søkt for tidlig - kan behandles om litt over en uke
-        assertThat(saksbehandler.valgtBehandling.getAksjonspunkter()
+        assertThat(saksbehandler.valgtBehandling.getAksjonspunktene()
                 .stream().map(Aksjonspunkt::getDefinisjon)
                 .anyMatch(AksjonspunktKoder.AUTO_VENT_PGA_FOR_TIDLIG_SØKNAD::equals)).isTrue();
     }
