@@ -60,7 +60,7 @@ public class Behandling {
     public boolean harVerge;
 
     private List<Vilkar> vilkår;
-    private List<Aksjonspunkt> aksjonspunktene;
+    private List<Aksjonspunkt> aksjonspunkt;
 
     private Lazy<Beregningsgrunnlag> beregningsgrunnlag;
     private Lazy<Beregningsresultat> beregningResultatEngangsstonad;
@@ -235,12 +235,12 @@ public class Behandling {
         this.saldoer = dStonadskontoer;
     }
 
-    public List<Aksjonspunkt> getAksjonspunktene() {
-        return aksjonspunktene;
+    public List<Aksjonspunkt> getAksjonspunkt() {
+        return aksjonspunkt;
     }
 
-    public void setAksjonspunktene(List<Aksjonspunkt> aksjonspunktene) {
-        this.aksjonspunktene = aksjonspunktene;
+    public void setAksjonspunkt(List<Aksjonspunkt> aksjonspunkt) {
+        this.aksjonspunkt = aksjonspunkt;
     }
 
     public Tilrettelegging getTilrettelegging() {

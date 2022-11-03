@@ -95,7 +95,7 @@ class Soknadsfrist extends FpsakTestBase {
                 .as("Aksjonspunktstatus for SJEKK_MANGLENDE_FØDSEL")
                 .isEqualTo("OPPR");
 
-        var harSøknadsfristAP = saksbehandler.valgtBehandling.getAksjonspunktene().stream()
+        var harSøknadsfristAP = saksbehandler.valgtBehandling.getAksjonspunkt().stream()
                 .anyMatch(ap -> ap.getDefinisjon()
                         .equals(AksjonspunktKoder.MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET));
         assertThat(harSøknadsfristAP)
