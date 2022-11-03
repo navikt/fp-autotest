@@ -289,7 +289,7 @@ public class Saksbehandler {
         }
         throw new IllegalStateException(String.format("Behandlingsstatus for behandling %s på fagsak %s var ikke %s, men var %s."
                         + "Har følgende aksjonspunkt: \n%s", valgtBehandling.uuid, valgtFagsak.saksnummer(),
-                forventetStatus, behandlingsstatus, valgtBehandling.getAksjonspunktene()));
+                forventetStatus, behandlingsstatus, valgtBehandling.getAksjonspunkt()));
     }
 
     protected void refreshBehandling() {
@@ -500,11 +500,12 @@ public class Saksbehandler {
      * Henter aksjonspunkt av gitt kode. Tar en refresh i tilfelle nye er blitt utledet etter bekreftelse
      */
     public Aksjonspunkt hentAksjonspunkt(String kode) {
-        return behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid).stream()
+        var apkt = behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid);
+        return apkt.stream()
                 .filter(ap -> ap.getDefinisjon().equals(kode))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + "." +
-                        "\nAksjonspunkt på behandling: " + valgtBehandling.getAksjonspunktene().toString()));
+                        "\nAksjonspunkt på behandling: " + apkt));
     }
 
 
@@ -551,7 +552,7 @@ public class Saksbehandler {
     }
 
     private void verifsierAtAPErFerdigbehandlet(AksjonspunktBekreftelse bekreftelse) {
-        var ap = valgtBehandling.getAksjonspunktene().stream()
+        var ap = valgtBehandling.getAksjonspunkt().stream()
                 .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equalsIgnoreCase(bekreftelse.kode()))
                 .findFirst()
                 .orElseThrow(); // Vil ikke inntreffe ettersom hentAksjonspunkt() vil alltid bli kalt først.

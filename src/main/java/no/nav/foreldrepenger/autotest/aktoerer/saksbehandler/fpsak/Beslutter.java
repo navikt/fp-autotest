@@ -14,7 +14,7 @@ public class Beslutter extends Saksbehandler {
     }
 
     public List<Aksjonspunkt> hentAksjonspunktSomSkalTilTotrinnsBehandling() {
-        return valgtBehandling.getAksjonspunktene().stream()
+        return valgtBehandling.getAksjonspunkt().stream()
                 .filter(Aksjonspunkt::skalTilToTrinnsBehandling)
                 .toList();
     }
