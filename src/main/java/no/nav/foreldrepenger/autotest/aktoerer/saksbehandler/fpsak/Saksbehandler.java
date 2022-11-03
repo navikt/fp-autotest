@@ -497,10 +497,10 @@ public class Saksbehandler {
     }
 
     /*
-     * Henter aksjonspunkt av gitt kode
+     * Henter aksjonspunkt av gitt kode. Tar en refresh i tilfelle nye er blitt utledet etter bekreftelse
      */
     public Aksjonspunkt hentAksjonspunkt(String kode) {
-        return valgtBehandling.getAksjonspunktene().stream()
+        return behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid).stream()
                 .filter(ap -> ap.getDefinisjon().equals(kode))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ikke aksjonspunkt med kode " + kode + "." +
