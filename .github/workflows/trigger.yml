@@ -574,7 +574,7 @@ jobs:
           private-key: ${{ secrets.FP_PRIVATE_KEY }}
           app-id: ${{ secrets.FP_APP_ID }}
 
-      - name: Deployer fpsak til dev og prod
+      - name: Deployer fpsak til dev
         run: |
           curl -XPOST -u "x-access-token:${{ steps.get-token.outputs.token }}" \
           -H "Accept: application/vnd.github.v3+json" \
@@ -590,7 +590,28 @@ jobs:
                   "slash_command": {
                       "args": {
                           "unnamed": {
-                              "arg1": ""
+                              "arg1": "dev-fss"
+                  }}}
+                }
+              }'
+
+      - name: Deployer fpsak til prod
+        run: |
+          curl -XPOST -u "x-access-token:${{ steps.get-token.outputs.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.event.inputs.trigger }}/dispatches \
+          -d '{
+                "event_type": "promote-command",
+                "client_payload": {
+                  "github": {
+                      "payload": {
+                          "issue": {
+                              "number": "${{ github.event.inputs.issue_number }}"
+                  }}},
+                  "slash_command": {
+                      "args": {
+                          "unnamed": {
+                              "arg1": "prod-fss"
                   }}}
                 }
               }'
