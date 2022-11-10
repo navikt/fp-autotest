@@ -31,7 +31,7 @@
         <fp-kontrakter.version>6.1.27</fp-kontrakter.version>
 
         <allure.version>2.19.0</allure.version>
-        <allure.maven.version>2.11.2</allure.maven.version>
+        <allure.maven.version>2.12.0</allure.maven.version>
         <assertj.version>3.23.1</assertj.version>
         <aspectj.version>1.9.9.1</aspectj.version>
         <junit.version>5.9.1</junit.version>
