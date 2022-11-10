@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,8 +24,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
@@ -34,7 +34,6 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeids
 
 @Tag("logger")
 class LoggTest {
-    private static final Logger LOG = LoggerFactory.getLogger(LoggTest.class);
     private static final List<String> UNWANTED_STRINGS = List.of(
         "Server Error",
         "deadlock detected",
@@ -45,19 +44,23 @@ class LoggTest {
         UnsupportedOperationException.class.getSimpleName(),
         ArrayIndexOutOfBoundsException.class.getSimpleName(),
         NoSuchElementException.class.getSimpleName(),
-//        SQLException.class.getSimpleName(),
+        SQLException.class.getSimpleName(),
         ConstraintViolationException.class.getSimpleName(),
+        IOException.class.getSimpleName(),
         "javax.persistence.PersistenceException");
 
     private static final List<String> IGNORE_EXCEPTION_IF_CONTAINS = List.of(
             "taskName=behandlingskontroll.tilbakeTilStart",
             "Error while loading kafka-streams-version.properties",
-            "Vil automatisk prøve igjen");
+            "Vil automatisk prøve igjen",
+            "FP-018669:Feil ved kall til Abakus: Kunne ikke hente grunnlag fra abakus", // Logges i fpsak som konsekvens av det nedenfor
+            "duplicate key value violates unique constraint \\\"uidx_kobling_1\\\"" // Logges i fpabakus
+    );
 
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend");
     private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "redis", "fpfrontend", "fpsoknad-mottak");
 
-    private static final String toNumericPattern(String s) {
+    private static String toNumericPattern(String s) {
         return "^(.*[^0-9])?" + Pattern.quote(s) + "([^0-9].*)?$";
     }
 
@@ -106,8 +109,7 @@ class LoggTest {
                     linePos++;
                     for (var unwantedString : UNWANTED_STRINGS) {
                         assertFalse(isUnwantedString(currentLine, unwantedString),
-                            String.format("Fant feil i logg : [%s] for applikasjon: [%s], linje[%s]=%s",
-                                    unwantedString, containerNavn, linePos, currentLine));
+                                String.format("Fant feil i logg : [%s] for applikasjon: [%s], linje[%s]=%s", unwantedString, containerNavn, linePos, currentLine));
                     }
                 }
                 if (!containerNavn.equalsIgnoreCase("fpdokgen") && linePos < 80) {
@@ -119,6 +121,10 @@ class LoggTest {
     }
 
     private boolean isUnwantedString(String currentLine, String unwantedString) {
+        return currentLine.contains(unwantedString) && IGNORE_EXCEPTION_IF_CONTAINS.stream().noneMatch(currentLine::contains);
+    }
+
+    private boolean isUnwantedString(String currentLine, String unwantedString, String containerNavn) {
         return currentLine.contains(unwantedString) && IGNORE_EXCEPTION_IF_CONTAINS.stream().noneMatch(currentLine::contains);
     }
 
