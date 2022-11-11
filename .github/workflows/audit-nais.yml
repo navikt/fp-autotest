@@ -37,7 +37,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: resources/pipeline/audit.nais/Dockerfile
+          context: resources/pipeline/audit.nais
           platforms: linux/amd64, linux/arm64
           pull: true
           push: true
