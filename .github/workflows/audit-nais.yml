@@ -28,6 +28,13 @@ jobs:
       - name: Print build version
         run: echo "Generated build-version is ${{ env.build-version }}"
 
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
