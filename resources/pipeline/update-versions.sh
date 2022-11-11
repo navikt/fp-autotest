@@ -17,7 +17,7 @@ imageVersion () {
 
 echo POSTGRES_IMAGE="postgres:12" > .env
 echo ORACLE_IMAGE="ghcr.io/navikt/oracle-foreldrepenger:18-migrert" >> .env
-echo AUDIT_NAIS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-audit-nais-mock")" >> .env
+echo AUDIT_NAIS_IMAGE="$(imageVersion "ghcr.io/navikt/fpsak-autotest/audit-nais-mock")" >> .env
 echo VTP_IMAGE="$(imageVersion "ghcr.io/navikt/vtp")" >> .env
 echo FPABAKUS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-abakus")" >> .env
 echo FPSAK_IMAGE="$(imageVersion "ghcr.io/navikt/fp-sak")" >> .env
