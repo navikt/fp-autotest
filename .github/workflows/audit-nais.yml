@@ -1,0 +1,46 @@
+name: Build and deploy nais.audit
+
+on:
+  schedule:
+    - cron: '0 2 * * 2'
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'resources/pipeline/audit.nais/Dockerfile'
+
+jobs:
+  build:
+    name: Build audit.nais mock
+    runs-on: ubuntu-latest
+    env:
+      image: 'ghcr.io/${{ github.repository }}/audit-nais-mock'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate build version
+        id: generate-build-version
+        run: |
+          echo "build-version=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+
+      - name: Print build version
+        run: echo "Generated build-version is ${{ env.build-version }}"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ./resources/pipeline/audit.nais/Dockerfile
+          platforms: linux/amd64, linux/arm64
+          pull: true
+          push: true
+          tags: ${{ env.image }}:${{ env.build-version }}, ${{ env.image }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
