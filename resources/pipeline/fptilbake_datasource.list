@@ -1,9 +1,9 @@
 APP_NAME=fptilbake
 NAIS_APP_NAME=fptilbake
-DEFAULTDS_URL=jdbc:oracle:thin:@//host.docker.internal:1521/xe
+DEFAULTDS_URL=jdbc:oracle:thin:@//docker:1521/xe
 DEFAULTDS_USERNAME=fptilbake
 DEFAULTDS_PASSWORD=fptilbake
-DVHDS_URL=jdbc:oracle:thin:@//host.docker.internal:1521/xe
+DVHDS_URL=jdbc:oracle:thin:@//docker:1521/xe
 MQGATEWAY02_HOSTNAME=b27apvl176.preprod.local
 MQGATEWAY02_PORT=1413
 MQGATEWAY02_NAME=MQ1LSC02
