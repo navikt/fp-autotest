@@ -1,5 +1,5 @@
 APP_NAME=fpfordel
 NAIS_APP_NAME=fpfordel
-DEFAULTDS_URL=jdbc:oracle:thin:@//oracle:1521/xe
+DEFAULTDS_URL=jdbc:oracle:thin:@//host.docker.internal:1521/xe
 DEFAULTDS_USERNAME=fpfordel
 DEFAULTDS_PASSWORD=fpfordel
