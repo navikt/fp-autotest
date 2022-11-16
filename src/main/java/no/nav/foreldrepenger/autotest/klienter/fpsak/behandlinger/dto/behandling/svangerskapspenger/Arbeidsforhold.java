@@ -36,6 +36,12 @@ public class Arbeidsforhold {
         return eksternArbeidsforholdReferanse;
     }
 
+    public void setTilretteleggingBehovFom(LocalDate tilretteleggingBehovFom) {this.tilretteleggingBehovFom = tilretteleggingBehovFom;}
+
+    public void setTilretteleggingDatoer(List<Tilretteleggingsdato> tilretteleggingDatoer) {
+        this.tilretteleggingDatoer = tilretteleggingDatoer;
+    }
+
     public String getInternArbeidsforholdReferanse() {
         return internArbeidsforholdReferanse;
     }

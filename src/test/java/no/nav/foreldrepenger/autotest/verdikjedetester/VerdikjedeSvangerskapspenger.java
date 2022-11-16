@@ -6,6 +6,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.TilretteleggingType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -63,8 +70,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -114,8 +122,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -167,7 +176,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -234,7 +244,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer1, false);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -265,6 +277,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var avklarFaktaFødselOgTilrettelegging2 = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
         avklarFaktaFødselOgTilrettelegging2.setBegrunnelse("Begrunnelse");
+        avklarFaktaFødselOgTilrettelegging2.getBekreftetSvpArbeidsforholdList().get(0).setTilretteleggingBehovFom(LocalDate.now().minusDays(7));
+        avklarFaktaFødselOgTilrettelegging2.getBekreftetSvpArbeidsforholdList().get(0).setTilretteleggingDatoer(
+                List.of(new Tilretteleggingsdato(LocalDate.now().minusDays(7), TilretteleggingType.INGEN_TILRETTELEGGING, BigDecimal.valueOf(100))));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging2);
 
         var bekreftSvangerskapspengervilkår2 = saksbehandler
@@ -357,7 +372,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);

@@ -12,4 +12,9 @@ public class Tilretteleggingsdato {
     protected TilretteleggingType type;
     protected BigDecimal stillingsprosent;
 
+    public Tilretteleggingsdato(LocalDate fom, TilretteleggingType type, BigDecimal stillingsprosent) {
+        this.fom = fom;
+        this.type = type;
+        this.stillingsprosent = stillingsprosent;
+    }
 }
