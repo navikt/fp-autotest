@@ -65,6 +65,34 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+  fpwsproxy:
+    image: $FPWSPROXY_IMAGE
+    container_name: fpwsproxy
+    restart: on-failure
+    mem_limit: 512mb
+    environment:
+      - "SPRING_PROFILES_ACTIVE=test"
+      - "NAIS_CLUSTER_NAME=test"
+      - "LOADBALANCER_URL=http://localhost:8292"
+      - "MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED=true"
+      - "OIDC_STS_ISSUER_URL=http://vtp:8060" # TODO Erstat med samme syntax som resten av applikasjonene
+      - "MELDEKORTUTBETALINGSGRUNNLAG_V1_URL=https://vtp:8063/soap/ail_ws/MeldekortUtbetalingsgrunnlag_v1"
+      - "OPPDRAG_SERVICE_URL=https://vtp:8063/soap/cics/services/oppdragService"
+      - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
+    env_file:
+      - "common.env"
+    volumes:
+      - "~/.modig:/app/.modig"
+    ports:
+      - "8292:8292"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8292/api/actuator" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      vtp:
+        condition: service_healthy
   fpabakus:
     image: $FPABAKUS_IMAGE
     container_name: fpabakus
@@ -87,6 +115,8 @@ services:
       retries: 10
     depends_on:
       audit.nais:
+        condition: service_started
+      fpwsproxy:
         condition: service_started
       postgres:
         condition: service_healthy
@@ -252,6 +282,7 @@ services:
     depends_on:
       - oracle
       - vtp
+      - fpwsproxy
       - fpsak
   fptilbake:
     image: $FPTILBAKE_IMAGE
@@ -290,6 +321,7 @@ services:
       - oracle
       - vtp
       - fpsak
+      - fpwsproxy
   fprisk:
     image: $FPRISK_IMAGE
     container_name: fprisk
