@@ -84,7 +84,7 @@ services:
     volumes:
       - "~/.modig:/app/.modig"
     ports:
-      - "8292:8292"
+      - "8292:8080"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8292/api/actuator" ]
       interval: 5s
