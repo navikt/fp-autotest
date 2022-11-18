@@ -73,7 +73,6 @@ services:
     environment:
       - "LOADBALANCER_URL=http://localhost:8015"
       - "KAFKA_LONNSKOMPENSASJON_TOPIC=privat-permittering-lonnskomp-vedtak-vtp"
-      - "FPWSPROXY_RS_URL=http://vtp:8060/rest/api"
     env_file:
       - "fpabakus_datasource.list"
       - "common.env"
