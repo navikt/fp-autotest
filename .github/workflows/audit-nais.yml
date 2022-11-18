@@ -18,7 +18,7 @@ jobs:
       image: 'ghcr.io/${{ github.repository }}/audit-nais-mock'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Generate build version
         id: generate-build-version
