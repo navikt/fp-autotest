@@ -93,6 +93,33 @@ services:
                   }
                 },
                 {
+                  "requestParam": "code",
+                  "match": "beslut",
+                  "claims": {
+                    "aud": ["fpfrontend"],
+                    "sub": "beslut",
+                    "NAVIdent": "beslut"
+                  }
+                },
+                {
+                  "requestParam": "code",
+                  "match": "oversty",
+                  "claims": {
+                    "aud": ["fpfrontend"],
+                    "sub": "oversty",
+                    "NAVIdent": "oversty"
+                  }
+                },
+                {
+                  "requestParam": "code",
+                  "match": "klageb",
+                  "claims": {
+                    "aud": ["fpfrontend"],
+                    "sub": "klageb",
+                    "NAVIdent": "klageb"
+                  }
+                },
+                {
                   "requestParam": "grant_type",
                   "match": "authorization_code",
                   "claims": {
