@@ -223,7 +223,6 @@ services:
             }
           ]
         }
-    hostname: host.docker.internal
   fpabakus:
     image: $FPABAKUS_IMAGE
     container_name: fpabakus
@@ -527,7 +526,7 @@ services:
       - "OPPSLAG_URL=http://vtp:8060/rest/dummy/oppslag"
       - "FPFORDEL_MAX=20"
       - "FPINFO_MAX=20"
-      - "AZURE_OPENID_CONFIG_TOKEN_ENDPOINT=http://host.docker.internal:8085/azureAd/token"
+      - "AZURE_OPENID_CONFIG_TOKEN_ENDPOINT=http://authserver:8085/azureAd/token"
       - "AZURE_APP_CLIENT_ID=lokal:teamforeldrepenger:fpsoknad-mottak"
       - "AZURE_APP_JWK=/tokenx/jwk.json"
       - "OIDC_STS_ISSUER_URL=http://vtp:8060" # TODO Erstat med samme syntax som resten av applikasjonene
@@ -676,7 +675,7 @@ services:
     command: |
       --openid.provider=azure
       --openid.scopes=api://fpfrontend/.default
-      --openid.well-known-url=http://host.docker.internal:8085/azureAd/.well-known/openid-configuration
+      --openid.well-known-url=http://authserver:8085/azureAd/.well-known/openid-configuration
       --ingress=http://localhost:9000
       --bind-address=0.0.0.0:9000
       --upstream-host=fpfrontend:9090
