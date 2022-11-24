@@ -53,10 +53,10 @@ public final class TokenProvider {
                         .build())
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .POST(buildFormDataFromMap(buildAuthQueryFromMap((Map.of(
+                        "code", saksbehandlerRolle.getKode(),
                         "grant_type", "authorization_code",
                         "client_id", "autotest",
-                        "scope", "openid",
-                        "code", saksbehandlerRolle.getKode())))
+                        "scope", "openid")))
                 ));
 
         var accessTokenResponseDTO = send(requestAuth.build(), OidcTokenResponse.class);
