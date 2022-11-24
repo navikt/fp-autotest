@@ -178,6 +178,13 @@ services:
                 },
                 {
                   "requestParam": "scope",
+                  "match": "api://fprisk/.default",
+                  "claims": {
+                    "aud": ["fprisk"]
+                  }
+                },
+                {
+                  "requestParam": "scope",
                   "match": "api://fpabakus/.default",
                   "claims": {
                     "aud": ["fpabakus"]
@@ -185,9 +192,9 @@ services:
                 },
                 {
                   "requestParam": "scope",
-                  "match": "api://fprisk/.default",
+                  "match": "api://vtp.default.fpabakus/.default",
                   "claims": {
-                    "aud": ["fprisk"]
+                    "aud": ["fpabakus"]
                   }
                 }
               ]
