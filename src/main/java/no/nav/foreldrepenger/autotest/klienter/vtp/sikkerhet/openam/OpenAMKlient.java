@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam;
 
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestBodyPublishers.buildAuthQueryFromMap;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestBodyPublishers.buildFormDataFromMap;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
@@ -32,7 +33,7 @@ public class OpenAMKlient {
                         .path(ACCESS_TOKEN_PATH)
                         .build())
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .POST(buildFormDataFromMap(Map.of("code", saksbehandlerRolle.getKode())));
+                .POST(buildFormDataFromMap(buildAuthQueryFromMap(Map.of("code", saksbehandlerRolle.getKode()))));
         var accessTokenResponseDTO = send(request.build(), AccessTokenResponseDTO.class);
         return accessTokenResponseDTO.getIdToken();
     }
