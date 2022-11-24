@@ -17,7 +17,7 @@ public final class TokenProvider {
     }
 
     public static String openAMToken(SaksbehandlerRolle saksbehandlerRolle) {
-        return OpenAMKlient.logInnMedRolle(saksbehandlerRolle);
+        return no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.TokenProvider.azureAdToken(saksbehandlerRolle, "fpsak-localhost");
     }
 
     public static String tokenXToken(Fødselsnummer fnr) {

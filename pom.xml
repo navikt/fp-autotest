@@ -103,6 +103,11 @@
         <!-- Interne avhengigheter-->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-oidc</artifactId>
+            <version>${fp-felles.versjon}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-mapper</artifactId>
             <version>${fp-felles.versjon}</version>
         </dependency>
@@ -241,6 +246,7 @@
                 <configuration>
                     <argLine>
                         -Duser.timezone="Europe/Oslo"
+                        -Djdk.httpclient.allowRestrictedHeaders=host
                         -Dfile.encoding=UTF-8
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>

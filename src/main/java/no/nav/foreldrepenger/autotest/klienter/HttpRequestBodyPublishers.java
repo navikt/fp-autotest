@@ -11,7 +11,11 @@ public final class HttpRequestBodyPublishers {
         // Statisk implementasjon
     }
 
-    public static HttpRequest.BodyPublisher buildFormDataFromMap(Map<String, String> data) {
+    public static HttpRequest.BodyPublisher buildFormDataFromMap(String query) {
+        return HttpRequest.BodyPublishers.ofString(query);
+    }
+
+    public static String buildAuthQueryFromMap(Map<String, String> data) {
         var builder = new StringBuilder();
         for (var entry : data.entrySet()) {
             if (builder.length() > 0) {
@@ -21,6 +25,6 @@ public final class HttpRequestBodyPublishers {
             builder.append("=");
             builder.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8));
         }
-        return HttpRequest.BodyPublishers.ofString(builder.toString());
+        return builder.toString();
     }
 }

@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx;
 
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestBodyPublishers.buildAuthQueryFromMap;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestBodyPublishers.buildFormDataFromMap;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
@@ -40,10 +41,10 @@ public class TokenXVekslingKlient {
                         .path(TOKEN_ENDPOINT_AZURE_AD)
                         .build())
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .POST(buildFormDataFromMap(Map.of(
+                .POST(buildFormDataFromMap(buildAuthQueryFromMap(Map.of(
                         "grant_type", "client_credentials",
                         "scope", "openid",
-                        "code", fnr.value())));
+                        "code", fnr.value()))));
         var tokenResponse = send(request.build(), TokenResponse.class);
         return tokenResponse.id_token();
     }
@@ -54,9 +55,9 @@ public class TokenXVekslingKlient {
                         .path(TOKEN_ENDPOINT_TOKENX)
                         .build())
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .POST(buildFormDataFromMap(Map.of(
+                .POST(buildFormDataFromMap(buildAuthQueryFromMap(Map.of(
                         "subject_token", subjectToken,
-                        "audience", "lokal")));
+                        "audience", "lokal"))));
         var tokenResponse = send(request.build(), TokenResponse.class);
         return tokenResponse.access_token();
     }
