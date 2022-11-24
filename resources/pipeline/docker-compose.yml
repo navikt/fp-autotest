@@ -223,6 +223,7 @@ services:
             }
           ]
         }
+    hostname: authserver
   fpabakus:
     image: $FPABAKUS_IMAGE
     container_name: fpabakus
