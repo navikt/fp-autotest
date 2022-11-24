@@ -52,6 +52,7 @@ public final class TokenProvider {
                         .path(AZURE_TOKEN_BASE_PATH)
                         .build())
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .header("Host", "authserver:8085")
                 .POST(buildFormDataFromMap(buildAuthQueryFromMap((Map.of(
                         "code", saksbehandlerRolle.getKode(),
                         "grant_type", "authorization_code",
