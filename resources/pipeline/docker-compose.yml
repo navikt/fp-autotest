@@ -73,6 +73,8 @@ services:
     container_name: authserver
     ports:
       - "8085:8085"
+    volumes:
+      - ./authserver/konfig.json:/authserver/konfig.json
     environment:
       PORT: 8085
       JSON_CONFIG_PATH: "/authserver/konfig.json"
@@ -308,7 +310,6 @@ services:
       - "common.env"
     volumes:
       - "~/.modig:/app/.modig"
-      - "./authserver:/authserver"
     ports:
       - "8015:8080"
     healthcheck:
