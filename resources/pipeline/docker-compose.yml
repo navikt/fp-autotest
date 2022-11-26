@@ -75,155 +75,7 @@ services:
       - "8085:8085"
     environment:
       PORT: 8085
-      JSON_CONFIG: |
-        {
-          "interactiveLogin": true,
-          "httpServer": "NettyWrapper",
-          "tokenCallbacks": [
-            {
-              "issuerId": "azureAd",
-              "tokenExpiry": 3600,
-              "requestMappings": [
-                {
-                  "requestParam": "code",
-                  "match": "saksbeh",
-                  "claims": {
-                    "aud": ["fpfrontend"],
-                    "sub": "saksbeh",
-                    "NAVident": "saksbeh"
-                  }
-                },
-                {
-                  "requestParam": "code",
-                  "match": "beslut",
-                  "claims": {
-                    "aud": ["fpfrontend"],
-                    "sub": "beslut",
-                    "NAVident": "beslut"
-                  }
-                },
-                {
-                  "requestParam": "code",
-                  "match": "oversty",
-                  "claims": {
-                    "aud": ["fpfrontend"],
-                    "sub": "oversty",
-                    "NAVident": "oversty"
-                  }
-                },
-                {
-                  "requestParam": "code",
-                  "match": "klageb",
-                  "claims": {
-                    "aud": ["fpfrontend"],
-                    "sub": "klageb",
-                    "NAVident": "klageb"
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fpsak/.default",
-                  "claims": {
-                    "aud": ["fpsak"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fptilbake/.default",
-                  "claims": {
-                    "aud": ["fptilbake"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fpoppdrag/.default",
-                  "claims": {
-                    "aud": ["fpoppdrag"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fpformidling/.default",
-                  "claims": {
-                    "aud": ["fpformidling"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fpinfo/.default",
-                  "claims": {
-                    "aud": ["fpinfo"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fprisk/.default",
-                  "claims": {
-                    "aud": ["fprisk"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fpfordel/.default",
-                  "claims": {
-                    "aud": ["fpfordel"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fpabonnent/.default",
-                  "claims": {
-                    "aud": ["fpabonnent"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fprisk/.default",
-                  "claims": {
-                    "aud": ["fprisk"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://fpabakus/.default",
-                  "claims": {
-                    "aud": ["fpabakus"]
-                  }
-                },
-                {
-                  "requestParam": "scope",
-                  "match": "api://vtp.default.fpabakus/.default",
-                  "claims": {
-                    "aud": ["fpabakus"]
-                  }
-                }
-              ]
-            },
-            {
-              "issuerId": "idPorten",
-              "tokenExpiry": 3600,
-              "requestMappings": [
-                {
-                  "requestParam": "grant_type",
-                  "match": "authorization_code",
-                  "claims": {
-                     "aud": ["foreldrepengesoknad", "lokal"],
-                     "acr": "Level4"
-                  }
-                },
-                {
-                  "requestParam": "audience",
-                  "match": "lokal",
-                  "claims": {
-                    "aud": ["lokal"],
-                    "acr": "Level4",
-                    "sub": "Michal"
-                  }
-                }
-              ]
-            }
-          ]
-        }
+      JSON_CONFIG_PATH: "/authserver/konfig.json"
   fpabakus:
     image: $FPABAKUS_IMAGE
     container_name: fpabakus
@@ -237,6 +89,7 @@ services:
       - "common.env"
     volumes:
       - "~/.modig:/app/.modig"
+      - "./authserver:/authserver"
     ports:
       - "8015:8080"
     healthcheck:
@@ -295,7 +148,7 @@ services:
       - "KAFKA_TOPICS_FORDELING=privat-foreldrepenger-historikk-fordeling"
       - "KAFKA_TOPIC_JOURNAL_HENDELSE=aapen-dok-journalfoering-v1-q1"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
-      - "FPFORDEL_IT_FP_URL=https://vtp:8063/rest/infotrygd/saker/foreldrepenger"
+      - "FPFORDEL_IT_FP_URL=http://vtp:8060/rest/infotrygd/saker/foreldrepenger"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.mottak.hendelse.test.VtpKafkaAvroSerde"
     env_file:
       - "fpfordel_datasource.list"
@@ -324,9 +177,9 @@ services:
     mem_limit: 512mb
     environment:
       - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
-      - "DOKDIST_REST_BASE_URL=https://vtp:8063/rest/dokdist/v1"
-      - "JOURNALPOST_REST_V1_URL=https://vtp:8063/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
-      - "JOURNALPOST_REST_PROXY_V1_URL=https://vtp:8063/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
+      - "DOKDIST_REST_BASE_URL=http://vtp:8060/rest/dokdist/v1"
+      - "JOURNALPOST_REST_V1_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
+      - "JOURNALPOST_REST_PROXY_V1_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "OPENIDCONNECT_USERNAME=fpformidling-localhost"
       - "LOADBALANCER_URL=http://localhost:8010"
     env_file:
@@ -372,7 +225,7 @@ services:
       - "fpoppdrag_datasource.list"
       - "common.env"
     environment:
-      - "OPPDRAG_SERVICE_URL=https://vtp:8063/soap/cics/services/oppdragService"
+      - "OPPDRAG_SERVICE_URL=http://vtp:8060/soap/cics/services/oppdragService"
       - "LOADBALANCER_URL=http://localhost:8070"
       - "LOADBALANCER_FQDN=localhost:8070"
       - "OPENIDCONNECT_USERNAME=fpoppdrag-localhost"
@@ -402,8 +255,8 @@ services:
       - "CONTEXT_PATH=/fptilbake"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
-      - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
-      - "DOKDIST_REST_DISTRIBUER_JOURNALPOST=https://vtp:8063/rest/dokdist/v1/distribuerjournalpost"
+      - "TILBAKEKREVING_V1_URL=http://vtp:8060/soap/tilbakekreving/services/tilbakekrevingService"
+      - "DOKDIST_REST_DISTRIBUER_JOURNALPOST=http://vtp:8060/rest/dokdist/v1/distribuerjournalpost"
       - "TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
       - "KAFKA_FPLOS_TOPIC=tilbakebetaling-aksjonspunkthendelse"
       - "KAFKA_DVH_SAKSSTATISTIKK_TOPIC=privat-tilbakekreving-dvh-saksstatistikk-v1-vtp"
@@ -439,7 +292,7 @@ services:
     environment:
       - "LOADBALANCER_URL=http://localhost:8075"
       - "OPENIDCONNECT_USERNAME=fprisk-localhost"
-      - "BRREG_PROXY=https://vtp:8063/rest/brreg/proxy/not/implemented"
+      - "BRREG_PROXY=http://vtp:8060/rest/brreg/proxy/not/implemented"
     volumes:
       - "~/.modig:/app/.modig"
     ports:
@@ -523,7 +376,7 @@ services:
       - "KAFKA_PASSWORD=vtp"
       - "PDL_GRAPHQL_BASE_URL=http://vtp:8060/rest/api/pdl/graphql"
       - "DIGDIR_BASE_URL=http://vtp:8060/rest/digdir"
-      - "ORGANISASJON_RS_BASE_URL=https://vtp:8063/rest/ereg/api"
+      - "ORGANISASJON_RS_BASE_URL=http://vtp:8060/rest/ereg/api"
       - "OPPSLAG_URL=http://vtp:8060/rest/dummy/oppslag"
       - "FPFORDEL_MAX=20"
       - "FPINFO_MAX=20"
@@ -707,8 +560,161 @@ services:
     depends_on:
       authserver:
         condition: service_started
-      vtp:
-        condition: service_healthy
+  fpswagger:
+    image: ghcr.io/navikt/fp-swagger:latest
+    container_name: fpswagger
+    restart: on-failure
+    mem_limit: 128mb
+    environment:
+      PORT: 9190
+      HOST: localhost
+      NODE_ENV: development
+      AZURE_APP_CLIENT_ID: fpswagger
+      PROXY_CONFIG: |
+        {
+            "apis": [
+                {
+                    "path": "/fpsak/api",
+                    "scopes": "api://fpsak/swagger",
+                    "url": "http://fpsak:8080",
+                    "name": "fp-sak"
+                },
+                {
+                    "path": "/fpoppdrag/api",
+                    "scopes": "api://fpoppdrag/swagger",
+                    "url": "http://fpoppdrag:8080",
+                    "name": "fp-oppdrag"
+                },
+                {
+                    "path": "/fptilbake/api",
+                    "scopes": "api://fptilbake/swagger",
+                    "url": "http://fptilbake:8080",
+                    "name": "fp-tilbake"
+                },
+                {
+                    "path": "/fpformidling/api",
+                    "scopes": "api://fpformidling/swagger",
+                    "url": "http://fpformidling:8080",
+                    "name": "fp-formidling"
+                },
+                {
+                    "path": "/fplos/api",
+                    "scopes": "api://fplos/swagger",
+                    "url": "http://fplos:8080",
+                    "name": "fp-los"
+                },
+                {
+                  "path": "/fpfordel/api",
+                  "scopes": "api://fpfordel/swagger",
+                  "url": "http://fpfordel:8080",
+                  "name": "fp-fordel"
+                },
+                {
+                  "path": "/fpabakus/api",
+                  "scopes": "api://fpabakus/swagger",
+                  "url": "http://fpabakus:8080",
+                  "name": "fp-abakus"
+                },
+                {
+                  "path": "/fprisk/api",
+                  "scopes": "api://fprisk/swagger",
+                  "url": "http://fprisk:8080",
+                  "name": "fp-risk"
+                },
+                {
+                  "path": "/fpabonnent/api",
+                  "scopes": "api://fpabonnent/swagger",
+                  "url": "http://fpabonnent:8080",
+                  "name": "fp-abonnent"
+                },
+                {
+                  "path": "/fpinfo/api",
+                  "scopes": "api://fpinfo/swagger",
+                  "url": "http://fpinfo:8080",
+                  "name": "fp-info"
+                },
+                {
+                  "path": "/fpsak/ekstern/api",
+                  "scopes": "api://fpsak/swagger",
+                  "url": "http://fpsak:8080",
+                  "name": "fp-sak ekstern API"
+                },
+                {
+                  "path": "/fpfordel/ekstern/api",
+                  "scopes": "api://fpfordel/swagger",
+                  "url": "http://fpfordel:8080",
+                  "name": "fp-fordel ekstern API"
+                }
+            ]
+        }
+      AZURE_APP_JWKS: |
+        {"keys":[
+          {
+            "p": "uglj69HBqwsI8HoRZ3O3LZLagL4LASooVJktgCvTgjucVDovIYeSSUmd1LTtDKFM2W-oobbWQA-t1-pnTM0dnEgti0d3fWuiBe1StAoiCSh18KOcnMnors-MQi-WlmBUACGRYX2v0coMCLWMBkMfRjPGZ43eHutCcyRydNCopOE",
+            "kty": "RSA",
+            "q": "s1uYe4HX1HHKbVlmHbHsGjiMown3Qio0KYO8ehohVbkH9-2lFpb00h2-NZMXZxluBBWmx5ukIV07NJ9nKiFbRTkR2b2ww5WocPYRk4fAMYDe8sCHOHuOAZiI6F97x4kySPiqj_U2ut_EWkgDtUkMwtciZDzwRmcuGPb-c8OHSkU",
+            "d": "CGME29GzZxGC7CcqfiWabszarqXfCFLBkVD6cQqYBilA3DJ-3j3_txIWaQVtUplBQt6YOIL8S_-4D_LGFn5B4bHYq5pPLsV6FJfqYLz2CRppWH5cvQYqH1MraOSm0127vG19KRDK02FUC77P7X9gFiOPLerU8j02mhu6riQmfvT8fRZ3It8yN_RL0aaQ87m_acI33pS5lUhR8ooaWBKN27pWeiVMImMJ4OxiPZiU-9C8rbLwFjiXjZzjuxmWQ7zu1-aqfy4iqc4kyFLo6H6wIY3mGgK76k3zmQrerJRTZElAzm6018IWNLNkVJKjsaH5GwSmK0KVnZLj6NPrbWzvgQ",
+            "e": "AQAB",
+            "use": "sig",
+            "kid": "azureAd",
+            "qi": "g87KpFNEigeOQ2EF6hdjllzmyYu3rVIUvqKTR7RjiqDQwujRlugGbXGXxJy93X5FLpk6Z2xM-cwE2PEm1369ZZxom3EDx46sic1v5aH9mbU2BhaGOfpY4Mi9X72VkW_KBMoAfJYPi3SCScBMoqYkAOFGbtS3uARvY0-HB0P5X2U",
+            "dp": "GmTOqlxeD7hHEmcfJQBD0tFs8qsDwKyMgEQjMnYFUgrHCSQgH6-uT3uESvNIVmxkDM1MrXTVPM18qo91DG5lbxDGdWY0S7UDjbe37hcp8QauhO-RfqUev_5uNc2unbMY99PLXnuIgEkcH_gx34mSXFFoKrTz-IsEKHXZTz1zT8E",
+            "dq": "Zy48bGDoDxlfQMT7T_35O6Rok6q6CeBJndBhb0T1BGGryd9256X0NaRStnNmNTOV7Nef2JkbNO5zjvRc3wnNfec087SCqiHAgyusNNkVoeTnXXOQ1teNfDGKIVQ82y98NCqJxMNmtt7gEKf5KiNaKgSljlDYUUguZsJA48wKWpk",
+            "n": "glchA7ywlOiBhxPj6WxGcbiT2ejpfVivkWz0KdQ8BiXxZaUBMr4hdB6voYfSWaNaZle6Avy10MVr-hn8Ef15G1y4ot_vEVdomhLBsaX1UcyMSY8J-rZusq1sPmkBZbe0Xoivt__AJaXBS2OZi8PgCe80HYEN2G3PB3ytvA8YC99l3xBzTmYlSWCth9mJiR4ovlQdsswu7ruDNCrtO2MktLrFehKkha3LFiZiq0MTaXzK2XyvgjwU8o12pyWpVnmF8vttY2mQln8C5_ybTxT1C62e2Q0QR9K25t3YY6qeDjsD0SypaxCtfiQ5dwidorwTi1mKKaz_5AuAAmtmUsR6pQ",
+            "alg": "RS256"
+          }
+        ]}
+    env_file:
+      - "common.env"
+    ports:
+      - "9190:9190"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9190/health/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      fpswagger-wonderwall:
+        condition: service_started
+  fpswagger-wonderwall:
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-swagger
+    command: |
+      --openid.provider=openid
+      --openid.client-id=fpswagger
+      --openid.scopes=api://fpswagger/.default
+      --openid.well-known-url=http://authserver:8085/azureAd/.well-known/openid-configuration
+      --ingress=http://localhost:9200
+      --bind-address=0.0.0.0:9200
+      --upstream-host=fpswagger:9190
+      --auto-login=true
+      --log-level=debug
+    ports:
+      - "9200:9200"
+    environment:
+      AZURE_APP_CLIENT_ID: fpswagger
+      WONDERWALL_OPENID_CLIENT_JWK: |
+        {
+          "p": "uglj69HBqwsI8HoRZ3O3LZLagL4LASooVJktgCvTgjucVDovIYeSSUmd1LTtDKFM2W-oobbWQA-t1-pnTM0dnEgti0d3fWuiBe1StAoiCSh18KOcnMnors-MQi-WlmBUACGRYX2v0coMCLWMBkMfRjPGZ43eHutCcyRydNCopOE",
+          "kty": "RSA",
+          "q": "s1uYe4HX1HHKbVlmHbHsGjiMown3Qio0KYO8ehohVbkH9-2lFpb00h2-NZMXZxluBBWmx5ukIV07NJ9nKiFbRTkR2b2ww5WocPYRk4fAMYDe8sCHOHuOAZiI6F97x4kySPiqj_U2ut_EWkgDtUkMwtciZDzwRmcuGPb-c8OHSkU",
+          "d": "CGME29GzZxGC7CcqfiWabszarqXfCFLBkVD6cQqYBilA3DJ-3j3_txIWaQVtUplBQt6YOIL8S_-4D_LGFn5B4bHYq5pPLsV6FJfqYLz2CRppWH5cvQYqH1MraOSm0127vG19KRDK02FUC77P7X9gFiOPLerU8j02mhu6riQmfvT8fRZ3It8yN_RL0aaQ87m_acI33pS5lUhR8ooaWBKN27pWeiVMImMJ4OxiPZiU-9C8rbLwFjiXjZzjuxmWQ7zu1-aqfy4iqc4kyFLo6H6wIY3mGgK76k3zmQrerJRTZElAzm6018IWNLNkVJKjsaH5GwSmK0KVnZLj6NPrbWzvgQ",
+          "e": "AQAB",
+          "use": "sig",
+          "kid": "azureAd",
+          "qi": "g87KpFNEigeOQ2EF6hdjllzmyYu3rVIUvqKTR7RjiqDQwujRlugGbXGXxJy93X5FLpk6Z2xM-cwE2PEm1369ZZxom3EDx46sic1v5aH9mbU2BhaGOfpY4Mi9X72VkW_KBMoAfJYPi3SCScBMoqYkAOFGbtS3uARvY0-HB0P5X2U",
+          "dp": "GmTOqlxeD7hHEmcfJQBD0tFs8qsDwKyMgEQjMnYFUgrHCSQgH6-uT3uESvNIVmxkDM1MrXTVPM18qo91DG5lbxDGdWY0S7UDjbe37hcp8QauhO-RfqUev_5uNc2unbMY99PLXnuIgEkcH_gx34mSXFFoKrTz-IsEKHXZTz1zT8E",
+          "dq": "Zy48bGDoDxlfQMT7T_35O6Rok6q6CeBJndBhb0T1BGGryd9256X0NaRStnNmNTOV7Nef2JkbNO5zjvRc3wnNfec087SCqiHAgyusNNkVoeTnXXOQ1teNfDGKIVQ82y98NCqJxMNmtt7gEKf5KiNaKgSljlDYUUguZsJA48wKWpk",
+          "n": "glchA7ywlOiBhxPj6WxGcbiT2ejpfVivkWz0KdQ8BiXxZaUBMr4hdB6voYfSWaNaZle6Avy10MVr-hn8Ef15G1y4ot_vEVdomhLBsaX1UcyMSY8J-rZusq1sPmkBZbe0Xoivt__AJaXBS2OZi8PgCe80HYEN2G3PB3ytvA8YC99l3xBzTmYlSWCth9mJiR4ovlQdsswu7ruDNCrtO2MktLrFehKkha3LFiZiq0MTaXzK2XyvgjwU8o12pyWpVnmF8vttY2mQln8C5_ybTxT1C62e2Q0QR9K25t3YY6qeDjsD0SypaxCtfiQ5dwidorwTi1mKKaz_5AuAAmtmUsR6pQ",
+          "alg": "RS256"
+        }
+    env_file:
+      - "common.env"
+    depends_on:
+      authserver:
+        condition: service_started
+      fpsak:
+        condition: service_started
   foreldrepengeoversikt:
     image: $FORELDREPENGEOVERSIKT_IMAGE
     container_name: foreldrepengeoversikt
