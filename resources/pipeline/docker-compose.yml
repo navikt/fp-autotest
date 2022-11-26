@@ -152,6 +152,13 @@ services:
                   }
                 },
                 {
+                    "requestParam": "scope",
+                    "match": "api://vtp.tfp.fptilbake/.default",
+                    "claims": {
+                        "aud": ["fptilbake"]
+                    }
+                },
+                {
                   "requestParam": "scope",
                   "match": "api://fpoppdrag/.default",
                   "claims": {
@@ -248,6 +255,13 @@ services:
                   "claims": {
                     "aud": ["fprisk"]
                   }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.tfp.fprisk/.default",
+                    "claims": {
+                        "aud": ["fprisk"]
+                    }
                 },
                 {
                   "requestParam": "scope",
