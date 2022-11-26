@@ -183,7 +183,7 @@
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://vtp.tfp.fpabakus/.default",
+                    "match": "api://vtp.default.fpabakus/.default",
                     "claims": {
                         "aud": ["fpabakus"]
                     }
