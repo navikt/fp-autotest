@@ -762,8 +762,6 @@ services:
     depends_on:
       fpsak:
         condition: service_healthy
-      wonderwall:
-        condition: service_started
   wonderwall:
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall
@@ -800,6 +798,8 @@ services:
       - "common.env"
     depends_on:
       authserver:
+        condition: service_started
+      fpfrontend:
         condition: service_started
   fpswagger:
     image: ghcr.io/navikt/fp-swagger:latest
@@ -845,46 +845,46 @@ services:
                     "name": "fp-los"
                 },
                 {
-                  "path": "/fpfordel/api",
-                  "scopes": "api://fpfordel/swagger",
-                  "url": "http://fpfordel:8080",
-                  "name": "fp-fordel"
+                    "path": "/fpfordel/api",
+                    "scopes": "api://fpfordel/swagger",
+                    "url": "http://fpfordel:8080",
+                    "name": "fp-fordel"
                 },
                 {
-                  "path": "/fpabakus/api",
-                  "scopes": "api://fpabakus/swagger",
-                  "url": "http://fpabakus:8080",
-                  "name": "fp-abakus"
+                    "path": "/fpabakus/api",
+                    "scopes": "api://fpabakus/swagger",
+                    "url": "http://fpabakus:8080",
+                    "name": "fp-abakus"
                 },
                 {
-                  "path": "/fprisk/api",
-                  "scopes": "api://fprisk/swagger",
-                  "url": "http://fprisk:8080",
-                  "name": "fp-risk"
+                    "path": "/fprisk/api",
+                    "scopes": "api://fprisk/swagger",
+                    "url": "http://fprisk:8080",
+                    "name": "fp-risk"
                 },
                 {
-                  "path": "/fpabonnent/api",
-                  "scopes": "api://fpabonnent/swagger",
-                  "url": "http://fpabonnent:8080",
-                  "name": "fp-abonnent"
+                    "path": "/fpabonnent/api",
+                    "scopes": "api://fpabonnent/swagger",
+                    "url": "http://fpabonnent:8080",
+                    "name": "fp-abonnent"
                 },
                 {
-                  "path": "/fpinfo/api",
-                  "scopes": "api://fpinfo/swagger",
-                  "url": "http://fpinfo:8080",
-                  "name": "fp-info"
+                    "path": "/fpinfo/api",
+                    "scopes": "api://fpinfo/swagger",
+                    "url": "http://fpinfo:8080",
+                    "name": "fp-info"
                 },
                 {
-                  "path": "/fpsak/ekstern/api",
-                  "scopes": "api://fpsak/swagger",
-                  "url": "http://fpsak:8080",
-                  "name": "fp-sak ekstern API"
+                    "path": "/fpsak/ekstern/api",
+                    "scopes": "api://fpsak/swagger",
+                    "url": "http://fpsak:8080",
+                    "name": "fp-sak ekstern API"
                 },
                 {
-                  "path": "/fpfordel/ekstern/api",
-                  "scopes": "api://fpfordel/swagger",
-                  "url": "http://fpfordel:8080",
-                  "name": "fp-fordel ekstern API"
+                    "path": "/fpfordel/ekstern/api",
+                    "scopes": "api://fpfordel/swagger",
+                    "url": "http://fpfordel:8080",
+                    "name": "fp-fordel ekstern API"
                 }
             ]
         }
