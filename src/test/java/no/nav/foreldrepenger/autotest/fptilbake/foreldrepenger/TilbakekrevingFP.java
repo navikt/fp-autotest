@@ -6,8 +6,14 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Clock;
+import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -200,8 +206,9 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
     @Test
     @DisplayName("3. Oppretter og behandler en tilbakekreving helt-automatisk")
-    @Description("Heltautomatisert scenario. Beløp under et halvt rettsgebyr og blir plukket av auto-batch")
+    @Description("Heltautomatisert scenario. Beløp under et halvt rettsgebyr og blir plukket av auto-batch. Batchen kjører ikke i helgene, derfor skip hvis helg.")
     void opprettOgBehandleTilbakekrevingAutomatisk() {
+        Assumptions.assumeTrue(!isWeekend(LocalDate.now()), "Batche kjører ikke i helgen.");
         var familie = new Familie("142");
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
@@ -263,5 +270,11 @@ class TilbakekrevingFP extends FptilbakeTestBase {
             inntektsmelding.medBeregnetInntekt(ProsentAndel.valueOf(50));
         }
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+    }
+
+    public static boolean isWeekend(final LocalDate ld)
+    {
+        var day = DayOfWeek.of(ld.get(ChronoField.DAY_OF_WEEK));
+        return day == DayOfWeek.SUNDAY || day == DayOfWeek.SATURDAY;
     }
 }
