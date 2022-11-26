@@ -2,6 +2,8 @@ version: '2.4'
 services:
   audit.nais:
     mem_limit: 32m
+  authserver:
+    mem_limit: 512mb
   oracle:
     mem_limit: 4gb
     shm_size: 4gb
