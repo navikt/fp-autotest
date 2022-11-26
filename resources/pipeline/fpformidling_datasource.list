@@ -1,5 +1,7 @@
-APP_NAME=FPFORMIDLING
-NAIS_APP_NAME=FPFORMIDLING
+APP_NAME=fpformidling
+NAIS_APP_NAME=fpformidling
+AZURE_APP_CLIENT_ID=fpformidling
+
 DEFAULTDS_USERNAME=fpformidling
 DEFAULTDS_PASSWORD=fpformidling
 DEFAULTDS_URL=jdbc:postgresql://postgres:5432/fpformidling

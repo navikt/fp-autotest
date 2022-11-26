@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.AzureTokenProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx.TokenXVekslingKlient;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
@@ -13,10 +14,6 @@ public final class TokenProvider {
 
     private TokenProvider() {
         // Skal ikke instansieres
-    }
-
-    public static String openAMToken(SaksbehandlerRolle saksbehandlerRolle) {
-        return no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.TokenProvider.azureAdToken(saksbehandlerRolle, "fpsak-localhost");
     }
 
     public static String tokenXToken(Fødselsnummer fnr) {

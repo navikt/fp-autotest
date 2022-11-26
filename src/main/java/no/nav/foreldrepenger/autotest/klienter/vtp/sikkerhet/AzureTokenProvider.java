@@ -21,38 +21,30 @@ import no.nav.vedtak.sikkerhet.oidc.token.impl.OidcTokenResponse;
  *  - OpenAM Token
  *  - Loginservice token som er veksles inn til et TokenX token for en gitt bruker (fnr)
  */
-public final class TokenProvider {
-
-    private static final String TOKEN_PROVIDER_BASE_PATH = "/rest/token/provider";
-    private static final String TOKENX_ENDPOINT = TOKEN_PROVIDER_BASE_PATH + "/borger/tokenx";
-    private static final String AZUREAD_ENDPOINT = TOKEN_PROVIDER_BASE_PATH + "/ansatt/azuread";
+public final class AzureTokenProvider {
     private static final String AZURE_TOKEN_BASE_PATH = "/azureAd/token";
     private static final String IDPORTEN_TOKEN_BASE_PATH = "/idPorten/token";
 
-    private static final Map<SaksbehandlerRolle, Map<String, String>> saksbehandlerTokenAzureAD = new ConcurrentHashMap<>();
+    private static final Map<SaksbehandlerRolle, String> saksbehandlerAzureAuthToken = new ConcurrentHashMap<>();
+    private static final Map<String, String> saksbehandlerAzureOboToken = new ConcurrentHashMap<>();
     private static final Map<Fødselsnummer, String> accessTokensTokenX = new ConcurrentHashMap<>();
 
-    private TokenProvider() {
+    private AzureTokenProvider() {
         // Skal ikke instansieres
     }
 
-    public static String azureAdToken(SaksbehandlerRolle saksbehandlerRolle, String clientId) {
-        return saksbehandlerTokenAzureAD
-                .computeIfAbsent(saksbehandlerRolle, rolle -> new ConcurrentHashMap<>(Map.of(clientId, hentNyttAzureAdTokenForSaksbehandler(rolle, clientId))))
-                .computeIfAbsent(clientId, id -> hentNyttAzureAdTokenForSaksbehandler(saksbehandlerRolle, id));
+    public static String azureOboToken(SaksbehandlerRolle saksbehandlerRolle, String clientId) {
+        String sbhAccessToken = saksbehandlerAzureAuthToken.computeIfAbsent(saksbehandlerRolle, token -> saksbehandlerLogin(saksbehandlerRolle));
+        return saksbehandlerAzureOboToken
+                .computeIfAbsent(String.format("%s-%s", sbhAccessToken, clientId), token -> hentOboToken(sbhAccessToken, clientId));
     }
 
     public static String tokenXToken(Fødselsnummer fnr, String audience) { // Vi bruker det bare til å kalle fpsoknad-mottak ATM
         return accessTokensTokenX.computeIfAbsent(fnr, ident -> hentNyttTokenXTokenFor(ident, audience));
     }
 
-    private static String hentNyttAzureAdTokenForSaksbehandler(SaksbehandlerRolle saksbehandlerRolle, String scope) {
-        var requestAuth =  HttpRequest.newBuilder()
-                .uri(fromUri(BaseUriProvider.AZURE_ROOT)
-                        .path(AZURE_TOKEN_BASE_PATH)
-                        .build())
-                .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .header("Host", "authserver:8085")
+    private static String saksbehandlerLogin(SaksbehandlerRolle saksbehandlerRolle) {
+        var requestAuth =  getAzureRequestBuilder()
                 .POST(buildFormDataFromMap(buildAuthQueryFromMap((Map.of(
                         "code", saksbehandlerRolle.getKode(),
                         "grant_type", "authorization_code",
@@ -62,6 +54,29 @@ public final class TokenProvider {
 
         var accessTokenResponseDTO = send(requestAuth.build(), OidcTokenResponse.class);
         return accessTokenResponseDTO.access_token();
+    }
+
+    private static String hentOboToken(String saksbehandlerAccessToken, String clientId) {
+        var requestAuth =  getAzureRequestBuilder()
+                .POST(buildFormDataFromMap(buildAuthQueryFromMap((Map.of(
+                        "grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer",
+                        "client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+                        "requested_token_use", "on_behalf_of",
+                        "scope", String.format("api://%s/.default", clientId),
+                        "assertion", saksbehandlerAccessToken)))
+                ));
+
+        var accessTokenResponseDTO = send(requestAuth.build(), OidcTokenResponse.class);
+        return accessTokenResponseDTO.access_token();
+    }
+
+    private static HttpRequest.Builder getAzureRequestBuilder() {
+        return HttpRequest.newBuilder()
+                .uri(fromUri(BaseUriProvider.AZURE_ROOT)
+                        .path(AZURE_TOKEN_BASE_PATH)
+                        .build())
+                .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .header("Host", "authserver:8085");
     }
 
     private static String hentNyttTokenXTokenFor(Fødselsnummer fnr, String audience) {

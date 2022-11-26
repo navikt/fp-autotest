@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.util.Optional;
 
 import jakarta.ws.rs.core.MediaType;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.AzureTokenProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
@@ -31,7 +32,8 @@ public final class HttpRequestProvider {
 
     public static HttpRequest.Builder requestMedInnloggetSaksbehandler(SaksbehandlerRolle saksbehandlerRolle) {
         var requestBuilder = requestMedBasicHeadere();
-        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.openAMToken(saksbehandlerRolle));
+        var clientId = "fptilbake";
+        return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle, clientId));
     }
 
     public static HttpRequest.Builder requestMedBasicHeadere() {

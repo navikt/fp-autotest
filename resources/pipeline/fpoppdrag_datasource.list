@@ -1,5 +1,7 @@
 APP_NAME=fpoppdrag
 NAIS_APP_NAME=fpoppdrag
+AZURE_APP_CLIENT_ID=fpoppdrag
+
 DEFAULTDS_URL=jdbc:oracle:thin:@//oracle:1521/xe
 DEFAULTDS_USERNAME=fpoppdrag
 DEFAULTDS_PASSWORD=fpoppdrag

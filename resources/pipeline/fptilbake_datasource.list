@@ -1,5 +1,7 @@
 APP_NAME=fptilbake
 NAIS_APP_NAME=fptilbake
+AZURE_APP_CLIENT_ID=fptilbake
+
 DEFAULTDS_URL=jdbc:oracle:thin:@//oracle:1521/xe
 DEFAULTDS_USERNAME=fptilbake
 DEFAULTDS_PASSWORD=fptilbake
