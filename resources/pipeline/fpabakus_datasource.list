@@ -1,5 +1,7 @@
-APP_NAME=FPABAKUS
-NAIS_APP_NAME=FPABAKUS
+APP_NAME=fpabakus
+NAIS_APP_NAME=fpabakus
+AZURE_APP_CLIENT_ID=fpabakus
+
 DEFAULTDS_USERNAME=fpabakus
 DEFAULTDS_PASSWORD=fpabakus
 DEFAULTDS_URL=jdbc:postgresql://postgres:5432/fpabakus

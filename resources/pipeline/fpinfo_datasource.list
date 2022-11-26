@@ -1,5 +1,7 @@
 APP_NAME=fpinfo
 NAIS_APP_NAME=fpinfo
+AZURE_APP_CLIENT_ID=fpinfo
+
 DEFAULTDS_URL=jdbc:oracle:thin:@//oracle:1521/xe
 DEFAULTDS_USERNAME=fpinfo
 DEFAULTDS_PASSWORD=fpinfo

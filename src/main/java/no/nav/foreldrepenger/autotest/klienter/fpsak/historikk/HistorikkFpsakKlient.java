@@ -13,7 +13,7 @@ public class HistorikkFpsakKlient implements HistorikkKlient {
     private final HistorikkKlientFelles historikkKlientFelles;
 
     public HistorikkFpsakKlient(SaksbehandlerRolle saksbehandlerRolle) {
-        historikkKlientFelles = new HistorikkKlientFelles(FPSAK_BASE, saksbehandlerRolle);
+        historikkKlientFelles = new HistorikkKlientFelles(FPSAK_BASE, saksbehandlerRolle, "fpsak");
     }
 
     @Override

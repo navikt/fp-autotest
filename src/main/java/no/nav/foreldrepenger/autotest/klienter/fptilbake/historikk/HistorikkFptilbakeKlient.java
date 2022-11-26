@@ -15,7 +15,7 @@ public class HistorikkFptilbakeKlient implements HistorikkKlient {
     private final HistorikkKlientFelles historikkKlientFelles;
 
     public HistorikkFptilbakeKlient(SaksbehandlerRolle saksbehandlerRolle) {
-        historikkKlientFelles = new HistorikkKlientFelles(FPTILBAKE_BASE, saksbehandlerRolle);
+        historikkKlientFelles = new HistorikkKlientFelles(FPTILBAKE_BASE, saksbehandlerRolle, "fptilbake");
     }
 
     @Override

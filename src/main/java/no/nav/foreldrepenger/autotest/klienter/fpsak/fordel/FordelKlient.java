@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
 import no.nav.foreldrepenger.kontrakter.fordel.SaksnummerDto;
 
 public class FordelKlient {
-
+    private static final String API_NAME = "fpsak";
     private static final String FORDEL_URL = "/fordel";
     private static final String JOURNALPOST_URL = FORDEL_URL + "/journalpost";
     private static final String FAGSAK_URL = FORDEL_URL + "/fagsak";
@@ -30,7 +30,7 @@ public class FordelKlient {
     }
 
     public void journalpost(JournalpostMottakDto journalpostMottak) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(JOURNALPOST_URL)
                         .build())
@@ -43,7 +43,7 @@ public class FordelKlient {
     }
 
     private SaksnummerDto opprettFagsak(OpprettSakDto opprettSakDto) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_OPPRETT_URL)
                         .build())
@@ -59,7 +59,7 @@ public class FordelKlient {
     }
 
     public void fagsakKnyttJournalpost(JournalpostKnyttningDto knyttJournalpost) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_KNYTT_JOURNALPOST_URL)
                         .build())

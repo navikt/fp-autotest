@@ -32,6 +32,7 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class BehandlingFptilbakeKlient implements BehandlingerKlient {
 
+    private static final String API_NAME = "fptilbake";
     private static final String BEHANDLINGER_OPPRETT = BEHANDLINGER_URL + "/opprett";
     private static final String BEHANDLINGER_STATUS_FPTILBAKE_URL = BEHANDLINGER_URL + "/status";
 
@@ -52,7 +53,8 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
 
     public BehandlingFptilbakeKlient(SaksbehandlerRolle saksbehandlerRolle) {
         this.saksbehandlerRolle = saksbehandlerRolle;
-        behandlingKlientFelles = new BehandlingKlientFelles(saksbehandlerRolle, FPTILBAKE_BASE, BEHANDLINGER_STATUS_FPTILBAKE_URL, AKSJONSPUNKT_FPTILBAKE_PATH);
+        behandlingKlientFelles = new BehandlingKlientFelles(saksbehandlerRolle, FPTILBAKE_BASE, BEHANDLINGER_STATUS_FPTILBAKE_URL, AKSJONSPUNKT_FPTILBAKE_PATH,
+                API_NAME);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
 
     @Step("Oppretter ny tilbakekreving")
     public Behandling opprettTilbakekrevingManuelt(BehandlingOpprett behandlingOpprett) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(BEHANDLINGER_OPPRETT)
                         .build())
@@ -102,7 +104,7 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
     }
 
     public Behandling addVerge(BehandlingIdBasicDto behandlingIdBasicDto) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(LEGG_TIL_VERGE_URL)
                         .build())
@@ -111,7 +113,7 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
     }
 
     public Behandling removeVerge(BehandlingIdBasicDto behandlingIdBasicDto) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(FJERN_VERGE_URL)
                         .build())
@@ -120,7 +122,7 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
     }
 
     public void registrerBrukerrespons(BrukerresponsDto brukerresponsDto){
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(REGISTRER_BRUKERRESPONS)
                         .build())
@@ -130,7 +132,7 @@ public class BehandlingFptilbakeKlient implements BehandlingerKlient {
 
     @Description("Henter faktaer som trengs for behandling av Fakta - aksjonspunkt 7003")
     public FeilutbetalingDto hentFeilutbetalingFakta(UUID behandlingUuid) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(FPTILBAKE_BASE)
                         .path(FEILUTBETALING_FAKTA_URL)
                         .queryParam(UUID_NAME, behandlingUuid)

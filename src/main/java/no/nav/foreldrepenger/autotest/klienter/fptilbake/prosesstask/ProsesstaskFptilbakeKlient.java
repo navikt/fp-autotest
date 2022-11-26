@@ -16,7 +16,7 @@ public class ProsesstaskFptilbakeKlient implements ProsessTaskKlient {
     private final ProsesstaskKlientFelles prosesstaskKlient;
 
     public ProsesstaskFptilbakeKlient(SaksbehandlerRolle saksbehandlerRolle) {
-        prosesstaskKlient = new ProsesstaskKlientFelles(FPTILBAKE_BASE, saksbehandlerRolle);
+        prosesstaskKlient = new ProsesstaskKlientFelles(FPTILBAKE_BASE, saksbehandlerRolle, "fptilbake");
     }
 
     @Override

@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.kontrakter.risk.v1.RisikovurderingResultatDto;
 
 public class RisikovurderingKlient {
 
+    private static final String API_NAME = "fprisk";
     private static final String RISIKOVURDERING_URL = "/risikovurdering";
     private static final String RISIKOVURDERING_HENT_URL = RISIKOVURDERING_URL + "/hentResultat";
 
@@ -25,7 +26,7 @@ public class RisikovurderingKlient {
     }
 
     public RisikovurderingResultatDto getRisikovurdering(UUID uuid) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPRISK_BASE)
                         .path(RISIKOVURDERING_HENT_URL)
                         .build())
