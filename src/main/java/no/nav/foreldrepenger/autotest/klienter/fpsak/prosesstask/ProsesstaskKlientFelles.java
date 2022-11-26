@@ -30,9 +30,13 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
     private final URI baseUrl;
     private final SaksbehandlerRolle saksbehandlerRolle;
 
-    public ProsesstaskKlientFelles(URI baseUrl, SaksbehandlerRolle saksbehandlerRolle) {
+    private final String apiName;
+
+
+    public ProsesstaskKlientFelles(URI baseUrl, SaksbehandlerRolle saksbehandlerRolle, String apiName) {
         this.baseUrl = baseUrl;
         this.saksbehandlerRolle = saksbehandlerRolle;
+        this.apiName = apiName;
     }
 
     // @Pattern(regexp = "FEILET|VENTER_SVAR|SUSPENDERT|VETO|KLAR")
@@ -60,7 +64,7 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
 
     @Override
     public List<ProsessTaskDataDto> list(StatusFilterDto statusFilterDto) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, this.apiName)
                 .uri(fromUri(baseUrl)
                         .path(PROSESSTASK_LIST_URL)
                         .build())
@@ -72,7 +76,7 @@ public class ProsesstaskKlientFelles implements ProsessTaskKlient {
 
     @Override
     public void create(ProsessTaskOpprettInputDto prosessTaskOpprettInputDto) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, this.apiName)
                 .uri(fromUri(baseUrl)
                         .path(PROSESSTASK_CREATE_URL)
                         .build())

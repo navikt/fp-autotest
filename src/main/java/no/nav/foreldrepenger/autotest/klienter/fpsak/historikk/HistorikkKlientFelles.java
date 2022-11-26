@@ -21,14 +21,17 @@ public class HistorikkKlientFelles implements HistorikkKlient {
     private final URI baseUrl;
     private final SaksbehandlerRolle saksbehandlerRolle;
 
-    public HistorikkKlientFelles(URI baseUrl, SaksbehandlerRolle saksbehandlerRolle) {
+    private final String apiName;
+
+    public HistorikkKlientFelles(URI baseUrl, SaksbehandlerRolle saksbehandlerRolle, String apiName) {
         this.baseUrl = baseUrl;
         this.saksbehandlerRolle = saksbehandlerRolle;
+        this.apiName = apiName;
     }
 
     @Override
     public List<HistorikkInnslag> hentHistorikk(Saksnummer saksnummer) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, this.apiName)
                 .uri(fromUri(baseUrl).path(HISTORIKK_URL_FORMAT)
                         .queryParam("saksnummer", saksnummer.value())
                         .build())

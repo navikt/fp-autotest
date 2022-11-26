@@ -30,9 +30,8 @@ public final class HttpRequestProvider {
         return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.tokenXToken(søker));
     }
 
-    public static HttpRequest.Builder requestMedInnloggetSaksbehandler(SaksbehandlerRolle saksbehandlerRolle) {
+    public static HttpRequest.Builder requestMedInnloggetSaksbehandler(SaksbehandlerRolle saksbehandlerRolle, String clientId) {
         var requestBuilder = requestMedBasicHeadere();
-        var clientId = "fptilbake";
         return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle, clientId));
     }
 

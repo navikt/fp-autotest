@@ -20,6 +20,8 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class FagsakKlient {
 
+    private static final String API_NAME = "fpsak";
+
     private static final String FAGSAK_URL = "/fagsak";
     private static final String FAGSAK_SØK_URL = FAGSAK_URL + "/sok";
 
@@ -30,7 +32,7 @@ public class FagsakKlient {
     }
 
     public Fagsak hentFagsak(Saksnummer saksnummer) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_URL)
                         .queryParam("saksnummer", saksnummer.value())
@@ -45,7 +47,7 @@ public class FagsakKlient {
     }
 
     private List<Fagsak> søk(Sok søk) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
                         .path(FAGSAK_SØK_URL)
                         .build())

@@ -16,6 +16,8 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.Saksbehandle
 
 public class OkonomiKlient {
 
+    private static final String API_NAME = "fptilbake";
+
     private static final String GRUNNLAG_URL = "/grunnlag";
     private static final String BEREGNING_RESULTAT_URL = "/beregning/resultat";
 
@@ -27,7 +29,7 @@ public class OkonomiKlient {
 
     @Step
     public void putGrunnlag(Kravgrunnlag kravgrunnlag, int behandlingId) {
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPTILBAKE_BASE)
                         .path(GRUNNLAG_URL)
                         .queryParam("behandlingId", behandlingId)
@@ -38,7 +40,7 @@ public class OkonomiKlient {
 
     @Step
     public BeregningResultat hentResultat(UUID uuid){
-        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle)
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPTILBAKE_BASE)
                         .path(BEREGNING_RESULTAT_URL)
                         .queryParam("uuid", uuid)
