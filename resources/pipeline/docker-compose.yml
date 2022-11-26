@@ -445,7 +445,7 @@ services:
       - "fpoppdrag_datasource.list"
       - "common.env"
     environment:
-      - "OPPDRAG_SERVICE_URL=http://vtp:8060/soap/cics/services/oppdragService"
+      - "OPPDRAG_SERVICE_URL=https://vtp:8063/soap/cics/services/oppdragService"
       - "LOADBALANCER_URL=http://localhost:8070"
       - "LOADBALANCER_FQDN=localhost:8070"
       - "OPENIDCONNECT_USERNAME=fpoppdrag-localhost"
@@ -475,7 +475,7 @@ services:
       - "CONTEXT_PATH=/fptilbake"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
-      - "TILBAKEKREVING_V1_URL=http://vtp:8060/soap/tilbakekreving/services/tilbakekrevingService"
+      - "TILBAKEKREVING_V1_URL=https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService"
       - "DOKDIST_REST_DISTRIBUER_JOURNALPOST=http://vtp:8060/rest/dokdist/v1/distribuerjournalpost"
       - "TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
       - "KAFKA_FPLOS_TOPIC=tilbakebetaling-aksjonspunkthendelse"
