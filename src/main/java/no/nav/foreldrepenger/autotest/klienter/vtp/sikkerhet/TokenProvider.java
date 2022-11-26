@@ -57,7 +57,7 @@ public final class TokenProvider {
                         "code", saksbehandlerRolle.getKode(),
                         "grant_type", "authorization_code",
                         "client_id", "autotest",
-                        "scope", "openid")))
+                        "scope", "api://fpfrontend/.default")))
                 ));
 
         var accessTokenResponseDTO = send(requestAuth.build(), OidcTokenResponse.class);
