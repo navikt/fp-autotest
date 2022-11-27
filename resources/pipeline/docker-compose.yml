@@ -468,27 +468,27 @@ services:
             "apis": [
                 {
                     "path": "/fpsak/api",
-                    "scopes": "api://fpsak/.default",
+                    "scopes": "api://vtp.teamforeldrepenger.fpsak/.default",
                     "url": "http://fpsak:8080"
                 },
                 {
                     "path": "/fpoppdrag",
-                    "scopes": "api://fpoppdrag/.default",
+                    "scopes": "api://vtp.teamforeldrepenger.fpoppdrag/.default",
                     "url": "http://fpoppdrag:8080"
                 },
                 {
                     "path": "/fptilbake",
-                    "scopes": "api://fptilbake/.default",
+                    "scopes": "api://vtp.teamforeldrepenger.fptilbake/.default",
                     "url": "http://fptilbake:8080"
                 },
                 {
                     "path": "/fpformidling",
-                    "scopes": "api://fpformidling/.default",
+                    "scopes": "api://vtp.teamforeldrepenger.fpformidling/.default",
                     "url": "http://fpformidling:8080"
                 },
                 {
                     "path": "/fplos/api",
-                    "scopes": "api://fplos/.default",
+                    "scopes": "api://vtp.teamforeldrepenger.fplos/.default",
                     "url": "http://fplos:8081"
                 }
             ]
@@ -528,7 +528,6 @@ services:
     command: |
       --openid.provider=openid
       --openid.client-id=fpfrontend
-      --openid.scopes=api://fpfrontend/.default
       --openid.well-known-url=http://authserver:8085/azureAd/.well-known/openid-configuration
       --ingress=http://localhost:9000
       --bind-address=0.0.0.0:9000
@@ -576,73 +575,73 @@ services:
             "apis": [
                 {
                     "path": "/fpsak/api",
-                    "scopes": "api://fpsak/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fpsak/swagger",
                     "url": "http://fpsak:8080",
                     "name": "fp-sak"
                 },
                 {
                     "path": "/fpoppdrag/api",
-                    "scopes": "api://fpoppdrag/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fpoppdrag/swagger",
                     "url": "http://fpoppdrag:8080",
                     "name": "fp-oppdrag"
                 },
                 {
                     "path": "/fptilbake/api",
-                    "scopes": "api://fptilbake/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fptilbake/swagger",
                     "url": "http://fptilbake:8080",
                     "name": "fp-tilbake"
                 },
                 {
                     "path": "/fpformidling/api",
-                    "scopes": "api://fpformidling/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fpformidling/swagger",
                     "url": "http://fpformidling:8080",
                     "name": "fp-formidling"
                 },
                 {
                     "path": "/fplos/api",
-                    "scopes": "api://fplos/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fplos/swagger",
                     "url": "http://fplos:8080",
                     "name": "fp-los"
                 },
                 {
                     "path": "/fpfordel/api",
-                    "scopes": "api://fpfordel/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/swagger",
                     "url": "http://fpfordel:8080",
                     "name": "fp-fordel"
                 },
                 {
                     "path": "/fpabakus/api",
-                    "scopes": "api://fpabakus/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fpabakus/swagger",
                     "url": "http://fpabakus:8080",
                     "name": "fp-abakus"
                 },
                 {
                     "path": "/fprisk/api",
-                    "scopes": "api://fprisk/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fprisk/swagger",
                     "url": "http://fprisk:8080",
                     "name": "fp-risk"
                 },
                 {
                     "path": "/fpabonnent/api",
-                    "scopes": "api://fpabonnent/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fpabonnent/swagger",
                     "url": "http://fpabonnent:8080",
                     "name": "fp-abonnent"
                 },
                 {
                     "path": "/fpinfo/api",
-                    "scopes": "api://fpinfo/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fpinfo/swagger",
                     "url": "http://fpinfo:8080",
                     "name": "fp-info"
                 },
                 {
                     "path": "/fpsak/ekstern/api",
-                    "scopes": "api://fpsak/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fpsak/swagger",
                     "url": "http://fpsak:8080",
                     "name": "fp-sak ekstern API"
                 },
                 {
                     "path": "/fpfordel/ekstern/api",
-                    "scopes": "api://fpfordel/swagger",
+                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/swagger",
                     "url": "http://fpfordel:8080",
                     "name": "fp-fordel ekstern API"
                 }
@@ -683,7 +682,6 @@ services:
     command: |
       --openid.provider=openid
       --openid.client-id=fpswagger
-      --openid.scopes=api://fpswagger/.default
       --openid.well-known-url=http://authserver:8085/azureAd/.well-known/openid-configuration
       --ingress=http://localhost:9200
       --bind-address=0.0.0.0:9200

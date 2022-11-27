@@ -48,7 +48,7 @@ public final class AzureTokenProvider {
                         "grant_type", "authorization_code",
                         "code", saksbehandlerRolle.getKode(),
                         "client_id", "autotest",
-                        "scope", "api://fpfrontend/.default")))
+                        "scope", "api://vtp.teamforeldrepenger.fpfrontend/.default")))
                 ));
 
         return send(requestAuth.build(), TokenResponse.class).access_token();
@@ -60,7 +60,7 @@ public final class AzureTokenProvider {
                         "grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer",
                         "client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
                         "requested_token_use", "on_behalf_of",
-                        "scope", String.format("api://%s/.default", clientId),
+                        "scope", String.format("api://vtp.teamforeldrepenger.%s/.default", clientId),
                         "assertion", saksbehandlerAccessToken)))
                 ));
 
