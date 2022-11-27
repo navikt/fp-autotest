@@ -9,7 +9,7 @@ import java.net.http.HttpRequest;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.kontrakter.risk.v1.HentRisikovurderingDto;
 import no.nav.foreldrepenger.kontrakter.risk.v1.RisikovurderingResultatDto;
 

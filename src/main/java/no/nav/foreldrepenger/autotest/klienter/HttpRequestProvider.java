@@ -12,8 +12,8 @@ import java.time.Duration;
 import java.util.Optional;
 
 import jakarta.ws.rs.core.MediaType;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.AzureTokenProvider;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.AzureTokenProvider;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.vedtak.log.mdc.MDCOperations;
 

@@ -11,7 +11,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class HistorikkKlientFelles implements HistorikkKlient {
