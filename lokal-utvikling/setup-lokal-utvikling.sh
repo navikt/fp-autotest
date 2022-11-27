@@ -132,7 +132,7 @@ settPorterSomSkalErstattes ${applikasjoner[0]}
 for f in {.*,*}; do
     if [[ -f "$f" ]]; then
         cp "$f" "${relativ_path}/$f"
-    elif [[ $f == oracle-init ]] || [[ $f == postgres-init ]] || [[ $f == tokenx ]]; then
+    elif [[ $f == oracle-init ]] || [[ $f == postgres-init ]] || [[ $f == tokenx ]] || [[ $f == authserver ]]; then
         cp -r "$f" "${relativ_path}"
     fi
 done
