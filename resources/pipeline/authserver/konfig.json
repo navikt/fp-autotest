@@ -59,13 +59,6 @@
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://vtp.teamforeldrepenger.fpsak/swagger",
-                    "claims": {
-                        "aud": ["fpsak"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fptilbake/.default",
                     "claims": {
                         "aud": ["fptilbake"]
@@ -74,13 +67,6 @@
                 {
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fptilbake/swagger",
-                    "claims": {
-                        "aud": ["fptilbake"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
-                    "match": "api://vtp.teamforeldrepenger.fptilbake/.default",
                     "claims": {
                         "aud": ["fptilbake"]
                     }
@@ -129,20 +115,6 @@
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://vtp.teamforeldrepenger.fprisk/.default",
-                    "claims": {
-                        "aud": ["fprisk"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
-                    "match": "api://vtp.teamforeldrepenger.fprisk/swagger",
-                    "claims": {
-                        "aud": ["fprisk"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fpfordel/.default",
                     "claims": {
                         "aud": ["fpfordel"]
@@ -186,6 +158,13 @@
                 {
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fplos/.default",
+                    "claims": {
+                        "aud": ["fplos"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fplos/swagger",
                     "claims": {
                         "aud": ["fplos"]
                     }
