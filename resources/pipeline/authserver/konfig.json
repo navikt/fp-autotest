@@ -1,5 +1,6 @@
 {
     "interactiveLogin": true,
+    "loginPagePath": "/authserver/login.html",
     "httpServer": "NettyWrapper",
     "tokenCallbacks": [
         {
@@ -58,6 +59,13 @@
                 },
                 {
                     "requestParam": "scope",
+                    "match": "api://vtp.tfp.fpsak/.default",
+                    "claims": {
+                        "aud": ["fpsak"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
                     "match": "api://fptilbake/.default",
                     "claims": {
                         "aud": ["fptilbake"]
@@ -66,6 +74,13 @@
                 {
                     "requestParam": "scope",
                     "match": "api://fptilbake/swagger",
+                    "claims": {
+                        "aud": ["fptilbake"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.tfp.fptilbake/.default",
                     "claims": {
                         "aud": ["fptilbake"]
                     }
@@ -164,6 +179,13 @@
                 {
                     "requestParam": "scope",
                     "match": "api://fprisk/swagger",
+                    "claims": {
+                        "aud": ["fprisk"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.tfp.fprisk/.default",
                     "claims": {
                         "aud": ["fprisk"]
                     }
