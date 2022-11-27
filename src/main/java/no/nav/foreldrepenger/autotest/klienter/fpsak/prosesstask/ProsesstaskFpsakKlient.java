@@ -4,7 +4,7 @@ import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPSAK_BASE
 
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.StatusFilterDto;

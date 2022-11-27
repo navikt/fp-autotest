@@ -45,168 +45,140 @@
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpsak/.default",
+                    "match": "api://vtp.teamforeldrepenger.fpsak/.default",
                     "claims": {
                         "aud": ["fpsak"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpsak/swagger",
+                    "match": "api://vtp.teamforeldrepenger.fpsak/swagger",
                     "claims": {
                         "aud": ["fpsak"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://vtp.tfp.fpsak/.default",
-                    "claims": {
-                        "aud": ["fpsak"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
-                    "match": "api://fptilbake/.default",
+                    "match": "api://vtp.teamforeldrepenger.fptilbake/.default",
                     "claims": {
                         "aud": ["fptilbake"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fptilbake/swagger",
+                    "match": "api://vtp.teamforeldrepenger.fptilbake/swagger",
                     "claims": {
                         "aud": ["fptilbake"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://vtp.tfp.fptilbake/.default",
-                    "claims": {
-                        "aud": ["fptilbake"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
-                    "match": "api://fpoppdrag/.default",
+                    "match": "api://vtp.teamforeldrepenger.fpoppdrag/.default",
                     "claims": {
                         "aud": ["fpoppdrag"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpoppdrag/swagger",
+                    "match": "api://vtp.teamforeldrepenger.fpoppdrag/swagger",
                     "claims": {
                         "aud": ["fpoppdrag"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpformidling/.default",
+                    "match": "api://vtp.teamforeldrepenger.fpformidling/.default",
                     "claims": {
                         "aud": ["fpformidling"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpformidling/swagger",
+                    "match": "api://vtp.teamforeldrepenger.fpformidling/swagger",
                     "claims": {
                         "aud": ["fpformidling"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpinfo/.default",
+                    "match": "api://vtp.teamforeldrepenger.fpinfo/.default",
                     "claims": {
                         "aud": ["fpinfo"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpinfo/swagger",
+                    "match": "api://vtp.teamforeldrepenger.fpinfo/swagger",
                     "claims": {
                         "aud": ["fpinfo"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fprisk/.default",
-                    "claims": {
-                        "aud": ["fprisk"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
-                    "match": "api://fprisk/swagger",
-                    "claims": {
-                        "aud": ["fprisk"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
-                    "match": "api://fpfordel/.default",
+                    "match": "api://vtp.teamforeldrepenger.fpfordel/.default",
                     "claims": {
                         "aud": ["fpfordel"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpfordel/swagger",
+                    "match": "api://vtp.teamforeldrepenger.fpfordel/swagger",
                     "claims": {
                         "aud": ["fpfordel"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpabonnent/.default",
+                    "match": "api://vtp.teamforeldrepenger.fpabonnent/.default",
                     "claims": {
                         "aud": ["fpabonnent"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpabonnent/swagger",
+                    "match": "api://vtp.teamforeldrepenger.fpabonnent/swagger",
                     "claims": {
                         "aud": ["fpabonnent"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fprisk/.default",
+                    "match": "api://vtp.teamforeldrepenger.fprisk/.default",
                     "claims": {
                         "aud": ["fprisk"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fprisk/swagger",
+                    "match": "api://vtp.teamforeldrepenger.fprisk/swagger",
                     "claims": {
                         "aud": ["fprisk"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://vtp.tfp.fprisk/.default",
+                    "match": "api://vtp.teamforeldrepenger.fplos/.default",
                     "claims": {
-                        "aud": ["fprisk"]
+                        "aud": ["fplos"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpabakus/.default",
+                    "match": "api://vtp.teamforeldrepenger.fplos/swagger",
+                    "claims": {
+                        "aud": ["fplos"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpabakus/.default",
                     "claims": {
                         "aud": ["fpabakus"]
                     }
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://fpabakus/swagger",
-                    "claims": {
-                        "aud": ["fpabakus"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
-                    "match": "api://vtp.tfp.fpabakus/.default",
+                    "match": "api://vtp.teamforeldrepenger.fpabakus/swagger",
                     "claims": {
                         "aud": ["fpabakus"]
                     }

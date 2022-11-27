@@ -39,7 +39,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.prosesstask.ProsesstaskFptilbakeKlient;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;

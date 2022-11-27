@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx;
+package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

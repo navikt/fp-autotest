@@ -8,7 +8,7 @@ import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import java.net.http.HttpRequest;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;

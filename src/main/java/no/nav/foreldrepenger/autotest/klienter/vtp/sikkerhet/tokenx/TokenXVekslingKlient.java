@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jakarta.ws.rs.core.MediaType;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.TokenResponse;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
 public class TokenXVekslingKlient {

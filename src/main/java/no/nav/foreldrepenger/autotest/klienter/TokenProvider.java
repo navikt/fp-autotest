@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.AzureTokenProvider;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx.TokenXVekslingKlient;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 

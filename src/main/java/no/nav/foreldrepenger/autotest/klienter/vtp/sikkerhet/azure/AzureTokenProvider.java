@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet;
+package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure;
 
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
@@ -12,9 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jakarta.ws.rs.core.MediaType;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam.SaksbehandlerRolle;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.TokenResponse;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.vedtak.sikkerhet.oidc.token.impl.OidcTokenResponse;
 
 /**
  * Denne klassen skal tilby følgende token:
@@ -46,14 +45,13 @@ public final class AzureTokenProvider {
     private static String saksbehandlerLogin(SaksbehandlerRolle saksbehandlerRolle) {
         var requestAuth =  getAzureRequestBuilder()
                 .POST(buildFormDataFromMap(buildAuthQueryFromMap((Map.of(
-                        "code", saksbehandlerRolle.getKode(),
                         "grant_type", "authorization_code",
+                        "code", saksbehandlerRolle.getKode(),
                         "client_id", "autotest",
-                        "scope", "api://fpfrontend/.default")))
+                        "scope", "api://vtp.teamforeldrepenger.fpfrontend/.default")))
                 ));
 
-        var accessTokenResponseDTO = send(requestAuth.build(), OidcTokenResponse.class);
-        return accessTokenResponseDTO.access_token();
+        return send(requestAuth.build(), TokenResponse.class).access_token();
     }
 
     private static String hentOboToken(String saksbehandlerAccessToken, String clientId) {
@@ -62,12 +60,11 @@ public final class AzureTokenProvider {
                         "grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer",
                         "client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
                         "requested_token_use", "on_behalf_of",
-                        "scope", String.format("api://%s/.default", clientId),
+                        "scope", String.format("api://vtp.teamforeldrepenger.%s/.default", clientId),
                         "assertion", saksbehandlerAccessToken)))
                 ));
 
-        var accessTokenResponseDTO = send(requestAuth.build(), OidcTokenResponse.class);
-        return accessTokenResponseDTO.access_token();
+        return send(requestAuth.build(), TokenResponse.class).access_token();
     }
 
     private static HttpRequest.Builder getAzureRequestBuilder() {
@@ -92,8 +89,7 @@ public final class AzureTokenProvider {
                         "fnr", fnr.value(),
                         "code", "some_random_code"))
                 ));
-        var accessTokenResponseDTO = send(request.build(), OidcTokenResponse.class);
-        return accessTokenResponseDTO.access_token();
+        return send(request.build(), TokenResponse.class).access_token();
     }
 
 }

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.openam;
+package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure;
 
 public enum SaksbehandlerRolle {
     SAKSBEHANDLER("saksbeh"),
