@@ -41,6 +41,7 @@ jobs:
     name: Kjører fpsak spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.event.inputs.trigger)
     runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
         with:
@@ -172,6 +173,7 @@ jobs:
     if: github.event.inputs.trigger == 'navikt/fptilbake'
     name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
         with:
@@ -335,6 +337,7 @@ jobs:
   verdikjedetestene:
     name: Kjører verdikjedetestene som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
         with:
@@ -513,6 +516,7 @@ jobs:
       github.event.inputs.issue_number != null
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v3
       - name: Henter testresultat for fpsak
@@ -567,6 +571,7 @@ jobs:
       github.event.inputs.trigger != 'navikt/fp-abakus'
     needs: [fpsak-autotester, verdikjedetestene]
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     steps:
       - uses: navikt/github-app-token-generator@v1
         id: get-token
@@ -600,6 +605,7 @@ jobs:
       github.event.inputs.issue_number != null
     needs: [fptilbake-tester, verdikjedetestene]
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     steps:
       - uses: navikt/github-app-token-generator@v1
         id: get-token
@@ -635,6 +641,7 @@ jobs:
       !contains(fromJson('["navikt/fptilbake", "navikt/fp-sak", "navikt/fp-abakus"]'), github.event.inputs.trigger)
     needs: [verdikjedetestene]
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     steps:
       - uses: navikt/github-app-token-generator@v1
         id: get-token
