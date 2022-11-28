@@ -464,7 +464,7 @@ services:
     environment:
       AZURE_APP_CLIENT_ID: fpfrontend
       PORT: 9090
-      HOST: localhost
+      HOST: http://localhost
       NODE_ENV: development
       PROXY_CONFIG: |
         {
@@ -539,7 +539,7 @@ services:
     environment:
       AZURE_APP_CLIENT_ID: fpswagger
       PORT: 9190
-      HOST: localhost
+      HOST: http://localhost
       NODE_ENV: development
       PROXY_CONFIG: |
         {
