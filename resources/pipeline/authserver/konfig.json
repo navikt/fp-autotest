@@ -171,13 +171,6 @@
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://vtp.teamforeldrepenger.fplos/swagger",
-                    "claims": {
-                        "aud": ["fplos"]
-                    }
-                },
-                {
-                    "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fpabakus/.default",
                     "claims": {
                         "aud": ["fpabakus"]
