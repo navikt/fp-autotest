@@ -521,7 +521,7 @@ services:
     ports:
       - "9000:9000"
     environment:
-      AZURE_APP_CLIENT_ID: wonderwall-fpfrontend
+      AZURE_APP_CLIENT_ID: fpfrontend
 #     AZURE_APP_WELL_KNOWN_URL: kommer fra common.env
     env_file:
       - "common.env"
@@ -643,7 +643,7 @@ services:
     ports:
       - "9200:9200"
     environment:
-      AZURE_APP_CLIENT_ID: wonderwall-fpswagger
+      AZURE_APP_CLIENT_ID: fpswagger
 #     AZURE_APP_WELL_KNOWN_URL kommer fra common.env
     env_file:
       - "common.env"
