@@ -1,6 +1,5 @@
 APP_NAME=fprisk
 NAIS_APP_NAME=fprisk
-AZURE_APP_CLIENT_ID=fprisk
 
 DEFAULTDS_URL=jdbc:oracle:thin:@//oracle:1521/xe
 DEFAULTDS_USERNAME=fprisk

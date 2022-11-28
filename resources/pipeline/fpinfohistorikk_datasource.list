@@ -1,6 +1,5 @@
 APP_NAME=fpinfohistorikk
 NAIS_APP_NAME=fpinfohistorikk
-AZURE_APP_CLIENT_ID=fpinfohistorikk
 
 DEFAULTDS_USERNAME=fpinfohistorikk
 DEFAULTDS_PASSWORD=fpinfohistorikk

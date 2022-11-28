@@ -1,6 +1,5 @@
 APP_NAME=fpsak
 NAIS_APP_NAME=fpsak
-AZURE_APP_CLIENT_ID=fpsak
 
 DEFAULTDS_DATASOURCE=defaultDS
 DEFAULTDS_URL=jdbc:oracle:thin:@//oracle:1521/xe
