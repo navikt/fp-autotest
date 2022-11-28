@@ -35,5 +35,6 @@ echo FPINFO_HISTORIKK_IMAGE="$(imageVersion "ghcr.io/navikt/fpinfo-historikk")" 
 echo FORELDREPENGESOKNADAPI_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad-api")" >> .env
 echo FORELDREPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad")" >> .env
 echo FORELDREPENGEOVERSIKT_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengeoversikt")" >> .env
+echo SVANGERSKAPSPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/svangerskapspengesoknad")" >> .env
 
 echo ".env fil opprettet - Klart for docker-compose up"

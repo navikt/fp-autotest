@@ -85,6 +85,7 @@ services:
     mem_limit: 512mb
     environment:
       - "AZURE_APP_CLIENT_ID=fpabakus"
+      - "LOADBALANCER_URL=http://localhost:8015"
       - "KAFKA_LONNSKOMPENSASJON_TOPIC=privat-permittering-lonnskomp-vedtak-vtp"
     env_file:
       - "fpabakus_datasource.list"
@@ -113,6 +114,7 @@ services:
     shm_size: 256mb
     environment:
       - "AZURE_APP_CLIENT_ID=fpsak"
+      - "LOADBALANCER_URL=http://localhost:8080"
       - "ABAKUS_CALLBACK_URL=http://fpsak:8080/fpsak/api/registerdata/iay/callback"
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
       - "UFORE_RS_URL=http://vtp:8060/rest/api/pesys/ufo"
@@ -146,6 +148,7 @@ services:
     mem_limit: 512mb
     environment:
       - "AZURE_APP_CLIENT_ID=fpfordel"
+      - "LOADBALANCER_URL=http://localhost:8090"
       - "KAFKA_TOPICS_FORDELING=privat-foreldrepenger-historikk-fordeling"
       - "KAFKA_TOPIC_JOURNAL_HENDELSE=aapen-dok-journalfoering-v1-q1"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
@@ -178,6 +181,7 @@ services:
     mem_limit: 512mb
     environment:
       - "AZURE_APP_CLIENT_ID=fpformidling"
+      - "LOADBALANCER_URL=http://localhost:8010"
       - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
       - "DOKDIST_REST_BASE_URL=http://vtp:8060/rest/dokdist/v1"
       - "JOURNALPOST_REST_V1_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
@@ -226,6 +230,7 @@ services:
       - "common.env"
     environment:
       - "AZURE_APP_CLIENT_ID=fpoppdrag"
+      - "LOADBALANCER_URL=http://localhost:8070"
       - "OPPDRAG_SERVICE_URL=https://vtp:8063/soap/cics/services/oppdragService"
     volumes:
       - "~/.modig:/app/.modig"
@@ -251,6 +256,7 @@ services:
       - "common.env"
     environment:
       - "AZURE_APP_CLIENT_ID=fptilbake"
+      - "LOADBALANCER_URL=http://localhost:8030"
       - "CONTEXT_PATH=/fptilbake"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
@@ -262,7 +268,6 @@ services:
       - "KAFKA_DVH_VEDTAK_TOPIC=privat-tilbakekreving-dvh-vedtak-v1-vtp"
       - "KAFKA_DVH_SAKSHENDELSE_AIVEN_TOPIC=privat-tilbakekreving-dvh-saksstatistikk-v1-aiven-vtp"
       - "KAFKA_DVH_VEDTAK_AIVEN_TOPIC=privat-tilbakekreving-dvh-vedtak-v1-aiven-vtp"
-      - "LOADBALANCER_URL=http://localhost:8030"
       - "ABAC_ATTRIBUTT_APPLIKASJON=no.nav.abac.attributter.foreldrepenger"
       - "ABAC_ATTRIBUTT_FAGSAK=no.nav.abac.attributter.foreldrepenger.fagsak"
       - "ABAC_ATTRIBUTT_VENTEFRIST=no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist"
@@ -290,6 +295,7 @@ services:
       - "common.env"
     environment:
       - "AZURE_APP_CLIENT_ID=fprisk"
+      - "LOADBALANCER_URL=http://localhost:8075"
       - "BRREG_PROXY=http://vtp:8060/rest/brreg/proxy/not/implemented"
     volumes:
       - "~/.modig:/app/.modig"
@@ -314,6 +320,7 @@ services:
       - "common.env"
     environment:
       - "AZURE_APP_CLIENT_ID=fpabonnent"
+      - "LOADBALANCER_URL=http://localhost:8065"
       - "KAFKA_PDL_LEESAH_TOPIC=aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
@@ -335,6 +342,8 @@ services:
     container_name: fpinfo
     restart: on-failure
     mem_limit: 256mb
+    environment:
+      - "LOADBALANCER_URL=http://localhost:8040"
     env_file:
       - "fpinfo_datasource.list"
       - "common.env"
@@ -670,6 +679,18 @@ services:
       - "APPRES_CMS_URL=https://www.nav.no/dekoratoren"
       - "FORELDREPENGESOKNAD_API_URL=http://localhost:9002/rest"
       - "FP_UTTAK_SERVICE_URL=http://localhost:9002"
+      - "LOGINSERVICE_URL=http://localhost:8060/rest/loginservice/login"
+    depends_on:
+      - foreldrepengesoknad-api
+  svangerskapspengesoknad:
+    image: $SVANGERSKAPSPENGESOKNAD_IMAGE
+    container_name: svangerskapspengesoknad
+    ports:
+      - "9068:8080"
+    restart: on-failure
+    environment:
+      - "APPRES_CMS_URL=https://www.nav.no/dekoratoren"
+      - "FORELDREPENGESOKNAD_API_URL=http://localhost:9002/rest"
       - "LOGINSERVICE_URL=http://localhost:8060/rest/loginservice/login"
     depends_on:
       - foreldrepengesoknad-api
