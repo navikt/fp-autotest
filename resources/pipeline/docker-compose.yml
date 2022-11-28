@@ -343,6 +343,7 @@ services:
     restart: on-failure
     mem_limit: 256mb
     environment:
+      - "AZURE_APP_CLIENT_ID=fpinfo"
       - "LOADBALANCER_URL=http://localhost:8040"
     env_file:
       - "fpinfo_datasource.list"
