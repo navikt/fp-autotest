@@ -84,7 +84,7 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
-      - "LOADBALANCER_URL=http://localhost:8015"
+      - "AZURE_APP_CLIENT_ID=fpabakus"
       - "KAFKA_LONNSKOMPENSASJON_TOPIC=privat-permittering-lonnskomp-vedtak-vtp"
     env_file:
       - "fpabakus_datasource.list"
@@ -112,11 +112,11 @@ services:
     mem_limit: 1gb
     shm_size: 256mb
     environment:
+      - "AZURE_APP_CLIENT_ID=fpsak"
       - "ABAKUS_CALLBACK_URL=http://fpsak:8080/fpsak/api/registerdata/iay/callback"
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
       - "UFORE_RS_URL=http://vtp:8060/rest/api/pesys/ufo"
       - "KAFKA_SAKOGBEHANDLING_TOPIC=aapen-sob-oppgaveHendelse-v1"
-      - "LOADBALANCER_URL=http://localhost:8080"
       - "EXTRA_CLASS_PATH=:vtp-lib/*"
     env_file:
       - "fpsak_datasource.list"
@@ -145,7 +145,7 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
-      - "LOADBALANCER_URL=http://localhost:8090"
+      - "AZURE_APP_CLIENT_ID=fpfordel"
       - "KAFKA_TOPICS_FORDELING=privat-foreldrepenger-historikk-fordeling"
       - "KAFKA_TOPIC_JOURNAL_HENDELSE=aapen-dok-journalfoering-v1-q1"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
@@ -177,12 +177,11 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
+      - "AZURE_APP_CLIENT_ID=fpformidling"
       - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
       - "DOKDIST_REST_BASE_URL=http://vtp:8060/rest/dokdist/v1"
       - "JOURNALPOST_REST_V1_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "JOURNALPOST_REST_PROXY_V1_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
-      - "OPENIDCONNECT_USERNAME=fpformidling-localhost"
-      - "LOADBALANCER_URL=http://localhost:8010"
     env_file:
       - "fpformidling_datasource.list"
       - "common.env"
@@ -226,10 +225,8 @@ services:
       - "fpoppdrag_datasource.list"
       - "common.env"
     environment:
+      - "AZURE_APP_CLIENT_ID=fpoppdrag"
       - "OPPDRAG_SERVICE_URL=https://vtp:8063/soap/cics/services/oppdragService"
-      - "LOADBALANCER_URL=http://localhost:8070"
-      - "LOADBALANCER_FQDN=localhost:8070"
-      - "OPENIDCONNECT_USERNAME=fpoppdrag-localhost"
     volumes:
       - "~/.modig:/app/.modig"
     ports:
@@ -253,6 +250,7 @@ services:
       - "fptilbake_datasource.list"
       - "common.env"
     environment:
+      - "AZURE_APP_CLIENT_ID=fptilbake"
       - "CONTEXT_PATH=/fptilbake"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
@@ -291,8 +289,7 @@ services:
       - "fprisk_datasource.list"
       - "common.env"
     environment:
-      - "LOADBALANCER_URL=http://localhost:8075"
-      - "OPENIDCONNECT_USERNAME=fprisk-localhost"
+      - "AZURE_APP_CLIENT_ID=fprisk"
       - "BRREG_PROXY=http://vtp:8060/rest/brreg/proxy/not/implemented"
     volumes:
       - "~/.modig:/app/.modig"
@@ -316,7 +313,7 @@ services:
       - "fpabonnent_datasource.list"
       - "common.env"
     environment:
-      - "LOADBALANCER_URL=http://localhost:8065"
+      - "AZURE_APP_CLIENT_ID=fpabonnent"
       - "KAFKA_PDL_LEESAH_TOPIC=aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
@@ -338,8 +335,6 @@ services:
     container_name: fpinfo
     restart: on-failure
     mem_limit: 256mb
-    environment:
-      - "LOADBALANCER_URL=http://localhost:8040"
     env_file:
       - "fpinfo_datasource.list"
       - "common.env"
@@ -368,7 +363,6 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=test"
       - "NAIS_CLUSTER_NAME=test"
-      - "LOADBALANCER_URL=http://localhost:9001"
       - "MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED=true"
       - "AAREG_RS_URL=http://vtp:8060/rest/aareg-services/api"
       - "SECURITYTOKENSERVICE_USERNAME=vtp"
@@ -407,9 +401,9 @@ services:
     restart: on-failure
     mem_limit: 512mb
     environment:
+      - "AZURE_APP_CLIENT_ID=fpinfohistorikk"
       - "SPRING_PROFILES_ACTIVE=test"
       - "NAIS_CLUSTER_NAME=test"
-      - "LOADBALANCER_URL=http://localhost:9002"
       - "LOGINSERVICE_IDPORTEN_DISCOVERY_URL=http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration"
       - "LOGINSERVICE_IDPORTEN_AUDIENCE=OIDC"
     env_file:
@@ -435,7 +429,6 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=test"
       - "NAIS_CLUSTER_NAME=test"
-      - "LOADBALANCER_URL=http://localhost:9002"
       - "LOGINSERVICE_IDPORTEN_DISCOVERY_URL=http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration"
       - "LOGINSERVICE_IDPORTEN_AUDIENCE=OIDC"
     env_file:
@@ -459,10 +452,10 @@ services:
     restart: on-failure
     mem_limit: 128mb
     environment:
+      AZURE_APP_CLIENT_ID: fpfrontend
       PORT: 9090
       HOST: localhost
       NODE_ENV: development
-      AZURE_APP_CLIENT_ID: fpfrontend
       PROXY_CONFIG: |
         {
             "apis": [
@@ -493,23 +486,6 @@ services:
                 }
             ]
         }
-      AZURE_APP_JWKS: |
-        {"keys":[
-          {
-            "p": "uglj69HBqwsI8HoRZ3O3LZLagL4LASooVJktgCvTgjucVDovIYeSSUmd1LTtDKFM2W-oobbWQA-t1-pnTM0dnEgti0d3fWuiBe1StAoiCSh18KOcnMnors-MQi-WlmBUACGRYX2v0coMCLWMBkMfRjPGZ43eHutCcyRydNCopOE",
-            "kty": "RSA",
-            "q": "s1uYe4HX1HHKbVlmHbHsGjiMown3Qio0KYO8ehohVbkH9-2lFpb00h2-NZMXZxluBBWmx5ukIV07NJ9nKiFbRTkR2b2ww5WocPYRk4fAMYDe8sCHOHuOAZiI6F97x4kySPiqj_U2ut_EWkgDtUkMwtciZDzwRmcuGPb-c8OHSkU",
-            "d": "CGME29GzZxGC7CcqfiWabszarqXfCFLBkVD6cQqYBilA3DJ-3j3_txIWaQVtUplBQt6YOIL8S_-4D_LGFn5B4bHYq5pPLsV6FJfqYLz2CRppWH5cvQYqH1MraOSm0127vG19KRDK02FUC77P7X9gFiOPLerU8j02mhu6riQmfvT8fRZ3It8yN_RL0aaQ87m_acI33pS5lUhR8ooaWBKN27pWeiVMImMJ4OxiPZiU-9C8rbLwFjiXjZzjuxmWQ7zu1-aqfy4iqc4kyFLo6H6wIY3mGgK76k3zmQrerJRTZElAzm6018IWNLNkVJKjsaH5GwSmK0KVnZLj6NPrbWzvgQ",
-            "e": "AQAB",
-            "use": "sig",
-            "kid": "azureAd",
-            "qi": "g87KpFNEigeOQ2EF6hdjllzmyYu3rVIUvqKTR7RjiqDQwujRlugGbXGXxJy93X5FLpk6Z2xM-cwE2PEm1369ZZxom3EDx46sic1v5aH9mbU2BhaGOfpY4Mi9X72VkW_KBMoAfJYPi3SCScBMoqYkAOFGbtS3uARvY0-HB0P5X2U",
-            "dp": "GmTOqlxeD7hHEmcfJQBD0tFs8qsDwKyMgEQjMnYFUgrHCSQgH6-uT3uESvNIVmxkDM1MrXTVPM18qo91DG5lbxDGdWY0S7UDjbe37hcp8QauhO-RfqUev_5uNc2unbMY99PLXnuIgEkcH_gx34mSXFFoKrTz-IsEKHXZTz1zT8E",
-            "dq": "Zy48bGDoDxlfQMT7T_35O6Rok6q6CeBJndBhb0T1BGGryd9256X0NaRStnNmNTOV7Nef2JkbNO5zjvRc3wnNfec087SCqiHAgyusNNkVoeTnXXOQ1teNfDGKIVQ82y98NCqJxMNmtt7gEKf5KiNaKgSljlDYUUguZsJA48wKWpk",
-            "n": "glchA7ywlOiBhxPj6WxGcbiT2ejpfVivkWz0KdQ8BiXxZaUBMr4hdB6voYfSWaNaZle6Avy10MVr-hn8Ef15G1y4ot_vEVdomhLBsaX1UcyMSY8J-rZusq1sPmkBZbe0Xoivt__AJaXBS2OZi8PgCe80HYEN2G3PB3ytvA8YC99l3xBzTmYlSWCth9mJiR4ovlQdsswu7ruDNCrtO2MktLrFehKkha3LFiZiq0MTaXzK2XyvgjwU8o12pyWpVnmF8vttY2mQln8C5_ybTxT1C62e2Q0QR9K25t3YY6qeDjsD0SypaxCtfiQ5dwidorwTi1mKKaz_5AuAAmtmUsR6pQ",
-            "alg": "RS256"
-          }
-        ]}
     env_file:
       - "common.env"
     ports:
@@ -522,13 +498,12 @@ services:
     depends_on:
       fpsak:
         condition: service_healthy
-  wonderwall:
+  wonderwall-fpfrontend:
     image: ghcr.io/nais/wonderwall:latest
-    container_name: wonderwall
+    container_name: wonderwall-fpfrontend
     command: |
-      --openid.provider=openid
-      --openid.client-id=fpfrontend
-      --openid.well-known-url=http://authserver:8085/azureAd/.well-known/openid-configuration
+      --openid.provider=azure
+      --openid.scopes=api://vtp.teamforeldrepenger.fpfrontend/.default
       --ingress=http://localhost:9000
       --bind-address=0.0.0.0:9000
       --upstream-host=fpfrontend:9090
@@ -537,22 +512,8 @@ services:
     ports:
       - "9000:9000"
     environment:
-      AZURE_APP_CLIENT_ID: fpfrontend
-      WONDERWALL_OPENID_CLIENT_JWK: |
-        {
-          "p": "uglj69HBqwsI8HoRZ3O3LZLagL4LASooVJktgCvTgjucVDovIYeSSUmd1LTtDKFM2W-oobbWQA-t1-pnTM0dnEgti0d3fWuiBe1StAoiCSh18KOcnMnors-MQi-WlmBUACGRYX2v0coMCLWMBkMfRjPGZ43eHutCcyRydNCopOE",
-          "kty": "RSA",
-          "q": "s1uYe4HX1HHKbVlmHbHsGjiMown3Qio0KYO8ehohVbkH9-2lFpb00h2-NZMXZxluBBWmx5ukIV07NJ9nKiFbRTkR2b2ww5WocPYRk4fAMYDe8sCHOHuOAZiI6F97x4kySPiqj_U2ut_EWkgDtUkMwtciZDzwRmcuGPb-c8OHSkU",
-          "d": "CGME29GzZxGC7CcqfiWabszarqXfCFLBkVD6cQqYBilA3DJ-3j3_txIWaQVtUplBQt6YOIL8S_-4D_LGFn5B4bHYq5pPLsV6FJfqYLz2CRppWH5cvQYqH1MraOSm0127vG19KRDK02FUC77P7X9gFiOPLerU8j02mhu6riQmfvT8fRZ3It8yN_RL0aaQ87m_acI33pS5lUhR8ooaWBKN27pWeiVMImMJ4OxiPZiU-9C8rbLwFjiXjZzjuxmWQ7zu1-aqfy4iqc4kyFLo6H6wIY3mGgK76k3zmQrerJRTZElAzm6018IWNLNkVJKjsaH5GwSmK0KVnZLj6NPrbWzvgQ",
-          "e": "AQAB",
-          "use": "sig",
-          "kid": "azureAd",
-          "qi": "g87KpFNEigeOQ2EF6hdjllzmyYu3rVIUvqKTR7RjiqDQwujRlugGbXGXxJy93X5FLpk6Z2xM-cwE2PEm1369ZZxom3EDx46sic1v5aH9mbU2BhaGOfpY4Mi9X72VkW_KBMoAfJYPi3SCScBMoqYkAOFGbtS3uARvY0-HB0P5X2U",
-          "dp": "GmTOqlxeD7hHEmcfJQBD0tFs8qsDwKyMgEQjMnYFUgrHCSQgH6-uT3uESvNIVmxkDM1MrXTVPM18qo91DG5lbxDGdWY0S7UDjbe37hcp8QauhO-RfqUev_5uNc2unbMY99PLXnuIgEkcH_gx34mSXFFoKrTz-IsEKHXZTz1zT8E",
-          "dq": "Zy48bGDoDxlfQMT7T_35O6Rok6q6CeBJndBhb0T1BGGryd9256X0NaRStnNmNTOV7Nef2JkbNO5zjvRc3wnNfec087SCqiHAgyusNNkVoeTnXXOQ1teNfDGKIVQ82y98NCqJxMNmtt7gEKf5KiNaKgSljlDYUUguZsJA48wKWpk",
-          "n": "glchA7ywlOiBhxPj6WxGcbiT2ejpfVivkWz0KdQ8BiXxZaUBMr4hdB6voYfSWaNaZle6Avy10MVr-hn8Ef15G1y4ot_vEVdomhLBsaX1UcyMSY8J-rZusq1sPmkBZbe0Xoivt__AJaXBS2OZi8PgCe80HYEN2G3PB3ytvA8YC99l3xBzTmYlSWCth9mJiR4ovlQdsswu7ruDNCrtO2MktLrFehKkha3LFiZiq0MTaXzK2XyvgjwU8o12pyWpVnmF8vttY2mQln8C5_ybTxT1C62e2Q0QR9K25t3YY6qeDjsD0SypaxCtfiQ5dwidorwTi1mKKaz_5AuAAmtmUsR6pQ",
-          "alg": "RS256"
-        }
+      AZURE_APP_CLIENT_ID: wonderwall-fpfrontend
+#     AZURE_APP_WELL_KNOWN_URL: kommer fra common.env
     env_file:
       - "common.env"
     depends_on:
@@ -566,10 +527,10 @@ services:
     restart: on-failure
     mem_limit: 128mb
     environment:
+      AZURE_APP_CLIENT_ID: fpswagger
       PORT: 9190
       HOST: localhost
       NODE_ENV: development
-      AZURE_APP_CLIENT_ID: fpswagger
       PROXY_CONFIG: |
         {
             "apis": [
@@ -647,23 +608,6 @@ services:
                 }
             ]
         }
-      AZURE_APP_JWKS: |
-        {"keys":[
-          {
-            "p": "uglj69HBqwsI8HoRZ3O3LZLagL4LASooVJktgCvTgjucVDovIYeSSUmd1LTtDKFM2W-oobbWQA-t1-pnTM0dnEgti0d3fWuiBe1StAoiCSh18KOcnMnors-MQi-WlmBUACGRYX2v0coMCLWMBkMfRjPGZ43eHutCcyRydNCopOE",
-            "kty": "RSA",
-            "q": "s1uYe4HX1HHKbVlmHbHsGjiMown3Qio0KYO8ehohVbkH9-2lFpb00h2-NZMXZxluBBWmx5ukIV07NJ9nKiFbRTkR2b2ww5WocPYRk4fAMYDe8sCHOHuOAZiI6F97x4kySPiqj_U2ut_EWkgDtUkMwtciZDzwRmcuGPb-c8OHSkU",
-            "d": "CGME29GzZxGC7CcqfiWabszarqXfCFLBkVD6cQqYBilA3DJ-3j3_txIWaQVtUplBQt6YOIL8S_-4D_LGFn5B4bHYq5pPLsV6FJfqYLz2CRppWH5cvQYqH1MraOSm0127vG19KRDK02FUC77P7X9gFiOPLerU8j02mhu6riQmfvT8fRZ3It8yN_RL0aaQ87m_acI33pS5lUhR8ooaWBKN27pWeiVMImMJ4OxiPZiU-9C8rbLwFjiXjZzjuxmWQ7zu1-aqfy4iqc4kyFLo6H6wIY3mGgK76k3zmQrerJRTZElAzm6018IWNLNkVJKjsaH5GwSmK0KVnZLj6NPrbWzvgQ",
-            "e": "AQAB",
-            "use": "sig",
-            "kid": "azureAd",
-            "qi": "g87KpFNEigeOQ2EF6hdjllzmyYu3rVIUvqKTR7RjiqDQwujRlugGbXGXxJy93X5FLpk6Z2xM-cwE2PEm1369ZZxom3EDx46sic1v5aH9mbU2BhaGOfpY4Mi9X72VkW_KBMoAfJYPi3SCScBMoqYkAOFGbtS3uARvY0-HB0P5X2U",
-            "dp": "GmTOqlxeD7hHEmcfJQBD0tFs8qsDwKyMgEQjMnYFUgrHCSQgH6-uT3uESvNIVmxkDM1MrXTVPM18qo91DG5lbxDGdWY0S7UDjbe37hcp8QauhO-RfqUev_5uNc2unbMY99PLXnuIgEkcH_gx34mSXFFoKrTz-IsEKHXZTz1zT8E",
-            "dq": "Zy48bGDoDxlfQMT7T_35O6Rok6q6CeBJndBhb0T1BGGryd9256X0NaRStnNmNTOV7Nef2JkbNO5zjvRc3wnNfec087SCqiHAgyusNNkVoeTnXXOQ1teNfDGKIVQ82y98NCqJxMNmtt7gEKf5KiNaKgSljlDYUUguZsJA48wKWpk",
-            "n": "glchA7ywlOiBhxPj6WxGcbiT2ejpfVivkWz0KdQ8BiXxZaUBMr4hdB6voYfSWaNaZle6Avy10MVr-hn8Ef15G1y4ot_vEVdomhLBsaX1UcyMSY8J-rZusq1sPmkBZbe0Xoivt__AJaXBS2OZi8PgCe80HYEN2G3PB3ytvA8YC99l3xBzTmYlSWCth9mJiR4ovlQdsswu7ruDNCrtO2MktLrFehKkha3LFiZiq0MTaXzK2XyvgjwU8o12pyWpVnmF8vttY2mQln8C5_ybTxT1C62e2Q0QR9K25t3YY6qeDjsD0SypaxCtfiQ5dwidorwTi1mKKaz_5AuAAmtmUsR6pQ",
-            "alg": "RS256"
-          }
-        ]}
     env_file:
       - "common.env"
     ports:
@@ -680,9 +624,8 @@ services:
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-swagger
     command: |
-      --openid.provider=openid
-      --openid.client-id=fpswagger
-      --openid.well-known-url=http://authserver:8085/azureAd/.well-known/openid-configuration
+      --openid.provider=azure
+      --openid.scopes=api://vtp.teamforeldrepenger.fpswagger/.default
       --ingress=http://localhost:9200
       --bind-address=0.0.0.0:9200
       --upstream-host=fpswagger:9190
@@ -691,22 +634,8 @@ services:
     ports:
       - "9200:9200"
     environment:
-      AZURE_APP_CLIENT_ID: fpswagger
-      WONDERWALL_OPENID_CLIENT_JWK: |
-        {
-          "p": "uglj69HBqwsI8HoRZ3O3LZLagL4LASooVJktgCvTgjucVDovIYeSSUmd1LTtDKFM2W-oobbWQA-t1-pnTM0dnEgti0d3fWuiBe1StAoiCSh18KOcnMnors-MQi-WlmBUACGRYX2v0coMCLWMBkMfRjPGZ43eHutCcyRydNCopOE",
-          "kty": "RSA",
-          "q": "s1uYe4HX1HHKbVlmHbHsGjiMown3Qio0KYO8ehohVbkH9-2lFpb00h2-NZMXZxluBBWmx5ukIV07NJ9nKiFbRTkR2b2ww5WocPYRk4fAMYDe8sCHOHuOAZiI6F97x4kySPiqj_U2ut_EWkgDtUkMwtciZDzwRmcuGPb-c8OHSkU",
-          "d": "CGME29GzZxGC7CcqfiWabszarqXfCFLBkVD6cQqYBilA3DJ-3j3_txIWaQVtUplBQt6YOIL8S_-4D_LGFn5B4bHYq5pPLsV6FJfqYLz2CRppWH5cvQYqH1MraOSm0127vG19KRDK02FUC77P7X9gFiOPLerU8j02mhu6riQmfvT8fRZ3It8yN_RL0aaQ87m_acI33pS5lUhR8ooaWBKN27pWeiVMImMJ4OxiPZiU-9C8rbLwFjiXjZzjuxmWQ7zu1-aqfy4iqc4kyFLo6H6wIY3mGgK76k3zmQrerJRTZElAzm6018IWNLNkVJKjsaH5GwSmK0KVnZLj6NPrbWzvgQ",
-          "e": "AQAB",
-          "use": "sig",
-          "kid": "azureAd",
-          "qi": "g87KpFNEigeOQ2EF6hdjllzmyYu3rVIUvqKTR7RjiqDQwujRlugGbXGXxJy93X5FLpk6Z2xM-cwE2PEm1369ZZxom3EDx46sic1v5aH9mbU2BhaGOfpY4Mi9X72VkW_KBMoAfJYPi3SCScBMoqYkAOFGbtS3uARvY0-HB0P5X2U",
-          "dp": "GmTOqlxeD7hHEmcfJQBD0tFs8qsDwKyMgEQjMnYFUgrHCSQgH6-uT3uESvNIVmxkDM1MrXTVPM18qo91DG5lbxDGdWY0S7UDjbe37hcp8QauhO-RfqUev_5uNc2unbMY99PLXnuIgEkcH_gx34mSXFFoKrTz-IsEKHXZTz1zT8E",
-          "dq": "Zy48bGDoDxlfQMT7T_35O6Rok6q6CeBJndBhb0T1BGGryd9256X0NaRStnNmNTOV7Nef2JkbNO5zjvRc3wnNfec087SCqiHAgyusNNkVoeTnXXOQ1teNfDGKIVQ82y98NCqJxMNmtt7gEKf5KiNaKgSljlDYUUguZsJA48wKWpk",
-          "n": "glchA7ywlOiBhxPj6WxGcbiT2ejpfVivkWz0KdQ8BiXxZaUBMr4hdB6voYfSWaNaZle6Avy10MVr-hn8Ef15G1y4ot_vEVdomhLBsaX1UcyMSY8J-rZusq1sPmkBZbe0Xoivt__AJaXBS2OZi8PgCe80HYEN2G3PB3ytvA8YC99l3xBzTmYlSWCth9mJiR4ovlQdsswu7ruDNCrtO2MktLrFehKkha3LFiZiq0MTaXzK2XyvgjwU8o12pyWpVnmF8vttY2mQln8C5_ybTxT1C62e2Q0QR9K25t3YY6qeDjsD0SypaxCtfiQ5dwidorwTi1mKKaz_5AuAAmtmUsR6pQ",
-          "alg": "RS256"
-        }
+      AZURE_APP_CLIENT_ID: wonderwall-fpswagger
+#     AZURE_APP_WELL_KNOWN_URL kommer fra common.env
     env_file:
       - "common.env"
     depends_on:

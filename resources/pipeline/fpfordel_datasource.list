@@ -1,6 +1,5 @@
 APP_NAME=fpfordel
 NAIS_APP_NAME=fpfordel
-AZURE_APP_CLIENT_ID=fpfordel
 
 DEFAULTDS_URL=jdbc:oracle:thin:@//oracle:1521/xe
 DEFAULTDS_USERNAME=fpfordel
