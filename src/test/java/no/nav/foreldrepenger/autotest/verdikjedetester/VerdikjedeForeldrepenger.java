@@ -1056,7 +1056,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         /* FAR */
         var far = familie.far();
-        var omsorgsovertakelsedatoe = LocalDate.now().minusMonths(4);
+        var omsorgsovertakelsedatoe = LocalDate.now().minusMonths(4).minusWeeks(1);
         var fpStartdatoFar = omsorgsovertakelsedatoe;
         var fordelingFar = fordeling(
                 uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(46).minusDays(1)));
