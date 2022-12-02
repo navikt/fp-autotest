@@ -72,9 +72,9 @@ services:
     image: ghcr.io/navikt/mock-oauth2-server:0.5.5
     container_name: authserver
     ports:
-      - "8085:8085"
+      - "8086:8086"
     environment:
-      PORT: 8085
+      PORT: 8086
       JSON_CONFIG_PATH: "/authserver/konfig.json"
     volumes:
       - ./authserver:/authserver
@@ -385,7 +385,7 @@ services:
       - "OPPSLAG_URL=http://vtp:8060/rest/dummy/oppslag"
       - "FPFORDEL_MAX=20"
       - "FPINFO_MAX=20"
-      - "AZURE_OPENID_CONFIG_TOKEN_ENDPOINT=http://authserver:8085/azureAd/token"
+      - "AZURE_OPENID_CONFIG_TOKEN_ENDPOINT=http://authserver:8086/azureAd/token"
       - "AZURE_APP_CLIENT_ID=lokal:teamforeldrepenger:fpsoknad-mottak"
       - "AZURE_APP_JWK=/tokenx/jwk.json"
       - "OIDC_STS_ISSUER_URL=http://vtp:8060" # TODO Erstat med samme syntax som resten av applikasjonene
