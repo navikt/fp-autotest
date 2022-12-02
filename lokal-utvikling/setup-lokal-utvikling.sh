@@ -17,8 +17,8 @@ settPorterSomSkalErstattes () {
       with_port_array=("8060" "8063" "8636" "9093" "9092" "8389")
       ;;
     authserver)
-      replace_port_array=("8085")
-      with_port_array=("8085")
+      replace_port_array=("8086")
+      with_port_array=("8086")
       ;;
     fpabakus)
       replace_port_array=("8080")

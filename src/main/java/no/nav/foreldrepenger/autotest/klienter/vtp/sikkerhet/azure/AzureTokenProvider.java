@@ -73,7 +73,7 @@ public final class AzureTokenProvider {
                         .path(AZURE_TOKEN_BASE_PATH)
                         .build())
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .header("Host", "authserver:8085");
+                .header("Host", "authserver:8086");
     }
 
     private static String hentNyttTokenXTokenFor(Fødselsnummer fnr, String audience) {
