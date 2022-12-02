@@ -465,6 +465,9 @@ services:
       AZURE_APP_CLIENT_ID: fpfrontend
       PORT: 9090
       HOST: http://localhost
+      CORS_ALLOWED_METHODS: "GET, POST"
+      CORS_EXPOSED_HEADERS: "Location"
+      CORS_ALLOWED_HEADERS: "Referer, Origin, Content-Type, Accept, X-Requested-With, cache-control, x_Nav-CallId, pragma, expires, X-Forwarded-Proto"
       NODE_ENV: development
       PROXY_CONFIG: |
         {
@@ -518,6 +521,9 @@ services:
       --bind-address=0.0.0.0:9000
       --upstream-host=fpfrontend:9090
       --auto-login=true
+      --session.max-lifetime=12h0m0s
+      --session.inactivity-timeout=12h0m0s
+      --session.refresh=true
       --log-level=debug
     ports:
       - "9000:9000"
