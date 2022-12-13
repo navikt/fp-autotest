@@ -25,11 +25,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.KlageVurde
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.SettBehandlingPaVentDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.OverstyrAksjonspunkter;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KlageInfo;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerAktiviteskravPeriode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerFaktaData;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
@@ -70,8 +69,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     private static final String BEHANDLING_KLAGE_MELLOMLAGRE_URL = BEHANDLING_URL + "/klage/mellomlagre-klage";
 
     private static final String BEHANDLING_UTTAK = BEHANDLING_URL + "/uttak";
-    private static final String BEHANDLING_UTTAK_KONTROLLER_FAKTA_PERIODER_URL = BEHANDLING_UTTAK + "/kontroller-fakta-perioder";
-    private static final String BEHANDLING_UTTAK_KONTROLLER_AKTIVITETSKRAV_URL = BEHANDLING_UTTAK + "/kontroller-aktivitetskrav";
+    private static final String BEHANDLING_UTTAK_VURDER_DOKUEMTASJON = BEHANDLING_UTTAK + "/vurder-dokumentasjon";
     private static final String BEHANDLING_UTTAK_STONADSKONTOER_URL = BEHANDLING_UTTAK + "/stonadskontoer";
     private static final String BEHANDLING_UTTAK_STONADSKONTOER_GITT_UTTAKSPERIODER_URL = BEHANDLING_UTTAK + "/stonadskontoerGittUttaksperioder";
     private static final String BEHANDLING_UTTAK_RESULTAT_PERIODER_URL = BEHANDLING_UTTAK + "/resultat-perioder";
@@ -320,30 +318,14 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
         return send(request.build(), Saldoer.class);
     }
 
-    /*
-     * hent kontroller fakta for behandling
-     */
-    public KontrollerFaktaData behandlingKontrollerFaktaPerioder(UUID behandlingUuid) {
+    public List<VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov> behandlingDokumentasjonVurderingBehov(UUID uuid) {
         var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(FPSAK_BASE)
-                        .path(BEHANDLING_UTTAK_KONTROLLER_FAKTA_PERIODER_URL)
-                        .queryParam(UUID_NAME, behandlingUuid)
+                        .path(BEHANDLING_UTTAK_VURDER_DOKUEMTASJON)
+                        .queryParam(UUID_NAME, uuid)
                         .build())
                 .GET();
-        return send(request.build(), KontrollerFaktaData.class);
-    }
-
-    /*
-     * hent kontroller fakta for behandling
-     */
-    public List<KontrollerAktiviteskravPeriode> behandlingKontrollerAktivitetskrav(UUID behandlingUuid) {
-        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
-                .uri(fromUri(FPSAK_BASE)
-                        .path(BEHANDLING_UTTAK_KONTROLLER_AKTIVITETSKRAV_URL)
-                        .queryParam(UUID_NAME, behandlingUuid)
-                        .build())
-                .GET();
-        return Optional.ofNullable(send(request.build(), new TypeReference<List<KontrollerAktiviteskravPeriode>>() {}))
+        return Optional.ofNullable(send(request.build(), new TypeReference<List<VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov>>() {}))
                 .orElse(List.of());
     }
 
@@ -412,6 +394,4 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(manglendeOpplysningerVurderingDto)));
         send(request.build());
     }
-
-
 }

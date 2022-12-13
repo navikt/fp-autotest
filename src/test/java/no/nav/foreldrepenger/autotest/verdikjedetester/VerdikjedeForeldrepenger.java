@@ -68,7 +68,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRealitetsbehandlingEllerKlage;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
@@ -82,7 +81,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.KontrollerBesteberegningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
@@ -421,7 +420,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingerFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
 
         /*
          * Fellesperioden skal splittes slik at første periode på 8 uker blir avslått og
@@ -521,7 +520,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Forventer at det er registert en opptjeningsaktivitet med aktivitettype FRILANSER som har frilansinntekt på skjæringstidspunktet!")
                 .isTrue();
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -604,11 +603,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Bare far har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        var kontrollerAktivitetskravBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
-                .morErIAktivitetForAllePerioder()
-                .setBegrunnelse("Mor er i aktivitet!");
-        saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
@@ -776,8 +771,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaUttakPerioder = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
-                .godkjennPeriode(overføringsperiodeEndring);
+                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .godkjenn(overføringsperiodeEndring);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         var beregningAktivitetStatus = saksbehandler.hentUnikeBeregningAktivitetStatus();
@@ -1222,7 +1217,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Både far og mor har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerAktivitetskravBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1572,8 +1567,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaUttak = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
-                .sykdomErDokumentertForPeriode();
+                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .godkjennSykdom();
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttak);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
@@ -1697,12 +1692,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         * Mors aktivitet er ikke dokumentert for utsettelsesperioden og første uttaksperiode etter utsettelsen.
         * */
         saksbehandler.hentFagsak(saksnummerFar);
-        var kontrollerAktivitetskravBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
-                .periodeIkkeAktivitetIkkeDokumentert(utsettelsesperiode)
-                .periodeIkkeAktivitetIkkeDokumentert(uttaksperiodeEtterUtsettelse1)
+        var vurderUttakDokBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .ikkeDokumentert(utsettelsesperiode)
+                .ikkeDokumentert(uttaksperiodeEtterUtsettelse1)
                 .setBegrunnelse("Mor er ikke i aktivitet for siste uttaksperiode!");
-        saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
+        saksbehandler.bekreftAksjonspunkt(vurderUttakDokBekreftelse);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
