@@ -45,7 +45,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarBrukerBosattBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
@@ -62,6 +62,7 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Stønadskont
 class MorOgFarSammen extends FpsakTestBase {
 
     private final Logger LOG = LoggerFactory.getLogger(MorOgFarSammen.class);
+
 
     @Test
     @DisplayName("Mor og far koblet sak, kant til kant")
@@ -84,7 +85,7 @@ class MorOgFarSammen extends FpsakTestBase {
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, fpstartdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE);
+        saksbehandler.harAksjonspunkt(AksjonspunktKoder.AVKLAR_FAKTA_UTTAK);
         assertThat(saksbehandler.valgtFagsak.status())
                 .as("Fagsak status")
                 .isEqualTo(FagsakStatus.UNDER_BEHANDLING);
@@ -107,10 +108,10 @@ class MorOgFarSammen extends FpsakTestBase {
 
         // Behandle ferdig mor sin sak
         saksbehandler.hentFagsak(saksnummerMor);
-        var avklarUttakDok = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
-                .godkjennSykdom();
-        saksbehandler.bekreftAksjonspunkt(avklarUttakDok);
+        var avklarFaktaUttak = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
+                .sykdomErDokumentertForPeriode();
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttak);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         beslutter.hentFagsak(saksnummerMor);
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);

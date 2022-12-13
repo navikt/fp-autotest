@@ -100,12 +100,14 @@ public class AksjonspunktKoder {
 
     public static final String MANUELL_KONTROLL_AV_OM_BRUKER_HAR_OMSORG = "5061";
 
+    public static final String AVKLAR_FAKTA_UTTAK = "5070";
     public static final String FASTSETT_UTTAKPERIODER = "5071";
+    public static final String AVKLAR_FØRSTE_UTTAKSDATO = "5081";
+    public static final String OVERSTYRING_AV_UTTAKPERIODER = "6008";
     public static final String AVKLAR_FAKTA_ANNEN_FORELDER_HAR_RETT_KODE = "5086";
 
-    public static final String VURDER_UTTAK_DOKUMENTASJON_KODE = "5074";
-
     public static final String KONTROLLER_REALITETSBEHANDLING_ELLER_KLAGE = "5073";
+    public static final String KONTROLLER_OPPLYSNINGER_OM_MEDLEMSKAP = "5074";
     public static final String KONTROLLER_OPPLYSNINGER_OM_FORDELING_AV_STØNADSPERIODEN = "5075";
     public static final String KONTROLLER_OPPLYSNINGER_OM_DØD = "5076";
     public static final String KONTROLLER_OPPLYSNINGER_OM_SØKNADSFRIST = "5077";
