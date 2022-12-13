@@ -26,7 +26,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsette
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
@@ -82,14 +82,14 @@ class SammenhengendeUttak extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaUttakPerioder = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
-                .godkjennPeriode(utsettelseInstitusjsoppholdBarn)
-                .godkjennPeriode(utsettelseInstitusjsoppholdSøker)
-                .godkjennPeriode(utsettelseSykdom)
-                .godkjennPeriode(utsettelseHvØvelse)
-                .godkjennPeriode(utsettelseNavTiltak);
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
+        var vurderUttakDokumentasjonBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .godkjenn(utsettelseInstitusjsoppholdBarn)
+                .godkjenn(utsettelseInstitusjsoppholdSøker)
+                .godkjenn(utsettelseSykdom)
+                .godkjenn(utsettelseHvØvelse)
+                .godkjenn(utsettelseNavTiltak);
+        saksbehandler.bekreftAksjonspunkt(vurderUttakDokumentasjonBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
