@@ -45,7 +45,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.Arbeidsforhold;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManglendeOpplysningerVurderingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
@@ -363,7 +363,6 @@ public class Saksbehandler {
             behandling.setBeregningResultatEngangsstonad(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatEngangsstønad(behandling.uuid)));
             behandling.setBeregningResultatForeldrepenger(new Lazy<>(() -> behandlingerKlient.behandlingBeregningsresultatForeldrepenger(behandling.uuid)));
             behandling.setFeriepengegrunnlag(new Lazy<>(() -> behandlingerKlient.behandlingFeriepengegrunnlag(behandling.uuid)));
-            behandling.setInntektArbeidYtelse(new Lazy<>(() -> behandlingerKlient.behandlingInntektArbeidYtelse(behandling.uuid)));
             behandling.setKontrollerAktivitetskrav(new Lazy<>(() -> behandlingerKlient.behandlingKontrollerAktivitetskrav(behandling.uuid)));
             behandling.setKontrollerFaktaData(new Lazy<>(() -> behandlingerKlient.behandlingKontrollerFaktaPerioder(behandling.uuid)));
             behandling.setMedlem(new Lazy<>(() -> behandlingerKlient.behandlingMedlemskap(behandling.uuid)));
@@ -740,9 +739,9 @@ public class Saksbehandler {
     }
 
     private String hentInternArbeidsforholdId(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
-        return valgtBehandling.getInntektArbeidYtelse().getArbeidsforhold().stream()
-                .filter(arbeidsforhold -> arbeidsgiverIdentifikator.equals(arbeidsforhold.getArbeidsgiverReferanse()))
-                .map(Arbeidsforhold::getArbeidsforholdId)
+        return valgtBehandling.getArbeidOgInntektsmeldingDto().arbeidsforhold().stream()
+                .filter(arbeidsforhold -> arbeidsgiverIdentifikator.value().equals(arbeidsforhold.arbeidsgiverIdent()))
+                .map(ArbeidsforholdDto::internArbeidsforholdId)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Fant ingen interne arbeidforhold med orgnummer " + arbeidsgiverIdentifikator));
     }
