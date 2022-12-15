@@ -14,7 +14,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ArbeidOgInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
@@ -69,7 +68,6 @@ public class Behandling {
     private Lazy<Feriepengegrunnlag> feriepengegrunnlag;
     private Lazy<Soknad> soknad;
     private Lazy<Opptjening> opptjening;
-    private Lazy<InntektArbeidYtelse> inntektArbeidYtelse;
     private Lazy<KontrollerFaktaData> kontrollerFaktaData;
     private Lazy<Medlem> medlem;
     private Lazy<KlageInfo> klagevurdering;
@@ -189,14 +187,6 @@ public class Behandling {
 
     public void setOpptjening(Lazy<Opptjening> dOpptjening) {
         this.opptjening = dOpptjening;
-    }
-
-    public InntektArbeidYtelse getInntektArbeidYtelse() {
-        return get(inntektArbeidYtelse);
-    }
-
-    public void setInntektArbeidYtelse(Lazy<InntektArbeidYtelse> dInntektArbeidYtelse) {
-        this.inntektArbeidYtelse = dInntektArbeidYtelse;
     }
 
     public KontrollerFaktaData getKontrollerFaktaData() {

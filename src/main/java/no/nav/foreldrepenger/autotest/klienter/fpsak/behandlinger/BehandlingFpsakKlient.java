@@ -32,7 +32,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KontrollerFaktaData;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeid.InntektArbeidYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ArbeidOgInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManglendeOpplysningerVurderingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
@@ -65,7 +64,6 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     private static final String BEHANDLING_AKSJONSPUNKT_OVERSTYR_URL = BEHANDLING_AKSJONSPUNKT_URL + "/overstyr";
     private static final String BEHANDLING_SOKNAD_URL = BEHANDLING_URL + "/soknad";
     private static final String BEHANDLING_OPPTJENING_URL = BEHANDLING_URL + "/opptjening";
-    private static final String BEHANDLING_INNTEKT_ARBEID_YTELSE_URL = BEHANDLING_URL + "/inntekt-arbeid-ytelse";
     private static final String BEHANDLING_KLAGE_URL = BEHANDLING_URL + "/klage-v2";
     private static final String BEHANDLING_KLAGE_MELLOMLAGRE_URL = BEHANDLING_URL + "/klage/mellomlagre-klage";
 
@@ -262,18 +260,6 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .GET();
         return send(request.build(), Opptjening.class);
     }
-
-
-    public InntektArbeidYtelse behandlingInntektArbeidYtelse(UUID behandlingUuid) {
-        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
-                .uri(fromUri(FPSAK_BASE)
-                        .path(BEHANDLING_INNTEKT_ARBEID_YTELSE_URL)
-                        .queryParam(UUID_NAME, behandlingUuid)
-                        .build())
-                .GET();
-        return send(request.build(), InntektArbeidYtelse.class);
-    }
-
 
     public KlageInfo klage(UUID behandlingUuid) {
         var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
