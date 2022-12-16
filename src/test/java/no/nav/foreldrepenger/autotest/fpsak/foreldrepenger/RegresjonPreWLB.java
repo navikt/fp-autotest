@@ -26,9 +26,8 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsa
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerAktivitetskravBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaUttakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
@@ -90,11 +89,11 @@ class RegresjonPreWLB extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
         var kontrollerAktivitetskravBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
-                .periodeIkkeAktivitetIkkeDokumentert(uttaksperiode1)
-                .periodeIkkeAktivitetIkkeDokumentert(utsettelsesperiode1)
-                .periodeIkkeAktivitetIkkeDokumentert(uttaksperiode2)
-                .periodeIkkeAktivitetIkkeDokumentert(utsettelsesperiode2)
+                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .ikkeDokumentert(uttaksperiode1)
+                .ikkeDokumentert(utsettelsesperiode1)
+                .ikkeDokumentert(uttaksperiode2)
+                .ikkeDokumentert(utsettelsesperiode2)
                 .setBegrunnelse("Mor er ikke i aktivtet i perioden som det søkes om, med unntak av siste periode som søkes uten aktivitetskrav");
         saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
 
@@ -180,15 +179,10 @@ class RegresjonPreWLB extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
         var avklarFaktaUttakPerioder = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaUttakBekreftelse.AvklarFaktaUttakPerioder.class)
-                .kanIkkeAvgjørePeriode(uttaksperiodeIfmFødsel);
+                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .ikkeGodkjenn(uttaksperiodeIfmFødsel)
+                .godkjennMorsAktivitet(VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
-
-        var kontrollerAktivitetskravBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(KontrollerAktivitetskravBekreftelse.class)
-                .morErIAktivitetForAllePerioder()
-                .setBegrunnelse("Mor er i aktivtet!");
-        saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)

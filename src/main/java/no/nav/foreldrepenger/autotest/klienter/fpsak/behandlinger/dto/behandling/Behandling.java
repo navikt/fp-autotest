@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ArbeidOgInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatMedUttaksplan;
@@ -41,14 +42,10 @@ public class Behandling {
     public BehandlingType type;
     public BehandlingStatus status;
 
-    public LocalDate skjaringstidspunkt;
     public LocalDateTime avsluttet;
     public LocalDateTime opprettet;
     public LocalDate fristBehandlingPaaVent;
 
-    public String ansvarligSaksbehandler;
-    public String behandlendeEnhet;
-    public String behandlendeEnhetNavn;
     public Boolean behandlingHenlagt;
     public Boolean behandlingPaaVent;
     public String venteArsakKode;
@@ -68,13 +65,12 @@ public class Behandling {
     private Lazy<Feriepengegrunnlag> feriepengegrunnlag;
     private Lazy<Soknad> soknad;
     private Lazy<Opptjening> opptjening;
-    private Lazy<KontrollerFaktaData> kontrollerFaktaData;
     private Lazy<Medlem> medlem;
     private Lazy<KlageInfo> klagevurdering;
     private Lazy<Saldoer> saldoer;
     private Lazy<Tilrettelegging> tilrettelegging;
+    private Lazy<List<VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov>> dokumentasjonVurderingBehov;
     private Lazy<ArbeidOgInntektsmeldingDto> arbeidOgInntektsmeldingDto;
-    private Lazy<List<KontrollerAktiviteskravPeriode>> kontrollerAktiviteskrav;
 
     public List<UttakResultatPeriode> hentUttaksperioder() {
         return getUttakResultatPerioder().getPerioderSøker().stream()
@@ -99,10 +95,6 @@ public class Behandling {
 
     public Avslagsårsak hentAvslagsarsak() {
         return behandlingsresultat.avslagsarsak();
-    }
-
-    public List<KontrollerAktiviteskravPeriode> getKontrollerAktiviteskrav() {
-        return get(kontrollerAktiviteskrav);
     }
 
     @Override
@@ -189,18 +181,6 @@ public class Behandling {
         this.opptjening = dOpptjening;
     }
 
-    public KontrollerFaktaData getKontrollerFaktaData() {
-        return get(kontrollerFaktaData);
-    }
-
-    public void setKontrollerFaktaData(Lazy<KontrollerFaktaData> dKontrollerFaktaData) {
-        this.kontrollerFaktaData = dKontrollerFaktaData;
-    }
-
-    public void setKontrollerAktivitetskrav(Lazy<List<KontrollerAktiviteskravPeriode>> data) {
-        this.kontrollerAktiviteskrav = data;
-    }
-
     public Medlem getMedlem() {
         return get(medlem);
     }
@@ -235,6 +215,14 @@ public class Behandling {
 
     public Tilrettelegging getTilrettelegging() {
         return get(tilrettelegging);
+    }
+
+    public void setDokumentasjonVurderingBehov(Lazy<List<VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov>> dokumentasjonVurderingBehov) {
+        this.dokumentasjonVurderingBehov = dokumentasjonVurderingBehov;
+    }
+
+    public List<VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov> getDokumentasjonVurderingBehov() {
+        return get(dokumentasjonVurderingBehov);
     }
 
     public void setTilrettelegging(Lazy<Tilrettelegging> dTilrettelegging) {
