@@ -85,8 +85,6 @@ services:
     mem_limit: 512mb
     environment:
       - "AZURE_APP_CLIENT_ID=fpabakus"
-      - "LOADBALANCER_URL=http://localhost:8015"
-      - "KAFKA_LONNSKOMPENSASJON_TOPIC=privat-permittering-lonnskomp-vedtak-vtp"
     env_file:
       - "fpabakus_datasource.list"
       - "common.env"
@@ -114,7 +112,6 @@ services:
     shm_size: 256mb
     environment:
       - "AZURE_APP_CLIENT_ID=fpsak"
-      - "LOADBALANCER_URL=http://localhost:8080"
       - "ABAKUS_CALLBACK_URL=http://fpsak:8080/fpsak/api/registerdata/iay/callback"
       - "FPOPPDRAG_OVERRIDE_PROXY_URL=http://localhost:9000/fpoppdrag/api"
       - "UFORE_RS_URL=http://vtp:8060/rest/api/pesys/ufo"
@@ -149,7 +146,6 @@ services:
     mem_limit: 512mb
     environment:
       - "AZURE_APP_CLIENT_ID=fpfordel"
-      - "LOADBALANCER_URL=http://localhost:8090"
       - "KAFKA_TOPICS_FORDELING=privat-foreldrepenger-historikk-fordeling"
       - "KAFKA_TOPIC_JOURNAL_HENDELSE=aapen-dok-journalfoering-v1-q1"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
@@ -182,7 +178,6 @@ services:
     mem_limit: 512mb
     environment:
       - "AZURE_APP_CLIENT_ID=fpformidling"
-      - "LOADBALANCER_URL=http://localhost:8010"
       - "DOKGEN_REST_BASE_URL=http://fpdokgen:8080"
       - "DOKDIST_REST_BASE_URL=http://vtp:8060/rest/dokdist/v1"
       - "JOURNALPOST_REST_V1_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
@@ -231,7 +226,6 @@ services:
       - "common.env"
     environment:
       - "AZURE_APP_CLIENT_ID=fpoppdrag"
-      - "LOADBALANCER_URL=http://localhost:8070"
       - "OPPDRAG_SERVICE_URL=https://vtp:8063/soap/cics/services/oppdragService"
     volumes:
       - "~/.modig:/app/.modig"
@@ -257,7 +251,6 @@ services:
       - "common.env"
     environment:
       - "AZURE_APP_CLIENT_ID=fptilbake"
-      - "LOADBALANCER_URL=http://localhost:8030"
       - "CONTEXT_PATH=/fptilbake"
       - "DOKARKIV_BASE_URL=http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost"
       - "KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL=privat-tilbakekreving-brukerdialog-local"
@@ -294,7 +287,6 @@ services:
       - "common.env"
     environment:
       - "AZURE_APP_CLIENT_ID=fprisk"
-      - "LOADBALANCER_URL=http://localhost:8075"
       - "BRREG_PROXY=http://vtp:8060/rest/brreg/proxy/not/implemented"
     volumes:
       - "~/.modig:/app/.modig"
@@ -319,7 +311,6 @@ services:
       - "common.env"
     environment:
       - "AZURE_APP_CLIENT_ID=fpabonnent"
-      - "LOADBALANCER_URL=http://localhost:8065"
       - "KAFKA_PDL_LEESAH_TOPIC=aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_PDL_LEESAH_APPLICATION_ID=fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp"
       - "KAFKA_AVRO_SERDE_CLASS=no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde"
@@ -343,7 +334,6 @@ services:
     mem_limit: 256mb
     environment:
       - "AZURE_APP_CLIENT_ID=fpinfo"
-      - "LOADBALANCER_URL=http://localhost:8040"
     env_file:
       - "fpinfo_datasource.list"
       - "common.env"

@@ -50,5 +50,3 @@ Eksempler:
 |		|->dto
 |			|-Sak
 |			|-Søk
->openam
-|----OpenAMKlient

@@ -5,7 +5,6 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
 /**
  * Denne klassen skal tilby følgende token:
- *  - OpenAM Token
  *  - Loginservice token som er veksles inn til et TokenX token for en gitt bruker (fnr)
  */
 public final class TokenProvider {
