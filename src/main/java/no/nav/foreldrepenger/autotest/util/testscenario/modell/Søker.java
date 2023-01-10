@@ -199,10 +199,11 @@ public abstract class Søker {
 
     public Saksnummer søk(Endringssøknad søknad) {
         genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
-        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
-        LOG.info("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());
-        return this.saksnummer;
+        LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), søknad.getSaksnr());
+
+        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, søknad.getSaksnr());
+        LOG.info("Endringssøknad sendt inn og fagsak {} er oppdatert", søknad.getSaksnr());
+        return søknad.getSaksnr();
     }
 
     public Saksnummer søkPapirsøknadForeldrepenger() {
