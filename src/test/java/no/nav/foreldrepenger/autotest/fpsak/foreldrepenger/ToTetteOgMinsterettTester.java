@@ -48,7 +48,7 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Stønadskont
  *
  * Scenario 1:  Mor har FP og får innvilget ny FP. Gammel FP opphører fordi hun har brukt mer enn minsteretten.
  *              Nytt barn opphører gammel sak fom 3 uker før termin og avslår periode
- * Situasjon 2: Mor har tatt ut mindre enn minsterett på barn 1 (f.eks. 4 uker igjen av minsteretten).
+ * Scenario 2:  Mor har tatt ut mindre enn minsterett på barn 1 (f.eks. 4 uker igjen av minsteretten).
  *              Mor søker termin på barn 2 (40 uker etter barn 1).
  *              Mor søker endring på barn 1 om å ta ut resten av minsteretten etter de 6 første ukene for barn 2.
  *              Far tar ut 2 uker ifm fødsel og endringssøker om å ta ut resten av minsteretten sin på barn 1 (6 uker) etter mors peridoer for barn 2.
@@ -60,7 +60,8 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
 
     /**
      * Scenario 1:  Mor har FP og får innvilget ny FP. Gammel FP opphører fordi hun har brukt mer enn minsteretten.
-     *              Nytt barn opphører gammel sak fom 3 uker før termin og avslår periode
+     *              Nytt barn opphører gammel sak fom 3 uker før termin og avslår periode.
+     *   Barn 1: x, Barn 2: y                                               saldo: FØR_FØDSEL|MØDRE|FEDRE|FELLES (3|15|15|16)
      *   Barn 1 (FS):   ---x----- ------        ----------                  saldo: 0|0|15|6    (28 brukt, 0 av 22 uker minstrett igjen)
      *   Barn 2 (FS):                               ---y------ --------     saldo: 0|0|15|6    (28 brukt)
      *   Barn 1 (R):    ---x----- ------        ----   y                    saldo: 0|0|15|12   Opphør. (24 brukt, 0 av 22 uker minstrett igjen)
@@ -120,11 +121,10 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
     }
 
     /**
-     * Situasjon 2: Mor har tatt ut mindre enn minsterett på barn 1 (f.eks. 4 uker igjen av minsteretten).
+     * Scenario 2:  Mor har tatt ut mindre enn minsterett på barn 1 (f.eks. 4 uker igjen av minsteretten).
      *              Mor søker termin på barn 2 (40 uker etter barn 1).
      *              Mor søker endring på barn 1 om å ta ut resten av minsteretten etter de 6 første ukene for barn 2.
      *              Far tar ut 2 uker ifm fødsel og endringssøker om å ta ut resten av minsteretten sin på barn 1 (6 uker) etter mors peridoer for barn 2.
-
      *   Barn 1: x, Barn 2: y                                                               saldo: FØR_FØDSEL|MØDRE|FEDRE|FELLES (3|15|15|16)
      *   MOR Barn 1 (FS):   ---x------ ---------                                            saldo: 0|3|15|13    INNVILGET (18 brukt, 4 av 22 uker igjen av minsterett)
      *   FAR Barn 1 (FS):      x--                                                          saldo: 0|0|13|16    INNVILGET (2 uker brukt ifm fødsel, 6 av 8 uker igjen av minsterett barn 1)
