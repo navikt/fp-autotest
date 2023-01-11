@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperiodeType.SAMTIDIGUTTAK;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.util.VirkedagUtil.helgejustertTilMandag;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.REBEREGN_FERIEPENGER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
@@ -26,9 +27,9 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.util.VirkedagUtil;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakEtterNesteSakDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
@@ -108,38 +109,40 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
-        var sisteUttaksperiode = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().stream()
-                .max(Comparator.comparing(UttakResultatPeriode::getFom))
-                .orElseThrow();
+        var sisteUttaksperiode = sisteUttaksperiode();
         assertThat(sisteUttaksperiode.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
-                .isEqualTo(VirkedagUtil.helgejustertTilMandag(termindatoBarn2.minusWeeks(3)));
+                .isEqualTo(helgejustertTilMandag(termindatoBarn2.minusWeeks(3)));
         assertThat(sisteUttaksperiode.getPeriodeResultatÅrsak())
                 .as("Siste periode avslått med årsak ny stønadsperiode")
                 .isEqualTo(PeriodeResultatÅrsak.STØNADSPERIODE_NYTT_BARN);
 
     }
 
+
+
+
     /**
      * Scenario 2:  Mor har tatt ut mindre enn minsterett på barn 1 (f.eks. 4 uker igjen av minsteretten).
-     *              Mor søker termin på barn 2 (40 uker etter barn 1).
-     *              Mor søker endring på barn 1 om å ta ut resten av minsteretten etter de 6 første ukene for barn 2.
-     *              Far tar ut 2 uker ifm fødsel og endringssøker om å ta ut resten av minsteretten sin på barn 1 (6 uker) etter mors peridoer for barn 2.
-     *   Barn 1: x, Barn 2: y                                                               saldo: FØR_FØDSEL|MØDRE|FEDRE|FELLES (3|15|15|16)
-     *   MOR Barn 1 (FS):   ---x------ ---------                                            saldo: 0|3|15|13    INNVILGET (18 brukt, 4 av 22 uker igjen av minsterett)
-     *   FAR Barn 1 (FS):      x--                                                          saldo: 0|0|13|16    INNVILGET (2 uker brukt ifm fødsel, 6 av 8 uker igjen av minsterett barn 1)
-     *   MOR Barn 2 (FS):                               ---y------                          saldo: 0|0|15|6     INNVILGET (28 brukt)
-     *   MOR Barn 1 (ENDR):    x                                   ----                     saldo: 0|0|15|12    Tar ut resten av minsrteretten på barn 1 (22 brukt, 0 av 22 uker igjen av minsterett)
-     *   MOR Barn 1 (RE):   ---x------ ---------                   ----                     saldo: 0|0|15|12    INVILGET. Forventer AP 5067. Vurder overlapp med sak 2.
-     *   FAR Barn 1 (ENDR):    x                                       ---- --              saldo: 0|0|15|10    Tar ut resten av minstretten på barn 1 (0 uker igjen av minsterett, opphør, forventer AP 5067)
-     *   FAR Barn 1 (RE):      x--                                     ---- --              saldo: 0|0|15|10    INVILGET. Forventer AP 5067. Vurder overlapp med sak 2
+     *              Far tar ut ifm fødsel og 10 uker av fedrekvoten som strekker seg over uke 40 (termin for barn 2).
+     *              Mor søker termin på barn 2 (40 uker etter barn 1) som førere til revurdering på far.
+     *              Far sin sak revurderes og avslår uker som strekker seg forbi startdato barn 2 og som ikke er minstrett
+     *              Mor søker endring på barn 1 om å ta 8 uker (bare 4 uker gjenstår av minstrett) etter de 6 første ukene for barn 2. Delvis innvilget.
+     *   Barn 1: x, Barn 2: y                                                       saldo: FØR_FØDSEL|MØDRE|FEDRE|FELLES (3|15|15|16)
+     *   MOR Barn 1 (FS):   ---x------ ---------                                    saldo: 0|3|15|13    INNVILGET (18 brukt, 4 av 22 uker igjen av minsterett)
+     *   FAR Barn 1 (FS):      x--                  ----------                      saldo: 0|0|3|13     INNVILGET (2 uker brukt ifm fødsel, 10 brukt andre periode)
+     *   MOR Barn 2 (FS):                               ---y------                  saldo: 0|9|15|13    INNVILGET (28 brukt)
+     *   FAR Barn 1 (RE):      x--                  ------                          saldo: 0|0|9|13     Delvis innvilget/avslag: Forventer AP 5067. Vurder overlapp med sak 2. Avslå FK som strekker seg forbi startdato for mors nye sak.
+     *   MOR Barn 1 (ENDR):    x                                  ---- ----         saldo: 0|0|15|12    Tar ut resten av minsrteretten på barn 1 (22 brukt, 0 av 22 uker igjen av minsterett)
+     *   MOR Barn 1 (RE):   ---x------ ---------                  ----              saldo: 0|0|15|12    Delvis innvilget/avslag. Søker om mer enn minstretten. Forventer AP 5067. Vurder overlapp med sak 2.
      */
     @Test
     @DisplayName("Mor og far beholder minsteretten ved to tette og kan ta ut denne etter fødsel av siste barn")
     @Description("Scenario 2: Mor har tatt ut mindre enn minsterett på barn 1 (f.eks. 4 uker igjen av minsteretten)."
-            + "Mor søker termin på barn 2 (40 uker etter barn 1)."
-            + "Mor søker endring på barn 1 om å ta ut resten av minsteretten etter de 6 første ukene for barn 2."
-            + "Far tar ut 2 uker ifm fødsel og endringssøker om å ta ut resten av minsteretten sin på barn 1 (6 uker) etter mors peridoer for barn 2.")
+            + "Far tar ut ifm fødsel og 10 uker av fedrekvoten som strekker seg over uke 40 (termin for barn 2)."
+            + "Mor søker termin på barn 2 (40 uker etter barn 1) som førere til revurdering på far."
+            + "Far sin sak revurderes og avslår uker som strekker seg forbi startdato barn 2 og som ikke er minstrett."
+            + "Mor søker endring på barn 1 om å ta 8 uker (bare 4 uker gjenstår av minstrett) etter de 6 første ukene for barn 2. Delvis innvilget")
     void mor_og_far_beholder_minsteretten_ved_to_tette_og_kan_ta_ut_denne_etter_fødel_av_siste_barn() {
         var familie = new Familie("700", SEND_DOKUMENTER_UTEN_SELVBETJENING);
 
@@ -166,10 +169,12 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
 
         // TODO: Assert på forventet saldo av minsterettdager igjen
 
+
         // FAR (barn 1): Førstegangssøknad for barn 1 (40 uker gammelt)
         var far = familie.far();
         var fordeling = fordeling(
-                uttaksperiode(FEDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK)
+                uttaksperiode(FEDREKVOTE, fødselsdatoBarn1, fødselsdatoBarn1.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK),
+                uttaksperiode(FEDREKVOTE, fødselsdatoBarn1.plusWeeks(36), fødselsdatoBarn1.plusWeeks(46).minusDays(1))
         );
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdatoBarn1, FAR)
                 .medFordeling(fordeling.build())
@@ -184,12 +189,12 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
 
         // TODO: Assert på forventet saldo av minsterettdager igjen
 
+
         // MOR (barn 2): Førstegangssøknad på Barn 2 (termin 40 uker etter barn 1)
         var termindatoBarn2 = fødselsdatoBarn1.plusWeeks(40);
         var fordelingMorBarn2 = fordeling(
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, termindatoBarn2.minusWeeks(3), termindatoBarn2.minusDays(1)),
-                uttaksperiode(MØDREKVOTE, termindatoBarn2, termindatoBarn2.plusWeeks(6).minusDays(1)),
-                uttaksperiode(FELLESPERIODE, termindatoBarn2.plusWeeks(6), termindatoBarn2.plusWeeks(10).minusDays(1))
+                uttaksperiode(MØDREKVOTE, termindatoBarn2, termindatoBarn2.plusWeeks(6).minusDays(1))
         );
         var søknadMorBarn2 = lagSøknadForeldrepengerTermin(termindatoBarn2, MOR)
                 .medFordeling(fordelingMorBarn2.build())
@@ -211,14 +216,42 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 .extracting(BehandlingÅrsak::behandlingArsakType)
                 .containsExactly(REBEREGN_FERIEPENGER);
 
+
+
+        // FAR (barn 1): Revurdering pga overlapp med nytt barn
         saksbehandler.hentFagsak(saksnummerFarBarn1);
-        assertThat(saksbehandler.harRevurderingBehandling()).isFalse();
+        saksbehandler.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
+
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakEtterNesteSakDto.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        beslutter.hentFagsak(saksnummerFarBarn1);
+        beslutter.ventPåOgVelgRevurderingBehandling();
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(
+                beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                        .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling()));
+        beslutter.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker())
+                .map(BehandlingÅrsak::behandlingArsakType)
+                .containsExactly(BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN);
+
+        // Forventer at siste periode er avslått med avlsagstype STØNADSPERIODE_NYTT_BARN
+        var sisteUttaksperiodeFarBarn1 = sisteUttaksperiode();
+        assertThat(sisteUttaksperiodeFarBarn1.getFom())
+                .as("Siste periode knekt ved startdato ny sak")
+                .isEqualTo(helgejustertTilMandag(fødselsdatoBarn1.plusWeeks(36).plusWeeks(6)));
+        assertThat(sisteUttaksperiodeFarBarn1.getPeriodeResultatÅrsak().isAvslåttÅrsak()).isTrue();
+        assertThat(sisteUttaksperiodeFarBarn1.getPeriodeResultatÅrsak())
+                .as("Siste periode avslått med årsak ny stønadsperiode")
+                .isEqualTo(PeriodeResultatÅrsak.STØNADSPERIODE_NYTT_BARN);
 
 
-        // MOR (barn 1): ENDRINGSSØKNAD FOR Å TA UT RESTEN AV MINSTERETTEN
+
+        // MOR (barn 1): ENDRINGSSØKNAD FOR Å TA UT RESTEN AV MINSTERETTEN.
+        // Har 4 uker igjen av minstretten, men søker om 8 (forventer 4 uker innvilget og de siste 4 ukene avslått)
         var fordelingEndringBarn1 = fordeling(
                 uttaksperiode(MØDREKVOTE, termindatoBarn2.plusWeeks(6), termindatoBarn2.plusWeeks(9).minusDays(1)),
-                uttaksperiode(FELLESPERIODE, termindatoBarn2.plusWeeks(9), termindatoBarn2.plusWeeks(10).minusDays(1))
+                uttaksperiode(FELLESPERIODE, termindatoBarn2.plusWeeks(9), termindatoBarn2.plusWeeks(14).minusDays(1))
         );
         var endringssøknadMorBarn1 = SøknadEndringErketyper.lagEndringssøknadFødsel(fødselsdatoBarn1, MOR,
                 fordelingEndringBarn1.build(), saksnummerMorBarn1);
@@ -235,35 +268,24 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(
                 beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
                         .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling()));
-        beslutter.ventTilFagsakLøpende();
+        beslutter.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        // FAR (barn 2): Endringssøknad om å ta ut resten av sin minsterett etter mors sine første 6 uker etter termin for barn 2
-        saksbehandler.hentFagsak(saksnummerFarBarn1);
-        var fordelingFarEndringBarn1 = fordeling(
-                uttaksperiode(FEDREKVOTE, termindatoBarn2.plusWeeks(10), termindatoBarn2.plusWeeks(16).minusDays(1))
-        );
-        var endringssøknadFarBarn1 = SøknadEndringErketyper.lagEndringssøknadFødsel(
-                fødselsdatoBarn1,
-                FAR,
-                fordelingFarEndringBarn1.build(),
-                saksnummerFarBarn1);
-        var saksnummerFarBarn1Endring = far.søk(endringssøknadFarBarn1.build());
+        // Forventer at siste periode er avslått med avlsagstype STØNADSPERIODE_NYTT_BARN
+        var sisteUttaksperiodeMorBarn1 = sisteUttaksperiode();
+        assertThat(sisteUttaksperiodeMorBarn1.getFom())
+                .as("Siste periode knekt ved startdato ny sak")
+                .isEqualTo(helgejustertTilMandag(termindatoBarn2.plusWeeks(10)));
+        assertThat(sisteUttaksperiodeMorBarn1.getPeriodeResultatÅrsak().isAvslåttÅrsak()).isTrue();
+        assertThat(sisteUttaksperiodeMorBarn1.getPeriodeResultatÅrsak())
+                .as("Siste periode avslått med årsak ny stønadsperiode")
+                .isEqualTo(PeriodeResultatÅrsak.STØNADSPERIODE_NYTT_BARN);
+    }
 
-        saksbehandler.hentFagsak(saksnummerFarBarn1Endring);
-        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakEtterNesteSakDto.class);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        beslutter.hentFagsak(saksnummerFarBarn1Endring);
-        beslutter.ventPåOgVelgRevurderingBehandling();
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(
-                beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                        .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling()));
-        beslutter.ventTilFagsakLøpende();
-
-        // Verifiser at fagsak på barn 2 ikke er påvirket
-        saksbehandler.hentFagsak(saksnummerMorBarn2);
-        assertThat(saksbehandler.harRevurderingBehandling()).isFalse();
+    private UttakResultatPeriode sisteUttaksperiode() {
+        return saksbehandler.valgtBehandling.getUttakResultatPerioder()
+                .getPerioderSøker()
+                .stream()
+                .max(Comparator.comparing(UttakResultatPeriode::getFom))
+                .orElseThrow();
     }
 }
