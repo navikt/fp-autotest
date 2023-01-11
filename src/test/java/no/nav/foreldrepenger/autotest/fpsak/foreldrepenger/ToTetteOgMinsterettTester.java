@@ -167,7 +167,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerMorBarn1);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        // TODO: Assert på forventet saldo av minsterettdager igjen
+        // TODO: Assert på forventet saldo av minsterettdager igjen (TFP-5354)
 
 
         // FAR (barn 1): Førstegangssøknad for barn 1 (40 uker gammelt)
@@ -187,7 +187,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerFarBarn1);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        // TODO: Assert på forventet saldo av minsterettdager igjen
+        // TODO: Assert på forventet saldo av minsterettdager igjen (TFP-5354)
 
 
         // MOR (barn 2): Førstegangssøknad på Barn 2 (termin 40 uker etter barn 1)
@@ -233,7 +233,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
 
         assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker())
                 .map(BehandlingÅrsak::behandlingArsakType)
-                .containsExactly(BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN);
+                .containsExactly(BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN); // TODO: (TFP-5356) Skal ikke føre til opphør
 
         // Forventer at siste periode er avslått med avlsagstype STØNADSPERIODE_NYTT_BARN
         var sisteUttaksperiodeFarBarn1 = sisteUttaksperiode();
@@ -271,6 +271,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         beslutter.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Forventer at siste periode er avslått med avlsagstype STØNADSPERIODE_NYTT_BARN
+        // TODO: (TFP-5356) Skal ikke føre til opphør eller skal det det i denne sammenhengen?
         var sisteUttaksperiodeMorBarn1 = sisteUttaksperiode();
         assertThat(sisteUttaksperiodeMorBarn1.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
@@ -279,6 +280,10 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         assertThat(sisteUttaksperiodeMorBarn1.getPeriodeResultatÅrsak())
                 .as("Siste periode avslått med årsak ny stønadsperiode")
                 .isEqualTo(PeriodeResultatÅrsak.STØNADSPERIODE_NYTT_BARN);
+
+        // Verifiser at fagsak på barn 12 IKKE blir berørt og det IKKE opprettes en revurdering
+        saksbehandler.hentFagsak(saksnummerMorBarn2);
+        assertThat(saksbehandler.harRevurderingBehandling()).isFalse();
     }
 
     private UttakResultatPeriode sisteUttaksperiode() {
