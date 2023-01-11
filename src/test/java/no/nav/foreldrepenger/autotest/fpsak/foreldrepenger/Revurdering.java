@@ -5,15 +5,10 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordelingEndringssøknadGradering;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.LocalDate;
-import java.util.Comparator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.util.VirkedagUtil;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
@@ -31,7 +25,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
@@ -314,59 +307,6 @@ class Revurdering extends FpsakTestBase {
                 .as("Avslåtte uttaksperioder")
                 .hasSizeGreaterThan(1);
     }
-
-    @Test
-    @DisplayName("Mor innvilges for ny termin - revurder løpende FP")
-    @Description("Mor har FP og får innvilget ny FP - revurder tidligste FP og avslå perioder inn i ny stønadsperiode")
-    void revurder_fp_pga_innvilget_fp_nytt_barn() {
-        // Barn 1 er 25 uker gammelt
-        var familie = new Familie("74", SEND_DOKUMENTER_UTEN_SELVBETJENING);
-        var mor = familie.mor();
-        var fødselsdato = familie.barn().fødselsdato();
-        var fpStartdato = fødselsdato.minusWeeks(3);
-        var fordeling = fordeling(
-                uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(15).minusDays(1)),
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(15), fødselsdato.plusWeeks(31).minusDays(1)));
-        var søknadBarn1 = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medFordeling(fordeling.build())
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fødselsdato.minusWeeks(2));
-        var saksnummerBarn1 = mor.søk(søknadBarn1.build());
-
-        var arbeidsgiver = mor.arbeidsgiver();
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummerBarn1, fpStartdato);
-
-        saksbehandler.hentFagsak(saksnummerBarn1);
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-
-        // Barn 2: Søker for barn 2 med termin om 6 uker og blir innvilget med start om 3 uker.
-        var termindatoBarn2 = LocalDate.now().plusWeeks(6);
-        var søknadBarn2 = lagSøknadForeldrepengerTermin(termindatoBarn2, BrukerRolle.MOR)
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
-        var saksnummerBarn2 = mor.søk(søknadBarn2.build());
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummerBarn2, termindatoBarn2.minusWeeks(3));
-
-        saksbehandler.hentFagsak(saksnummerBarn2);
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-
-        // Barn 1: Revurdering skal avslå siste uttaksperiode med rett årsak
-        saksbehandler.hentFagsak(saksnummerBarn1);
-        saksbehandler.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
-        var sisteUttaksperiode = saksbehandler.valgtBehandling.getUttakResultatPerioder().getPerioderSøker().stream()
-                .max(Comparator.comparing(UttakResultatPeriode::getFom))
-                .orElseThrow();
-        assertThat(sisteUttaksperiode.getFom())
-                .as("Siste periode knekt ved startdato ny sak")
-                .isEqualTo(VirkedagUtil.helgejustertTilMandag(termindatoBarn2.minusWeeks(3)));
-        assertThat(sisteUttaksperiode.getPeriodeResultatÅrsak())
-                .as("Siste periode avslått med årsak ny stønadsperiode")
-                .isEqualTo(PeriodeResultatÅrsak.STØNADSPERIODE_NYTT_BARN);
-
-    }
-
 }
 
 

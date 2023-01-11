@@ -100,6 +100,7 @@ public class AksjonspunktKoder {
 
     public static final String MANUELL_KONTROLL_AV_OM_BRUKER_HAR_OMSORG = "5061";
 
+    public static final String VURDER_UTTAK_ETTER_NESTE_SAK_KODE = "5067";
     public static final String FASTSETT_UTTAKPERIODER = "5071";
     public static final String AVKLAR_FAKTA_ANNEN_FORELDER_HAR_RETT_KODE = "5086";
 
