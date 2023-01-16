@@ -26,16 +26,16 @@
 
         <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.4.0</dokumentgenerator.version>
-        <fp-felles.versjon>4.2.15</fp-felles.versjon>
+        <fp-felles.versjon>4.2.17</fp-felles.versjon>
         <fp-prosesstask.version>3.1.14</fp-prosesstask.version>
-        <fp-kontrakter.version>6.2.1</fp-kontrakter.version>
+        <fp-kontrakter.version>6.2.5</fp-kontrakter.version>
 
         <allure.version>2.20.1</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
-        <assertj.version>3.23.1</assertj.version>
-        <aspectj.version>1.9.9.1</aspectj.version>
-        <junit.version>5.9.1</junit.version>
-        <mockito.version>4.10.0</mockito.version>
+        <assertj.version>3.24.1</assertj.version>
+        <aspectj.version>1.9.19</aspectj.version>
+        <junit.version>5.9.2</junit.version>
+        <mockito.version>4.11.0</mockito.version>
         <jackson.version>2.14.1</jackson.version>
         <jakarta.vs.rs.version>3.1.0</jakarta.vs.rs.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
