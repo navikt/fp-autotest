@@ -328,6 +328,31 @@ services:
       - oracle
       - vtp
       - fpsak
+  fplos:
+    image: $FPLOS_IMAGE
+    container_name: fplos
+    restart: on-failure
+    mem_limit: 512mb
+    environment:
+      - "AZURE_APP_CLIENT_ID=fplos"
+      - "AXSYS_URL=http://vtp:8060/rest/axsys-enhetstilgang"
+    env_file:
+      - "fplos_datasource.list"
+      - "common.env"
+    volumes:
+      - "~/.modig:/app/.modig"
+    ports:
+      - "8071:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/fplos/internal/health/isReady"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
   fpinfo:
     image: $FPINFO_IMAGE
     container_name: fpinfo
