@@ -30,6 +30,7 @@ echo FPRISK_IMAGE="$(imageVersion "ghcr.io/navikt/fp-risk")" >> .env
 echo FPABONNENT_IMAGE="$(imageVersion "ghcr.io/navikt/fpabonnent")" >> .env
 echo FPFORDEL_IMAGE="$(imageVersion "ghcr.io/navikt/fpfordel")" >> .env
 echo FPINFO_IMAGE="$(imageVersion "ghcr.io/navikt/fpinfo")" >> .env
+echo FPLOS_IMAGE="$(imageVersion "ghcr.io/navikt/fplos")" >> .env
 echo FPSOKNAD_MOTTAK_IMAGE="$(imageVersion "ghcr.io/navikt/fpsoknad-mottak")" >> .env
 echo FPINFO_HISTORIKK_IMAGE="$(imageVersion "ghcr.io/navikt/fpinfo-historikk")" >> .env
 echo FORELDREPENGESOKNADAPI_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad-api")" >> .env
