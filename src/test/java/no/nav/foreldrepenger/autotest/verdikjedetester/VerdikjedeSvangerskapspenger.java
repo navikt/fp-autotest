@@ -6,13 +6,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
-
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.TilretteleggingType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -25,12 +18,16 @@ import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.TilretteleggingType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
+import no.nav.foreldrepenger.common.innsyn.v2.BehandlingTilstand;
 
 @Tag("verdikjede")
 class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
@@ -399,6 +396,68 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgnummer2, prosentTilArbeidforhold2))
                 .as("Foventer at hele den utbetalte dagsatsen går til søker!")
                 .isTrue();
+    }
+
+    @Test
+    @DisplayName("6: Verifiser innsyn har korrekt data")
+    @Description("Verifiserer at innsyn har korrekt data og sammenligner med vedtaket med det saksbehandlerene ser")
+    void mor_innsyn_verifsere() {
+        var familie = new Familie("502");
+        var mor = familie.mor();
+        var arbeidsforholdMor = mor.arbeidsforhold();
+        var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
+        var termindato = LocalDate.now().plusMonths(3);
+        var tilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
+                LocalDate.now(),
+                LocalDate.now(),
+                ArbeidsforholdErketyper.virksomhet((Orgnummer) orgnummer),
+                BigDecimal.valueOf(40));
+        var søknad = SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad(
+                BrukerRolle.MOR,
+                termindato,
+                List.of(tilrettelegging));
+        var saksnummer = mor.søk(søknad.build());
+
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
+
+        saksbehandler.hentFagsak(saksnummer);
+        var avklarFaktaFødselOgTilrettelegging = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+
+        var svpSaker = mor.innsyn().hentSaker().svangerskapspenger();
+        assertThat(svpSaker).hasSize(1);
+        var svpSak = svpSaker.stream().findFirst().orElseThrow();
+        assertThat(svpSak.saksnummer().value()).isEqualTo(saksnummer.value());
+        assertThat(svpSak.sakAvsluttet()).isFalse();
+        assertThat(svpSak.åpenBehandling().tilstand()).isEqualTo(BehandlingTilstand.UNDER_BEHANDLING);
+        assertThat(svpSak.familiehendelse().termindato()).isEqualTo(termindato);
+        assertThat(svpSak.familiehendelse().fødselsdato()).isNull();
+        assertThat(svpSak.familiehendelse().antallBarn()).isZero();
+        assertThat(svpSak.familiehendelse().omsorgsovertakelse()).isNull();
+
+        avklarFaktaFødselOgTilrettelegging.setBegrunnelse("En begrunnelse fra autotest");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
+
+        var bekreftSvangerskapspengervilkår = saksbehandler
+                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+        bekreftSvangerskapspengervilkår
+                .godkjenn()
+                .setBegrunnelse("Godkjenner vilkår");
+        saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        var svpSakerEtterVedtak = mor.innsyn().hentSaker().svangerskapspenger();
+        assertThat(svpSakerEtterVedtak).hasSize(1);
+        var svpSakEtterVedtak = svpSakerEtterVedtak.stream().findFirst().orElseThrow();
+        assertThat(svpSakEtterVedtak.saksnummer().value()).isEqualTo(saksnummer.value());
+        assertThat(svpSakEtterVedtak.sakAvsluttet()).isFalse();
+        assertThat(svpSakEtterVedtak.åpenBehandling()).isNull();
+        assertThat(svpSakEtterVedtak.familiehendelse().termindato()).isEqualTo(termindato);
+        assertThat(svpSakEtterVedtak.familiehendelse().fødselsdato()).isNull();
+        assertThat(svpSakEtterVedtak.familiehendelse().antallBarn()).isZero();
+        assertThat(svpSakEtterVedtak.familiehendelse().omsorgsovertakelse()).isNull();
     }
 
     private Integer regnUtForventetDagsats(Integer samletMånedsbeløp, Integer tilrettelegginsprosent) {
