@@ -493,17 +493,17 @@ services:
                     "url": "http://fpsak:8080"
                 },
                 {
-                    "path": "/fpoppdrag",
+                    "path": "/fpoppdrag/api",
                     "scopes": "api://vtp.teamforeldrepenger.fpoppdrag/.default",
                     "url": "http://fpoppdrag:8080"
                 },
                 {
-                    "path": "/fptilbake",
+                    "path": "/fptilbake/api",
                     "scopes": "api://vtp.teamforeldrepenger.fptilbake/.default",
                     "url": "http://fptilbake:8080"
                 },
                 {
-                    "path": "/fpformidling",
+                    "path": "/fpformidling/api",
                     "scopes": "api://vtp.teamforeldrepenger.fpformidling/.default",
                     "url": "http://fpformidling:8080"
                 },
@@ -511,6 +511,11 @@ services:
                     "path": "/fplos/api",
                     "scopes": "api://vtp.teamforeldrepenger.fplos/.default",
                     "url": "http://fplos:8080"
+                },
+                {
+                    "path": "/fpfordel/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/.default",
+                    "url": "http://fpfordel:8080"
                 }
             ]
         }
