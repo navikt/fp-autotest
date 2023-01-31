@@ -529,6 +529,8 @@ services:
       timeout: 10s
       retries: 10
     depends_on:
+      wonderwall-fpfrontend:
+        condition: service_started
       fpsak:
         condition: service_healthy
   wonderwall-fpfrontend:
@@ -552,11 +554,9 @@ services:
 #     AZURE_APP_WELL_KNOWN_URL: kommer fra common.env
     env_file:
       - "common.env"
+    restart: on-failure
     depends_on:
-      authserver:
-        condition: service_started
-      fpfrontend:
-        condition: service_started
+      - authserver
   fpswagger:
     image: ghcr.io/navikt/fp-swagger:latest
     container_name: fpswagger
