@@ -159,19 +159,19 @@ if [ ${#mock_applikasjon[@]} ]; then
     for applikasjon in "${mock_applikasjon[@]}"; do
         if [[ "${applikasjoner_som_kan_mockes_ut[@]}" =~ "${applikasjon}" ]]; then
             if [[ "$*" == *vtp* ]]; then
-                sed -i.bak "s*${applikasjon}:8080*${host_adresse}:8060/rest/dummy*g" "docker-compose.yml"
+                sed -i.bak "s*${applikasjon}:8080*${host_adresse}:8060/rest/dummy*g" "compose.yml"
                 sed -i.bak "s*${applikasjon}:8080*${host_adresse}:8060/rest/dummy*g" "common.env"
             else
-                sed -i.bak "s*${applikasjon}:8080*vtp:8060/rest/dummy*g" "docker-compose.yml"
+                sed -i.bak "s*${applikasjon}:8080*vtp:8060/rest/dummy*g" "compose.yml"
                 sed -i.bak "s*${applikasjon}:8080*vtp:8060/rest/dummy*g" "common.env"
             fi
 
             if [[ "${applikasjon}" =~ "fpoppdrag"  ]] && [[ "$*" == *fpfrontend* ]] ; then
-                sed -i.bak "s*localhost:9000/fpoppdrag/api*vtp:8060/rest/dummy/fpoppdrag/api*g" "docker-compose.yml"
+                sed -i.bak "s*localhost:9000/fpoppdrag/api*vtp:8060/rest/dummy/fpoppdrag/api*g" "compose.yml"
                 sed -i.bak "s*localhost:9000/fpoppdrag/api*vtp:8060/rest/dummy/fpoppdrag/api*g" "common.env"
             fi
 
-            rm docker-compose.yml.bak
+            rm compose.yml.bak
             rm common.env.bak
         else
             echo "Mock av ${applikasjon} finnes ikke – beholder konfigurasjon som den er"
