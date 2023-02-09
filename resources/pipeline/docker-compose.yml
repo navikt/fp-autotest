@@ -166,7 +166,7 @@ services:
       retries: 10
     depends_on:
       fpsak:
-        condition: service_healthy
+        condition: service_started
       oracle:
         condition: service_healthy
       vtp:
@@ -375,7 +375,7 @@ services:
       retries: 10
     depends_on:
       fpsak:
-        condition: service_healthy
+        condition: service_started
       oracle:
         condition: service_healthy
       vtp:
@@ -534,7 +534,7 @@ services:
       wonderwall-fpfrontend:
         condition: service_started
       fpsak:
-        condition: service_healthy
+        condition: service_started
   wonderwall-fpfrontend:
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-fpfrontend
