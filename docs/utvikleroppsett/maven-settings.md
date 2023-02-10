@@ -29,17 +29,21 @@
     <profiles>
         <profile>
             <id>github</id>
-             <activation>
+            <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <repositories>
+                <repository>
+                    <id>github-central</id>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                </repository>
                 <repository>
                     <id>github</id>
                     <url>https://maven.pkg.github.com/navikt/fp-felles</url>
                 </repository>
                 <repository>
-                     <id>confluent</id>
-                     <url>https://packages.confluent.io/maven/</url>
+                    <id>confluent</id>
+                    <url>https://packages.confluent.io/maven/</url>
                 </repository>
             </repositories>
         </profile>

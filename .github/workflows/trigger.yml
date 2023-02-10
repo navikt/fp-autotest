@@ -69,24 +69,7 @@ jobs:
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
           cd docker-compose-lokal
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpsak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
-      - name: Venter på stacken og sjekker status
-        run: |
-          echo "STACK_CREATED=true" >> $GITHUB_ENV
-          docker ps -a
-          echo
-          echo "Tester om VTP er oppe"
-          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabakus er oppe"
-          timeout 180 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpsak er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "STACK_STARTED=true" >> $GITHUB_ENV
+          docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpsak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
       - name: Utfører foreldrepengetestene for fpsak
         id: tester
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P fpsak > >(tee test-result-log.txt)
@@ -199,59 +182,8 @@ jobs:
           ./make-dummy-keystore.sh
           cd ../pipeline
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpoppdrag fptilbake fprisk fpdokgen fpabonnent fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
-      - name: Venter på stacken og sjekker status
-        run: |
-          echo "STACK_CREATED=true" >> $GITHUB_ENV
-          docker ps -a
-          echo
-          echo "Tester om VTP er oppe"
-          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabakus er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpsak er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpformidling er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8010/fpformidling/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpdokgen er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8291)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpoppdrag er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8070/fpoppdrag/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fptilbake er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8030/fptilbake/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fprisk er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8075/fprisk/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabonnent er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8065/fpabonnent/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpfordel er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8090/fpfordel/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpinfo er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8040/fpinfo/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "Tester om fpsoknad-mottak er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:9001/api/actuator)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "STACK_STARTED=true" >> $GITHUB_ENV
+          docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpoppdrag fptilbake fprisk fpdokgen fpabonnent fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+
       - name: Sjekker minneforbruk
         if: always()
         run: |
@@ -363,59 +295,8 @@ jobs:
           ./make-dummy-keystore.sh
           cd ../pipeline
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
-          docker-compose -f docker-compose.yml -f docker-compose-github.yml up --quiet-pull --detach fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
-      - name: Venter på stacken og sjekker status
-        run: |
-          echo "STACK_CREATED=true" >> $GITHUB_ENV
-          docker ps -a
-          echo
-          echo "Tester om VTP er oppe"
-          timeout 5 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8060/rest/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabakus er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8015/fpabakus/internal/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpsak er oppe"
-          timeout 240 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8080/fpsak/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpformidling er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8010/fpformidling/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpdokgen er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8291)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpoppdrag er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8070/fpoppdrag/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fptilbake er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8030/fptilbake/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fprisk er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8075/fprisk/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpabonnent er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8065/fpabonnent/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpfordel er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8090/fpfordel/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo
-          echo "Tester om fpinfo er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:8040/fpinfo/internal/health/isReady)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "Tester om fpsoknad-mottak er oppe"
-          timeout 60 bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' http://localhost:9001/api/actuator)" != "200" ]]; do sleep 2; done' || false
-          echo Oppe!
-          echo "STACK_STARTED=true" >> $GITHUB_ENV
+          docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+
       - name: Sjekker minneforbruk
         if: always()
         run: |
@@ -508,6 +389,7 @@ jobs:
         with:
           name: logs-verdikjedetester
           path: container-logs
+
   rapport:
     name: Lager og publiserer test rapport
     if: |
@@ -562,8 +444,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-
   deploy-fpsak:
     if: |
       github.event_name == 'workflow_dispatch' &&
@@ -599,6 +479,7 @@ jobs:
                   }}}
                 }
               }'
+
   deploy-fptilbake:
     if: |
       github.event_name == 'workflow_dispatch' &&
@@ -634,6 +515,7 @@ jobs:
                   }}}
                 }
               }'
+
   deploy-rest:
     if: |
       github.event_name == 'workflow_dispatch' &&

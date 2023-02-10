@@ -18,7 +18,7 @@ nødvendige applikasjonene som trengs for å kunne kjøre angitt applikasjon.
 *   Minste verdikjede for FPSAK: postgres, oracle, fpabakus og vtp.
 *   IKKE minste verdikjede for FPSAK: postgres, oracle, fpabakus, vtp, fpformidling, fpfrontend, ...
 
-Hvis en ønsker å kjøre opp hele verdikjeden med ingen applikasjoner utenfor i IDE kan `resources/pipeline/docker-compose.yml` kjøres.
+Hvis en ønsker å kjøre opp hele verdikjeden med ingen applikasjoner utenfor i IDE kan `resources/pipeline/compose.yml` kjøres.
 
 
 ## Eksempel 1: FPSAK kjørende i IDE
