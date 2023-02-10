@@ -60,9 +60,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup fpsak og dens avhengigheter
+        id: setup
         run: |
-          echo "STACK_STARTED=false" >> $GITHUB_ENV
-          echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
           cd ../../lokal-utvikling
@@ -75,7 +74,7 @@ jobs:
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P fpsak > >(tee test-result-log.txt)
 
       - name: Sjekker loggen etter feil
-        if: always() && env.STACK_STARTED == 'true'
+        if: always() && steps.setup.outcome == 'success'
         id: logger
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil
 
@@ -83,7 +82,7 @@ jobs:
         if: |
           always() &&
           github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
+          steps.setup.outcome == 'success' &&
           steps.tester.outcome != 'skipped' &&
           steps.tester.outcome != 'cancelled'
         id: ghpages
@@ -112,7 +111,7 @@ jobs:
         if: |
           always() &&
           github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
+          steps.setup.outcome == 'success' &&
           steps.tester.outcome != 'skipped' &&
           steps.tester.outcome != 'cancelled'
         run: |
@@ -133,7 +132,7 @@ jobs:
                 "client_payload":{
                     "trigger": "${{ github.event.inputs.trigger }}",
                     "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "stack_started": "${{ steps.setup.outcome == 'success' }}",
                     "test_outcome": "${{ steps.tester.outcome }}",
                     "loggtest_outcome": "${{ steps.logger.outcome }}",
                     "test_resultat": "${{ env.TEST_RESULTAT }}",
@@ -141,13 +140,13 @@ jobs:
                     "run_id": "${{ github.run_id }}"
                   }}'
       - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
       - name: Laste opp logger
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         uses: actions/upload-artifact@v3
         with:
           name: logs-autotest
@@ -176,8 +175,6 @@ jobs:
 
       - name: Setup verdikjeden
         run: |
-          echo "STACK_STARTED=false" >> $GITHUB_ENV
-          echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
           cd ../pipeline
@@ -197,7 +194,7 @@ jobs:
         if: |
           always() &&
           github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
+          steps.setup.outcome == 'success' &&
           steps.tester.outcome != 'skipped' &&
           steps.tester.outcome != 'cancelled'
         id: ghpages
@@ -226,7 +223,7 @@ jobs:
         if: |
           always() &&
           github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
+          steps.setup.outcome == 'success' &&
           steps.tester.outcome != 'skipped' &&
           steps.tester.outcome != 'cancelled'
         run: |
@@ -247,7 +244,7 @@ jobs:
                 "client_payload":{
                     "trigger": "${{ github.event.inputs.trigger }}",
                     "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "stack_started": "${{ steps.setup.outcome == 'success' }}",
                     "test_outcome": "${{ steps.tester.outcome }}",
                     "loggtest_outcome": "success",
                     "test_resultat": "${{ env.TEST_RESULTAT }}",
@@ -255,13 +252,13 @@ jobs:
                     "run_id": "${{ github.run_id }}"
                   }}'
       - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
       - name: Laste opp logger
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         uses: actions/upload-artifact@v3
         with:
           name: logs-fptilbake-tester
@@ -289,8 +286,6 @@ jobs:
 
       - name: Setup verdikjeden
         run: |
-          echo "STACK_STARTED=false" >> $GITHUB_ENV
-          echo "Oppretter dummy keystore for testing"
           cd resources/keystore
           ./make-dummy-keystore.sh
           cd ../pipeline
@@ -307,7 +302,7 @@ jobs:
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P verdikjede > >(tee test-result-log.txt)
 
       - name: Sjekker loggen etter feil og lekket sensitiv data.
-        if: always() && env.STACK_STARTED == 'true'
+        if: always() && steps.setup.outcome == 'success'
         id: logger
         run: |
           mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger
@@ -320,7 +315,7 @@ jobs:
         if: |
           always() &&
           github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
+          steps.setup.outcome == 'success' &&
           steps.tester.outcome != 'skipped' &&
           steps.tester.outcome != 'cancelled'
         id: ghpages
@@ -349,7 +344,7 @@ jobs:
         if: |
           always() &&
           github.event_name == 'workflow_dispatch' &&
-          env.STACK_STARTED == 'true' &&
+          steps.setup.outcome == 'success' &&
           steps.tester.outcome != 'skipped' &&
           steps.tester.outcome != 'cancelled'
         shell: bash
@@ -370,7 +365,7 @@ jobs:
                 "client_payload":{
                     "trigger": "${{ github.event.inputs.trigger }}",
                     "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ env.STACK_STARTED }}",
+                    "stack_started": "${{ steps.setup.outcome == 'success' }}",
                     "test_outcome": "${{ steps.tester.outcome }}",
                     "loggtest_outcome": "${{ steps.logger.outcome }}",
                     "test_resultat": "${{ env.TEST_RESULTAT }}",
@@ -378,13 +373,13 @@ jobs:
                     "run_id": "${{ github.run_id }}"
                   }}'
       - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
       - name: Laste opp logger
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         uses: actions/upload-artifact@v3
         with:
           name: logs-verdikjedetester
