@@ -417,11 +417,11 @@ jobs:
 
           function echoStatus() {
             if [[ "$2" == 'skipped' ]]; then
-              echo ":skipped:  $1"
+              echo ":heavy_minus_sign:  $1"
             elif [[ "$2" == 'success' ]]; then
               echo ":heavy_check_mark:  $1"
             else
-              echo ":x:  $1"
+              echo ":x:  $1 -> se $3"
             fi
           }
 
@@ -431,13 +431,12 @@ jobs:
 
           echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
           echo >> $GITHUB_ENV
-          echoStatus Fpsak $fpsakStatus  >> $GITHUB_ENV
-          echoStatus Fptilbake $fptilbakeStatus >> $GITHUB_ENV
-          echoStatus Verdikjedetester $verdikjedetestStatus >> $GITHUB_ENV
+          echoStatus Fpsak $fpsakStatus "<https://navikt.github.io/fpsak-autotest/fpsak|rapport>" >> $GITHUB_ENV
+          echoStatus Fptilbake $fptilbakeStatus "<https://navikt.github.io/fpsak-autotest/fptilbake|rapport>" >> $GITHUB_ENV
+          echoStatus Verdikjedetester $verdikjedetestStatus "<https://navikt.github.io/verdikjede|rapport>" >> $GITHUB_ENV
           echo >> $GITHUB_ENV
           echo '*Trigger*: ${{ github.event.inputs.trigger }}:${{ github.event.inputs.version }}' >> $GITHUB_ENV
           echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
-          echo '*Resultat*: <https://navikt.github.io/fpsak-autotest|Allure rapport>' >> $GITHUB_ENV
           echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ github.run_id }}|Github Action Url>' >> $GITHUB_ENV
           echo '\n' >> $GITHUB_ENV
           if [[ $fpsakStatus == 'test-feil' && $fptilbakeStatus == 'test-feil' && $verdikjedetestStatus == 'test-feil' ]]; then
