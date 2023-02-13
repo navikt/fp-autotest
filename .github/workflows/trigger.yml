@@ -53,7 +53,6 @@ jobs:
           distribution: 'temurin'
           java-version: 17
           cache: 'maven'
-
       - name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
         with:
@@ -71,6 +70,7 @@ jobs:
           cd docker-compose-lokal
           ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
           docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpsak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+
       - name: Utfører foreldrepengetestene for fpsak
         id: tester
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P fpsak > >(tee test-result-log.txt)
@@ -97,6 +97,7 @@ jobs:
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fpsak/history target/allure-results
           mvn allure:report --batch-mode --settings .github/.m2/settings.xml
+
       - name: Tar testresultat
         if: always() && steps.ghpages.outcome == 'success'
         run: tar -czf fpsak.tar.gz -C target/allure-report .
@@ -115,6 +116,7 @@ jobs:
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+
       - name: Laste opp logger
         if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         uses: actions/upload-artifact@v3
@@ -134,6 +136,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: 'master'
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -160,9 +163,15 @@ jobs:
         run: |
           docker stats --no-stream
           free -m
+
       - name: Utfører testene for fptilbake
         id: tester
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P fptilbake > >(tee test-result-log.txt)
+
+      - name: Sjekker loggen etter feil
+        if: always() && steps.setup.outcome == 'success'
+        id: logger
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil
 
       - name: Generer testrapport
         if: |
@@ -181,6 +190,7 @@ jobs:
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fptilbake/history target/allure-results
           mvn allure:report --batch-mode --settings .github/.m2/settings.xml
+
       - name: Tar testresultat
         if: always() && steps.ghpages.outcome == 'success'
         run: tar -czf fptilbake.tar.gz -C target/allure-report .
@@ -199,6 +209,7 @@ jobs:
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+
       - name: Laste opp logger
         if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         uses: actions/upload-artifact@v3
@@ -250,13 +261,14 @@ jobs:
       - name: Sjekker loggen etter feil og lekket sensitiv data.
         if: always() && steps.setup.outcome == 'success'
         id: logger
-        run: |
-          mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger
+
       - name: Sjekker minneforbruk
         if: always()
         run: |
           docker stats --no-stream
           free -m
+
       - name: Generer testrapport
         if: |
           always() &&
@@ -274,6 +286,7 @@ jobs:
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/verdikjede/history target/allure-results
           mvn allure:report --batch-mode --settings .github/.m2/settings.xml
+
       - name: Tar testresultat
         if: always() && steps.ghpages.outcome == 'success'
         run: tar -czf verdikjede.tar.gz -C target/allure-report .
@@ -292,6 +305,7 @@ jobs:
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+
       - name: Laste opp logger
         if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         uses: actions/upload-artifact@v3
@@ -362,7 +376,7 @@ jobs:
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene, rapport ]
     runs-on: ubuntu-latest
     timeout-minutes: 2
-      # Notify slack
+    steps:
       - name: Henter ut historie til trigger
         if: always() && !cancelled()
         id: slacknotify
@@ -387,17 +401,17 @@ jobs:
         if: always() && !cancelled()
         shell: bash
         run: |
-          if [[ ${{needs.fpsak-autotester.outputs.result}} == 'failure' || \
-                ${{needs.fptilbake-tester.outputs.result}} == 'failure' || \
+          if [[ ${{needs.fpsak-autotester.outputs.result}}  == 'failure' || \
+                ${{needs.fptilbake-tester.outputs.result}}  == 'failure' || \
                 ${{needs.verdikjedetestene.outputs.result}} == 'failure']]; then
             echo "TEST_OUTCOME=failure" >> $GITHUB_ENV
           else
             echo "TEST_OUTCOME=success" >> $GITHUB_ENV
           fi
 
-          if [[ ${{needs.fpsak-autotester.outputs.result-log}} == 'failure' || \
-                ${{needs.fptilbake-tester.outputs.result-log}} == 'failure' || \
-                ${{needs.verdikjedetestene.outputs.result-log}} == 'failure']]; then
+          if [[ [[ ${{needs.fpsak-autotester.outputs.result}}  == 'success' && ${{needs.fpsak-autotester.outputs.result-log}} == 'failure' ]] || \
+                [[ ${{needs.fptilbake-tester.outputs.result}}  == 'success' && ${{needs.fptilbake-tester.outputs.result-log}} == 'failure' ]] || \
+                [[ ${{needs.verdikjedetestene.outputs.result}} == 'success' && ${{needs.verdikjedetestene.outputs.result-log}} == 'failure']] ]]; then
             echo "LOG_OUTCOME=failure" >> $GITHUB_ENV
           else
             echo "LOG_OUTCOME=success" >> $GITHUB_ENV
