@@ -368,7 +368,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   notify-slack:
-    name: Lager og publiserer test rapport
+    name: Notify slack om testresultat
     if: |
       always() && !cancelled() &&
       github.event_name == 'workflow_dispatch' &&
