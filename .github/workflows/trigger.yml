@@ -321,7 +321,7 @@ jobs:
       github.event.inputs.issue_number != null
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
       - name: Henter testresultat for fpsak
@@ -401,17 +401,17 @@ jobs:
         if: always() && !cancelled()
         shell: bash
         run: |
-          if [[ ${{needs.fpsak-autotester.outputs.result}}  == 'failure' || \
-                ${{needs.fptilbake-tester.outputs.result}}  == 'failure' || \
-                ${{needs.verdikjedetestene.outputs.result}} == 'failure']]; then
+          if [[ '${{needs.fpsak-autotester.outputs.result}}'  == 'failure' || \
+                '${{needs.fptilbake-tester.outputs.result}}'  == 'failure' || \
+                '${{needs.verdikjedetestene.outputs.result}}' == 'failure']]; then
             echo "TEST_OUTCOME=failure" >> $GITHUB_ENV
           else
             echo "TEST_OUTCOME=success" >> $GITHUB_ENV
           fi
 
-          if [[ [[ ${{needs.fpsak-autotester.outputs.result}}  == 'success' && ${{needs.fpsak-autotester.outputs.result-log}} == 'failure' ]] || \
-                [[ ${{needs.fptilbake-tester.outputs.result}}  == 'success' && ${{needs.fptilbake-tester.outputs.result-log}} == 'failure' ]] || \
-                [[ ${{needs.verdikjedetestene.outputs.result}} == 'success' && ${{needs.verdikjedetestene.outputs.result-log}} == 'failure']] ]]; then
+          if [[ [[ '${{needs.fpsak-autotester.outputs.result}}'  != 'failure' && '${{needs.fpsak-autotester.outputs.result-log}}' == 'failure' ]] || \
+                [[ '${{needs.fptilbake-tester.outputs.result}}'  != 'failure' && '${{needs.fptilbake-tester.outputs.result-log}}' == 'failure' ]] || \
+                [[ '${{needs.verdikjedetestene.outputs.result}}' != 'failure' && '${{needs.verdikjedetestene.outputs.result-log}}' == 'failure']] ]]; then
             echo "LOG_OUTCOME=failure" >> $GITHUB_ENV
           else
             echo "LOG_OUTCOME=success" >> $GITHUB_ENV
