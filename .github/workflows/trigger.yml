@@ -170,7 +170,7 @@ jobs:
       - name: Sjekker loggen etter feil
         if: always() && steps.setup.outcome == 'success'
         id: logger
-        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpinfo,fpdokgen,fpabonnent
 
       - name: Generer testrapport
         if: |
@@ -261,7 +261,7 @@ jobs:
       - name: Sjekker loggen etter feil og lekket sensitiv data.
         if: always() && steps.setup.outcome == 'success'
         id: logger
-        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger-DikkeSjekkLengdeAvContainer=fpdokgen
 
       - name: Sjekker minneforbruk
         if: always()

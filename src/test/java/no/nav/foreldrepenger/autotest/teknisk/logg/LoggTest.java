@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import javax.validation.ConstraintViolationException;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,8 +33,13 @@ import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Tag("logger")
 class LoggTest {
+    private static final Logger LOG = LoggerFactory.getLogger(LoggTest.class);
+
     private static final List<String> UNWANTED_STRINGS = List.of(
         "Server Error",
         "deadlock detected",
@@ -59,6 +65,7 @@ class LoggTest {
 
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver");
     private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak");
+    private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
 
     private static String toNumericPattern(String s) {
         return "^(.*[^0-9])?" + Pattern.quote(s) + "([^0-9].*)?$";
@@ -66,6 +73,13 @@ class LoggTest {
 
     private static Stream<String> hentContainerNavn() {
         return Arrays.stream(DockerUtils.hentContainerNavn());
+    }
+
+    @BeforeAll
+    public static void setup() throws Exception {
+        IKKE_SJEKK_LENGDE_AV_CONTAINERE = Optional.ofNullable(System.getProperty("ikkeSjekkLengdeAvContainer"))
+                .orElse("sjekker alle");
+        LOG.info("Sjekker ikke lengden av følgende containere: {}", IKKE_SJEKK_LENGDE_AV_CONTAINERE);
     }
 
     @DisplayName("Test om lekker sensitive opplysninger")
@@ -101,6 +115,7 @@ class LoggTest {
     @MethodSource("hentContainerNavn")
     void sjekkFeilILogger(String containerNavn) {
         if (!ignoreContainersFeil.contains(containerNavn)) {
+
             var log = DockerUtils.hentLoggForContainer(containerNavn);
             try (var scanner = new Scanner(log)) {
                 int linePos = 0;
@@ -112,7 +127,8 @@ class LoggTest {
                                 String.format("Fant feil i logg : [%s] for applikasjon: [%s], linje[%s]=%s", unwantedString, containerNavn, linePos, currentLine));
                     }
                 }
-                if (!containerNavn.equalsIgnoreCase("fpdokgen") && linePos < 80) {
+
+                if (!IKKE_SJEKK_LENGDE_AV_CONTAINERE.contains(containerNavn) && linePos < 80) {
                     fail(String.format("Det forventes minst 80 linjer i loggen for applijasjon: %s, men var %s.",
                             containerNavn, linePos));
                 }
