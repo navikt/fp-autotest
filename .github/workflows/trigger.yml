@@ -10,9 +10,7 @@ on:
       - '.gitignore'
       - 'CODEOWNERS'
       - '.github/workflows/label-pr.yml'
-      - '.github/workflows/deprecated-fpsak-trigger.yml'
-      - '.github/workflows/trigger-verdikjede.yml'
-      - '.github/workflows/deprecated-update-issue.yml'
+      - '.github/workflows/build-pr.yml'
       - 'lokalutvikling/*'
       - 'docs/*'
   workflow_dispatch:
