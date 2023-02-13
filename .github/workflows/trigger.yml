@@ -109,39 +109,6 @@ jobs:
           path: fpsak.tar.gz
           retention-days: 1
 
-      - name: Henter testresultat og setter outcome
-        id: testresultat
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          steps.setup.outcome == 'success' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
-        run: |
-          echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_OUTPUT
-          rm test-result-log.txt
-      - name: Notify slack
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          steps.tester.outcome != 'cancelled' &&
-          github.event.inputs.trigger != null &&
-          github.event.inputs.version != null
-        run: |
-          curl -XPOST -u "x-access-token:${{ secrets.GH_ACCESS_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/navikt/fpsak-autotest/dispatches \
-          -d '{ "event_type":"notify-slack",
-                "client_payload":{
-                    "trigger": "${{ github.event.inputs.trigger }}",
-                    "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ steps.setup.outcome == 'success' }}",
-                    "test_outcome": "${{ steps.tester.outcome }}",
-                    "loggtest_outcome": "${{ steps.logger.outcome }}",
-                    "test_resultat": "${{ env.TEST_RESULTAT }}",
-                    "test_suite": "fpsak",
-                    "run_id": "${{ github.run_id }}"
-                  }}'
       - name: Dumper logger for feilsøking
         if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         run: |
@@ -226,38 +193,6 @@ jobs:
           path: fptilbake.tar.gz
           retention-days: 1
 
-      - name: Henter testresultat og setter outcome
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          steps.setup.outcome == 'success' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
-        run: |
-          echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
-          rm test-result-log.txt
-      - name: Notify slack
-        if: |
-          always() &&
-          steps.tester.outcome != 'cancelled' &&
-          github.event_name == 'workflow_dispatch' &&
-          github.event.inputs.trigger != null &&
-          github.event.inputs.version != null
-        run: |
-          curl -XPOST -u "x-access-token:${{ secrets.GH_ACCESS_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/navikt/fpsak-autotest/dispatches \
-          -d '{ "event_type":"notify-slack",
-                "client_payload":{
-                    "trigger": "${{ github.event.inputs.trigger }}",
-                    "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ steps.setup.outcome == 'success' }}",
-                    "test_outcome": "${{ steps.tester.outcome }}",
-                    "loggtest_outcome": "success",
-                    "test_resultat": "${{ env.TEST_RESULTAT }}",
-                    "test_suite": "fptilbake",
-                    "run_id": "${{ github.run_id }}"
-                  }}'
       - name: Dumper logger for feilsøking
         if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         run: |
@@ -270,6 +205,7 @@ jobs:
         with:
           name: logs-fptilbake-tester
           path: container-logs
+
   verdikjedetestene:
     name: Kjører verdikjedetestene som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
     runs-on: ubuntu-latest-8-cores
@@ -350,38 +286,6 @@ jobs:
           path: verdikjede.tar.gz
           retention-days: 1
 
-      - name: Henter testresultat
-        if: |
-          always() &&
-          github.event_name == 'workflow_dispatch' &&
-          steps.setup.outcome == 'success' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
-        shell: bash
-        run: |
-          echo "TEST_RESULTAT=$(grep -o 'Tests run: [0-9]\+, Failures: [0-9]\+, Errors: [0-9]\+, Skipped: [0-9]\+$' test-result-log.txt)" >> $GITHUB_ENV
-          rm test-result-log.txt
-      - name: Notify slack
-        if: |
-          always() && !cancelled() &&
-          github.event_name == 'workflow_dispatch' &&
-          github.event.inputs.trigger != null &&
-          github.event.inputs.version != null
-        run: |
-          curl -XPOST -u "x-access-token:${{ secrets.GH_ACCESS_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/navikt/fpsak-autotest/dispatches \
-          -d '{ "event_type":"notify-slack",
-                "client_payload":{
-                    "trigger": "${{ github.event.inputs.trigger }}",
-                    "version": "${{ github.event.inputs.version }}",
-                    "stack_started": "${{ steps.setup.outcome == 'success' }}",
-                    "test_outcome": "${{ steps.tester.outcome }}",
-                    "loggtest_outcome": "${{ steps.logger.outcome }}",
-                    "test_resultat": "${{ env.TEST_RESULTAT }}",
-                    "test_suite": "verdikjede",
-                    "run_id": "${{ github.run_id }}"
-                  }}'
       - name: Dumper logger for feilsøking
         if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
         run: |
