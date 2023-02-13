@@ -355,9 +355,9 @@ jobs:
           git fetch origin gh-pages
           mkdir gh-pages
           git --work-tree=gh-pages checkout origin/gh-pages
-          if [ -d "fpsak" ]; then echo "Oppdatere testresultat for fpsak" && cp -a fpsak/. gh-pages/fpsak; fi
-          if [ -d "fptilbake" ]; then echo "Oppdatere testresultat for fptilbake" && cp -a fptilbake/. gh-pages/fptilbake; fi
-          if [ -d "verdikjede" ]; then echo "Oppdatere testresultat for verdikjede" && cp -a verdikjede/. gh-pages/verdikjede; fi
+          if [ -d "fpsak" ]; then echo "Oppdatere testresultat for fpsak" && rm -rf gh-pages/fpsak && cp -r fpsak gh-pages; fi
+          if [ -d "fptilbake" ]; then echo "Oppdatere testresultat for fptilbake" && rm -rf gh-pages/fptilbake && cp -r fptilbake gh-pages; fi
+          if [ -d "verdikjede" ]; then echo "Oppdatere testresultat for verdikjede" && rm -rf gh-pages/verdikjede && cp -r verdikjede gh-pages; fi
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v3.1.0
