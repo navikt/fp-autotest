@@ -321,7 +321,7 @@ jobs:
       github.event.inputs.issue_number != null
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v3
       - name: Henter testresultat for fpsak
@@ -417,7 +417,7 @@ jobs:
 
           function echoStatus() {
             if [[ "$2" == 'skipped' ]]; then
-              echo ":skip:  $1"
+              echo ":skipped:  $1"
             elif [[ "$2" == 'success' ]]; then
               echo ":heavy_check_mark:  $1"
             else
@@ -426,9 +426,8 @@ jobs:
           }
 
           fpsakStatus="$(statusJobb ${{needs.fpsak-autotester.result}} ${{needs.fpsak-autotester.outputs.result}} ${{needs.fpsak-autotester.outputs.result-log}})"
-          fptilbakeStatus="$(statusJobb ${{needs.fpsak-autotester.result}} ${{needs.fptilbake-tester.outputs.result}} ${{needs.fpsak-autotester.outputs.result-log}})"
-          verdikjedetestStatus="$( statusJobb ${{needs.fpsak-autotester.result}} ${{needs.verdikjedetestene.outputs.result}} ${{needs.fpsak-autotester.outputs.result-log}})"
-
+          fptilbakeStatus="$(statusJobb ${{needs.fptilbake-tester.result}} ${{needs.fptilbake-tester.outputs.result}} ${{needs.fptilbake-tester.outputs.result-log}})"
+          verdikjedetestStatus="$( statusJobb ${{needs.verdikjedetestene.result}} ${{needs.verdikjedetestene.outputs.result}} ${{needs.verdikjedetestene.outputs.result-log}})"
 
           echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
           echo >> $GITHUB_ENV
@@ -438,17 +437,17 @@ jobs:
           echo >> $GITHUB_ENV
           echo '*Trigger*: ${{ github.event.inputs.trigger }}:${{ github.event.inputs.version }}' >> $GITHUB_ENV
           echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
-          echo '*Resultat*: <https://navikt.github.io/fpsak-autotest/verdikjede|Allure rapport>' >> $GITHUB_ENV
+          echo '*Resultat*: <https://navikt.github.io/fpsak-autotest|Allure rapport>' >> $GITHUB_ENV
           echo '*Action URL*: <https://github.com/navikt/fpsak-autotest/actions/runs/${{ github.run_id }}|Github Action Url>' >> $GITHUB_ENV
           echo '\n' >> $GITHUB_ENV
-          if [[ $fpsakStatus == 'logg-feil' && $fptilbakeStatus == 'logg-feil' && $verdikjedetestStatus == 'logg-feil' ]]; then
-            echo "Feil i loggen, men testene kjørte OK!"
-            echo "SLACK_TITLE=Testene gikk grønne, men fant feil i loggen :bug:" >> $GITHUB_ENV
-            echo "SLACK_COLOR=#ffff00" >> $GITHUB_ENV
-          elif [[ $fpsakStatus == 'test-feil' && $fptilbakeStatus == 'logg-feil' && $verdikjedetestStatus == 'test-feil' ]]; then
+          if [[ $fpsakStatus == 'test-feil' && $fptilbakeStatus == 'test-feil' && $verdikjedetestStatus == 'test-feil' ]]; then
             echo "Test failure!"
             echo "SLACK_TITLE=Verdikjeden er brukket :boom:" >> $GITHUB_ENV
             echo "SLACK_COLOR=#df1515" >> $GITHUB_ENV
+          elif [[ $fpsakStatus == 'logg-feil' && $fptilbakeStatus == 'logg-feil' && $verdikjedetestStatus == 'logg-feil' ]]; then
+            echo "Feil i loggen, men testene kjørte OK!"
+            echo "SLACK_TITLE=Testene gikk grønne, men fant feil i loggen :bug:" >> $GITHUB_ENV
+            echo "SLACK_COLOR=#ffff00" >> $GITHUB_ENV
           else
             echo "Test success!"
             echo "SLACK_TITLE=Verdikjeden er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
