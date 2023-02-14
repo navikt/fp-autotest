@@ -9,6 +9,7 @@ x-default-konfigurasjon: &default-konfigurasjon
 
 services:
   audit.nais:
+    <<: *default-konfigurasjon
     image: $AUDIT_NAIS_IMAGE
     container_name: audit.nais
     mem_limit: 16mb
@@ -49,6 +50,7 @@ services:
       timeout: 30s
       start_period: 10s
   authserver:
+    <<: *default-konfigurasjon
     image: ghcr.io/navikt/mock-oauth2-server:0.5.5
     container_name: authserver
     environment:
@@ -58,11 +60,6 @@ services:
       - 127.0.0.1:8086:8086
     volumes:
       - ./authserver:/authserver
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8086/isalive" ]
-      interval: 5s
-      timeout: 5s
-      retries: 10
   vtp:
     <<: *default-konfigurasjon
     image: $VTP_IMAGE
@@ -597,11 +594,6 @@ services:
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
       FP_UTTAK_SERVICE_URL: http://localhost:9002
       LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9066" ]
-      interval: 5s
-      timeout: 10s
-      retries: 20
     depends_on:
       - foreldrepengesoknad-api
   foreldrepengesoknad:
@@ -618,11 +610,6 @@ services:
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
       FP_UTTAK_SERVICE_URL: http://localhost:9002
       LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9067" ]
-      interval: 5s
-      timeout: 10s
-      retries: 20
     depends_on:
       - foreldrepengesoknad-api
   svangerskapspengesoknad:
@@ -635,11 +622,6 @@ services:
       APPRES_CMS_URL: https://www.nav.no/dekoratoren
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
       LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9068" ]
-      interval: 5s
-      timeout: 10s
-      retries: 20
     depends_on:
       - foreldrepengesoknad-api
 
