@@ -44,12 +44,13 @@ if [[ ${1} == down ]]; then
     fi
 
 else
+    echo "Setting up oracle in colima"
     # Setting up oracle i x86_64 instans
     colima start --memory 3 --arch x86_64
     docker context use colima
     docker-compose -f ../resources/pipeline/compose.yml up -d oracle
 
-
+    echo "Konfigurer docker-compose-lokal/ for å kjøre følgende applikasjoner i IDEA $*"
     # Setting up resten
     if [[ $software = "colima" ]] ; then
         colima start --profile arm --cpu 4 --memory 12 --arch aarch64

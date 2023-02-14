@@ -5,7 +5,7 @@ software="docker-dekstop"
 while [ -n "$1" ]; do # while loop starts
     case "$1" in
     -o|--operativsystem)
-        if [[ "$2" = "mac-colima" || "$2" = "mac-dekstop" ]] ; then
+        if [[ "$2" = "mac" || "$2" = "windows" ]] ; then
             operativsystem="$2"
         else
             echo "Ukjent operativsystem. Defaulter til Windows."
@@ -25,8 +25,8 @@ while [ -n "$1" ]; do # while loop starts
         echo ""
         echo "Options:"
         echo "-o|--operativsystem       <windows|mac>               Default: windows"
-        echo "-s|--software <colima|docker-dekstop>     Velg mellom colima og docker-dekstop (colima kjører opp oracle for mac uansett)"
-        echo "                                          default: docker-dekstop"
+        echo "-s|--software             <colima|docker-dekstop>     Velg mellom colima og docker-dekstop (colima kjører opp oracle for mac uansett)"
+        echo "                                                      default: docker-dekstop"
         echo
         exit 0
         ;;

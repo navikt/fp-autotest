@@ -58,6 +58,11 @@ services:
       - 127.0.0.1:8086:8086
     volumes:
       - ./authserver:/authserver
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8086/isalive" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
   vtp:
     <<: *default-konfigurasjon
     image: $VTP_IMAGE
@@ -159,7 +164,7 @@ services:
       vtp:
         condition: service_healthy
       fpabakus:
-        condition: service_healthy
+        condition: service_started
   fpfrontend:
     <<: *default-konfigurasjon
     image: $FPFRONTEND_IMAGE
@@ -272,12 +277,12 @@ services:
       timeout: 10s
       retries: 10
     depends_on:
-      fpsak:
-        condition: service_healthy
       oracle:
         condition: service_healthy
       vtp:
         condition: service_healthy
+      fpsak:
+        condition: service_started
   fpformidling:
     <<: *default-konfigurasjon
     image: $FPFORMIDLING_IMAGE
@@ -481,12 +486,12 @@ services:
       timeout: 10s
       retries: 10
     depends_on:
-      fpsak:
-        condition: service_healthy
       oracle:
         condition: service_healthy
       vtp:
         condition: service_healthy
+      fpsak:
+        condition: service_started
   fpsoknad-mottak:
     <<: *default-konfigurasjon
     image: $FPSOKNAD_MOTTAK_IMAGE
@@ -592,6 +597,11 @@ services:
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
       FP_UTTAK_SERVICE_URL: http://localhost:9002
       LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9066" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
     depends_on:
       - foreldrepengesoknad-api
   foreldrepengesoknad:
@@ -608,6 +618,11 @@ services:
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
       FP_UTTAK_SERVICE_URL: http://localhost:9002
       LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9067" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
     depends_on:
       - foreldrepengesoknad-api
   svangerskapspengesoknad:
@@ -620,6 +635,11 @@ services:
       APPRES_CMS_URL: https://www.nav.no/dekoratoren
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
       LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9068" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
     depends_on:
       - foreldrepengesoknad-api
 

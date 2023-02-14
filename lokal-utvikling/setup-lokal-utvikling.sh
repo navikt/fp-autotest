@@ -154,10 +154,10 @@ done
 
 # Ved mocking av våre interne applikasjoner bruker vi en stub i vtp. Bare støtte for fpoppdrag, fptilbake, fpformidling eller fprisk
 if [ ${#mock_applikasjon[@]} ]; then
-    echo "Mocker ut følgende applikasjoner: ${mock_applikasjon[@]}"
+    if [ ! -z "${mock_applikasjon[*]}" ]; then echo "Mocker ut følgende applikasjoner: ${mock_applikasjon[*]}"; fi
     applikasjoner_som_kan_mockes_ut=(fpoppdrag fptilbake fpformidling fprisk)
     for applikasjon in "${mock_applikasjon[@]}"; do
-        if [[ "${applikasjoner_som_kan_mockes_ut[@]}" =~ "${applikasjon}" ]]; then
+        if [[ "${applikasjoner_som_kan_mockes_ut[*]}" =~ ${applikasjon} ]]; then
             if [[ "$*" == *vtp* ]]; then
                 sed -i.bak "s*${applikasjon}:8080*${host_adresse}:8060/rest/dummy*g" "compose.yml"
                 sed -i.bak "s*${applikasjon}:8080*${host_adresse}:8060/rest/dummy*g" "common.env"
