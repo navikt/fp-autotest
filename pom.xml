@@ -230,7 +230,7 @@
                 <plugin>
                     <groupId>io.qameta.allure</groupId>
                     <artifactId>allure-maven</artifactId>
-                    <version>${allure.version}</version>
+                    <version>${allure.maven.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
