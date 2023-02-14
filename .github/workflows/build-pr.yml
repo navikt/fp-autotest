@@ -11,7 +11,7 @@ on:
       - 'lokalutvikling/*'
 
 env:
-  JUIPTER_PARALLELISM: 16
+  JUIPTER_PARALLELISM: 4
   GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
