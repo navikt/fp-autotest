@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 # Dette scriptet setter opp hele verdikjeden i Docker utenom fpfrontend slik at du kan kjøre opp fpfrontend lokalt.
-system="windows"
+operativsystem="windows"
+software="docker-dekstop"
 while [ -n "$1" ]; do # while loop starts
     case "$1" in
-    -s|--system)
+    -o|--operativsystem)
         if [[ "$2" = "mac-colima" || "$2" = "mac-dekstop" ]] ; then
-            system="$2"
+            operativsystem="$2"
         else
-            echo "Ukjent system. Defaulter til Windows."
+            echo "Ukjent operativsystem. Defaulter til Windows."
+        fi
+        shift
+        ;;
+    -s|--software)
+        if [[ "$2" = "colima" || "$2" = "docker-dekstop" ]] ; then
+            software="$2"
+        else
+            echo "Ukjent operativsystem. Defaulter til Docker-Dekstop."
         fi
         shift
         ;;
@@ -15,8 +24,9 @@ while [ -n "$1" ]; do # while loop starts
         echo "usage: ./setup-lokal-utvikling.sh [options]"
         echo ""
         echo "Options:"
-        echo "-s, --system <windows|mac-colima|mac-dekstop>     Velg mellom windows og mac (bare colima eller colima og dekstop)"
-        echo "                                                  default: windows"
+        echo "-o|--operativsystem       <windows|mac>               Default: windows"
+        echo "-s|--software <colima|docker-dekstop>     Velg mellom colima og docker-dekstop (colima kjører opp oracle for mac uansett)"
+        echo "                                          default: docker-dekstop"
         echo
         exit 0
         ;;
@@ -30,8 +40,8 @@ done
 ARGUMENT=${1}
 
 if [[ $ARGUMENT == down ]]; then
-    if [[ $system = "mac-dekstop" || $system = "mac-colima" ]] ; then
-        sh ./setup-lokal-utvikling-mac.sh --system "$system" down
+    if [[ $operativsystem = "mac" ]] ; then
+        sh ./setup-lokal-utvikling-mac.sh --software "$software" down
     else
         docker-compose -f docker-compose-lokal/compose.yml down
     fi
@@ -39,8 +49,8 @@ if [[ $ARGUMENT == down ]]; then
 fi
 
 
-if [[ $system = "mac-dekstop" || $system = "mac-colima" ]] ; then
-    sh ./setup-lokal-utvikling-mac.sh fpfrontend
+if [[ $operativsystem = "mac" ]] ; then
+    sh ./setup-lokal-utvikling-mac.sh --software "$software" fpfrontend
 else
     sh ./setup-lokal-utvikling.sh fpfrontend
 fi

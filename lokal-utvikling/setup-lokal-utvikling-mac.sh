@@ -1,12 +1,12 @@
 #!/bin/bash
-system="mac-dekstop"
-while [ -n "$1" ]; do
+software="docker-dekstop"
+while [ -n "$1" ]; do # while loop starts
     case "$1" in
-    -s|--system)
-        if [[ "$2" = "mac-colima" || "$2" = "mac-dekstop" ]] ; then
-            system="$2"
+    -s|--software)
+        if [[ "$2" = "colima" || "$2" = "docker-dekstop" ]] ; then
+            software="$2"
         else
-            echo "Ukjent system. Defaulter til mac-dekstop."
+            echo "Ukjent operativsystem. Defaulter til Docker-Dekstop."
         fi
         shift
         ;;
@@ -14,8 +14,9 @@ while [ -n "$1" ]; do
         echo "usage: ./setup-lokal-utvikling.sh [options]"
         echo ""
         echo "Options:"
-        echo "-s, --system <mac-colima|mac-dekstop>     Velg mellom mac bare med colima eller med både colima og dekstop)"
-        echo "                                          default: mac-dekstop"
+        echo "-o|--operativsystem       <windows|mac>               Default: windows"
+        echo "-s|--software             <colima|docker-dekstop>     Velg mellom colima og docker-dekstop (colima kjører opp oracle for mac uansett)"
+        echo "                                                      default: docker-dekstop"
         echo
         exit 0
         ;;
@@ -33,7 +34,7 @@ if [[ ${1} == down ]]; then
     colima stop
 
     cd docker-compose-lokal || exit
-    if [[ $system = "mac-colima" ]] ; then
+    if [[ $software = "colima" ]] ; then
         docker context use colima-arm
         docker-compose down
         colima --profile arm stop
@@ -50,7 +51,7 @@ else
 
 
     # Setting up resten
-    if [[ $system = "mac-colima" ]] ; then
+    if [[ $software = "colima" ]] ; then
         colima start --profile arm --cpu 4 --memory 12 --arch aarch64
         docker context use colima-arm
         sh ./setup-lokal-utvikling.sh --system colima "$@" oracle
