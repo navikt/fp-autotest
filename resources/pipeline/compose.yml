@@ -741,6 +741,8 @@ services:
       - 127.0.0.1:9200:9200
     environment:
       AZURE_APP_CLIENT_ID: fpswagger
+    env_file:
+      - *common-properties
     depends_on:
       authserver:
         condition: service_started

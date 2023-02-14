@@ -46,7 +46,7 @@ if [[ ${1} == down ]]; then
 else
     echo "Setting up oracle in colima"
     # Setting up oracle i x86_64 instans
-    colima start --memory 3 --arch x86_64
+    colima start --cpu 2 --memory 4 --arch x86_64
     docker context use colima
     docker-compose -f ../resources/pipeline/compose.yml up -d oracle
 
