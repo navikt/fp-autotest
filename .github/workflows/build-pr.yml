@@ -1,7 +1,7 @@
 name: Kjører Autotestene for verdikjeden PR
 
 on:
-  pull_request_target:
+  pull_request:
     paths-ignore:
       - '**.md'
       - '**.MD'
@@ -11,8 +11,8 @@ on:
       - 'lokalutvikling/*'
 
 env:
-  JUIPTER_PARALLELISM: 16
-  GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+  JUIPTER_PARALLELISM: 4
+  GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:

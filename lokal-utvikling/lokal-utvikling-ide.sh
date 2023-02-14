@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 # Med dette scriptet kan du angi selv hvilke apper du ønsker å kjøre i IDE på kommandolinjen,
 # feks: ./lokal-utvikling-ide.sh fpsak fpformidling
-system="windows"
+operativsystem="windows"
+software="docker-dekstop"
 while [ -n "$1" ]; do # while loop starts
     case "$1" in
-    -s|--system)
-        if [[ "$2" = "mac-colima" || "$2" = "mac-dekstop" ]] ; then
-            system="$2"
+    -o|--operativsystem)
+        if [[ "$2" = "mac" || "$2" = "windows" ]] ; then
+            operativsystem="$2"
         else
-            echo "Ukjent system. Defaulter til Windows."
+            echo "Ukjent operativsystem. Defaulter til Windows."
+        fi
+        shift
+        ;;
+    -s|--software)
+        if [[ "$2" = "colima" || "$2" = "docker-dekstop" ]] ; then
+            software="$2"
+        else
+            echo "Ukjent operativsystem. Defaulter til Docker-Dekstop."
         fi
         shift
         ;;
@@ -16,8 +25,9 @@ while [ -n "$1" ]; do # while loop starts
         echo "usage: ./setup-lokal-utvikling.sh [options]"
         echo ""
         echo "Options:"
-        echo "-s, --system <windows|mac-colima|mac-dekstop>     Velg mellom windows og mac (bare colima eller colima og dekstop)"
-        echo "                                                  default: windows"
+        echo "-o|--operativsystem       <windows|mac>               Default: windows"
+        echo "-s|--software             <colima|docker-dekstop>     Velg mellom colima og docker-dekstop (colima kjører opp oracle for mac uansett)"
+        echo "                                                      default: docker-dekstop"
         echo
         exit 0
         ;;
@@ -29,8 +39,8 @@ while [ -n "$1" ]; do # while loop starts
 done
 
 if [[ $1 == down ]]; then
-    if [[ $system = "mac-dekstop" || $system = "mac-colima" ]] ; then
-        sh ./setup-lokal-utvikling-mac.sh --system "$system" down
+    if [[ $operativsystem = "mac" ]] ; then
+        sh ./setup-lokal-utvikling-mac.sh --software "$software" down
     else
         docker-compose -f docker-compose-lokal/compose.yml down
     fi
@@ -45,8 +55,8 @@ while (( "$#" )); do
     shift
 done
 
-if [[ $system = "mac-dekstop" || $system = "mac-colima" ]] ; then
-    sh ./setup-lokal-utvikling-mac.sh --system "$system" ${setup}
+if [[ $operativsystem = "mac" ]] ; then
+    sh ./setup-lokal-utvikling-mac.sh --software "$software" ${setup}
 else
     sh ./setup-lokal-utvikling.sh ${setup}
 fi

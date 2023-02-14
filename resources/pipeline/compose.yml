@@ -9,6 +9,7 @@ x-default-konfigurasjon: &default-konfigurasjon
 
 services:
   audit.nais:
+    <<: *default-konfigurasjon
     image: $AUDIT_NAIS_IMAGE
     container_name: audit.nais
     mem_limit: 16mb
@@ -49,6 +50,7 @@ services:
       timeout: 30s
       start_period: 10s
   authserver:
+    <<: *default-konfigurasjon
     image: ghcr.io/navikt/mock-oauth2-server:0.5.5
     container_name: authserver
     environment:
@@ -159,7 +161,7 @@ services:
       vtp:
         condition: service_healthy
       fpabakus:
-        condition: service_healthy
+        condition: service_started
   fpfrontend:
     <<: *default-konfigurasjon
     image: $FPFRONTEND_IMAGE
@@ -272,12 +274,12 @@ services:
       timeout: 10s
       retries: 10
     depends_on:
-      fpsak:
-        condition: service_healthy
       oracle:
         condition: service_healthy
       vtp:
         condition: service_healthy
+      fpsak:
+        condition: service_started
   fpformidling:
     <<: *default-konfigurasjon
     image: $FPFORMIDLING_IMAGE
@@ -481,12 +483,12 @@ services:
       timeout: 10s
       retries: 10
     depends_on:
-      fpsak:
-        condition: service_healthy
       oracle:
         condition: service_healthy
       vtp:
         condition: service_healthy
+      fpsak:
+        condition: service_started
   fpsoknad-mottak:
     <<: *default-konfigurasjon
     image: $FPSOKNAD_MOTTAK_IMAGE

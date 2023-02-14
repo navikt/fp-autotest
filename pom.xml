@@ -26,11 +26,11 @@
 
         <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.4.2</dokumentgenerator.version>
-        <fp-felles.versjon>4.2.22</fp-felles.versjon>
+        <fp-felles.versjon>4.2.23</fp-felles.versjon>
         <fp-prosesstask.version>3.1.17</fp-prosesstask.version>
-        <fp-kontrakter.version>6.2.8</fp-kontrakter.version>
+        <fp-kontrakter.version>6.2.9</fp-kontrakter.version>
 
-        <allure.version>2.20.1</allure.version>
+        <allure.version>2.21.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <assertj.version>3.24.2</assertj.version>
         <aspectj.version>1.9.19</aspectj.version>
@@ -220,7 +220,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M7</version>
+                    <version>3.0.0-M8</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -230,7 +230,7 @@
                 <plugin>
                     <groupId>io.qameta.allure</groupId>
                     <artifactId>allure-maven</artifactId>
-                    <version>${allure.maven.version}</version>
+                    <version>${allure.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

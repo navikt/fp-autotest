@@ -382,7 +382,7 @@ jobs:
         id: slacknotify
         uses: actions/checkout@v3
         with:
-          repository: ${{ env.TRIGGER }}
+          repository: ${{ github.event.inputs.trigger }}
           path: ${{ github.event.inputs.trigger }}
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           fetch-depth: 5
