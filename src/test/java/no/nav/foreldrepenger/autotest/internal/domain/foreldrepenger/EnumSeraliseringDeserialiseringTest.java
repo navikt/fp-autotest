@@ -14,7 +14,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.MedlemskapManuellVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakPeriodeVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
@@ -74,11 +73,6 @@ class EnumSeraliseringDeserialiseringTest extends SerializationTestBase {
     @Test
     void OmsorgsovertakelseVilkårTypeTest() {
         test(OmsorgsovertakelseVilkårType.FORELDREANSVARSVILKÅRET_2_LEDD);
-    }
-
-    @Test
-    void UttakPeriodeVurderingTypeTest() {
-        test(UttakPeriodeVurderingType.PERIODE_OK);
     }
 
     @Test
