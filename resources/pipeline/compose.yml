@@ -71,18 +71,15 @@ services:
       JAVAX_NET_SSL_TRUSTSTORE: /app/.modig/truststore.jks
       CREATE_TOPICS: >-
         teamforeldrepenger.inntektsmelding-innsendinghendelse-v1,
-        fpsoknad-mottak-innsendinghendelse,
+        teamforeldrepenger.selvbetjening-innsendinghendelse-v1,
         teamforeldrepenger.behandling-hendelse-v1,
-        teamforeldrepenger.familie-vedtakfattet-v1-vtp,
+        teamforeldrepenger.familie-vedtakfattet-v1,
+        teamforeldrepenger.tilbakekreving-brukerdialog-v1,
+        teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1,
+        teamforeldrepenger.tilbakekreving-dvh-vedtak-v1,
         aapen-sob-oppgaveHendelse-v1,
-        tilbakebetaling-aksjonspunkthendelse,
-        aapen-person-pdl-leesah-v1-vtp,
-        privat-foreldrepenger-historikk-fordeling,
-        aapen-dok-journalfoering-v1-q1,
-        privat-permittering-lonnskomp-vedtak-vtp,
-        tilbakekreving-brukerdialog-local,
-        privat-tilbakekreving-dvh-saksstatistikk-v1-aiven-vtp,
-        privat-tilbakekreving-dvh-vedtak-v1-aiven-vtp
+        pdl.leesah-v1,
+        teamdokumenthandtering.aapen-dok-journalfoering-vtp
     volumes:
       - *sertifikat-volum
     ports:
@@ -255,8 +252,7 @@ services:
     mem_limit: 512mb
     environment:
       AZURE_APP_CLIENT_ID: fpfordel
-      KAFKA_TOPICS_FORDELING: privat-foreldrepenger-historikk-fordeling
-      KAFKA_TOPIC_JOURNAL_HENDELSE: aapen-dok-journalfoering-v1-q1
+      KAFKA_TOPIC_JOURNAL_HENDELSE: teamdokumenthandtering.aapen-dok-journalfoering-vtp
       DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
       FPFORDEL_IT_FP_URL: http://vtp:8060/rest/infotrygd/saker/foreldrepenger
       KAFKA_AVRO_SERDE_CLASS: no.nav.foreldrepenger.mottak.hendelse.test.VtpKafkaAvroSerde
@@ -359,14 +355,12 @@ services:
       AZURE_APP_CLIENT_ID: fptilbake
       CONTEXT_PATH: /fptilbake
       DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
-      KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL: privat-tilbakekreving-brukerdialog-local
+      KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL: teamforeldrepenger.tilbakekreving-brukerdialog-v1
       TILBAKEKREVING_V1_URL: https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService
       DOKDIST_REST_DISTRIBUER_JOURNALPOST: http://vtp:8060/rest/dokdist/v1/distribuerjournalpost
-      TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL: privat-tilbakekreving-brukerdialog-local
-      KAFKA_FPLOS_TOPIC: tilbakebetaling-aksjonspunkthendelse
       KAFKA_LOS_AIVEN_TOPIC: teamforeldrepenger.behandling-hendelse-v1
-      KAFKA_DVH_SAKSHENDELSE_AIVEN_TOPIC: privat-tilbakekreving-dvh-saksstatistikk-v1-aiven-vtp
-      KAFKA_DVH_VEDTAK_AIVEN_TOPIC: privat-tilbakekreving-dvh-vedtak-v1-aiven-vtp
+      KAFKA_DVH_SAKSHENDELSE_AIVEN_TOPIC: teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1
+      KAFKA_DVH_VEDTAK_AIVEN_TOPIC: teamforeldrepenger.tilbakekreving-dvh-vedtak-v1
       ABAC_ATTRIBUTT_APPLIKASJON: no.nav.abac.attributter.foreldrepenger
       ABAC_ATTRIBUTT_FAGSAK: no.nav.abac.attributter.foreldrepenger.fagsak
       ABAC_ATTRIBUTT_VENTEFRIST: no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist
@@ -421,8 +415,8 @@ services:
       - fpabonnent_datasource.env
     environment:
       AZURE_APP_CLIENT_ID: fpabonnent
-      KAFKA_PDL_LEESAH_TOPIC: aapen-person-pdl-leesah-v1-vtp
-      KAFKA_PDL_LEESAH_APPLICATION_ID: fpabonnent-default-KC-aapen-person-pdl-leesah-v1-vtp
+      KAFKA_PDL_LEESAH_TOPIC: pdl.leesah-v1
+      KAFKA_PDL_LEESAH_APPLICATION_ID: fpabonnent-vtp
       KAFKA_AVRO_SERDE_CLASS: no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde
     volumes:
       - *sertifikat-volum
@@ -541,7 +535,7 @@ services:
       LOGINSERVICE_IDPORTEN_DISCOVERY_URL: http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration
       LOGINSERVICE_IDPORTEN_AUDIENCE: OIDC
       HISTORIKK_TILBAKEKREVING_ENABLED: true
-      HISTORIKK_TILBAKEKREVING_TOPIC: privat-tilbakekreving-brukerdialog-local
+      HISTORIKK_TILBAKEKREVING_TOPIC: teamforeldrepenger.tilbakekreving-brukerdialog-v1
     env_file:
       - *common-properties
       - fpinfohistorikk_datasource.env
