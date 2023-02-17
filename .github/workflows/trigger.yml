@@ -433,7 +433,7 @@ jobs:
           echo >> $GITHUB_ENV
           echoStatus Fpsak $fpsakStatus "<https://navikt.github.io/fpsak-autotest/fpsak|rapport>" >> $GITHUB_ENV
           echoStatus Fptilbake $fptilbakeStatus "<https://navikt.github.io/fpsak-autotest/fptilbake|rapport>" >> $GITHUB_ENV
-          echoStatus Verdikjedetester $verdikjedetestStatus "<https://navikt.github.io/verdikjede|rapport>" >> $GITHUB_ENV
+          echoStatus Verdikjedetester $verdikjedetestStatus "<https://navikt.github.io/fpsak-autotest/verdikjede|rapport>" >> $GITHUB_ENV
           echo >> $GITHUB_ENV
           echo '*Trigger*: ${{ github.event.inputs.trigger }}:${{ github.event.inputs.version }}' >> $GITHUB_ENV
           echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
