@@ -85,7 +85,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         var søknadBarn1 = lagSøknadForeldrepengerFødsel(fødselsdatoBarn1, BrukerRolle.MOR)
                 .medFordeling(fordelingBarn1.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fødselsdatoBarn1.minusWeeks(2));
+                .medMottattDato(fødselsdatoBarn1.minusWeeks(2));
         var saksnummerBarn1 = mor.søk(søknadBarn1.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -158,7 +158,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         var søknadBarn1 = lagSøknadForeldrepengerFødsel(fødselsdatoBarn1, MOR)
                 .medFordeling(fordelingBarn1.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fødselsdatoBarn1.minusWeeks(2));
+                .medMottattDato(fødselsdatoBarn1.minusWeeks(2));
         var saksnummerMorBarn1 = mor.søk(søknadBarn1.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -179,7 +179,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdatoBarn1, FAR)
                 .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottatdato(fødselsdatoBarn1.minusWeeks(1));
+                .medMottattDato(fødselsdatoBarn1.minusWeeks(1));
         var saksnummerFarBarn1 = far.søk(søknadFar.build());
 
         far.arbeidsgivere().sendDefaultInntektsmeldingerFP(saksnummerFarBarn1, fødselsdatoBarn1);
@@ -199,7 +199,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         var søknadMorBarn2 = lagSøknadForeldrepengerTermin(termindatoBarn2, MOR)
                 .medFordeling(fordelingMorBarn2.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(termindatoBarn2.minusWeeks(3));
+                .medMottattDato(termindatoBarn2.minusWeeks(3));
         var saksnummerMorBarn2 = mor.søk(søknadMorBarn2.build());
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerMorBarn2, termindatoBarn2.minusWeeks(3));
 

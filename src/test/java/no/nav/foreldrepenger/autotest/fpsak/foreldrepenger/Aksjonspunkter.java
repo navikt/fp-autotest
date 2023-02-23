@@ -60,13 +60,15 @@ class Aksjonspunkter extends FpsakTestBase {
         var familie = new Familie("172", SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var adopsjon = Adopsjon.builder()
-                .antallBarn(1)
-                .ektefellesBarn(false)
-                .fødselsdato(List.of(fødselsdato))
-                .ankomstDato(fødselsdato)
-                .omsorgsovertakelsesdato(fødselsdato)
-                .build();
+        var adopsjon = new Adopsjon(
+                1,
+                fødselsdato,
+                false,
+                false,
+                null,
+                fødselsdato,
+                List.of(fødselsdato)
+        );
         var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)

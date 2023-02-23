@@ -72,7 +72,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødsel, BrukerRolle.MOR)
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fpStartdato.minusWeeks(3));
+                .medMottattDato(fpStartdato.minusWeeks(3));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -142,7 +142,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(opprinneligFordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fpStartdato.minusWeeks(3));
+                .medMottattDato(fpStartdato.minusWeeks(3));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -237,7 +237,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fpStartdato.minusWeeks(3));
+                .medMottattDato(fpStartdato.minusWeeks(3));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -321,7 +321,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fødselsdato);
+                .medMottattDato(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 

@@ -163,7 +163,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknadMor = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordelingMor)
                 .medAnnenForelder(lagNorskAnnenforeldre(far))
-                .medMottatdato(fødselsdato);
+                .medMottattDato(fødselsdato);
         var morSaksnummer = mor.søk(søknadMor.build());
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(morSaksnummer, fpStartdatoMor);
@@ -179,7 +179,7 @@ class MorOgFarSammen extends FpsakTestBase {
                         uttaksperiode(FEDREKVOTE, fellesPeriodeMorFørstegangssøknad.getFom(), fellesPeriodeMorFørstegangssøknad.getFom().plusWeeks(6).minusDays(1)))
                         .build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottatdato(fødselsdato.plusWeeks(1));
+                .medMottattDato(fødselsdato.plusWeeks(1));
         var farSaksnummer = far.søk(søknadFar.build());
 
         saksbehandler.hentFagsak(farSaksnummer);
@@ -273,7 +273,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordelingMor.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fødselsdato.minusWeeks(3));
+                .medMottattDato(fødselsdato.minusWeeks(3));
         var saksnummerMor = mor.søk(søknadMor.build());
 
         var arbeidsgivere = mor.arbeidsgivere();
@@ -301,7 +301,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(fordelingFar.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottatdato(fødselsdato);
+                .medMottattDato(fødselsdato);
         var saksnummerFar = far.søk(søknadFar.build());
 
         far.arbeidsgivere().sendDefaultInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);

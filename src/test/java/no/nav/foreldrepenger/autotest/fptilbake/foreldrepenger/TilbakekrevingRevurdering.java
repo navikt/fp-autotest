@@ -39,7 +39,7 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fpStartdato);
+                .medMottattDato(fpStartdato);
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
