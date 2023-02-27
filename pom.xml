@@ -25,7 +25,7 @@
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
         <vtp.versjon>1.1.6</vtp.versjon>
-        <dokumentgenerator.version>3.4.2</dokumentgenerator.version>
+        <dokumentgenerator.version>3.4.6</dokumentgenerator.version>
         <fp-felles.versjon>4.2.23</fp-felles.versjon>
         <fp-prosesstask.version>3.1.21</fp-prosesstask.version>
         <fp-kontrakter.version>6.2.9</fp-kontrakter.version>
