@@ -323,7 +323,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fpStartdato);
+                .medMottattDato(fpStartdato);
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();

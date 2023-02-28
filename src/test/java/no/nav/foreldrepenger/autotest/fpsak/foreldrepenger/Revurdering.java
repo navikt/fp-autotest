@@ -223,7 +223,7 @@ class Revurdering extends FpsakTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fødselsdato.plusWeeks(9));
+                .medMottattDato(fødselsdato.plusWeeks(9));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -268,7 +268,7 @@ class Revurdering extends FpsakTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fødselsdato.plusWeeks(18));
+                .medMottattDato(fødselsdato.plusWeeks(18));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();

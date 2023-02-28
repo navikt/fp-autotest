@@ -74,7 +74,7 @@ class RegresjonPreWLB extends FpsakTestBase {
                 .medFordeling(fordeling.build())
                 .medRettigheter(RettigheterErketyper.annenpartIkkeRettOgMorHarUføretrygd())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottatdato(fødselsdato);
+                .medMottattDato(fødselsdato);
         var saksnummer = far.søk(søknad.build());
 
         var arbeidsgiver = far.arbeidsgiver();
@@ -166,7 +166,7 @@ class RegresjonPreWLB extends FpsakTestBase {
                 .medFordeling(fordeling)
                 .medRettigheter(RettigheterErketyper.beggeForeldreRettIkkeAleneomsorg())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottatdato(fødselsdato);
+                .medMottattDato(fødselsdato);
         var saksnummer = far.søk(søknad.build());
         var arbeidsgiver = far.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fødselsdato);

@@ -59,7 +59,7 @@ jobs:
           free -m
 
       - name: Dumper logger for feilsøking
-        if: failure() && env.STACK_CREATED == 'true'
+        if: failure()
         run: |
           mkdir container-logs
           cd container-logs

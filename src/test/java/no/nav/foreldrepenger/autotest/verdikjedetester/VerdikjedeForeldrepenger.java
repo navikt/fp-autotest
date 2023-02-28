@@ -129,7 +129,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medFordeling(fordeling.build())
                 .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(termindato.minusWeeks(5));
+                .medMottattDato(termindato.minusWeeks(5));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -218,7 +218,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
                 .medOpptjening(opptjening)
-                .medMottatdato(fødselsdato.plusWeeks(2));
+                .medMottattDato(fødselsdato.plusWeeks(2));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -512,7 +512,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
                 .medFordeling(fordelingFar.build())
                 .medOpptjening(opptjeningFar)
-                .medMottatdato(fødselsdato.minusWeeks(1));
+                .medMottattDato(fødselsdato.minusWeeks(1));
         var saksnummerFar = far.søk(søknadFar.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -580,7 +580,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
                 .medFordeling(fordelingFar)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottatdato(fødselsdato.minusWeeks(2));
+                .medMottattDato(fødselsdato.minusWeeks(2));
         var saksnummerFar = far.søk(søknadFar.build());
 
         var arbeidsgivere = far.arbeidsgivere().toList();
@@ -766,7 +766,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(fordelingFar.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottatdato(fødselsdato.plusWeeks(6));
+                .medMottattDato(fødselsdato.plusWeeks(6));
         var saksnummerFar = far.søk(søknadFar.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -864,7 +864,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medFordeling(fordelingMor.build())
                 .medRelasjonTilBarn(RelasjonTilBarnErketyper.fødsel(2, fødselsdato))
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fpStartdatoMor.minusWeeks(3));
+                .medMottattDato(fpStartdatoMor.minusWeeks(3));
         var saksnummerMor = mor.søk(søknadMor.build());
 
         var arbeidsgiverMor = mor.arbeidsgiver();
@@ -1058,7 +1058,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, BrukerRolle.FAR, false)
                 .medFordeling(fordelingFar.build())
                 .medAnnenForelder(new UkjentForelder())
-                .medMottatdato(fpStartdatoFar.minusWeeks(3));
+                .medMottattDato(fpStartdatoFar.minusWeeks(3));
         var saksnummerFar = far.søk(søknadFar.build());
 
 
@@ -1435,7 +1435,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var fpStartdatoMor = termindato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(termindato.minusMonths(2));
+                .medMottattDato(termindato.minusMonths(2));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -1558,7 +1558,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(fødselsdato.minusWeeks(3))
+                .medMottattDato(fødselsdato.minusWeeks(3))
                 .build();
         var saksnummer = mor.søk(søknad);
 
@@ -1623,7 +1623,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon(omsorgsovertagelsesdato, BrukerRolle.MOR, false)
                 .medFordeling(fordeling.build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottatdato(omsorgsovertagelsesdato.minusWeeks(3));
+                .medMottattDato(omsorgsovertagelsesdato.minusWeeks(3));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -1682,7 +1682,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medFordeling(fordeling)
                 .medRettigheter(RettigheterErketyper.harIkkeAleneomsorgOgAnnenpartIkkeRett())
                 .medAnnenForelder(lagNorskAnnenforeldre(mor))
-                .medMottatdato(fødselsdato.minusWeeks(1));
+                .medMottattDato(fødselsdato.minusWeeks(1));
         var saksnummerFar = far.søk(søknad.build());
         var arbeidsgiver = far.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
@@ -1815,7 +1815,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
                 .medFordeling(fordeling(uttaksperiode(FEDREKVOTE, fomFedrekvote, fomFedrekvote.plusWeeks(1).plusDays(3), SAMTIDIGUTTAK)).build())
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottatdato(termindato.minusWeeks(1));
+                .medMottattDato(termindato.minusWeeks(1));
         var saksnummerFar = far.søk(søknadFar.build());
 
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato.minusWeeks(1));
@@ -1889,14 +1889,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var far = familie.far();
 
         var farsPeriodeRundtFødsel = uttaksperiode(FEDREKVOTE, termindato, termindato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK);
-        var fordelingFar = Fordeling.builder()
-                .erAnnenForelderInformert(true)
-                .ønskerJustertUttakVedFødsel(true)
-                .perioder(List.of(farsPeriodeRundtFødsel))
-                .build();
+        var fordelingFar = new Fordeling(
+                true,
+                List.of(farsPeriodeRundtFødsel),
+                true
+        );
         var søknadFar = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
                 .medFordeling(fordelingFar)
-                .medMottatdato(termindato.minusWeeks(1))
+                .medMottattDato(termindato.minusWeeks(1))
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()));
         var saksnummerFar = far.søk(søknadFar.build());
 
@@ -1950,7 +1950,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var søknadMor = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
                 .medFordeling(fordelingMor.build())
-                .medMottatdato(fpStartdatoMor.minusWeeks(4));
+                .medMottattDato(fpStartdatoMor.minusWeeks(4));
         var saksnummerMor = mor.søk(søknadMor.build());
 
         var arbeidsgiver = mor.arbeidsgiver();

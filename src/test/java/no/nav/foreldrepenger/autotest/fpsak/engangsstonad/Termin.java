@@ -168,7 +168,7 @@ class Termin extends FpsakTestBase {
         var mor = familie.mor();
         var termindato = LocalDate.now().minusDays(26);
         var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato)
-                .medMottatdato(termindato.plusDays(25));
+                .medMottattDato(termindato.plusDays(25));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

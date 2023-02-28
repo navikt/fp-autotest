@@ -124,7 +124,7 @@ public class Fordel extends DokumentInnsendingHjelper {
         if (ytelse instanceof Foreldrepenger foreldrepenger) {
             if (foreldrepenger.annenForelder() instanceof NorskForelder norskForelder) {
                 var oppslag = Mockito.mock(Oppslag.class);
-                when(oppslag.aktørId(norskForelder.getFnr())).thenReturn(aktørIdAnnenpart);
+                when(oppslag.aktørId(norskForelder.fnr())).thenReturn(aktørIdAnnenpart);
                 mapper = new V3ForeldrepengerDomainMapper(oppslag);
             } else {
                 mapper = new V3ForeldrepengerDomainMapper(null);
