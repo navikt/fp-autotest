@@ -1,4 +1,4 @@
-# Fpsak-autotest [![](https://github.com/navikt/fpsak-autotest/actions/workflows/trigger.yml/badge.svg)](https://github.com/navikt/fpsak-autotest/actions/workflows/trigger.yml)
+# Fpsak-autotest [![Utfører tester mot SUT](https://github.com/navikt/fpsak-autotest/actions/workflows/trigger.yml/badge.svg?branch=master)](https://github.com/navikt/fpsak-autotest/actions/workflows/trigger.yml)
 Fpsak-autotest har to testfunksjoner for øyeblikket: Teste spesifikke applikasjoner og teste hele verdikjeden. Navnet fpsak-autotest
 er fra gammelt av, hvor fpsak-autotest ble bare brukt til å teste fpsak. Nå i senere tid blir repoet også brukt til å teste resten av verdikjeden.
 
