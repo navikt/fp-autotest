@@ -498,7 +498,7 @@ jobs:
                   "slash_command": {
                       "args": {
                           "unnamed": {
-                              "arg1": ""
+                              "arg1": "dev prod"
                   }}}
                 }
               }'
