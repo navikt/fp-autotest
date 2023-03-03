@@ -33,7 +33,7 @@
                 "fom": "now() - P10M",
                 "tom": "now() - P5M1D",
                 "beløp": 40000,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -41,7 +41,7 @@
             {
                 "fom": "now() - P5M",
                 "beløp": 21667,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "YtelseFraOffentlige",
                 "fordel": "kontantytelse",
                 "beskrivelse": "dagpenger ved arbeidsløshet"
@@ -55,7 +55,7 @@
                 "ansettelsesperiodeFom": "now() - P10M",
                 "ansettelsesperiodeTom": "now() - P5M1D",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "arbeidsgiverOrgnr": "910909088",
+                "arbeidsgiverOrgnr": "889640782",
 
 
                 "arbeidsavtaler" : [

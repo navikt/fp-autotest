@@ -33,7 +33,7 @@
 				"fom": "now() - P12M",
 				"tom": "now() - P12W",
 				"beløp": 30000,
-				"orgnr": "910909088",
+				"orgnr": "889640782",
 				"type": "Lønnsinntekt",
 				"fordel": "kontantytelse",
 				"beskrivelse": "testbeskrivelsesomfungererennsålenge"
@@ -48,7 +48,7 @@
 				"ansettelsesperiodeFom": "now() - P12M",
 				"ansettelsesperiodeTom": "now() + P12M",
 				"arbeidsforholdstype": "ordinaertArbeidsforhold",
-				"arbeidsgiverOrgnr": "910909088",
+				"arbeidsgiverOrgnr": "889640782",
 				"arbeidsavtaler" : [
 					{
 						"fomGyldighetsperiode": "now() - P12M",

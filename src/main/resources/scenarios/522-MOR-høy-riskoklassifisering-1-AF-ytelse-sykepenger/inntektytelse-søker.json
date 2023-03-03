@@ -53,7 +53,7 @@
                 "fom": "now() - P10M",
                 "tom": "now() - P9M",
                 "beløp": 100000,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -62,7 +62,7 @@
                 "fom": "now() - P9M",
                 "tom": "now() - P8M",
                 "beløp": 10,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -71,7 +71,7 @@
                 "fom": "now() - P8M",
                 "tom": "now()",
                 "beløp": 100000,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -84,7 +84,7 @@
                 "arbeidsforholdId": "ARB001-001",
                 "ansettelsesperiodeFom": "now() - P10M",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "arbeidsgiverOrgnr": "910909088",
+                "arbeidsgiverOrgnr": "889640782",
 
 
                 "arbeidsavtaler" : [

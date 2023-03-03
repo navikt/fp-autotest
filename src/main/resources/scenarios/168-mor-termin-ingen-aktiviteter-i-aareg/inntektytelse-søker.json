@@ -5,7 +5,7 @@
                 "fom": "now() - P24M",
                 "tom": "now() - P23M",
                 "beløp": 13155.37,
-                "orgnr": "973625586",
+                "orgnr": "992259590",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "testbeskrivelsesomfungererennsålenge"
@@ -16,7 +16,7 @@
         "arbeidsforhold": [
             {
                 "arbeidsforholdId": "ARB001-001",
-                "arbeidsgiverOrgnr": "910909088",
+                "arbeidsgiverOrgnr": "889640782",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "ansettelsesperiodeFom": "now() - P48M",
                 "ansettelsesperiodeTom": "now() - P12M",

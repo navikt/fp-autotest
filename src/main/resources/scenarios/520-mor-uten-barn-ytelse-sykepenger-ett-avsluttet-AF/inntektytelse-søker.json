@@ -53,7 +53,7 @@
                 "fom": "now() - P4Y",
                 "tom": "now() - P12M",
                 "beløp": 40000,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -67,7 +67,7 @@
                 "ansettelsesperiodeFom": "now() - P4Y",
                 "ansettelsesperiodeTom": "now() - P12M",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "arbeidsgiverOrgnr": "910909088",
+                "arbeidsgiverOrgnr": "889640782",
                 "arbeidsavtaler" : [
                     {
                         "fomGyldighetsperiode": "now() - P4Y",
