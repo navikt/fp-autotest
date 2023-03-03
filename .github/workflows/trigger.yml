@@ -498,7 +498,8 @@ jobs:
                   "slash_command": {
                       "args": {
                           "unnamed": {
-                              "arg1": "dev prod"
+                              "all": "dev prod"
+                              "arg1": "dev prod",
                   }}}
                 }
               }'
@@ -533,6 +534,7 @@ jobs:
                   "slash_command": {
                       "args": {
                           "unnamed": {
+                              "all": "dev",
                               "arg1": "dev-fss",
                               "arg2": "teamforeldrepenger"
                   }}}
@@ -570,7 +572,8 @@ jobs:
                   "slash_command": {
                       "args": {
                           "unnamed": {
-                              "arg1": "dev-fss"
+                              "all": "dev"
+                              "arg1": "dev-fss",
                   }}}
                 }
               }'
