@@ -212,9 +212,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var mor = familie.mor();
         var næringsinntekt = mor.næringsinntekt(2018);
         // Merk: Avviket er G-sensitivt og kan bli påvirket av g-regulering
-        var arbeidsgiverIdentifikator = mor.arbeidsforhold().arbeidsgiverIdentifikasjon();
         var avvikendeNæringsinntekt = næringsinntekt * 1.9; // >25% avvik
-        var opptjening = OpptjeningErketyper.egenNaeringOpptjening(arbeidsgiverIdentifikator.value(), false, avvikendeNæringsinntekt, true);
+        // Legger inn orgnummer fra 510/organisasjon ettersom det ikke finnes arbeidsforhold for organisasjonen
+        var opptjening = OpptjeningErketyper.egenNaeringOpptjening("889640782", false, avvikendeNæringsinntekt, true);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
                 .medOpptjening(opptjening)
