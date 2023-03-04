@@ -47,11 +47,7 @@
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fpsak/.default",
                     "claims": {
-                        "aud": ["fpsak"],
-                        "sub": "system",
-                        "oid": "system",
-                        "azp": "klient",
-                        "azp_name": "vtp:teamforeldrepenger:klient"
+                        "aud": ["fpsak"]
                     }
                 },
                 {
@@ -65,11 +61,7 @@
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fptilbake/.default",
                     "claims": {
-                        "aud": ["fptilbake"],
-                        "sub": "system",
-                        "oid": "system",
-                        "azp": "klient",
-                        "azp_name": "vtp:teamforeldrepenger:klient"
+                        "aud": ["fptilbake"]
                     }
                 },
                 {
@@ -83,11 +75,7 @@
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fpoppdrag/.default",
                     "claims": {
-                        "aud": ["fpoppdrag"],
-                        "sub": "system",
-                        "oid": "system",
-                        "azp": "klient",
-                        "azp_name": "vtp:teamforeldrepenger:klient"
+                        "aud": ["fpoppdrag"]
                     }
                 },
                 {
@@ -101,11 +89,7 @@
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fpformidling/.default",
                     "claims": {
-                        "aud": ["fpformidling"],
-                        "sub": "system",
-                        "oid": "system",
-                        "azp": "klient",
-                        "azp_name": "vtp:teamforeldrepenger:klient"
+                        "aud": ["fpformidling"]
                     }
                 },
                 {
@@ -133,11 +117,7 @@
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fpfordel/.default",
                     "claims": {
-                        "aud": ["fpfordel"],
-                        "sub": "system",
-                        "oid": "system",
-                        "azp": "klient",
-                        "azp_name": "vtp:teamforeldrepenger:klient"
+                        "aud": ["fpfordel"]
                     }
                 },
                 {
@@ -165,11 +145,7 @@
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fprisk/.default",
                     "claims": {
-                        "aud": ["fprisk"],
-                        "sub": "system",
-                        "oid": "system",
-                        "azp": "klient",
-                        "azp_name": "vtp:teamforeldrepenger:klient"
+                        "aud": ["fprisk"]
                     }
                 },
                 {
@@ -183,11 +159,7 @@
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fplos/.default",
                     "claims": {
-                        "aud": ["fplos"],
-                        "sub": "system",
-                        "oid": "system",
-                        "azp": "klient",
-                        "azp_name": "vtp:teamforeldrepenger:klient"
+                        "aud": ["fplos"]
                     }
                 },
                 {
@@ -201,11 +173,7 @@
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fpabakus/.default",
                     "claims": {
-                        "aud": ["fpabakus"],
-                        "sub": "system",
-                        "oid": "system",
-                        "azp": "klient",
-                        "azp_name": "vtp:teamforeldrepenger:klient"
+                        "aud": ["fpabakus"]
                     }
                 },
                 {
@@ -213,6 +181,16 @@
                     "match": "api://vtp.teamforeldrepenger.fpabakus/swagger",
                     "claims": {
                         "aud": ["fpabakus"]
+                    }
+                },
+                {
+                    "requestParam": "grant_type",
+                    "match": "client_credentials",
+                    "claims": {
+                        "sub": "system",
+                        "oid": "system",
+                        "azp": "klient",
+                        "azp_name": "vtp:teamforeldrepenger:klient"
                     }
                 }
             ]
