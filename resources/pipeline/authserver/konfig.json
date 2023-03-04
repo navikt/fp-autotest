@@ -188,9 +188,63 @@
                     "match": "client_credentials",
                     "claims": {
                         "sub": "system",
-                        "oid": "system",
-                        "azp": "klient",
-                        "azp_name": "vtp:teamforeldrepenger:klient"
+                        "oid": "system"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpabakus",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpabakus"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpabonnent",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpabonnent"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpfordel",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpfordel"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpformidling",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpformidling"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpoppdrag",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpoppdrag"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fptilbake",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fptilbake"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fprisk",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fprisk"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fplos",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fplos"
                     }
                 }
             ]
