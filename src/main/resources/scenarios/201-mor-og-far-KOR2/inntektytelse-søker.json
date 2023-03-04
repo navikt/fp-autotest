@@ -5,7 +5,7 @@
                 "fom": "now() - P2Y",
                 "tom": "now()",
                 "beløp": 60000,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -19,7 +19,7 @@
                 "ansettelsesperiodeFom": "now() - P2Y",
                 "ansettelsesperiodeTom": "now() - P7D",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "arbeidsgiverOrgnr": "910909088",
+                "arbeidsgiverOrgnr": "889640782",
                 "arbeidsavtaler" : [
                     {
                         "fomGyldighetsperiode": "now() - P2Y",
@@ -36,7 +36,7 @@
                 "arbeidsforholdId": "ARB001-002",
                 "ansettelsesperiodeFom": "now() - P6D",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
-                "arbeidsgiverOrgnr": "910909088",
+                "arbeidsgiverOrgnr": "889640782",
                 "arbeidsavtaler" : [
                     {
                         "fomGyldighetsperiode": "now() - P6D",

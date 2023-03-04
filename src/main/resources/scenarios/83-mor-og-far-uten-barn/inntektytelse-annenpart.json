@@ -4,7 +4,7 @@
             {
                 "fom": "now() - P4Y",
                 "beløp": 60000,
-                "orgnr": "994884174",
+                "orgnr": "993110469",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -15,7 +15,7 @@
         "arbeidsforhold": [
             {
                 "arbeidsforholdId": "ARB001-001",
-                "arbeidsgiverOrgnr": "994884174",
+                "arbeidsgiverOrgnr": "993110469",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "ansettelsesperiodeFom": "now() - P4Y",
                 "arbeidsavtaler" : [

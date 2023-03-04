@@ -5,7 +5,7 @@
                 "fom": "now() - P2Y",
                 "tom": "now()",
                 "beløp": 45000,
-                "orgnr": "973861778",
+                "orgnr": "992261048",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -20,7 +20,7 @@
                 "ansettelsesperiodeFom": "now() - P2Y",
                 "ansettelsesperiodeTom": "now()",
                 "arbeidsforholdstype": "frilanserOppdragstakerHonorarPersonerMm",
-                "arbeidsgiverOrgnr": "973861778",
+                "arbeidsgiverOrgnr": "992261048",
 
 
                 "arbeidsavtaler" : [

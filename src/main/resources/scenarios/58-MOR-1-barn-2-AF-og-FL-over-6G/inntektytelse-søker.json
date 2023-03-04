@@ -5,7 +5,7 @@
                 "fom": "now() - P12M",
                 "tom": "now() - P10M",
                 "beløp": 50000,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -14,7 +14,7 @@
                 "fom": "now() - P10M",
                 "tom": "now() - P2M",
                 "beløp": 60000,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -22,7 +22,7 @@
             {
                 "fom": "now() - P15M",
                 "beløp": 60000,
-                "orgnr": "994884174",
+                "orgnr": "993110469",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -33,7 +33,7 @@
         "arbeidsforhold": [
             {
                 "arbeidsforholdId": "ARB001-001",
-                "arbeidsgiverOrgnr": "910909088",
+                "arbeidsgiverOrgnr": "889640782",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "ansettelsesperiodeFom": "now() - P4M",
                 "arbeidsavtaler" : [
@@ -56,7 +56,7 @@
             },
             {
                 "arbeidsforholdId": "ARB001-002",
-                "arbeidsgiverOrgnr": "994884174",
+                "arbeidsgiverOrgnr": "993110469",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "ansettelsesperiodeFom": "now() - P4Y",
                 "arbeidsavtaler" : [
@@ -71,7 +71,7 @@
             },
             {
                 "arbeidsforholdId": "ARB001-003",
-                "arbeidsgiverOrgnr": "979191300",
+                "arbeidsgiverOrgnr": "992257822",
                 "arbeidsforholdstype": "frilanserOppdragstakerHonorarPersonerMm",
                 "ansettelsesperiodeFom": "now() - P1Y",
                 "arbeidsavtaler" : [

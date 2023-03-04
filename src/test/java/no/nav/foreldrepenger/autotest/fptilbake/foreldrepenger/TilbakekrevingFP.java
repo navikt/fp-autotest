@@ -160,7 +160,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         tbksaksbehandler.leggTilVerge();
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5030);
         var vergeFakta = (ApVerge) tbksaksbehandler.hentAksjonspunktbehandling(5030);
-        vergeFakta.setVerge("973861778");
+        vergeFakta.setVerge("992261048");
         tbksaksbehandler.behandleAksjonspunkt(vergeFakta);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 

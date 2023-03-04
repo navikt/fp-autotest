@@ -21,8 +21,8 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.ArbeidsforholdErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.MedlemsskapErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.OpptjeningErketyper;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.Søknad;
 
@@ -53,7 +53,7 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
                 .medMedlemsskap(MedlemsskapErketyper.medlemskapUtlandetForrige12mnd())
                 .build());
         test(lagSøknadForeldrepengerAdopsjon(LocalDate.now(), MOR, true)
-                .medOpptjening(OpptjeningErketyper.egenNaeringOgFrilansOpptjening())
+                .medOpptjening(OpptjeningErketyper.egenNaeringOgFrilansOpptjening("992261005"))
                 .build());
     }
 
@@ -67,7 +67,7 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
 
     @Test
     public void tilretteleggingTest() {
-        test(helTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.virksomhet(new Orgnummer("999035462"))));
+        test(helTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.virksomhet(new Orgnummer("992261005"))));
         test(delvisTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.privatArbeidsgiver("12345678910"), 50));
         test(ingenTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.selvstendigNæringsdrivende()));
     }

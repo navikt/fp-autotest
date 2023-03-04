@@ -5,7 +5,7 @@
                 "fom": "now() - P12M",
                 "tom": "now() - P1M",
                 "beløp": 30000,
-                "orgnr": "974760673",
+                "orgnr": "992261064",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "testbeskrivelsesomfungererennsålenge"
@@ -16,7 +16,7 @@
         "arbeidsforhold": [
             {
                 "arbeidsforholdId": "ARB001-004",
-                "arbeidsgiverOrgnr": "974760673",
+                "arbeidsgiverOrgnr": "992261064",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "ansettelsesperiodeFom": "now() - P12M",
                 "arbeidsavtaler" : [

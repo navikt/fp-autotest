@@ -53,7 +53,7 @@
                 "fom": "now() - P9M",
                 "tom": "now() - P4M",
                 "beløp": 5000,
-                "orgnr": "910909088",
+                "orgnr": "889640782",
                 "type": "Lønnsinntekt",
                 "fordel": "kontantytelse",
                 "beskrivelse": "fastloenn"
@@ -64,7 +64,7 @@
         "arbeidsforhold": [
             {
                 "arbeidsforholdId": "ARB001-001",
-                "arbeidsgiverOrgnr": "910909088",
+                "arbeidsgiverOrgnr": "889640782",
                 "arbeidsforholdstype": "ordinaertArbeidsforhold",
                 "ansettelsesperiodeFom": "now() - P4Y",
                 "arbeidsavtaler" : [
