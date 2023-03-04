@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordeling;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper.egenNaeringOpptjening;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
@@ -50,7 +49,6 @@ import org.slf4j.LoggerFactory;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.RelasjonTilBarnErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper;
@@ -96,6 +94,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInns
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.autotest.util.testscenario.modell.OpptjeningErketyper;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
@@ -213,8 +212,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var mor = familie.mor();
         var næringsinntekt = mor.næringsinntekt(2018);
         // Merk: Avviket er G-sensitivt og kan bli påvirket av g-regulering
+        var arbeidsgiverIdentifikator = mor.arbeidsforhold().arbeidsgiverIdentifikasjon();
         var avvikendeNæringsinntekt = næringsinntekt * 1.9; // >25% avvik
-        var opptjening = OpptjeningErketyper.egenNaeringOpptjening(false, avvikendeNæringsinntekt, true);
+        var opptjening = OpptjeningErketyper.egenNaeringOpptjening(arbeidsgiverIdentifikator.value(), false, avvikendeNæringsinntekt, true);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
                 .medOpptjening(opptjening)
@@ -899,7 +899,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
          */
         var far = familie.far();
         var næringsinntekt = far.næringsinntekt(2018);
-        var opptjeningFar = egenNaeringOpptjening(
+        var opptjeningFar = OpptjeningErketyper.egenNaeringOpptjening(
+                far.arbeidsforhold().arbeidsgiverIdentifikasjon().value(),
                 fpStartdatoFar.minusYears(4),
                 VirkedagUtil.helgejustertTilMandag(fpStartdatoFar),
                 false,
