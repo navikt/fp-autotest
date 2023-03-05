@@ -103,8 +103,6 @@ services:
     image: $FPABAKUS_IMAGE
     container_name: fpabakus
     mem_limit: 512mb
-    environment:
-      AZURE_APP_CLIENT_ID: fpabakus
     env_file:
       - *common-properties
       - fpabakus_datasource.env
@@ -131,7 +129,6 @@ services:
     mem_limit: 1gb
     shm_size: 256mb
     environment:
-      AZURE_APP_CLIENT_ID: fpsak
       ABAKUS_CALLBACK_URL: http://fpsak:8080/fpsak/api/registerdata/iay/callback
       FPOPPDRAG_OVERRIDE_PROXY_URL: http://localhost:9000/fpoppdrag/api
       UFORE_RS_URL: http://vtp:8060/rest/api/pesys/ufo
@@ -251,7 +248,6 @@ services:
     container_name: fpfordel
     mem_limit: 512mb
     environment:
-      AZURE_APP_CLIENT_ID: fpfordel
       KAFKA_TOPIC_JOURNAL_HENDELSE: teamdokumenthandtering.aapen-dok-journalfoering-vtp
       DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
       FPFORDEL_IT_FP_URL: http://vtp:8060/rest/infotrygd/saker/foreldrepenger
@@ -282,7 +278,6 @@ services:
     container_name: fpformidling
     mem_limit: 512mb
     environment:
-      AZURE_APP_CLIENT_ID: fpformidling
       DOKGEN_REST_BASE_URL: http://fpdokgen:8080
       DOKDIST_REST_BASE_URL: http://vtp:8060/rest/dokdist/v1
       JOURNALPOST_REST_V1_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
@@ -330,7 +325,6 @@ services:
       - *common-properties
       - fpoppdrag_datasource.env
     environment:
-      AZURE_APP_CLIENT_ID: fpoppdrag
       OPPDRAG_SERVICE_URL: https://vtp:8063/soap/cics/services/oppdragService
     volumes:
       - *sertifikat-volum
@@ -352,7 +346,6 @@ services:
     mem_limit: 768mb
     shm_size: 256mb
     environment:
-      AZURE_APP_CLIENT_ID: fptilbake
       CONTEXT_PATH: /fptilbake
       DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
       KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL: teamforeldrepenger.tilbakekreving-brukerdialog-v1
@@ -387,7 +380,6 @@ services:
     container_name: fprisk
     mem_limit: 512mb
     environment:
-      AZURE_APP_CLIENT_ID: fprisk
       BRREG_PROXY: http://vtp:8060/rest/brreg/proxy/not/implemented
     env_file:
       - fprisk_datasource.env
@@ -414,7 +406,6 @@ services:
       - *common-properties
       - fpabonnent_datasource.env
     environment:
-      AZURE_APP_CLIENT_ID: fpabonnent
       KAFKA_PDL_LEESAH_TOPIC: pdl.leesah-v1
       KAFKA_PDL_LEESAH_APPLICATION_ID: fpabonnent-vtp
       KAFKA_AVRO_SERDE_CLASS: no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde
@@ -437,7 +428,6 @@ services:
     container_name: fplos
     mem_limit: 512mb
     environment:
-      AZURE_APP_CLIENT_ID: fplos
       AXSYS_URL: http://vtp:8060/rest/axsys-enhetstilgang
     env_file:
       - *common-properties
@@ -461,8 +451,6 @@ services:
     image: $FPINFO_IMAGE
     container_name: fpinfo
     mem_limit: 256mb
-    environment:
-      AZURE_APP_CLIENT_ID: fpinfo
     env_file:
       - *common-properties
       - fpinfo_datasource.env
