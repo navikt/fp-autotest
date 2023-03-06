@@ -1,0 +1,40 @@
+{
+    "modeller": [
+        {
+            "orgnummer": "889640782",
+            "navn": {
+                "navnelinje": [
+                    "BEDRIFT AS"
+                ]
+            },
+            "organisasjonDetaljer": {
+                "registreringsDato": "2010-11-01",
+                "datoSistEndret": "2019-11-01"
+            }
+        },
+        {
+            "orgnummer": "992261048",
+            "navn": {
+                "navnelinje": [
+                    "NAV TECH"
+                ]
+            },
+            "organisasjonDetaljer": {
+                "registreringsDato": "2010-11-01",
+                "datoSistEndret": "2019-11-01"
+            }
+        },
+        {
+            "orgnummer": "992260475",
+            "navn": {
+                "navnelinje": [
+                    "NFP A AS"
+                ]
+            },
+            "organisasjonDetaljer": {
+                "registreringsDato": "2010-11-01",
+                "datoSistEndret": "2019-12-01"
+            }
+        }
+    ]
+}

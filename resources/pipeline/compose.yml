@@ -1,0 +1,744 @@
+x-default-volumes: &sertifikat-volum
+  "~/.modig:/app/.modig"
+x-common-env: &common-properties
+  "common.env"
+x-default-konfigurasjon: &default-konfigurasjon
+  restart: on-failure
+#  extra_hosts:
+#    - "host.docker.internal:host-gateway"
+
+services:
+  audit.nais:
+    <<: *default-konfigurasjon
+    image: $AUDIT_NAIS_IMAGE
+    container_name: audit.nais
+    mem_limit: 16mb
+    ports:
+      - 127.0.0.1:6514:6514
+  oracle:
+    image: $ORACLE_IMAGE
+    container_name: oracle
+    environment:
+      TZ: Europe/Oslo
+      ORACLE_PASSWORD: oracle
+    ports:
+      - 127.0.0.1:1521:1521
+    volumes:
+      - ./oracle-init:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: [ "CMD-SHELL","/opt/oracle/product/18c/dbhomeXE/health_check.sh" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+  postgres:
+    image: $POSTGRES_IMAGE
+    container_name: postgres
+    mem_limit: 128mb
+    shm_size: 128mb
+    environment:
+      TZ: Europe/Oslo
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+    volumes:
+      - ./postgres-init:/docker-entrypoint-initdb.d/
+    ports:
+      - 127.0.0.1:5432:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "while ! /usr/bin/pg_isready -U admin -t 1; do sleep 1; done" ]
+      interval: 2s
+      retries: 1
+      timeout: 30s
+      start_period: 10s
+  authserver:
+    <<: *default-konfigurasjon
+    image: ghcr.io/navikt/mock-oauth2-server:0.5.5
+    container_name: authserver
+    environment:
+      PORT: 8086
+      JSON_CONFIG_PATH: /authserver/konfig.json
+    ports:
+      - 127.0.0.1:8086:8086
+    volumes:
+      - ./authserver:/authserver
+  vtp:
+    <<: *default-konfigurasjon
+    image: $VTP_IMAGE
+    container_name: vtp
+    mem_limit: 1gb
+    shm_size: 512mb
+    environment:
+      NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE: /app/.modig/keystore.jks
+      JAVAX_NET_SSL_TRUSTSTORE: /app/.modig/truststore.jks
+      CREATE_TOPICS: >-
+        teamforeldrepenger.inntektsmelding-innsendinghendelse-v1,
+        teamforeldrepenger.selvbetjening-innsendinghendelse-v1,
+        teamforeldrepenger.behandling-hendelse-v1,
+        teamforeldrepenger.familie-vedtakfattet-v1,
+        teamforeldrepenger.tilbakekreving-brukerdialog-v1,
+        teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1,
+        teamforeldrepenger.tilbakekreving-dvh-vedtak-v1,
+        aapen-sob-oppgaveHendelse-v1,
+        pdl.leesah-v1,
+        teamdokumenthandtering.aapen-dok-journalfoering-vtp
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8060:8060
+      - 127.0.0.1:8063:8063
+      - 127.0.0.1:8636:8636
+      - 127.0.0.1:9093:9093
+      - 127.0.0.1:9092:9092
+      - 127.0.0.1:1337:1337
+      - 127.0.0.1:8389:8389
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8060/rest/isReady"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      authserver:
+        condition: service_started
+  fpabakus:
+    <<: *default-konfigurasjon
+    image: $FPABAKUS_IMAGE
+    container_name: fpabakus
+    mem_limit: 512mb
+    environment:
+      AZURE_APP_CLIENT_ID: fpabakus
+    env_file:
+      - *common-properties
+      - fpabakus_datasource.env
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8015:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpabakus/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      audit.nais:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
+  fpsak:
+    <<: *default-konfigurasjon
+    image: $FPSAK_IMAGE
+    container_name: fpsak
+    mem_limit: 1gb
+    shm_size: 256mb
+    environment:
+      AZURE_APP_CLIENT_ID: fpsak
+      ABAKUS_CALLBACK_URL: http://fpsak:8080/fpsak/api/registerdata/iay/callback
+      FPOPPDRAG_OVERRIDE_PROXY_URL: http://localhost:9000/fpoppdrag/api
+      UFORE_RS_URL: http://vtp:8060/rest/api/pesys/ufo
+      KAFKA_SAKOGBEHANDLING_TOPIC: aapen-sob-oppgaveHendelse-v1
+      EXTRA_CLASS_PATH: :vtp-lib/*
+      BRUK_NY_FAKTA_UTTAK: true
+    env_file:
+      - *common-properties
+      - fpsak_datasource.env
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8080:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpsak/internal/health/isReady" ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      audit.nais:
+        condition: service_started
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
+      fpabakus:
+        condition: service_started
+  fpfrontend:
+    <<: *default-konfigurasjon
+    image: $FPFRONTEND_IMAGE
+    container_name: fpfrontend
+    mem_limit: 128mb
+    environment:
+      AZURE_APP_CLIENT_ID: fpfrontend
+      PORT: 9090
+      HOST: http://localhost
+      CORS_ALLOWED_METHODS: GET, POST
+      CORS_EXPOSED_HEADERS: Location
+      CORS_ALLOWED_HEADERS: Referer, Origin, Content-Type, Accept, X-Requested-With, cache-control, x_Nav-CallId, pragma, expires, X-Forwarded-Proto
+      NODE_ENV: development
+      PROXY_CONFIG: |
+        {
+            "apis": [
+                {
+                    "path": "/fpsak/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpsak/.default",
+                    "url": "http://fpsak:8080"
+                },
+                {
+                    "path": "/fpoppdrag/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpoppdrag/.default",
+                    "url": "http://fpoppdrag:8080"
+                },
+                {
+                    "path": "/fptilbake/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fptilbake/.default",
+                    "url": "http://fptilbake:8080"
+                },
+                {
+                    "path": "/fpformidling/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpformidling/.default",
+                    "url": "http://fpformidling:8080"
+                },
+                {
+                    "path": "/fplos/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fplos/.default",
+                    "url": "http://fplos:8080"
+                },
+                {
+                    "path": "/fpfordel/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/.default",
+                    "url": "http://fpfordel:8080"
+                }
+            ]
+        }
+    env_file:
+      - *common-properties
+    ports:
+      - 127.0.0.1:9090:9090
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9090/health/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      wonderwall-fpfrontend:
+        condition: service_started
+      fpsak:
+        condition: service_started
+  wonderwall-fpfrontend:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-fpfrontend
+    command: |
+      --openid.provider=azure
+      --openid.scopes=api://vtp.teamforeldrepenger.fpfrontend/.default
+      --ingress=http://localhost:9000
+      --bind-address=0.0.0.0:9000
+      --upstream-host=fpfrontend:9090
+      --auto-login=true
+      --session.max-lifetime=12h0m0s
+      --session.inactivity-timeout=12h0m0s
+      --session.refresh=true
+      --log-level=debug
+    ports:
+      - 127.0.0.1:9000:9000
+    environment:
+      AZURE_APP_CLIENT_ID: fpfrontend
+    #     AZURE_APP_WELL_KNOWN_URL: kommer fra common.env
+    env_file:
+      - *common-properties
+    depends_on:
+      - authserver
+  fpfordel:
+    <<: *default-konfigurasjon
+    image: $FPFORDEL_IMAGE
+    container_name: fpfordel
+    mem_limit: 512mb
+    environment:
+      AZURE_APP_CLIENT_ID: fpfordel
+      KAFKA_TOPIC_JOURNAL_HENDELSE: teamdokumenthandtering.aapen-dok-journalfoering-vtp
+      DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
+      FPFORDEL_IT_FP_URL: http://vtp:8060/rest/infotrygd/saker/foreldrepenger
+      KAFKA_AVRO_SERDE_CLASS: no.nav.foreldrepenger.mottak.hendelse.test.VtpKafkaAvroSerde
+    env_file:
+      - *common-properties
+      - fpfordel_datasource.env
+    volumes:
+      - *sertifikat-volum
+      - ./tokenx:/tokenx
+    ports:
+      - 127.0.0.1:8090:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpfordel/internal/health/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
+      fpsak:
+        condition: service_started
+  fpformidling:
+    <<: *default-konfigurasjon
+    image: $FPFORMIDLING_IMAGE
+    container_name: fpformidling
+    mem_limit: 512mb
+    environment:
+      AZURE_APP_CLIENT_ID: fpformidling
+      DOKGEN_REST_BASE_URL: http://fpdokgen:8080
+      DOKDIST_REST_BASE_URL: http://vtp:8060/rest/dokdist/v1
+      JOURNALPOST_REST_V1_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
+      JOURNALPOST_REST_PROXY_V1_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
+    env_file:
+      - *common-properties
+      - fpformidling_datasource.env
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8010:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpformidling/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      - postgres
+      - vtp
+      - fpsak
+  fpdokgen:
+    <<: *default-konfigurasjon
+    image: $FPDOKGEN_IMAGE
+    container_name: fpdokgen
+    mem_limit: 512mb
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8291:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/actuator/info" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      - fpformidling
+  fpoppdrag:
+    <<: *default-konfigurasjon
+    image: $FPOPPDRAG_IMAGE
+    container_name: fpoppdrag
+    mem_limit: 512mb
+    env_file:
+      - *common-properties
+      - fpoppdrag_datasource.env
+    environment:
+      AZURE_APP_CLIENT_ID: fpoppdrag
+      OPPDRAG_SERVICE_URL: https://vtp:8063/soap/cics/services/oppdragService
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8070:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpoppdrag/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      - oracle
+      - vtp
+      - fpsak
+  fptilbake:
+    <<: *default-konfigurasjon
+    image: $FPTILBAKE_IMAGE
+    container_name: fptilbake
+    mem_limit: 768mb
+    shm_size: 256mb
+    environment:
+      AZURE_APP_CLIENT_ID: fptilbake
+      CONTEXT_PATH: /fptilbake
+      DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
+      KAFKA_TILBAKEKREVING_BRUKERDIALOG_HENDELSE_V1_TOPIC_URL: teamforeldrepenger.tilbakekreving-brukerdialog-v1
+      TILBAKEKREVING_V1_URL: https://vtp:8063/soap/tilbakekreving/services/tilbakekrevingService
+      DOKDIST_REST_DISTRIBUER_JOURNALPOST: http://vtp:8060/rest/dokdist/v1/distribuerjournalpost
+      KAFKA_LOS_AIVEN_TOPIC: teamforeldrepenger.behandling-hendelse-v1
+      KAFKA_DVH_SAKSHENDELSE_AIVEN_TOPIC: teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1
+      KAFKA_DVH_VEDTAK_AIVEN_TOPIC: teamforeldrepenger.tilbakekreving-dvh-vedtak-v1
+      ABAC_ATTRIBUTT_APPLIKASJON: no.nav.abac.attributter.foreldrepenger
+      ABAC_ATTRIBUTT_FAGSAK: no.nav.abac.attributter.foreldrepenger.fagsak
+      ABAC_ATTRIBUTT_VENTEFRIST: no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist
+      ABAC_ATTRIBUTT_BATCH: no.nav.abac.attributter.foreldrepenger.batch
+    env_file:
+      - *common-properties
+      - fptilbake_datasource.env
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8030:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fptilbake/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      - oracle
+      - vtp
+      - fpsak
+  fprisk:
+    <<: *default-konfigurasjon
+    image: $FPRISK_IMAGE
+    container_name: fprisk
+    mem_limit: 512mb
+    environment:
+      AZURE_APP_CLIENT_ID: fprisk
+      BRREG_PROXY: http://vtp:8060/rest/brreg/proxy/not/implemented
+    env_file:
+      - fprisk_datasource.env
+      - *common-properties
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8075:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fprisk/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      - oracle
+      - vtp
+      - fpsak
+  fpabonnent:
+    <<: *default-konfigurasjon
+    image: $FPABONNENT_IMAGE
+    container_name: fpabonnent
+    mem_limit: 512mb
+    env_file:
+      - *common-properties
+      - fpabonnent_datasource.env
+    environment:
+      AZURE_APP_CLIENT_ID: fpabonnent
+      KAFKA_PDL_LEESAH_TOPIC: pdl.leesah-v1
+      KAFKA_PDL_LEESAH_APPLICATION_ID: fpabonnent-vtp
+      KAFKA_AVRO_SERDE_CLASS: no.nav.foreldrepenger.abonnent.pdl.kafka.test.VtpKafkaAvroSerde
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8065:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpabonnent/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      - oracle
+      - vtp
+      - fpsak
+  fplos:
+    <<: *default-konfigurasjon
+    image: $FPLOS_IMAGE
+    container_name: fplos
+    mem_limit: 512mb
+    environment:
+      AZURE_APP_CLIENT_ID: fplos
+      AXSYS_URL: http://vtp:8060/rest/axsys-enhetstilgang
+    env_file:
+      - *common-properties
+      - fplos_datasource.env
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8071:8080
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/fplos/internal/health/isReady"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
+  fpinfo:
+    <<: *default-konfigurasjon
+    image: $FPINFO_IMAGE
+    container_name: fpinfo
+    mem_limit: 256mb
+    environment:
+      AZURE_APP_CLIENT_ID: fpinfo
+    env_file:
+      - *common-properties
+      - fpinfo_datasource.env
+    volumes:
+      - *sertifikat-volum
+      - ./tokenx:/tokenx
+    ports:
+      - 127.0.0.1:8040:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpinfo/internal/health/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
+      fpsak:
+        condition: service_started
+  fpsoknad-mottak:
+    <<: *default-konfigurasjon
+    image: $FPSOKNAD_MOTTAK_IMAGE
+    container_name: fpsoknad-mottak
+    mem_limit: 512mb
+    environment:
+      SPRING_PROFILES_ACTIVE: test
+      NAIS_CLUSTER_NAME: test
+      MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: true
+      AAREG_RS_URL: http://vtp:8060/rest/aareg-services/api
+      SECURITYTOKENSERVICE_USERNAME: vtp
+      SECURITYTOKENSERVICE_PASSWORD: vtp
+      KAFKA_USERNAME: vtp
+      KAFKA_PASSWORD: vtp
+      PDL_GRAPHQL_BASE_URL: http://vtp:8060/rest/api/pdl/graphql
+      DIGDIR_BASE_URL: http://vtp:8060/rest/digdir
+      ORGANISASJON_RS_BASE_URL: http://vtp:8060/rest/ereg/api
+      OPPSLAG_URL: http://vtp:8060/rest/dummy/oppslag
+      FPFORDEL_MAX: 20
+      FPINFO_MAX: 20
+      AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://authserver:8086/azureAd/token
+      AZURE_APP_CLIENT_ID: lokal:teamforeldrepenger:fpsoknad-mottak
+      AZURE_APP_JWK: /tokenx/jwk.json
+      OIDC_STS_ISSUER_URL: http://vtp:8060 # TODO Erstat med samme syntax som resten av applikasjonene
+    env_file:
+      - *common-properties
+    volumes:
+      - *sertifikat-volum
+      - ./tokenx:/tokenx
+    ports:
+      - 127.0.0.1:9001:9001
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9001/api/actuator" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      - fpinfo
+      - fpfordel
+  ## SELVBETJENING SPESIFIKK
+  fpinfo-historikk:
+    <<: *default-konfigurasjon
+    image: $FPINFO_HISTORIKK_IMAGE
+    container_name: fpinfo-historikk
+    mem_limit: 512mb
+    environment:
+      AZURE_APP_CLIENT_ID: fpinfohistorikk
+      SPRING_PROFILES_ACTIVE: test
+      NAIS_CLUSTER_NAME: test
+      LOGINSERVICE_IDPORTEN_DISCOVERY_URL: http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration
+      LOGINSERVICE_IDPORTEN_AUDIENCE: OIDC
+      HISTORIKK_TILBAKEKREVING_ENABLED: true
+      HISTORIKK_TILBAKEKREVING_TOPIC: teamforeldrepenger.tilbakekreving-brukerdialog-v1
+    env_file:
+      - *common-properties
+      - fpinfohistorikk_datasource.env
+    volumes:
+      - *sertifikat-volum
+      - ./tokenx:/tokenx
+    ports:
+      - 127.0.0.1:9003:9003
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9003/api/actuator" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      - fpsoknad-mottak
+  foreldrepengesoknad-api:
+    <<: *default-konfigurasjon
+    image: $FORELDREPENGESOKNADAPI_IMAGE
+    container_name: foreldrepengesoknad-api
+    mem_limit: 512mb
+    environment:
+      SPRING_PROFILES_ACTIVE: test
+      NAIS_CLUSTER_NAME: test
+      LOGINSERVICE_IDPORTEN_DISCOVERY_URL: http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration
+      LOGINSERVICE_IDPORTEN_AUDIENCE: OIDC
+    env_file:
+      - *common-properties
+    volumes:
+      - *sertifikat-volum
+      - ./tokenx:/tokenx
+    ports:
+      - 127.0.0.1:9002:9002
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9002/internal/actuator" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      - fpsoknad-mottak
+      - fpinfo-historikk
+  foreldrepengeoversikt:
+    <<: *default-konfigurasjon
+    image: $FORELDREPENGEOVERSIKT_IMAGE
+    container_name: foreldrepengeoversikt
+    ports:
+      - 127.0.0.1:9066:8080
+    environment:
+      KLAGE_URL: https://klage.nav.no
+      APPRES_CMS_URL: https://www.nav.no/dekoratoren
+      FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
+      FP_UTTAK_SERVICE_URL: http://localhost:9002
+      LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
+    depends_on:
+      - foreldrepengesoknad-api
+  foreldrepengesoknad:
+    <<: *default-konfigurasjon
+    image: $FORELDREPENGESOKNAD_IMAGE
+    container_name: foreldrepengesoknad
+    ports:
+      - 127.0.0.1:9067:8080
+    environment:
+      FEATURE_VIS_PERIODER_SOM_SENDES_INN: on
+      FEATURE_BRUK_SAKER_V2: on
+      FAMILIE: https://familie.nav.no
+      APPRES_CMS_URL: https://www.nav.no/dekoratoren
+      FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
+      FP_UTTAK_SERVICE_URL: http://localhost:9002
+      LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
+    depends_on:
+      - foreldrepengesoknad-api
+  svangerskapspengesoknad:
+    <<: *default-konfigurasjon
+    image: $SVANGERSKAPSPENGESOKNAD_IMAGE
+    container_name: svangerskapspengesoknad
+    ports:
+      - 127.0.0.1:9068:8080
+    environment:
+      APPRES_CMS_URL: https://www.nav.no/dekoratoren
+      FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
+      LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
+    depends_on:
+      - foreldrepengesoknad-api
+
+  ## Swagger
+  fpswagger:
+    <<: *default-konfigurasjon
+    image: ghcr.io/navikt/fp-swagger:latest
+    container_name: fpswagger
+    mem_limit: 128mb
+    environment:
+      AZURE_APP_CLIENT_ID: fpswagger
+      PORT: 9190
+      HOST: http://localhost
+      NODE_ENV: development
+      PROXY_CONFIG: |
+        {
+            "apis": [
+                {
+                    "path": "/fpsak/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpsak/swagger",
+                    "url": "http://fpsak:8080",
+                    "name": "fp-sak"
+                },
+                {
+                    "path": "/fpoppdrag/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpoppdrag/swagger",
+                    "url": "http://fpoppdrag:8080",
+                    "name": "fp-oppdrag"
+                },
+                {
+                    "path": "/fptilbake/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fptilbake/swagger",
+                    "url": "http://fptilbake:8080",
+                    "name": "fp-tilbake"
+                },
+                {
+                    "path": "/fpformidling/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpformidling/swagger",
+                    "url": "http://fpformidling:8080",
+                    "name": "fp-formidling"
+                },
+                {
+                    "path": "/fplos/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fplos/swagger",
+                    "url": "http://fplos:8080",
+                    "name": "fp-los"
+                },
+                {
+                    "path": "/fpfordel/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/swagger",
+                    "url": "http://fpfordel:8080",
+                    "name": "fp-fordel"
+                },
+                {
+                    "path": "/fpabakus/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpabakus/swagger",
+                    "url": "http://fpabakus:8080",
+                    "name": "fp-abakus"
+                },
+                {
+                    "path": "/fprisk/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fprisk/swagger",
+                    "url": "http://fprisk:8080",
+                    "name": "fp-risk"
+                },
+                {
+                    "path": "/fpabonnent/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpabonnent/swagger",
+                    "url": "http://fpabonnent:8080",
+                    "name": "fp-abonnent"
+                },
+                {
+                    "path": "/fpinfo/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpinfo/swagger",
+                    "url": "http://fpinfo:8080",
+                    "name": "fp-info"
+                },
+                {
+                    "path": "/fpsak/ekstern/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpsak/swagger",
+                    "url": "http://fpsak:8080",
+                    "name": "fp-sak ekstern API"
+                },
+                {
+                    "path": "/fpfordel/ekstern/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/swagger",
+                    "url": "http://fpfordel:8080",
+                    "name": "fp-fordel ekstern API"
+                }
+            ]
+        }
+    env_file:
+      - *common-properties
+    ports:
+      - 127.0.0.1:9190:9190
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9190/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      fpswagger-wonderwall:
+        condition: service_started
+  fpswagger-wonderwall:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-swagger
+    command: |
+      --openid.provider=azure
+      --openid.scopes=api://vtp.teamforeldrepenger.fpswagger/.default
+      --ingress=http://localhost:9200
+      --bind-address=0.0.0.0:9200
+      --upstream-host=fpswagger:9190
+      --auto-login=true
+      --log-level=debug
+    ports:
+      - 127.0.0.1:9200:9200
+    environment:
+      AZURE_APP_CLIENT_ID: fpswagger
+    env_file:
+      - *common-properties
+    depends_on:
+      authserver:
+        condition: service_started
+      fpsak:
+        condition: service_started

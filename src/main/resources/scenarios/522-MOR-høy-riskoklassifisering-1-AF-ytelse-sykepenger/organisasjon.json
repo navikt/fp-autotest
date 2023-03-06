@@ -1,0 +1,16 @@
+{
+    "modeller": [
+        {
+            "orgnummer": "889640782",
+            "navn": {
+                "navnelinje": [
+                    "NFP A"
+                ]
+            },
+            "organisasjonDetaljer": {
+                "registreringsDato": "now() - P2D",
+                "datoSistEndret": "now() - P2D"
+            }
+        }
+    ]
+}

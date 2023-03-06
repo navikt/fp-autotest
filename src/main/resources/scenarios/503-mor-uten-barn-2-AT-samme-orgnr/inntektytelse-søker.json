@@ -1,0 +1,56 @@
+{
+    "inntektskomponent": {
+        "inntektsperioder": [
+            {
+                "fom": "now() - P2Y",
+                "tom": "now()",
+                "beløp": 40000,
+                "orgnr": "889640782",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            }
+        ]
+    },
+    "aareg": {
+        "arbeidsforhold": [
+            {
+                "arbeidsforholdId": "ARB001-001",
+
+                "ansettelsesperiodeFom": "now() - P2Y",
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
+                "arbeidsgiverOrgnr": "889640782",
+
+
+                "arbeidsavtaler" : [
+                    {
+                        "fomGyldighetsperiode": "now() - P2Y",
+                        "sisteLønnsendringsdato": "now() - P1M",
+                        "avlønningstype": "fastlønn",
+                        "avtaltArbeidstimerPerUke": "20",
+                        "stillingsprosent" : 40,
+                        "beregnetAntallTimerPerUke": "20"
+                    }
+                ]
+
+            },
+            {
+                "arbeidsforholdId": "ARB001-002",
+
+                "ansettelsesperiodeFom": "now() - P4Y",
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
+                "arbeidsgiverOrgnr": "889640782",
+                "arbeidsavtaler" : [
+                    {
+                        "fomGyldighetsperiode": "now() - P4Y",
+                        "sisteLønnsendringsdato": "now() - P1Y",
+                        "avlønningstype": "fastlønn",
+                        "avtaltArbeidstimerPerUke": "20",
+                        "stillingsprosent" : 60,
+                        "beregnetAntallTimerPerUke": "20"
+                    }
+                ]
+            }
+        ]
+    }
+}

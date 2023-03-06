@@ -1,0 +1,579 @@
+name: Utfører tester mot SUT
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - 'CODEOWNERS'
+      - '.github/workflows/label-pr.yml'
+      - '.github/workflows/build-pr.yml'
+      - 'lokalutvikling/*'
+      - 'docs/*'
+  workflow_dispatch:
+    inputs:
+      trigger:
+        description: 'Repository triggering this build'
+        required: true
+        default: 'navikt/fp-autotest'
+      version:
+        description: 'Docker tag (from repository)'
+        required: false
+      issue_number:
+        description: 'Issue number  (from repository)'
+        required: false
+  schedule:
+    - cron:  '15 0 * * *'
+
+env:
+  JUIPTER_PARALLELISM_VK: 8
+  JUIPTER_PARALLELISM_FP: 16
+  GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
+
+jobs:
+  fpsak-autotester:
+    name: Kjører fpsak spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+    if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.event.inputs.trigger)
+    runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 15
+    outputs:
+      result: ${{ steps.tester.outcome }}
+      result-log: ${{ steps.logger.outcome }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: 'master'
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'maven'
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup fpsak og dens avhengigheter
+        id: setup
+        run: |
+          cd resources/keystore
+          ./make-dummy-keystore.sh
+          cd ../../lokal-utvikling
+          ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
+          cd docker-compose-lokal
+          ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+          docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpsak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+
+      - name: Utfører foreldrepengetestene for fpsak
+        id: tester
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P fpsak > >(tee test-result-log.txt)
+
+      - name: Sjekker loggen etter feil
+        if: always() && steps.setup.outcome == 'success'
+        id: logger
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil
+
+      - name: Generer testrapport
+        if: |
+          always() &&
+          github.event_name == 'workflow_dispatch' &&
+          steps.setup.outcome == 'success' &&
+          steps.tester.outcome != 'skipped' &&
+          steps.tester.outcome != 'cancelled'
+        id: ghpages
+        run: |
+          git fetch origin gh-pages
+          mkdir gh-pages
+          git --work-tree=gh-pages checkout origin/gh-pages -- fpsak/history
+          resources/allure/set-environment-variables-fpsak.sh ${{ github.event.inputs.trigger }}
+          cp resources/allure/environment.properties target/allure-results
+          cp resources/allure/categories.json target/allure-results
+          cp -r gh-pages/fpsak/history target/allure-results
+          mvn allure:report --batch-mode --settings .github/.m2/settings.xml
+
+      - name: Tar testresultat
+        if: always() && steps.ghpages.outcome == 'success'
+        run: tar -czf fpsak.tar.gz -C target/allure-report .
+
+      - name: Laste opp testresultat
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: actions/upload-artifact@v3
+        with:
+          name: fpsak-testresultat
+          path: fpsak.tar.gz
+          retention-days: 1
+
+      - name: Dumper logger for feilsøking
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        run: |
+          mkdir container-logs
+          cd container-logs
+          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+
+      - name: Laste opp logger
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-autotest
+          path: container-logs
+
+  fptilbake-tester:
+    if: github.event.inputs.trigger == 'navikt/fptilbake'
+    name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+    runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 15
+    outputs:
+      result: ${{ steps.tester.outcome }}
+      result-log: ${{ steps.logger.outcome }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: 'master'
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'maven'
+
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup verdikjeden
+        id: setup
+        run: |
+          cd resources/keystore
+          ./make-dummy-keystore.sh
+          cd ../pipeline
+          ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+          docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpoppdrag fptilbake fprisk fpdokgen fpabonnent fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+
+      - name: Sjekker minneforbruk
+        if: always()
+        run: |
+          docker stats --no-stream
+          free -m
+
+      - name: Utfører testene for fptilbake
+        id: tester
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P fptilbake > >(tee test-result-log.txt)
+
+      - name: Sjekker loggen etter feil
+        if: always() && steps.setup.outcome == 'success'
+        id: logger
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpinfo,fpdokgen,fpabonnent
+
+      - name: Generer testrapport
+        if: |
+          always() &&
+          github.event_name == 'workflow_dispatch' &&
+          steps.setup.outcome == 'success' &&
+          steps.tester.outcome != 'skipped' &&
+          steps.tester.outcome != 'cancelled'
+        id: ghpages
+        run: |
+          git fetch origin gh-pages
+          mkdir gh-pages
+          git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake/history
+          resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }}
+          cp resources/allure/environment.properties target/allure-results
+          cp resources/allure/categories.json target/allure-results
+          cp -r gh-pages/fptilbake/history target/allure-results
+          mvn allure:report --batch-mode --settings .github/.m2/settings.xml
+
+      - name: Tar testresultat
+        if: always() && steps.ghpages.outcome == 'success'
+        run: tar -czf fptilbake.tar.gz -C target/allure-report .
+
+      - name: Laste opp testresultat
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: actions/upload-artifact@v3
+        with:
+          name: fptilbake-testresultat
+          path: fptilbake.tar.gz
+          retention-days: 1
+
+      - name: Dumper logger for feilsøking
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        run: |
+          mkdir container-logs
+          cd container-logs
+          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+
+      - name: Laste opp logger
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-fptilbake-tester
+          path: container-logs
+
+  verdikjedetestene:
+    name: Kjører verdikjedetestene som er trigget av ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+    runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 15
+    outputs:
+      result: ${{ steps.tester.outcome }}
+      result-log: ${{ steps.logger.outcome }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: 'master'
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'maven'
+
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup verdikjeden
+        id: setup
+        run: |
+          cd resources/keystore
+          ./make-dummy-keystore.sh
+          cd ../pipeline
+          ./update-versions.sh ${{ github.event.inputs.trigger }} ${{ github.event.inputs.version }}
+          docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+
+      - name: Sjekker minneforbruk
+        if: always()
+        run: |
+          docker stats --no-stream
+          free -m
+      - name: Utfører verdikjedetestene
+        id: tester
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P verdikjede > >(tee test-result-log.txt)
+
+      - name: Sjekker loggen etter feil og lekket sensitiv data.
+        if: always() && steps.setup.outcome == 'success'
+        id: logger
+        run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger-DikkeSjekkLengdeAvContainer=fpdokgen
+
+      - name: Sjekker minneforbruk
+        if: always()
+        run: |
+          docker stats --no-stream
+          free -m
+
+      - name: Generer testrapport
+        if: |
+          always() &&
+          github.event_name == 'workflow_dispatch' &&
+          steps.setup.outcome == 'success' &&
+          steps.tester.outcome != 'skipped' &&
+          steps.tester.outcome != 'cancelled'
+        id: ghpages
+        run: |
+          git fetch origin gh-pages
+          mkdir gh-pages
+          git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
+          resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }}
+          cp resources/allure/environment.properties target/allure-results
+          cp resources/allure/categories.json target/allure-results
+          cp -r gh-pages/verdikjede/history target/allure-results
+          mvn allure:report --batch-mode --settings .github/.m2/settings.xml
+
+      - name: Tar testresultat
+        if: always() && steps.ghpages.outcome == 'success'
+        run: tar -czf verdikjede.tar.gz -C target/allure-report .
+
+      - name: Laste opp testresultat
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: actions/upload-artifact@v3
+        with:
+          name: verdikjede-testresultat
+          path: verdikjede.tar.gz
+          retention-days: 1
+
+      - name: Dumper logger for feilsøking
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        run: |
+          mkdir container-logs
+          cd container-logs
+          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
+
+      - name: Laste opp logger
+        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        uses: actions/upload-artifact@v3
+        with:
+          name: logs-verdikjedetester
+          path: container-logs
+
+  rapport:
+    name: Lager og publiserer test rapport
+    if: |
+      always() && !cancelled() &&
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.issue_number != null
+    needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v3
+      - name: Henter testresultat for fpsak
+        if: contains(fromJson('["success", "failure"]'), needs.fpsak-autotester.result)
+        uses: actions/download-artifact@v3
+        with:
+          name: fpsak-testresultat
+          path: .
+      - name: Henter testresultat for fptilbake
+        if: contains(fromJson('["success", "failure"]'), needs.fptilbake-tester.result)
+        uses: actions/download-artifact@v3
+        with:
+          name: fptilbake-testresultat
+          path: .
+      - name: Henter testresultat for verdikjede
+        if: contains(fromJson('["success", "failure"]'), needs.verdikjedetestene.result)
+        uses: actions/download-artifact@v3
+        with:
+          name: verdikjede-testresultat
+          path: .
+      - name: Pakk ut testresultat
+        if: success()
+        run: |
+          if [ -f "fpsak.tar.gz" ]; then echo "Testresultat fpsak funnet" && mkdir fpsak && tar -xzf fpsak.tar.gz --directory fpsak; fi
+          if [ -f "fptilbake.tar.gz" ]; then echo "Testresultat fptilbake funnet" && mkdir fptilbake && tar -xzf fptilbake.tar.gz --directory fptilbake; fi
+          if [ -f "verdikjede.tar.gz" ]; then echo "Testresultat verdikjede funnet" && mkdir verdikjede && tar -xzf verdikjede.tar.gz --directory verdikjede; fi
+      - name: Hent eksistrende testrapport og overskriv med nytt test resultat
+        if: success()
+        id: ghpages
+        run: |
+          git fetch origin gh-pages
+          mkdir gh-pages
+          git --work-tree=gh-pages checkout origin/gh-pages
+          if [ -d "fpsak" ]; then echo "Oppdatere testresultat for fpsak" && rm -rf gh-pages/fpsak && cp -r fpsak gh-pages; fi
+          if [ -d "fptilbake" ]; then echo "Oppdatere testresultat for fptilbake" && rm -rf gh-pages/fptilbake && cp -r fptilbake gh-pages; fi
+          if [ -d "verdikjede" ]; then echo "Oppdatere testresultat for verdikjede" && rm -rf gh-pages/verdikjede && cp -r verdikjede gh-pages; fi
+      - name: Deploy testrapport
+        if: always() && steps.ghpages.outcome == 'success'
+        uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          target_branch: gh-pages
+          build_dir: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify-slack:
+    name: Notify slack om testresultat
+    if: |
+      always() && !cancelled() &&
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.issue_number != null
+    needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene, rapport ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Henter ut historie til trigger
+        if: always() && !cancelled()
+        id: slacknotify
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.inputs.trigger }}
+          path: ${{ github.event.inputs.trigger }}
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          fetch-depth: 5
+
+      - name: Hent ut versjon fra forrige issue
+        if: always() && !cancelled() && steps.slacknotify.outcome == 'success'
+        shell: bash
+        run: |
+          CURRENT_HASH=$(echo "${{ github.event.inputs.version }}" | awk -F'-' '{print $3}')
+          cd "${{ github.event.inputs.trigger }}"
+          git remote -v
+          git fetch
+          echo "DIFFERANSE=$(git log --pretty=format:"%s; author: %an" -n 1 ${CURRENT_HASH})" >> $GITHUB_ENV
+
+      - name: Bygger opp slack melding
+        if: always() && !cancelled()
+        shell: bash
+        run: |
+          function statusJobb() {
+            if [[ "$1" == 'skipped' ]]; then
+              echo "skipped"
+            else
+              if [[ "$2" != 'success' ]]; then
+                echo "test-feil"
+              elif [[ "$2" == 'success' && "$3" == 'failure' ]]; then
+                echo "logg-feil"
+              else
+                echo "success"
+              fi
+            fi
+          }
+
+          function echoStatus() {
+            if [[ "$2" == 'skipped' ]]; then
+              echo ":heavy_minus_sign:  $1"
+            elif [[ "$2" == 'success' ]]; then
+              echo ":heavy_check_mark:  $1"
+            else
+              echo ":x:  $1 -> se $3"
+            fi
+          }
+
+          fpsakStatus="$(statusJobb ${{needs.fpsak-autotester.result}} ${{needs.fpsak-autotester.outputs.result}} ${{needs.fpsak-autotester.outputs.result-log}})"
+          fptilbakeStatus="$(statusJobb ${{needs.fptilbake-tester.result}} ${{needs.fptilbake-tester.outputs.result}} ${{needs.fptilbake-tester.outputs.result-log}})"
+          verdikjedetestStatus="$( statusJobb ${{needs.verdikjedetestene.result}} ${{needs.verdikjedetestene.outputs.result}} ${{needs.verdikjedetestene.outputs.result-log}})"
+
+          echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
+          echo >> $GITHUB_ENV
+          echoStatus Fpsak $fpsakStatus "<https://navikt.github.io/fp-autotest/fpsak|rapport>" >> $GITHUB_ENV
+          echoStatus Fptilbake $fptilbakeStatus "<https://navikt.github.io/fp-autotest/fptilbake|rapport>" >> $GITHUB_ENV
+          echoStatus Verdikjedetester $verdikjedetestStatus "<https://navikt.github.io/fp-autotest/verdikjede|rapport>" >> $GITHUB_ENV
+          echo >> $GITHUB_ENV
+          echo '*Trigger*: ${{ github.event.inputs.trigger }}:${{ github.event.inputs.version }}' >> $GITHUB_ENV
+          echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
+          echo '*Action URL*: <https://github.com/navikt/fp-autotest/actions/runs/${{ github.run_id }}|Github Action Url>' >> $GITHUB_ENV
+          echo '\n' >> $GITHUB_ENV
+          if [[ $fpsakStatus == 'test-feil' || $fptilbakeStatus == 'test-feil' || $verdikjedetestStatus == 'test-feil' ]]; then
+            echo "Test failure!"
+            echo "SLACK_TITLE=Verdikjeden er brukket :boom:" >> $GITHUB_ENV
+            echo "SLACK_COLOR=#df1515" >> $GITHUB_ENV
+          elif [[ $fpsakStatus == 'logg-feil'|| $fptilbakeStatus == 'logg-feil' || $verdikjedetestStatus == 'logg-feil' ]]; then
+            echo "Feil i loggen, men testene kjørte OK!"
+            echo "SLACK_TITLE=Testene gikk grønne, men fant feil i loggen :bug:" >> $GITHUB_ENV
+            echo "SLACK_COLOR=#ffff00" >> $GITHUB_ENV
+          else
+            echo "Test success!"
+            echo "SLACK_TITLE=Verdikjeden er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
+            echo "SLACK_COLOR=#37df1d" >> $GITHUB_ENV
+          fi
+
+      - name: Slack Notification
+        if: always() && !cancelled()
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_CHANNEL: vtp-autotest-resultat
+          SLACK_COLOR: ${{ env.SLACK_COLOR }}
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ${{ env.SLACK_TITLE }}
+          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_FOOTER: ''
+          MSG_MINIMAL: true
+
+  deploy-fpsak:
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.issue_number != null &&
+      github.event.inputs.trigger != 'navikt/fp-abakus'
+    needs: [fpsak-autotester, verdikjedetestene]
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          private-key: ${{ secrets.FP_PRIVATE_KEY }}
+          app-id: ${{ secrets.FP_APP_ID }}
+
+      - name: Deployer fpsak til dev og prod
+        run: |
+          curl -XPOST -u "x-access-token:${{ steps.get-token.outputs.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.event.inputs.trigger }}/dispatches \
+          -d '{
+                "event_type": "promote-command",
+                "client_payload": {
+                  "github": {
+                      "payload": {
+                          "issue": {
+                              "number": "${{ github.event.inputs.issue_number }}"
+                  }}},
+                  "slash_command": {
+                      "args": {
+                          "unnamed": {
+                              "all": "dev prod",
+                              "arg1": "dev prod"
+                  }}}
+                }
+              }'
+
+  deploy-fptilbake:
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.issue_number != null
+    needs: [fptilbake-tester, verdikjedetestene]
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          private-key: ${{ secrets.FP_PRIVATE_KEY }}
+          app-id: ${{ secrets.FP_APP_ID }}
+
+      - name: Deployer applikasjon til dev
+        run: |
+          curl -XPOST -u "x-access-token:${{ steps.get-token.outputs.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.event.inputs.trigger }}/dispatches \
+          -d '{
+                "event_type": "promote-command",
+                "client_payload": {
+                  "github": {
+                      "payload": {
+                          "issue": {
+                              "number": "${{ github.event.inputs.issue_number }}"
+                  }}},
+                  "slash_command": {
+                      "args": {
+                          "unnamed": {
+                              "all": "dev",
+                              "arg1": "dev-fss",
+                              "arg2": "teamforeldrepenger"
+                  }}}
+                }
+              }'
+
+  deploy-rest:
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.issue_number != null &&
+      !contains(fromJson('["navikt/fptilbake", "navikt/fp-sak", "navikt/fp-abakus"]'), github.event.inputs.trigger)
+    needs: [verdikjedetestene]
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          private-key: ${{ secrets.FP_PRIVATE_KEY }}
+          app-id: ${{ secrets.FP_APP_ID }}
+
+      - name: Deployer applikasjon til dev
+        run: |
+          curl -XPOST -u "x-access-token:${{ steps.get-token.outputs.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.event.inputs.trigger }}/dispatches \
+          -d '{
+                "event_type": "promote-command",
+                "client_payload": {
+                  "github": {
+                      "payload": {
+                          "issue": {
+                              "number": "${{ github.event.inputs.issue_number }}"
+                  }}},
+                  "slash_command": {
+                      "args": {
+                          "unnamed": {
+                              "all": "dev",
+                              "arg1": "dev-fss"
+                  }}}
+                }
+              }'

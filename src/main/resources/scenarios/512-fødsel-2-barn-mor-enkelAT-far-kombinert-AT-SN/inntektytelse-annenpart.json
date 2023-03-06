@@ -1,0 +1,75 @@
+{
+    "inntektskomponent": {
+        "inntektsperioder": [
+            {
+                "fom": "now() - P12M",
+                "tom": "now() - P1M",
+                "beløp": 40000,
+                "orgnr": "993110469",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "testbeskrivelsesomfungererennsålenge"
+            }
+        ]
+    },
+    "aareg": {
+        "arbeidsforhold": [
+            {
+                "arbeidsforholdId": "ARB001-001",
+
+                "ansettelsesperiodeFom": "now() - P12M",
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
+                "arbeidsgiverOrgnr": "993110469",
+                "arbeidsavtaler" : [
+                    {
+                        "fomGyldighetsperiode": "now() - P12M",
+                        "avlønningstype": "fastlønn",
+                        "avtaltArbeidstimerPerUke": "40",
+                        "stillingsprosent" : 100,
+                        "beregnetAntallTimerPerUke": "40"
+                    }
+                ]
+            }
+        ]
+    },
+    "sigrun": {
+        "inntektsår": [
+            {
+                "år": "2018",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "1000000"
+                    }
+                ]
+            },
+            {
+                "år": "2019",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "1000000"
+                    }
+                ]
+            },
+            {
+                "år": "2020",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "1000000"
+                    }
+                ]
+            },
+            {
+                "år": "2021",
+                "oppføring": [
+                    {
+                        "tekniskNavn": "personinntektNaering",
+                        "beløp": "1000000"
+                    }
+                ]
+            }
+        ]
+    }
+}

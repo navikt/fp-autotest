@@ -1,0 +1,99 @@
+{
+    "søker": {
+        "@type": "søker",
+        "ident": "${for1}",
+        "fødselsdato": "1990-01-01",
+        "kjønn": "M",
+        "geografiskTilknytning": {
+            "type": "Land",
+            "kode": "NOR"
+        },
+        "adresser": [
+            {
+                "@type": "ref",
+                "fom": "2018-01-01",
+                "adresseType": "BOSTEDSADRESSE",
+                "land": "NOR"
+            }
+        ],
+        "personstatus": [
+            {
+                "kode": "BOSA",
+                "fom": "1990-01-01"
+            }
+        ],
+        "sivilstand": [
+            {
+                "kode": "GIFT"
+            }
+        ]
+    },
+    "annenPart": {
+        "@type": "annenPart",
+        "ident": "${for2}",
+        "fødselsdato": "1988-04-01",
+        "kjønn": "K",
+        "harUføretrygd": true,
+        "personstatus": [
+            {
+                "kode": "BOSA",
+                "fom": "1988-04-01"
+            }
+        ]
+    },
+    "familierelasjoner": [
+        {
+            "rolle": "BARN",
+            "til": {
+                "@type": "barn",
+                "ident": "${barn1}",
+                "fornavn": "Ole",
+                "etternavn": "Duck",
+                "fødselsdato": "2021-10-15"
+            }
+        },
+        {
+            "rolle": "EKTE",
+            "til": {
+                "@type": "annenPart",
+                "ident": "${for2}"
+            }
+        }
+    ],
+    "familierelasjonerAnnenPart": [
+        {
+            "rolle": "BARN",
+            "til": {
+                "@type": "barn",
+                "ident": "${barn1}",
+                "fornavn": "Ole",
+                "etternavn": "Duck",
+                "fødselsdato": "2021-10-15"
+            }
+        },
+        {
+            "rolle": "EKTE",
+            "til": {
+                "@type": "annenPart",
+                "ident": "${for1}"
+            }
+        }
+    ],
+
+    "familierelasjonerBarn": [
+        {
+            "rolle": "MORA",
+            "til": {
+                "@type": "søker",
+                "ident": "${for1}"
+            }
+        },
+        {
+            "rolle": "FARA",
+            "til": {
+                "@type": "annenPart",
+                "ident": "${for2}"
+            }
+        }
+    ]
+}

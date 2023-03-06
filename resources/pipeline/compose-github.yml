@@ -1,0 +1,35 @@
+services:
+  audit.nais:
+    mem_limit: 32m
+  authserver:
+    mem_limit: 512mb
+  oracle:
+    mem_limit: 5gb
+  postgres:
+    mem_limit: 1gb
+  vtp:
+    mem_limit: 4gb
+  fpabakus:
+    mem_limit: 1gb
+  fpsak:
+    mem_limit: 3gb
+  fpfrontend:
+    mem_limit: 64mb
+  fpfordel:
+    mem_limit: 1gb
+  fpinfo:
+    mem_limit: 1gb
+  fpsoknad-mottak:
+    mem_limit: 1gb
+  fpformidling:
+    mem_limit: 1gb
+  fpdokgen:
+    mem_limit: 1gb
+  fpoppdrag:
+    mem_limit: 1gb
+  fptilbake:
+    mem_limit: 2gb
+  fprisk:
+    mem_limit: 1gb
+  fpabonnent:
+    mem_limit: 1gb

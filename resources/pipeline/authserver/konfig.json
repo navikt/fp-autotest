@@ -1,0 +1,276 @@
+{
+    "interactiveLogin": true,
+    "loginPagePath": "/authserver/login.html",
+    "httpServer": "NettyWrapper",
+    "tokenCallbacks": [
+        {
+            "issuerId": "azureAd",
+            "tokenExpiry": 3600,
+            "requestMappings": [
+                {
+                    "requestParam": "code",
+                    "match": "saksbeh",
+                    "claims": {
+                        "aud": ["fpfrontend"],
+                        "sub": "saksbeh",
+                        "NAVident": "saksbeh"
+                    }
+                },
+                {
+                    "requestParam": "code",
+                    "match": "beslut",
+                    "claims": {
+                        "aud": ["fpfrontend"],
+                        "sub": "beslut",
+                        "NAVident": "beslut"
+                    }
+                },
+                {
+                    "requestParam": "code",
+                    "match": "oversty",
+                    "claims": {
+                        "aud": ["fpfrontend"],
+                        "sub": "oversty",
+                        "NAVident": "oversty"
+                    }
+                },
+                {
+                    "requestParam": "code",
+                    "match": "klageb",
+                    "claims": {
+                        "aud": ["fpfrontend"],
+                        "sub": "klageb",
+                        "NAVident": "klageb"
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpsak/.default",
+                    "claims": {
+                        "aud": ["fpsak"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpsak/swagger",
+                    "claims": {
+                        "aud": ["fpsak"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fptilbake/.default",
+                    "claims": {
+                        "aud": ["fptilbake"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fptilbake/swagger",
+                    "claims": {
+                        "aud": ["fptilbake"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpoppdrag/.default",
+                    "claims": {
+                        "aud": ["fpoppdrag"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpoppdrag/swagger",
+                    "claims": {
+                        "aud": ["fpoppdrag"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpformidling/.default",
+                    "claims": {
+                        "aud": ["fpformidling"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpformidling/swagger",
+                    "claims": {
+                        "aud": ["fpformidling"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpinfo/.default",
+                    "claims": {
+                        "aud": ["fpinfo"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpinfo/swagger",
+                    "claims": {
+                        "aud": ["fpinfo"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpfordel/.default",
+                    "claims": {
+                        "aud": ["fpfordel"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpfordel/swagger",
+                    "claims": {
+                        "aud": ["fpfordel"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpabonnent/.default",
+                    "claims": {
+                        "aud": ["fpabonnent"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpabonnent/swagger",
+                    "claims": {
+                        "aud": ["fpabonnent"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fprisk/.default",
+                    "claims": {
+                        "aud": ["fprisk"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fprisk/swagger",
+                    "claims": {
+                        "aud": ["fprisk"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fplos/.default",
+                    "claims": {
+                        "aud": ["fplos"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fplos/swagger",
+                    "claims": {
+                        "aud": ["fplos"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpabakus/.default",
+                    "claims": {
+                        "aud": ["fpabakus"]
+                    }
+                },
+                {
+                    "requestParam": "scope",
+                    "match": "api://vtp.teamforeldrepenger.fpabakus/swagger",
+                    "claims": {
+                        "aud": ["fpabakus"]
+                    }
+                },
+                {
+                    "requestParam": "grant_type",
+                    "match": "client_credentials",
+                    "claims": {
+                        "sub": "system",
+                        "oid": "system"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpabakus",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpabakus"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpabonnent",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpabonnent"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpfordel",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpfordel"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpformidling",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpformidling"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fpoppdrag",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fpoppdrag"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fptilbake",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fptilbake"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fprisk",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fprisk"
+                    }
+                },
+                {
+                    "requestParam": "client_id",
+                    "match": "fplos",
+                    "claims": {
+                        "azp_name": "vtp:teamforeldrepenger:fplos"
+                    }
+                }
+            ]
+        },
+        {
+            "issuerId": "idPorten",
+            "tokenExpiry": 3600,
+            "requestMappings": [
+                {
+                    "requestParam": "grant_type",
+                    "match": "authorization_code",
+                    "claims": {
+                        "aud": ["foreldrepengesoknad", "lokal"],
+                        "acr": "Level4"
+                    }
+                },
+                {
+                    "requestParam": "audience",
+                    "match": "lokal",
+                    "claims": {
+                        "aud": ["lokal"],
+                        "acr": "Level4",
+                        "sub": "Michal"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,82 @@
+{
+    "inntektskomponent": {
+        "inntektsperioder": [
+            {
+                "fom": "now() - P2Y",
+                "beløp": 50000,
+                "orgnr": "889640782",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            },
+            {
+                "fom": "now() - P2Y",
+                "beløp": 50000,
+                "orgnr": "992261048",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            },
+            {
+                "fom": "now() - P2Y",
+                "beløp": 50000,
+                "orgnr": "992260475",
+                "type": "Lønnsinntekt",
+                "fordel": "kontantytelse",
+                "beskrivelse": "fastloenn"
+            }
+        ]
+    },
+    "aareg": {
+        "arbeidsforhold": [
+            {
+                "arbeidsforholdId": "ARB001-001",
+                "arbeidsgiverOrgnr": "889640782",
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
+                "ansettelsesperiodeFom": "now() - P4Y",
+                "arbeidsavtaler" : [
+                    {
+                        "fomGyldighetsperiode": "now() - P2Y",
+                        "sisteLønnsendringsdato": "now() - P1M",
+                        "avlønningstype": "fastlønn",
+                        "avtaltArbeidstimerPerUke": "40",
+                        "stillingsprosent" : 100,
+                        "beregnetAntallTimerPerUke": "40"
+                    }
+                ]
+            },
+            {
+                "arbeidsforholdId": "ARB001-002",
+                "arbeidsgiverOrgnr": "992261048",
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
+                "ansettelsesperiodeFom": "now() - P4Y",
+                "arbeidsavtaler" : [
+                    {
+                        "fomGyldighetsperiode": "now() - P2Y",
+                        "sisteLønnsendringsdato": "now() - P1M",
+                        "avlønningstype": "fastlønn",
+                        "avtaltArbeidstimerPerUke": "40",
+                        "stillingsprosent" : 100,
+                        "beregnetAntallTimerPerUke": "40"
+                    }
+                ]
+            },
+            {
+                "arbeidsforholdId": "ARB001-003",
+                "arbeidsgiverOrgnr": "992260475",
+                "arbeidsforholdstype": "ordinaertArbeidsforhold",
+                "ansettelsesperiodeFom": "now() - P4Y",
+                "arbeidsavtaler" : [
+                    {
+                        "fomGyldighetsperiode": "now() - P2Y",
+                        "sisteLønnsendringsdato": "now() - P1M",
+                        "avlønningstype": "fastlønn",
+                        "avtaltArbeidstimerPerUke": "40",
+                        "stillingsprosent" : 100,
+                        "beregnetAntallTimerPerUke": "40"
+                    }
+                ]
+            }
+        ]
+    }
+}

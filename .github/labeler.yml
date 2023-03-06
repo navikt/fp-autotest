@@ -1,0 +1,20 @@
+github-action:
+  - .github/**/*
+
+lokal-utvikling:
+  - lokal-utvikling/**/*
+
+testrammeverk:
+  - src/main/java/**/*
+
+tester:
+  - src/test/java/**/*
+
+pom:
+  - pom.xml
+
+docs:
+  - docs/**/*
+  - README.md
+  - LICENSE.md
+  - CODEOWNERS
