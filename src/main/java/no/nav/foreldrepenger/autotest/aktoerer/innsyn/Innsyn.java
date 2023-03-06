@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.innsyn.InnsynKlient;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.innsyn.v2.Saker;
+import no.nav.foreldrepenger.common.innsyn.Saker;
 
 public class Innsyn {
     private static final Logger LOG = LoggerFactory.getLogger(Innsyn.class);

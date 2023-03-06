@@ -59,7 +59,7 @@ public final class AzureTokenProvider {
                         "grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer",
                         "client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
                         "requested_token_use", "on_behalf_of",
-                        "scope", String.format("api://vtp.teamforeldrepenger.%s/.default", clientId),
+                        "scope", "api://vtp.teamforeldrepenger.vtp/.default",
                         "assertion", saksbehandlerAccessToken)))
                 ));
 
