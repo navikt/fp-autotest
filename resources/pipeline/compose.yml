@@ -358,6 +358,7 @@ services:
       ABAC_ATTRIBUTT_FAGSAK: no.nav.abac.attributter.foreldrepenger.fagsak
       ABAC_ATTRIBUTT_VENTEFRIST: no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist
       ABAC_ATTRIBUTT_BATCH: no.nav.abac.attributter.foreldrepenger.batch
+      TOGGLE_ENABLE_LAGRE_BEREGNINGSRESULTAT: true
     env_file:
       - *common-properties
       - fptilbake_datasource.env
