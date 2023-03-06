@@ -130,6 +130,15 @@
                         "aud": ["vtp"],
                         "azp_name": "vtp:teamforeldrepenger:vtp"
                     }
+                },
+                {
+                    "requestParam": "grant_type",
+                    "match": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+                    "claims": {
+                        "sub": "obo",
+                        "aud": ["vtp"],
+                        "azp_name": "vtp:teamforeldrepenger:vtp"
+                    }
                 }
             ]
         },
