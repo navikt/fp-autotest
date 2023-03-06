@@ -64,6 +64,7 @@
                         "aud": ["vtp"]
                     }
                 },
+                {
                     "requestParam": "scope",
                     "match": "api://vtp.teamforeldrepenger.fpformidling/swagger",
                     "claims": {
