@@ -103,6 +103,8 @@ services:
     image: $FPABAKUS_IMAGE
     container_name: fpabakus
     mem_limit: 512mb
+    environment:
+      TOKEN_SYSTEM_USE_AZURE: true
     env_file:
       - *common-properties
       - fpabakus_datasource.env
