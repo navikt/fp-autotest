@@ -6,9 +6,6 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
@@ -17,8 +14,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.util.IndexClasses;
 
 public abstract class AksjonspunktBekreftelse {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AksjonspunktBekreftelse.class);
 
     @JsonProperty("@type")
     protected String kode;
@@ -44,22 +39,22 @@ public abstract class AksjonspunktBekreftelse {
         kode = this.getClass().getAnnotation(BekreftelseKode.class).kode();
     }
 
-    public static AksjonspunktBekreftelse fromKode(String kode, Fagsystem gjeldendeFagsystem) throws InstantiationException,
+    private static AksjonspunktBekreftelse fromKode(String kode, Fagsystem gjeldendeFagsystem) throws InstantiationException,
             IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        for (var klasse : aksjonspunktBekreftelseClasses) {
-            var annotation = klasse.getDeclaredAnnotation(BekreftelseKode.class);
-
-            if (Modifier.isAbstract(klasse.getModifiers())) {
-                continue; // trenger trenger ikke skjekke klasser som er abstrakte
-            }
-            if (annotation == null) {
-                LOG.warn("Aksjonspunkt mangler annotasjon='{}'", klasse.getName());
-            } else if (annotation.kode().equals(kode) && annotation.fagsystem().equals(gjeldendeFagsystem)) {
-                return klasse.getConstructor().newInstance();
-            }
+        var matchende = aksjonspunktBekreftelseClasses.stream()
+                .filter(klasse -> !Modifier.isAbstract(klasse.getModifiers()))
+                .filter(klasse -> {
+                    var annotation = klasse.getDeclaredAnnotation(BekreftelseKode.class);
+                    return annotation.kode().equals(kode) && annotation.fagsystem().equals(gjeldendeFagsystem);
+                })
+                .toList();
+        if (matchende.size() > 1) {
+            throw new IllegalStateException("Finner flere enn en class som bekrefter aksjonspunkt " + kode);
         }
-
-        return null;
+        if (matchende.isEmpty()) {
+            throw new IllegalStateException("Finner ingen class som bekrefter aksjonspunkt " + kode);
+        }
+        return matchende.get(0).getConstructor().newInstance();
     }
 
     public static AksjonspunktBekreftelse fromAksjonspunkt(Aksjonspunkt aksjonspunkt, Fagsystem fagsystem) throws InstantiationException, IllegalAccessException,
