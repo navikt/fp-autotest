@@ -12,7 +12,7 @@ on:
 env:
   JUIPTER_PARALLELISM_VK: 4
   JUIPTER_PARALLELISM_FP: 4
-  GITHUB_PASSWORD: ${{ secrets.PAT }}
+  GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   fpsak-autotester:
