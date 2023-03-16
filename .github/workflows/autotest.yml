@@ -16,7 +16,7 @@ env:
 jobs:
   fpsak-autotester:
     name: Kjører fpsak spesifikke tester som er trigget av ${{ github.repository }} ${{ github.event.inputs.build-version }}
-    if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.event.inputs.trigger)
+    if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -104,7 +104,7 @@ jobs:
           path: container-logs
 
   fptilbake-tester:
-    if: github.event.inputs.trigger == 'navikt/fptilbake'
+    if: github.repository == 'navikt/fptilbake'
     name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.repository }} ${{ github.event.inputs.build-version }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -300,10 +300,7 @@ jobs:
 
 #  rapport:
 #    name: Lager og publiserer test rapport
-#    if: |
-#      always() && !cancelled() &&
-#      github.event_name == 'workflow_dispatch' &&
-#      github.event.inputs.issue_number != null
+#    if: always() && !cancelled()
 #    needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
 #    runs-on: ubuntu-latest
 #    timeout-minutes: 6
@@ -354,10 +351,7 @@ jobs:
 
   notify-slack:
     name: Notify slack om testresultat
-    if: |
-      always() && !cancelled() &&
-      github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.issue_number != null
+    if: always() && !cancelled()
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene, rapport ]
     runs-on: ubuntu-latest
     timeout-minutes: 2
