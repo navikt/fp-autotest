@@ -23,7 +23,7 @@ public class PdlLeesahKlient {
     @Step("Sender inn {personhendelseDto.type}")
     public void opprettHendelse(PersonhendelseDto personhendelseDto) {
         tilJsonOgPubliserIAllureRapport(personhendelseDto);
-        LOG.info("Legger til hendelse av type: {} i PDL", personhendelseDto.getType());
+        LOG.info("Legger til hendelse {} i PDL", personhendelseDto);
         var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
                         .path(PDL_LEESAH)
