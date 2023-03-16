@@ -353,7 +353,7 @@ jobs:
   notify-slack:
     name: Notify slack om testresultat
     if: always() && !cancelled()
-    needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene, rapport ]
+    needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
