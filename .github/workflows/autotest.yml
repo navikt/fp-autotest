@@ -2,8 +2,8 @@ name: Utfører tester mot SUT
 
 on:
   workflow_call:
-    build-version:
-      version:
+    inputs:
+      build-version:
         description: 'Docker tag (from repository)'
         required: false
         default: 'latest'
