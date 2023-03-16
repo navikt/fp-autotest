@@ -4,8 +4,9 @@ on:
   workflow_call:
     inputs:
       build-version:
-        description: 'Docker tag (from repository)'
         required: false
+        type: string
+        description: 'Docker tag (from repository)'
         default: 'latest'
 
 env:
