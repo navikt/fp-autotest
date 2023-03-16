@@ -364,7 +364,6 @@ jobs:
         with:
           repository: ${{ github.repository }}
           path: ${{ github.repository }}
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
           fetch-depth: 5
 
       - name: Hent ut versjon fra forrige issue
@@ -433,16 +432,16 @@ jobs:
             echo "SLACK_COLOR=#37df1d" >> $GITHUB_ENV
           fi
 
-      - name: Slack Notification
-        if: always() && !cancelled()
-        uses: rtCamp/action-slack-notify@v2.2.0
-        env:
-          SLACK_CHANNEL: vtp-autotest-resultat
-          SLACK_COLOR: ${{ env.SLACK_COLOR }}
-          SLACK_ICON: https://github.com/github.png?size=48
-          SLACK_TITLE: ${{ env.SLACK_TITLE }}
-          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
-          SLACK_USERNAME: Github Action
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_FOOTER: ''
-          MSG_MINIMAL: true
+#      - name: Slack Notification
+#        if: always() && !cancelled()
+#        uses: rtCamp/action-slack-notify@v2.2.0
+#        env:
+#          SLACK_CHANNEL: vtp-autotest-resultat
+#          SLACK_COLOR: ${{ env.SLACK_COLOR }}
+#          SLACK_ICON: https://github.com/github.png?size=48
+#          SLACK_TITLE: ${{ env.SLACK_TITLE }}
+#          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
+#          SLACK_USERNAME: Github Action
+#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#          SLACK_FOOTER: ''
+#          MSG_MINIMAL: true
