@@ -24,18 +24,18 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
-        <vtp.versjon>1.1.14</vtp.versjon>
+        <vtp.versjon>1.1.6</vtp.versjon>
         <dokumentgenerator.version>3.5.6</dokumentgenerator.version>
-        <fp-felles.versjon>4.2.36</fp-felles.versjon>
-        <fp-prosesstask.version>3.1.25</fp-prosesstask.version>
-        <fp-kontrakter.version>6.2.14</fp-kontrakter.version>
+        <fp-felles.versjon>4.2.31</fp-felles.versjon>
+        <fp-prosesstask.version>3.1.21</fp-prosesstask.version>
+        <fp-kontrakter.version>6.2.12</fp-kontrakter.version>
 
         <allure.version>2.21.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <assertj.version>3.24.2</assertj.version>
         <aspectj.version>1.9.19</aspectj.version>
         <junit.version>5.9.2</junit.version>
-        <mockito.version>5.2.0</mockito.version>
+        <mockito.version>5.1.1</mockito.version>
         <jackson.version>2.14.2</jackson.version>
         <jakarta.vs.rs.version>3.1.0</jakarta.vs.rs.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
@@ -74,7 +74,7 @@
             <dependency>
                 <groupId>net.minidev</groupId>
                 <artifactId>json-smart</artifactId>
-                <version>2.4.9</version>
+                <version>2.4.8</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.core</groupId>

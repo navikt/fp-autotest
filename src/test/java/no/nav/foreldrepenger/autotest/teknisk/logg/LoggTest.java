@@ -25,8 +25,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
@@ -34,6 +32,9 @@ import no.nav.foreldrepenger.autotest.util.DockerUtils;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Tag("logger")
 class LoggTest {
@@ -163,7 +164,7 @@ class LoggTest {
     }
 
     private Set<SensitivInformasjon> sensitivArbeidsgiverInformasjon(TestscenarioDto testscenarioDto) {
-        return Optional.ofNullable(testscenarioDto.scenariodata())
+        return Optional.ofNullable(testscenarioDto.scenariodataDto())
             .map(InntektYtelseModell::arbeidsforholdModell)
             .map(ArbeidsforholdModell::arbeidsforhold)
             .map(o -> o.stream()
