@@ -36,7 +36,7 @@ env:
 jobs:
   fpsak-autotester:
     name: Kjører fpsak spesifikke tester som er trigget av ${{ github.repository }} ${{ github.event.inputs.build-version }}
-#    if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.repository)
+    if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.repository)
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 15
     outputs:
