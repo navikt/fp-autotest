@@ -20,7 +20,7 @@ public class PdlLeesahKlient {
     private static final String PDL_LEESAH = "/pdl/leesah";
     private static final Logger LOG = LoggerFactory.getLogger(PdlLeesahKlient.class);
 
-    @Step("Sender inn {personhendelseDto.type}")
+    @Step("Sender inn hendelse")
     public void opprettHendelse(PersonhendelseDto personhendelseDto) {
         tilJsonOgPubliserIAllureRapport(personhendelseDto);
         LOG.info("Legger til hendelse {} i PDL", personhendelseDto);
