@@ -320,12 +320,12 @@ jobs:
     if: always() && !cancelled()
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    continue-on-error: true
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v3
         with:
           repository: 'navikt/fp-autotest'
-          ref: 'gh-pages'
       - name: Henter testresultat for fpsak
         if: contains(fromJson('["success", "failure"]'), needs.fpsak-autotester.result)
         uses: actions/download-artifact@v3
@@ -376,6 +376,7 @@ jobs:
     if: always() && !cancelled()
     needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
     runs-on: ubuntu-latest
+    continue-on-error: true
     timeout-minutes: 2
     steps:
       - name: Henter ut historie til trigger
@@ -453,16 +454,16 @@ jobs:
             echo "SLACK_COLOR=#37df1d" >> $GITHUB_ENV
           fi
 
-#      - name: Slack Notification
-#        if: always() && !cancelled()
-#        uses: rtCamp/action-slack-notify@v2.2.0
-#        env:
-#          SLACK_CHANNEL: vtp-autotest-resultat
-#          SLACK_COLOR: ${{ env.SLACK_COLOR }}
-#          SLACK_ICON: https://github.com/github.png?size=48
-#          SLACK_TITLE: ${{ env.SLACK_TITLE }}
-#          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
-#          SLACK_USERNAME: Github Action
-#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-#          SLACK_FOOTER: ''
-#          MSG_MINIMAL: true
+      - name: Slack Notification
+        if: always() && !cancelled()
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_CHANNEL: vtp-autotest-resultat
+          SLACK_COLOR: ${{ env.SLACK_COLOR }}
+          SLACK_ICON: https://github.com/github.png?size=48
+          SLACK_TITLE: ${{ env.SLACK_TITLE }}
+          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
+          SLACK_USERNAME: Github Action
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_FOOTER: ''
+          MSG_MINIMAL: true
