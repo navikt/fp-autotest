@@ -133,6 +133,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          repository: 'navikt/fp-autotest'
           ref: 'master'
 
       - uses: actions/setup-java@v3
