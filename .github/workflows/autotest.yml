@@ -368,14 +368,13 @@ jobs:
           repo: 'navikt/fp-autotest'
           target_branch: gh-pages
           build_dir: gh-pages
-          dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   notify-slack:
     name: Notify slack om testresultat
     if: always() && !cancelled()
-    needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene ]
+    needs: [ fpsak-autotester, fptilbake-tester, verdikjedetestene, rapport ]
     runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 2
