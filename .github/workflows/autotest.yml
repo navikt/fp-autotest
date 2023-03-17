@@ -323,6 +323,8 @@ jobs:
     timeout-minutes: 6
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: 'navikt/fp-autotest'
       - name: Henter testresultat for fpsak
         if: contains(fromJson('["success", "failure"]'), needs.fpsak-autotester.result)
         uses: actions/download-artifact@v3
