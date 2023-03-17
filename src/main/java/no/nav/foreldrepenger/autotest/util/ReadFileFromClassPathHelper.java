@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.autotest.util;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
+import org.apache.cxf.helpers.IOUtils;
 
 public final class ReadFileFromClassPathHelper {
     private ReadFileFromClassPathHelper() {
@@ -12,13 +12,12 @@ public final class ReadFileFromClassPathHelper {
     public static String hent(String filsti) {
         Objects.requireNonNull(filsti, "Må oppgi en filsti det skal hentes fra");
 
-        try(var inputStream = ReadFileFromClassPathHelper.class.getClassLoader().getResourceAsStream(filsti)) {
-            if (inputStream == null) {
-                throw new IllegalArgumentException("Finner ikke fil på classpath '" + filsti + "'.");
-            }
-            return new BufferedReader(new InputStreamReader(inputStream))
-                    .lines().collect(Collectors.joining("\n"));
-
+        var inputStream = ReadFileFromClassPathHelper.class.getClassLoader().getResourceAsStream(filsti);
+        if (inputStream == null) {
+            throw new IllegalArgumentException("Finner ikke fil på classpath '" + filsti + "'.");
+        }
+        try {
+            return IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
         } catch (Exception e) {
             throw new IllegalArgumentException("Feil ved lesing av fil '" + filsti + "'", e);
         }

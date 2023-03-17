@@ -54,7 +54,7 @@ public class Familie {
                         new Fødselsnummer(scenario.personopplysninger().søkerIdent()),
                         new AktørId(scenario.personopplysninger().søkerAktørIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
-                        scenario.scenariodata(),
+                        scenario.scenariodataDto(),
                         innsender);
                 return mor;
             } else if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.K)) {
@@ -62,7 +62,7 @@ public class Familie {
                         new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
                         new AktørId(scenario.personopplysninger().søkerAktørIdent()),
-                        scenario.scenariodataAnnenpart(),
+                        scenario.scenariodataAnnenpartDto(),
                         innsender);
                 return mor;
             } else {
@@ -82,7 +82,7 @@ public class Familie {
                         new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
                         new AktørId(scenario.personopplysninger().søkerAktørIdent()),
-                        scenario.scenariodataAnnenpart(),
+                        scenario.scenariodataAnnenpartDto(),
                         innsender);
                 return medmor;
             } else {
@@ -100,7 +100,7 @@ public class Familie {
                         new Fødselsnummer(scenario.personopplysninger().søkerIdent()),
                         new AktørId(scenario.personopplysninger().søkerAktørIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
-                        scenario.scenariodata(),
+                        scenario.scenariodataDto(),
                         innsender);
                 return far;
             } else if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.M)) {
@@ -108,7 +108,7 @@ public class Familie {
                         new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
                         new AktørId(scenario.personopplysninger().søkerAktørIdent()),
-                        scenario.scenariodataAnnenpart(),
+                        scenario.scenariodataAnnenpartDto(),
                         innsender);
                 return far;
             } else {
