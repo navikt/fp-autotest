@@ -369,7 +369,7 @@ jobs:
           target_branch: gh-pages
           build_dir: gh-pages
         env:
-          GH_PAT: ${{ secrets.PAT_AUTOTEST }}
+          GH_PAT: ${{ secrets.PAT }}
 
   notify-slack:
     name: Notify slack om testresultat
