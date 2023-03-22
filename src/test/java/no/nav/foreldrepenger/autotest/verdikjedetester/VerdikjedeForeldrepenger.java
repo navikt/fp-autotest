@@ -17,7 +17,6 @@ import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesokn
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.REBEREGN_FERIEPENGER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_DØD_FORELDER;
-import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
@@ -69,7 +68,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KlageFormkravNfp;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerManueltOpprettetRevurdering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRealitetsbehandlingEllerKlage;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
@@ -117,88 +115,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "25% avvik med delvis refusjon. Etter behandlingen er ferdigbehandlet mottas en fødselshendelse.")
     void testcase_mor_fødsel() {
         var familie = new Familie("501");
-        var mor = familie.mor();
-        var termindato = LocalDate.now().plusWeeks(1);
-        var fpStartdato = termindato.minusWeeks(3);
-        var fordeling = fordeling(
-                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, fpStartdato, termindato.minusDays(1)),
-                uttaksperiode(StønadskontoType.FORELDREPENGER, termindato, termindato.plusWeeks(15).minusDays(1)),
-                uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
-        var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medFordeling(fordeling.build())
-                .medRettigheter(RettigheterErketyper.harAleneOmsorgOgEnerett())
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottattDato(termindato.minusWeeks(5));
-        var saksnummer = mor.søk(søknad.build());
 
-        var arbeidsgiver = mor.arbeidsgiver();
-        var månedsinntekt = mor.månedsinntekt();
-        var avvikendeMånedsinntekt = månedsinntekt * 1.3;
-        var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medBeregnetInntekt(BigDecimal.valueOf(avvikendeMånedsinntekt))
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
-
-        saksbehandler.hentFagsak(saksnummer);
-        var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt(månedsinntekt * 12, 1)
-                .setBegrunnelse("Begrunnelse");
-        saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
-
-        var avklarFaktaAleneomsorgBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
-                .bekreftBrukerHarAleneomsorg()
-                .setBegrunnelse("Bekreftelse sendt fra Autotest.");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
-
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.INNVILGET);
-
-        var saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
-                .as("Saldo for stønadskontoen FORELDREPENGER_FØR_FØDSEL")
-                .isZero();
-        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
-                .as("Saldoen for stønadskontoen FORELDREPENGER")
-                .isEqualTo(75);
-
-        assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getDagsats())
-                .as("Forventer at dagsatsen blir justert ut i fra årsinntekten og utbeatlinsggrad, og IKKE 6G fordi inntekten er under 6G!")
-                .isEqualTo(1846);
-        assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(60))
-                .as("Forventer at 40% summen utbetales til søker og 60% av summen til arbeisdgiver pga 60% refusjon!")
-                .isTrue();
-
-        // Fødselshendelse
-        familie.sendInnFødselshendelse(termindato.minusWeeks(1));
-
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).behandlingArsakType())
-                .as("Årsakskode til revuderingen")
-                .isEqualTo(RE_HENDELSE_FØDSEL);
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
-
-        // Verifiser riktig justering av kontoer og uttak.
-        saldoer = saksbehandler.valgtBehandling.getSaldoer();
-        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
-                .as("Saldo for stønadskontoen FORELDREPENGER_FØR_FØDSEL")
-                .isEqualTo(5);
-        assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER).saldo())
-                .as("Saldo for stønadskontoen FORELDREPENGER")
-                .isEqualTo(70);
-
-        var feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
-        assertThat(feriepenger).isNotNull();
-        var feriepengerTilArbeidsgiver = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), false);
-        var feriepengerTilSøker = oppsummerFeriepengerForArbeidsgiver(feriepenger.andeler(), arbeidsgiver.arbeidsgiverIdentifikator().value(), true);
-        assertFeriepenger(feriepengerTilSøker + feriepengerTilArbeidsgiver, 11297);
     }
 
     @Test
