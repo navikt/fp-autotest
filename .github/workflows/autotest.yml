@@ -12,21 +12,12 @@ on:
       fpsak-result:
         description: "Fpsak resultat tester"
         value: ${{ jobs.fpsak-autotester.outputs.result }}
-      fpsak-result-log:
-        description: "Fpsak resultat tester"
-        value: ${{ jobs.fpsak-autotester.outputs.result-log }}
       fptilbake-result:
         description: "Fptilbake resultat tester"
         value: ${{ jobs.fptilbake-tester.outputs.result }}
-      fptilbake-result-log:
-        description: "Fpsak resultat tester"
-        value: ${{ jobs.fptilbake-tester.outputs.result-log }}
       verdikjedetestene-result:
         description: "Verdikjedetester resultat"
         value: ${{ jobs.verdikjedetestene.outputs.result }}
-      verdikjedetestene-result-log:
-        description: "Verdikjede logg testresultat"
-        value: ${{ jobs.verdikjedetestene.outputs.result-log }}
 
 env:
   JUIPTER_PARALLELISM_VK: 8
@@ -40,8 +31,7 @@ jobs:
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 15
     outputs:
-      result: ${{ steps.tester.outcome }}
-      result-log: ${{ steps.logger.outcome }}
+      result: ${{ steps.resultat.outcome }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -78,6 +68,10 @@ jobs:
         if: always() && steps.setup.outcome == 'success'
         id: logger
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil
+
+      - name: Utled testresultat
+        id: resultat
+        run: echo "resultat=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
       - name: Generer testrapport
         if: |
@@ -128,8 +122,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
-      result: ${{ steps.tester.outcome }}
-      result-log: ${{ steps.logger.outcome }}
+      result: ${{ steps.resultat.outcome }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -172,6 +165,10 @@ jobs:
         if: always() && steps.setup.outcome == 'success'
         id: logger
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpinfo,fpdokgen,fpabonnent
+
+      - name: Utled testresultat
+        id: resultat
+        run: echo "resultat=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
       - name: Generer testrapport
         if: |
@@ -221,8 +218,7 @@ jobs:
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 20
     outputs:
-      result: ${{ steps.tester.outcome }}
-      result-log: ${{ steps.logger.outcome }}
+      result: ${{ steps.resultat.outcome }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -234,8 +230,6 @@ jobs:
           distribution: 'temurin'
           java-version: 17
           cache: 'maven'
-
-      - run: ls -a
 
       - name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
@@ -266,6 +260,10 @@ jobs:
         if: always() && steps.setup.outcome == 'success'
         id: logger
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger-DikkeSjekkLengdeAvContainer=fpdokgen
+
+      - name: Utled testresultat
+        id: resultat
+        run: echo "resultat=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
       - name: Sjekker minneforbruk
         if: always()
