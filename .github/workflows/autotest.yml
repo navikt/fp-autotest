@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 15
     outputs:
-      result: ${{ steps.result.outcomes.result }}
+      result: ${{ steps.result.outputs.result }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -137,7 +137,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
-      result: ${{ steps.result.outcomes.result }}
+      result: ${{ steps.result.outputs.result }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -234,7 +234,7 @@ jobs:
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 20
     outputs:
-      result: ${{ steps.result.outcomes.result }}
+      result: ${{ steps.result.outputs.result }}
     steps:
       - uses: actions/checkout@v3
         with:
