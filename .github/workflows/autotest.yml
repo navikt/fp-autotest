@@ -8,6 +8,21 @@ on:
         type: string
         description: 'Docker tag (from repository)'
         default: 'latest'
+      test-fpsak:
+        required: false
+        type: boolean
+        description: skal fpsak testes
+        default: false
+      test-fptilbake:
+        required: false
+        type: boolean
+        description: skal fptilbake testes
+        default: false
+      test-verdikjede:
+        required: false
+        type: boolean
+        description: skal verdikjede testes
+        default: false
     outputs:
       fpsak:
         description: "Fpsak resultat tester"
@@ -26,8 +41,8 @@ env:
 
 jobs:
   fpsak-autotester:
-    name: Kjører fpsak spesifikke tester som er trigget av ${{ github.repository }} ${{ github.event.inputs.build-version }}
-    if: contains(fromJson('["navikt/fp-abakus", "navikt/fp-sak"]'), github.repository)
+    name: Kjører fpsak spesifikke tester som er trigget av ${{ github.repository }} ${{ inputs.build-version }}
+    if: inputs.test-fpsak
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 15
     outputs:
@@ -57,7 +72,7 @@ jobs:
           cd ../../lokal-utvikling
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
           cd docker-compose-lokal
-          ./update-versions.sh ${{ github.repository }} ${{ github.event.inputs.build-version }}
+          ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
           docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpsak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
       - name: Utfører foreldrepengetestene for fpsak
@@ -117,8 +132,8 @@ jobs:
           path: container-logs
 
   fptilbake-tester:
-    if: github.repository == 'navikt/fptilbake'
-    name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.repository }} ${{ github.event.inputs.build-version }}
+    name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.repository }} ${{ inputs.build-version }}
+    if: inputs.test-fptilbake
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -148,7 +163,7 @@ jobs:
           cd resources/keystore
           ./make-dummy-keystore.sh
           cd ../pipeline
-          ./update-versions.sh ${{ github.repository }} ${{ github.event.inputs.build-version }}
+          ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
           docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpoppdrag fptilbake fprisk fpdokgen fpabonnent fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
       - name: Sjekker minneforbruk
@@ -214,7 +229,8 @@ jobs:
           path: container-logs
 
   verdikjedetestene:
-    name: Kjører verdikjedetestene som er trigget av ${{ github.repository }} ${{ github.event.inputs.build-version }}
+    name: Kjører verdikjedetestene som er trigget av ${{ github.repository }} ${{ inputs.build-version }}
+    if: inputs.test-verdikjede
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 20
     outputs:
@@ -244,7 +260,7 @@ jobs:
           cd resources/keystore
           ./make-dummy-keystore.sh
           cd ../pipeline
-          ./update-versions.sh ${{ github.repository }} ${{ github.event.inputs.build-version }}
+          ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
           docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
       - name: Sjekker minneforbruk
@@ -390,7 +406,7 @@ jobs:
         if: always() && !cancelled() && steps.slacknotify.outcome == 'success'
         shell: bash
         run: |
-          CURRENT_HASH=$(echo "${{ github.event.inputs.build-version }}" | awk -F'-' '{print $3}')
+          CURRENT_HASH=$(echo "${{ inputs.build-version }}" | awk -F'-' '{print $3}')
           cd "${{ github.repository }}"
           git remote -v
           git fetch
@@ -434,7 +450,7 @@ jobs:
           echoStatus Fptilbake $fptilbakeStatus "<https://navikt.github.io/fp-autotest/fptilbake|rapport>" >> $GITHUB_ENV
           echoStatus Verdikjedetester $verdikjedetestStatus "<https://navikt.github.io/fp-autotest/verdikjede|rapport>" >> $GITHUB_ENV
           echo >> $GITHUB_ENV
-          echo '*Trigger*: ${{ github.repository }}:${{ github.event.inputs.build-version }}' >> $GITHUB_ENV
+          echo '*Trigger*: ${{ github.repository }}:${{ inputs.build-version }}' >> $GITHUB_ENV
           echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
           echo '*Action URL*: <https://github.com/navikt/fp-autotest/actions/runs/${{ github.run_id }}|Github Action Url>' >> $GITHUB_ENV
           echo '\n' >> $GITHUB_ENV
