@@ -9,13 +9,13 @@ on:
         description: 'Docker tag (from repository)'
         default: 'latest'
     outputs:
-      fpsak-result:
+      fpsak:
         description: "Fpsak resultat tester"
         value: ${{ jobs.fpsak-autotester.outputs.result }}
-      fptilbake-result:
+      fptilbake:
         description: "Fptilbake resultat tester"
         value: ${{ jobs.fptilbake-tester.outputs.result }}
-      verdikjedetestene-result:
+      verdikjede:
         description: "Verdikjedetester resultat"
         value: ${{ jobs.verdikjedetestene.outputs.result }}
 
