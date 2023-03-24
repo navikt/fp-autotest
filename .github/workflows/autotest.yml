@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 15
     outputs:
-      result: ${{ steps.resultat.outcome }}
+      result: ${{ steps.result.outcomes.result }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -85,8 +85,8 @@ jobs:
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil
 
       - name: Utled testresultat
-        id: resultat
-        run: echo "resultat=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
+        id: result
+        run: echo "result=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
       - name: Generer testrapport
         if: |
@@ -137,7 +137,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
-      result: ${{ steps.resultat.outcome }}
+      result: ${{ steps.result.outcomes.result }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -182,8 +182,8 @@ jobs:
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpinfo,fpdokgen,fpabonnent
 
       - name: Utled testresultat
-        id: resultat
-        run: echo "resultat=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
+        id: result
+        run: echo "result=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
       - name: Generer testrapport
         if: |
@@ -234,7 +234,7 @@ jobs:
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 20
     outputs:
-      result: ${{ steps.resultat.outcome }}
+      result: ${{ steps.result.outcomes.result }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -278,8 +278,8 @@ jobs:
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger-DikkeSjekkLengdeAvContainer=fpdokgen
 
       - name: Utled testresultat
-        id: resultat
-        run: echo "resultat=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
+        id: result
+        run: echo "result=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
       - name: Sjekker minneforbruk
         if: always()
