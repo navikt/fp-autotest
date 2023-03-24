@@ -19,6 +19,9 @@ on:
         description: "Fpsak resultat tester"
         default: 'skipped'
 
+env:
+  GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   rapport:
     name: Lager og publiserer test rapport
