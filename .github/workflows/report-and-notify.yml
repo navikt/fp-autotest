@@ -30,19 +30,19 @@ jobs:
         with:
           repository: 'navikt/fp-autotest'
       - name: Henter testresultat for fpsak
-        if: !contains(inputs.fpsak, 'skipped')
+        if: ${{ !contains(inputs.fpsak, 'skipped') }}
         uses: actions/download-artifact@v3
         with:
           name: fpsak-testresultat
           path: .
       - name: Henter testresultat for fptilbake
-        if: !contains(inputs.fptilbake, 'skipped')
+        if: ${{ !contains(inputs.fptilbake, 'skipped') }}
         uses: actions/download-artifact@v3
         with:
           name: fptilbake-testresultat
           path: .
       - name: Henter testresultat for verdikjede
-        if: !contains(inputs.verdikjede, 'skipped')
+        if: ${{ !contains(inputs.verdikjede, 'skipped') }}
         uses: actions/download-artifact@v3
         with:
           name: verdikjede-testresultat
