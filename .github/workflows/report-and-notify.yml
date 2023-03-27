@@ -73,7 +73,7 @@ jobs:
           target_branch: gh-pages
           build_dir: gh-pages
         env:
-          GH_PAT: ${{ secrets.PAT }}
+          GH_PAT: ${{ secrets.PAT_AUTOTEST}}
 
   notify-slack:
     name: Notify slack om testresultat
@@ -138,7 +138,7 @@ jobs:
           echo >> $GITHUB_ENV
           echo '*Trigger*: ${{ github.repository }}:${{ github.event.inputs.build-version }}' >> $GITHUB_ENV
           echo '*Endringer*: ${{ env.DIFFERANSE }}' >> $GITHUB_ENV
-          echo '*Action URL*: <https://github.com/navikt/fp-autotest/actions/runs/${{ github.run_id }}|Github Action Url>' >> $GITHUB_ENV
+          echo '*Action URL*: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Github Action Url>' >> $GITHUB_ENV
           echo '\n' >> $GITHUB_ENV
           if [[ $fpsakStatus == 'test-feil' || $fptilbakeStatus == 'test-feil' || $verdikjedetestStatus == 'test-feil' ]]; then
             echo "Test failure!"
