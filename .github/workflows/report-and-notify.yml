@@ -19,8 +19,6 @@ on:
         description: "Fpsak resultat tester"
         default: 'skipped'
 
-env:
-  GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   rapport:
@@ -66,6 +64,14 @@ jobs:
           if [ -d "fpsak" ]; then echo "Oppdatere testresultat for fpsak" && rm -rf gh-pages/fpsak && cp -r fpsak gh-pages; fi
           if [ -d "fptilbake" ]; then echo "Oppdatere testresultat for fptilbake" && rm -rf gh-pages/fptilbake && cp -r fptilbake gh-pages; fi
           if [ -d "verdikjede" ]; then echo "Oppdatere testresultat for verdikjede" && rm -rf gh-pages/verdikjede && cp -r verdikjede gh-pages; fi
+
+      - name: Generate token
+        uses: navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          private-key: ${{ secrets.FP_PRIVATE_KEY }}
+          app-id: ${{ secrets.FP_APP_ID }}
+
       - name: Deploy testrapport
         if: always() && steps.ghpages.outcome == 'success'
         uses: crazy-max/ghaction-github-pages@v3.1.0
@@ -74,7 +80,7 @@ jobs:
           target_branch: gh-pages
           build_dir: gh-pages
         env:
-          GH_PAT: ${{ secrets.PAT }}
+          GH_PAT: ${{ steps.get-token.outputs.token }}
 
   notify-slack:
     name: Notify slack om testresultat
