@@ -73,7 +73,8 @@ jobs:
           target_branch: gh-pages
           build_dir: gh-pages
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_AUTOTEST }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.PAT_AUTOTEST }}
 
   notify-slack:
     name: Notify slack om testresultat
