@@ -130,7 +130,6 @@ jobs:
         with:
           name: logs-autotest
           path: container-logs
-
   fptilbake-tester:
     name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.repository }} ${{ inputs.build-version }}
     if: inputs.test-fptilbake
@@ -227,7 +226,6 @@ jobs:
         with:
           name: logs-fptilbake-tester
           path: container-logs
-
   verdikjedetestene:
     name: Kjører verdikjedetestene som er trigget av ${{ github.repository }} ${{ inputs.build-version }}
     if: inputs.test-verdikjede

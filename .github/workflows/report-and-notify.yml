@@ -3,6 +3,11 @@ name: Report and notify about testresults
 on:
   workflow_call:
     inputs:
+      build-version:
+        required: false
+        type: string
+        description: 'Docker tag (from repository)'
+        default: 'latest'
       fpsak:
         required: false
         type: string
