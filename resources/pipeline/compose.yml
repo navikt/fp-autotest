@@ -474,6 +474,29 @@ services:
         condition: service_healthy
       fpsak:
         condition: service_started
+  fpoversikt:
+    <<: *default-konfigurasjon
+    image: $FPOVERSIKT_IMAGE
+    container_name: fpoversikt
+    mem_limit: 256mb
+    env_file:
+      - *common-properties
+      - fpoversikt_datasource.env
+    volumes:
+      - *sertifikat-volum
+      - ./tokenx:/tokenx
+    ports:
+      - 127.0.0.1:8889:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpoversikt/internal/health/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
   fpsoknad-mottak:
     <<: *default-konfigurasjon
     image: $FPSOKNAD_MOTTAK_IMAGE
