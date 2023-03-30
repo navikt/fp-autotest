@@ -2,10 +2,8 @@ package no.nav.foreldrepenger.generator.soknad.erketyper;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.generator.soknad.builder.EngangsstønadBuilder;
-import no.nav.foreldrepenger.generator.soknad.erketyper.MedlemsskapErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.RelasjonTilBarnErketyper;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.generator.soknad.builder.EngangsstønadBuilder;
 
 public final class SøknadEngangsstønadErketyper {
 

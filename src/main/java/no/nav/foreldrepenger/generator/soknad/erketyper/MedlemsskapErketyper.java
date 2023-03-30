@@ -1,15 +1,15 @@
 package no.nav.foreldrepenger.generator.soknad.erketyper;
 
-import static java.util.Collections.emptyList;
-
-import java.time.LocalDate;
-import java.util.List;
-
 import com.neovisionaries.i18n.CountryCode;
 
 import no.nav.foreldrepenger.common.domain.felles.LukketPeriode;
 import no.nav.foreldrepenger.common.domain.felles.medlemskap.Medlemsskap;
 import no.nav.foreldrepenger.common.domain.felles.medlemskap.Utenlandsopphold;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static java.util.Collections.emptyList;
 
 public final class MedlemsskapErketyper {
 

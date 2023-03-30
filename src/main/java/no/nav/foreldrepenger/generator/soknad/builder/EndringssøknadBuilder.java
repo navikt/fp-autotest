@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.generator.soknad.builder;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.generator.soknad.builder.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.Søker;

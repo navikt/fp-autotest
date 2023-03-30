@@ -12,9 +12,26 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.*;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.*;
+import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
+import no.nav.inntektsmelding.xml.kodeliste._20180702.YtelseKodeliste;
+import no.nav.inntektsmelding.xml.kodeliste._20180702.ÅrsakBeregnetInntektEndringKodeliste;
+import no.nav.inntektsmelding.xml.kodeliste._20180702.ÅrsakInnsendingKodeliste;
+import no.nav.inntektsmelding.xml.kodeliste._20180702.ÅrsakUtsettelseKodeliste;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.Arbeidsforhold;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.Arbeidsgiver;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.ArbeidsgiverPrivat;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.Avsendersystem;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.EndringIRefusjon;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.GjenopptakelseNaturalytelseListe;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.GraderingIForeldrepenger;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.InntektsmeldingM;
 import no.seres.xsd.nav.inntektsmelding_m._20181211.ObjectFactory;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.Omsorgspenger;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.OpphoerAvNaturalytelseListe;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.Periode;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.PleiepengerPeriodeListe;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.SykepengerIArbeidsgiverperioden;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.UtsettelseAvForeldrepenger;
 
 public class InntektsmeldingBuilder {
     private InntektsmeldingM inntektsmeldingKladd;

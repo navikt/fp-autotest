@@ -12,10 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
-import no.nav.foreldrepenger.generator.soknad.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
@@ -28,6 +24,10 @@ import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
+import no.nav.foreldrepenger.generator.soknad.erketyper.ArbeidsforholdErketyper;
+import no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper;
+import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper;
+import no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper;
 
 @Tag("verdikjede")
 class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {

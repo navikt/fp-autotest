@@ -2,12 +2,6 @@ package no.nav.foreldrepenger.generator.soknad.erketyper;
 
 import com.neovisionaries.i18n.CountryCode;
 
-import no.nav.foreldrepenger.generator.soknad.erketyper.*;
-import no.nav.foreldrepenger.generator.soknad.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEndringErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
@@ -28,6 +22,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.List;
 
+import static no.nav.foreldrepenger.common.domain.Orgnummer.MAGIC_ORG;
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.*;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordelingFarAleneomsorg;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.MedlemsskapErketyper.medlemskapUtlandetForrige12mnd;
@@ -39,8 +35,6 @@ import static no.nav.foreldrepenger.generator.soknad.erketyper.RettigheterErkety
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.utsettelsesperiode;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
-import static no.nav.foreldrepenger.common.domain.Orgnummer.MAGIC_ORG;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.*;
 import static org.assertj.core.api.Assertions.assertThat;
 @Tag("internal")
 class SoeknadBuilderIntegritetTest {

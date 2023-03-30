@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.generator.inntektsmelding.builders;
 
-import no.seres.xsd.nav.inntektsmelding_m._20181211.EndringIRefusjon;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.ObjectFactory;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.Refusjon;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import no.seres.xsd.nav.inntektsmelding_m._20181211.EndringIRefusjon;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.ObjectFactory;
+import no.seres.xsd.nav.inntektsmelding_m._20181211.Refusjon;
 
 
 public class RefusjonBuilder {

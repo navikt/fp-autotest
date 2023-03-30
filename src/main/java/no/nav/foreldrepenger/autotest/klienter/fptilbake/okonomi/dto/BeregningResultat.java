@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningResultat {

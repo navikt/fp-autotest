@@ -3,12 +3,10 @@ package no.nav.foreldrepenger.generator.soknad.erketyper;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.generator.soknad.builder.EndringssøknadBuilder;
-import no.nav.foreldrepenger.generator.soknad.erketyper.RelasjonTilBarnErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.RettigheterErketyper;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Fordeling;
+import no.nav.foreldrepenger.generator.soknad.builder.EndringssøknadBuilder;
 
 public class SøknadEndringErketyper {
 
