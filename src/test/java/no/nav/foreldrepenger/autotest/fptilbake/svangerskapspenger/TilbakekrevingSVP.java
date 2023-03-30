@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.autotest.fptilbake.svangerskapspenger;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.ArbeidsforholdErketyper.virksomhet;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.ArbeidsforholdErketyper.virksomhet;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
