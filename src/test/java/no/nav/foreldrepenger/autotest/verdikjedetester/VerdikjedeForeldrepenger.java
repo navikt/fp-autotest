@@ -223,7 +223,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        if (MonthDay.now().isBefore(MonthDay.of(7,1))) {
+        if (!MonthDay.now().isBefore(MonthDay.of(7,1))) {
             var vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
                     .godkjennAllOpptjening()
                     .setBegrunnelse("Opptjening godkjent av Autotest.");
