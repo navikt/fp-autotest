@@ -17,7 +17,6 @@ import java.util.UUID;
 import org.mockito.Mockito;
 
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.AktørId;
@@ -34,6 +33,7 @@ import no.nav.foreldrepenger.common.innsending.mappers.V1SvangerskapspengerDomai
 import no.nav.foreldrepenger.common.innsending.mappers.V3EngangsstønadDomainMapper;
 import no.nav.foreldrepenger.common.innsending.mappers.V3ForeldrepengerDomainMapper;
 import no.nav.foreldrepenger.common.oppslag.Oppslag;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
 import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;

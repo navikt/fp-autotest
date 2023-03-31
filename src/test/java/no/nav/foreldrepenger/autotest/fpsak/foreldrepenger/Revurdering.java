@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordeling;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordelingEndringssøknadGradering;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordelingEndringssøknadGradering;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;

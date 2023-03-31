@@ -1,17 +1,17 @@
 package no.nav.foreldrepenger.autotest.internal.søknad;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadTermin;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.TilretteleggingsErketyper.delvisTilrettelegging;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.TilretteleggingsErketyper.helTilrettelegging;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
 import static no.nav.foreldrepenger.common.domain.BrukerRolle.MOR;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadTermin;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper.delvisTilrettelegging;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper.helTilrettelegging;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,12 +19,12 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.MedlemsskapErketyper;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.Søknad;
+import no.nav.foreldrepenger.generator.soknad.erketyper.ArbeidsforholdErketyper;
+import no.nav.foreldrepenger.generator.soknad.erketyper.MedlemsskapErketyper;
+import no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper;
 
 public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBase {
 

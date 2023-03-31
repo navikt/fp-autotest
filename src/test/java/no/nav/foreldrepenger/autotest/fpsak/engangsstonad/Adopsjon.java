@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;

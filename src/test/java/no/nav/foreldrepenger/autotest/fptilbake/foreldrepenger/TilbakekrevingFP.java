@@ -1,16 +1,13 @@
 package no.nav.foreldrepenger.autotest.fptilbake.foreldrepenger;
 
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.FordelingErketyper.fordeling;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.autotest.dokumentgenerator.foreldrepengesoknad.json.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.Clock;
 import java.time.DayOfWeek;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
 
 import org.junit.jupiter.api.Assumptions;

@@ -25,7 +25,6 @@
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
         <vtp.versjon>1.1.14</vtp.versjon>
-        <dokumentgenerator.version>3.5.6</dokumentgenerator.version>
         <fp-felles.versjon>4.2.38</fp-felles.versjon>
         <fp-prosesstask.version>3.1.26</fp-prosesstask.version>
         <fp-kontrakter.version>6.2.15</fp-kontrakter.version>
@@ -70,15 +69,11 @@
                 <artifactId>fpsoknad-felles</artifactId>
                 <version>1.0.2</version>
             </dependency>
+
             <dependency>
-                <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
-                <artifactId>foreldrepengesoknad</artifactId>
-                <version>${dokumentgenerator.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
-                <artifactId>inntektsmelding</artifactId>
-                <version>${dokumentgenerator.version}</version>
+                <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+                <artifactId>inntektsmelding-v1</artifactId>
+                <version>${fp-kontrakter.version}</version>
             </dependency>
 
             <dependency>
@@ -141,6 +136,11 @@
             <artifactId>fpsoknad-felles</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>inntektsmelding-v1</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>testmodell</artifactId>
             <version>${vtp.versjon}</version>
@@ -149,14 +149,6 @@
             <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>kontrakter</artifactId>
             <version>${vtp.versjon}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
-            <artifactId>foreldrepengesoknad</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.autotest.dokumentgenerator</groupId>
-            <artifactId>inntektsmelding</artifactId>
         </dependency>
 
         <!-- Eksterne avhengigheter (Http klient, jackson og tilhørende avhengigheter) -->
@@ -222,7 +214,6 @@
             <artifactId>mockito-core</artifactId>
         </dependency>
     </dependencies>
-
 
     <build>
         <pluginManagement>
@@ -367,7 +358,7 @@
             <properties>
                 <includeTestsTags>internal</includeTestsTags>
                 <excludeTestsTags>pending</excludeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.internal.**</testPackage>
+                <testPackage>no.nav.foreldrepenger.**</testPackage>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

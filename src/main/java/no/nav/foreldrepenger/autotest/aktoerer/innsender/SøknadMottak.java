@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.dokumentgenerator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsoknad_mottak.mottak.MottakKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
@@ -16,6 +15,7 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.Søknad;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.Endringssøknad;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
