@@ -52,11 +52,13 @@ jobs:
         with:
           repository: 'navikt/fp-autotest'
           ref: 'master'
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: 17
           cache: 'maven'
+
       - name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
         with:
@@ -80,20 +82,17 @@ jobs:
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P fpsak > >(tee test-result-log.txt)
 
       - name: Sjekker loggen etter feil
-        if: always() && steps.setup.outcome == 'success'
+        if: (success() || failure()) && steps.setup.outcome == 'success'
         id: logger
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil
 
       - name: Utled testresultat
+        if: (success() || failure()) && steps.setup.outcome == 'success'
         id: result
         run: echo "result=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
       - name: Generer testrapport
-        if: |
-          always() &&
-          steps.setup.outcome == 'success' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
+        if: (success() || failure()) && steps.setup.outcome == 'success'
         id: ghpages
         run: |
           git fetch origin gh-pages
@@ -106,11 +105,11 @@ jobs:
           mvn allure:report --batch-mode --settings .github/.m2/settings.xml
 
       - name: Tar testresultat
-        if: always() && steps.ghpages.outcome == 'success'
+        if: (success() || failure()) && steps.ghpages.outcome == 'success'
         run: tar -czf fpsak.tar.gz -C target/allure-report .
 
       - name: Laste opp testresultat
-        if: always() && steps.ghpages.outcome == 'success'
+        if: (success() || failure()) && steps.ghpages.outcome == 'success'
         uses: actions/upload-artifact@v3
         with:
           name: fpsak-testresultat
@@ -118,18 +117,19 @@ jobs:
           retention-days: 1
 
       - name: Dumper logger for feilsøking
-        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        if: failure() && !cancelled()
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
-        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        if: failure() && !cancelled()
         uses: actions/upload-artifact@v3
         with:
           name: logs-autotest
           path: container-logs
+
   fptilbake-tester:
     name: Kjører fptilbake spesifikke tester som er trigget av ${{ github.repository }} ${{ inputs.build-version }}
     if: inputs.test-fptilbake
@@ -165,31 +165,22 @@ jobs:
           ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
           docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpoppdrag fptilbake fprisk fpdokgen fpabonnent fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
-      - name: Sjekker minneforbruk
-        if: always()
-        run: |
-          docker stats --no-stream
-          free -m
-
       - name: Utfører testene for fptilbake
         id: tester
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P fptilbake > >(tee test-result-log.txt)
 
       - name: Sjekker loggen etter feil
-        if: always() && steps.setup.outcome == 'success'
+        if: (success() || failure()) && steps.setup.outcome == 'success'
         id: logger
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_FP }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpinfo,fpdokgen,fpabonnent
 
       - name: Utled testresultat
+        if: (success() || failure()) && steps.setup.outcome == 'success'
         id: result
         run: echo "result=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
       - name: Generer testrapport
-        if: |
-          always() &&
-          steps.setup.outcome == 'success' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
+        if: (success() || failure()) && steps.setup.outcome == 'success'
         id: ghpages
         run: |
           git fetch origin gh-pages
@@ -202,11 +193,11 @@ jobs:
           mvn allure:report --batch-mode --settings .github/.m2/settings.xml
 
       - name: Tar testresultat
-        if: always() && steps.ghpages.outcome == 'success'
+        if: (success() || failure()) && steps.ghpages.outcome == 'success'
         run: tar -czf fptilbake.tar.gz -C target/allure-report .
 
       - name: Laste opp testresultat
-        if: always() && steps.ghpages.outcome == 'success'
+        if: (success() || failure()) && steps.ghpages.outcome == 'success'
         uses: actions/upload-artifact@v3
         with:
           name: fptilbake-testresultat
@@ -214,23 +205,24 @@ jobs:
           retention-days: 1
 
       - name: Dumper logger for feilsøking
-        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        if: failure() && !cancelled()
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
-        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        if: failure() && !cancelled()
         uses: actions/upload-artifact@v3
         with:
           name: logs-fptilbake-tester
           path: container-logs
+
   verdikjedetestene:
     name: Kjører verdikjedetestene som er trigget av ${{ github.repository }} ${{ inputs.build-version }}
     if: inputs.test-verdikjede
     runs-on: ubuntu-latest-8-cores
-    timeout-minutes: 20
+    timeout-minutes: 15
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:
@@ -261,36 +253,22 @@ jobs:
           ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
           docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
-      - name: Sjekker minneforbruk
-        if: always()
-        run: |
-          docker stats --no-stream
-          free -m
       - name: Utfører verdikjedetestene
         id: tester
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P verdikjede > >(tee test-result-log.txt)
 
       - name: Sjekker loggen etter feil og lekket sensitiv data.
-        if: always() && steps.setup.outcome == 'success'
+        if: (success() || failure()) && steps.setup.outcome == 'success'
         id: logger
         run: mvn test -e --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM_VK }} -P logger-DikkeSjekkLengdeAvContainer=fpdokgen
 
       - name: Utled testresultat
+        if: (success() || failure()) && steps.setup.outcome == 'success'
         id: result
         run: echo "result=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
-      - name: Sjekker minneforbruk
-        if: always()
-        run: |
-          docker stats --no-stream
-          free -m
-
       - name: Generer testrapport
-        if: |
-          always() &&
-          steps.setup.outcome == 'success' &&
-          steps.tester.outcome != 'skipped' &&
-          steps.tester.outcome != 'cancelled'
+        if: (success() || failure()) && steps.setup.outcome == 'success'
         id: ghpages
         run: |
           git fetch origin gh-pages
@@ -303,11 +281,11 @@ jobs:
           mvn allure:report --batch-mode --settings .github/.m2/settings.xml
 
       - name: Tar testresultat
-        if: always() && steps.ghpages.outcome == 'success'
+        if: (success() || failure()) && steps.ghpages.outcome == 'success'
         run: tar -czf verdikjede.tar.gz -C target/allure-report .
 
       - name: Laste opp testresultat
-        if: always() && steps.ghpages.outcome == 'success'
+        if: (success() || failure()) && steps.ghpages.outcome == 'success'
         uses: actions/upload-artifact@v3
         with:
           name: verdikjede-testresultat
@@ -315,14 +293,14 @@ jobs:
           retention-days: 1
 
       - name: Dumper logger for feilsøking
-        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        if: failure() && !cancelled()
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
 
       - name: Laste opp logger
-        if: failure() && steps.setup.outcome != 'skipped' && steps.setup.outcome != 'cancelled'
+        if: failure() && !cancelled()
         uses: actions/upload-artifact@v3
         with:
           name: logs-verdikjedetester
