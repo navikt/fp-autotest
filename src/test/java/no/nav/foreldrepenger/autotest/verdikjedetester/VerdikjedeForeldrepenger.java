@@ -37,6 +37,7 @@ import static org.assertj.core.api.Assertions.within;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -205,7 +206,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @DisplayName("2: Mor selvstendig næringsdrivende, varig endring. Søker dør etter behandlingen er ferdigbehandlet.")
     @Description("Mor er selvstendig næringsdrivende og har ferdiglignet inntekt i mange år. Oppgir en næringsinntekt" +
             "som avviker med mer enn 25% fra de tre siste ferdiglignede årene. Søker dør etter behandlingen er " +
-            "ferdigbehandlet.")
+            "ferdigbehandlet. NB: Må legge til ferdiglignet inntekt for inneværende år -1 etter 1/7")
     void morSelvstendigNæringsdrivendeTest() {
         var familie = new Familie("510");
         var fødselsdato = familie.barn().fødselsdato();
@@ -222,11 +223,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var vurderPerioderOpptjeningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
-                .godkjennAllOpptjening()
-                .setBegrunnelse("Opptjening godkjent av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
+        if (MonthDay.now().isBefore(MonthDay.of(7,1))) {
+            var vurderPerioderOpptjeningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
+                    .godkjennAllOpptjening()
+                    .setBegrunnelse("Opptjening godkjent av Autotest.");
+            saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
+        }
 
         var vurderVarigEndringEllerNyoppstartetSNBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class)
