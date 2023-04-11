@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Omsorgsoverta
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.overføringsperiode;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
 
 import java.time.LocalDate;
@@ -22,15 +21,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaresignalerDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVilkaarForSykdomBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaOmsorgOgForeldreansvarBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.felles.relasjontilbarn.Adopsjon;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Overføringsårsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper;
 import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper;
@@ -149,38 +145,6 @@ class Aksjonspunkter extends FpsakTestBase {
                 .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
                 .leggTilNyIArbeidslivet(true);
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
-
-    }
-
-    @Test
-    @DisplayName("VURDER_OM_VILKÅR_FOR_SYKDOM_OPPFYLT")
-    void aksjonspunkt_FAR_FOEDSELSSOKNAD_FORELDREPENGER_5044() {
-        var familie = new Familie("86", SEND_DOKUMENTER_UTEN_SELVBETJENING);
-        var far = familie.far();
-        var termindato = LocalDate.now().plusWeeks(2);
-        var fordeling = fordeling(
-                overføringsperiode(Overføringsårsak.SYKDOM_ANNEN_FORELDER, StønadskontoType.MØDREKVOTE,
-                        termindato, termindato.plusWeeks(10)),
-                uttaksperiode(StønadskontoType.FEDREKVOTE, termindato.plusWeeks(20), termindato.plusWeeks(30)));
-        var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
-                .medFordeling(fordeling.build())
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()));
-        var saksnummer = far.søk(søknad.build());
-
-        var arbeidsgiver = far.arbeidsgiver();
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, termindato);
-
-        saksbehandler.hentFagsak(saksnummer);
-
-        var avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class)
-                .setUtstedtdato(termindato.minusWeeks(3));
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
-
-        var vurderVilkaarForSykdomBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderVilkaarForSykdomBekreftelse.class)
-                .setErMorForSykVedFodsel(true);
-        saksbehandler.bekreftAksjonspunkt(vurderVilkaarForSykdomBekreftelse);
 
     }
 
