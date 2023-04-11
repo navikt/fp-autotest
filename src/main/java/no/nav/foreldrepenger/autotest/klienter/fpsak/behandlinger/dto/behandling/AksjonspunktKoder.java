@@ -74,8 +74,6 @@ public class AksjonspunktKoder {
     public static final String VURDERE_ANNEN_YTELSE_FØR_VEDTAK = "5033";
     public static final String VURDERE_DOKUMENT_FØR_VEDTAK = "5034";
 
-    public static final String VURDER_OM_VILKÅR_FOR_SYKDOM_OPPFYLT = "5044";
-
     public static final String MANUELL_VURDERING_AV_KLAGE_NFP = "5035";
     public static final String VURDER_OPPTJENINGSVILKÅRET = "5089";
 
