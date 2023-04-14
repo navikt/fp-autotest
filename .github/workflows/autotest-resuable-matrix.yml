@@ -30,7 +30,6 @@ jobs:
     strategy:
       matrix:
         test-suite: [${{ inputs.test-suite }}]
-
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:
