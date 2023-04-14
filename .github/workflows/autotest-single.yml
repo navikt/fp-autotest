@@ -9,7 +9,7 @@ on:
         required: false
         default: 'latest'
       parallellitet:
-        description: 'Docker tag (from repository)'
+        description: 'Ønsket parallelitet ved kjøring'
         type: string
         required: false
         default: '8'
@@ -17,11 +17,6 @@ on:
         description: 'Test suite å kjøre (fpsak|fptilbake|verdikjede)'
         type: string
         required: true
-      run-tests:
-        description: 'Skal vi kjøre testene?'
-        type: boolean
-        required: false
-        default: true
     outputs:
       resultat:
         description: "Test resultat"
@@ -30,7 +25,11 @@ on:
 jobs:
   autotest:
     name: Kjører ${{ inputs.test-suite }}-tester mot ${{ github.repository }} ${{ inputs.build-version }}
-    if: inputs.run-tests && github.actor != 'dependabot[bot]'
+    if: |
+      github.ref_name == 'master' ||
+      (github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.labels.*.name, 'autotest')) &&
+      github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 15
     outputs:
