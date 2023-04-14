@@ -12,7 +12,7 @@ on:
 
 jobs:
   fpsak:
-    name: Kjører tester fra test suite fpsak mot ${{ github.repository }} ${{ inputs.build-version }}
+    name: Fpsak
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@test
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
