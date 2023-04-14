@@ -17,10 +17,11 @@ on:
         description: 'Test suite å kjøre (fpsak|fptilbake|verdikjede)'
         type: string
         required: true
-      test-suites:
-        description: 'Test suite å kjøre (fpsak|fptilbake|verdikjede)'
-        type: string
-        required: true
+      run-tests:
+        description: 'Skal vi kjøre testene?'
+        type: boolean
+        required: false
+        default: true
     outputs:
       resultat:
         description: "Test resultat"
@@ -28,8 +29,8 @@ on:
 
 jobs:
   autotest:
-    name: Kjører tester fra test suite ${{ inputs.test-suite }} mot ${{ github.repository }} ${{ inputs.build-version }}
-    if: contains(inputs.test-suites, inputs.test-suite)
+    name: Kjører ${{ inputs.test-suite }}tester mot ${{ github.repository }} ${{ inputs.build-version }}
+    if: inputs.run-tests
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 15
     outputs:
