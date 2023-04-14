@@ -24,6 +24,9 @@ on:
         value: ${{ jobs.verdikjede.outputs.result }}
 
 jobs:
+
+
+
   fpsak:
     name: Kjører tester fra test suite fpsak mot ${{ github.repository }} ${{ inputs.build-version }}
     if: contains(inputs.test-suites, 'fpsak')
