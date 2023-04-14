@@ -1,5 +1,4 @@
 name: Utfører tester mot SUT
-description: 'Kjøring av tester'
 
 on:
   workflow_call:
