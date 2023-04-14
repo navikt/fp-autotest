@@ -24,12 +24,12 @@ on:
 
 jobs:
   autotest:
-    name: Kjører tester fra test suite ${{ inputs.test-suites }} mot ${{ github.repository }} ${{ inputs.build-version }}
-    runs-on: ubuntu-latest-8-cores
-    timeout-minutes: 15
     strategy:
       matrix:
         test-suite: [${{ inputs.test-suite }}]
+    name: Kjører tester fra test suite ${{ inputs.test-suites }} mot ${{ github.repository }} ${{ inputs.build-version }}
+    runs-on: ubuntu-latest-8-cores
+    timeout-minutes: 15
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:

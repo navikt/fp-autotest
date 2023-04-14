@@ -11,12 +11,24 @@ on:
       - 'lokalutvikling/*'
 
 jobs:
-  autotest:
+#  autotest:
+#    name: Autotest
+#    uses: navikt/fp-autotest/.github/workflows/autotest-resuable-matrix.yml@test
+#    with:
+#      build-version: ${{ needs.build-app.outputs.build-version }}
+#      test-suites: fpsak, fptilbake
+#    secrets: inherit
+
+
+  autotest-matrix:
     name: Autotest
-    uses: navikt/fp-autotest/.github/workflows/autotest-resuable-matrix.yml@test
+    strategy:
+      matrix:
+        test-suite: [ fpsak, fptilbake ]
+    uses: navikt/fp-autotest/.github/workflows/autotest-resuable.yml@test
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
-      test-suites: fpsak, fptilbake
+      test-suites: ${{ matrix.test-suite }}
     secrets: inherit
 
 
