@@ -25,7 +25,7 @@ on:
 jobs:
   autotest:
     name: Kjører ${{ inputs.test-suite }}-tester mot ${{ github.repository }} ${{ inputs.build-version }}
-    if: github.ref_name == 'master' && github.actor != 'dependabot[bot]')
+    if: github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest-8-cores
     timeout-minutes: 15
     outputs:
