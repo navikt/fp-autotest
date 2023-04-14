@@ -57,7 +57,8 @@ public class Familie {
                         scenario.scenariodata(),
                         innsender);
                 return mor;
-            } else if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.K)) {
+            }
+            if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.K)) {
                 mor = new Mor(
                         new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
@@ -65,12 +66,10 @@ public class Familie {
                         scenario.scenariodataAnnenpart(),
                         innsender);
                 return mor;
-            } else {
-                throw new IllegalStateException("Hverken søker eller annenpart er kvinne. Bruk metoden far()!");
             }
-        } else {
-            return mor;
+            throw new IllegalStateException("Hverken søker eller annenpart er kvinne. Bruk metoden far()!");
         }
+        return mor;
 
     }
 
@@ -85,12 +84,10 @@ public class Familie {
                         scenario.scenariodataAnnenpart(),
                         innsender);
                 return medmor;
-            } else {
-                throw new IllegalStateException("Medmor eksistere ikke for scenarioid: Enten er søker eller annenpart far");
             }
-        } else {
-            return medmor;
+            throw new IllegalStateException("Medmor eksistere ikke for scenarioid: Enten er søker eller annenpart far");
         }
+        return medmor;
     }
 
     public Far far() {
@@ -103,7 +100,8 @@ public class Familie {
                         scenario.scenariodata(),
                         innsender);
                 return far;
-            } else if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.M)) {
+            }
+            if (scenario.personopplysninger().annenpartKjønn().equals(BrukerModell.Kjønn.M)) {
                 far = new Far(
                         new Fødselsnummer(scenario.personopplysninger().annenpartIdent()),
                         new AktørId(scenario.personopplysninger().annenpartAktørIdent()),
@@ -111,12 +109,10 @@ public class Familie {
                         scenario.scenariodataAnnenpart(),
                         innsender);
                 return far;
-            } else {
-                throw new IllegalStateException("Hverken søker eller annenpart er mann: Bruk mor() eller medmor()");
             }
-        } else {
-            return far;
+            throw new IllegalStateException("Hverken søker eller annenpart er mann: Bruk mor() eller medmor()");
         }
+        return far;
     }
 
     public Barn barn() {

@@ -27,9 +27,11 @@ class DokumentIDFraSøknad {
         var ytelse = søknad.getYtelse();
         if (ytelse instanceof Foreldrepenger) {
             return dokumentTypeFraRelasjonForForeldrepenger(søknad);
-        } else if (ytelse instanceof Engangsstønad) {
+        }
+        if (ytelse instanceof Engangsstønad) {
             return dokumentTypeFraRelasjonForEngangsstønad(søknad);
-        } else if (ytelse instanceof Svangerskapspenger){
+        }
+        if (ytelse instanceof Svangerskapspenger){
             return SØKNAD_SVANGERSKAPSPENGER;
         }
         throw new UnsupportedOperationException("DokumenttypeID er ikke støttet for søknad");

@@ -30,11 +30,11 @@ final class Inntektskomponenten {
     private static boolean erArbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, Inntektsperiode p) {
         if (p.orgnr() != null) {
             return arbeidsgiverIdentifikator.value().equalsIgnoreCase(p.orgnr());
-        } else if (p.arbeidsgiver() != null) {
-            return arbeidsgiverIdentifikator.value().equalsIgnoreCase(p.arbeidsgiver().getAktørIdent());
-        } else {
-            return false;
         }
+        if (p.arbeidsgiver() != null) {
+            return arbeidsgiverIdentifikator.value().equalsIgnoreCase(p.arbeidsgiver().getAktørIdent());
+        }
+        return false;
     }
 
     static int månedsinntekt(InntektskomponentModell inntektskomponenten, Fødselsnummer arbeidsgiverFnr) {

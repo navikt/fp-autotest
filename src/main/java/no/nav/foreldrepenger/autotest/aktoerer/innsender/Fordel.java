@@ -7,14 +7,11 @@ import static no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGen
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
-import org.mockito.Mockito;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
@@ -24,7 +21,6 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.Søknad;
 import no.nav.foreldrepenger.common.domain.engangsstønad.Engangsstønad;
-import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.Endringssøknad;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.Foreldrepenger;
 import no.nav.foreldrepenger.common.domain.svangerskapspenger.Svangerskapspenger;
@@ -32,7 +28,6 @@ import no.nav.foreldrepenger.common.innsending.mappers.DomainMapper;
 import no.nav.foreldrepenger.common.innsending.mappers.V1SvangerskapspengerDomainMapper;
 import no.nav.foreldrepenger.common.innsending.mappers.V3EngangsstønadDomainMapper;
 import no.nav.foreldrepenger.common.innsending.mappers.V3ForeldrepengerDomainMapper;
-import no.nav.foreldrepenger.common.oppslag.Oppslag;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
@@ -116,19 +111,10 @@ public class Fordel extends DokumentInnsendingHjelper {
     }
 
     private String tilSøknadXML(Søknad søknad, AktørId aktørId, AktørId aktørIdAnnenpart) {
-        // TODO: Litt hacky måte å få det til, men marginalt bedre enn tidligere...
-        //  aktørIdAnnenpart trengs av domainmapperen hvor den gjør oppslag på fødselsnummer
-        //  Kan nå flytte lagNorskAnnenpart bort og ut (uten å trekke med fordel objektet)
         DomainMapper mapper;
         var ytelse = søknad.getYtelse();
-        if (ytelse instanceof Foreldrepenger foreldrepenger) {
-            if (foreldrepenger.annenForelder() instanceof NorskForelder norskForelder) {
-                var oppslag = Mockito.mock(Oppslag.class);
-                when(oppslag.aktørId(norskForelder.fnr())).thenReturn(aktørIdAnnenpart);
-                mapper = new V3ForeldrepengerDomainMapper(oppslag);
-            } else {
-                mapper = new V3ForeldrepengerDomainMapper(null);
-            }
+        if (ytelse instanceof Foreldrepenger) {
+            mapper = new V3ForeldrepengerDomainMapper(fnr -> aktørIdAnnenpart);
         } else if (ytelse instanceof Svangerskapspenger) {
             mapper = new V1SvangerskapspengerDomainMapper();
         } else if (ytelse instanceof Engangsstønad) {
@@ -139,27 +125,30 @@ public class Fordel extends DokumentInnsendingHjelper {
 
         if (søknad instanceof Endringssøknad endringssøknad) {
             return mapper.tilXML(endringssøknad, aktørId, null);
-        } else {
-            return mapper.tilXML(søknad, aktørId, null);
         }
+        return mapper.tilXML(søknad, aktørId, null);
     }
 
     private static BehandlingsTema finnBehandlingstemaKode(DokumenttypeId dokumenttypeId) {
         if (dokumenttypeId == DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL) {
             return BehandlingsTema.FORELDREPENGER_FØDSEL;
-        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_FORELDREPENGER_ADOPSJON) {
-            return BehandlingsTema.FORELDREPENGER_ADOPSJON;
-        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL) {
-            return BehandlingsTema.ENGANGSSTØNAD_FØDSEL;
-        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON) {
-            return BehandlingsTema.ENGANGSSTØNAD_ADOPSJON;
-        } else if (dokumenttypeId == DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD) {
-            return BehandlingsTema.FORELDREPENGER;
-        } else if (dokumenttypeId == DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER){
-            return BehandlingsTema.SVANGERSKAPSPENGER;
-        } else {
-            throw new RuntimeException("Kunne ikke matche på dokumenttype.");
         }
+        if (dokumenttypeId == DokumenttypeId.SØKNAD_FORELDREPENGER_ADOPSJON) {
+            return BehandlingsTema.FORELDREPENGER_ADOPSJON;
+        }
+        if (dokumenttypeId == DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL) {
+            return BehandlingsTema.ENGANGSSTØNAD_FØDSEL;
+        }
+        if (dokumenttypeId == DokumenttypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON) {
+            return BehandlingsTema.ENGANGSSTØNAD_ADOPSJON;
+        }
+        if (dokumenttypeId == DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD) {
+            return BehandlingsTema.FORELDREPENGER;
+        }
+        if (dokumenttypeId == DokumenttypeId.SØKNAD_SVANGERSKAPSPENGER){
+            return BehandlingsTema.SVANGERSKAPSPENGER;
+        }
+        throw new RuntimeException("Kunne ikke matche på dokumenttype.");
     }
 
     /*

@@ -27,9 +27,8 @@ public final class FordelingErketyper {
     public static FordelingBuilder fordelingHappyCase(LocalDate familehendelseDato, BrukerRolle søkerRolle) {
         if (søkerRolle == BrukerRolle.MOR) {
             return fordelingMorHappyCaseLong(familehendelseDato);
-        } else {
-            return fordelingFarHappyCase(familehendelseDato);
         }
+        return fordelingFarHappyCase(familehendelseDato);
     }
 
     public static FordelingBuilder fordelingMorHappyCase(LocalDate familehendelseDato) {

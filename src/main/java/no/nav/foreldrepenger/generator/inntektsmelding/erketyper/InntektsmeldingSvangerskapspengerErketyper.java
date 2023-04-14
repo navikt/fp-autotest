@@ -18,10 +18,9 @@ public class InntektsmeldingSvangerskapspengerErketyper {
                                                                               ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
         if (arbeidsgiverIdentifikator instanceof Orgnummer o) {
             return lagSvangerskapspengerInntektsmelding(fnr, beløp, o);
-        } else {
-            throw new IllegalStateException("Ikke støttet. For privat arbeidgiver bruk lagInntektsmeldingPrivateArbeidsgiver()");
-
         }
+        throw new IllegalStateException("Ikke støttet. For privat arbeidgiver bruk lagInntektsmeldingPrivateArbeidsgiver()");
+
     }
 
     public static InntektsmeldingBuilder lagSvangerskapspengerInntektsmelding(Fødselsnummer fnr, Integer beløp,

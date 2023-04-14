@@ -45,7 +45,8 @@ public final class Vent {
                     LOG.warn("Async venting av {} har tatt mer enn 75% av timeout på {} sekunder!", ste, timeoutInSeconds);
                 }
                 if (now.isAfter(end)) {
-                    throw new IllegalStateException("Async venting timet ut etter " + timeoutInSeconds + " sekunder fordi: " + errorMessageProducer.call());
+                    throw new IllegalStateException(
+                            "Async venting timet ut etter " + timeoutInSeconds + " sekunder fordi: " + errorMessageProducer.call());
                 }
                 sleep(progressivVentetidMs);
                 progressivVentetidMs = Math.min(750, 2 * progressivVentetidMs);
@@ -57,20 +58,19 @@ public final class Vent {
         }
     }
 
-        private static <T> boolean booleanExpression(T callable) {
+    private static <T> boolean booleanExpression(T callable) {
         if (callable instanceof Boolean) {
             return Boolean.FALSE.equals(callable);
-        } else {
-            return callable == null;
         }
+        return callable == null;
     }
 
 
     private static StackTraceElement getCallerCallerClassName() {
         var stElements = Thread.currentThread().getStackTrace();
-        for (var i=1; i<stElements.length; i++) {
+        for (var i = 1; i < stElements.length; i++) {
             var ste = stElements[i];
-            if (!ste.getClassName().equals(Vent.class.getName())&& ste.getClassName().indexOf("java.lang.Thread")!= 0) {
+            if (!ste.getClassName().equals(Vent.class.getName()) && ste.getClassName().indexOf("java.lang.Thread") != 0) {
                 return ste;
             }
         }

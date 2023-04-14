@@ -104,7 +104,8 @@ public abstract class Søker {
                     new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(orgnummer)),
                     arbeidsforholdene(arbeidsgiverIdentifikator),
                     innsender));
-        } else if(arbeidsgiverIdentifikator instanceof AktørId id) {
+        }
+        if(arbeidsgiverIdentifikator instanceof AktørId id) {
             // Trenger fnr for person arbeidsgiver pga aktørid ikke kan brukes for IM
             var fnrArbeidsgiver = new Fødselsnummer(inntektYtelseModell.inntektskomponentModell().inntektsperioder().stream()
                     .filter(p -> p.arbeidsgiver() != null && p.arbeidsgiver().getAktørIdent().equalsIgnoreCase(id.value()))
@@ -124,9 +125,8 @@ public abstract class Søker {
     private ArbeidsgiverIdentifikator getArbeidsgiverIdentifikator(no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold arbeidsforhold) {
         if (arbeidsforhold.arbeidsgiverOrgnr() != null) {
             return Orgnummer.valueOf(arbeidsforhold.arbeidsgiverOrgnr());
-        } else {
-            return AktørId.valueOf(arbeidsforhold.arbeidsgiverAktorId());
         }
+        return AktørId.valueOf(arbeidsforhold.arbeidsgiverAktorId());
     }
 
     public Arbeidsgivere arbeidsgivere(Orgnummer orgnummer){

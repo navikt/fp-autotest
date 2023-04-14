@@ -25,9 +25,8 @@ public class InntektsmeldingForeldrepengeErketyper {
                     .medStartdatoForeldrepengerperiodenFOM(fpStartdato)
                     .medAvsendersystem("FS22", "1.0")
                     .medArbeidsgiver(o.value(), "41925090");
-        } else {
-            throw new IllegalStateException("Bruk metode lagInntektsmeldingPrivateArbeidsgiver() siden det er privat arbeidsgiver!");
         }
+        throw new IllegalStateException("Bruk metode lagInntektsmeldingPrivateArbeidsgiver() siden det er privat arbeidsgiver!");
     }
 
     public static InntektsmeldingBuilder lagInntektsmeldingPrivateArbeidsgiver(Integer beløp, Fødselsnummer fnr,

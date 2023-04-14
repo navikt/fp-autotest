@@ -47,10 +47,10 @@ final class Aareg {
         }
         if (a.arbeidsgiverOrgnr() != null) {
              return arbeidsgiverIdentifikator.value().equalsIgnoreCase(a.arbeidsgiverOrgnr());
-        } else if (a.arbeidsgiverAktorId() != null) {
-            return arbeidsgiverIdentifikator.value().equalsIgnoreCase(a.arbeidsgiverAktorId());
-        } else {
-            return false;
         }
+        if (a.arbeidsgiverAktorId() != null) {
+            return arbeidsgiverIdentifikator.value().equalsIgnoreCase(a.arbeidsgiverAktorId());
+        }
+        return false;
     }
 }
