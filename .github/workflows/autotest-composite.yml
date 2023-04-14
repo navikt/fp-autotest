@@ -32,6 +32,7 @@ jobs:
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-and-test
         with:
           build-version: ${{ needs.build-app.outputs.build-version }}
@@ -46,6 +47,7 @@ jobs:
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-and-test
         with:
           build-version: ${{ needs.build-app.outputs.build-version }}
@@ -60,6 +62,7 @@ jobs:
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-and-test
         with:
           build-version: ${{ needs.build-app.outputs.build-version }}
