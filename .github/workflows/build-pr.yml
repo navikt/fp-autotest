@@ -13,7 +13,7 @@ on:
 jobs:
   autotest:
     name: Autotest
-    uses: navikt/fp-autotest/.github/workflows/autotest-resuable.yml@test
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@test
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
       test-suites: fpsak, fptilbake
