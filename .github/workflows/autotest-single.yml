@@ -30,13 +30,16 @@ on:
 jobs:
   autotest:
     name: Kjører ${{ inputs.test-suite }}-tester mot ${{ github.repository }} ${{ inputs.build-version }}
-    if: inputs.run-tests
-    runs-on: ubuntu-latest
+    if: inputs.run-tests && github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest-8-cores
     timeout-minutes: 15
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:
       - uses: actions/checkout@v3
+        if: github.repository == 'navikt/fp-autotest'
+      - uses: actions/checkout@v3
+        if: github.repository != 'navikt/fp-autotest'
         with:
           repository: 'navikt/fp-autotest'
           ref: 'master'
