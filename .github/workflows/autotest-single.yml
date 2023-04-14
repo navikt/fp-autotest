@@ -72,7 +72,6 @@ jobs:
         id: setup
         shell: bash
         run: |
-          services=""
           if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
             cd lokal-utvikling
             ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
