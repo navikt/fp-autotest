@@ -29,7 +29,7 @@ runs:
       uses: whelk-io/maven-settings-xml-action@v21
       with:
         repositories: '[{"id": "github", "name": "github", "url": "https://maven.pkg.github.com/${{ github.repository }}",
-            "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" }}]'
+              "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" }}]'
         servers: '[{ "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.GITHUB_TOKEN}}" }]'
         output_file: settings.xml
 
@@ -56,20 +56,20 @@ runs:
       id: setup
       shell: bash
       run: |
-        services
+        services=""
         if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
-          cd ../../lokal-utvikling
+          cd lokal-utvikling
           ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
           cd docker-compose-lokal
-          services = fpsak
+          services="fpsak"
         else
-          cd ../pipeline
-          services = fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak
+          cd resources/pipeline
+          services="fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak"
         fi
 
         ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
-        echo "Kjører docker compose up på følgende applikasjoner: $services"
-        docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait "$services" || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+        echo "Kjører docker compose up på følgende applikasjoner: ${services}"
+        docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait "${services}" || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
 
     - name: Utfører tester fra test suite ${{ inputs.test-suite }} mot SUT
       id: tester
