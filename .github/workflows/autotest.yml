@@ -10,6 +10,7 @@ on:
         default: 'latest'
       test-suites:
         description: 'Test suite å kjøre (fpsak|fptilbake|verdikjede)'
+        type: string
         required: true
     outputs:
       fpsak:
