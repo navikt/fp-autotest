@@ -105,7 +105,7 @@ jobs:
         run: echo "result=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
 
       - name: Generer testrapport
-        if: (success() || failure()) && steps.setup.outcome == 'success'
+        if: (success() || failure()) && steps.setup.outcome == 'success' && ${{ github.repository }} != 'navikt/fp-autotest'
         id: ghpages
         shell: bash
         run: |
