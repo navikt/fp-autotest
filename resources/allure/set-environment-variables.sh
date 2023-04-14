@@ -10,4 +10,8 @@ else
   echo trigger="$TRIGGER" >>environment.properties
 fi
 
-cat ../pipeline/.env >> environment.properties
+if [ $1 == 'fpsak' ]; then
+    grep -e '^disclaimer\|^trigger\|^AUDIT_NAIS_IMAGE\|^ORACLE_IMAGE\|^POSTGRES_IMAGE\|^VTP_IMAGE\|^FPABAKUS_IMAGE\|^FPSAK_IMAGE' ../../lokal-utvikling/docker-compose-lokal/.env >> environment.properties
+else
+    cat ../../lokal-utvikling/docker-compose-lokal/.env >> environment.properties
+fi
