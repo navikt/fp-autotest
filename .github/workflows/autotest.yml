@@ -29,7 +29,7 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest-resuable.yml@test
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
-      run-tests: $${ contains(inputs.test-suites, fpsak) }}
+      run-tests: contains($${ inputs.test-suites }}, 'fpsak')
       test-suite: fpsak
       parallellitet: 16
     secrets: inherit
@@ -39,7 +39,7 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest-resuable.yml@test
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
-      run-tests: $${ contains(inputs.test-suites, fptilbake) }}
+      run-tests: contains($${ inputs.test-suites }}, 'fptilbake')
       test-suite: fptilbake
       parallellitet: 8
     secrets: inherit
@@ -49,7 +49,7 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest-resuable.yml@test
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
-      run-tests: $${ contains(inputs.test-suites, verdikjede) }}
+      run-tests: contains($${ inputs.test-suites }}, 'verdikjede')
       test-suite: verdikjede
       parallellitet: 8
     secrets: inherit
