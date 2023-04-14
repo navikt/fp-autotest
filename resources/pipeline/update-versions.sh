@@ -34,9 +34,9 @@ echo FPLOS_IMAGE="$(imageVersion "ghcr.io/navikt/fplos")" >> .env
 echo FPSOKNAD_MOTTAK_IMAGE="$(imageVersion "ghcr.io/navikt/fpsoknad-mottak")" >> .env
 echo FPINFO_HISTORIKK_IMAGE="$(imageVersion "ghcr.io/navikt/fpinfo-historikk")" >> .env
 echo FORELDREPENGESOKNADAPI_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad-api")" >> .env
-echo FORELDREPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad")" >> .env
-echo FORELDREPENGEOVERSIKT_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengeoversikt")" >> .env
-echo SVANGERSKAPSPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/svangerskapspengesoknad")" >> .env
+echo FORELDREPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad/foreldrepengesoknad")" >> .env
+echo FORELDREPENGEOVERSIKT_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad/foreldrepengeoversikt")" >> .env
+echo SVANGERSKAPSPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad/svangerskapspengesoknad")" >> .env
 echo FPOVERSIKT_IMAGE="$(imageVersion "ghcr.io/navikt/fp-oversikt")" >> .env
 
 echo ".env fil opprettet - Klart for docker-compose up"
