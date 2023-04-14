@@ -35,7 +35,7 @@
         <assertj.version>3.24.2</assertj.version>
         <aspectj.version>1.9.19</aspectj.version>
         <junit.version>5.9.2</junit.version>
-        <mockito.version>5.2.0</mockito.version>
+        <mockito.version>5.3.0</mockito.version>
         <jackson.version>2.14.2</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
         <jakarta.vs.rs.version>3.1.0</jakarta.vs.rs.version>
