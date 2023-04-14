@@ -10,71 +10,12 @@ on:
       - '.github/workflows/trigger.yml.yml'
       - 'lokalutvikling/*'
 
-env:
-  JUIPTER_PARALLELISM: 4
-  GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
-  build:
-    name: Utfør testene til fpsak
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{github.event.pull_request.head.ref}}
-          repository: ${{github.event.pull_request.head.repo.full_name}}
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: 17
-          cache: 'maven'
-
-      - name: Login to GitHub Packages Docker  Registry
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup fpsak og dens avhengigheter
-        shell: bash
-        run: |
-          echo "Oppretter dummy keystore for testing"
-          cd resources/keystore
-          ./make-dummy-keystore.sh
-          cd ../../lokal-utvikling
-          ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
-          cd docker-compose-lokal
-          ./update-versions.sh ${{ github.event.client_payload.trigger }} ${{ github.event.client_payload.version }}
-          docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait fpsak
-
-      - name: Kjører enhetstester for autotest
-        run: mvn clean install --settings .github/.m2/settings.xml
-
-      - name: Utfører autotestene for fpsak
-        run: |
-          mvn test --batch-mode --settings .github/.m2/settings.xml -Djuipter.parallelism=${{ env.JUIPTER_PARALLELISM }} -P fpsak
-          docker stats --no-stream
-          free -m
-
-      - name: Dumper logger for feilsøking
-        if: failure()
-        run: |
-          mkdir container-logs
-          cd container-logs
-          docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
-
-      - name: Laste opp logger
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: logs
-          path: container-logs
-
-      - name: Sjekker storage
-        if: failure()
-        run: |
-          docker stats --no-stream
-          docker system df -v
-          df -h
+  fpsak:
+    name: Kjører tester fra test suite fpsak mot ${{ github.repository }} ${{ inputs.build-version }}
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@test
+    with:
+      build-version: ${{ needs.build-app.outputs.build-version }}
+      test-suite: fpsak
+      parallellitet: 16
+    secrets: inherit
