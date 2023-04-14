@@ -17,5 +17,4 @@ jobs:
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
       test-suites: fpsak
-      parallellitet: 16
     secrets: inherit
