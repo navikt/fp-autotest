@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
@@ -225,9 +225,7 @@ public class InntektsmeldingBuilder {
             var jaxbContext = JAXBContext.newInstance(InntektsmeldingM.class);
             var jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); // Prettyprinter output
-            jaxbMarshaller.marshal(
-                    objectFactory.createMelding(inntektsmelding), sw
-            );
+            jaxbMarshaller.marshal(objectFactory.createMelding(inntektsmelding), sw);
             return sw.toString();
         } catch (JAXBException | IOException e) {
             throw new IllegalArgumentException("Noe gikk galt ved oversetting av inntektsmelding til XML", e);

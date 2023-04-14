@@ -27,7 +27,8 @@
         <vtp.versjon>1.1.14</vtp.versjon>
         <fp-felles.versjon>4.2.38</fp-felles.versjon>
         <fp-prosesstask.version>3.1.26</fp-prosesstask.version>
-        <fp-kontrakter.version>6.2.15</fp-kontrakter.version>
+        <fp-kontrakter.version>6.2.17</fp-kontrakter.version>
+        <fpsoknad-felles.version>2.0.1</fpsoknad-felles.version>
 
         <allure.version>2.21.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
@@ -36,6 +37,7 @@
         <junit.version>5.9.2</junit.version>
         <mockito.version>5.2.0</mockito.version>
         <jackson.version>2.14.2</jackson.version>
+        <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
         <jakarta.vs.rs.version>3.1.0</jakarta.vs.rs.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
         <jboss-jandex.version>2.4.3.Final</jboss-jandex.version>
@@ -44,6 +46,14 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Jakarta EE API BOM -->
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <version>${jakarta.jakartaee-bom.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
@@ -57,49 +67,6 @@
                 <version>${junit.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.foreldrepenger</groupId>
-                <artifactId>fpsoknad-felles</artifactId>
-                <version>1.0.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-                <artifactId>inntektsmelding-v1</artifactId>
-                <version>${fp-kontrakter.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.minidev</groupId>
-                <artifactId>json-smart</artifactId>
-                <version>2.4.10</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.core</groupId>
-                <artifactId>jersey-common</artifactId>
-                <version>${jersey.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss</groupId>
-                <artifactId>jandex</artifactId>
-                <version>${jboss-jandex.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.el</artifactId>
-                <version>${jakarta.el.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.ws.rs</groupId>
-                <artifactId>jakarta.ws.rs-api</artifactId>
-                <version>${jakarta.vs.rs.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -123,21 +90,24 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>fordel-v1</artifactId>
+            <artifactId>fordel-v1-jakarta</artifactId>
             <version>${fp-kontrakter.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>risk-v1</artifactId>
+            <artifactId>risk-v1-jakarta</artifactId>
             <version>${fp-kontrakter.version}</version>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>inntektsmelding-v1-jakarta</artifactId>
+            <version>${fp-kontrakter.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>no.nav.foreldrepenger</groupId>
             <artifactId>fpsoknad-felles</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-            <artifactId>inntektsmelding-v1</artifactId>
+            <version>${fpsoknad-felles.version}</version>
         </dependency>
 
         <dependency>
@@ -171,6 +141,7 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
+            <version>${jakarta.el.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
@@ -179,10 +150,12 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
+            <version>${jersey.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss</groupId>
             <artifactId>jandex</artifactId>
+            <version>${jboss-jandex.version}</version>
         </dependency>
 
         <!-- Testavhengigheter (brukes også i scr) -->
@@ -212,6 +185,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
         </dependency>
     </dependencies>
 
