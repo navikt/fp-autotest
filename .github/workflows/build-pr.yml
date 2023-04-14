@@ -16,6 +16,6 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@test
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
-      test-suite: fpsak
+      test-suites: fpsak
       parallellitet: 16
     secrets: inherit
