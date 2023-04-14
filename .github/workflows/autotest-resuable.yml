@@ -6,14 +6,17 @@ on:
     inputs:
       build-version:
         description: 'Docker tag (from repository)'
+        type: string
         required: false
         default: 'latest'
       parallellitet:
         description: 'Docker tag (from repository)'
+        type: string
         required: false
         default: '8'
       test-suite:
         description: 'Test suite å kjøre (fpsak|fptilbake|verdikjede)'
+        type: string
         required: true
     outputs:
       resultat:
