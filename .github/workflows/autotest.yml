@@ -26,7 +26,7 @@ on:
 jobs:
   fpsak:
     name: Kjører tester fra test suite fpsak mot ${{ github.repository }} ${{ inputs.build-version }}
-    uses: navikt/fp-autotest/.github/workflows/autotest-resuable.yml@test
+    uses: navikt/fp-autotest/.github/workflows/autotest-single.yml@test
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
       run-tests: ${{ contains(inputs.test-suites, 'fpsak') }}
@@ -36,12 +36,11 @@ jobs:
 
   fptilbake:
     name: Kjører tester fra test suite fptilbake mot ${{ github.repository }} ${{ inputs.build-version }}
-    uses: navikt/fp-autotest/.github/workflows/autotest-resuable.yml@test
+    uses: navikt/fp-autotest/.github/workflows/autotest-single.yml@test
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
       run-tests: ${{ contains(inputs.test-suites, 'fptilbake') }}
       test-suite: fptilbake
-      parallellitet: 8
     secrets: inherit
 
   verdikjede:
@@ -51,5 +50,4 @@ jobs:
       build-version: ${{ needs.build-app.outputs.build-version }}
       run-tests: ${{ contains(inputs.test-suites, 'verdikjede') }}
       test-suite: verdikjede
-      parallellitet: 8
     secrets: inherit

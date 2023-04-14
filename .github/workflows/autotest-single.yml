@@ -29,7 +29,7 @@ on:
 
 jobs:
   autotest:
-    name: Kjører ${{ inputs.test-suite }}tester mot ${{ github.repository }} ${{ inputs.build-version }}
+    name: Kjører ${{ inputs.test-suite }}-tester mot ${{ github.repository }} ${{ inputs.build-version }}
     if: inputs.run-tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
