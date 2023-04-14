@@ -20,7 +20,7 @@ on:
     outputs:
       resultat:
         description: "Test resultat"
-        value: ${{ steps.result.outputs.result }}
+        value: ${{ jobs.autotest.outputs.result }}
 
 jobs:
   autotest:
