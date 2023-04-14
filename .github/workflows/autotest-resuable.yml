@@ -68,12 +68,12 @@ jobs:
         run: |
           services=""
           if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
-            cd ../../lokal-utvikling
+            cd lokal-utvikling
             ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
             cd docker-compose-lokal
             services = "fpsak"
           else
-            cd ../pipeline
+            cd resources/pipeline
             services = "fpsak fpformidling fpdokgen fpoppdrag fptilbake fprisk fpabonnent fpinfo fpfordel fpsoknad-mottak"
           fi
 
