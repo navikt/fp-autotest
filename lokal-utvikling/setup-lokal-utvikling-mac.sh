@@ -48,6 +48,7 @@ else
     # Setting up oracle i x86_64 instans
     colima start --cpu 2 --memory 4 --arch x86_64
     docker context use colima
+    sh ../resources/pipeline/update-versions.sh
     docker-compose -f ../resources/pipeline/compose.yml up -d oracle
 
     echo "Konfigurer docker-compose-lokal/ for å kjøre følgende applikasjoner i IDEA $*"
