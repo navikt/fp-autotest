@@ -97,7 +97,7 @@ jobs:
           git fetch origin gh-pages
           mkdir gh-pages
           git --work-tree=gh-pages checkout origin/gh-pages -- fpsak/history
-          resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }}
+          resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }} fpsak
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fpsak/history target/allure-results
@@ -197,7 +197,7 @@ jobs:
           git fetch origin gh-pages
           mkdir gh-pages
           git --work-tree=gh-pages checkout origin/gh-pages -- fptilbake/history
-          resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }}
+          resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }} fptilbake
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/fptilbake/history target/allure-results
@@ -301,7 +301,7 @@ jobs:
           git fetch origin gh-pages
           mkdir gh-pages
           git --work-tree=gh-pages checkout origin/gh-pages -- verdikjede/history
-          resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }}
+          resources/allure/set-environment-variables.sh ${{ github.event.inputs.trigger }} verdikjede
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/verdikjede/history target/allure-results

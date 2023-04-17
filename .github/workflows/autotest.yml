@@ -109,7 +109,7 @@ jobs:
           git fetch origin gh-pages
           mkdir gh-pages
           git --work-tree=gh-pages checkout origin/gh-pages -- ${{ inputs.test-suite }}/history
-          resources/allure/set-environment-variables.sh ${{ github.repository }}
+          resources/allure/set-environment-variables.sh ${{ github.repository }} ${{ inputs.test-suite }}
           cp resources/allure/environment.properties target/allure-results
           cp resources/allure/categories.json target/allure-results
           cp -r gh-pages/${{ inputs.test-suite }}/history target/allure-results
