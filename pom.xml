@@ -28,7 +28,7 @@
         <fp-felles.versjon>4.2.38</fp-felles.versjon>
         <fp-prosesstask.version>3.1.26</fp-prosesstask.version>
         <fp-kontrakter.version>6.2.17</fp-kontrakter.version>
-        <fpsoknad-felles.version>2.1.0</fpsoknad-felles.version>
+        <fpsoknad-felles.version>2.2.0</fpsoknad-felles.version>
 
         <allure.version>2.21.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
