@@ -28,6 +28,7 @@ on:
 jobs:
   rapport:
     name: Lager og publiserer test rapport
+    if: !(inputs.fpsak == 'skipped' && inputs.fptilbake == 'skipped' && inputs.verdikjede == 'skipped')
     runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 5
@@ -106,7 +107,7 @@ jobs:
           function statusJobb() {
             if [[ "$1" == *"skipped"* ]]; then
               echo "skipped"
-            elif [[ "$1" == *"test-failure"* ]]; then
+            elif [[ "$1" == *"test-failure"* || -z "$1" ]]; then
               echo "test-feil"
             elif [[ "$1" == *"test-success"* && "$1" == *"logg-failure"* ]]; then
               echo "logg-feil"
@@ -127,7 +128,7 @@ jobs:
 
           fpsakStatus="$(statusJobb ${{inputs.fpsak}})"
           fptilbakeStatus="$(statusJobb ${{inputs.fptilbake}})"
-          verdikjedetestStatus="$( statusJobb ${{inputs.verdikjede}})"
+          verdikjedetestStatus="$(statusJobb ${{inputs.verdikjede}})"
 
           echo 'SLACK_MESSAGE<<\n' >> $GITHUB_ENV
           echo >> $GITHUB_ENV
