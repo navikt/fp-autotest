@@ -37,7 +37,7 @@ jobs:
         if: github.repository != 'navikt/fp-autotest'
         with:
           repository: 'navikt/fp-autotest'
-          ref: 'master'
+          ref: 'testinger'
 
       - name: Create maven .m2 settings for GITHUB
         uses: whelk-io/maven-settings-xml-action@v21
