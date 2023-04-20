@@ -119,7 +119,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     void testcase_mor_fødsel() {
         var familie = new Familie("501");
         var mor = familie.mor();
-        assertThat(true).isFalse(); // Feiler tester for å sjekke workflows
         var termindato = LocalDate.now().plusWeeks(1);
         var fpStartdato = termindato.minusWeeks(3);
         var fordeling = fordeling(

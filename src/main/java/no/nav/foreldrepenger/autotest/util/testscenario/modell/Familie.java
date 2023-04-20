@@ -39,12 +39,12 @@ public class Familie {
     }
 
     public Familie(String scenarioId, boolean privatArbeidsgiver, InnsenderType innsenderType) {
-
-        this.scenario = opprettTestscenario(scenarioId, privatArbeidsgiver);
-        this.innsender = switch (innsenderType) {
-            case SEND_DOKUMENTER_MED_SELVBETJENING -> new SøknadMottak();
-            case SEND_DOKUMENTER_UTEN_SELVBETJENING -> new Fordel();
-        };
+        throw new RuntimeException("test");
+//        this.scenario = opprettTestscenario(scenarioId, privatArbeidsgiver);
+//        this.innsender = switch (innsenderType) {
+//            case SEND_DOKUMENTER_MED_SELVBETJENING -> new SøknadMottak();
+//            case SEND_DOKUMENTER_UTEN_SELVBETJENING -> new Fordel();
+//        };
     }
 
     public Mor mor() {
