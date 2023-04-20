@@ -99,7 +99,12 @@ jobs:
         if: (success() || failure()) && steps.setup.outcome == 'success'
         id: result
         shell: bash
-        run: echo "result=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
+        run: |
+          if [[ ${{ steps.setup.outcome }} == 'success' ]]; then
+            echo "result=test-${{ steps.tester.outcome }} logg-${{ steps.logger.outcome }}" >> $GITHUB_OUTPUT
+          else
+            echo "result=skipped" >> $GITHUB_OUTPUT
+          fi
 
       - name: Generer testrapport
         if: (success() || failure()) && steps.setup.outcome == 'success' && ${{ github.repository }} != 'navikt/fp-autotest'
