@@ -28,7 +28,7 @@ on:
 jobs:
   rapport:
     name: Lager og publiserer test rapport
-    if: !(inputs.fpsak == 'skipped' && inputs.fptilbake == 'skipped' && inputs.verdikjede == 'skipped')
+    if: "!(inputs.fpsak == 'skipped' && inputs.fptilbake == 'skipped' && inputs.verdikjede == 'skipped')"
     runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 5
