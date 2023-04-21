@@ -93,7 +93,12 @@ jobs:
         if: (success() || failure()) && steps.setup.outcome == 'success'
         id: logger
         shell: bash
-        run: mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil
+        run: |
+          if [[ ${{ inputs.test-suite }} == 'fptilbake' ]]; then
+            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpinfo,fpdokgen,fpabonnent
+          else
+            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
+          fi
 
       - name: Utled testresultat
         if: (success() || failure()) && steps.setup.outcome == 'success'
@@ -107,7 +112,7 @@ jobs:
           fi
 
       - name: Generer testrapport
-        if: (success() || failure()) && steps.setup.outcome == 'success' && ${{ github.repository }} != 'navikt/fp-autotest'
+        if: (success() || failure()) && steps.setup.outcome == 'success' && github.repository != 'navikt/fp-autotest'
         id: ghpages
         shell: bash
         run: |

@@ -109,7 +109,7 @@ jobs:
               echo "skipped"
             elif [[ "$1" == *"test-failure"* || -z "$1" ]]; then
               echo "test-feil"
-            elif [[ "$1" == *"test-success"* && "$1" == *"logg-failure"* ]]; then
+            elif [[ "$1" == *"test-success"* && "$2" == *"logg-failure"* ]]; then
               echo "logg-feil"
             else
               echo "success"
