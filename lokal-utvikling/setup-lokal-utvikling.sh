@@ -128,6 +128,11 @@ mkdir $folder
 
 # Copy all docker-compose file to separate docker-compose-lokal folder for local instance
 cd ../resources/pipeline
+
+if [ -f ".env" ]; then
+    sh update-versions.sh
+fi
+
 settPorterSomSkalErstattes ${applikasjoner[0]}
 for f in {.*,*}; do
     if [[ -f "$f" ]]; then
@@ -143,7 +148,7 @@ cd $relativ_path
 for applikasjon in "${applikasjoner[@]}"; do
   settPorterSomSkalErstattes $applikasjon
   for f in {.*,*}; do
-    if [ -f "$f" ] && [[ $f != .env ]]  && [[ $f != *.sh ]] && [[ $f != *.sql ]]; then # Only files && not .env %% not script files && not sql files
+    if [ -f "$f" ] && [[ $f != *.sh ]] && [[ $f != *.sql ]]; then # Only files %% not script files && not sql files
       for ((i=0;i<${#replace_port_array[@]};++i)); do
         sed -i.bak "s/${applikasjon}:${replace_port_array[i]}/${host_adresse}:${with_port_array[i]}/g" "$f"
         rm $f.bak
