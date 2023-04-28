@@ -24,7 +24,6 @@ jobs:
     if: github.ref_name != 'master'
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
     with:
-      build-version: ${{ needs.build-app.outputs.build-version }}
       test-suite: fpsak
     secrets: inherit
 
@@ -33,7 +32,6 @@ jobs:
     if: github.ref_name == 'master'
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
     with:
-      build-version: ${{ needs.build-app.outputs.build-version }}
       test-suite: fptilbake
     secrets: inherit
 
@@ -42,6 +40,5 @@ jobs:
     if: github.ref_name == 'master'
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
     with:
-      build-version: ${{ needs.build-app.outputs.build-version }}
       test-suite: verdikjede
     secrets: inherit
