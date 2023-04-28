@@ -1,0 +1,47 @@
+name: Kjører Autotestene ved bygg
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - '.editorconfig'
+      - '.java-version'
+      - '.gitattributes'
+      - 'LICENSE'
+      - 'CODEOWNERS'
+      - '.github/workflows/trigger.yml.yml'
+      - 'docs/**'
+      - '.github/*.yml'
+
+jobs:
+  fpsak-tester:
+    name: Fpsak tester
+    if: github.ref_name != 'master'
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
+    with:
+      build-version: ${{ needs.build-app.outputs.build-version }}
+      test-suite: fpsak
+    secrets: inherit
+
+  fptilbake-tester:
+    name: Fptilbake tester
+    if: github.ref_name == 'master'
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
+    with:
+      build-version: ${{ needs.build-app.outputs.build-version }}
+      test-suite: fptilbake
+    secrets: inherit
+
+  verdikjede-tester:
+    name: Verdikjedetester
+    if: github.ref_name == 'master'
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
+    with:
+      build-version: ${{ needs.build-app.outputs.build-version }}
+      test-suite: verdikjede
+    secrets: inherit
