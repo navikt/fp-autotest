@@ -473,7 +473,7 @@ services:
       vtp:
         condition: service_healthy
       fpsak:
-        condition: service_started
+        condition: service_healthy
   fpoversikt:
     <<: *default-konfigurasjon
     image: $FPOVERSIKT_IMAGE
