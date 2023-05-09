@@ -26,7 +26,7 @@
 
         <vtp.versjon>1.1.14</vtp.versjon>
         <fp-felles.versjon>4.2.45</fp-felles.versjon>
-        <fp-prosesstask.version>3.1.26</fp-prosesstask.version>
+        <fp-prosesstask.version>3.1.28</fp-prosesstask.version>
         <fp-kontrakter.version>6.2.17</fp-kontrakter.version>
         <fpsoknad-felles.version>2.2.0</fpsoknad-felles.version>
 
@@ -189,7 +189,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
