@@ -25,16 +25,16 @@
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
         <vtp.versjon>1.1.14</vtp.versjon>
-        <fp-felles.versjon>4.2.38</fp-felles.versjon>
+        <fp-felles.versjon>4.2.45</fp-felles.versjon>
         <fp-prosesstask.version>3.1.28</fp-prosesstask.version>
         <fp-kontrakter.version>6.2.20</fp-kontrakter.version>
-        <fpsoknad-felles.version>2.2.0</fpsoknad-felles.version>
+        <fpsoknad-felles.version>2.2.1</fpsoknad-felles.version>
 
-        <allure.version>2.21.0</allure.version>
+        <allure.version>2.22.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <assertj.version>3.24.2</assertj.version>
         <aspectj.version>1.9.19</aspectj.version>
-        <junit.version>5.9.2</junit.version>
+        <junit.version>5.9.3</junit.version>
         <jackson.version>2.14.2</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
         <jakarta.vs.rs.version>3.1.0</jakarta.vs.rs.version>
