@@ -40,7 +40,7 @@
         <jakarta.vs.rs.version>3.1.0</jakarta.vs.rs.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
         <jboss-jandex.version>2.4.3.Final</jboss-jandex.version>
-        <jersey.version>3.1.1</jersey.version>
+        <jersey.version>3.1.2</jersey.version>
     </properties>
 
     <dependencyManagement>
