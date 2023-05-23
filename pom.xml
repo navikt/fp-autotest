@@ -30,7 +30,7 @@
         <fp-kontrakter.version>6.2.20</fp-kontrakter.version>
         <fpsoknad-felles.version>2.2.1</fpsoknad-felles.version>
 
-        <allure.version>2.22.0</allure.version>
+        <allure.version>2.22.1</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <assertj.version>3.24.2</assertj.version>
         <aspectj.version>1.9.19</aspectj.version>
