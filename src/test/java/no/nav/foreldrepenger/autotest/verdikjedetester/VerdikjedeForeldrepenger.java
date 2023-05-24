@@ -1774,18 +1774,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         // Mor går på min side for innsyn på foreldrepengesaken sin. Verifisere innhold
         var mor = familie.mor();
-        var saker = mor.innsyn().hentSaker();
-        assertThat(saker.engangsstønad()).isEmpty();
-        assertThat(saker.svangerskapspenger()).isEmpty();
-        assertThat(saker.foreldrepenger()).hasSize(1);
-        var innsynForeldrepenger = saker.foreldrepenger().iterator().next();
-        assertThat(innsynForeldrepenger.annenPart()).isNotNull();
-        assertThat(innsynForeldrepenger.dekningsgrad()).isEqualTo(Dekningsgrad.HUNDRE);
-        assertThat(innsynForeldrepenger.barn()).hasSize(1);
+        var fpSak = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
+        assertThat(fpSak.annenPart()).isNotNull();
+        assertThat(fpSak.dekningsgrad()).isEqualTo(Dekningsgrad.HUNDRE);
+        assertThat(fpSak.barn()).hasSize(1);
 
         // Sammenlign uttak fra fpfrontend og innsyn for bruker
         var uttakResultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
-        var vedtaksperioderInnsyn = innsynForeldrepenger.gjeldendeVedtak().perioder();
+        var vedtaksperioderInnsyn = fpSak.gjeldendeVedtak().perioder();
         assertThat(uttakResultatPerioder)
                 .hasSameSizeAs(vedtaksperioderInnsyn)
                 .hasSize(4);

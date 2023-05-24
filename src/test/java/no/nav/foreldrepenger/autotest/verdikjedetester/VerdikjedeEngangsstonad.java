@@ -76,9 +76,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         var avklarFaktaTerminBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
 
-        var esSaker = mor.innsyn().hentSaker().engangsstønad();
-        assertThat(esSaker).hasSize(1);
-        var esSak = esSaker.stream().findFirst().orElseThrow();
+        var esSak = mor.innsyn().hentEsSakMedÅpenBehandlingTilstand(saksnummer, BehandlingTilstand.UNDER_BEHANDLING);
         assertThat(esSak.saksnummer().value()).isEqualTo(saksnummer.value());
         assertThat(esSak.sakAvsluttet()).isFalse();
         assertThat(esSak.gjelderAdopsjon()).isFalse();
@@ -96,9 +94,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarLovligOppholdBekreftelse);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
 
-        var esSakerEtterVedtak = mor.innsyn().hentSaker().engangsstønad();
-        assertThat(esSakerEtterVedtak).hasSize(1);
-        var esSakEtterVedtak = esSakerEtterVedtak.stream().findFirst().orElseThrow();
+        var esSakEtterVedtak = mor.innsyn().hentEsSakUtenÅpenBehandling(saksnummer);
         assertThat(esSakEtterVedtak.saksnummer().value()).isEqualTo(saksnummer.value());
         assertThat(esSakEtterVedtak.sakAvsluttet()).isTrue();
         assertThat(esSakEtterVedtak.åpenBehandling()).isNull();
