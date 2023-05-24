@@ -57,7 +57,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
                 .medAnnenForelder(lagNorskAnnenforeldre(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
-        var orgnummer = Orgnummer.valueOf("889640782");
+        var orgnummer = new Orgnummer("889640782");
         var inntektsmelding = lagInntektsmelding(mor.månedsinntekt(), mor.fødselsnummer(), fpStartdato, orgnummer);
         mor.sendIMBasertPåInntekskomponenten(inntektsmelding);
 

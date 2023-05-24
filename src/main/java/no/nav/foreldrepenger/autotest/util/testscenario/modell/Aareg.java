@@ -36,7 +36,7 @@ final class Aareg {
 
     private static Arbeidsforhold mapTilArbeidsforhold(no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold a) {
         return new Arbeidsforhold(
-                a.arbeidsgiverOrgnr() != null ? Orgnummer.valueOf(a.arbeidsgiverOrgnr()) : AktørId.valueOf(a.arbeidsgiverAktorId()),
+                a.arbeidsgiverOrgnr() != null ? new Orgnummer(a.arbeidsgiverOrgnr()) : new AktørId(a.arbeidsgiverAktorId()),
                 new ArbeidsforholdId(a.arbeidsforholdId()), a.ansettelsesperiodeFom(), a.ansettelsesperiodeTom(),
                 a.arbeidsforholdstype(), a.arbeidsavtaler().get(0).stillingsprosent());
     }

@@ -31,7 +31,7 @@ public class SerializationTestBase {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
     }
 
-    private static void test(Object obj, boolean log) {
+    protected static void test(Object obj, boolean log) {
         try {
             if (log) {
                 LOG.info("{}", obj);

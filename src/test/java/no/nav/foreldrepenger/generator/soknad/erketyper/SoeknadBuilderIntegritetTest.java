@@ -48,7 +48,7 @@ class SoeknadBuilderIntegritetTest {
     void endringssøknadRi() {
         var tid = LocalDate.now().minusWeeks(5);
         var endringssøknad = SøknadEndringErketyper.lagEndringssøknadFødsel(tid, BrukerRolle.FAR,
-                        fordelingFarAleneomsorg(tid).build(), Saksnummer.valueOf("123"))
+                        fordelingFarAleneomsorg(tid).build(), new Saksnummer("123"))
                 .medMottattDato(tid)
                 .build();
 
