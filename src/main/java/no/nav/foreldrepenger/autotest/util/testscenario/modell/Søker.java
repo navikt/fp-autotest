@@ -124,9 +124,9 @@ public abstract class Søker {
 
     private ArbeidsgiverIdentifikator getArbeidsgiverIdentifikator(no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold arbeidsforhold) {
         if (arbeidsforhold.arbeidsgiverOrgnr() != null) {
-            return Orgnummer.valueOf(arbeidsforhold.arbeidsgiverOrgnr());
+            return new Orgnummer(arbeidsforhold.arbeidsgiverOrgnr());
         }
-        return AktørId.valueOf(arbeidsforhold.arbeidsgiverAktorId());
+        return new AktørId(arbeidsforhold.arbeidsgiverAktorId());
     }
 
     public Arbeidsgivere arbeidsgivere(Orgnummer orgnummer){

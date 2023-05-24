@@ -64,6 +64,10 @@ settPorterSomSkalErstattes () {
       replace_port_array=("8080")
       with_port_array=("8065")
       ;;
+    fpoversikt)
+      replace_port_array=("8080")
+      with_port_array=("8889")
+      ;;
     "")
       replace_port_array=()
       with_port_array=()
