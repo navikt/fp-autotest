@@ -101,6 +101,12 @@ jobs:
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil
           fi
 
+      - name: Sjekker minneforbruk
+        if: failure() && !cancelled()
+        run: |
+          docker stats --no-stream
+          free -m
+
       - name: Utled testresultat
         if: (success() || failure()) && steps.setup.outcome == 'success'
         id: result
