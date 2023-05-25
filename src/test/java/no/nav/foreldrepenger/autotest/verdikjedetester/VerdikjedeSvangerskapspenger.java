@@ -426,9 +426,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
 
-        var svpSaker = mor.innsyn().hentSaker().svangerskapspenger();
-        assertThat(svpSaker).hasSize(1);
-        var svpSak = svpSaker.stream().findFirst().orElseThrow();
+        var svpSak = mor.innsyn().hentSvpSakMedÅpenBehandlingTilstand(saksnummer, BehandlingTilstand.UNDER_BEHANDLING);
         assertThat(svpSak.saksnummer().value()).isEqualTo(saksnummer.value());
         assertThat(svpSak.sakAvsluttet()).isFalse();
         assertThat(svpSak.åpenBehandling().tilstand()).isEqualTo(BehandlingTilstand.UNDER_BEHANDLING);
@@ -449,9 +447,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        var svpSakerEtterVedtak = mor.innsyn().hentSaker().svangerskapspenger();
-        assertThat(svpSakerEtterVedtak).hasSize(1);
-        var svpSakEtterVedtak = svpSakerEtterVedtak.stream().findFirst().orElseThrow();
+        var svpSakEtterVedtak = mor.innsyn().hentSvpSakUtenÅpenBehandling(saksnummer);
         assertThat(svpSakEtterVedtak.saksnummer().value()).isEqualTo(saksnummer.value());
         assertThat(svpSakEtterVedtak.sakAvsluttet()).isFalse();
         assertThat(svpSakEtterVedtak.åpenBehandling()).isNull();

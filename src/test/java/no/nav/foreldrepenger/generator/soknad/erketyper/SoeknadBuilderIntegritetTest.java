@@ -1,5 +1,28 @@
 package no.nav.foreldrepenger.generator.soknad.erketyper;
 
+import static no.nav.foreldrepenger.common.domain.Orgnummer.MAGIC_ORG;
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.ARBEID;
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.TRENGER_HJELP;
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UFØRE;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordelingFarAleneomsorg;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.MedlemsskapErketyper.medlemskapUtlandetForrige12mnd;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.MedlemsskapErketyper.medlemsskapNorge;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper.egenNaeringOgFrilansOpptjening;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper.utenlandskArbeidsforhold;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.RelasjonTilBarnErketyper.termin;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.RettigheterErketyper.annenpartIkkeRettOgMorHarUføretrygd;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import com.neovisionaries.i18n.CountryCode;
 
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
@@ -15,27 +38,6 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Stønadskont
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.common.domain.svangerskapspenger.Svangerskapspenger;
 import no.nav.foreldrepenger.common.domain.svangerskapspenger.tilrettelegging.Tilrettelegging;
-
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static no.nav.foreldrepenger.common.domain.Orgnummer.MAGIC_ORG;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.*;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordelingFarAleneomsorg;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.MedlemsskapErketyper.medlemskapUtlandetForrige12mnd;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.MedlemsskapErketyper.medlemsskapNorge;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper.egenNaeringOgFrilansOpptjening;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper.utenlandskArbeidsforhold;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.RelasjonTilBarnErketyper.termin;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.RettigheterErketyper.annenpartIkkeRettOgMorHarUføretrygd;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
-import static org.assertj.core.api.Assertions.assertThat;
 @Tag("internal")
 class SoeknadBuilderIntegritetTest {
 

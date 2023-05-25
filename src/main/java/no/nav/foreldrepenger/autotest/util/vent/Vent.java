@@ -28,12 +28,16 @@ public final class Vent {
     }
 
     public static <T> T på(Callable<T> callable, int timeoutInSeconds, Callable<String> errorMessageProducer) {
+        return på(callable, timeoutInSeconds, errorMessageProducer, 50);
+    }
+
+    public static <T> T på(Callable<T> callable, int timeoutInSeconds, Callable<String> errorMessageProducer, int progressivVentetid) {
         var start = LocalDateTime.now();
         var end = start.plusSeconds(timeoutInSeconds);
         var advarsel = start.plusSeconds((int) (timeoutInSeconds * 0.75));
         var logget = false;
 
-        long progressivVentetidMs = 50;
+        long progressivVentetidMs = progressivVentetid;
 
         try {
             T objektReturnert = callable.call();
