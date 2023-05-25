@@ -76,7 +76,7 @@ jobs:
             services=("fpsak")
           else
             cd resources/pipeline
-            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpinfo" "fpfordel" "fpsoknad-mottak" "fpoversikt")
+            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad-mottak" "fpoversikt")
           fi
 
           ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
