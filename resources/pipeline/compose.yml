@@ -504,7 +504,7 @@ services:
     ports:
       - 127.0.0.1:8889:8080
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpoversikt/internal/health/isReady" ]
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/internal/health/isReady" ]
       interval: 15s
       timeout: 10s
       retries: 10
