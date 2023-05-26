@@ -79,7 +79,8 @@ services:
         teamforeldrepenger.tilbakekreving-dvh-vedtak-v1,
         aapen-sob-oppgaveHendelse-v1,
         pdl.leesah-v1,
-        teamdokumenthandtering.aapen-dok-journalfoering-vtp
+        teamdokumenthandtering.aapen-dok-journalfoering-vtp,
+        fpoversikt-migrering-v1
     volumes:
       - *sertifikat-volum
     ports:
