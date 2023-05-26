@@ -77,10 +77,10 @@ services:
         teamforeldrepenger.tilbakekreving-brukerdialog-v1,
         teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1,
         teamforeldrepenger.tilbakekreving-dvh-vedtak-v1,
+        teamforeldrepenger.fpoversikt-migrering-v1,
         aapen-sob-oppgaveHendelse-v1,
         pdl.leesah-v1,
-        teamdokumenthandtering.aapen-dok-journalfoering-vtp,
-        fpoversikt-migrering-v1
+        teamdokumenthandtering.aapen-dok-journalfoering-vtp
     volumes:
       - *sertifikat-volum
     ports:
