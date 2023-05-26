@@ -479,7 +479,7 @@ services:
     <<: *default-konfigurasjon
     image: $FPOVERSIKT_IMAGE
     container_name: fpoversikt
-    mem_limit: 256mb
+    mem_limit: 512mb
     environment:
       TOKEN_X_PRIVATE_JWK:
         "{
