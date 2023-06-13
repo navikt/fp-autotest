@@ -183,6 +183,82 @@ class Førstegangsbehandling extends FpsakTestBase {
     }
 
     @Test
+    @DisplayName("Mor søker SVP med ett arbeidsforhold - halv og så endring til ingen tilrettelegging. Full refusjon")
+    @Description("Mor søker SVP med ett arbeidsforhold - halv og så endring til ingen tilrettelegging. Full refusjon")
+    void mor_søker_svp_ett_arbeidsforhold_endrer_ingen_tilrettelegging() {
+        var familie = new Familie("502", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var mor = familie.mor();
+        var termindato = LocalDate.now().plusWeeks(6);
+        var arbeidsforholdene = mor.arbeidsforholdene();
+        var arbeidsforhold1 = arbeidsforholdene.get(0).arbeidsgiverIdentifikasjon();
+        var forsteTilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
+                termindato.minusMonths(3),
+                termindato.minusMonths(3),
+                ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsforhold1),
+                BigDecimal.valueOf(50));
+        var søknad = lagSvangerskapspengerSøknad(BrukerRolle.MOR, termindato, List.of(forsteTilrettelegging));
+        var saksnummerSVP = mor.søk(søknad.build());
+
+        var arbeidsgivere = mor.arbeidsgivere();
+        arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
+
+        saksbehandler.hentFagsak(saksnummerSVP);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        var andreTilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
+                termindato.minusMonths(3),
+                termindato.minusMonths(1),
+                ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsforhold1));
+        var søknad2 = lagSvangerskapspengerSøknad(BrukerRolle.MOR, termindato, List.of(andreTilrettelegging));
+        mor.søk(søknad2.build(), saksnummerSVP);
+
+        saksbehandler.hentFagsak(saksnummerSVP);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        // Verifisering av Beregning
+        var bgPerioder = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
+                .getBeregningsgrunnlagPerioder()
+                .stream()
+                .sorted(Comparator.comparing(BeregningsgrunnlagPeriodeDto::getBeregningsgrunnlagPeriodeFom))
+                .collect(Collectors.toList());
+        assertThat(bgPerioder).hasSize(3);
+
+        // Verifisering av Tilkjent ytelse
+        var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
+                .getPerioder();
+        assertThat(tilkjentYtelsePerioder)
+                .as("Antall tilkjent ytelses peridoer")
+                .hasSize(2);
+        assertThat(tilkjentYtelsePerioder.get(0).getFom())
+                .as("Tilkjent ytelses fom")
+                .isEqualTo(termindato.minusMonths(3));
+        assertThat(tilkjentYtelsePerioder.get(0).getTom())
+                .as("Tilkjent ytelses tom")
+                .isEqualTo(termindato.minusMonths(1).minusDays(1));
+        assertThat(tilkjentYtelsePerioder.get(1).getFom())
+                .as("Tilkjent ytelses fom")
+                .isEqualTo(termindato.minusMonths(1));
+        assertThat(tilkjentYtelsePerioder.get(1).getTom())
+                .as("Tilkjent ytelses tom")
+                .isEqualTo(termindato.minusWeeks(3).minusDays(1));
+
+        // Valider at ny og identisk inntektsmelding revuderes automatisk
+        arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
+
+        saksbehandler.hentFagsak(saksnummerSVP);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class); // Denne skal bort etterhver
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+    }
+
+    @Test
     @DisplayName("Mor søker SVP og FP - revurder SVP")
     @Description("Mor søker SVP og FP - revurder SVP, SVP seks uker før termin, FP tre uker før tidligere termin")
     void revurder_svp_pga_innvilget_fp() {
@@ -225,9 +301,7 @@ class Førstegangsbehandling extends FpsakTestBase {
         // Revurder SVP - siste periode skal bli avslått i uttak og tilkjent dagsats = 0
         overstyrer.hentFagsak(saksnummerSVP);
         overstyrer.ventPåOgVelgRevurderingBehandling();
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class); // Denne skal bort etterhver
         overstyrer.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.hentFagsak(saksnummerSVP);
