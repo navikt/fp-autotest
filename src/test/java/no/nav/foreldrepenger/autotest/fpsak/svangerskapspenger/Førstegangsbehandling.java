@@ -254,7 +254,6 @@ class Førstegangsbehandling extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerSVP);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class); // Denne skal bort etterhver
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
     }
 
@@ -301,7 +300,6 @@ class Førstegangsbehandling extends FpsakTestBase {
         // Revurder SVP - siste periode skal bli avslått i uttak og tilkjent dagsats = 0
         overstyrer.hentFagsak(saksnummerSVP);
         overstyrer.ventPåOgVelgRevurderingBehandling();
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class); // Denne skal bort etterhver
         overstyrer.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.hentFagsak(saksnummerSVP);
