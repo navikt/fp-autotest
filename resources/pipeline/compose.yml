@@ -481,6 +481,7 @@ services:
     container_name: fpoversikt
     mem_limit: 512mb
     environment:
+      FPSAK_BASE_URL: http://fpsak:8080/fpsak
       TOKEN_X_PRIVATE_JWK:
         "{
           \"p\": \"2dZeNRmZow7uWKzqpOolNf7FUIr6dP5bThwnqpcDca7sP96fzPGaryZmYAawZj7h1UthpDp9b2D5v0-D0fSrbdp-MisaOz_ZL-2kdwyTSIP0ii-4yPHpFqaZuGTbuLmROwDhklTGMoYC4fN8vb0jgE6cR33bA52JH255qz5R1rc\",
