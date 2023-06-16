@@ -17,8 +17,6 @@ services:
     mem_limit: 64mb
   fpfordel:
     mem_limit: 1gb
-  fpinfo:
-    mem_limit: 1gb
   fpsoknad-mottak:
     mem_limit: 1gb
   fpformidling:

@@ -450,31 +450,6 @@ services:
         condition: service_healthy
       vtp:
         condition: service_healthy
-  fpinfo:
-    <<: *default-konfigurasjon
-    image: $FPINFO_IMAGE
-    container_name: fpinfo
-    mem_limit: 256mb
-    env_file:
-      - *common-properties
-      - fpinfo_datasource.env
-    volumes:
-      - *sertifikat-volum
-      - ./tokenx:/tokenx
-    ports:
-      - 127.0.0.1:8040:8080
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpinfo/internal/health/isReady" ]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-    depends_on:
-      oracle:
-        condition: service_healthy
-      vtp:
-        condition: service_healthy
-      fpsak:
-        condition: service_healthy
   fpoversikt:
     <<: *default-konfigurasjon
     image: $FPOVERSIKT_IMAGE
@@ -534,7 +509,6 @@ services:
       ORGANISASJON_RS_BASE_URL: http://vtp:8060/rest/ereg/api
       OPPSLAG_URL: http://vtp:8060/rest/dummy/oppslag
       FPFORDEL_MAX: 20
-      FPINFO_MAX: 20
       AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://authserver:8086/azureAd/token
       AZURE_APP_CLIENT_ID: lokal:teamforeldrepenger:fpsoknad-mottak
       AZURE_APP_JWK: /tokenx/jwk.json
@@ -552,7 +526,6 @@ services:
       timeout: 10s
       retries: 20
     depends_on:
-      - fpinfo
       - fpfordel
   ## SELVBETJENING SPESIFIKK
   fpinfo-historikk:
@@ -720,12 +693,6 @@ services:
                     "name": "fp-abonnent"
                 },
                 {
-                    "path": "/fpinfo/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpinfo/swagger",
-                    "url": "http://fpinfo:8080",
-                    "name": "fp-info"
-                },
-                {
                     "path": "/fpsak/ekstern/api",
                     "scopes": "api://vtp.teamforeldrepenger.fpsak/swagger",
                     "url": "http://fpsak:8080",
@@ -736,6 +703,12 @@ services:
                     "scopes": "api://vtp.teamforeldrepenger.fpfordel/swagger",
                     "url": "http://fpfordel:8080",
                     "name": "fp-fordel ekstern API"
+                },
+                {
+                    "path": "/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpoversikt/swagger",
+                    "url": "http://fpoversikt:8889",
+                    "name": "fp-oversikt"
                 }
             ]
         }
