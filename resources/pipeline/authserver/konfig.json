@@ -73,7 +73,7 @@
                 },
                 {
                     "requestParam": "scope",
-                    "match": "api://vtp.teamforeldrepenger.fpinfo/swagger",
+                    "match": "api://vtp.teamforeldrepenger.fpoversikt/swagger",
                     "claims": {
                         "aud": ["vtp"]
                     }

@@ -52,10 +52,6 @@ settPorterSomSkalErstattes () {
       replace_port_array=("8080")
       with_port_array=("8090")
       ;;
-    fpinfo)
-      replace_port_array=("8080")
-      with_port_array=("8040")
-      ;;
     fpsoknad-mottak)
       replace_port_array=("9001")
       with_port_array=("9001")
