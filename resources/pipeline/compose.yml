@@ -506,7 +506,6 @@ services:
       KAFKA_PASSWORD: vtp
       PDL_GRAPHQL_BASE_URL: http://vtp:8060/rest/api/pdl/graphql
       DIGDIR_BASE_URL: http://vtp:8060/rest/digdir
-      ORGANISASJON_RS_BASE_URL: http://vtp:8060/rest/ereg/api
       OPPSLAG_URL: http://vtp:8060/rest/dummy/oppslag
       FPFORDEL_MAX: 20
       AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://authserver:8086/azureAd/token
