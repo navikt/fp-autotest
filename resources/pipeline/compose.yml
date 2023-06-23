@@ -384,7 +384,7 @@ services:
     container_name: fprisk
     mem_limit: 512mb
     environment:
-      BRREG_PROXY: http://vtp:8060/rest/brreg/proxy/not/implemented
+      BRREG_PROXY: http://vtp:8060/rest/dummy/brreg
     env_file:
       - fprisk_datasource.env
       - *common-properties
