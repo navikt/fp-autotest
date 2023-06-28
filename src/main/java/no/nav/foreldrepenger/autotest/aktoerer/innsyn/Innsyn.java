@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
 import no.nav.foreldrepenger.common.innsyn.EsSak;
 import no.nav.foreldrepenger.common.innsyn.FpSak;
 import no.nav.foreldrepenger.common.innsyn.Saker;
-import no.nav.foreldrepenger.common.innsyn.SvpSak;
+import no.nav.foreldrepenger.common.innsyn.svp.SvpSak;
 
 public class Innsyn {
     private static final Logger LOG = LoggerFactory.getLogger(Innsyn.class);
