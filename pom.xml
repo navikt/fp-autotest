@@ -27,7 +27,7 @@
         <vtp.versjon>1.1.15</vtp.versjon>
         <fp-felles.versjon>4.2.47</fp-felles.versjon>
         <fp-prosesstask.version>3.1.29</fp-prosesstask.version>
-        <fp-kontrakter.version>6.2.21</fp-kontrakter.version>
+        <fp-kontrakter.version>6.2.22</fp-kontrakter.version>
         <fpsoknad-felles.version>2.4.3</fpsoknad-felles.version>
 
         <slf4j.version>2.0.7</slf4j.version>
