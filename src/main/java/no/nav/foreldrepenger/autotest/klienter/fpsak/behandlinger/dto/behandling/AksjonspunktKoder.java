@@ -65,7 +65,6 @@ public class AksjonspunktKoder {
     public static final String VARSEL_REVURDERING_ETTERKONTROLL = "5025";
     public static final String VARSEL_REVURDERING_MANUELL = "5026";
     public static final String KONTROLLER_REVURDERINGSBEHANDLING = "5055";
-    public static final String KONTROLL_AV_MANUELT_OPPRETTET_REVURDERINGSBEHANDLING = "5056";
 
     public static final String SJEKK_MANGLENDE_FØDSEL = "5027";
 
