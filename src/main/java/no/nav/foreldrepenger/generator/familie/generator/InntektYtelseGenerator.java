@@ -34,11 +34,11 @@ public class InntektYtelseGenerator {
     }
 
     public InntektYtelseGenerator arbeidMedOpptjeningOver6G() {
-        return arbeidsforhold(LocalDate.now().minusYears(3), null, 900_000);
+        return arbeidsforhold(LocalDate.now().minusYears(3), 900_000);
     }
 
     public InntektYtelseGenerator arbeidMedOpptjeningUnder6G() {
-        return arbeidsforhold(LocalDate.now().minusYears(3), null, 480_000);
+        return arbeidsforhold(LocalDate.now().minusYears(3), 480_000);
     }
 
     public InntektYtelseGenerator arbeidsforholdUtenInntekt(Arbeidsgiver arbeidsgiver, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
@@ -55,6 +55,10 @@ public class InntektYtelseGenerator {
 
     public InntektYtelseGenerator arbeidsforhold(LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(DEAFULT_STILLINGSPROSENT, fom, tom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
+    }
+
+    public InntektYtelseGenerator arbeidsforhold(LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+        return arbeidsforhold(DEAFULT_STILLINGSPROSENT, fom, null, årslønn, arbeidsavtaler);
     }
 
     public InntektYtelseGenerator arbeidsforhold(LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {

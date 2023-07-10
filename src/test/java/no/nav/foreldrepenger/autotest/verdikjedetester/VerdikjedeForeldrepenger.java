@@ -131,10 +131,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "25% avvik med delvis refusjon. Etter behandlingen er ferdigbehandlet mottas en fødselshendelse.")
     void testcase_mor_fødsel() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor(LocalDate.now().minusYears(33))
+                .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
-                .forelder(far(LocalDate.now().minusYears(32)).build())
+                .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
 
@@ -229,12 +229,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             "ferdigbehandlet. NB: Må legge til ferdiglignet inntekt for inneværende år -1 etter 1/7")
     void morSelvstendigNæringsdrivendeTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor(LocalDate.now().minusYears(33))
+                .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .selvstendigNæringsdrivende(200_000)
                                 .build())
                         .build())
-                .forelder(far(LocalDate.now().minusYears(32)).build())
+                .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
@@ -351,14 +351,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             "omgjøring i anke")
     void morSykepengerKunYtelseTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor(LocalDate.now().minusYears(33))
+                .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .ytelse(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(),
                                         GrunnlagDto.Status.LØPENDE, LocalDate.now().minusDays(2))
                                 .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusYears(1), 480_000)
                                 .build())
                         .build())
-                .forelder(far(LocalDate.now().minusYears(32)).build())
+                .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
 
@@ -422,10 +422,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge.")
     void farSøkerForeldrepengerTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor(LocalDate.now().minusYears(33))
+                .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
-                .forelder(far(LocalDate.now().minusYears(29))
+                .forelder(far()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 50, LocalDate.now().minusYears(2), 720_000)
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 50, LocalDate.now().minusYears(4), null)
@@ -611,8 +611,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             "Far sender dermed inn endringssøknad og gir fra seg alle periodene.")
     void farSøkerMedToAktiveArbeidsforholdOgEtInaktivtTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor(LocalDate.now().minusYears(33)).build())
-                .forelder(far(LocalDate.now().minusYears(29))
+                .forelder(mor().build())
+                .forelder(far()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, 60, LocalDate.now().minusYears(2), 360_000)
                                 .arbeidsforhold(TestOrganisasjoner.NAV_BERGEN, 40, LocalDate.now().minusYears(4), 240_000)

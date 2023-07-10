@@ -1,10 +1,20 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+
+import com.neovisionaries.i18n.CountryCode;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.StatsborgerskapDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -36,7 +46,13 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     @DisplayName("1: Mor søker fullt uttak med inntekt under 6G")
     @Description("Mor søker ingen tilrettelegging for en 100% stilling med inntekt over 6G.")
     void morSøkerIngenTilretteleggingInntektOver6GTest() {
-        var familie = new Familie("501");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build();
         var mor = familie.mor();
         var tilrettelegginsprosent = 0;
         var termindato = LocalDate.now().plusMonths(3);
@@ -87,7 +103,12 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     @DisplayName("2: Mor søker gradert uttak med inntekt over 6G")
     @Description("Mor søker delvis tilrettelegging for en 100% stilling hvor hun har inntekt over 6G.")
     void morSøkerDelvisTilretteleggingMedInntektOver6GTest() {
-        var familie = new Familie("502");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .build();
+
         var mor = familie.mor();
         var arbeidsforholdMor = mor.arbeidsforhold();
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
@@ -140,7 +161,15 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     @Description("Mor søker ingen tilrettelegging for ett av to arbeidsforhold i samme virksomhet. Arbeidsgiver leverer to" +
             "inntektsmeldinger med forskjellig arbeidsforholdID, med ulik lønn.")
     void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
-        var familie = new Familie("503");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 40, LocalDate.now().minusYears(2), 480_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 60, LocalDate.now().minusYears(4), null)
+                                .build())
+                        .build())
+                .build();
+
         var mor = familie.mor();
         var arbeidsforholdene = mor.arbeidsforholdene();
         var arbeidsforhold1 = arbeidsforholdene.get(0);
@@ -202,7 +231,16 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     @Description("Mor søker i første omgang bare for AF, hvor AG ønsker full refusjon av innekt over 6G." +
             "To måneder senere sender mor inn ny søknad for SN")
     void morSøkerFørstForATOgSenereForSNTest() {
-        var familie = new Familie("511");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .selvstendigNæringsdrivende(1_000_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(12), 720_000)
+                                .build())
+                        .build())
+                .barn(LocalDate.now().minusWeeks(8))
+                .build();
+
         var mor = familie.mor();
         var arbeidsforhold = mor.arbeidsforhold();
         var arbeidsgiverIdentifikator = arbeidsforhold.arbeidsgiverIdentifikasjon();
@@ -324,7 +362,15 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     @Description("Mor søker ingen tilrettelegging for begge arbeidsforholdene. Begge arbeidsgiverene ønsker 100% reufsjon." +
             "Inntekten i disse to arbeidsforholdene er samlet over 6G hvor fordelingen er 2/3 og 1/3 av inntekten.")
     void morSøkerIngenTilretteleggingForToArbeidsforholdFullRefusjonTest() {
-        var familie = new Familie("504");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), 720_000)
+                                .arbeidsforhold(50, LocalDate.now().minusYears(2), 360_000)
+                                .build())
+                        .build())
+                .build();
+
         var mor = familie.mor();
         var arbeidsforholdene = mor.arbeidsforholdene();
         var arbeidsforhold1 = arbeidsforholdene.get(0);
@@ -403,7 +449,12 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     @DisplayName("6: Verifiser innsyn har korrekt data")
     @Description("Verifiserer at innsyn har korrekt data og sammenligner med vedtaket med det saksbehandlerene ser")
     void mor_innsyn_verifsere() {
-        var familie = new Familie("502");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .build();
+
         var mor = familie.mor();
         var arbeidsforholdMor = mor.arbeidsforhold();
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();

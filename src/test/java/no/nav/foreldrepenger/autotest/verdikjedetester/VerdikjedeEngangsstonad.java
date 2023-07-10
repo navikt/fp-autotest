@@ -1,8 +1,20 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.neovisionaries.i18n.CountryCode;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.StatsborgerskapDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -27,7 +39,14 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
     @DisplayName("1: Mor er tredjelandsborger og søker engangsstønad")
     @Description("Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
     void MorTredjelandsborgerSøkerEngangsStønadTest() {
-        var familie = new Familie("505");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato);
         var saksnummer = familie.mor().søk(søknad.build());
@@ -66,7 +85,14 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
     @DisplayName("2: Verifiser innsyn har korrekt data")
     @Description("Verifiserer at innsyn har korrekt data og sammenligner med vedtaket med det saksbehandlerene ser")
     void mor_innsyn_verifsere() {
-        var familie = new Familie("505");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato);
         var mor = familie.mor();
