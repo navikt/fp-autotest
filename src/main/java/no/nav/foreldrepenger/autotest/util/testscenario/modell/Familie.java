@@ -31,16 +31,14 @@ public class Familie {
     private Far far;
     private Mor medmor;
 
+    @Deprecated // Sjekk new FamilieGenerator();
     public Familie(String scenarioId) {
         this(scenarioId, SEND_DOKUMENTER_MED_SELVBETJENING);
     }
 
+    @Deprecated // Sjekk new FamilieGenerator();
     public Familie(String scenarioId, InnsenderType innsenderType) {
-        this(scenarioId, false, innsenderType);
-    }
-
-    public Familie(String scenarioId, boolean privatArbeidsgiver, InnsenderType innsenderType) {
-        this.scenario = opprettTestscenario(scenarioId, privatArbeidsgiver);
+        this.scenario = TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(scenarioId);
         this.innsender = switch (innsenderType) {
             case SEND_DOKUMENTER_MED_SELVBETJENING -> new SøknadMottak();
             case SEND_DOKUMENTER_UTEN_SELVBETJENING -> new Fordel();
@@ -156,17 +154,4 @@ public class Familie {
         innsender.sendInnHendelse(personhendelseDto);
     }
 
-    private TestscenarioDto opprettTestscenario(String id, boolean privatArbeidsgiver) {
-        if (privatArbeidsgiver) {
-            return opprettScenarioMedPrivatArbeidsgiver(id);
-        }
-        return TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(id);
-    }
-
-    private TestscenarioDto opprettScenarioMedPrivatArbeidsgiver(String id) {
-        var arbeidsgiverScenario = TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario("59"); // TODO: ok med Hardkodet?
-        var fnrArbeidsgiver = arbeidsgiverScenario.personopplysninger().søkerIdent();
-        var arbeidsgiverAktørId = arbeidsgiverScenario.personopplysninger().søkerAktørIdent();
-        return TESTSCENARIO_JERSEY_KLIENT.opprettTestscenarioMedAktorId(id, arbeidsgiverAktørId, fnrArbeidsgiver);
-    }
 }

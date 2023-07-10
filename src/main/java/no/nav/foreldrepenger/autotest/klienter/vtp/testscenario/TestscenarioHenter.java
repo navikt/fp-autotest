@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
+@Deprecated
 class TestscenarioHenter {
 
     private static final String PATH_TIL_SCENARIO = "scenarios/";

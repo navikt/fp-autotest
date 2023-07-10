@@ -39,6 +39,7 @@ public class TestscenarioKlient {
         return testscenarioDto;
     }
 
+    @Deprecated // Sjekk new FamilieGenerator();
     @Step("Oppretter familie/scenario #{key}")
     public TestscenarioDto opprettTestscenarioMedAktorId(String key, String aktorId, String ident) {
         var testscenarioObject = testscenarioHenter.hentScenario(key);

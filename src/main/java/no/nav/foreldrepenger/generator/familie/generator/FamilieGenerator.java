@@ -98,6 +98,8 @@ public class FamilieGenerator {
         return build(InnsenderType.SEND_DOKUMENTER_MED_SELVBETJENING);
     }
     public Familie build(InnsenderType innsenderType) {
+        guardMinstEnPart();
+        guardForeldresammensetning();
         opprettFamilieRelasjonForFødteBarn();
         var privateArbeidsgiver = parter.stream()
                 .map(PersonDto::inntektytelse)
@@ -110,10 +112,24 @@ public class FamilieGenerator {
                 .map(PrivatArbeidsgiver.class::cast)
                 .collect(Collectors.toSet());
         privateArbeidsgiver.forEach(p -> parter.add(privatArbeidsgiver(p)));
-
-        // TODO: Verifiser at vi har minst en part. Hvis to parter. Verifiser at det er enten mor/far og far/medmor/medfar
         var testscenarioDto = TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(parter);
         return new Familie(testscenarioDto, innsenderType);
+    }
+
+    private void guardForeldresammensetning() {
+        if (parter.stream().noneMatch(p -> Set.of(Rolle.MOR, Rolle.FAR).contains(p))) {
+            throw new IllegalStateException("Familien må inneholde enten MOR eller FAR");
+        }
+        if (parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).count() > 1 ||
+                parter.stream().filter(p -> p.rolle().equals(Rolle.FAR)).count() > 1) {
+            throw new IllegalStateException("Annenpart må være enten MEDFAR eller MEDMOR");
+        }
+    }
+
+    private void guardMinstEnPart() {
+        if (parter.isEmpty()) {
+            throw new IllegalStateException("Må være minst en part!");
+        }
     }
 
 

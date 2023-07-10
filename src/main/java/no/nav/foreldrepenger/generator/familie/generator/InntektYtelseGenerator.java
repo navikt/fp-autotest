@@ -26,8 +26,8 @@ public class InntektYtelseGenerator {
 
     private final InntektYtelseModellDto.Builder inntektYtelse = InntektYtelseModellDto.builder();
     private final TestOrganisasjoner testOrganisasjoner = new TestOrganisasjoner();
-    private final int DEFAULT_ÅRSLØNN = 600_000;
-    private final int DEAFULT_STILLINGSPROSENT = 100;
+    private static final int DEFAULT_ÅRSLØNN = 600_000;
+    private static final int DEAFULT_STILLINGSPROSENT = 100;
 
     public static InntektYtelseGenerator ny() {
         return new InntektYtelseGenerator();
@@ -194,8 +194,7 @@ public class InntektYtelseGenerator {
                 fraArbeidsforhold.arbeidsgiver()
 
         );
-        inntektsperiode(inntektsperiode);
-        return this;
+        return inntektsperiode(inntektsperiode);
     }
 
     public InntektYtelseGenerator inntektsperiode(OrganisasjonDto organisasjon, LocalDate fom, LocalDate tom, Integer beløp) {
@@ -208,8 +207,7 @@ public class InntektYtelseGenerator {
                 organisasjon
 
         );
-        inntektsperiode(inntektsperiode);
-        return this;
+        return inntektsperiode(inntektsperiode);
     }
 
     public InntektYtelseGenerator inntektsperiode(InntektsperiodeDto inntektsperiode) {
@@ -250,8 +248,7 @@ public class InntektYtelseGenerator {
                 TestOrganisasjoner.NAV
 
         );
-        inntektsperiode(inntektsperiode);
-        return this;
+        return inntektsperiode(inntektsperiode);
     }
 
 
@@ -280,7 +277,6 @@ public class InntektYtelseGenerator {
             now = now.minusYears(1);
         }
         inntektYtelse.sigrun(sigrunDto);
-//        inntektsperiode(testOrganisasjoner.tilfeldigOrg(), LocalDate.now().minusYears(1), null, gjennomsnittligNæringsinntekt/12);
         return this;
     }
 

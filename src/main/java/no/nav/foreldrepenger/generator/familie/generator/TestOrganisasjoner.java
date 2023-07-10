@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-// TODO: Make it pick from a list. No duplicates!
 public class TestOrganisasjoner {
     public static final OrganisasjonDto NAV = new OrganisasjonDto(
             new Orgnummer("889640782"),
