@@ -10,6 +10,8 @@ import java.net.http.HttpRequest;
 import java.util.List;
 import java.util.Optional;
 
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,14 +25,24 @@ public class TestscenarioKlient {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestscenarioKlient.class);
 
-    private static final String TESTSCENARIO_I_AUTOTEST_POST_URL = "/testscenarios";
+    private static final String TESTSCENARIO_I_AUTOTEST_POST_URL = "/testscenarios/v2";
     private static final TestscenarioHenter testscenarioHenter = new TestscenarioHenter();
+
+    public TestscenarioDto opprettTestscenario(List<PersonDto> personer) {
+        var request = requestMedBasicHeadere()
+                .uri(fromUri(BaseUriProvider.VTP_BASE).path(TESTSCENARIO_I_AUTOTEST_POST_URL).build())
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(personer)));
+        var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
+//        tilJsonOgPubliserIAllureRapport(testscenarioObject);
+        LOG.info("Testscenario opprettet med hovedsøker: {} annenpart: {}", testscenarioDto.personopplysninger().søkerIdent(), testscenarioDto.personopplysninger().annenpartIdent());
+        return testscenarioDto;
+    }
 
     @Step("Oppretter familie/scenario #{key}")
     public TestscenarioDto opprettTestscenarioMedAktorId(String key, String aktorId, String ident) {
         var testscenarioObject = testscenarioHenter.hentScenario(key);
 
-        var uriBuilder = fromUri(BaseUriProvider.VTP_BASE).path(TESTSCENARIO_I_AUTOTEST_POST_URL);
+        var uriBuilder = fromUri(BaseUriProvider.VTP_BASE).path("/testscenarios");
         if (aktorId != null) {
             uriBuilder = uriBuilder.queryParam("aktor1", aktorId);
         }

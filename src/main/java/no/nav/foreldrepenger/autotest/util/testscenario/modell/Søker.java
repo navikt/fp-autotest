@@ -75,8 +75,21 @@ public abstract class Søker {
         return Aareg.arbeidsforholdene(inntektYtelseModell.arbeidsforholdModell());
     }
 
+    public Arbeidsforhold arbeidsforhold(String orgnummer) {
+        return arbeidsforholdene().stream()
+                .filter(arbeidsforhold -> orgnummer.equals(arbeidsforhold.arbeidsgiverIdentifikasjon().value()))
+                .findFirst()
+                .orElseThrow();
+    }
     private List<Arbeidsforhold> arbeidsforholdene(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
         return Aareg.arbeidsforholdene(inntektYtelseModell.arbeidsforholdModell(), arbeidsgiverIdentifikator);
+    }
+
+    public Arbeidsgiver arbeidsgiver(String orgnummer) {
+        return arbeidsgivere().toList().stream()
+                .filter(a -> orgnummer.equals(a.arbeidsgiverIdentifikator().value()))
+                .findFirst()
+                .orElseThrow();
     }
 
     public Arbeidsgiver arbeidsgiver() {
@@ -96,16 +109,24 @@ public abstract class Søker {
         return new Arbeidsgivere(arbeidsgivere);
     }
 
-    private boolean leggTilArbeidsforhold(ArrayList<Arbeidsgiver> arbeidsgivere, no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold a) {
-        var arbeidsgiverIdentifikator = getArbeidsgiverIdentifikator(a);
+    private boolean leggTilArbeidsforhold(ArrayList<Arbeidsgiver> arbeidsgivere, no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold arbeidsforhold) {
+        var arbeidsgiverIdentifikator = getArbeidsgiverIdentifikator(arbeidsforhold);
         if (arbeidsgiverIdentifikator instanceof Orgnummer orgnummer) {
-            return arbeidsgivere.add(new Virksomhet(
-                    arbeidsgiverIdentifikator,
+            return arbeidsgivere.add(new Virksomhet(arbeidsgiverIdentifikator,
                     new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(orgnummer)),
                     arbeidsforholdene(arbeidsgiverIdentifikator),
                     innsender));
-        }
-        if(arbeidsgiverIdentifikator instanceof AktørId id) {
+        } else if (arbeidsforhold.personArbeidsgiver() != null) {
+            var personarbeidsgiver = arbeidsforhold.personArbeidsgiver();
+            var fnrArbeidsgiver = new Fødselsnummer(personarbeidsgiver.getIdent());
+            var aktørIdArbeidsgiver = new AktørId(personarbeidsgiver.getAktørIdent());
+            return arbeidsgivere.add(new PersonArbeidsgiver(
+                    arbeidsgiverIdentifikator,
+                    new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(fnrArbeidsgiver)),
+                    arbeidsforholdene(aktørIdArbeidsgiver),
+                    innsender, fnrArbeidsgiver));
+        // Deprecated
+        } else if(arbeidsgiverIdentifikator instanceof AktørId id) {
             // Trenger fnr for person arbeidsgiver pga aktørid ikke kan brukes for IM
             var fnrArbeidsgiver = new Fødselsnummer(inntektYtelseModell.inntektskomponentModell().inntektsperioder().stream()
                     .filter(p -> p.arbeidsgiver() != null && p.arbeidsgiver().getAktørIdent().equalsIgnoreCase(id.value()))
@@ -126,16 +147,19 @@ public abstract class Søker {
         if (arbeidsforhold.arbeidsgiverOrgnr() != null) {
             return new Orgnummer(arbeidsforhold.arbeidsgiverOrgnr());
         }
+        if (arbeidsforhold.personArbeidsgiver() != null) {
+            return new AktørId(arbeidsforhold.personArbeidsgiver().getAktørIdent());
+        }
         return new AktørId(arbeidsforhold.arbeidsgiverAktorId());
     }
 
-    public Arbeidsgivere arbeidsgivere(Orgnummer orgnummer){
+    public Arbeidsgivere arbeidsgivere(String orgnummer){
         return new Arbeidsgivere(arbeidsgivere().toList().stream()
-               .filter(a -> orgnummer.equals(a.arbeidsgiverIdentifikator()))
+               .filter(a -> orgnummer.equals(a.arbeidsgiverIdentifikator().value()))
                .toList());
     }
 
-    public LocalDate FrilansAnnsettelsesFom() {
+    public LocalDate frilansAnnsettelsesFom() {
         return arbeidsforholdFrilans(inntektYtelseModell.arbeidsforholdModell()).get(0)
                 .ansettelsesperiodeFom();
     }
@@ -171,8 +195,8 @@ public abstract class Søker {
                 .orElse(0);
     }
 
-    public double næringsinntekt(int beregnFraOgMedÅr) {
-        return hentNæringsinntekt(inntektYtelseModell.sigrunModell(), beregnFraOgMedÅr);
+    public double næringsinntekt() {
+        return hentNæringsinntekt(inntektYtelseModell.sigrunModell(), LocalDate.now().getYear() - 1);
     }
 
     public Søknad lagSøknad() {

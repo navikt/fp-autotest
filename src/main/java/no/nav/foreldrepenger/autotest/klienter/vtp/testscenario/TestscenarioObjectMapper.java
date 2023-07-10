@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 import no.nav.foreldrepenger.vtp.testmodell.identer.LokalIdentIndeks;
+import no.nav.foreldrepenger.vtp.testmodell.personopplysning.AdresseIndeks;
 import no.nav.foreldrepenger.vtp.testmodell.util.VariabelContainer;
 
 public class TestscenarioObjectMapper {
@@ -42,6 +43,7 @@ public class TestscenarioObjectMapper {
         InjectableValues.Std injectableValues = new InjectableValues.Std();
         injectableValues.addValue(LokalIdentIndeks.class, null);
         injectableValues.addValue(VariabelContainer.class, null);
+        injectableValues.addValue(AdresseIndeks.class, null);
         mapper.setInjectableValues(injectableValues);
         return mapper;
     }

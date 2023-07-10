@@ -13,7 +13,7 @@ final class Sigrun {
     static double hentNæringsinntekt(SigrunModell sigrunModell, int beregnFraOgMedÅr) {
         double gjennomsnittDeTreSisteÅrene = sigrunModell.inntektsår().stream()
                 .sorted(Comparator.comparing(Inntektsår::år).reversed())
-                .filter(inntektsår -> Integer.parseInt(inntektsår.år()) <= beregnFraOgMedÅr)
+                .filter(inntektsår -> Integer.parseInt(inntektsår.år()) >= beregnFraOgMedÅr)
                 .flatMap(inntektsår -> inntektsår.oppføring().stream())
                 .mapToDouble(oppføring -> Double.parseDouble(oppføring.verdi()))
                 .limit(3)

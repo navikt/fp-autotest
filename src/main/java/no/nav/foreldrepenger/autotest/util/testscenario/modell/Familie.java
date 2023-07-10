@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.util.testscenario.modell;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_MED_SELVBETJENING;
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -40,6 +41,18 @@ public class Familie {
 
     public Familie(String scenarioId, boolean privatArbeidsgiver, InnsenderType innsenderType) {
         this.scenario = opprettTestscenario(scenarioId, privatArbeidsgiver);
+        this.innsender = switch (innsenderType) {
+            case SEND_DOKUMENTER_MED_SELVBETJENING -> new SøknadMottak();
+            case SEND_DOKUMENTER_UTEN_SELVBETJENING -> new Fordel();
+        };
+    }
+
+    public Familie(TestscenarioDto testscenarioDto) {
+        this(testscenarioDto, SEND_DOKUMENTER_MED_SELVBETJENING);
+    }
+
+    public Familie(TestscenarioDto testscenarioDto, InnsenderType innsenderType) {
+        this.scenario = testscenarioDto;
         this.innsender = switch (innsenderType) {
             case SEND_DOKUMENTER_MED_SELVBETJENING -> new SøknadMottak();
             case SEND_DOKUMENTER_UTEN_SELVBETJENING -> new Fordel();

@@ -5,6 +5,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class Arbeidsgivere {
@@ -17,6 +18,13 @@ public class Arbeidsgivere {
 
     public List<Arbeidsgiver> toList() {
         return alleArbeidsgivere;
+    }
+
+    public Arbeidsgiver arbeidgiver(Orgnummer orgnummer) {
+        return alleArbeidsgivere.stream()
+                .filter(a -> a.arbeidsgiverIdentifikator.value().equals(orgnummer.value()))
+                .findFirst()
+                .orElseThrow();
     }
 
     public Arbeidsgiver arbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
