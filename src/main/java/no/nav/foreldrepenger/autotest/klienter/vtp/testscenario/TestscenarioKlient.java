@@ -25,12 +25,13 @@ public class TestscenarioKlient {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestscenarioKlient.class);
 
-    private static final String TESTSCENARIO_I_AUTOTEST_POST_URL = "/testscenarios/v2";
+    private static final String TESTSCENARIO_I_AUTOTEST_POST_URL = "/testscenarios";
     private static final TestscenarioHenter testscenarioHenter = new TestscenarioHenter();
 
+    @Step("Oppretter familie/scenario")
     public TestscenarioDto opprettTestscenario(List<PersonDto> personer) {
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE).path(TESTSCENARIO_I_AUTOTEST_POST_URL).build())
+                .uri(fromUri(BaseUriProvider.VTP_BASE).path("/testscenarios/v2").build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(personer)));
         var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
 //        tilJsonOgPubliserIAllureRapport(testscenarioObject);
@@ -42,7 +43,7 @@ public class TestscenarioKlient {
     public TestscenarioDto opprettTestscenarioMedAktorId(String key, String aktorId, String ident) {
         var testscenarioObject = testscenarioHenter.hentScenario(key);
 
-        var uriBuilder = fromUri(BaseUriProvider.VTP_BASE).path("/testscenarios");
+        var uriBuilder = fromUri(BaseUriProvider.VTP_BASE).path(TESTSCENARIO_I_AUTOTEST_POST_URL);
         if (aktorId != null) {
             uriBuilder = uriBuilder.queryParam("aktor1", aktorId);
         }
