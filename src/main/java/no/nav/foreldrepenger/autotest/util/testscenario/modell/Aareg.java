@@ -51,6 +51,9 @@ final class Aareg {
         if (a.arbeidsgiverAktorId() != null) {
             return arbeidsgiverIdentifikator.value().equalsIgnoreCase(a.arbeidsgiverAktorId());
         }
+        if (a.personArbeidsgiver() != null) {
+            return arbeidsgiverIdentifikator.value().equalsIgnoreCase(a.personArbeidsgiver().getAktørIdent());
+        }
         return false;
     }
 }

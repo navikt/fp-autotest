@@ -8,6 +8,8 @@ import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Støn
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordelingFarAleneomsorg;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordelingMorAleneomsorgHappyCase;
@@ -21,6 +23,13 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -491,7 +500,24 @@ class Fodsel extends FpsakTestBase {
     @Description("Mor søker fødsel med privatperson som arbeidsgiver")
     @DisplayName("Mor søker fødsel med privatperson som arbeidsgiver, avvik i beregning")
     void morSøkerFødselMedPrivatpersonSomArbeidsgiver() {
-        var familie = new Familie("152", true, SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var uuidArbeidsgiver = UUID.randomUUID();
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                    .inntektytelse(InntektYtelseGenerator.ny()
+                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-000", 0, LocalDate.now().minusMonths(12), LocalDate.now().minusMonths(11), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-001", 0, LocalDate.now().minusMonths(10), LocalDate.now().minusMonths(9), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-002", 0, LocalDate.now().minusMonths(7), LocalDate.now().minusMonths(6), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-003", 0, LocalDate.now().minusMonths(4), LocalDate.now().minusMonths(3), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-004", 0, LocalDate.now().minusMonths(3), LocalDate.now().minusMonths(2), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-005", 0, LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1), 360_000)
+                        .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-006", 0, LocalDate.now().minusMonths(1), 360_000)
+                        .build())
+                    .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
@@ -562,7 +588,23 @@ class Fodsel extends FpsakTestBase {
     @Description("Mor søker fødsel med privatperson som arbeidsgiver med endring i refusjon")
     @DisplayName("Mor søker fødsel med privatperson som arbeidsgiver med endring i refusjon, avvik i beregning")
     void morSøkerFødselMedPrivatpersonSomArbeidsgiverMedEndringIRefusjon() {
-        var familie = new Familie("152", true, SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var uuidArbeidsgiver = UUID.randomUUID();
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-000", 0, LocalDate.now().minusMonths(12), LocalDate.now().minusMonths(11), 360_000)
+                                .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-001", 0, LocalDate.now().minusMonths(10), LocalDate.now().minusMonths(9), 360_000)
+                                .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-002", 0, LocalDate.now().minusMonths(7), LocalDate.now().minusMonths(6), 360_000)
+                                .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-003", 0, LocalDate.now().minusMonths(4), LocalDate.now().minusMonths(3), 360_000)
+                                .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-004", 0, LocalDate.now().minusMonths(3), LocalDate.now().minusMonths(2), 360_000)
+                                .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-005", 0, LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(1), 360_000)
+                                .arbeidsforhold(new PrivatArbeidsgiver(uuidArbeidsgiver), "ARB001-006", 0, LocalDate.now().minusMonths(1), 360_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);

@@ -206,7 +206,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var mor = familie.mor();
         var arbeidsforhold = mor.arbeidsforhold();
         var arbeidsgiverIdentifikator = arbeidsforhold.arbeidsgiverIdentifikasjon();
-        var næringsinntekt = mor.næringsinntekt(2018);
+        var næringsinntekt = mor.næringsinntekt();
         var opptjening = OpptjeningErketyper.egenNaeringOpptjening(
                 arbeidsgiverIdentifikator.value(),
                 false,
