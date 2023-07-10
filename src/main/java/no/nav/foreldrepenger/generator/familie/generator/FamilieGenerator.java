@@ -117,7 +117,7 @@ public class FamilieGenerator {
     }
 
     private void guardForeldresammensetning() {
-        if (parter.stream().noneMatch(p -> Set.of(Rolle.MOR, Rolle.FAR).contains(p))) {
+        if (parter.stream().noneMatch(p -> Set.of(Rolle.MOR, Rolle.FAR).contains(p.rolle()))) {
             throw new IllegalStateException("Familien må inneholde enten MOR eller FAR");
         }
         if (parter.stream().filter(p -> p.rolle().equals(Rolle.MOR)).count() > 1 ||
