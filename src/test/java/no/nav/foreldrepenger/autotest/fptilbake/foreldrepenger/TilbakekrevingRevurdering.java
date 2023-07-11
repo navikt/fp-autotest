@@ -1,10 +1,16 @@
 package no.nav.foreldrepenger.autotest.fptilbake.foreldrepenger;
 
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,6 +29,8 @@ import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
+import java.time.LocalDate;
+
 @Tag("tilbakekreving")
 @Tag("fptilbake")
 class TilbakekrevingRevurdering extends FptilbakeTestBase {
@@ -33,7 +41,14 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
     @DisplayName("Oppretter en tilbakekreving og deretter tilbakekreving revurdering manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving. Revurdering pga Foreldelse")
     void opprettTilbakekrevingManuelt() {
-        var familie = new Familie("50");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);

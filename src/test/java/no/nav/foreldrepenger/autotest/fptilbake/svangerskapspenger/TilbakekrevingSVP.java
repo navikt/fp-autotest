@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.fptilbake.svangerskapspenger;
 
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.ArbeidsforholdErketyper.virksomhet;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
@@ -7,6 +9,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import com.neovisionaries.i18n.CountryCode;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -36,7 +47,13 @@ class TilbakekrevingSVP extends FptilbakeTestBase {
     @DisplayName("1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     void opprettTilbakekrevingManuelt() {
-        var familie = new Familie("501");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .build();
+
         var mor = familie.mor();
         var termindato = LocalDate.now().plusMonths(3);
         var arbeidsgiver = mor.arbeidsgiver();

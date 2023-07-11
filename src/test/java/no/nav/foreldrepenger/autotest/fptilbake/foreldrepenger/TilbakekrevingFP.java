@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.fptilbake.foreldrepenger;
 
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
@@ -9,6 +11,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
@@ -43,7 +50,14 @@ class TilbakekrevingFP extends FptilbakeTestBase {
     @DisplayName("1. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling og revurdering")
     @Description("Enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     void opprettTilbakekrevingManuelt() {
-        var familie = new Familie("50");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -107,7 +121,17 @@ class TilbakekrevingFP extends FptilbakeTestBase {
     @DisplayName("2. Oppretter en tilbakekreving automatisk etter negativ simulering på fpsak revurdering")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving men med registrert advokat som verge/fullmektig")
     void opprettTilbakekrevingAutomatisk() {
-        var familie = new Familie("142");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(12))
+                .build();
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -157,7 +181,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         tbksaksbehandler.leggTilVerge();
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5030);
         var vergeFakta = (ApVerge) tbksaksbehandler.hentAksjonspunktbehandling(5030);
-        vergeFakta.setVerge("992261048");
+        vergeFakta.setVerge(familie.far().arbeidsgiver().arbeidsgiverIdentifikator().value());
         tbksaksbehandler.behandleAksjonspunkt(vergeFakta);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
 
@@ -206,7 +230,16 @@ class TilbakekrevingFP extends FptilbakeTestBase {
     @Description("Heltautomatisert scenario. Beløp under et halvt rettsgebyr og blir plukket av auto-batch. Batchen kjører ikke i helgene, derfor skip hvis helg.")
     void opprettOgBehandleTilbakekrevingAutomatisk() {
         Assumptions.assumeTrue(!isWeekend(LocalDate.now()), "Batche kjører ikke i helgen.");
-        var familie = new Familie("142");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(12))
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);

@@ -1,11 +1,26 @@
 package no.nav.foreldrepenger.autotest.fptilbake.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType.TILBAKEKREVING;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.neovisionaries.i18n.CountryCode;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.StatsborgerskapDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -40,7 +55,18 @@ class TilbakekrevingES extends FptilbakeTestBase {
     @DisplayName("1. Førstegangssøknad innvilges. Revurdering opprettes som fører til avslag. Saksbehandler oppretter tilbakekreving.")
     @Description("Vanligste scenario, enkel periode, treffer ikke foreldelse, full tilbakekreving.")
     void opprettTilbakekrevingManuelt() {
-        var familie = new Familie("55");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), 1_120_000,
+                                        ArbeidsavtaleDto.arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        ArbeidsavtaleDto.arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                        .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build();
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1).plusWeeks(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false)
@@ -137,7 +163,21 @@ class TilbakekrevingES extends FptilbakeTestBase {
     @DisplayName("2. Oppretter en tilbakekreving manuelt etter Fpsak-førstegangsbehandling med verge")
     @Description("FPsak med søker under 18, kopierer verge fra FPSAK, fjerner i FPTILBAKE og legger til ny.")
     void tilbakeKrevingMedVerge() {
-        var familie = new Familie("54");
+        var familie = FamilieGenerator.ny()
+                .forelder(mor(LocalDate.now().minusYears(17))
+                        .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 100_00)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4))
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(4))
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build();
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -192,7 +232,11 @@ class TilbakekrevingES extends FptilbakeTestBase {
 
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(5030);
         var vergeFakta = (ApVerge) tbksaksbehandler.hentAksjonspunktbehandling(5030);
-        var vergeFamilie = new Familie("01");
+        var vergeFamilie = FamilieGenerator.ny()
+                .forelder(mor().build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build();
         vergeFakta.setVerge(vergeFamilie);
         tbksaksbehandler.behandleAksjonspunkt(vergeFakta);
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
