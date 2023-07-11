@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.autotest.fpsak.svangerskapspenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,6 +12,11 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -41,7 +48,17 @@ class Førstegangsbehandling extends FpsakTestBase {
     @DisplayName("Mor søker SVP med to arbeidsforhold - hel tilrettelegging")
     @Description("Mor søker SVP med to arbeidsforhold, fire uke før termin, hel tilrettelegging")
     void morSøkerSvp_HelTilrettelegging_FireUkerFørTermin_ToArbeidsforholdFraUlikeVirksomheter() {
-        var familie = new Familie("504", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(2))
+                                .arbeidsforhold(LocalDate.now().minusYears(4))
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(4);
         var arbeidsforholdene = mor.arbeidsforholdene();
@@ -100,7 +117,18 @@ class Førstegangsbehandling extends FpsakTestBase {
     @DisplayName("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med tre arbeidsforhold - hel, halv og ingen tilrettelegging. Full refusjon")
     void mor_søker_svp_tre_arbeidsforhold_hel_halv_og_ingen_tilrettelegging() {
-        var familie = new Familie("78", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(2))
+                                .arbeidsforhold(LocalDate.now().minusYears(4))
+                                .arbeidsforhold(LocalDate.now().minusYears(4))
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var termindato = LocalDate.now().plusMonths(3);
         var arbeidsforholdene = mor.arbeidsforholdene();
@@ -186,7 +214,14 @@ class Førstegangsbehandling extends FpsakTestBase {
     @DisplayName("Mor søker SVP med ett arbeidsforhold - halv og så endring til ingen tilrettelegging. Full refusjon")
     @Description("Mor søker SVP med ett arbeidsforhold - halv og så endring til ingen tilrettelegging. Full refusjon")
     void mor_søker_svp_ett_arbeidsforhold_endrer_ingen_tilrettelegging() {
-        var familie = new Familie("502", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(6);
         var arbeidsforholdene = mor.arbeidsforholdene();
@@ -262,7 +297,13 @@ class Førstegangsbehandling extends FpsakTestBase {
     @Description("Mor søker SVP og FP - revurder SVP, SVP seks uker før termin, FP tre uker før tidligere termin")
     void revurder_svp_pga_innvilget_fp() {
         // Innvilg SVP fra nå til Termin-3uker - tom fredag
-        var familie = new Familie("502", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(6);
         var arbeidsforholdene = mor.arbeidsforholdene();

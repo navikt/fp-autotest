@@ -1,8 +1,16 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,6 +31,8 @@ import no.nav.foreldrepenger.autotest.util.testscenario.modell.Mor;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
+import java.time.LocalDate;
+
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class Klage extends FpsakTestBase {
@@ -31,7 +41,14 @@ class Klage extends FpsakTestBase {
     @DisplayName("Klage med Medhold Ugunst NFP")
     @Description("Sender inn klage på førstegangsbehandling. Bekrefter medhold i Ugunst hos NFP. Beslutter og avslutter.")
     void klageMedholUgunstNFP() {
-        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
 
@@ -103,7 +120,14 @@ class Klage extends FpsakTestBase {
     @DisplayName("Klage avvist i formkrav av NFP")
     @Description("Sender inn klage på førstegangsbehandling. NFP avslår formkrav (ikke konkret). Beslutter og avslutter.")
     void avvisFormkravNFP() {
-        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var saksnummer = opprettForstegangsbehandlingMor(mor, familie);
 

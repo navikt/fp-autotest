@@ -41,8 +41,24 @@ public class InntektYtelseGenerator {
         return arbeidsforhold(LocalDate.now().minusYears(3), 480_000);
     }
 
+    public InntektYtelseGenerator arbeidsforholdUtenInntekt(LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+        return arbeidsforholdUtenInntekt(testOrganisasjoner.tilfeldigOrg(), fom, null, arbeidsavtaler);
+    }
+
+    public InntektYtelseGenerator arbeidsforholdUtenInntekt(LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+        return arbeidsforholdUtenInntekt(testOrganisasjoner.tilfeldigOrg(), fom, tom, arbeidsavtaler);
+    }
+
     public InntektYtelseGenerator arbeidsforholdUtenInntekt(Arbeidsgiver arbeidsgiver, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
-        return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), fom, null, null, arbeidsavtaler);
+        return arbeidsforholdUtenInntekt(arbeidsgiver, fom, null, arbeidsavtaler);
+    }
+
+    public InntektYtelseGenerator arbeidsforholdUtenInntekt(Arbeidsgiver arbeidsgiver, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+        return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), fom, tom, null, arbeidsavtaler);
+    }
+
+    public InntektYtelseGenerator arbeidsforholdUtenInntekt(Arbeidsgiver arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+        return arbeidsforhold(arbeidsgiver, arbeidsforholdId, fom, tom, null, arbeidsavtaler);
     }
 
     public InntektYtelseGenerator arbeidsforhold(LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
@@ -132,6 +148,10 @@ public class InntektYtelseGenerator {
         return frilans(fom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
+    public InntektYtelseGenerator frilans(Integer stillingsprosent, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
+        return frilans(fom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
+    }
+
     public InntektYtelseGenerator frilans(LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(fom, null, årslønn, arbeidsavtaler);
     }
@@ -141,7 +161,15 @@ public class InntektYtelseGenerator {
     }
 
     public InntektYtelseGenerator frilans(LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
-        return frilans(testOrganisasjoner.tilfeldigOrg(), testOrganisasjoner.arbeidsforholdId(), fom, tom, årslønn, arbeidsavtaler);
+        return frilans(DEAFULT_STILLINGSPROSENT, fom, tom, årslønn, arbeidsavtaler);
+    }
+
+    public InntektYtelseGenerator frilans(Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+        return frilans(stillingsprosent, fom, null, årslønn, arbeidsavtaler);
+    }
+
+    public InntektYtelseGenerator frilans(Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+        return frilans(testOrganisasjoner.tilfeldigOrg(), testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, tom, årslønn, arbeidsavtaler);
     }
 
     public InntektYtelseGenerator frilans(Arbeidsgiver arbeidsgiver, String arbeidsforholdId, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
@@ -149,17 +177,17 @@ public class InntektYtelseGenerator {
     }
 
     public InntektYtelseGenerator frilans(Arbeidsgiver arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
-        return frilans(arbeidsgiver, arbeidsforholdId, fom, tom, arbeidsavtaler);
+        return frilans(arbeidsgiver, arbeidsforholdId, DEAFULT_STILLINGSPROSENT, fom, tom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator frilans(Arbeidsgiver arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektYtelseGenerator frilans(Arbeidsgiver arbeidsgiver, String arbeidsforholdId, Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
         var frilansArbeidsforhold = ArbeidsforholdDto.builder()
                 .arbeidsgiver(arbeidsgiver)
                 .arbeidsforholdId(arbeidsforholdId)
                 .ansettelsesperiodeFom(fom)
                 .ansettelsesperiodeTom(tom)
                 .arbeidsforholdstype(Arbeidsforholdstype.FRILANSER_OPPDRAGSTAKER_MED_MER)
-                .arbeidsavtaler(List.of(arbeidsavtaler).isEmpty() ? List.of(defaultArbeidsavtale(fom, tom, 100)) : List.of(arbeidsavtaler))
+                .arbeidsavtaler(List.of(arbeidsavtaler).isEmpty() ? List.of(defaultArbeidsavtale(fom, tom, stillingsprosent)) : List.of(arbeidsavtaler))
                 .build();
         return arbeidsforhold(frilansArbeidsforhold, årslønn);
     }
@@ -280,7 +308,7 @@ public class InntektYtelseGenerator {
         return this;
     }
 
-    public InntektYtelseGenerator erUføre() {
+    public InntektYtelseGenerator harUføretrygd() {
         inntektYtelse.pesys(new PesysDto(true));
         return this;
     }

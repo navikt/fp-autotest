@@ -1,10 +1,28 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.medmor;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.neovisionaries.i18n.CountryCode;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +58,15 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel - godkjent")
     @Description("Mor søker fødsel - godkjent happy case")
     void morSøkerFødselGodkjent() {
-        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -58,7 +84,19 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel - avvist")
     @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i tps")
     void morSøkerFødselAvvist() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusDays(30L);
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -89,7 +127,18 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Far søker registrert fødsel")
     @Description("Far søker registrert fødsel og blir avvist fordi far søker")
     void farSøkerFødselRegistrert() {
-        var familie = new Familie("60", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4))
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(4))
+                                .build())
+                        .build())
+                .forelder(mor().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.FAR, fødselsdato);
@@ -110,7 +159,18 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel overstyrt vilkår")
     @Description("Mor søker fødsel overstyrt vilkår adopsjon fra godkjent til avslått")
     void morSøkerFødselOverstyrt() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusDays(30L);
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -153,7 +213,14 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel - beregning overstyrt")
     @Description("Mor søker fødsel - beregning overstyrt fra ett beløp til 10 kroner")
     void morSøkerFødselBeregningOverstyrt() {
-        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -198,7 +265,17 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel med flere barn")
     @Description("Mor søker fødsel med flere barn - happy case flere barn")
     void morSøkerFødselFlereBarn() {
-        var familie = new Familie("53", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato)
@@ -237,7 +314,21 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel med verge")
     @Description("Mor søker fødsel med verge - skal få aksjonspunkt om registrering av verge når man er under 18")
     void morSøkerFødselMedVerge() {
-        var familie = new Familie("54", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor(LocalDate.now().minusYears(17))
+                        .personstatus(List.of(new PersonstatusDto(PersonstatusDto.Personstatuser.UTVA, LocalDate.now().minusYears(30), null)))
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.IHT_AVTALE)))
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 100_00)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4))
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(4))
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -278,7 +369,18 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel")
     @Description("Mor søker uregistrert fødsel mindre enn 14 dager etter fødsel. Behandlingen skal bli satt på vent")
     void morSøkerUregistrertFødselMindreEnn14DagerEtter() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(1);
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -289,11 +391,21 @@ class Fodsel extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.erSattPåVent()).as("behandling er ikke satt på vent").isTrue();
     }
 
+    // TODO: Feiler av en eller annen grunn?
     @Test
     @DisplayName("Medmor søker fødsel")
     @Description("Medmor søker fødsel - søkand blir avslått fordi søker er medmor")
     void medmorSøkerFødsel() {
-        var familie = new Familie("90", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor().build())
+                .forelder(medmor()
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.FULL)))
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(30))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var medmor = familie.medmor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MEDMOR, fødselsdato);

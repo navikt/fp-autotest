@@ -1,10 +1,19 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -28,7 +37,19 @@ class Soknadsfrist extends FpsakTestBase {
     @DisplayName("Behandle søknadsfrist og sent tilbake")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av søknadsfrist. Manglende fødsel.")
     void behandleSøknadsfristOgSentTilbakePåGrunnAvSøknadsfrist() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusMonths(7);
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
@@ -69,7 +90,18 @@ class Soknadsfrist extends FpsakTestBase {
     @DisplayName("Behandle søknadsfrist og sent tilbake på grunn av fødsel")
     @Description("Behandle søknadsfrist og sent tilbake på grunn av fødsel - tester tilbakesending")
     void behandleSøknadsfristOgSentTilbakePåGrunnAvFodsel() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusMonths(7);
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);

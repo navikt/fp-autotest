@@ -1,10 +1,19 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -32,7 +41,19 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon - godkjent")
     @Description("Mor søker adopsjon - godkjent happy case")
     void morSøkerAdopsjonGodkjent() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
@@ -63,7 +84,18 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon - avvist - barn er over 15 år")
     @Description("Mor søker adopsjon - avvist - barn er over 15 år og blir dermed avlått")
     void morSøkerAdopsjonAvvist() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
@@ -98,7 +130,18 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Mor søker adopsjon med overstyrt vilkår")
     @Description("Mor søker adopsjon med overstyrt vilkår som tar behandlingen fra innvilget til avslått")
     void morSøkerAdopsjonOverstyrt() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false);
@@ -143,7 +186,16 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Far søker adopsjon - godkjent")
     @Description("Far søker adopsjon - godkjent happy case")
     void farSøkerAdopsjonGodkjent() {
-        var familie = new Familie("61", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 10_000)
+                                .build())
+                        .build())
+                .forelder(mor().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.FAR, omsorgsovertakelsedato, false);
@@ -179,7 +231,15 @@ class Adopsjon extends FpsakTestBase {
     @DisplayName("Far søker adopsjon av ektefelles barn")
     @Description("Far søker adopsjon av ektefelles barn fører til avvist behandling")
     void farSøkerAdopsjonAvvist() {
-        var familie = new Familie("61", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(1), LocalDate.now().plusMonths(2), 10_000)
+                                .build())
+                        .build())
+                .forelder(mor().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(BrukerRolle.FAR, omsorgsovertakelsedato, false);

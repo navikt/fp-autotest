@@ -6,6 +6,9 @@ import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsA
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.INNLAGT;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.TRENGER_HJELP;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UFØRE;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.norskAdresse;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.utsettelsesperiode;
@@ -13,6 +16,13 @@ import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErk
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -46,7 +56,17 @@ class RegresjonPreWLB extends FpsakTestBase {
             + "fra de 15 ukene uten aktivitetskrav, mens utsettelsen trekker dager. Far prøver å ta ut foreldrepenger uten aktivitetskrav"
             + "etter uke 46 og for avslag pga manglende stønadsdager igjen på konto.")
     void BFHRMorUføreTrekkerDagerFortløpendeNårVilkårIkkeErOppfylt() {
-        var familie = new Familie("601", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-001", LocalDate.of(2021, 07, 1))
+                                .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-002", LocalDate.of(2021, 11, 1), LocalDate.of(2021, 7,1))
+                                .build())
+                        .build())
+                .forelder(mor().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.of(2021, 10, 15))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdatoFar = fødselsdato.plusWeeks(6);
@@ -153,7 +173,17 @@ class RegresjonPreWLB extends FpsakTestBase {
     @Description("Far søker rundt fødsel hvor han oppgir at mor er trenger hjelp. Saksbehanlder velger at sykdom ikke er dokumentert"
             + "og avslå perioden ifm fødel. Resten skal innvilges automatisk.")
     void farSøkerImfFødselMenMorErIkkeSykEllerInnlagt() {
-        var familie = new Familie("601", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-001", LocalDate.of(2021, 07, 1))
+                                .arbeidsforhold(TestOrganisasjoner.NAV_STORD, "ARB001-002", LocalDate.of(2021, 11, 1), LocalDate.of(2021, 7,1))
+                                .build())
+                        .build())
+                .forelder(mor().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.of(2021, 10, 15))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
         var uttaksperiodeIfmFødsel = uttaksperiode(StønadskontoType.FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(1).minusDays(1), INNLAGT);

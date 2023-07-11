@@ -16,6 +16,7 @@ import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketype
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -27,9 +28,12 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.SivilstandDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -87,7 +91,17 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor fødsel med arbeidsforhold og frilans. Vurderer opptjening og beregning. Finner avvik")
     @Description("Mor søker fødsel med ett arbeidsforhold og frilans. Vurder opptjening. Vurder fakta om beregning. Avvik i beregning")
     void morSøkerFødselMedEttArbeidsforholdOgFrilans_VurderOpptjening_VurderFaktaOmBeregning_AvvikIBeregning() {
-        var familie = new Familie("59", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(75, LocalDate.now().minusYears(1), 480_000)
+                                .frilans(25, LocalDate.now().minusYears(3), LocalDate.now().minusMonths(1), 120_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now())
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -161,7 +175,17 @@ class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold i samme organisasjon og avvik i beregning")
     void morSøkerFødselMedToArbeidsforhold_AvvikIBeregning() {
-        var familie = new Familie("57", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(2), null)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(3), 540_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -209,7 +233,14 @@ class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold og avvik i beregning")
     void morSøkerFødselMedEttArbeidsforhold_AvvikIBeregning() {
-        var familie = new Familie("500", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(8))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -252,7 +283,16 @@ class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold i samme organisasjon")
     void morSøkerFødselMedToArbeidsforholdISammeOrganisasjon() {
-        var familie = new Familie("57", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(2), null)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(3), 540_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -278,7 +318,14 @@ class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold")
     void morSøkerFødselMedEttArbeidsforhold() {
-        var familie = new Familie("500", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(8))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -303,7 +350,17 @@ class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold med inntekt over 6G")
     void morSøkerFødselMedToArbeidsforhold() {
-        var familie = new Familie("56", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidMedOpptjeningUnder6G()
+                                .arbeidMedOpptjeningUnder6G()
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -327,7 +384,14 @@ class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Far søker fødsel med 1 arbeidsforhold")
     void farSøkerFødselMedEttArbeidsforhold() {
-        var familie = new Familie("550", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(mor().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(2))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
         var fordeling = fordeling(
@@ -371,7 +435,16 @@ class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold i samme organisasjon med 1 inntektsmelding")
     void morSøkerFødselMedToArbeidsforholdISammeOrganisasjonEnInntektsmelding() {
-        var familie = new Familie("57", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(2), null)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(3), 540_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -400,7 +473,14 @@ class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Mor søker fødsel med 1 arbeidsforhold, Papirsøkand")
     void morSøkerFødselMedEttArbeidsforhold_papirsøknad() {
-        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var saksnummer = mor.søkPapirsøknadForeldrepenger();
 
@@ -467,7 +547,18 @@ class Fodsel extends FpsakTestBase {
     @Description("Mor søker fødsel med 2 arbeidsforhold med arbeidsforhold som ikke matcher på ID")
     @DisplayName("Mor søker fødsel med 2 arbeidsforhold med arbeidsforhold som ikke matcher på ID")
     void morSøkerFødselMed2ArbeidsforholdArbeidsforholdIdMatcherIkke() {
-        var familie = new Familie("56", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidMedOpptjeningUnder6G()
+                                .arbeidMedOpptjeningUnder6G()
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
@@ -715,7 +806,14 @@ class Fodsel extends FpsakTestBase {
     @Test
     @DisplayName("Far søker fødsel med aleneomsorg som bekreftes at han har (mor forsvunnet)")
     void farSøkerFødselAleneomsorgMenErGiftOgBorMedAnnenpart() {
-        var familie = new Familie("550", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(mor().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(2))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
@@ -756,7 +854,16 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel har stillingsprosent 0")
     @Description("Mor søker fødsel har stillingsprosent 0 som fører til aksjonspunkt for opptjening")
     void morSøkerFødselStillingsprosent0() {
-        var familie = new Familie("45", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(0, LocalDate.now().minusMonths(12), 360_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -789,7 +896,17 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker gradering. Med to arbeidsforhold. Uten avvikende inntektsmelding")
     @Description("Mor, med to arbeidsforhold, søker gradering. Samsvar med IM.")
     void morSøkerGraderingOgUtsettelseMedToArbeidsforhold_utenAvvikendeInntektsmeldinger() {
-        var familie = new Familie("56", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidMedOpptjeningUnder6G()
+                                .arbeidMedOpptjeningUnder6G()
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -890,7 +1007,16 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel med aleneomsorg")
     @Description("Mor søker fødsel aleneomsorg. Annen forelder ikke kjent.")
     void morSøkerFødselAleneomsorgKunEnHarRett() {
-        var familie = new Familie("102", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .sivilstand(List.of(new SivilstandDto(SivilstandDto.Sivilstander.UGIF, null, null)))
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidMedOpptjeningUnder6G()
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .barn(LocalDate.now().minusDays(2))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -959,7 +1085,14 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker fødsel for 2 barn med 1 barn registrert")
     @Description("Mor søker fødsel for 2 barn med 1 barn registrert. dette fører til aksjonspunkt for bekreftelse av antall barn")
     void morSøker2Barn1Registrert() {
-        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -994,7 +1127,18 @@ class Fodsel extends FpsakTestBase {
     @DisplayName("Mor søker uregistrert fødsel før det har gått 1 uke")
     @Description("Mor søker uregistrert fødsel før det har gått 1 uke - skal sette behandling på vent")
     void morSøkerUregistrertEtterFør2Uker() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusDays(5);
         var fpStartdato = fødselsdato.minusWeeks(3);

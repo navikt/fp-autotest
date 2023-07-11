@@ -20,6 +20,7 @@ public class PersonGenerator {
 
     private static final LocalDate DEFAULT_FØRDSELSDATO_MOR = LocalDate.now().minusYears(32);
     private static final LocalDate DEFAULT_FØDSELSDATO_FAR = LocalDate.now().minusYears(34);
+    private static final String DEFAULT_SPRÅK = "NB";
 
     public static PersonDto.Builder mor() {
         return mor(DEFAULT_FØRDSELSDATO_MOR);
@@ -29,7 +30,7 @@ public class PersonGenerator {
                 .rolle(Rolle.MOR)
                 .kjønn(Kjønn.K)
                 .fødselsdato(fødselsdato)
-                .språk("NB")
+                .språk(DEFAULT_SPRÅK)
                 .geografiskTilknytning(GeografiskTilknytningDto.norsk())
                 .adresser(norskAdresse())
                 .personstatus(bosattFra(fødselsdato))
@@ -48,7 +49,26 @@ public class PersonGenerator {
                 .rolle(Rolle.FAR)
                 .kjønn(Kjønn.M)
                 .fødselsdato(fødselsdato)
-                .språk("NB")
+                .språk(DEFAULT_SPRÅK)
+                .geografiskTilknytning(GeografiskTilknytningDto.norsk())
+                .adresser(norskAdresse())
+                .personstatus(bosattFra(fødselsdato))
+                .sivilstand(ugift())
+                .medlemskap(norskMedlemskap())
+                .statsborgerskap(norskStatsborgerskap())
+                ;
+    }
+
+    public static PersonDto.Builder medmor() {
+        return medmor(DEFAULT_FØRDSELSDATO_MOR);
+    }
+
+    public static PersonDto.Builder medmor(LocalDate fødselsdato) {
+        return PersonDto.builder()
+                .rolle(Rolle.MEDMOR)
+                .kjønn(Kjønn.K)
+                .fødselsdato(fødselsdato)
+                .språk(DEFAULT_SPRÅK)
                 .geografiskTilknytning(GeografiskTilknytningDto.norsk())
                 .adresser(norskAdresse())
                 .personstatus(bosattFra(fødselsdato))
@@ -84,7 +104,7 @@ public class PersonGenerator {
                 AdresseDto.AdresseType.BOSTEDSADRESSE,
                 CountryCode.NO,
                 "000000001",
-                LocalDate.now().minusYears(5),
+                LocalDate.now().minusYears(10),
                 null
         );
 
