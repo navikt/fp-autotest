@@ -111,7 +111,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .inntektsperiode(TestOrganisasjoner.NAV_BERGEN, LocalDate.now().minusMonths(24), LocalDate.now().minusMonths(23), 150_000)
-                                .arbeidsforholdUtenInntekt(TestOrganisasjoner.NAV, LocalDate.now().minusYears(4), LocalDate.now().minusYears(1))
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 0, LocalDate.now().minusYears(4), LocalDate.now().minusYears(1), null)
                                 .build())
                         .build())
                 .forelder(far().build())

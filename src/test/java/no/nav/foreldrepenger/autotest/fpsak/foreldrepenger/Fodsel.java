@@ -178,14 +178,14 @@ class Fodsel extends FpsakTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(2), null)
-                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(3), 540_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 40, LocalDate.now().minusYears(2), 490_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 60, LocalDate.now().minusYears(3), null)
                                 .build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
-
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -286,12 +286,13 @@ class Fodsel extends FpsakTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(2), null)
-                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, LocalDate.now().minusYears(3), 540_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 40, LocalDate.now().minusYears(2), 490_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 60, LocalDate.now().minusYears(3), null)
                                 .build())
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
@@ -444,6 +445,7 @@ class Fodsel extends FpsakTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusDays(2))
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();

@@ -90,8 +90,8 @@ class Termin extends FpsakTestBase {
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusYears(4),
-                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
-                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                        arbeidsavtale(LocalDate.now().minusMonths(4), LocalDate.now().minusDays(60)).stillingsprosent(50).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).sisteLønnsendringsdato(LocalDate.now().minusMonths(1)).build()
                                 )
                                 .build())
                         .build())

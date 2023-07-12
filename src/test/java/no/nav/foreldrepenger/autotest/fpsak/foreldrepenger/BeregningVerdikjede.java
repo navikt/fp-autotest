@@ -8,6 +8,7 @@ import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketype
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.graderingsperiodeSN;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
@@ -130,7 +132,6 @@ class BeregningVerdikjede extends FpsakTestBase {
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(12), LocalDate.now().minusWeeks(12), 10_000)
                                 .arbeidsforholdUtenInntekt(LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(12))
-                                .arbeidMedOpptjeningUnder6G()
                                 .build())
                         .build())
                 .forelder(far().build())
@@ -177,9 +178,8 @@ class BeregningVerdikjede extends FpsakTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(12), LocalDate.now().minusWeeks(12), 10_000)
+                                .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(2), 10_000)
                                 .arbeidsforhold(LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(12))
-                                .arbeidMedOpptjeningUnder6G()
                                 .build())
                         .build())
                 .forelder(far().build())
@@ -339,17 +339,17 @@ class BeregningVerdikjede extends FpsakTestBase {
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
-                lagBGAndel(arbeidsgiverIdentifikator, 720_000, 720_000, 0, 720_000));
+                lagBGAndel(arbeidsgiverIdentifikator, 900_000, 900_000, 0, 900_000));
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel().stream()
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
 
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1),
-                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 720_000, 500_000, 0, 500_000));
+                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 900_000, 500_000, 0, 500_000));
         assertFordeltSNAndel(beregningsgrunnlag.getBeregningsgrunnlagPeriode(1), 235_138);
 
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2),
-                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 720_000, 720_000, 0, 720_000));
+                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 900_000, 720_000, 0, 720_000));
         assertThat(beregningsgrunnlag.getBeregningsgrunnlagPeriode(2).getBeregningsgrunnlagPrStatusOgAndel().stream()
                 .filter(andel -> andel.getAktivitetStatus().equals(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .mapToInt(andel -> ((Double)andel.getDagsats()).intValue()).sum()).isZero();
@@ -376,16 +376,14 @@ class BeregningVerdikjede extends FpsakTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_00)
-                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
-                                .selvstendigNæringsdrivende(1_000_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(4), LocalDate.now(), 900_000)
                                 .build())
                         .build())
                 .forelder(far()
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_00)
-                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
-                                .selvstendigNæringsdrivende(1_000_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV_BERGEN, "ARB001-001", LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV_BERGEN, "ARB001-002", LocalDate.now().minusMonths(4), LocalDate.now(), 900_000)
                                 .build())
                         .build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
@@ -445,7 +443,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
         verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
-                lagBGAndel(arbeidsgiverIdentifikator, 360_000, 360_000, 0, 348_000));
+                lagBGAndel(arbeidsgiverIdentifikator, 450_000, 360_000, 0, 348_000));
     }
 
     @Test
@@ -454,8 +452,14 @@ class BeregningVerdikjede extends FpsakTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(LocalDate.now().minusYears(1), 300_00)
-                                .frilans(25, LocalDate.now().minusYears(3), 300_000)
+                                .arbeidsforhold(LocalDate.now().minusYears(1), 300_000,
+                                        arbeidsavtale(LocalDate.now().minusYears(1))
+                                                .sisteLønnsendringsdato(LocalDate.now().minusMonths(2))
+                                                .build())
+                                .frilans(25, LocalDate.now().minusYears(3), 300_000,
+                                        arbeidsavtale(LocalDate.now().minusYears(1))
+                                                .sisteLønnsendringsdato(LocalDate.now())
+                                                .build())
                                 .build())
                         .build())
                 .forelder(far().build())
@@ -490,11 +494,17 @@ class BeregningVerdikjede extends FpsakTestBase {
     }
 
     @Test
-    @DisplayName("Uten inntektsmelding, med lønnsendring")
-    @Description("Uten inntektsmelding, med lønnsendring")
+    @DisplayName("Uten inntektsmelding, med lønnsendring de siste 3 månedene")
+    @Description("Uten inntektsmelding, med lønnsendring de siste 3 månedene")
     void vurder_mottar_ytelse_vurder_lonnsendring() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(1),
+                                        arbeidsavtale(LocalDate.now().minusYears(1))
+                                                .sisteLønnsendringsdato(LocalDate.now().minusMonths(2))
+                                                .build())
+                                .build())
+                        .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now())
@@ -529,9 +539,9 @@ class BeregningVerdikjede extends FpsakTestBase {
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", LocalDate.now().minusMonths(12), LocalDate.now().minusMonths(1), 360_000)
-                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(2), 360_000)
-                                .arbeidsforholdUtenInntekt(TestOrganisasjoner.NAV, "ARB001-003", LocalDate.now(), LocalDate.now().plusMonths(2))
-                                .arbeidsforhold(TestOrganisasjoner.NAV_STORD, LocalDate.now().minusMonths(12), 300_000)
+                                .arbeidsforholdUtenInntekt(TestOrganisasjoner.NAV, "ARB001-002", LocalDate.now().minusMonths(12), LocalDate.now())
+                                .arbeidsforholdUtenInntekt(TestOrganisasjoner.NAV, "ARB001-003", LocalDate.now().plusWeeks(1), LocalDate.now().plusMonths(2))
+                                .arbeidsforhold(TestOrganisasjoner.NAV_STORD, 15, LocalDate.now().minusMonths(12), 300_000)
                                 .build())
                         .build())
                 .forelder(far().build())

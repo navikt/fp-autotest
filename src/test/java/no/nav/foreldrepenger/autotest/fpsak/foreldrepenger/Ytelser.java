@@ -91,7 +91,7 @@ class Ytelser extends FpsakTestBase {
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .ytelse(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(), GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
-                                .arbeidsforhold(LocalDate.now().minusYears(4), 50_000)
+                                .arbeidsforhold(LocalDate.now().minusYears(4), 30_000)
                                 .build())
                         .build())
                 .forelder(far().build())
@@ -116,7 +116,7 @@ class Ytelser extends FpsakTestBase {
 
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt((12 * 5000), 1);
+                .leggTilInntekt((100_000), 1);
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);

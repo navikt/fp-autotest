@@ -293,7 +293,16 @@ public class InntektYtelseGenerator {
             grunnlagliste.add(ytelsegrunnlag);
             inntektYtelse.infotrygd(new InfotrygdDto(grunnlagliste));
         }
-        return this;
+        var inntektsperiode = new InntektsperiodeDto(
+                fom,
+                tom,
+                10_000,
+                InntektsperiodeDto.InntektTypeDto.YTELSE_FRA_OFFENTLIGE,
+                InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
+                TestOrganisasjoner.NAV_YTELSE_BETALING
+
+        );
+        return inntektsperiode(inntektsperiode);
     }
 
     public InntektYtelseGenerator selvstendigNæringsdrivende(Integer gjennomsnittligNæringsinntekt) {
