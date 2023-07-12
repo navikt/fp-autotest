@@ -52,7 +52,7 @@ class LoggTest {
         SQLException.class.getSimpleName(),
         ConstraintViolationException.class.getSimpleName(),
         IOException.class.getSimpleName(),
-        "javax.persistence.PersistenceException");
+        "javax.persistence.PersistenceException", "jakarta.persistence.PersistenceException");
 
     private static final List<String> IGNORE_EXCEPTION_IF_CONTAINS = List.of(
             "taskName=behandlingskontroll.tilbakeTilStart",
