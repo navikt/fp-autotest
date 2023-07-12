@@ -13,6 +13,9 @@ on:
 jobs:
   build:
     name: Build audit.nais mock
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
     env:
       image: 'ghcr.io/${{ github.repository }}/audit-nais-mock'

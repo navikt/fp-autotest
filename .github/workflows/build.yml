@@ -25,7 +25,6 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
     with:
       test-suite: fpsak
-    secrets: inherit
 
   fptilbake-tester:
     name: Fptilbake tester
@@ -33,7 +32,6 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
     with:
       test-suite: fptilbake
-    secrets: inherit
 
   verdikjede-tester:
     name: Verdikjedetester
@@ -41,4 +39,3 @@ jobs:
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
     with:
       test-suite: verdikjede
-    secrets: inherit
