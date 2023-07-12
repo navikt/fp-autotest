@@ -116,29 +116,14 @@ public abstract class Søker {
                     new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(orgnummer)),
                     arbeidsforholdene(arbeidsgiverIdentifikator),
                     innsender));
-        } else if (arbeidsforhold.personArbeidsgiver() != null) {
+        } else if (arbeidsgiverIdentifikator instanceof AktørId) {
             var personarbeidsgiver = arbeidsforhold.personArbeidsgiver();
             var fnrArbeidsgiver = new Fødselsnummer(personarbeidsgiver.getIdent());
             var aktørIdArbeidsgiver = new AktørId(personarbeidsgiver.getAktørIdent());
-            return arbeidsgivere.add(new PersonArbeidsgiver(
-                    arbeidsgiverIdentifikator,
+            return arbeidsgivere.add(new PersonArbeidsgiver(arbeidsgiverIdentifikator,
                     new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(fnrArbeidsgiver)),
                     arbeidsforholdene(aktørIdArbeidsgiver),
                     innsender, fnrArbeidsgiver));
-        // Deprecated
-        } else if(arbeidsgiverIdentifikator instanceof AktørId id) {
-            // Trenger fnr for person arbeidsgiver pga aktørid ikke kan brukes for IM
-            var fnrArbeidsgiver = new Fødselsnummer(inntektYtelseModell.inntektskomponentModell().inntektsperioder().stream()
-                    .filter(p -> p.arbeidsgiver() != null && p.arbeidsgiver().getAktørIdent().equalsIgnoreCase(id.value()))
-                    .max(Comparator.nullsFirst(Comparator.comparing(Inntektsperiode::tom)))
-                    .map(p -> p.arbeidsgiver().getIdent())
-                    .orElseThrow(() -> new IllegalArgumentException("Fant ikke ident på aktørid!")));
-            return arbeidsgivere.add(new PersonArbeidsgiver(
-                    arbeidsgiverIdentifikator,
-                    new Arbeidstaker(fødselsnummer, id, månedsinntekt(fnrArbeidsgiver)),
-                    arbeidsforholdene(arbeidsgiverIdentifikator),
-                    innsender,
-                    fnrArbeidsgiver));
         }
         return false;
     }
@@ -147,10 +132,8 @@ public abstract class Søker {
         if (arbeidsforhold.arbeidsgiverOrgnr() != null) {
             return new Orgnummer(arbeidsforhold.arbeidsgiverOrgnr());
         }
-        if (arbeidsforhold.personArbeidsgiver() != null) {
-            return new AktørId(arbeidsforhold.personArbeidsgiver().getAktørIdent());
-        }
-        return new AktørId(arbeidsforhold.arbeidsgiverAktorId());
+        return new AktørId(arbeidsforhold.personArbeidsgiver().getAktørIdent());
+
     }
 
     public Arbeidsgivere arbeidsgivere(String orgnummer){
