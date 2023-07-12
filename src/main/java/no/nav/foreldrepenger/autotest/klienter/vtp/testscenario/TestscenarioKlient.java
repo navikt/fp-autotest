@@ -26,7 +26,6 @@ public class TestscenarioKlient {
     private static final Logger LOG = LoggerFactory.getLogger(TestscenarioKlient.class);
 
     private static final String TESTSCENARIO_I_AUTOTEST_POST_URL = "/testscenarios";
-    private static final TestscenarioHenter testscenarioHenter = new TestscenarioHenter();
 
     @Step("Oppretter familie/scenario")
     public TestscenarioDto opprettTestscenario(List<PersonDto> personer) {
@@ -37,33 +36,6 @@ public class TestscenarioKlient {
 //        tilJsonOgPubliserIAllureRapport(testscenarioObject);
         LOG.info("Testscenario opprettet med hovedsøker: {} annenpart: {}", testscenarioDto.personopplysninger().søkerIdent(), testscenarioDto.personopplysninger().annenpartIdent());
         return testscenarioDto;
-    }
-
-    @Deprecated // Sjekk new FamilieGenerator();
-    @Step("Oppretter familie/scenario #{key}")
-    public TestscenarioDto opprettTestscenarioMedAktorId(String key, String aktorId, String ident) {
-        var testscenarioObject = testscenarioHenter.hentScenario(key);
-
-        var uriBuilder = fromUri(BaseUriProvider.VTP_BASE).path(TESTSCENARIO_I_AUTOTEST_POST_URL);
-        if (aktorId != null) {
-            uriBuilder = uriBuilder.queryParam("aktor1", aktorId);
-        }
-        if (ident != null) {
-            uriBuilder = uriBuilder.queryParam("ident1", ident);
-        }
-        var request = requestMedBasicHeadere()
-                .uri(uriBuilder.build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(testscenarioObject)));
-        var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
-        tilJsonOgPubliserIAllureRapport(testscenarioObject);
-        LOG.info("Testscenario opprettet: [{}] med hovedsøker: {} annenpart: {}", key,
-                testscenarioDto.personopplysninger().søkerIdent(), testscenarioDto.personopplysninger().annenpartIdent());
-        return testscenarioDto;
-    }
-
-    @Step("Oppretter familie/scenario #{key}")
-    public TestscenarioDto opprettTestscenario(String key) {
-        return opprettTestscenarioMedAktorId(key, null, null);
     }
 
     public List<TestscenarioDto> hentAlleScenarier() {

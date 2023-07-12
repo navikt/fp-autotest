@@ -391,7 +391,6 @@ class Fodsel extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.erSattPåVent()).as("behandling er ikke satt på vent").isTrue();
     }
 
-    // TODO: Feiler av en eller annen grunn?
     @Test
     @DisplayName("Medmor søker fødsel")
     @Description("Medmor søker fødsel - søkand blir avslått fordi søker er medmor")
@@ -399,7 +398,6 @@ class Fodsel extends FpsakTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().build())
                 .forelder(medmor()
-                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.FULL)))
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)

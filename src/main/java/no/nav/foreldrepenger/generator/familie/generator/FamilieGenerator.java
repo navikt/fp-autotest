@@ -67,7 +67,8 @@ public class FamilieGenerator {
             var foreldrene = foreldrene();
             for (var forelder : foreldrene) {
                 var barnetsRelasjonTilForelder = switch (forelder.rolle()) {
-                    case MOR, MEDMOR -> FamilierelasjonModellDto.Relasjon.MOR;
+                    case MOR -> FamilierelasjonModellDto.Relasjon.MOR;
+                    case MEDMOR -> FamilierelasjonModellDto.Relasjon.MEDMOR;
                     case FAR, MEDFAR -> FamilierelasjonModellDto.Relasjon.FAR;
                     default -> throw new IllegalStateException("Unexpected value: " + forelder.rolle());
                 };

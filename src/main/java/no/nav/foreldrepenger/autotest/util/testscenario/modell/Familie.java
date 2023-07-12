@@ -22,28 +22,12 @@ import no.nav.foreldrepenger.vtp.testmodell.personopplysning.BrukerModell;
 
 public class Familie {
 
-    private static final TestscenarioKlient TESTSCENARIO_JERSEY_KLIENT = new TestscenarioKlient();
-
     private final TestscenarioDto scenario;
     private final Innsender innsender;
 
     private Mor mor;
     private Far far;
     private Mor medmor;
-
-    @Deprecated // Sjekk new FamilieGenerator();
-    public Familie(String scenarioId) {
-        this(scenarioId, SEND_DOKUMENTER_MED_SELVBETJENING);
-    }
-
-    @Deprecated // Sjekk new FamilieGenerator();
-    public Familie(String scenarioId, InnsenderType innsenderType) {
-        this.scenario = TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(scenarioId);
-        this.innsender = switch (innsenderType) {
-            case SEND_DOKUMENTER_MED_SELVBETJENING -> new SøknadMottak();
-            case SEND_DOKUMENTER_UTEN_SELVBETJENING -> new Fordel();
-        };
-    }
 
     public Familie(TestscenarioDto testscenarioDto) {
         this(testscenarioDto, SEND_DOKUMENTER_MED_SELVBETJENING);
