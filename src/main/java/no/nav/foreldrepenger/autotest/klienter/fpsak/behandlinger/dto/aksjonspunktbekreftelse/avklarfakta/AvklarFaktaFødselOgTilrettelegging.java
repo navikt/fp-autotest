@@ -8,7 +8,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Arbeidsforhold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.ArbeidsforholdId;
+import no.nav.foreldrepenger.generator.familie.ArbeidsforholdId;
 
 @BekreftelseKode(kode = "5091")
 public class AvklarFaktaFødselOgTilrettelegging extends AksjonspunktBekreftelse {

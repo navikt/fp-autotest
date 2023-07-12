@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.util.testscenario.modell;
+package no.nav.foreldrepenger.generator.familie;
 
 import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 
@@ -70,11 +70,11 @@ public abstract class Arbeidsgiver {
 
     public InntektsmeldingBuilder lagInntektsmeldingTilkommendeArbeidsforholdEtterFPstartdato(LocalDate startdatoForeldrepenger) {
         guardFlereEllerIngenArbeidsforhold(startdatoForeldrepenger);
-        return lagInntektsmeldingFP(arbeidstaker.månedsinntekt(), ArbeidsforholdEtterFPstartdato(startdatoForeldrepenger),
+        return lagInntektsmeldingFP(arbeidstaker.månedsinntekt(), arbeidsforholdEtterFPstartdato(startdatoForeldrepenger),
                 startdatoForeldrepenger);
     }
 
-    public ArbeidsforholdId ArbeidsforholdEtterFPstartdato(LocalDate fpStartdato) {
+    public ArbeidsforholdId arbeidsforholdEtterFPstartdato(LocalDate fpStartdato) {
         return arbeidsforhold.stream()
                 .filter(a -> tilkommendeArbeidsforhold(a, fpStartdato))
                 .map(Arbeidsforhold::arbeidsforholdId)

@@ -1,8 +1,8 @@
-package no.nav.foreldrepenger.autotest.util.testscenario.modell;
+package no.nav.foreldrepenger.generator.familie;
 
 import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
-import static no.nav.foreldrepenger.autotest.util.testscenario.modell.Aareg.arbeidsforholdFrilans;
-import static no.nav.foreldrepenger.autotest.util.testscenario.modell.Sigrun.hentNæringsinntekt;
+import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilans;
+import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CONSUMER_ID;
 

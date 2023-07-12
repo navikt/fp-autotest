@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Klagebehandle
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Overstyrer;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Saksbehandler;
 import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Søker;
+import no.nav.foreldrepenger.generator.familie.Søker;
 import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 
 // TODO: Fiks opp i testbasene

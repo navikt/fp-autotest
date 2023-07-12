@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.util.testscenario.modell;
+package no.nav.foreldrepenger.generator.familie;
 
 import static no.nav.foreldrepenger.generator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmeldingPrivateArbeidsgiver;
 import static no.nav.foreldrepenger.generator.inntektsmelding.erketyper.InntektsmeldingSvangerskapspengerErketyper.lagInntektsmeldingPrivateArbeidsgiver;

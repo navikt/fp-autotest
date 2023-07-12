@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.util.testscenario.modell;
+package no.nav.foreldrepenger.generator.familie;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.common.domain.AktørId;

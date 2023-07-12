@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.util.testscenario.modell;
+package no.nav.foreldrepenger.generator.familie;
 
 import java.util.List;
 

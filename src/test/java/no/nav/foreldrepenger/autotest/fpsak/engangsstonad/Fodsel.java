@@ -46,7 +46,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrBeregning;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.generator.soknad.erketyper.RelasjonTilBarnErketyper;
 
@@ -202,60 +201,6 @@ class Fodsel extends FpsakTestBase {
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
         beslutter.hentFagsak(saksnummer);
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
-    }
-
-    // TODO (OL): Analyser hvorfor denne ikke fungerer med ny henting av aksjonspunkter.
-    @Test
-    @Disabled
-    @DisplayName("Mor søker fødsel - beregning overstyrt")
-    @Description("Mor søker fødsel - beregning overstyrt fra ett beløp til 10 kroner")
-    void morSøkerFødselBeregningOverstyrt() {
-        var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
-                        .build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .barn(LocalDate.now().minusMonths(1))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
-        var mor = familie.mor();
-        var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
-        var saksnummer = mor.søk(søknad.build());
-
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.INNVILGET);
-
-        // Overstyr beregning
-        overstyrer.hentFagsak(saksnummer);
-        overstyrer.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_FEIL_PROSESSUELL);
-        overstyrer.ventPåOgVelgRevurderingBehandling();
-
-        var varselOmRevurderingBekreftelse = overstyrer
-                .hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
-        varselOmRevurderingBekreftelse.bekreftIkkeSendVarsel();
-        overstyrer.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
-
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaTillegsopplysningerBekreftelse.class);
-        OverstyrBeregning overstyrBeregning = new OverstyrBeregning(10);
-        overstyrer.overstyr(overstyrBeregning);
-        assertThat(overstyrer.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse())
-                .as("BeregnetTilkjentYtelse")
-                .isEqualTo(10);
-
-        ForeslåVedtakBekreftelse foreslåVedtakBekreftelse = overstyrer
-                .hentAksjonspunktbekreftelse(ForeslåVedtakBekreftelse.class);
-        overstyrer.bekreftAksjonspunkt(foreslåVedtakBekreftelse);
-
-        beslutter.hentFagsak(saksnummer);
-        beslutter.ventPåOgVelgRevurderingBehandling();
-
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);

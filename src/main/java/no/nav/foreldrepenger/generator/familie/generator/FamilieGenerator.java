@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsforholdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseModellDto;

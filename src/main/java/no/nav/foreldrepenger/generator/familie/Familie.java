@@ -1,7 +1,6 @@
-package no.nav.foreldrepenger.autotest.util.testscenario.modell;
+package no.nav.foreldrepenger.generator.familie;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_MED_SELVBETJENING;
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -10,7 +9,6 @@ import no.nav.foreldrepenger.autotest.aktoerer.innsender.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.SøknadMottak;
-import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
@@ -24,6 +22,7 @@ public class Familie {
 
     private final TestscenarioDto scenario;
     private final Innsender innsender;
+    private static final String ENDRINGSTYPE_OPPRETTET = "OPPRETTET";
 
     private Mor mor;
     private Far far;
@@ -117,17 +116,16 @@ public class Familie {
     }
 
     public void sendInnDødshendelse(Fødselsnummer fnr, LocalDate dødsdato) {
-        sendInnHendelse(new DødshendelseDto("OPPRETTET", null, fnr.value(), dødsdato));
+        sendInnHendelse(new DødshendelseDto(ENDRINGSTYPE_OPPRETTET, null, fnr.value(), dødsdato));
     }
 
     public void sendInnDødfødselhendelse(LocalDate dødfødselsdato) {
-        sendInnHendelse(new DødfødselhendelseDto("OPPRETTET", null, mor.fødselsnummer().value(), dødfødselsdato));
+        sendInnHendelse(new DødfødselhendelseDto(ENDRINGSTYPE_OPPRETTET, null, mor.fødselsnummer().value(), dødfødselsdato));
     }
 
     public void sendInnFødselshendelse(LocalDate fødselsdato) {
         var farEllerMedmor = far != null ? far : medmor;
-        var fødselshendelseDto = new FødselshendelseDto(
-                "OPPRETTET", null,
+        var fødselshendelseDto = new FødselshendelseDto(ENDRINGSTYPE_OPPRETTET, null,
                 Optional.ofNullable(mor).map(m -> m.fødselsnummer().value()).orElse(null),
                 Optional.ofNullable(farEllerMedmor).map(a -> a.fødselsnummer().value()).orElse(null),
                 null, fødselsdato);
