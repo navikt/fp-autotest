@@ -22,6 +22,10 @@ public class PersonGenerator {
     private static final LocalDate DEFAULT_FØDSELSDATO_FAR = LocalDate.now().minusYears(34);
     private static final String DEFAULT_SPRÅK = "NB";
 
+    private PersonGenerator() {
+        // Statisk implementasjon
+    }
+
     public static PersonDto.Builder mor() {
         return mor(DEFAULT_FØRDSELSDATO_MOR);
     }
@@ -87,10 +91,6 @@ public class PersonGenerator {
         return new ArrayList<>(); // Her skal bare utenlandske medlemskap spesifiseres
     }
 
-    public static List<SivilstandDto> gift() {
-        return new ArrayList<>(List.of(new SivilstandDto(SivilstandDto.Sivilstander.GIFT, LocalDate.now().minusYears(4), null)));
-    }
-
     public static List<SivilstandDto> ugift() {
         return new ArrayList<>(List.of(new SivilstandDto(SivilstandDto.Sivilstander.UGIF, null, null)));
     }
@@ -114,7 +114,7 @@ public class PersonGenerator {
     public static List<AdresseDto> utenlandskAdresse(CountryCode land) {
         var adresse = new AdresseDto(
                 AdresseDto.AdresseType.BOSTEDSADRESSE,
-                CountryCode.NO,
+                land,
                 "000000001",
                 LocalDate.now().minusYears(5),
                 null

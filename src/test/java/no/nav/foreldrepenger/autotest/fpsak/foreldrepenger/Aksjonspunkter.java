@@ -77,7 +77,7 @@ class Aksjonspunkter extends FpsakTestBase {
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arena(ArenaSakerDto.YtelseTema.DAG, LocalDate.now().minusYears(1), LocalDate.now().minusWeeks(12), 10_000)
-                                .ytelse(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(),
+                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(),
                                         GrunnlagDto.Status.AVSLUTTET, fødselsdatoBarn)
                                 .build())
                         .build())
@@ -266,7 +266,7 @@ class Aksjonspunkter extends FpsakTestBase {
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NYLIG_OPPSTATET, LocalDate.now())
-                                .ytelse(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(), GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
+                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(), GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
                                 .arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
@@ -290,7 +290,7 @@ class Aksjonspunkter extends FpsakTestBase {
                 .leggTilInntekt(800_000, 1);
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        var vurderFaresignalerDto = saksbehandler.hentAksjonspunktbekreftelse(VurderFaresignalerDto.class);
+        saksbehandler.hentAksjonspunktbekreftelse(VurderFaresignalerDto.class);
 //        vurderFaresignalerDto.setHarInnvirketBehandlingen(true);
 //        vurderFaresignalerDto.setBegrunnelse("HELLO");
 //        saksbehandler.bekreftAksjonspunkt(vurderFaresignalerDto);

@@ -134,16 +134,6 @@ public class InntektYtelseGenerator {
         return arbeidsforhold(arbeidsforholdDto, årslønn);
     }
 
-    public ArbeidsforholdDto.Builder arbeidsforholdB(LocalDate fom) {
-        return ArbeidsforholdDto.builder()
-                .arbeidsgiver(testOrganisasjoner.tilfeldigOrg())
-                .arbeidsforholdId(testOrganisasjoner.arbeidsforholdId())
-                .ansettelsesperiodeFom(fom)
-                .arbeidsforholdstype(Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD)
-                .arbeidsavtaler(List.of(defaultArbeidsavtale(fom, null, DEAFULT_STILLINGSPROSENT)));
-    }
-
-
     public InntektYtelseGenerator frilans(LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
         return frilans(fom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
@@ -207,7 +197,7 @@ public class InntektYtelseGenerator {
             inntektYtelse.aareg(new AaregDto(arbeidsforholdListe));
         }
         if (årslønn != null) {
-            inntektsperiode(arbeidsforhold, årslønn/12);
+            return inntektsperiode(arbeidsforhold, årslønn/12);
         }
         return this;
     }
@@ -253,10 +243,9 @@ public class InntektYtelseGenerator {
 
     public InntektYtelseGenerator arena(ArenaSakerDto.YtelseTema tema, LocalDate fom, LocalDate tom, Integer beløp) {
         var dagsats = 1_000;
-        var utbetalingsgrad = DEAFULT_STILLINGSPROSENT;
         var sak = new ArenaSakerDto(tema, ArenaSakerDto.SakStatus.AKTIV, List.of(
                 new ArenaVedtakDto(fom, tom, ArenaVedtakDto.VedtakStatus.IVERK, dagsats, List.of(
-                        new ArenaMeldekort(fom, tom, dagsats, beløp, utbetalingsgrad)
+                        new ArenaMeldekort(fom, tom, dagsats, beløp, DEAFULT_STILLINGSPROSENT)
                 ))
         ));
 
@@ -281,7 +270,7 @@ public class InntektYtelseGenerator {
 
 
     // trex -> infotrygd
-    public InntektYtelseGenerator ytelse(GrunnlagDto.Ytelse tema, LocalDate fom, LocalDate tom, GrunnlagDto.Status status, LocalDate fødselsdatoBarn) {
+    public InntektYtelseGenerator infotrygd(GrunnlagDto.Ytelse tema, LocalDate fom, LocalDate tom, GrunnlagDto.Status status, LocalDate fødselsdatoBarn) {
         var ytelsegrunnlag = new GrunnlagDto(tema, fom, tom, status, fødselsdatoBarn, List.of(
                 new GrunnlagDto.Vedtak(fom, tom, DEAFULT_STILLINGSPROSENT)));
 

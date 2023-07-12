@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.generator.familie;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_MED_SELVBETJENING;
-
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -27,10 +25,6 @@ public class Familie {
     private Mor mor;
     private Far far;
     private Mor medmor;
-
-    public Familie(TestscenarioDto testscenarioDto) {
-        this(testscenarioDto, SEND_DOKUMENTER_MED_SELVBETJENING);
-    }
 
     public Familie(TestscenarioDto testscenarioDto, InnsenderType innsenderType) {
         this.scenario = testscenarioDto;

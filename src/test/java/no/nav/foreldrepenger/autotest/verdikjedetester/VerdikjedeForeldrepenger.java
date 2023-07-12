@@ -352,7 +352,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .ytelse(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(),
+                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(),
                                         GrunnlagDto.Status.LØPENDE, LocalDate.now().minusDays(2))
                                 .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusYears(1), 480_000)
                                 .build())
@@ -664,7 +664,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
         arbeidsgiver1.sendInntektsmeldinger(saksnummerFar, inntektsmelding1);
 
-        var arbeidsgiver2 = far.arbeidsgiver(TestOrganisasjoner.NAV_BERGEN.orgnummer().value());;
+        var arbeidsgiver2 = far.arbeidsgiver(TestOrganisasjoner.NAV_BERGEN.orgnummer().value());
         var orgNummerFar2 = arbeidsgiver2.arbeidsgiverIdentifikator();
         var opphørsDatoForRefusjon = fpStartdatoEtterUke6Far.plusMonths(2).minusDays(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(fpStartdatoIfmFødselFar)
@@ -1453,7 +1453,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .ytelse(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now().plusDays(1), GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
+                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now().plusDays(1), GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
                                 .build())
                         .build())
                 .forelder(far().build())
