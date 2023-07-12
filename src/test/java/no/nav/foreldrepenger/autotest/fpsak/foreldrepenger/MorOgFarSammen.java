@@ -10,6 +10,8 @@ import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugFritekst;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak.FRI;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak.SYKDOM;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
@@ -20,6 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -48,7 +54,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
@@ -69,7 +75,16 @@ class MorOgFarSammen extends FpsakTestBase {
             "Behandler ferdig mor sin søknad (positivt vedtak). Behandler deretter far sin søknad (positivt og automatisk vedtak). "+
             "Ingen overlapp, med unntak av de to ukene ifm med fødsel. Verifiserer at sakene er koblet og at det ikke opprettes revurdering berørt sak.")
     void morOgFar_fødsel_ettArbeidsforholdHver_kobletsak_kantTilKant() {
-        var familie = new Familie("82", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(8))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpstartdatoMor = fødselsdato.minusWeeks(3);
@@ -147,7 +162,16 @@ class MorOgFarSammen extends FpsakTestBase {
             "Dette skal ikke føre til at far mister til periode som overlapper med mors førstegangssøknad. " +
             "Mor søker om perioden på nytt får å ta tilbake den tapte perioden.")
     void far_skal_ikke_miste_perioder_til_mor_ved_sniking() {
-        var familie = new Familie("82", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(8))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
@@ -260,7 +284,16 @@ class MorOgFarSammen extends FpsakTestBase {
             "Berørt sak opprettes på mor. Siste periode blir spittet i to og siste del blir avlsått. Det opprettes ikke" +
             "berørt sak på far.")
     void farOgMor_fødsel_ettArbeidsforholdHver_overlappendePeriode() {
-        var familie = new Familie("82", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(8))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpstartdatoMor = fødselsdato.minusWeeks(3);
@@ -355,7 +388,22 @@ class MorOgFarSammen extends FpsakTestBase {
     @Description("Sender inn søknad mor. Sender inn søknad far uten overlapp. Sender inn endringssøknad mor som er lik " +
                 "førstegangsbehandlingen. Verifiserer at det ikke blir berørt sak på far.")
     void kobletSakIngenEndring() {
-        var familie = new Familie("84", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusYears(3))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var fødselsdato = LocalDate.now().minusMonths(4);
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
@@ -390,8 +438,22 @@ class MorOgFarSammen extends FpsakTestBase {
         var fødselsdato = LocalDate.now().minusMonths(4);
         var farOpprinneligStartdato = fødselsdato.plusWeeks(10).plusDays(1);
         var farUtsattStartDato = fødselsdato.plusWeeks(20).plusDays(1);
-
-        var familie = new Familie("84", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusYears(3))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato); // fødselsdato-3w -> fødselsdato+10w
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato, farOpprinneligStartdato); // fødselsdato+10w1d -> fødselsdato+12w1d
         saksbehandler.hentFagsak(saksnummerFar);
@@ -426,7 +488,16 @@ class MorOgFarSammen extends FpsakTestBase {
     @Description("Mor søker og får innvilget. Far søker og får innvilget rundt fødsel. Far søker utsatt oppstart "
             + "og blir innvilget uten berørt behandling hos mor.")
     void farUtsetterOppstartRundtFødsel() {
-        var familie = new Familie("82", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(8))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var fødselsdato = familie.barn().fødselsdato();
 
         var far = familie.far();
@@ -477,8 +548,22 @@ class MorOgFarSammen extends FpsakTestBase {
         var fødselsdato = LocalDate.now().minusMonths(4);
         var farOpprinneligStartdato = fødselsdato.plusWeeks(10).plusDays(1);
         var farUtsattStartDato = LocalDate.now().plusWeeks(5).plusDays(2);
-
-        var familie = new Familie("84", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusYears(3))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato, farOpprinneligStartdato);
 
@@ -514,7 +599,22 @@ class MorOgFarSammen extends FpsakTestBase {
     @DisplayName("Mor får revurdering fra endringssøknad vedtak opphører")
     @Description("Mor får revurdering fra endringssøknad vedtak opphører - far får revurdering")
     void berørtSakOpphør() {
-        var familie = new Familie("84", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusYears(3))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var fødselsdato = LocalDate.now().minusMonths(4);
         var saksnummerMor = behandleSøknadForMorUtenOverlapp(familie, fødselsdato);
         var saksnummerFar = behandleSøknadForFarUtenOverlapp(familie, fødselsdato);
@@ -566,7 +666,22 @@ class MorOgFarSammen extends FpsakTestBase {
     @DisplayName("Koblet sak mor søker etter far og sniker i køen")
     @Description("Far søker. Blir satt på vent pga for tidlig søknad. Mor søker og får innvilget. Oppretter manuell revurdering på mor.")
     void kobletSakMorSøkerEtterFar() {
-        var familie = new Familie("84", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
+                                .arbeidsforhold(LocalDate.now().minusMonths(4), 900_000)
+                                .build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusYears(3))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var fødselsdato = LocalDate.now().minusDays(15);
         behandleSøknadForFarSattPåVent(familie, fødselsdato);
         var saksnummerMor = behandleSøknadForMorUregistrert(familie, fødselsdato);

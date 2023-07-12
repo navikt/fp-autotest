@@ -20,6 +20,11 @@ public class PersonGenerator {
 
     private static final LocalDate DEFAULT_FØRDSELSDATO_MOR = LocalDate.now().minusYears(32);
     private static final LocalDate DEFAULT_FØDSELSDATO_FAR = LocalDate.now().minusYears(34);
+    private static final String DEFAULT_SPRÅK = "NB";
+
+    private PersonGenerator() {
+        // Statisk implementasjon
+    }
 
     public static PersonDto.Builder mor() {
         return mor(DEFAULT_FØRDSELSDATO_MOR);
@@ -29,7 +34,7 @@ public class PersonGenerator {
                 .rolle(Rolle.MOR)
                 .kjønn(Kjønn.K)
                 .fødselsdato(fødselsdato)
-                .språk("NB")
+                .språk(DEFAULT_SPRÅK)
                 .geografiskTilknytning(GeografiskTilknytningDto.norsk())
                 .adresser(norskAdresse())
                 .personstatus(bosattFra(fødselsdato))
@@ -48,7 +53,26 @@ public class PersonGenerator {
                 .rolle(Rolle.FAR)
                 .kjønn(Kjønn.M)
                 .fødselsdato(fødselsdato)
-                .språk("NB")
+                .språk(DEFAULT_SPRÅK)
+                .geografiskTilknytning(GeografiskTilknytningDto.norsk())
+                .adresser(norskAdresse())
+                .personstatus(bosattFra(fødselsdato))
+                .sivilstand(ugift())
+                .medlemskap(norskMedlemskap())
+                .statsborgerskap(norskStatsborgerskap())
+                ;
+    }
+
+    public static PersonDto.Builder medmor() {
+        return medmor(DEFAULT_FØRDSELSDATO_MOR);
+    }
+
+    public static PersonDto.Builder medmor(LocalDate fødselsdato) {
+        return PersonDto.builder()
+                .rolle(Rolle.MEDMOR)
+                .kjønn(Kjønn.K)
+                .fødselsdato(fødselsdato)
+                .språk(DEFAULT_SPRÅK)
                 .geografiskTilknytning(GeografiskTilknytningDto.norsk())
                 .adresser(norskAdresse())
                 .personstatus(bosattFra(fødselsdato))
@@ -67,10 +91,6 @@ public class PersonGenerator {
         return new ArrayList<>(); // Her skal bare utenlandske medlemskap spesifiseres
     }
 
-    public static List<SivilstandDto> gift() {
-        return new ArrayList<>(List.of(new SivilstandDto(SivilstandDto.Sivilstander.GIFT, LocalDate.now().minusYears(4), null)));
-    }
-
     public static List<SivilstandDto> ugift() {
         return new ArrayList<>(List.of(new SivilstandDto(SivilstandDto.Sivilstander.UGIF, null, null)));
     }
@@ -84,7 +104,7 @@ public class PersonGenerator {
                 AdresseDto.AdresseType.BOSTEDSADRESSE,
                 CountryCode.NO,
                 "000000001",
-                LocalDate.now().minusYears(5),
+                LocalDate.now().minusYears(10),
                 null
         );
 
@@ -93,10 +113,10 @@ public class PersonGenerator {
 
     public static List<AdresseDto> utenlandskAdresse(CountryCode land) {
         var adresse = new AdresseDto(
-                AdresseDto.AdresseType.BOSTEDSADRESSE,
-                CountryCode.NO,
-                "000000001",
-                LocalDate.now().minusYears(5),
+                AdresseDto.AdresseType.POSTADRESSE,
+                land,
+                null,
+                LocalDate.now().minusYears(1),
                 null
         );
 

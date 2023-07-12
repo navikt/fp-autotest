@@ -1,7 +1,15 @@
 package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -15,9 +23,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper;
+
+import java.time.LocalDate;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -27,7 +36,17 @@ class Ytelser extends FpsakTestBase {
     @DisplayName("Mor søker fødsel og mottar sykepenger")
     @Description("Mor søker fødsel og mottar sykepenger - opptjening automatisk oppfylt")
     void morSøkerFødselMottarSykepenger() {
-        var familie = new Familie("70", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var fødselsdatoBarn = LocalDate.now().minusDays(2);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(), GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(fødselsdatoBarn)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
@@ -66,7 +85,18 @@ class Ytelser extends FpsakTestBase {
     @DisplayName("Mor søker fødsel og mottar sykepenger og inntekter")
     @Description("Mor søker fødsel og mottar sykepenger og inntekter - opptjening automatisk godkjent")
     void morSøkerFødselMottarSykepengerOgInntekter() {
-        var familie = new Familie("72", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var fødselsdatoBarn = LocalDate.now().minusDays(2);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(), GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
+                                .arbeidsforhold(LocalDate.now().minusYears(4), 30_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(fødselsdatoBarn)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
@@ -85,7 +115,7 @@ class Ytelser extends FpsakTestBase {
 
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
-                .leggTilInntekt((12 * 5000), 1);
+                .leggTilInntekt((100_000), 1);
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);

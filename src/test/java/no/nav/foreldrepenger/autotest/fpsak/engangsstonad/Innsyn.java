@@ -1,10 +1,18 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -19,7 +27,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("fpsak")
@@ -30,7 +37,14 @@ class Innsyn extends FpsakTestBase {
     @DisplayName("Behandle innsyn for mor - godkjent")
     @Description("Behandle innsyn for mor - godkjent happy case")
     void behandleInnsynMorGodkjent() {
-        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR,
@@ -73,7 +87,14 @@ class Innsyn extends FpsakTestBase {
     @DisplayName("Behandle innsyn for mor - avvist")
     @Description("Behandle innsyn for mor - avvist ved vurdering")
     void behandleInnsynMorAvvist() {
-        var familie = new Familie("50", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(1))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(BrukerRolle.MOR,

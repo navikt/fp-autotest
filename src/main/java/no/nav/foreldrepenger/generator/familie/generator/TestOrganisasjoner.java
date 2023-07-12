@@ -11,6 +11,8 @@ import java.util.Random;
 import java.util.UUID;
 
 public class TestOrganisasjoner {
+
+
     public static final OrganisasjonDto NAV = new OrganisasjonDto(
             new Orgnummer("889640782"),
             new OrganisasjonDto.OrganisasjonsdetaljerDto(
@@ -40,6 +42,15 @@ public class TestOrganisasjoner {
             new Orgnummer("992260475"),
             new OrganisasjonDto.OrganisasjonsdetaljerDto(
                     "NAV FAMILIE- OG PENSJONSYTELSER STORD",
+                    LocalDate.of(2003, 1, 1),
+                    LocalDate.of(2015, 1, 1))
+    );
+
+
+    public static final OrganisasjonDto NAV_YTELSE_BETALING = new OrganisasjonDto(
+            new Orgnummer("991013628"),
+            new OrganisasjonDto.OrganisasjonsdetaljerDto(
+                    "NAV UTBETALING YTELSE",
                     LocalDate.of(2003, 1, 1),
                     LocalDate.of(2015, 1, 1))
     );

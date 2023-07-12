@@ -2,13 +2,25 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.OMSORGSVILKÅRET;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,7 +35,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaOmsorgOgForeldreansvarBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.felles.relasjontilbarn.Adopsjon;
@@ -37,7 +48,15 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("REGISTRER_PAPIRSØKNAD_FORELDREPENGER")
     void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5040() {
-        var familie = new Familie("500", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(8))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -53,7 +72,20 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("AVKLAR_ADOPSJONSDOKUMENTAJON")
     void aksjonspunkt_ADOPSJONSSOKNAD_FORELDREPENGER_5004() {
-        var familie = new Familie("172", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var fødselsdatoBarn = LocalDate.now().minusDays(2);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arena(ArenaSakerDto.YtelseTema.DAG, LocalDate.now().minusYears(1), LocalDate.now().minusWeeks(12), 10_000)
+                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(),
+                                        GrunnlagDto.Status.AVSLUTTET, fødselsdatoBarn)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(fødselsdatoBarn)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var adopsjon = new Adopsjon(
@@ -80,7 +112,18 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("MANUELL_VURDERING_AV_OMSORGSVILKÅRET")
     void aksjonspunkt_ADOPSJONSSOKNAD_ENGANGSSTONAD_5011() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = SøknadEngangsstønadErketyper.lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
@@ -99,7 +142,16 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("VURDER_OPPTJENINGSVILKÅRET")
     void aksjonspunkt_FOEDSELSSOKNAD_FORELDREPENGER_5089() {
-        var familie = new Familie("01", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusMonths(2))
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusMonths(15))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
@@ -116,7 +168,14 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("5058 – VURDER_FAKTA_FOR_ATFL_SN")
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER() {
-        var familie = new Familie("501", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(3);
         var næringOpptjening = OpptjeningErketyper.egenNaeringOpptjening(mor.arbeidsforhold().arbeidsgiverIdentifikasjon().value(), true, 30_000, false);
@@ -151,7 +210,14 @@ class Aksjonspunkter extends FpsakTestBase {
     @DisplayName("AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE")
     @Test
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_() {
-        var familie = new Familie("75", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var fpStartdato = termindato.minusWeeks(3);
@@ -170,7 +236,13 @@ class Aksjonspunkter extends FpsakTestBase {
     @DisplayName("SJEKK_MANGLENDE_FØDSEL")
     @Test
     void aksjonspunkt_MOR_FOEDSELSSOKNAD_FORELDREPENGER_5027() {
-        var familie = new Familie("501", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(3);
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -189,7 +261,19 @@ class Aksjonspunkter extends FpsakTestBase {
     @Test
     @DisplayName("5095 – VURDER_FARESIGNALER_KODE")
     void aksjonspunkt_VURDER_FARESIGNALER_KODE_5095() {
-        var familie = new Familie("522", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var fødselsdatoBarn = LocalDate.now().minusMonths(1);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(TestOrganisasjoner.NYLIG_OPPSTATET, LocalDate.now())
+                                .infotrygd(GrunnlagDto.Ytelse.SP, LocalDate.now().minusMonths(9), LocalDate.now(), GrunnlagDto.Status.LØPENDE, fødselsdatoBarn)
+                                .arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(fødselsdatoBarn)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -206,7 +290,7 @@ class Aksjonspunkter extends FpsakTestBase {
                 .leggTilInntekt(800_000, 1);
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        var vurderFaresignalerDto = saksbehandler.hentAksjonspunktbekreftelse(VurderFaresignalerDto.class);
+        saksbehandler.hentAksjonspunktbekreftelse(VurderFaresignalerDto.class);
 //        vurderFaresignalerDto.setHarInnvirketBehandlingen(true);
 //        vurderFaresignalerDto.setBegrunnelse("HELLO");
 //        saksbehandler.bekreftAksjonspunkt(vurderFaresignalerDto);

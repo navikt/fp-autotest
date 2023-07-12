@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
@@ -10,6 +12,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -34,7 +43,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 
@@ -49,7 +57,17 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
     @Description("Mor søker fødsel. Har ikke arbeidsforhold i AAREG, men det blir sendt inn en " +
             "innteksmelding. Saksbehandler legger til arbeidsforhold basert på motatt inntektsmelding")
     void utenArbeidsforholdMenMedInntektsmelding() {
-        var familie = new Familie("171", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .inntektsperiode(TestOrganisasjoner.NAV, LocalDate.now().minusYears(2), LocalDate.now(), 360_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now())
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
@@ -88,7 +106,17 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
     @DisplayName("Mor søker fødsel, men har ikke arbeidsforhold i AAREG. Legger til fiktivt arbeidsforhold.")
     @Description("Mor søker termin, men har ikke arbeidsforhold i AAREG. Saksbehandler legger til fiktivt arbeidsforhold")
     void morSøkerTerminUtenAktiviteterIAareg() {
-        var familie = new Familie("168", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .inntektsperiode(TestOrganisasjoner.NAV_BERGEN, LocalDate.now().minusMonths(24), LocalDate.now().minusMonths(23), 150_000)
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 0, LocalDate.now().minusYears(4), LocalDate.now().minusYears(1), null)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now())
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var termindato = fødselsdato.plusDays(2);

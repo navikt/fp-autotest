@@ -9,15 +9,23 @@ import static no.nav.foreldrepenger.common.domain.BrukerRolle.MOR;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperiodeType.SAMTIDIGUTTAK;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil.helgejustertTilMandag;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.Comparator;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -34,7 +42,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEndringErketyper;
@@ -72,7 +79,16 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
     @Description("Mor har FP og får innvilget ny FP - revurder tidligste FP og avslå perioder inn i ny stønadsperiode. "
             + "Skal ikke havne i aksjonspunkt 5067 fordi mor har brukt opp minsteretten")
     void nytt_barn_opphører_gammel_sak_pga_minsterett_oppbrukt() {
-        var familie = new Familie("700", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(40))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
 
         // Barn 1: Førstgangssøknad
         var mor = familie.mor();
@@ -144,7 +160,20 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
             + "Far sin sak revurderes og avslår uker som strekker seg forbi startdato barn 2 og som ikke er minstrett."
             + "Mor søker endring på barn 1 om å ta 8 uker (bare 4 uker gjenstår av minstrett) etter de 6 første ukene for barn 2. Delvis innvilget")
     void mor_og_far_beholder_minsteretten_ved_to_tette_og_kan_ta_ut_denne_etter_fødel_av_siste_barn() {
-        var familie = new Familie("700", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidMedOpptjeningUnder6G()
+                                .build())
+                        .build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidMedOpptjeningUnder6G()
+                                .build())
+                        .build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now().minusWeeks(40))
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
 
         // MOR (barn 1): Førstegangssøknad for barn 1 (40 uker gammelt)
         var mor = familie.mor();

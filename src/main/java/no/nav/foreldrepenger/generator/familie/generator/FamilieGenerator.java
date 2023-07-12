@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
+import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsforholdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseModellDto;
@@ -67,7 +67,8 @@ public class FamilieGenerator {
             var foreldrene = foreldrene();
             for (var forelder : foreldrene) {
                 var barnetsRelasjonTilForelder = switch (forelder.rolle()) {
-                    case MOR, MEDMOR -> FamilierelasjonModellDto.Relasjon.MOR;
+                    case MOR -> FamilierelasjonModellDto.Relasjon.MOR;
+                    case MEDMOR -> FamilierelasjonModellDto.Relasjon.MEDMOR;
                     case FAR, MEDFAR -> FamilierelasjonModellDto.Relasjon.FAR;
                     default -> throw new IllegalStateException("Unexpected value: " + forelder.rolle());
                 };

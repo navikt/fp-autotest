@@ -5,14 +5,22 @@ import static no.nav.foreldrepenger.common.domain.BrukerRolle.MOR;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,7 +31,6 @@ import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.util.testscenario.modell.Familie;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -34,7 +41,18 @@ class Termin extends FpsakTestBase {
     @Description("Mor med ett arbeidsforhold sender inn inntektsmelding før søknad. " +
             "Forventer at vedtak bli fattet og det blir bare opprettet en behandling")
     void MorSøkerMedEttArbeidsforholdInntektsmeldingFørSøknad() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var startDatoForeldrepenger = termindato.minusWeeks(3);
@@ -67,7 +85,18 @@ class Termin extends FpsakTestBase {
     @Description("Mor søker og saken blir behandlet før inntektsmelding er mottat basert på data fra " +
             "inntektskomponenten, så mottas inntektsmeldingen")
     void MorSøkerMedEttArbeidsforholdInntektsmeldingPåGjennopptattSøknad() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusMonths(4), LocalDate.now().minusDays(60)).stillingsprosent(50).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).sisteLønnsendringsdato(LocalDate.now().minusMonths(1)).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().minusWeeks(1);
         var startDatoForeldrepenger = termindato.minusWeeks(3);
@@ -107,7 +136,16 @@ class Termin extends FpsakTestBase {
             "fht IM, en periode som har feil graderingsprosent i fht IM, en periode som har feil orgnr i fht IM og " +
             "en periode som er ok.")
     void morSøkerTerminEttArbeidsforhold_avvikIGradering() {
-        var familie = new Familie("77", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(40, LocalDate.now().minusYears(4), 120_000)
+                                .arbeidsforhold(60, LocalDate.now().minusYears(2), 300_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(6);
         var fpstartdato = termindato.minusWeeks(3);
@@ -174,7 +212,18 @@ class Termin extends FpsakTestBase {
     @DisplayName("Mor søker termin uten FPFF")
     @Description("Mor søker termin uten periode for foreldrepenger før fødsel. Skjæringstidspunkt skal være 3 uker før termindato.")
     void morSokerTerminUtenFPFFperiode() {
-        var familie = new Familie("55", SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .arbeidsforhold(LocalDate.now().minusYears(4),
+                                        arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusDays(60)).build(),
+                                        arbeidsavtale(LocalDate.now().minusDays(59)).stillingsprosent(50).build()
+                                )
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var startDatoForeldrepenger = termindato;
