@@ -4,6 +4,7 @@ import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedBasicHeadere;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugJson;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.tilJsonOgPubliserIAllureRapport;
 
 import java.net.http.HttpRequest;
@@ -25,15 +26,14 @@ public class TestscenarioKlient {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestscenarioKlient.class);
 
-    private static final String TESTSCENARIO_I_AUTOTEST_POST_URL = "/testscenarios";
-
     @Step("Oppretter familie/scenario")
     public TestscenarioDto opprettTestscenario(List<PersonDto> personer) {
+        var personerJson = toJson(personer);
         var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE).path("/testscenarios/v2").build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(personer)));
+                .POST(HttpRequest.BodyPublishers.ofString(personerJson));
         var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
-//        tilJsonOgPubliserIAllureRapport(testscenarioObject);
+        debugJson(personerJson);
         LOG.info("Testscenario opprettet med hovedsøker: {} annenpart: {}", testscenarioDto.personopplysninger().søkerIdent(), testscenarioDto.personopplysninger().annenpartIdent());
         return testscenarioDto;
     }
@@ -41,7 +41,7 @@ public class TestscenarioKlient {
     public List<TestscenarioDto> hentAlleScenarier() {
         var request = requestMedBasicHeadere()
                 .uri(fromUri(BaseUriProvider.VTP_BASE)
-                        .path(TESTSCENARIO_I_AUTOTEST_POST_URL)
+                        .path("/testscenarios")
                         .build())
                 .GET();
         return Optional.ofNullable(send(request.build(), new TypeReference<List<TestscenarioDto>>() {}))
