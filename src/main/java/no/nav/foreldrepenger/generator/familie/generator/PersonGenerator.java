@@ -113,10 +113,10 @@ public class PersonGenerator {
 
     public static List<AdresseDto> utenlandskAdresse(CountryCode land) {
         var adresse = new AdresseDto(
-                AdresseDto.AdresseType.BOSTEDSADRESSE,
+                AdresseDto.AdresseType.POSTADRESSE,
                 land,
-                "000000001",
-                LocalDate.now().minusYears(5),
+                null,
+                LocalDate.now().minusYears(1),
                 null
         );
 

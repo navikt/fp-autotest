@@ -139,7 +139,8 @@ class Medlemskap extends FpsakTestBase {
     void morSøkerFødselUtenlandsadresse() {
         var familie = new FamilieGenerator()
                 .forelder(mor()
-                        .adresser(utenlandskAdresse(CountryCode.NL))
+                        .adresser(utenlandskAdresse(CountryCode.DE))
+                        .medlemskap(List.of(new MedlemskapDto(LocalDate.now().minusYears(1), LocalDate.now().plusYears(3), CountryCode.DE, MedlemskapDto.DekningsType.FULL)))
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
