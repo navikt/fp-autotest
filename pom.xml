@@ -31,7 +31,7 @@
         <fpsoknad-felles.version>2.4.3</fpsoknad-felles.version>
 
         <slf4j.version>2.0.7</slf4j.version>
-        <logback.version>1.4.8</logback.version>
+        <logback.version>1.4.9</logback.version>
         <allure.version>2.22.2</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <assertj.version>3.24.2</assertj.version>
