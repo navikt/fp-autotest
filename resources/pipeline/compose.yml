@@ -22,13 +22,13 @@ services:
       TZ: Europe/Oslo
       ORACLE_PASSWORD: oracle
     ports:
-      - 127.0.0.1:1521:1521
+      - "127.0.0.1:1521:1521"
     volumes:
-      - ./oracle-init:/docker-entrypoint-initdb.d/
+      - ./oracle-init/:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: [ "CMD-SHELL","/opt/oracle/product/18c/dbhomeXE/health_check.sh" ]
-      interval: 5s
-      timeout: 10s
+      test: [ "CMD-SHELL", "healthcheck.sh" ]
+      interval: 10s
+      timeout: 5s
       retries: 10
   postgres:
     image: $POSTGRES_IMAGE
@@ -228,6 +228,7 @@ services:
     command: |
       --openid.provider=azure
       --openid.scopes=api://vtp.teamforeldrepenger.fpfrontend/.default
+      --openid.audiences=fpfrontend,fpswagger
       --ingress=http://localhost:9000
       --bind-address=0.0.0.0:9000
       --upstream-host=fpfrontend:9090
@@ -727,6 +728,7 @@ services:
     command: |
       --openid.provider=azure
       --openid.scopes=api://vtp.teamforeldrepenger.fpswagger/.default
+      --openid.audiences=fpfrontend,fpswagger
       --ingress=http://localhost:9200
       --bind-address=0.0.0.0:9200
       --upstream-host=fpswagger:9190
