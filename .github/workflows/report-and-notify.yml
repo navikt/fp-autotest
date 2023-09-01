@@ -73,7 +73,7 @@ jobs:
 
       - name: Deploy testrapport
         if: success()
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+        uses: crazy-max/ghaction-github-pages@v3.2.0
         with:
           repo: 'navikt/fp-autotest'
           target_branch: gh-pages
