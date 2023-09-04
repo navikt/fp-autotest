@@ -624,7 +624,7 @@ public class Saksbehandler {
     }
 
     private boolean harHistorikkinnslagPåBehandling(Set<HistorikkinnslagType> type, UUID behandlingsId) {
-        if (List.of(HistorikkinnslagType.VEDLEGG_MOTTATT, HistorikkinnslagType.REVURD_OPPR).contains(type)) {
+        if (type.contains(HistorikkinnslagType.VEDLEGG_MOTTATT) || type.contains(HistorikkinnslagType.REVURD_OPPR)) {
             behandlingsId = null;
         }
         return hentHistorikkinnslagPåBehandling(behandlingsId).stream()
