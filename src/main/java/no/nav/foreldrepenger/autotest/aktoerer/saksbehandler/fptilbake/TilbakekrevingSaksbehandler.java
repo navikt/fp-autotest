@@ -52,6 +52,8 @@ public class TilbakekrevingSaksbehandler {
 
     private final Logger LOG = LoggerFactory.getLogger(TilbakekrevingSaksbehandler.class);
 
+    private static final Set<HistorikkinnslagType> GJENOPPTATT = Set.of(HistorikkinnslagType.BEH_GJEN, HistorikkinnslagType.BEH_MAN_GJEN);
+
     public List<Behandling> behandlingList;
     public Behandling valgtBehandling;
     public Saksnummer saksnummer;
@@ -291,7 +293,7 @@ public class TilbakekrevingSaksbehandler {
          *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
          */
         if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_VENT))) {
-            Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_GJEN))
+            Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type()))
                     ,10, "Behandlingen er på vent og er ikke blitt gjenopptatt!");
         }
 
