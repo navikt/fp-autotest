@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
 public enum HistorikkinnslagType {
 
-    // Mal Type 1
     BREV_SENT,
     BREV_BESTILT,
     BEH_STARTET_PÅ_NYTT,
@@ -25,68 +24,42 @@ public enum HistorikkinnslagType {
     KLAGEBEH_STARTET,
     INNSYN_OPPR,
     KØET_BEH_GJEN,
-
-    // Mal Type 2
     VEDTAK_FATTET,
     UENDRET_UTFALL,
     TILBAKEKR_VIDEREBEHANDLING,
     REGISTRER_OM_VERGE,
     FORSLAG_VEDTAK_UTEN_TOTRINN,
     FORSLAG_VEDTAK,
-
-    // Mal type 3
     SAK_RETUR,
     SAK_GODKJENT,
-
-    // Mal type 4
     FJERNET_VERGE,
     IVERKSETTELSE_VENT,
     BEH_VENT,
     BEH_KØET,
     AVBRUTT_BEH,
-
-    // Mal type 5
     UTTAK,
     KLAGE_BEH_NK,
     KLAGE_BEH_NFP,
     FAKTA_ENDRET,
     BYTT_ENHET,
     ANKE_BEH,
-
-    // Mal type 6
     NY_INFO_FRA_TPS,
-
-    // Mal type 7
     OVERSTYRT,
-
-    // Mal type 8
     OPPTJENING,
-
-    // Mal type 9
     OVST_UTTAK_SPLITT,
     FASTSATT_UTTAK_SPLITT,
-
-    // Mal Type 10
     FASTSATT_UTTAK,
     OVST_UTTAK,
-
-    //Mal Type 11
     AVKLART_AKTIVITETSKRAV,
+    OPPGAVE_VEDTAK,
 
     /**
      * FPTILBAKE SPESIFIKKE
      */
-    // Type 1
     BEH_STARTET_FORFRA,
     TILBAKEKREVING_OPPR,
-
-    // Type 2
     VEDTAK_FATTET_AUTOMATISK,
-
-    // Type 6
     NY_GRUNNLAG_MOTTATT,
-
-    // Type 10
     FAKTA_OM_FEILUTBETALING,
     TILBAKEKREVING,
     FORELDELSE,
