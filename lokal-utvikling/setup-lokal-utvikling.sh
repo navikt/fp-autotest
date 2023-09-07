@@ -16,10 +16,6 @@ settPorterSomSkalErstattes () {
       replace_port_array=("8060" "8063" "8636" "9093" "9092" "8389")
       with_port_array=("8060" "8063" "8636" "9093" "9092" "8389")
       ;;
-    authserver)
-      replace_port_array=("8086")
-      with_port_array=("8086")
-      ;;
     fpabakus)
       replace_port_array=("8080")
       with_port_array=("8015")
@@ -137,7 +133,7 @@ settPorterSomSkalErstattes ${applikasjoner[0]}
 for f in {.*,*}; do
     if [[ -f "$f" ]]; then
         cp "$f" "${relativ_path}/$f"
-    elif [[ $f == oracle-init ]] || [[ $f == postgres-init ]] || [[ $f == tokenx ]] || [[ $f == authserver ]]; then
+    elif [[ $f == oracle-init ]] || [[ $f == postgres-init ]] || [[ $f == tokenx ]]; then
         cp -r "$f" "${relativ_path}"
     fi
 done

@@ -49,17 +49,6 @@ services:
       retries: 1
       timeout: 30s
       start_period: 10s
-  authserver:
-    <<: *default-konfigurasjon
-    image: ghcr.io/navikt/mock-oauth2-server:0.5.5
-    container_name: authserver
-    environment:
-      PORT: 8086
-      JSON_CONFIG_PATH: /authserver/konfig.json
-    ports:
-      - 127.0.0.1:8086:8086
-    volumes:
-      - ./authserver:/authserver
   vtp:
     <<: *default-konfigurasjon
     image: $VTP_IMAGE
@@ -96,9 +85,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    depends_on:
-      authserver:
-        condition: service_started
   fpabakus:
     <<: *default-konfigurasjon
     image: $FPABAKUS_IMAGE
@@ -163,7 +149,7 @@ services:
     container_name: fpfrontend
     mem_limit: 128mb
     environment:
-      AZURE_APP_CLIENT_ID: fpfrontend
+      AZURE_APP_CLIENT_ID: vtp
       PORT: 9090
       HOST: http://localhost
       CORS_ALLOWED_METHODS: GET, POST
@@ -225,8 +211,6 @@ services:
     container_name: wonderwall-fpfrontend
     command: |
       --openid.provider=azure
-      --openid.scopes=api://vtp.teamforeldrepenger.fpfrontend/.default
-      --openid.audiences=fpfrontend,fpswagger
       --ingress=http://localhost:9000
       --bind-address=0.0.0.0:9000
       --upstream-host=fpfrontend:9090
@@ -238,12 +222,9 @@ services:
     ports:
       - 127.0.0.1:9000:9000
     environment:
-      AZURE_APP_CLIENT_ID: fpfrontend
-    #     AZURE_APP_WELL_KNOWN_URL: kommer fra common.env
+      AZURE_APP_CLIENT_ID: vtp
     env_file:
       - *common-properties
-    depends_on:
-      - authserver
   fpfordel:
     <<: *default-konfigurasjon
     image: $FPFORDEL_IMAGE
@@ -357,7 +338,6 @@ services:
       ABAC_ATTRIBUTT_FAGSAK: no.nav.abac.attributter.foreldrepenger.fagsak
       ABAC_ATTRIBUTT_VENTEFRIST: no.nav.abac.attributter.foreldrepenger.fagsak.ventefrist
       ABAC_ATTRIBUTT_BATCH: no.nav.abac.attributter.foreldrepenger.batch
-      TOGGLE_ENABLE_LAGRE_BEREGNINGSRESULTAT: true
     env_file:
       - *common-properties
       - fptilbake_datasource.env
@@ -468,7 +448,6 @@ services:
           \"dq\": \"R_ji4BhWOlcq9NaGg1I5zEVQ6kw1OPtFbOIW6C0Td1qtGomySSKibslvgBNFeH9auqdaUOZjBVWowx1pE-h8pM3AHJsw4sz6T9K0qSrAM_r4xdxXtThfovRWNkLCV0ZzE7sV2DixA06avDUNHbuHpgyAEZsP3kO_K-qx6jQYAc0\",
           \"n\": \"jAQFAKQ9omNtb_I2iSryCulJnkB56qGf35fA1RrDBLup7ysJCez9dnu-HTZ62SKoe-9Pxu-4WzjjBNQacotUXYTIi7GFWM5Pyb4ha-bBJprbiwhyrYGIVzZw4LIcleexWPcIOI0cTKmpM6qKb9_6CTFa-A6uX_16n-n3fQjWGPKrJBY7mcIalJ4YTmLhavs6yt6efSD67SaJ2FabzjouRa_yeDmsGPq2LA-4FymDvuGCHeeMtPO9ClnA2eWC15L7n3-Pagm5pso5GchORl2Rwr_bhCmNCKsC_Qh6TqTHJyymuJwZIuSOv88cf-5UsSidRSJ9r0dBl0S0KgndCagD6Q\"
         }"
-
     env_file:
       - *common-properties
       - fpoversikt_datasource.env
@@ -504,7 +483,7 @@ services:
       DIGDIR_BASE_URL: http://vtp:8060/rest/digdir
       OPPSLAG_URL: http://vtp:8060/rest/dummy/oppslag
       FPFORDEL_MAX: 20
-      AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://authserver:8086/azureAd/token
+      AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://vtp:8060/rest/azure/token
       AZURE_APP_CLIENT_ID: lokal:teamforeldrepenger:fpsoknad-mottak
       AZURE_APP_JWK: /tokenx/jwk.json
       OIDC_STS_ISSUER_URL: http://vtp:8060 # TODO Erstat med samme syntax som resten av applikasjonene
@@ -532,8 +511,6 @@ services:
       AZURE_APP_CLIENT_ID: fpinfohistorikk
       SPRING_PROFILES_ACTIVE: test
       NAIS_CLUSTER_NAME: test
-      LOGINSERVICE_IDPORTEN_DISCOVERY_URL: http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration
-      LOGINSERVICE_IDPORTEN_AUDIENCE: OIDC
       HISTORIKK_TILBAKEKREVING_ENABLED: true
       HISTORIKK_TILBAKEKREVING_TOPIC: teamforeldrepenger.tilbakekreving-brukerdialog-v1
     env_file:
@@ -559,8 +536,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: test
       NAIS_CLUSTER_NAME: test
-      LOGINSERVICE_IDPORTEN_DISCOVERY_URL: http://vtp:8060/rest/AzureAd/loginservice/v2.0/.well-known/openid-configuration
-      LOGINSERVICE_IDPORTEN_AUDIENCE: OIDC
+      IDPORTEN_WELL_KNOWN_URL: http://vtp:8060/rest/idporten/.well-known/openid-configuration
+      IDPORTEN_CLIENT_ID: vtp
     env_file:
       - *common-properties
     volumes:
@@ -587,7 +564,7 @@ services:
       APPRES_CMS_URL: https://www.nav.no/dekoratoren
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
       FP_UTTAK_SERVICE_URL: http://localhost:9002
-      LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
+      LOGINSERVICE_URL: http://localhost:8060/rest/idporten/login
     depends_on:
       - foreldrepengesoknad-api
   foreldrepengesoknad:
@@ -603,7 +580,7 @@ services:
       APPRES_CMS_URL: https://www.nav.no/dekoratoren
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
       FP_UTTAK_SERVICE_URL: http://localhost:9002
-      LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
+      LOGINSERVICE_URL: http://localhost:8060/rest/idporten/login
     depends_on:
       - foreldrepengesoknad-api
   svangerskapspengesoknad:
@@ -615,10 +592,9 @@ services:
     environment:
       APPRES_CMS_URL: https://www.nav.no/dekoratoren
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
-      LOGINSERVICE_URL: http://localhost:8060/rest/loginservice/login
+      LOGINSERVICE_URL: http://localhost:8060/rest/idporten/login
     depends_on:
       - foreldrepengesoknad-api
-
   ## Swagger
   fpswagger:
     <<: *default-konfigurasjon
@@ -626,7 +602,7 @@ services:
     container_name: fpswagger
     mem_limit: 128mb
     environment:
-      AZURE_APP_CLIENT_ID: fpswagger
+      AZURE_APP_CLIENT_ID: vtp
       PORT: 9190
       HOST: http://localhost
       NODE_ENV: development
@@ -725,8 +701,6 @@ services:
     container_name: wonderwall-swagger
     command: |
       --openid.provider=azure
-      --openid.scopes=api://vtp.teamforeldrepenger.fpswagger/.default
-      --openid.audiences=fpfrontend,fpswagger
       --ingress=http://localhost:9200
       --bind-address=0.0.0.0:9200
       --upstream-host=fpswagger:9190
@@ -735,11 +709,9 @@ services:
     ports:
       - 127.0.0.1:9200:9200
     environment:
-      AZURE_APP_CLIENT_ID: fpswagger
+      AZURE_APP_CLIENT_ID: vtp
     env_file:
       - *common-properties
     depends_on:
-      authserver:
-        condition: service_started
       fpsak:
         condition: service_started

@@ -22,7 +22,7 @@ public class JournalforingKlient {
 
     public JournalpostIdDto journalførR(JournalpostModell journalpostModell) {
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
                         .path(JOURNALFØR_JOURNALPOST)
                         .build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(journalpostModell)));
@@ -31,7 +31,7 @@ public class JournalforingKlient {
 
     public JournalpostIdDto journalfør(JournalpostModell journalpostModell) {
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
                         .path(JOURNALFØR_FORELDREPENGER_SØKNAD_URL_FORMAT)
                         .resolveTemplate("fnr", Optional.ofNullable(journalpostModell.getAvsenderFnr()).orElseThrow())
                         .resolveTemplate("dokumenttypeid", Optional.ofNullable(journalpostModell.getDokumentModellList().get(0).getDokumentType().getKode()).orElseThrow())
@@ -42,7 +42,7 @@ public class JournalforingKlient {
 
     public JournalpostIdDto knyttSakTilJournalpost(String journalpostId, Saksnummer saksnummer) {
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
                         .path(KNYTT_SAK_TIL_JOURNALPOST)
                         .resolveTemplate("journalpostid", Optional.ofNullable(journalpostId).orElseThrow())
                         .resolveTemplate("saksnummer", Optional.ofNullable(saksnummer).map(Saksnummer::value).orElseThrow())

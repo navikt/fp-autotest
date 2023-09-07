@@ -32,7 +32,7 @@ public final class HttpRequestProvider {
 
     public static HttpRequest.Builder requestMedInnloggetSaksbehandler(SaksbehandlerRolle saksbehandlerRolle, String clientId) {
         var requestBuilder = requestMedBasicHeadere();
-        return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle, clientId));
+        return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle));
     }
 
     public static HttpRequest.Builder requestMedBasicHeadere() {

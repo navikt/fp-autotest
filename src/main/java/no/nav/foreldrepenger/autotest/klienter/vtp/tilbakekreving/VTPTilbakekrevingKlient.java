@@ -26,7 +26,7 @@ public class VTPTilbakekrevingKlient {
         LOG.info("Oppdaterer VTPs tilbakekrevingsmock med saksnummer {} og behandling {} for konsistens", saksnummer.value(), behandlingId);
 
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
                         .path(TILBAKEKREVING_KONSISTENS)
                         .build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(

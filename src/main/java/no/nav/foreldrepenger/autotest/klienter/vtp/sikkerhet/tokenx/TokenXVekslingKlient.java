@@ -20,40 +20,38 @@ public class TokenXVekslingKlient {
     private static final Map<Fødselsnummer, String> subjectTokens = new ConcurrentHashMap<>();
     private static final Map<Fødselsnummer, String> accessTokens = new ConcurrentHashMap<>();
 
-    private static final String TOKEN_ENDPOINT_AZURE_AD = "/rest/AzureAd/loginservice/oauth2/v2.0/token";
-    private static final String TOKEN_ENDPOINT_TOKENX = "/rest/tokenx/token";
+    private static final String IDPORTEN_TOKEN_ENDPOINT = "/rest/idporten/bruker";
+    private static final String TOKENX_TOKEN_ENDPOINT = "/rest/tokenx/token";
 
     private TokenXVekslingKlient() {
         // Statisk implementasjon
     }
 
     public static String hentAccessTokenForBruker(Fødselsnummer fnr) {
-        return accessTokens.computeIfAbsent(fnr, TokenXVekslingKlient::hentAccessTokenFraVtp);
+        return accessTokens.computeIfAbsent(fnr, TokenXVekslingKlient::hentBrukerAccessToken);
     }
 
-    private static String hentAccessTokenFraVtp(Fødselsnummer fnr) {
-        var subjectToken = subjectTokens.computeIfAbsent(fnr, TokenXVekslingKlient::hentSubjectTokenFraLoginserviceVtp);
-        return vekslerInnSubjectTokenForEtAccessTokenFraTokenDings(subjectToken);
+    private static String hentBrukerAccessToken(Fødselsnummer fnr) {
+        var subjectToken = subjectTokens.computeIfAbsent(fnr, TokenXVekslingKlient::hentSubjectTokenFraIdporten);
+        return vekslerInnSubjectTokenForEtAccessTokenFraTokenX(subjectToken);
     }
 
-    private static String hentSubjectTokenFraLoginserviceVtp(Fødselsnummer fnr) {
+    private static String hentSubjectTokenFraIdporten(Fødselsnummer fnr) {
         var request = HttpRequest.newBuilder()
                 .uri(fromUri(BaseUriProvider.VTP_ROOT)
-                        .path(TOKEN_ENDPOINT_AZURE_AD)
+                        .path(IDPORTEN_TOKEN_ENDPOINT)
+                        .queryParam("fnr", fnr.value())
                         .build())
-                .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .POST(buildFormDataFromMap(buildAuthQueryFromMap(Map.of(
-                        "grant_type", "client_credentials",
-                        "scope", "openid",
-                        "code", fnr.value()))));
+                .header(CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .GET();
         var tokenResponse = send(request.build(), TokenResponse.class);
         return tokenResponse.id_token();
     }
 
-    private static String vekslerInnSubjectTokenForEtAccessTokenFraTokenDings(String subjectToken) {
+    private static String vekslerInnSubjectTokenForEtAccessTokenFraTokenX(String subjectToken) {
         var request = HttpRequest.newBuilder()
                 .uri(fromUri(BaseUriProvider.VTP_ROOT)
-                        .path(TOKEN_ENDPOINT_TOKENX)
+                        .path(TOKENX_TOKEN_ENDPOINT)
                         .build())
                 .header(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .POST(buildFormDataFromMap(buildAuthQueryFromMap(Map.of(

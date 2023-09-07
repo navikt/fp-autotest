@@ -1,8 +1,6 @@
 services:
   audit.nais:
     mem_limit: 32m
-  authserver:
-    mem_limit: 512mb
   oracle:
     mem_limit: 5gb
   postgres:
