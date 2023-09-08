@@ -483,7 +483,7 @@ services:
       DIGDIR_BASE_URL: http://vtp:8060/rest/digdir
       OPPSLAG_URL: http://vtp:8060/rest/dummy/oppslag
       FPFORDEL_MAX: 20
-      AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://vtp:8060/rest/azure/token
+      AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://vtp:8060/rest/azuread/token
       AZURE_APP_CLIENT_ID: lokal:teamforeldrepenger:fpsoknad-mottak
       AZURE_APP_JWK: /tokenx/jwk.json
       OIDC_STS_ISSUER_URL: http://vtp:8060 # TODO Erstat med samme syntax som resten av applikasjonene

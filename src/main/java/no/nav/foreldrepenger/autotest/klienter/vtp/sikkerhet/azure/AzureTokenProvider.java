@@ -19,7 +19,7 @@ import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
  * - Loginservice token som er veksles inn til et TokenX token for en gitt bruker (fnr)
  */
 public final class AzureTokenProvider {
-    private static final String AZURE_TOKEN_BASE_PATH = "/rest/azure/token";
+    private static final String AZURE_TOKEN_BASE_PATH = "/rest/azuread/token";
 
     private static final Map<SaksbehandlerRolle, String> saksbehandlerAzureAuthToken = new ConcurrentHashMap<>();
     private static final Map<String, String> saksbehandlerAzureOboToken = new ConcurrentHashMap<>();
