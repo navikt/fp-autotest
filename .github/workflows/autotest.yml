@@ -30,9 +30,9 @@ jobs:
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: github.repository == 'navikt/fp-autotest'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: github.repository != 'navikt/fp-autotest'
         with:
           repository: 'navikt/fp-autotest'

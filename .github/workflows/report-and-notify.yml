@@ -33,7 +33,7 @@ jobs:
     continue-on-error: true
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'navikt/fp-autotest'
       - name: Henter testresultat for fpsak
@@ -88,7 +88,7 @@ jobs:
     timeout-minutes: 2
     steps:
       - name: Henter ut historie til trigger
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }}
           path: ${{ github.repository }}
