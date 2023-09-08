@@ -18,7 +18,7 @@ imageVersion () {
 echo POSTGRES_IMAGE="postgres:15" > .env
 echo ORACLE_IMAGE="gvenzl/oracle-xe:21.3.0-slim-faststart" >> .env
 echo AUDIT_NAIS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-autotest/audit-nais-mock")" >> .env
-echo VTP_IMAGE="$(imageVersion "ghcr.io/navikt/vtp")" >> .env
+echo VTP_IMAGE="ghcr.io/navikt/vtp:2023.09.04.103009-4c0d7cc" >> .env
 echo FPABAKUS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-abakus")" >> .env
 echo FPSAK_IMAGE="$(imageVersion "ghcr.io/navikt/fp-sak")" >> .env
 echo FPFRONTEND_IMAGE="$(imageVersion "ghcr.io/navikt/fp-frontend")" >> .env
