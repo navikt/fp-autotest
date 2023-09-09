@@ -49,6 +49,7 @@ public final class AzureTokenProvider {
                 (Map.of("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer",
                         "client_assertion_type","urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
                         "requested_token_use", "on_behalf_of",
+                        "client_id", "autotest",
                         "scope","api://vtp.teamforeldrepenger.vtp/.default", // Forenkling alle clienter i VTP har azure_client_id satt til VTP
                         "assertion", saksbehandlerAccessToken)))));
 
