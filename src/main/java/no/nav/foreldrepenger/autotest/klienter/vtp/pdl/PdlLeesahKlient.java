@@ -25,7 +25,7 @@ public class PdlLeesahKlient {
         tilJsonOgPubliserIAllureRapport(personhendelseDto);
         LOG.info("Legger til hendelse {} i PDL", personhendelseDto);
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
                         .path(PDL_LEESAH)
                         .build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(personhendelseDto)));

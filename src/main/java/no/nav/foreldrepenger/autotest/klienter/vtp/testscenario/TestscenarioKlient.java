@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.reques
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugJson;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.tilJsonOgPubliserIAllureRapport;
 
 import java.net.http.HttpRequest;
 import java.util.List;
@@ -30,7 +29,7 @@ public class TestscenarioKlient {
     public TestscenarioDto opprettTestscenario(List<PersonDto> personer) {
         var personerJson = toJson(personer);
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE).path("/testscenarios/v2").build())
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE).path("/testscenarios/v2").build())
                 .POST(HttpRequest.BodyPublishers.ofString(personerJson));
         var testscenarioDto = send(request.build(), TestscenarioDto.class, TestscenarioObjectMapper.DEFAULT_MAPPER_VTP);
         debugJson(personerJson);
@@ -40,7 +39,7 @@ public class TestscenarioKlient {
 
     public List<TestscenarioDto> hentAlleScenarier() {
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
                         .path("/testscenarios")
                         .build())
                 .GET();

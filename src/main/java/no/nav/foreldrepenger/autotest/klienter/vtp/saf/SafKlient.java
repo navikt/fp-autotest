@@ -27,7 +27,7 @@ public class SafKlient {
     public Journalpost hentJournalpost(String journalpostId) {
         var body = new GraphQLRequest(query, null, Map.of("journalpostId", journalpostId));
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
                         .path(GRAPHQL_ENDPOINT)
                         .build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(body)));
@@ -37,7 +37,7 @@ public class SafKlient {
 
     public byte[] hentDokumenter(String journalpostId, String dokumentId, String variantFormat) {
         var request = requestMedBasicHeadere()
-                .uri(fromUri(BaseUriProvider.VTP_BASE)
+                .uri(fromUri(BaseUriProvider.VTP_API_BASE)
                         .path(HENT_DOKUMENT)
                         .resolveTemplate("journalpostId", Optional.ofNullable(journalpostId).orElse("null"))
                         .resolveTemplate("dokumentId", Optional.ofNullable(dokumentId).orElse("null"))
