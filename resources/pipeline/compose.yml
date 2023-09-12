@@ -563,7 +563,7 @@ services:
       KLAGE_URL: https://klage.nav.no
       APPRES_CMS_URL: https://www.nav.no/dekoratoren
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
-      FP_UTTAK_SERVICE_URL: http://localhost:9002
+      FP_UTTAK_SERVICE_URL: http://localhost:9002/rest
       LOGINSERVICE_URL: http://localhost:8060/rest/idporten/login
     depends_on:
       - foreldrepengesoknad-api
@@ -579,7 +579,7 @@ services:
       FAMILIE: https://familie.nav.no
       APPRES_CMS_URL: https://www.nav.no/dekoratoren
       FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
-      FP_UTTAK_SERVICE_URL: http://localhost:9002
+      FP_UTTAK_SERVICE_URL: http://localhost:9002/rest
       LOGINSERVICE_URL: http://localhost:8060/rest/idporten/login
     depends_on:
       - foreldrepengesoknad-api
