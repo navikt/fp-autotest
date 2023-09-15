@@ -22,20 +22,20 @@ jobs:
   fpsak-tester:
     name: Fpsak tester
     if: github.ref_name != 'master'
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: fpsak
 
   fptilbake-tester:
     name: Fptilbake tester
     if: github.ref_name == 'master'
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: fptilbake
 
   verdikjede-tester:
     name: Verdikjedetester
     if: github.ref_name == 'master'
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: verdikjede

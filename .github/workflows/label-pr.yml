@@ -1,14 +1,13 @@
 name: "Pull Request Labeler"
 on:
   pull_request_target:
-
 jobs:
   triage:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
-    - uses: actions/labeler@main
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
-        sync-labels: true
+      - uses: actions/labeler@6c834e41a82952bc67e003a8b2854840c337556e # ratchet:actions/labeler@main
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          sync-labels: true
