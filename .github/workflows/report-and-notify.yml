@@ -1,5 +1,4 @@
 name: Report and notify about testresults
-
 on:
   workflow_call:
     inputs:
@@ -23,8 +22,6 @@ on:
         type: string
         description: "Fpsak resultat tester"
         default: 'skipped'
-
-
 jobs:
   rapport:
     name: Lager og publiserer test rapport
@@ -33,24 +30,24 @@ jobs:
     continue-on-error: true
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # ratchet:actions/checkout@v4
         with:
           repository: 'navikt/fp-autotest'
       - name: Henter testresultat for fpsak
         if: ${{ !contains(inputs.fpsak, 'skipped') }}
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # ratchet:actions/download-artifact@v3
         with:
           name: fpsak-testresultat
           path: .
       - name: Henter testresultat for fptilbake
         if: ${{ !contains(inputs.fptilbake, 'skipped') }}
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # ratchet:actions/download-artifact@v3
         with:
           name: fptilbake-testresultat
           path: .
       - name: Henter testresultat for verdikjede
         if: ${{ !contains(inputs.verdikjede, 'skipped') }}
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # ratchet:actions/download-artifact@v3
         with:
           name: verdikjede-testresultat
           path: .
@@ -70,17 +67,15 @@ jobs:
           if [ -d "fpsak" ]; then echo "Oppdatere testresultat for fpsak" && rm -rf gh-pages/fpsak && cp -r fpsak gh-pages; fi
           if [ -d "fptilbake" ]; then echo "Oppdatere testresultat for fptilbake" && rm -rf gh-pages/fptilbake && cp -r fptilbake gh-pages; fi
           if [ -d "verdikjede" ]; then echo "Oppdatere testresultat for verdikjede" && rm -rf gh-pages/verdikjede && cp -r verdikjede gh-pages; fi
-
       - name: Deploy testrapport
         if: success()
-        uses: crazy-max/ghaction-github-pages@v3.2.0
+        uses: crazy-max/ghaction-github-pages@5859b4ea7efe6b470a5b19c570460eae9323aefc # ratchet:crazy-max/ghaction-github-pages@v3.2.0
         with:
           repo: 'navikt/fp-autotest'
           target_branch: gh-pages
           build_dir: gh-pages
         env:
           GH_PAT: ${{ secrets.PAT_AUTOTEST }}
-
   notify-slack:
     name: Notify slack om testresultat
     runs-on: ubuntu-latest
@@ -88,12 +83,11 @@ jobs:
     timeout-minutes: 2
     steps:
       - name: Henter ut historie til trigger
-        uses: actions/checkout@v4
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # ratchet:actions/checkout@v4
         with:
           repository: ${{ github.repository }}
           path: ${{ github.repository }}
           fetch-depth: 5
-
       - name: Hent ut versjon fra forrige issue
         run: |
           CURRENT_HASH=$(echo "${{ inputs.build-version }}" | awk -F'-' '{print $3}')
@@ -101,7 +95,6 @@ jobs:
           git remote -v
           git fetch
           echo "DIFFERANSE=$(git log --pretty=format:"%s; author: %an" -n 1 ${CURRENT_HASH})" >> $GITHUB_ENV
-
       - name: Bygger opp slack melding
         run: |
           function statusJobb() {
@@ -153,10 +146,9 @@ jobs:
             echo "SLACK_TITLE=Verdikjeden er kjørt UTEN feil :rocket:" >> $GITHUB_ENV
             echo "SLACK_COLOR=#37df1d" >> $GITHUB_ENV
           fi
-
       - name: Slack Notification
         if: success()
-        uses: rtCamp/action-slack-notify@v2.2.1
+        uses: rtCamp/action-slack-notify@b24d75fe0e728a4bf9fc42ee217caa686d141ee8 # ratchet:rtCamp/action-slack-notify@v2.2.1
         env:
           SLACK_CHANNEL: vtp-autotest-resultat
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
@@ -167,10 +159,9 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_FOOTER: ''
           MSG_MINIMAL: true
-
       - name: Slack Notification
         if: failure()
-        uses: rtCamp/action-slack-notify@v2.2.1
+        uses: rtCamp/action-slack-notify@b24d75fe0e728a4bf9fc42ee217caa686d141ee8 # ratchet:rtCamp/action-slack-notify@v2.2.1
         env:
           SLACK_CHANNEL: vtp-autotest-resultat
           SLACK_COLOR: #df1515
