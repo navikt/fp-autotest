@@ -69,7 +69,7 @@ jobs:
           if [ -d "verdikjede" ]; then echo "Oppdatere testresultat for verdikjede" && rm -rf gh-pages/verdikjede && cp -r verdikjede gh-pages; fi
       - name: Deploy testrapport
         if: success()
-        uses: crazy-max/ghaction-github-pages@5859b4ea7efe6b470a5b19c570460eae9323aefc # ratchet:crazy-max/ghaction-github-pages@v3.2.0
+        uses: crazy-max/ghaction-github-pages@c05ee637ec73429400a359430db8e5629f3f2564 # ratchet:crazy-max/ghaction-github-pages@v4.0.0
         with:
           repo: 'navikt/fp-autotest'
           target_branch: gh-pages
