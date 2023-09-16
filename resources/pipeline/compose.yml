@@ -165,11 +165,6 @@ services:
                     "url": "http://fpsak:8080"
                 },
                 {
-                    "path": "/fpoppdrag/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpoppdrag/.default",
-                    "url": "http://fpoppdrag:8080"
-                },
-                {
                     "path": "/fptilbake/api",
                     "scopes": "api://vtp.teamforeldrepenger.fptilbake/.default",
                     "url": "http://fptilbake:8080"
