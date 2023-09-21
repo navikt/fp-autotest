@@ -7,7 +7,7 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/labeler@6c834e41a82952bc67e003a8b2854840c337556e # ratchet:actions/labeler@main
+      - uses: actions/labeler@2b2e7d04cb1a6ea65c273238d0e516840a7a380e # ratchet:actions/labeler@main
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           sync-labels: true
