@@ -67,7 +67,7 @@ services:
         teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1,
         teamforeldrepenger.tilbakekreving-dvh-vedtak-v1,
         teamforeldrepenger.fpoversikt-migrering-v1,
-        aapen-sob-oppgaveHendelse-v1,
+        personoversikt.modia-soknadsstatus-hendelse,
         pdl.leesah-v1,
         teamdokumenthandtering.aapen-dok-journalfoering-vtp
     volumes:
@@ -119,7 +119,7 @@ services:
       ABAKUS_CALLBACK_URL: http://fpsak:8080/fpsak/api/registerdata/iay/callback
       FPOPPDRAG_OVERRIDE_PROXY_URL: http://localhost:9000/fpoppdrag/api
       UFORE_RS_URL: http://vtp:8060/rest/api/pesys/ufo
-      KAFKA_SAKOGBEHANDLING_TOPIC: aapen-sob-oppgaveHendelse-v1
+      KAFKA_PERSONOVERSIKT_TOPIC: personoversikt.modia-soknadsstatus-hendelse
       EXTRA_CLASS_PATH: :vtp-lib/*
       BRUK_NY_FAKTA_UTTAK: true
     env_file:
