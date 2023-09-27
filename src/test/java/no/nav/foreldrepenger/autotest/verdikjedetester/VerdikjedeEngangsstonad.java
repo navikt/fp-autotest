@@ -60,7 +60,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         avklarLovligOppholdBekreftelse.bekreftBrukerHarLovligOpphold();
         saksbehandler.bekreftAksjonspunkt(avklarLovligOppholdBekreftelse);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -116,7 +116,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .hentAksjonspunktbekreftelse(AvklarLovligOppholdBekreftelse.class);
         avklarLovligOppholdBekreftelse.bekreftBrukerHarLovligOpphold();
         saksbehandler.bekreftAksjonspunkt(avklarLovligOppholdBekreftelse);
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
 
         var esSakEtterVedtak = mor.innsyn().hentEsSakUtenÅpenBehandling(saksnummer);
         assertThat(esSakEtterVedtak.saksnummer().value()).isEqualTo(saksnummer.value());
