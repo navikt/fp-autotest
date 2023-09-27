@@ -172,7 +172,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Bekreftelse sendt fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -276,7 +276,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Skæringstidspunkt beregning")
                 .isEqualTo(fødselsdato.minusWeeks(3));
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -322,7 +322,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, false);
 
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Avslåtte uttaksperioder")
@@ -403,7 +403,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .avslåManuellePerioderMedPeriodeResultatÅrsak(IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -511,7 +511,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         overstyrer.overstyr(overstyringUttak);
 
         saksbehandler.velgSisteBehandling();
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -586,7 +586,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isTrue();
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -681,7 +681,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false, false);
 
         /* VERIFISERINGER */
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -791,7 +791,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
         vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -870,7 +870,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Forventer at beregningsgrunnlaget baserer seg på en årsinntekt større enn 0. Søker har bare AAP.")
                 .isPositive();
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -888,7 +888,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         }
 
 
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Foreldrepenger skal være endret pga annenpart har overlappende uttak!")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_ENDRET);
@@ -1260,7 +1260,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         vurderTilbakekrevingVedNegativSimulering2.setTilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering2);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true, true);
 
         var perioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
                 .getPerioder();
@@ -1337,7 +1337,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -1414,7 +1414,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         fastsettUttaksperioderManueltBekreftelseMor.avslåPeriode(sistePeriode.getFom(), sistePeriode.getTom(), IKKE_STØNADSDAGER_IGJEN, false);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true, false);
 
         beslutter.ventTilFagsakLøpende();
 
@@ -1478,7 +1478,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .leggTilAndelerYtelse(4000.0, Inntektskategori.ARBEIDSTAKER);
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
 
         assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0).getRedusertPrAar())
                 .as("Forventer at beregningsgrunnlaget baserer seg på et grunnlag som er mindre enn 1/2 G")
@@ -1537,7 +1537,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerRealitetsbehandlingEllerKlage.class);
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, false);
 
 
         assertThat(saksbehandler.valgtBehandling.behandlingsresultat.konsekvenserForYtelsen())
@@ -1615,7 +1615,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, false);
 
         var saldoerRevurdering = saksbehandler.valgtBehandling.getSaldoer();
         assertThat(saldoerRevurdering.stonadskontoer().get(SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL).saldo())
@@ -1718,7 +1718,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .godkjennSykdom();
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttak);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
 
         // UTTAK
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
@@ -1866,7 +1866,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .ikkeDokumentert(uttaksperiodeEtterUtsettelse1)
                 .setBegrunnelse("Mor er ikke i aktivitet for siste uttaksperiode!");
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokBekreftelse);
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")

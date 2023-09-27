@@ -596,6 +596,11 @@ public class Saksbehandler {
         ventTilFagsakstatus(FagsakStatus.LØPENDE, FagsakStatus.AVSLUTTET);
     }
 
+    public void ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving() {
+        ventTilAvsluttetBehandling();
+        ventTilFagsakstatus(FagsakStatus.UNDER_BEHANDLING, FagsakStatus.LØPENDE, FagsakStatus.AVSLUTTET);
+    }
+
 
     /*
      * Historikkinnslag
