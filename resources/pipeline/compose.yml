@@ -492,32 +492,6 @@ services:
     depends_on:
       - fpfordel
   ## SELVBETJENING SPESIFIKK
-  fpinfo-historikk:
-    <<: *default-konfigurasjon
-    image: $FPINFO_HISTORIKK_IMAGE
-    container_name: fpinfo-historikk
-    mem_limit: 512mb
-    environment:
-      AZURE_APP_CLIENT_ID: fpinfohistorikk
-      SPRING_PROFILES_ACTIVE: test
-      NAIS_CLUSTER_NAME: test
-      HISTORIKK_TILBAKEKREVING_ENABLED: true
-      HISTORIKK_TILBAKEKREVING_TOPIC: teamforeldrepenger.tilbakekreving-brukerdialog-v1
-    env_file:
-      - *common-properties
-      - fpinfohistorikk_datasource.env
-    volumes:
-      - *sertifikat-volum
-      - ./tokenx:/tokenx
-    ports:
-      - 127.0.0.1:9003:9003
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9003/api/actuator" ]
-      interval: 5s
-      timeout: 10s
-      retries: 20
-    depends_on:
-      - fpsoknad-mottak
   foreldrepengesoknad-api:
     <<: *default-konfigurasjon
     image: $FORELDREPENGESOKNADAPI_IMAGE
@@ -542,7 +516,7 @@ services:
       retries: 20
     depends_on:
       - fpsoknad-mottak
-      - fpinfo-historikk
+      - fpoversikt
   foreldrepengeoversikt:
     <<: *default-konfigurasjon
     image: $FORELDREPENGEOVERSIKT_IMAGE
