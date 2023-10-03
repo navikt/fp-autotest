@@ -16,7 +16,6 @@ imageVersion () {
 }
 
 echo POSTGRES_IMAGE="postgres:15" > .env
-echo ORACLE_IMAGE="gvenzl/oracle-xe:21.3.0-slim-faststart" >> .env
 echo AUDIT_NAIS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-autotest/audit-nais-mock")" >> .env
 echo VTP_IMAGE="$(imageVersion "ghcr.io/navikt/vtp")" >> .env
 echo FPABAKUS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-abakus")" >> .env
@@ -37,5 +36,15 @@ echo FORELDREPENGEOVERSIKT_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengeso
 echo SVANGERSKAPSPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad/svangerskapspengesoknad")" >> .env
 echo ENGANGSSTONAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad/engangsstonad")" >> .env
 echo FPOVERSIKT_IMAGE="$(imageVersion "ghcr.io/navikt/fp-oversikt")" >> .env
+
+case "$OSTYPE" in
+  darwin*) # MAC OS
+      echo ORACLE_IMAGE="ghcr.io/navikt/fp-autotest/oracle-arm:19" >> .env
+      echo ORACLE_HEALTHCHECK="/opt/oracle/checkDBStatus.sh" >> .env ;;
+  *)
+      echo ORACLE_IMAGE="gvenzl/oracle-xe:21.3.0-slim-faststart" >> .env
+      echo ORACLE_HEALTHCHECK="/opt/oracle/healthcheck.sh" >> .env;;
+esac
+
 
 echo ".env fil opprettet - Klart for docker-compose up"

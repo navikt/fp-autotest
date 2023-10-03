@@ -1,3 +1,5 @@
+alter session set "_oracle_script"=true;
+
 DECLARE userexists INTEGER;
 BEGIN
   SELECT count(*)

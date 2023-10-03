@@ -89,8 +89,6 @@ while [ -n "$1" ]; do # while loop starts
         echo "usage: ./setup-lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]"
         echo ""
         echo "Options:"
-        echo "-s, --system <docker_desktop|colima>      Velg enten docker_desktop eller colima. Brukes bare av colima brukere"
-        echo "                                          default: docker_desktop"
         echo "-m, --mock <applikasjon>                  Her kan du velge å mocke ut spesifikke applikasjoner istedenfor å bruke den"
         echo "                                          faktiske applikasjonen. En mock av applikasjonen i VTP blir dermed brukt."
         echo "                                          Applikasjoner som kan mockes ut er fptilbake, fpoppdrag og fpformidling."
