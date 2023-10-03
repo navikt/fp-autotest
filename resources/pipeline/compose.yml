@@ -58,6 +58,7 @@ services:
     environment:
       NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE: /app/.modig/keystore.jks
       JAVAX_NET_SSL_TRUSTSTORE: /app/.modig/truststore.jks
+      CREATE_TOPICS: >-
         teamforeldrepenger.behandling-hendelse-v1,
         teamforeldrepenger.familie-vedtakfattet-v1,
         teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1,
