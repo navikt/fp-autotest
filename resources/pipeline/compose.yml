@@ -7,6 +7,9 @@ x-default-konfigurasjon: &default-konfigurasjon
 #  extra_hosts:
 #    - "host.docker.internal:host-gateway"
 
+volumes:
+  oracle-data:
+
 services:
   audit.nais:
     <<: *default-konfigurasjon
@@ -20,13 +23,17 @@ services:
     container_name: oracle
     environment:
       TZ: Europe/Oslo
-      ORACLE_PASSWORD: oracle
+      ORACLE_SID: XE # Mac
+      ORACLE_PWD: oracle # Mac
+      ORACLE_PASSWORD: oracle # Windows
     ports:
       - "127.0.0.1:1521:1521"
     volumes:
-      - ./oracle-init/:/docker-entrypoint-initdb.d/
+      - oracle-data:/opt/oracle/oradata
+      - ./oracle-init/:/docker-entrypoint-initdb.d/ # Windows
+      - ./oracle-init/:/opt/oracle/scripts/setup # Mac
     healthcheck:
-      test: [ "CMD-SHELL", "healthcheck.sh" ]
+      test: ["CMD-SHELL", $ORACLE_HEALTHCHECK]
       interval: 10s
       timeout: 5s
       retries: 10

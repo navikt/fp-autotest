@@ -1,3 +1,5 @@
+alter session set "_oracle_script"=true;
+
 -- ##################################################
 -- ### Opplegg for enhetstester (lokal + jenkins) ###
 -- ##################################################
