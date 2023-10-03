@@ -61,5 +61,5 @@ if [ -f .env ]; then
 else
     cp docker-compose-lokal/.env .env
 fi
-docker-compose -f docker-compose-lokal/compose.yml up --detach fpfrontend foreldrepengesoknad foreldrepengeoversikt svangerskapspengesoknad
+docker-compose -f docker-compose-lokal/compose.yml up --detach fpfrontend foreldrepengesoknad foreldrepengeoversikt svangerskapspengesoknad engangsstonad
 

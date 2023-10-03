@@ -559,6 +559,18 @@ services:
       LOGINSERVICE_URL: http://localhost:8060/rest/idporten/login
     depends_on:
       - foreldrepengesoknad-api
+  engangsstonad:
+    <<: *default-konfigurasjon
+    image: $ENGANGSSTONAD_IMAGE
+    container_name: engangsstonad
+    ports:
+      - 127.0.0.1:9065:8080
+    environment:
+      APPRES_CMS_URL: https://www.nav.no/dekoratoren
+      FORELDREPENGESOKNAD_API_URL: http://localhost:9002/rest
+      LOGINSERVICE_URL: http://localhost:8060/rest/idporten/login
+    depends_on:
+      - foreldrepengesoknad-api
   ## Swagger
   fpswagger:
     <<: *default-konfigurasjon
