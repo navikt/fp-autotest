@@ -56,12 +56,7 @@ Skulle script 1-5 mot formodning ikke dekke ditt behov, så kan du bruke det sje
 slik at de peker ut på applikasjonene som du kjører utenfor Docker Compose. Når du kjører dette scriptet spesifiserer
 du hvilke applikasjoner du ønsker å kjøre utenfor docker-compose (og valgfritt, om du ønsker å kjøre opp mer av verdikjeden innenfor Docker Compose):
 
-    ./setup-lokal-utvikling.sh [options] [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
-      
-    Options:                     
-    -m,--mock <applikasjon>     Her kan du velge å mocke ut spesifikke applikasjoner istedenfor å kjøre opp de
-                                faktiske applikasjonen. En mock av applikasjonen i VTP blir dermed brukt.
-                                Applikasjonene som kan mockes ut er fptilbake, fpoppdrag, fpformidling og fprisk.
+    ./setup-lokal-utvikling.sh [APPLIKASJON_UTENFOR_DOCKER_COMPOSE ...]
 
 Etter at du har kjørt scriptet vil det lages en mappen: *lokal-utvikling/docker-compose-lokal*; gå inn i denne mappen.
 Denne mappen inneholder riktig konfigurasjonen for oppsettet i Docker Compose. Som standard så hentes den siste versjon 

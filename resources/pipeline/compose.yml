@@ -147,6 +147,14 @@ services:
         condition: service_healthy
       fpabakus:
         condition: service_started
+      fpformidling:
+        condition: service_started
+      fprisk:
+        condition: service_started
+      fpoppdrag:
+        condition: service_started
+      fptilbake:
+        condition: service_started
   fpfrontend:
     <<: *default-konfigurasjon
     image: $FPFRONTEND_IMAGE
@@ -199,6 +207,10 @@ services:
         condition: service_started
       fpsak:
         condition: service_started
+      fplos:
+        condition: service_started
+      fptilbake:
+        condition: service_started
   wonderwall-fpfrontend:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
@@ -249,6 +261,8 @@ services:
         condition: service_healthy
       fpsak:
         condition: service_started
+      fplos:
+        condition: service_started
   fpformidling:
     <<: *default-konfigurasjon
     image: $FPFORMIDLING_IMAGE
@@ -272,9 +286,9 @@ services:
       timeout: 5s
       retries: 10
     depends_on:
+      - fpdokgen
       - postgres
       - vtp
-      - fpsak
   fpdokgen:
     <<: *default-konfigurasjon
     image: $FPDOKGEN_IMAGE
@@ -291,8 +305,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    depends_on:
-      - fpformidling
   fpoppdrag:
     <<: *default-konfigurasjon
     image: $FPOPPDRAG_IMAGE
@@ -311,9 +323,10 @@ services:
       timeout: 5s
       retries: 10
     depends_on:
-      - oracle
-      - vtp
-      - fpsak
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
   fptilbake:
     <<: *default-konfigurasjon
     image: $FPTILBAKE_IMAGE
@@ -344,9 +357,12 @@ services:
       timeout: 5s
       retries: 10
     depends_on:
-      - oracle
-      - vtp
-      - fpsak
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
+      fpoppdrag:
+        condition: service_started
   fprisk:
     <<: *default-konfigurasjon
     image: $FPRISK_IMAGE
@@ -367,9 +383,10 @@ services:
       timeout: 5s
       retries: 10
     depends_on:
-      - oracle
-      - vtp
-      - fpsak
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
   fpabonnent:
     <<: *default-konfigurasjon
     image: $FPABONNENT_IMAGE
@@ -392,9 +409,12 @@ services:
       timeout: 5s
       retries: 10
     depends_on:
-      - oracle
-      - vtp
-      - fpsak
+      oracle:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
+      fpsak:
+        condition: service_started
   fplos:
     <<: *default-konfigurasjon
     image: $FPLOS_IMAGE
@@ -458,6 +478,10 @@ services:
         condition: service_healthy
       vtp:
         condition: service_healthy
+      fpsak:
+        condition: service_healthy
+      fptilbake:
+        condition: service_healthy
   fpsoknad-mottak:
     <<: *default-konfigurasjon
     image: $FPSOKNAD_MOTTAK_IMAGE
@@ -493,6 +517,7 @@ services:
       timeout: 10s
       retries: 20
     depends_on:
+      - vtp
       - fpfordel
   ## SELVBETJENING SPESIFIKK
   foreldrepengesoknad-api:

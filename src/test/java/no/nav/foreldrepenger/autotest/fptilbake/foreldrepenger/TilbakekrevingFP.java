@@ -158,7 +158,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingMedVarsel();
+        vurderTilbakekrevingVedNegativSimulering.tilbakekrevingMedVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(KontrollerRevuderingsbehandling.class);
         saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);
@@ -265,7 +265,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+        vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(KontrollerRevuderingsbehandling.class);
         saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);

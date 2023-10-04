@@ -131,27 +131,3 @@ av. Her lages det ikke et script: Dette gjøres på den manuelle måten ettersom
 9) Kjør opp resten av verdikjeden
 
     `docker-compose up --quiet-pull --detach --scale fpsak=0 --scale fpformidling=0`
-
-## Eksempel 5: FPOPPDRAG og FPTILBAKE kjørende i IDE
-Her ønsker vi å kjøre FPOPPDRAG (simulering) og FPTILBAKE (tilbakekreving) i IDE mens resten av miljøet kjører i docker.
-Her har vi et eget script siden denne varianten er nødvendig for å teste simulering (ellers blir FPOPPDRAG mocket i VTP)
-og for å teste brancher av enten FPOPPDRAG eller FPTILBAKE. FP-FRONTEND kjører også utenfor.
-
-1) Kjør `cd fp-autotest/lokal-utvikling` for å komme inn i mappen _"lokal-utvikling"_.
-
-2) Kjør `./lokal-utvikling-fpoppdrag-og-fptilbake` i root dir.
-
-3) Kjør `cd docker-compose-lokal` for å komme inn i mappen som nettopp ble laget av scriptet over.
-
-4) Sett versjon som skal kjøres opp med å kjøre scriptet "*update-versions.sh*":
-    1) For Mac skriv følgende i terminalen: `./update-versions.sh`
-    2) For Windows skriv følgende i terminalen: `sh update-versions.sh`
-
-5) Kjør opp docker-compose:
-
-    `docker-compose up --quiet-pull -d --scale fpoppdrag=0 --scale fptilbake=0 --scale fpfrontend=0`
-
-6) Kjør deretter opp resten av applikasjonene, FPTILBAKE, FPOPPDRAG og FP-FRONTEND
-    1) Kjør FPTILBAKE i IDE
-    2) Kjør FPOPPDRAG i IDE
-    3) Kjør FP-FRONDEND i GitBash ved å kjøre `yarn dev` i root mappen til FP-FRONTEND

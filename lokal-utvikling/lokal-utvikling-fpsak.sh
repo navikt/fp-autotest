@@ -9,7 +9,7 @@ if [[ $ARGUMENT == down ]]; then
     exit 0
 fi
 
-sh ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk fpsak
+sh ./setup-lokal-utvikling.sh
 
 if [ -f .env ]; then
     echo "Bruker applikasjonsversjonene som er definert i eksisterende .env fil: $(pwd)/.env"

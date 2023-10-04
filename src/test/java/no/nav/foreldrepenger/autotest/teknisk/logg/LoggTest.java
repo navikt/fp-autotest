@@ -58,6 +58,7 @@ class LoggTest {
             "taskName=behandlingskontroll.tilbakeTilStart",
             "Error while loading kafka-streams-version.properties",
             "Vil automatisk prøve igjen",
+            "no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType", // TODO
             "FP-018669:Feil ved kall til Abakus: Kunne ikke hente grunnlag fra abakus", // Logges i fpsak som konsekvens av det nedenfor
             "duplicate key value violates unique constraint \\\"uidx_kobling_1\\\"" // Logges i fpabakus
     );

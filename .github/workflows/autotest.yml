@@ -62,15 +62,12 @@ jobs:
         shell: bash
         run: |
           if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
-            cd lokal-utvikling
-            ./setup-lokal-utvikling.sh --mock fptilbake --mock fpoppdrag --mock fpformidling --mock fprisk
-            cd docker-compose-lokal
-            services=("fpsak")
+            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent")
           else
-            cd resources/pipeline
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad-mottak" "fpoversikt")
           fi
 
+          cd resources/pipeline
           ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
           echo "Kjører docker compose up på følgende applikasjoner: ${services[*]}"
           docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait "${services[@]}" || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)

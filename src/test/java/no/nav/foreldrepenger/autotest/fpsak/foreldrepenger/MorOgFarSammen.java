@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
@@ -249,6 +250,12 @@ class MorOgFarSammen extends FpsakTestBase {
         // Mor's uttak
         saksbehandler.hentFagsak(morSaksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling(BERØRT_BEHANDLING);
+
+        var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                .avventSamordningIngenTilbakekreving();
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+        saksbehandler.ventTilAvsluttetBehandling();
+
         assertThat(saksbehandler.hentAvslåtteUttaksperioder()).hasSize(1);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().get(0).getFom()).isEqualTo(fellesPeriodeMorFørstegangssøknad.getFom());
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().get(0).getTom()).isEqualTo(fellesPeriodeMorFørstegangssøknad.getTom());
@@ -461,23 +468,26 @@ class MorOgFarSammen extends FpsakTestBase {
                 .as("Har revurdert behandling")
                 .isFalse();
 
-        // Endringssøknad som sier opp innvilget uttak fra start
+        // FAR: Endringssøknad som sier opp innvilget uttak fra start
         var fordelingFrasiPerioder = fordeling(utsettelsesperiode(FRI, farOpprinneligStartdato, farOpprinneligStartdato.plusWeeks(2)));
         var søknad = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.FAR, fordelingFrasiPerioder.build(), saksnummerFar);
         familie.far().søk(søknad.build());
 
-        saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.velgSisteBehandling();
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-
         saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                .avventSamordningIngenTilbakekreving();
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        // Har fått tømt uttaket
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_SENERE);
+
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().stream().map(BehandlingÅrsak::behandlingArsakType))
+                .doesNotContain(BERØRT_BEHANDLING);
+
 
         // Sender ny førstegangssøknad
         behandleSøknadForFarUtenOverlapp(familie, fødselsdato, farUtsattStartDato, saksnummerFar);
@@ -527,6 +537,9 @@ class MorOgFarSammen extends FpsakTestBase {
         far.søk(endringssøknad.build());
 
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
+        var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                .avventSamordningIngenTilbakekreving();
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
         assertThat(uttak).hasSize(1);
@@ -581,6 +594,10 @@ class MorOgFarSammen extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
+
+        var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                .tilbakekrevingMedVarsel();
+        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         saksbehandler.ventTilAvsluttetBehandling();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -642,6 +659,9 @@ class MorOgFarSammen extends FpsakTestBase {
                 .bekreftHarGyldigGrunn(fødselsdato);
         overstyrer.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
 
+        var vurderTilbakekrevingVedNegativSimulering = overstyrer.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                .tilbakekrevingUtenVarsel();
+        overstyrer.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
 
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
 
@@ -649,7 +669,9 @@ class MorOgFarSammen extends FpsakTestBase {
         beslutter.ventPåOgVelgRevurderingBehandling();
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        beslutter.bekreftAksjonspunkt(bekreftelse);
+        beslutter.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
+
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.OPPHØR);

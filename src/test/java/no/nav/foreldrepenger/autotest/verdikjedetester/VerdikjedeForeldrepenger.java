@@ -318,7 +318,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
                     hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-            vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
+            vurderTilbakekrevingVedNegativSimulering.avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
 
@@ -789,7 +789,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+        vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
 
@@ -883,7 +883,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         if (forventerNegativSimuleringForBehandling(fpStartdatoFarEndret)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler
                     .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-            vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+            vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
 
@@ -1223,7 +1223,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
+        vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
@@ -1257,7 +1257,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var vurderTilbakekrevingVedNegativSimulering2 = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-        vurderTilbakekrevingVedNegativSimulering2.setTilbakekrevingUtenVarsel();
+        vurderTilbakekrevingVedNegativSimulering2.tilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering2);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, true, true);
@@ -2024,7 +2024,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
                     hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-            vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
+            vurderTilbakekrevingVedNegativSimulering.avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
 
@@ -2099,7 +2099,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
                     hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-            vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingIgnorer();
+            vurderTilbakekrevingVedNegativSimulering.avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
 

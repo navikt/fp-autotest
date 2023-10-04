@@ -1,18 +1,29 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @BekreftelseKode(kode="5084")
 public class VurderTilbakekrevingVedNegativSimulering extends AksjonspunktBekreftelse {
 
     protected VidereBehandling videreBehandling;
     protected String varseltekst;
-    @JsonProperty("@type")
-    protected String kode;
 
     public VurderTilbakekrevingVedNegativSimulering(){
+        super();
         this.setBegrunnelse("Dette er begrunnelsen");
-        this.kode = "5084";
+    }
+
+    public VurderTilbakekrevingVedNegativSimulering tilbakekrevingMedVarsel(){
+        tilbakekrevingMedVarsel("Dette er friteksten i varselbrevet. Her skriver saksbehandler litt om hvorfor det er oppstått en feilutbetaling");
+        return this;
+    }
+
+    public VurderTilbakekrevingVedNegativSimulering tilbakekrevingUtenVarsel(){
+        setVidereBehandling(VidereBehandling.TILBAKEKR_INFOTRYGD);
+        return this;
+    }
+
+    public VurderTilbakekrevingVedNegativSimulering avventSamordningIngenTilbakekreving(){
+        setVidereBehandling(VidereBehandling.TILBAKEKR_IGNORER);
+        return this;
     }
 
     private void setVidereBehandling(VidereBehandling videreBehandling) {
@@ -22,17 +33,9 @@ public class VurderTilbakekrevingVedNegativSimulering extends AksjonspunktBekref
         this.varseltekst = varseltekst;
     }
 
-    public void setTilbakekrevingMedVarsel(){
-        setTilbakekrevingMedVarsel("Dette er friteksten i varselbrevet. Her skriver saksbehandler litt om hvorfor det er oppstått en feilutbetaling");
-    }
-    public void setTilbakekrevingMedVarsel(String varseltekst){
+    private void tilbakekrevingMedVarsel(String varseltekst){
         setVidereBehandling(VidereBehandling.TILBAKEKR_INFOTRYGD);
         setVarseltekst(varseltekst);
     }
-    public void setTilbakekrevingUtenVarsel(){
-        setVidereBehandling(VidereBehandling.TILBAKEKR_INFOTRYGD);
-    }
-    public void setTilbakekrevingIgnorer(){
-        setVidereBehandling(VidereBehandling.TILBAKEKR_IGNORER);
-    }
+
 }
