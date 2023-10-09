@@ -55,7 +55,7 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
     private static final String BEHANDLINGER_STATUS_FPSAK_URL = BEHANDLING_URL + "/status";
     private static final String BEHANDLING_PERSON_MEDLEMSKAP = BEHANDLING_URL + "/person/medlemskap-v2";
     private static final String BEHANDLING_ENGANGSSTØNAD_URL = BEHANDLING_URL + "/beregningsresultat/engangsstonad";
-    private static final String BEHANDLING_FORELDREPENGER_URL = BEHANDLING_URL + "/beregningsresultat/foreldrepenger";
+    private static final String BEHANDLING_FORELDREPENGER_URL = BEHANDLING_URL + "/beregningsresultat/dagytelse";
     private static final String BEHANDLING_FERIEPENGER_URL = BEHANDLING_URL + "/feriepengegrunnlag";
     private static final String BEHANDLING_BEREGNINGSGRUNNALG_URL = BEHANDLING_URL + "/beregningsgrunnlag";
     private static final String BEHANDLING_VILKAAR_URL = BEHANDLING_URL + "/vilkar-v2";
