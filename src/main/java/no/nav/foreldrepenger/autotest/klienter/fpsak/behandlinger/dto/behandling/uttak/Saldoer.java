@@ -15,6 +15,7 @@ public record Saldoer(Map<SaldoVisningStønadskontoType, Stonadskontoer> stonads
         FORELDREPENGER_FØR_FØDSEL,
         FLERBARNSDAGER,
         UTEN_AKTIVITETSKRAV,
+        MINSTERETT_NESTE_STØNADSPERIODE,
         MINSTERETT
     }
 }

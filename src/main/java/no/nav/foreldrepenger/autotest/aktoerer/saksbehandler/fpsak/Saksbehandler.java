@@ -441,18 +441,6 @@ public class Saksbehandler {
                 .toList();
     }
 
-
-    /*
-     * Henting av Saldo
-     */
-    public Saldoer hentSaldoerGittUttaksperioder(List<UttakResultatPeriode> uttakResultatPerioder) {
-        BehandlingMedUttaksperioderDto behandlingMedUttaksperioderDto = new BehandlingMedUttaksperioderDto();
-        behandlingMedUttaksperioderDto.setPerioder(uttakResultatPerioder);
-        behandlingMedUttaksperioderDto.setBehandlingUuid(valgtBehandling.uuid);
-
-        return behandlingerKlient.behandlingUttakStonadskontoerGittUttaksperioder(behandlingMedUttaksperioderDto);
-    }
-
     /*
      * Henting av Beregningsresultat
      */

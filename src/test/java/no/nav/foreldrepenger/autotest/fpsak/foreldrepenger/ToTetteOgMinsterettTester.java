@@ -22,7 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.Map;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Stonadskontoer;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
@@ -196,8 +199,9 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerMorBarn1);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        // TODO: Assert på forventet saldo av minsterettdager igjen (TFP-5354)
-
+        var saldoMorFS = saksbehandler.valgtBehandling.getSaldoer().stonadskontoer();
+        assertThat(saldoMorFS.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT)).isFalse();
+        assertThat(saldoMorFS.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE)).isFalse();
 
         // FAR (barn 1): Førstegangssøknad for barn 1 (40 uker gammelt)
         var far = familie.far();
@@ -216,8 +220,9 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerFarBarn1);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        // TODO: Assert på forventet saldo av minsterettdager igjen (TFP-5354)
-
+        var saldoFarFs = saksbehandler.valgtBehandling.getSaldoer().stonadskontoer();
+        assertThat(saldoFarFs.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT)).isFalse();
+        assertThat(saldoFarFs.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE)).isFalse();
 
         // MOR (barn 2): Førstegangssøknad på Barn 2 (termin 40 uker etter barn 1)
         var termindatoBarn2 = fødselsdatoBarn1.plusWeeks(40);
@@ -245,8 +250,6 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 .extracting(BehandlingÅrsak::behandlingArsakType)
                 .containsExactly(REBEREGN_FERIEPENGER);
 
-
-
         // FAR (barn 1): Revurdering pga overlapp med nytt barn
         saksbehandler.hentFagsak(saksnummerFarBarn1);
         saksbehandler.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
@@ -260,6 +263,11 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                         .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling()));
         beslutter.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
+        var saldoFarRevurdering = saksbehandler.valgtBehandling.getSaldoer().stonadskontoer();
+        assertThat(saldoFarRevurdering.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT)).isFalse();
+        assertThat(saldoFarRevurdering.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE)).isTrue();
+        assertThat(saldoFarRevurdering.get(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE).saldo())
+                .isZero();
         assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker())
                 .map(BehandlingÅrsak::behandlingArsakType)
                 .containsExactly(BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN); // TODO: (TFP-5356) Skal ikke føre til opphør

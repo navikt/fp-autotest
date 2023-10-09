@@ -12,6 +12,7 @@ import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepe
 import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
@@ -51,8 +52,6 @@ import java.time.LocalDate;
 @Tag("foreldrepenger")
 class Revurdering extends FpsakTestBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(Revurdering.class);
-
     @Test
     @DisplayName("Revurdering opprettet manuelt av saksbehandler.")
     @Description("Førstegangsbehandling til positivt vedtak. Saksbehandler oppretter revurdering manuelt. " +
@@ -91,16 +90,18 @@ class Revurdering extends FpsakTestBase {
                 .avvis(Avslagsårsak.SØKER_ER_IKKE_MEDLEM)
                 .setBegrunnelse("avvist");
         overstyrer.overstyr(overstyrMedlemskapsvilkaaret);
+
+        var vurderTilbakekrevingVedNegativSimulering = overstyrer.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                .tilbakekrevingMedVarsel();
+        overstyrer.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
-        assertThat(overstyrer.valgtBehandling.behandlingsresultat.type())
-                .as("Behandlingsresultat")
-                .isEqualTo(BehandlingResultatType.OPPHØR);
 
         beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgRevurderingBehandling();
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
-        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.bekreftAksjonspunkt(bekreftelse);
+        beslutter.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
 
         assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
@@ -111,7 +112,6 @@ class Revurdering extends FpsakTestBase {
         assertThat(beslutter.valgtBehandling.status)
                 .as("Behandlingsstatus")
                 .isEqualTo(BehandlingStatus.AVSLUTTET);
-        logger.info("Status på sak: {}", beslutter.valgtFagsak.status().getKode());
     }
 
     @Test
