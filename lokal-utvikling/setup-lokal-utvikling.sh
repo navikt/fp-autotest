@@ -95,7 +95,7 @@ for applikasjon in "${applikasjoner[@]}"; do
     for ((i=0;i<${#replace_port_array[@]};++i)); do
         for f in {.*,*}; do
             if [ -f "$f" ] && [[ $f != *.sh ]] && [[ $f != *.sql ]]; then # Only files %% not script files && not sql files
-                sed -i.bak "s/${applikasjon}:${replace_port_array[i]}/${host_adresse}:${with_port_array[i]}/g" "$f"
+                sed -i.bak "s/\:\/\/${applikasjon}:${replace_port_array[i]}/\:\/\/${host_adresse}:${with_port_array[i]}/g" "$f"
                 rm $f.bak
             fi
         done
