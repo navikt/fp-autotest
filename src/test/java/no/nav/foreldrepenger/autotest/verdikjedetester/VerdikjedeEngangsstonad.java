@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Historikkinns
 import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
-import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper;
 
 @Tag("verdikjede")
 class VerdikjedeEngangsstonad extends VerdikjedeTestBase {

@@ -86,8 +86,10 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public List<UttakResultatPeriode> splitPeriode(LukketPeriodeMedVedlegg periode, LocalDate tomAvFørstePeriodeEtterSplitting) {
-        var fom = periode.getFom();
-        var tom = periode.getTom();
+        return splitPeriode(periode.getFom(), periode.getTom(), tomAvFørstePeriodeEtterSplitting);
+    }
+
+    public List<UttakResultatPeriode> splitPeriode(LocalDate fom, LocalDate tom, LocalDate tomAvFørstePeriodeEtterSplitting) {
         UttakResultatPeriode periode1 = finnPeriode(fom, tom);
 
         periode1.setTom(tomAvFørstePeriodeEtterSplitting);

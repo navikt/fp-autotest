@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.IdportenProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.tokenx.TokenXVekslingKlient;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
@@ -15,6 +16,10 @@ public final class TokenProvider {
 
     public static String tokenXToken(Fødselsnummer fnr) {
         return TokenXVekslingKlient.hentAccessTokenForBruker(fnr);
+    }
+
+    public static String idporten(Fødselsnummer fnr) {
+        return IdportenProvider.idportenToken(fnr);
     }
 
 

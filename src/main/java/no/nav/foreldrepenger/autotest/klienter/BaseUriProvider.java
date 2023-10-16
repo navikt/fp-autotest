@@ -10,6 +10,7 @@ public class BaseUriProvider {
     public static final URI FPRISK_BASE = URI.create(LOCALHOST + ":8075/fprisk/api");
     public static final URI FPTILBAKE_BASE = URI.create(LOCALHOST + ":8030/fptilbake/api");
     public static final URI FPSOKNAD_MOTTAK_BASE = URI.create(LOCALHOST + ":9001/api");
+    public static final URI FORELDREPENGESOKNAD_API_BASE = URI.create(LOCALHOST + ":9002");
     public static final URI FPOVERSIKT_BASE = URI.create(LOCALHOST + ":8889/api");
 
 }

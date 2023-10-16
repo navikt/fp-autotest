@@ -5,7 +5,7 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.Omsorgsoverta
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.OMSORGSVILKÅRET;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
 import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 

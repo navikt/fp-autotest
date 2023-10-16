@@ -2,15 +2,13 @@ package no.nav.foreldrepenger.autotest.fptilbake.foreldrepenger;
 
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEndringErketyper.lagEndringssøknadFødsel;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEndringErketyper.lagEndringssøknad;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttakErketyper.fordeling;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -27,8 +25,10 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnla
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
-
-import java.time.LocalDate;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.AnnenforelderErketyper;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -52,9 +52,10 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.far()))
-                .medMottattDato(fpStartdato);
-        var saksnummer = mor.søk(søknad.build());
+                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()))
+                .medMottattdato(fpStartdato)
+                .build();
+        var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
@@ -65,8 +66,9 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
         AllureHelper.debugFritekst("Ferdig med førstegangsbehandling");
 
         var fordeling = fordeling(
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1)));
-        var søknadE = lagEndringssøknadFødsel(fødselsdato, BrukerRolle.MOR, fordeling.build(), saksnummer);
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
+        );
+        var søknadE = lagEndringssøknad(søknad, saksnummer, fordeling);
         var saksnummerE = mor.søk(søknadE.build());
 
         saksbehandler.hentFagsak(saksnummerE);

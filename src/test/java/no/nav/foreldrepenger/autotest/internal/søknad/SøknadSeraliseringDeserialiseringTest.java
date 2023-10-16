@@ -1,17 +1,17 @@
 package no.nav.foreldrepenger.autotest.internal.søknad;
 
 import static no.nav.foreldrepenger.common.domain.BrukerRolle.MOR;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadTermin;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper.delvisTilrettelegging;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper.helTilrettelegging;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadTermin;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper.delvisTilrettelegging;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper.helTilrettelegging;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,14 +21,15 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
-import no.nav.foreldrepenger.common.domain.Søknad;
-import no.nav.foreldrepenger.generator.soknad.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.MedlemsskapErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper;
+import no.nav.foreldrepenger.generator.soknad.api.builder.SøkerBuilder;
+import no.nav.foreldrepenger.generator.soknad.api.dto.SøknadDto;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.ArbeidsforholdErketyper;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.MedlemsskapErketyper;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.OpptjeningErketyper;
 
 public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBase {
 
-    private static Søknad foreldrepengesøknad;
+    private static SøknadDto foreldrepengesøknad;
 
     @BeforeAll
     public static void byggSøknadd(){
@@ -38,12 +39,12 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
 
     @Test
     public void søkerTest() {
-        test(foreldrepengesøknad.getSøker());
+        test(foreldrepengesøknad.søker());
     }
 
     @Test
     public void foreldrepengerYtelseTest() {
-        test(foreldrepengesøknad.getYtelse());
+        test(foreldrepengesøknad);
     }
 
     @Test
@@ -53,7 +54,7 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
                 .medMedlemsskap(MedlemsskapErketyper.medlemskapUtlandetForrige12mnd())
                 .build());
         test(lagSøknadForeldrepengerAdopsjon(LocalDate.now(), MOR, true)
-                .medOpptjening(OpptjeningErketyper.egenNaeringOgFrilansOpptjening("992261005"))
+                .medSøker(new SøkerBuilder(MOR).medSelvstendigNæringsdrivendeInformasjon(List.of(OpptjeningErketyper.egenNaeringOpptjening("992261005"))).build())
                 .build());
     }
 

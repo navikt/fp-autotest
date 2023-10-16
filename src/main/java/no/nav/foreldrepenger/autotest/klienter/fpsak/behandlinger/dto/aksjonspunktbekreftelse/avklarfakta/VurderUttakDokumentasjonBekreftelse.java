@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.LukketPeriodeMedVedlegg;
+import no.nav.foreldrepenger.generator.soknad.api.dto.ÅpenPeriodeDto;
 
 @BekreftelseKode(kode = AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE)
 public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse {
@@ -34,6 +35,11 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
+    public VurderUttakDokumentasjonBekreftelse godkjenn(ÅpenPeriodeDto åpenPeriodeDto) {
+        vurder(GODKJENT, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
+        return this;
+    }
+
     public VurderUttakDokumentasjonBekreftelse godkjenn(LukketPeriodeMedVedlegg periode) {
         vurder(GODKJENT, null, periode);
         return this;
@@ -44,8 +50,13 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
+    public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(ÅpenPeriodeDto periode) {
+        vurder(IKKE_GODKJENT, null, periode.fom(), periode.tom());
+        return this;
+    }
+
     public VurderUttakDokumentasjonBekreftelse godkjennSykdom() {
-        vurder(GODKJENT, Behov.Årsak.SYKDOM_SØKER, null);
+        vurder(GODKJENT, Behov.Årsak.SYKDOM_SØKER, null, null);
         return this;
     }
 
@@ -59,18 +70,41 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
+
+    public VurderUttakDokumentasjonBekreftelse ikkeDokumentert(ÅpenPeriodeDto åpenPeriodeDto) {
+        vurder(IKKE_DOKUMENTERT, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
+        return this;
+    }
+
     private void vurder(Vurdering vurdering,
                         Behov.Årsak årsak,
                         LukketPeriodeMedVedlegg periode) {
+        if (periode == null) {
+            vurder(vurdering, årsak, null, null);
+        } else {
+            vurder(vurdering, årsak, periode.getFom(), periode.getTom());
+        }
+    }
+
+    private void vurder(Vurdering vurdering,
+                        Behov.Årsak årsak,
+                        LocalDate fom,
+                        LocalDate tom) {
         vurderingBehov = vurderingBehov.stream()
-                .map(vb -> likPeriode(periode, vb) && årsak == null || vb.årsak == årsak ? new DokumentasjonVurderingBehov(vb.fom,
+                .map(vb -> likPeriode(fom, tom, vb) && årsak == null || vb.årsak == årsak ? new DokumentasjonVurderingBehov(vb.fom,
                         vb.tom, vb.type, vb.årsak, vurdering) : vb)
                 .toList();
         this.begrunnelse = "autotest begrunnelse";
     }
 
-    private static boolean likPeriode(LukketPeriodeMedVedlegg periode, DokumentasjonVurderingBehov vb) {
-        return periode == null || (periode.getFom().isEqual(vb.fom) && periode.getTom().isEqual(vb.tom));
+
+
+    private static boolean likPeriode(LocalDate fom, LocalDate tom, DokumentasjonVurderingBehov vb) {
+        if (fom == null) {
+            return true;
+        }
+
+        return fom.isEqual(vb.fom) && tom.isEqual(vb.tom);
     }
 
     @Override
