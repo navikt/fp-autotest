@@ -8,20 +8,14 @@ import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsA
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UFØRE;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.FordelingErketyper.fordeling;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.utsettelsesperiode;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttakErketyper.fordeling;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttaksperioderErketyper.utsettelsesperiode;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttaksperioderErketyper.uttaksperiode;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-
-import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -40,7 +34,11 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
-import no.nav.foreldrepenger.generator.soknad.erketyper.RettigheterErketyper;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.AnnenforelderErketyper;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -93,10 +91,9 @@ class RegresjonPreWLB extends FpsakTestBase {
                 uttaksperiode3
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
-                .medFordeling(fordeling.build())
-                .medRettigheter(RettigheterErketyper.annenpartIkkeRettOgMorHarUføretrygd())
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottattDato(fødselsdato);
+                .medFordeling(fordeling)
+                .medAnnenForelder(AnnenforelderErketyper.annenpartIkkeRettOgMorHarUføretrygd(familie.mor()))
+                .medMottattdato(fødselsdato);
         var saksnummer = far.søk(søknad.build());
 
         var arbeidsgiver = far.arbeidsgiver();
@@ -112,10 +109,10 @@ class RegresjonPreWLB extends FpsakTestBase {
 
         var kontrollerAktivitetskravBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
-                .ikkeDokumentert(uttaksperiode1)
-                .ikkeDokumentert(utsettelsesperiode1)
-                .ikkeDokumentert(uttaksperiode2)
-                .ikkeDokumentert(utsettelsesperiode2)
+                .ikkeDokumentert(uttaksperiode1.tidsperiode())
+                .ikkeDokumentert(utsettelsesperiode1.tidsperiode())
+                .ikkeDokumentert(uttaksperiode2.tidsperiode())
+                .ikkeDokumentert(utsettelsesperiode2.tidsperiode())
                 .setBegrunnelse("Mor er ikke i aktivtet i perioden som det søkes om, med unntak av siste periode som søkes uten aktivitetskrav");
         saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
 
@@ -196,13 +193,12 @@ class RegresjonPreWLB extends FpsakTestBase {
         var fordeling = fordeling(
                 uttaksperiodeIfmFødsel,
                 uttaksperiode(StønadskontoType.FEDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(20).minusDays(1)),
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(26).minusDays(1), ARBEID))
-                .build();
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(26).minusDays(1), ARBEID)
+        );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medFordeling(fordeling)
-                .medRettigheter(RettigheterErketyper.beggeForeldreRettIkkeAleneomsorg())
-                .medAnnenForelder(lagNorskAnnenforeldre(familie.mor()))
-                .medMottattDato(fødselsdato);
+                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.mor()))
+                .medMottattdato(fødselsdato);
         var saksnummer = far.søk(søknad.build());
         var arbeidsgiver = far.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fødselsdato);
@@ -216,13 +212,13 @@ class RegresjonPreWLB extends FpsakTestBase {
 
         var avklarFaktaUttakPerioder = saksbehandler
                 .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
-                .ikkeGodkjenn(uttaksperiodeIfmFødsel)
+                .ikkeGodkjenn(uttaksperiodeIfmFødsel.tidsperiode())
                 .godkjennMorsAktivitet(VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
-                .avslåPeriode(uttaksperiodeIfmFødsel.getFom(), uttaksperiodeIfmFødsel.getTom(), DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
+                .avslåPeriode(uttaksperiodeIfmFødsel.tidsperiode().fom(), uttaksperiodeIfmFødsel.tidsperiode().tom(), DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);

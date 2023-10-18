@@ -379,6 +379,16 @@ public class Saksbehandler {
     /*
      * Henlegg behandling eller sett på vent
      */
+    public void ventTilBehandlingErPåVent() {
+        if (Boolean.TRUE.equals(valgtBehandling.behandlingPaaVent)) {
+            return;
+        }
+        Vent.til(() -> {
+            refreshBehandling();
+            return valgtBehandling.behandlingPaaVent;
+        }, 60, "Behandling kom aldri på vent");
+    }
+
     @Step("Setter behandling på vent")
     public void settBehandlingPåVent(LocalDate frist, Venteårsak årsak) {
         behandlingerKlient.settPaVent(new SettBehandlingPaVentDto(valgtBehandling, frist, årsak));

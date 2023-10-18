@@ -29,6 +29,10 @@ import no.nav.foreldrepenger.common.innsending.mappers.V1SvangerskapspengerDomai
 import no.nav.foreldrepenger.common.innsending.mappers.V3EngangsstønadDomainMapper;
 import no.nav.foreldrepenger.common.innsending.mappers.V3ForeldrepengerDomainMapper;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.generator.soknad.api.dto.MottattTidspunkt;
+import no.nav.foreldrepenger.generator.soknad.api.dto.SøknadDto;
+import no.nav.foreldrepenger.generator.soknad.api.dto.endringssøknad.EndringssøknadDto;
+import no.nav.foreldrepenger.generator.soknad.api.mapper.SøknadMapper;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
 import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
@@ -52,34 +56,34 @@ public class Fordel extends DokumentInnsendingHjelper {
      * Sender inn søkand og returnerer saksinformasjon
      */
     @Override
-    public Saksnummer sendInnSøknad(Endringssøknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
-        return sendInnSøknad(søknad, aktørId, fnr, aktørIdAnnenpart, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+    public Saksnummer sendInnSøknad(SøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+        return sendInnSøknad(SøknadMapper.tilSøknad(søknad, mottattdato(søknad)), aktørId, fnr, aktørIdAnnenpart, saksnummer);
     }
 
-    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, DokumenttypeId dokumenttypeId) {
-        return sendInnSøknad(søknad, aktørId, fnr, aktørIdAnnenpart, dokumenttypeId, null);
+    @Override
+    public Saksnummer sendInnSøknad(EndringssøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+        return sendInnSøknad(SøknadMapper.tilEndringssøknad(søknad, mottattdato(søknad)), aktørId, fnr, aktørIdAnnenpart, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
     }
 
     @Override
     @Step("Sender inn papirsøknad foreldrepenger")
     public Saksnummer sendInnPapirsøknadForeldrepenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart) {
-        return sendInnSøknad(null, aktørId, fnr, aktørIdAnnenpart, SØKNAD_FORELDREPENGER_FØDSEL);
+        return sendInnSøknad(null, aktørId, fnr, aktørIdAnnenpart, SØKNAD_FORELDREPENGER_FØDSEL, null);
     }
 
     @Override
     @Step("Sender inn endringssøknad på papir")
     public Saksnummer sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
-        return sendInnSøknad(null, aktørId, fnr, aktørIdAnnenpart, DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+        return sendInnSøknad(null, aktørId, fnr, aktørIdAnnenpart, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
     }
 
     @Override
     @Step("Sender inn papirsøknad engangsstønad")
     public Saksnummer sendInnPapirsøknadEngangsstønad(AktørId aktørId, Fødselsnummer fnr) {
-        return sendInnSøknad(null, aktørId, fnr, null, SØKNAD_ENGANGSSTØNAD_FØDSEL);
+        return sendInnSøknad(null, aktørId, fnr, null, SØKNAD_ENGANGSSTØNAD_FØDSEL, null);
     }
 
-    @Override
-    public Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+    private Saksnummer sendInnSøknad(Søknad søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         var dokumenttypeId = dokumentTypeFraRelasjon(søknad);
         return sendInnSøknad(søknad, aktørId, fnr, aktørIdAnnenpart, dokumenttypeId, saksnummer);
     }
@@ -238,4 +242,13 @@ public class Fordel extends DokumentInnsendingHjelper {
     private static String lagUnikEksternReferanseId() {
         return "AR" + String.format("%08d", ++inkrementForEksternReferanse);
     }
+
+    private static LocalDate mottattdato(MottattTidspunkt m) {
+        if (m.mottattdato() == null) {
+            return LocalDate.now();
+        } else {
+            return m.mottattdato();
+        }
+    }
+
 }

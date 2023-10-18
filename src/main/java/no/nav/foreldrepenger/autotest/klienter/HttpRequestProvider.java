@@ -30,6 +30,12 @@ public final class HttpRequestProvider {
         return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.tokenXToken(søker));
     }
 
+    public static HttpRequest.Builder requestMedInnloggetBrukerIdporten(Fødselsnummer søker) {
+        var requestBuilder = requestMedBasicHeadere();
+        return medBearerTokenOgConsumerId(requestBuilder, TokenProvider.idporten(søker));
+    }
+
+
     public static HttpRequest.Builder requestMedInnloggetSaksbehandler(SaksbehandlerRolle saksbehandlerRolle, String clientId) {
         var requestBuilder = requestMedBasicHeadere();
         return medBearerTokenOgConsumerId(requestBuilder, AzureTokenProvider.azureOboToken(saksbehandlerRolle));

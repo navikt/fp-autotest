@@ -2,9 +2,9 @@ package no.nav.foreldrepenger.autotest.fptilbake.svangerskapspenger;
 
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.ArbeidsforholdErketyper.virksomhet;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
-import static no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.ArbeidsforholdErketyper.virksomhet;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
+import static no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;

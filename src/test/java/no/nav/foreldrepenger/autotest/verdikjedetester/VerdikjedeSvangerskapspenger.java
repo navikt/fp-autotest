@@ -8,11 +8,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -30,10 +25,15 @@ import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
-import no.nav.foreldrepenger.generator.soknad.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.OpptjeningErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.SøknadSvangerskapspengerErketyper;
-import no.nav.foreldrepenger.generator.soknad.erketyper.TilretteleggingsErketyper;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.generator.soknad.api.builder.SøkerBuilder;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.ArbeidsforholdErketyper;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.OpptjeningErketyper;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadSvangerskapspengerErketyper;
+import no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("verdikjede")
 class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
@@ -256,8 +256,11 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging1))
-                .medOpptjening(opptjening);
-        var saksnummer1 = mor.søk(søknad1.build());
+                .medSøker(new SøkerBuilder(BrukerRolle.MOR)
+                        .medSelvstendigNæringsdrivendeInformasjon(List.of(opptjening))
+                        .build())
+                .build();
+        var saksnummer1 = mor.søk(søknad1);
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP()
@@ -301,8 +304,11 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging2))
-                .medOpptjening(opptjening);
-        var saksnummer2 = mor.søk(søknad2.build());
+                .medSøker(new SøkerBuilder(BrukerRolle.MOR)
+                        .medSelvstendigNæringsdrivendeInformasjon(List.of(opptjening))
+                        .build())
+                .build();
+        var saksnummer2 = mor.søk(søknad2);
 
         saksbehandler.hentFagsak(saksnummer2);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
