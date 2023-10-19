@@ -4,8 +4,8 @@ import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Støn
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
-import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.UttakplanPeriodeBuilder.gradert;
-import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.UttakplanPeriodeBuilder.uttak;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,45 +32,43 @@ public final class UttakMaler {
 
     public static List<UttaksplanPeriodeDto> fordelingMorHappyCase(LocalDate familehendelseDato) {
         return List.of(
-                uttak(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)).build(),
-                uttak(MØDREKVOTE, familehendelseDato, familehendelseDato.plusWeeks(10)).build()
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, familehendelseDato, familehendelseDato.plusWeeks(10))
         );
     }
 
 
     public static List<UttaksplanPeriodeDto> fordelingMorHappyCaseLong(LocalDate familehendelseDato) {
         return List.of(
-                uttak(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)).build(),
-                uttak(MØDREKVOTE, familehendelseDato, familehendelseDato.plusWeeks(15).minusDays(1)).build(),
-                uttak(FELLESPERIODE, familehendelseDato.plusWeeks(15), familehendelseDato.plusWeeks(31).minusDays(1)).build()
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, familehendelseDato, familehendelseDato.plusWeeks(15).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, familehendelseDato.plusWeeks(15), familehendelseDato.plusWeeks(31).minusDays(1))
         );
     }
 
     public static List<UttaksplanPeriodeDto> fordelingFarHappyCase(LocalDate familehendelseDato) {
         return List.of(
-                uttak(FELLESPERIODE, familehendelseDato.plusWeeks(3), familehendelseDato.plusWeeks(5)).build()
+                uttaksperiode(FELLESPERIODE, familehendelseDato.plusWeeks(3), familehendelseDato.plusWeeks(5))
         );
     }
 
     public static List<UttaksplanPeriodeDto> fordelingEndringssøknadGradering(StønadskontoType stønadskonto, LocalDate fom, LocalDate tom, ArbeidsgiverIdentifikator identifikator, Integer arbeidstidsprosentIOrgnr) {
         return List.of(
-                gradert(stønadskonto, fom, tom, Double.valueOf(arbeidstidsprosentIOrgnr))
-                        .medOrgnumre(List.of(identifikator.value()))
-                        .build()
+                graderingsperiodeArbeidstaker(stønadskonto, fom, tom, identifikator, arbeidstidsprosentIOrgnr)
         );
     }
 
     public static List<UttaksplanPeriodeDto> fordelingFarAleneomsorg(LocalDate familehendelseDato) {
         return List.of(
-                uttak(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(20)).build()
+                uttaksperiode(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(20))
         );
                 //.erAnnenForelderInformert(false); // TODO
     }
 
     public static List<UttaksplanPeriodeDto> fordelingMorAleneomsorgHappyCase(LocalDate familehendelseDato) {
         return List.of(
-                uttak(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)).build(),
-                uttak(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(100)).build()
+                uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)),
+                uttaksperiode(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(100))
         );
                 // .erAnnenForelderInformert(false); // TODO
     }
