@@ -7,10 +7,10 @@ import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Støn
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttakErketyper.fordeling;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.AnnenforelderErketyper;
+import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
@@ -68,7 +68,7 @@ class Termin extends FpsakTestBase {
                 .hasSize(1);
 
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         mor.søk(søknad.build(), saksnummer);
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -102,7 +102,7 @@ class Termin extends FpsakTestBase {
         var termindato = LocalDate.now().minusWeeks(1);
         var startDatoForeldrepenger = termindato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -168,7 +168,7 @@ class Termin extends FpsakTestBase {
         );
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
                 .medFordeling(fordeling)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         mor.arbeidsgivere().sendDefaultInntektsmeldingerFP(saksnummer, fpstartdato);
@@ -234,7 +234,7 @@ class Termin extends FpsakTestBase {
         );
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
                 .medFordeling(fordeling)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();

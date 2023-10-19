@@ -11,8 +11,8 @@ import java.time.Duration;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Kvittering;
-import no.nav.foreldrepenger.generator.soknad.api.dto.SøknadDto;
-import no.nav.foreldrepenger.generator.soknad.api.dto.endringssøknad.EndringssøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
 
 public class MottakKlient {
 

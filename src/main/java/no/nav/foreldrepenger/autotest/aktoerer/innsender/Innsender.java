@@ -9,8 +9,8 @@ import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.generator.soknad.api.dto.SøknadDto;
-import no.nav.foreldrepenger.generator.soknad.api.dto.endringssøknad.EndringssøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 
 public interface Innsender {

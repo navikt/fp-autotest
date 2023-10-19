@@ -5,8 +5,8 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.inntektsmelding.erketyper.InntektsmeldingForeldrepengeErketyper.lagInntektsmelding;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.AnnenforelderErketyper;
+import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 import org.junit.jupiter.api.DisplayName;
@@ -73,7 +73,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         var orgnummer = new Orgnummer("889640782");
@@ -122,7 +122,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var termindato = fødselsdato.plusDays(2);
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

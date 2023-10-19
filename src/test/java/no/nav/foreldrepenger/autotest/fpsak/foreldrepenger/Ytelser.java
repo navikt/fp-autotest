@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.AnnenforelderErketyper;
+import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
 
@@ -49,7 +49,7 @@ class Ytelser extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -100,7 +100,7 @@ class Ytelser extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();

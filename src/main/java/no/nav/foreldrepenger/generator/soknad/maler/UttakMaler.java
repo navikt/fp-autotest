@@ -1,11 +1,11 @@
-package no.nav.foreldrepenger.generator.soknad.api.erketyper;
+package no.nav.foreldrepenger.generator.soknad.maler;
 
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttaksperioderErketyper.graderingsperiodeArbeidstaker;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.graderingsperiodeArbeidstaker;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,14 +13,14 @@ import java.util.List;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
-import no.nav.foreldrepenger.generator.soknad.api.dto.foreldrepenger.UttaksplanPeriodeDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.UttaksplanPeriodeDto;
 
 /**
  * Fordeling == Uttaksplan
  */
-public final class UttakErketyper {
+public final class UttakMaler {
 
-    private UttakErketyper() {
+    private UttakMaler() {
     }
 
     public static List<UttaksplanPeriodeDto> fordelingHappyCase(LocalDate familehendelseDato, BrukerRolle søkerRolle) {

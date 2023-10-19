@@ -4,10 +4,10 @@ import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SE
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType.OMSORGSVILKÅRET;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttakErketyper.fordeling;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.UttaksperioderErketyper.uttaksperiode;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 
 import java.time.LocalDate;
@@ -32,11 +32,11 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Stønadskont
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.generator.soknad.api.builder.SøkerBuilder;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.AnnenforelderErketyper;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.OpptjeningErketyper;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.RelasjonTilBarnErketyper;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper;
+import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
@@ -87,17 +87,17 @@ class Aksjonspunkter extends FpsakTestBase {
 
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var adopsjon = RelasjonTilBarnErketyper.adopsjon(
+        var adopsjon = BarnBuilder.adopsjon(
                 fødselsdato,
                 false
-        );
+        ).build();
         var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(10))
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medBarn(adopsjon)
                 .medFordeling(fordeling)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -121,7 +121,7 @@ class Aksjonspunkter extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
-        var søknad = SøknadEngangsstønadErketyper.lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
+        var søknad = SøknadEngangsstønadMaler.lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -150,7 +150,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -173,7 +173,7 @@ class Aksjonspunkter extends FpsakTestBase {
 
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(3);
-        var næringOpptjening = OpptjeningErketyper.egenNaeringOpptjening(mor.arbeidsforhold().arbeidsgiverIdentifikasjon().value(), true, 30_000, false);
+        var næringOpptjening = OpptjeningMaler.egenNaeringOpptjening(mor.arbeidsforhold().arbeidsgiverIdentifikasjon().value(), true, 30_000, false);
         var fpStartdato = fødselsdato.minusWeeks(3);
         var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
@@ -182,7 +182,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
                 .medSøker(new SøkerBuilder(BrukerRolle.MOR).medSelvstendigNæringsdrivendeInformasjon(List.of(næringOpptjening)).build())
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
@@ -217,8 +217,8 @@ class Aksjonspunkter extends FpsakTestBase {
         var termindato = LocalDate.now().plusWeeks(3);
         var fpStartdato = termindato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medSøker(new SøkerBuilder(BrukerRolle.MOR).medAndreInntekterSiste10Mnd(List.of(OpptjeningErketyper.utenlandskArbeidsforhold(CountryCode.NO))).build())
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medSøker(new SøkerBuilder(BrukerRolle.MOR).medAndreInntekterSiste10Mnd(List.of(OpptjeningMaler.utenlandskArbeidsforhold(CountryCode.NO))).build())
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -242,7 +242,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var fødselsdato = LocalDate.now().minusWeeks(3);
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -273,7 +273,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderErketyper.norskMedRettighetNorge(familie.far()));
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();

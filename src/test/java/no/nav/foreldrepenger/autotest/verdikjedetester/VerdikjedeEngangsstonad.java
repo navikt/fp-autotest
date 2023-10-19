@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.Historikkinns
 import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper;
+import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
 
 @Tag("verdikjede")
 class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
@@ -46,7 +46,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
         var termindato = LocalDate.now().plusWeeks(3);
-        var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(BrukerRolle.MOR, termindato);
         var saksnummer = familie.mor().søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -92,7 +92,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
         var termindato = LocalDate.now().plusWeeks(3);
-        var søknad = SøknadEngangsstønadErketyper.lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(BrukerRolle.MOR, termindato);
         var mor = familie.mor();
         var saksnummer = mor.søk(søknad.build());
 

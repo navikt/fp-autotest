@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.autotest.fptilbake.engangsstonad;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType.TILBAKEKREVING;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadAdopsjon;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;

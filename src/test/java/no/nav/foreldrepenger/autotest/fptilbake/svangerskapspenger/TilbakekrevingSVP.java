@@ -2,16 +2,12 @@ package no.nav.foreldrepenger.autotest.fptilbake.svangerskapspenger;
 
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.ArbeidsforholdErketyper.virksomhet;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad;
+import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler.virksomhet;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -28,7 +24,10 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBuilder;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -50,10 +49,11 @@ class TilbakekrevingSVP extends FptilbakeTestBase {
         var mor = familie.mor();
         var termindato = LocalDate.now().plusMonths(3);
         var arbeidsgiver = mor.arbeidsgiver();
-        var tilrettelegging = ingenTilrettelegging(
+        var tilrettelegging = TilretteleggingBuilder.ingen(
                 LocalDate.now(),
                 LocalDate.now(),
-                virksomhet((Orgnummer) arbeidsgiver.arbeidsgiverIdentifikator()));
+                virksomhet((Orgnummer) arbeidsgiver.arbeidsgiverIdentifikator()))
+                .build();
         var søknad = lagSvangerskapspengerSøknad(BrukerRolle.MOR, termindato, List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
