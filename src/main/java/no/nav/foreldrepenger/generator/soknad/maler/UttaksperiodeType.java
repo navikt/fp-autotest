@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.generator.soknad.api.erketyper;
+package no.nav.foreldrepenger.generator.soknad.maler;
 
 public enum UttaksperiodeType {
     FLERBARNSDAGER,

@@ -28,11 +28,11 @@ import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.generator.soknad.api.builder.SøkerBuilder;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.OpptjeningErketyper;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadSvangerskapspengerErketyper;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper;
+import no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("verdikjede")
@@ -50,15 +50,16 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
         var mor = familie.mor();
-        var tilrettelegginsprosent = 0;
+        var tilrettelegginsprosent = 0.0;
         var termindato = LocalDate.now().plusMonths(3);
         var arbeidsforholdMor = mor.arbeidsforhold();
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
-        var tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
+        var tilrettelegging = TilretteleggingBuilder.ingen(
                 LocalDate.now(),
                 LocalDate.now(),
-                ArbeidsforholdErketyper.virksomhet(((Orgnummer) orgnummer)));
-        var søknad = SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad(
+                ArbeidsforholdMaler.virksomhet(((Orgnummer) orgnummer)))
+                .build();
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging));
@@ -108,14 +109,15 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var mor = familie.mor();
         var arbeidsforholdMor = mor.arbeidsforhold();
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
-        var tilrettelegginsprosent = 40;
+        var tilrettelegginsprosent = 40.0;
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
+        var tilrettelegging = TilretteleggingBuilder.delvis(
                 LocalDate.now(),
                 LocalDate.now(),
-                ArbeidsforholdErketyper.virksomhet((Orgnummer) orgnummer),
-                BigDecimal.valueOf(tilrettelegginsprosent));
-        var søknad = SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad(
+                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer),
+                tilrettelegginsprosent)
+                .build();
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging));
@@ -171,12 +173,13 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsforhold1 = arbeidsforholdene.get(0);
         var orgnummer1 = arbeidsforhold1.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegginsprosent = 0;
-        var tilrettelegging = TilretteleggingsErketyper.ingenTilrettelegging(
+        var tilrettelegginsprosent = 0.0;
+        var tilrettelegging = TilretteleggingBuilder.ingen(
                 LocalDate.now(),
                 LocalDate.now(),
-                ArbeidsforholdErketyper.virksomhet((Orgnummer) orgnummer1));
-        var søknad = SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad(
+                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1))
+                .build();
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging));
@@ -241,18 +244,19 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsforhold = mor.arbeidsforhold();
         var arbeidsgiverIdentifikator = arbeidsforhold.arbeidsgiverIdentifikasjon();
         var næringsinntekt = mor.næringsinntekt();
-        var opptjening = OpptjeningErketyper.egenNaeringOpptjening(
+        var opptjening = OpptjeningMaler.egenNaeringOpptjening(
                 arbeidsgiverIdentifikator.value(),
                 false,
                 næringsinntekt,
                 false);
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegginsprosent = 0;
-        var tilrettelegging1 = TilretteleggingsErketyper.ingenTilrettelegging(
+        var tilrettelegginsprosent = 0.0;
+        var tilrettelegging1 = TilretteleggingBuilder.ingen(
                 LocalDate.now().minusMonths(2),
                 LocalDate.now().minusMonths(2),
-                ArbeidsforholdErketyper.virksomhet((Orgnummer) arbeidsgiverIdentifikator));
-        var søknad1 = SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad(
+                ArbeidsforholdMaler.virksomhet((Orgnummer) arbeidsgiverIdentifikator))
+                .build();
+        var søknad1 = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging1))
@@ -296,11 +300,12 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .isTrue();
 
         /* SØKNAD 2 */
-        var tilrettelegging2 = TilretteleggingsErketyper.ingenTilrettelegging(
+        var tilrettelegging2 = TilretteleggingBuilder.ingen(
                 LocalDate.now(),
                 LocalDate.now(),
-                ArbeidsforholdErketyper.selvstendigNæringsdrivende());
-        var søknad2 = SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad(
+                ArbeidsforholdMaler.selvstendigNæringsdrivende())
+                .build();
+        var søknad2 = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging2))
@@ -380,16 +385,18 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsforhold2 = arbeidsforholdene.get(1);
         var orgnummer2 = arbeidsforhold2.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegginsprosent = 0;
-        var tilrettelegging1 = TilretteleggingsErketyper.ingenTilrettelegging(
+        var tilrettelegginsprosent = 0.0;
+        var tilrettelegging1 = TilretteleggingBuilder.ingen(
                 LocalDate.now(),
                 LocalDate.now(),
-                ArbeidsforholdErketyper.virksomhet((Orgnummer) orgnummer1));
-        var tilrettelegging2 = TilretteleggingsErketyper.ingenTilrettelegging(
+                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1))
+                .build();
+        var tilrettelegging2 = TilretteleggingBuilder.ingen(
                 LocalDate.now(),
                 LocalDate.now(),
-                ArbeidsforholdErketyper.virksomhet((Orgnummer) orgnummer2));
-        var søknad = SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad(
+                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer2))
+                .build();
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging1, tilrettelegging2));
@@ -461,12 +468,13 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsforholdMor = mor.arbeidsforhold();
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegging = TilretteleggingsErketyper.delvisTilrettelegging(
+        var tilrettelegging = TilretteleggingBuilder.delvis(
                 LocalDate.now(),
                 LocalDate.now(),
-                ArbeidsforholdErketyper.virksomhet((Orgnummer) orgnummer),
-                BigDecimal.valueOf(40));
-        var søknad = SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad(
+                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer),
+                40.0)
+                .build();
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging));
@@ -510,7 +518,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(svpSakEtterVedtak.familiehendelse().omsorgsovertakelse()).isNull();
     }
 
-    private Integer regnUtForventetDagsats(Integer samletMånedsbeløp, Integer tilrettelegginsprosent) {
+    private Integer regnUtForventetDagsats(Integer samletMånedsbeløp, Double tilrettelegginsprosent) {
         var årsinntekt = Double.valueOf(samletMånedsbeløp) * 12;
         var seksG = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getHalvG() * 2 * 6;
         var utbetalingProsentFaktor = (double) (100 - tilrettelegginsprosent) / 100;

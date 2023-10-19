@@ -1,52 +1,57 @@
-package no.nav.foreldrepenger.generator.soknad.api.erketyper;
+package no.nav.foreldrepenger.generator.soknad.maler;
 
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.generator.soknad.api.builder.AnnenforelderBuilder;
-import no.nav.foreldrepenger.generator.soknad.api.builder.ForeldrepengerBuilder;
-import no.nav.foreldrepenger.generator.soknad.api.builder.SøkerBuilder;
-import no.nav.foreldrepenger.generator.soknad.api.dto.foreldrepenger.Dekningsgrad;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.Dekningsgrad;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.AnnenforelderBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.ForeldrepengerBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.MedlemsskapMaler;
 
-public final class SøknadForeldrepengerErketyper {
+public final class SøknadForeldrepengerMaler {
 
-    private SøknadForeldrepengerErketyper() {
+    private SøknadForeldrepengerMaler() {
     }
 
     private static ForeldrepengerBuilder lagSøknadForeldrepenger(LocalDate familiehendelse, BrukerRolle brukerRolle) {
         return new ForeldrepengerBuilder()
-                .medFordeling(UttakErketyper.fordelingHappyCase(familiehendelse, brukerRolle))
+                .medFordeling(UttakMaler.fordelingHappyCase(familiehendelse, brukerRolle))
                 .medDekningsgrad(Dekningsgrad.HUNDRE)
-                .medMedlemsskap(MedlemsskapErketyper.medlemsskapNorge())
+                .medMedlemsskap(MedlemsskapMaler.medlemsskapNorge())
                 .medSøker(new SøkerBuilder(brukerRolle).build())
                 .medAnnenForelder(AnnenforelderBuilder.ukjentForelder());
     }
 
     public static ForeldrepengerBuilder lagSøknadForeldrepengerTermin(LocalDate termindato, BrukerRolle brukerRolle) {
         return lagSøknadForeldrepenger(termindato, brukerRolle)
-                .medBarn(RelasjonTilBarnErketyper.termin(1, termindato));
+                .medBarn(BarnBuilder.termin(1, termindato).build());
     }
 
     public static ForeldrepengerBuilder lagSøknadForeldrepengerFødsel(LocalDate fødselsdato, BrukerRolle brukerRolle) {
         return lagSøknadForeldrepenger(fødselsdato, brukerRolle)
-                .medBarn(RelasjonTilBarnErketyper.fødsel(1, fødselsdato));
+                .medBarn(BarnBuilder.fødsel(1, fødselsdato).build());
     }
 
     public static ForeldrepengerBuilder lagSøknadForeldrepengerTerminFødsel(LocalDate fødselsdato, BrukerRolle brukerRolle) {
         return lagSøknadForeldrepenger(fødselsdato, brukerRolle)
-            .medBarn(RelasjonTilBarnErketyper.fødselMedTermin(1, fødselsdato, fødselsdato));
+            .medBarn(BarnBuilder.fødsel(1, fødselsdato).build());
     }
 
     public static ForeldrepengerBuilder lagSøknadForeldrepengerTerminFødsel(LocalDate termindato, LocalDate fødselsdato, BrukerRolle brukerRolle) {
         return lagSøknadForeldrepenger(termindato, brukerRolle)
-            .medBarn(RelasjonTilBarnErketyper.fødselMedTermin(1, fødselsdato, termindato));
+            .medBarn(BarnBuilder.fødsel(1, fødselsdato)
+                    .medTermindato(termindato)
+                    .medTerminbekreftelseDato(termindato.minusMonths(1))
+                    .build());
     }
 
     public static ForeldrepengerBuilder lagSøknadForeldrepengerAdopsjon(LocalDate omsorgsovertakelsedatoen,
                                                                         BrukerRolle brukerRolle,
                                                                         Boolean ektefellesBarn) {
         return lagSøknadForeldrepenger(omsorgsovertakelsedatoen, brukerRolle)
-                .medBarn(RelasjonTilBarnErketyper.adopsjon(omsorgsovertakelsedatoen, ektefellesBarn));
+                .medBarn(BarnBuilder.adopsjon(omsorgsovertakelsedatoen, ektefellesBarn).build());
     }
 
 }

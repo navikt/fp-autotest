@@ -29,6 +29,7 @@
         <fp-prosesstask.version>4.0.0</fp-prosesstask.version>
         <fp-kontrakter.version>7.1.1</fp-kontrakter.version>
         <fpsoknad-felles.version>2.5.0</fpsoknad-felles.version>
+        <foreldrepenge-api.version>0.1.0</foreldrepenge-api.version>
 
         <slf4j.version>2.0.9</slf4j.version>
         <logback.version>1.4.11</logback.version>
@@ -109,7 +110,17 @@
             <artifactId>fpsoknad-felles</artifactId>
             <version>${fpsoknad-felles.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.foreldrepenger.selvbetjening</groupId>
+            <artifactId>kontrakt</artifactId>
+            <version>${foreldrepenge-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.selvbetjening</groupId>
+            <artifactId>kontrakt</artifactId>
+            <version>${foreldrepenge-api.version}</version>
+            <type>test-jar</type>
+        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>testmodell</artifactId>

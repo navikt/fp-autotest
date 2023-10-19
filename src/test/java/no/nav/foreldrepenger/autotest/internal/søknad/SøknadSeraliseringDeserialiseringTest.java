@@ -1,17 +1,17 @@
 package no.nav.foreldrepenger.autotest.internal.søknad;
 
 import static no.nav.foreldrepenger.common.domain.BrukerRolle.MOR;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadAdopsjon;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadFødsel;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadOmsorg;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadEngangsstønadErketyper.lagEngangstønadTermin;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerAdopsjon;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerFødsel;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadForeldrepengerErketyper.lagSøknadForeldrepengerTermin;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.SøknadSvangerskapspengerErketyper.lagSvangerskapspengerSøknad;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper.delvisTilrettelegging;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper.helTilrettelegging;
-import static no.nav.foreldrepenger.generator.soknad.api.erketyper.TilretteleggingsErketyper.ingenTilrettelegging;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadAdopsjon;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadOmsorg;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadTermin;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerAdopsjon;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin;
+import static no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad;
+import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBuilder.delvis;
+import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBuilder.hel;
+import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBuilder.ingen;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,11 +21,12 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
-import no.nav.foreldrepenger.generator.soknad.api.builder.SøkerBuilder;
-import no.nav.foreldrepenger.generator.soknad.api.dto.SøknadDto;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.ArbeidsforholdErketyper;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.MedlemsskapErketyper;
-import no.nav.foreldrepenger.generator.soknad.api.erketyper.OpptjeningErketyper;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.MedlemsskapMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
 
 public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBase {
 
@@ -51,10 +52,10 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
     public void foreldrepengersøknadTest() {
         test(foreldrepengesøknad);
         test(lagSøknadForeldrepengerTermin(LocalDate.now().minusWeeks(4), MOR)
-                .medMedlemsskap(MedlemsskapErketyper.medlemskapUtlandetForrige12mnd())
+                .medMedlemsskap(MedlemsskapMaler.medlemskapUtlandetForrige12mnd())
                 .build());
         test(lagSøknadForeldrepengerAdopsjon(LocalDate.now(), MOR, true)
-                .medSøker(new SøkerBuilder(MOR).medSelvstendigNæringsdrivendeInformasjon(List.of(OpptjeningErketyper.egenNaeringOpptjening("992261005"))).build())
+                .medSøker(new SøkerBuilder(MOR).medSelvstendigNæringsdrivendeInformasjon(List.of(OpptjeningMaler.egenNaeringOpptjening("992261005"))).build())
                 .build());
     }
 
@@ -68,14 +69,14 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
 
     @Test
     public void tilretteleggingTest() {
-        test(helTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.virksomhet(new Orgnummer("992261005"))));
-        test(delvisTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.privatArbeidsgiver("12345678910"), 50));
-        test(ingenTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.selvstendigNæringsdrivende()));
+        test(hel(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdMaler.virksomhet(new Orgnummer("992261005"))).build());
+        test(delvis(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdMaler.privatArbeidsgiver("12345678910"), 50.0).build());
+        test(ingen(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdMaler.selvstendigNæringsdrivende()).build());
     }
 
     @Test
     public void svangerskapspengersøknadTest() {
-        var delvisTilrettelegging = delvisTilrettelegging(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdErketyper.privatArbeidsgiver("12345678910"), 50);
+        var delvisTilrettelegging = TilretteleggingBuilder.delvis(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdMaler.privatArbeidsgiver("12345678910"), 50.0).build();
         test(lagSvangerskapspengerSøknad(MOR, LocalDate.now().plusWeeks(4), List.of(delvisTilrettelegging)).build());
     }
 
