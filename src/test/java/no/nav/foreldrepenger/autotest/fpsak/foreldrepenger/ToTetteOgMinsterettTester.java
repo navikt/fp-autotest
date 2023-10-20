@@ -36,6 +36,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsa
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakEtterNesteSakDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
@@ -112,10 +113,11 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
 
         // Barn 2: Søker for barn 2 med termin 44 uker etter første barn
         var termindatoBarn2 = fødselsdatoBarn1.plusWeeks(44);
+        var startdatoForeldrepengerMorBarn2 = termindatoBarn2.minusWeeks(3);
         var søknadBarn2 = lagSøknadForeldrepengerTermin(termindatoBarn2, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummerBarn2 = mor.søk(søknadBarn2.build());
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummerBarn2, termindatoBarn2.minusWeeks(3));
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummerBarn2, startdatoForeldrepengerMorBarn2);
 
         saksbehandler.hentFagsak(saksnummerBarn2);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -123,12 +125,19 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         // Barn 1: Revurdering skal avslå siste uttaksperiode med rett årsak
         saksbehandler.hentFagsak(saksnummerBarn1);
         saksbehandler.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        if (forventerNegativSimuleringForBehandling(startdatoForeldrepengerMorBarn2)) {
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                    .avventSamordningIngenTilbakekreving();
+            saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+            saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
+        } else {
+            saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        }
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
         var sisteUttaksperiode = sisteUttaksperiode();
         assertThat(sisteUttaksperiode.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
-                .isEqualTo(helgejustertTilMandag(termindatoBarn2.minusWeeks(3)));
+                .isEqualTo(helgejustertTilMandag(startdatoForeldrepengerMorBarn2));
         assertThat(sisteUttaksperiode.getPeriodeResultatÅrsak())
                 .as("Siste periode avslått med årsak ny stønadsperiode")
                 .isEqualTo(PeriodeResultatÅrsak.STØNADSPERIODE_NYTT_BARN);
@@ -327,4 +336,12 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 .max(Comparator.comparing(UttakResultatPeriode::getFom))
                 .orElseThrow();
     }
+    // Hvis perioden som overføres er IKKE i samme måned som dagens dato ELLER
+    // Hvis perioden som overføres er i samme måned som dagens dato OG dagens dato er ETTER utbetalingsdagen
+    // (20. i alle måneder) så skal det resultere i negativ simulering.
+    public Boolean forventerNegativSimuleringForBehandling(LocalDate fpStartdatoFarEndret) {
+        return fpStartdatoFarEndret.getMonth() != LocalDate.now().getMonth() ||
+                (fpStartdatoFarEndret.getMonth() == LocalDate.now().getMonth() && LocalDate.now().getDayOfMonth() >= 20);
+    }
+
 }
