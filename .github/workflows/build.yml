@@ -43,8 +43,7 @@ jobs:
     name: Verdikjedetester
     permissions:
       id-token: write
-    if: github.ref_name == 'master'
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@GAR/images # ratchet:exclude
     with:
       test-suite: verdikjede
     secrets: inherit
