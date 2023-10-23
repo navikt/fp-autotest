@@ -286,9 +286,12 @@ services:
       timeout: 5s
       retries: 10
     depends_on:
-      - fpdokgen
-      - postgres
-      - vtp
+      vtp:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      fpdokgen:
+        condition: service_started
   fpdokgen:
     <<: *default-konfigurasjon
     image: $FPDOKGEN_IMAGE
