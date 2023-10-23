@@ -21,21 +21,30 @@ on:
 jobs:
   fpsak-tester:
     name: Fpsak tester
+    permissions:
+      id-token: write
     if: github.ref_name != 'master'
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@GAR/images # ratchet:exclude
     with:
       test-suite: fpsak
+    secrets: inherit
 
   fptilbake-tester:
     name: Fptilbake tester
+    permissions:
+      id-token: write
     if: github.ref_name == 'master'
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: fptilbake
+    secrets: inherit
 
   verdikjede-tester:
     name: Verdikjedetester
+    permissions:
+      id-token: write
     if: github.ref_name == 'master'
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: verdikjede
+    secrets: inherit

@@ -23,6 +23,8 @@ on:
 jobs:
   autotest:
     name: Kjører ${{ inputs.test-suite }}-tester mot ${{ github.repository }} ${{ inputs.build-version }}
+    permissions:
+      id-token: write
     runs-on: ${{ (github.actor == 'dependabot[bot]' && 'ubuntu-latest') || 'ubuntu-latest-8-cores' }}
     timeout-minutes: 15
     outputs:
@@ -52,6 +54,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login GAR
+        uses: nais/login@104bca34b70d1d00fe837bcd0689633978eca744 # ratchet:nais/login@v0
+        with:
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          team: teamforeldrepenger
       - name: Setup keystore
         shell: bash
         run: |
@@ -70,7 +78,9 @@ jobs:
           cd resources/pipeline
           ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
           echo "Kjører docker compose up på følgende applikasjoner: ${services[*]}"
-          docker compose -f compose.yml -f compose-github.yml up --quiet-pull --wait "${services[@]}" || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
+          docker compose -f compose.yml -f compose-github.yml pull --quiet "${services[@]}"
+          docker stop $(docker ps -a -q) || docker rm $rm $(docker ps -a -q)
+          docker compose -f compose.yml -f compose-github.yml up --wait "${services[@]}" || (docker ps ; echo "Oppstart feilet. Se etter tjenester som er \"unhealthy\" eller \"restarting\" i listen over." ; exit 1)
       - name: Utfører tester fra test suite ${{ inputs.test-suite }} mot SUT
         id: tester
         shell: bash
