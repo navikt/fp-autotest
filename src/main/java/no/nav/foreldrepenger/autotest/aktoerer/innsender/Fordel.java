@@ -35,6 +35,7 @@ import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.MottattTidspunkt;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.engangsstønad.SøknadV2Dto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.mapper.SøknadMapper;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.BehandlingsTema;
@@ -57,6 +58,11 @@ public class Fordel extends DokumentInnsendingHjelper {
      */
     @Override
     public Saksnummer sendInnSøknad(SøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+        return sendInnSøknad(SøknadMapper.tilSøknad(søknad, mottattdato(søknad)), aktørId, fnr, aktørIdAnnenpart, saksnummer);
+    }
+
+    @Override
+    public Saksnummer sendInnSøknad(SøknadV2Dto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         return sendInnSøknad(SøknadMapper.tilSøknad(søknad, mottattdato(søknad)), aktørId, fnr, aktørIdAnnenpart, saksnummer);
     }
 

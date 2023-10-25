@@ -13,16 +13,28 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Kvittering;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.engangsstønad.EngangsstønadV2Dto;
 
 public class MottakKlient {
 
     private static final String API_SEND_PATH = "/rest/soknad";
+    private static final String API_SEND_ENGANGSSTØNAD_PATH = API_SEND_PATH + "/engangssoknad";
     private static final String API_ENDRING_PATH = API_SEND_PATH + "/endre";
 
     public Kvittering sendSøknad(Fødselsnummer fnr, SøknadDto søknad) {
         var request = requestMedInnloggetBrukerIdporten(fnr)
                 .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
                         .path(API_SEND_PATH)
+                        .build())
+                .timeout(Duration.ofSeconds(30))
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));
+        return send(request.build(), Kvittering.class);
+    }
+
+    public Kvittering sendSøknad(Fødselsnummer fnr, EngangsstønadV2Dto søknad) {
+        var request = requestMedInnloggetBrukerIdporten(fnr)
+                .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
+                        .path(API_SEND_ENGANGSSTØNAD_PATH)
                         .build())
                 .timeout(Duration.ofSeconds(30))
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));

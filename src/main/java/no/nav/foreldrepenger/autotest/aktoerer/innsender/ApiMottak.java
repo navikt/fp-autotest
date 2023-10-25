@@ -16,6 +16,8 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.engangsstønad.EngangsstønadV2Dto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.engangsstønad.SøknadV2Dto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -70,6 +72,11 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
+    public Saksnummer sendInnSøknad(SøknadV2Dto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+        return sendInnSøknad(fnr, søknad);
+    }
+
+    @Override
     public Saksnummer sendInnSøknad(SøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         return sendInnSøknad(fnr, søknad);
     }
@@ -85,6 +92,20 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         var skjæringsTidspunktForNyBehandling  = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
         mottakKlient.sendSøknad(fnr, søknad);
+
+        return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+    }
+
+    @Step("Sender inn søknad: {fnr}")
+    private Saksnummer sendInnSøknad(Fødselsnummer fnr, SøknadV2Dto søknad) {
+        AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
+        var skjæringsTidspunktForNyBehandling  = LocalDateTime.now();
+        var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+        if (søknad instanceof EngangsstønadV2Dto engangsstønad) {
+            mottakKlient.sendSøknad(fnr, engangsstønad);
+        } else {
+            throw new IllegalStateException("Utviklerfeil: Ikke støtte for ny modell");
+        }
 
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
