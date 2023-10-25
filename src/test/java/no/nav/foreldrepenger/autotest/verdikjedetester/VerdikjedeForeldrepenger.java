@@ -924,14 +924,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         }
     }
 
-    // Hvis perioden som overføres er IKKE i samme måned som dagens dato ELLER
-    // Hvis perioden som overføres er i samme måned som dagens dato OG dagens dato er ETTER utbetalingsdagen
-    // (20. i alle måneder) så skal det resultere i negativ simulering.
-    private Boolean forventerNegativSimuleringForBehandling(LocalDate fpStartdatoFarEndret) {
-        return fpStartdatoFarEndret.getMonth() != LocalDate.now().getMonth() ||
-                (fpStartdatoFarEndret.getMonth() == LocalDate.now().getMonth() && LocalDate.now().getDayOfMonth() >= 20);
-    }
-
     @Test
     @DisplayName("8: Mor har tvillinger og søker om hele utvidelsen.")
     @Description("Mor føder tvillinger og søker om hele mødrekvoten og fellesperioden, inkludert utvidelse. Far søker " +

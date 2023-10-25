@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.base;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Beslutter;
@@ -7,8 +9,6 @@ import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Klagebehandle
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Overstyrer;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Saksbehandler;
 import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
-import no.nav.foreldrepenger.generator.familie.Søker;
-import no.nav.foreldrepenger.common.domain.felles.annenforelder.NorskForelder;
 
 // TODO: Fiks opp i testbasene
 public abstract class FpsakTestBase {
@@ -31,7 +31,14 @@ public abstract class FpsakTestBase {
         LoggFormater.leggTilKjørendeTestCaseILogger();
     }
 
-    protected NorskForelder lagNorskAnnenforeldre(Søker annenpart) {
-        return new NorskForelder(annenpart.fødselsnummer(), "");
+    // Hvis perioden som overføres er IKKE i samme måned som dagens dato ELLER
+    // Hvis perioden som overføres er i samme måned som dagens dato OG dagens dato er ETTER utbetalingsdagen
+    // (20. i alle måneder) så skal det resultere i negativ simulering.
+    protected Boolean forventerNegativSimuleringForBehandling(LocalDate førsteAvslagsdag) {
+        var iDag = LocalDate.now();
+        if (førsteAvslagsdag.getMonthValue() > iDag.getMonthValue() || førsteAvslagsdag.getYear() > iDag.getYear()) {
+            return false;
+        }
+        return førsteAvslagsdag.getMonth() != iDag.getMonth() || iDag.getDayOfMonth() >= 20;
     }
 }

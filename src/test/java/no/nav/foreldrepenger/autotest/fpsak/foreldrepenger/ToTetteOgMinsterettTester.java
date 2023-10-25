@@ -336,12 +336,5 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 .max(Comparator.comparing(UttakResultatPeriode::getFom))
                 .orElseThrow();
     }
-    // Hvis perioden som overføres er IKKE i samme måned som dagens dato ELLER
-    // Hvis perioden som overføres er i samme måned som dagens dato OG dagens dato er ETTER utbetalingsdagen
-    // (20. i alle måneder) så skal det resultere i negativ simulering.
-    public Boolean forventerNegativSimuleringForBehandling(LocalDate fpStartdatoFarEndret) {
-        return fpStartdatoFarEndret.getMonth() != LocalDate.now().getMonth() ||
-                (fpStartdatoFarEndret.getMonth() == LocalDate.now().getMonth() && LocalDate.now().getDayOfMonth() >= 20);
-    }
 
 }
