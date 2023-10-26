@@ -244,12 +244,14 @@ class MorOgFarSammen extends FpsakTestBase {
         saksbehandler.hentFagsak(morSaksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling(BERØRT_BEHANDLING);
 
-        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
+        if (forventerNegativSimuleringForBehandling(uttaksperiodeEndringssøknadMor.tidsperiode().fom())) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+            saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
+        } else {
+            saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         }
-        saksbehandler.ventTilAvsluttetBehandling();
 
         assertThat(saksbehandler.hentAvslåtteUttaksperioder()).hasSize(1);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().get(0).getFom()).isEqualTo(fellesPeriodeMorFørstegangssøknad.tidsperiode().fom());

@@ -82,7 +82,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengeandel;
@@ -302,7 +301,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
 
-        familie.sendInnDødshendelse(mor.fødselsnummer(), LocalDate.now().minusDays(1));
+        var dødsdato = LocalDate.now().minusDays(1);
+        familie.sendInnDødshendelse(mor.fødselsnummer(), dødsdato);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -317,13 +317,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
 
-        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
-            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
-                    hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-            vurderTilbakekrevingVedNegativSimulering.avventSamordningIngenTilbakekreving();
+        if (forventerNegativSimuleringForBehandling(dødsdato)) {
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                    .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
-
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, false);
 
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
@@ -2009,22 +2007,21 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
+        var endringsdato = termindato.minusWeeks(1);
         var endringssøknad = lagEndringssøknad(søknadFar, saksnummerFar,
                 fordeling(
-                        utsettelsesperiode(FRI, termindato.minusWeeks(1), fødselsdato.minusDays(1)),
+                        utsettelsesperiode(FRI, endringsdato, fødselsdato.minusDays(1)),
                         uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK)
                 ));
         far.søk(endringssøknad.build());
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
-        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
-            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
-                    hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-            vurderTilbakekrevingVedNegativSimulering.avventSamordningIngenTilbakekreving();
+        if (forventerNegativSimuleringForBehandling(endringsdato)) {
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                    .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
-
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
@@ -2089,13 +2086,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
 
-        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_FEILUTBETALING_KODE)) {
-            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.
-                    hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
-            vurderTilbakekrevingVedNegativSimulering.avventSamordningIngenTilbakekreving();
+        if (forventerNegativSimuleringForBehandling(farsPeriodeRundtFødsel.tidsperiode().fom())) {
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+                    .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
-
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
