@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.BERØRT_BEHANDLING;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_FEILUTBETALING_KODE;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FELLESPERIODE;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER_FØR_FØDSEL;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MØDREKVOTE;
@@ -244,7 +245,7 @@ class MorOgFarSammen extends FpsakTestBase {
         saksbehandler.hentFagsak(morSaksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling(BERØRT_BEHANDLING);
 
-        if (forventerNegativSimuleringForBehandling(uttaksperiodeEndringssøknadMor.tidsperiode().fom())) {
+        if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);

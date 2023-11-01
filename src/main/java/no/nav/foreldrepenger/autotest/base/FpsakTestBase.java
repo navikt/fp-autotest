@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.autotest.base;
 
-import java.time.LocalDate;
-
 import org.junit.jupiter.api.BeforeEach;
 
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Beslutter;
@@ -31,14 +29,4 @@ public abstract class FpsakTestBase {
         LoggFormater.leggTilKjørendeTestCaseILogger();
     }
 
-    // Hvis perioden som overføres er IKKE i samme måned som dagens dato ELLER
-    // Hvis perioden som overføres er i samme måned som dagens dato OG dagens dato er ETTER utbetalingsdagen
-    // (20. i alle måneder) så skal det resultere i negativ simulering.
-    protected Boolean forventerNegativSimuleringForBehandling(LocalDate førsteAvslagsdag) {
-        var iDag = LocalDate.now();
-        if (førsteAvslagsdag.getMonthValue() > iDag.getMonthValue() || førsteAvslagsdag.getYear() > iDag.getYear()) {
-            return false;
-        }
-        return førsteAvslagsdag.getMonth() != iDag.getMonth() || iDag.getDayOfMonth() >= 20;
-    }
 }

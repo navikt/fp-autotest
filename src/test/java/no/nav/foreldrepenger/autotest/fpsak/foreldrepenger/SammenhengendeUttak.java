@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.fpsak.foreldrepenger;
 import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_FEILUTBETALING_KODE;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler.lagEndringssøknad;
@@ -194,7 +195,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
-        if (forventerNegativSimuleringForBehandling(utsettelseFom)) {
+        if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);

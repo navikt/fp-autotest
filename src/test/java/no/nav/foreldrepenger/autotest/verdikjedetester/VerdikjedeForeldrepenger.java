@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅr
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_FEILUTBETALING_KODE;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MINSTERETT;
@@ -317,7 +318,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
 
-        if (forventerNegativSimuleringForBehandling(dødsdato)) {
+        if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
@@ -881,7 +882,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         // Løser AP 5084 negativ simulering! Oppretter tilbakekreving og sjekk at den er opprette. Ikke løs det.
-        if (forventerNegativSimuleringForBehandling(fpStartdatoFarEndret)) {
+        if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler
                     .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
             vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
@@ -912,7 +913,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Siden perioden er avslått, forventes det 0 i dagsats")
                 .isZero();
 
-        if (forventerNegativSimuleringForBehandling(fpStartdatoFarEndret)) {
+        if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
             var tbksaksbehandler = new TilbakekrevingSaksbehandler(SaksbehandlerRolle.SAKSBEHANDLER);
             tbksaksbehandler.hentSisteBehandling(saksnummerMor);
             tbksaksbehandler.ventTilBehandlingErPåVent();
@@ -2017,7 +2018,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
-        if (forventerNegativSimuleringForBehandling(endringsdato)) {
+        if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
@@ -2086,12 +2087,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
 
-        if (forventerNegativSimuleringForBehandling(farsPeriodeRundtFødsel.tidsperiode().fom())) {
+        if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+            saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
+        } else {
+            saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         }
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
         for (var periode : uttak) {

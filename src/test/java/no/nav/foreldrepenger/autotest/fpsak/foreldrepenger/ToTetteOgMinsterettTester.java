@@ -4,6 +4,7 @@ import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SE
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.REBEREGN_FERIEPENGER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_FEILUTBETALING_KODE;
 import static no.nav.foreldrepenger.common.domain.BrukerRolle.FAR;
 import static no.nav.foreldrepenger.common.domain.BrukerRolle.MOR;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
@@ -125,7 +126,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         // Barn 1: Revurdering skal avslå siste uttaksperiode med rett årsak
         saksbehandler.hentFagsak(saksnummerBarn1);
         saksbehandler.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
-        if (forventerNegativSimuleringForBehandling(startdatoForeldrepengerMorBarn2)) {
+        if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
