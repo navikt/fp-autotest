@@ -166,7 +166,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
     }
 
     public void avslåPeriode(UttakResultatPeriode periode) {
-        avslåPeriode(periode, PeriodeResultatÅrsak.UKJENT, false);
+        avslåPeriode(periode, PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN, false);
     }
 
     public void avslåPeriode(UttakResultatPeriode periode, PeriodeResultatÅrsak periodeResultatÅrsak, boolean trekkDager) {
