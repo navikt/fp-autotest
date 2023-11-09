@@ -1194,7 +1194,6 @@ class Fodsel extends FpsakTestBase {
     private void verifiserTilkjentYtelse(BeregningsresultatMedUttaksplan beregningResultatForeldrepenger,
             boolean medFullRefusjon) {
         var perioder = beregningResultatForeldrepenger.getPerioder();
-        assertThat(beregningResultatForeldrepenger.isSokerErMor()).isTrue();
         assertThat(perioder).isNotEmpty();
         for (var periode : perioder) {
             assertThat(periode.getDagsats()).isPositive();

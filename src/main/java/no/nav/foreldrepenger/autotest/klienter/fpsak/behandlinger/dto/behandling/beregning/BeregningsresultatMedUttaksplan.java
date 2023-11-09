@@ -8,13 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeregningsresultatMedUttaksplan {
 
-    protected boolean sokerErMor;
     protected LocalDate opphoersdato;
     protected List<BeregningsresultatPeriode> perioder;
-
-    public boolean isSokerErMor() {
-        return sokerErMor;
-    }
 
     public LocalDate getOpphoersdato() {
         return opphoersdato;
