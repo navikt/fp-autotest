@@ -17,25 +17,25 @@ imageVersion () {
 
 echo POSTGRES_IMAGE="postgres:15" > .env
 echo AUDIT_NAIS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-autotest/audit-nais-mock")" >> .env
-echo VTP_IMAGE="$(imageVersion "ghcr.io/navikt/vtp")" >> .env
-echo FPABAKUS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-abakus")" >> .env
-echo FPSAK_IMAGE="$(imageVersion "ghcr.io/navikt/fp-sak")" >> .env
-echo FPFRONTEND_IMAGE="$(imageVersion "ghcr.io/navikt/fp-frontend")" >> .env
-echo FPFORMIDLING_IMAGE="$(imageVersion "ghcr.io/navikt/fp-formidling")" >> .env
-echo FPDOKGEN_IMAGE="$(imageVersion "ghcr.io/navikt/fp-dokgen")" >> .env
-echo FPOPPDRAG_IMAGE="$(imageVersion "ghcr.io/navikt/fpoppdrag")" >> .env
-echo FPTILBAKE_IMAGE="$(imageVersion "ghcr.io/navikt/fptilbake")" >> .env
-echo FPRISK_IMAGE="$(imageVersion "ghcr.io/navikt/fp-risk")" >> .env
-echo FPABONNENT_IMAGE="$(imageVersion "ghcr.io/navikt/fpabonnent")" >> .env
-echo FPFORDEL_IMAGE="$(imageVersion "ghcr.io/navikt/fpfordel")" >> .env
-echo FPLOS_IMAGE="$(imageVersion "ghcr.io/navikt/fplos")" >> .env
-echo FPSOKNAD_MOTTAK_IMAGE="$(imageVersion "ghcr.io/navikt/fpsoknad-mottak")" >> .env
-echo FORELDREPENGESOKNADAPI_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad-api")" >> .env
-echo FORELDREPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad/foreldrepengesoknad")" >> .env
-echo FORELDREPENGEOVERSIKT_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad/foreldrepengeoversikt")" >> .env
-echo SVANGERSKAPSPENGESOKNAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad/svangerskapspengesoknad")" >> .env
-echo ENGANGSSTONAD_IMAGE="$(imageVersion "ghcr.io/navikt/foreldrepengesoknad/engangsstonad")" >> .env
-echo FPOVERSIKT_IMAGE="$(imageVersion "ghcr.io/navikt/fp-oversikt")" >> .env
+echo VTP_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/vtp")" >> .env
+echo FPABAKUS_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-abakus")" >> .env
+echo FPSAK_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-sak")" >> .env
+echo FPFRONTEND_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-frontend")" >> .env
+echo FPFORMIDLING_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-formidling")" >> .env
+echo FPDOKGEN_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-dokgen")" >> .env
+echo FPOPPDRAG_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fpoppdrag")" >> .env
+echo FPTILBAKE_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fptilbake")" >> .env
+echo FPRISK_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-risk")" >> .env
+echo FPABONNENT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fpabonnent")" >> .env
+echo FPFORDEL_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fpfordel")" >> .env
+echo FPLOS_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fplos")" >> .env
+echo FPSOKNAD_MOTTAK_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fpsoknad-mottak")" >> .env
+echo FORELDREPENGESOKNADAPI_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad-api")" >> .env
+echo FORELDREPENGESOKNAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad/foreldrepengesoknad")" >> .env
+echo FORELDREPENGEOVERSIKT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad/foreldrepengeoversikt")" >> .env
+echo SVANGERSKAPSPENGESOKNAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad/svangerskapspengesoknad")" >> .env
+echo ENGANGSSTONAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad/engangsstonad")" >> .env
+echo FPOVERSIKT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-oversikt")" >> .env
 
 case "$OSTYPE" in
   darwin*) # MAC OS

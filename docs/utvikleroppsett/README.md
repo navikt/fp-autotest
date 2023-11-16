@@ -8,11 +8,17 @@
 3. Sett opp SSH-nøkkel for Git. Se [stegvis forklaring](github-ssh-key.md).
 4. Sett opp "Personal access tokens" for din Github-bruker som skal brukes for Maven og Docker. Se [stegvis forklaring](github-personal-access-tokens.md).
 5. Sett opp Mavens "settings.xml" for tilgang mot NAVs repositories. Se [eksempelfil og stegvis forklaring](maven-settings.md).
-6. Kjør følgende kommando for å autentisere mot ghcr.io: 
-   
-    `docker login ghcr.io -u DITT_GITHUBBRUKERNAVN_HER -p DITT_GENERERTE_PERSONAL_ACCESS_TOKEN_HER` eller
-   
-    `echo $PAT_VARIABEL_NAVN | docker login ghcr.io -u DITT_GITHUBBRUKERNAVN_HER --password-stdin`
+6. Docker imagene som brukes er publisert på GAR. Du må derform autentiser deg mot GAR:
+   1. Du må ha gcloud installert
+   2. Logg inn gcloud auth login
+   3. Legg inn repo i credentials helper `gcloud auth configure-docker europe-north1-docker.pkg.dev`
+   4. Hent tokenet og logge inn i docker:
+    ```
+   gcloud auth print-access-token \
+   | docker login \
+   -u oauth2accesstoken \
+   --password-stdin https://europe-north1-docker.pkg.dev
+    ```
 
 ## Oppsett for foreldrepenger
 1. Gå til katalogen der du vil ha kodeprosjektene dine og kjør `git clone git@github.com:navikt/fp-autotest.git`
