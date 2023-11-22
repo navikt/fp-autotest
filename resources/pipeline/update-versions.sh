@@ -6,10 +6,10 @@ TRIGGER=${1-not an repo}
 TRIGGER_VERSION=${2-latest}
 
 imageVersion () {
-  if echo "$1" | grep -iqF "${TRIGGER}/"; then
-    echo "${1}:${TRIGGER_VERSION}"
-  elif [[ "$1" == *"$TRIGGER" ]]; then
-    echo "${1}:${TRIGGER_VERSION}"
+  if [[ "$TRIGGER" == *"navikt/"* && "$1" == *$TRIGGER* ]]; then
+    echo "$1:${TRIGGER_VERSION}"
+  elif [[ "$1" == *"$TRIGGER"* ]]; then
+    echo "$TRIGGER:${TRIGGER_VERSION}"
   else
     echo "$1:latest"
   fi
