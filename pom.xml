@@ -25,8 +25,8 @@
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
         <vtp.versjon>1.2.0</vtp.versjon>
-        <fp-felles.versjon>7.0.0</fp-felles.versjon>
-        <fp-prosesstask.version>5.0.0</fp-prosesstask.version>
+        <fp-felles.versjon>7.0.1</fp-felles.versjon>
+        <fp-prosesstask.version>5.0.1</fp-prosesstask.version>
         <fp-kontrakter.version>9.0.2</fp-kontrakter.version>
         <fpsoknad-felles.version>3.0.1</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.1.0</foreldrepenge-api.version>
@@ -41,7 +41,6 @@
         <jackson.version>2.16.0</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
-        <jboss-jandex.version>2.4.4.Final</jboss-jandex.version>
         <jersey.version>3.1.4</jersey.version>
     </properties>
 
@@ -164,9 +163,9 @@
             <version>${jersey.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jboss</groupId>
+            <groupId>io.smallrye</groupId>
             <artifactId>jandex</artifactId>
-            <version>${jboss-jandex.version}</version>
+            <version>3.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
