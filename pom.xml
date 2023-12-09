@@ -41,7 +41,6 @@
         <jackson.version>2.16.0</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
-        <jboss-jandex.version>2.4.4.Final</jboss-jandex.version>
         <jersey.version>3.1.4</jersey.version>
     </properties>
 
@@ -164,9 +163,9 @@
             <version>${jersey.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jboss</groupId>
+            <groupId>io.smallrye</groupId>
             <artifactId>jandex</artifactId>
-            <version>${jboss-jandex.version}</version>
+            <version>3.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
