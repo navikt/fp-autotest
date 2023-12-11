@@ -15,6 +15,7 @@ final class Sigrun {
                 .sorted(Comparator.comparing(Inntektsår::år).reversed())
                 .filter(inntektsår -> Integer.parseInt(inntektsår.år()) >= beregnFraOgMedÅr)
                 .flatMap(inntektsår -> inntektsår.oppføring().stream())
+                .filter(oppføring -> oppføring.tekniskNavn().equals("personinntektNaering")) // For å hente skattegrunlag, ikke oppgjørsdato
                 .mapToDouble(oppføring -> Double.parseDouble(oppføring.verdi()))
                 .limit(3)
                 .sum();
