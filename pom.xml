@@ -36,12 +36,12 @@
         <allure.version>2.25.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <assertj.version>3.24.2</assertj.version>
-        <aspectj.version>1.9.20.1</aspectj.version>
+        <aspectj.version>1.9.21</aspectj.version>
         <junit.version>5.10.1</junit.version>
         <jackson.version>2.16.0</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
-        <jersey.version>3.1.4</jersey.version>
+        <jersey.version>3.1.5</jersey.version>
     </properties>
 
     <dependencyManagement>
