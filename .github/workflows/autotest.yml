@@ -47,7 +47,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 21
-          cache: 'maven'
+      - name: Cache for maven dependencies autotest
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-autotest-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-autotest
       - name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # Use commit-sha1 instead of tag for security concerns
         with:
