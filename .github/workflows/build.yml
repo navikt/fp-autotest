@@ -33,7 +33,7 @@ jobs:
     name: Fptilbake tester
     permissions:
       id-token: write
-    if: github.ref_name == 'master'
+    if: github.ref_name != 'master'
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
     with:
       test-suite: fptilbake
