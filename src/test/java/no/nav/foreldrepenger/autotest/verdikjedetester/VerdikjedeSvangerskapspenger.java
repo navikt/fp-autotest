@@ -246,6 +246,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var næringsinntekt = mor.næringsinntekt();
         var opptjening = OpptjeningMaler.egenNaeringOpptjening(
                 arbeidsgiverIdentifikator.value(),
+                mor.næringStartdato(),
+                LocalDate.now(),
                 false,
                 næringsinntekt,
                 false);
@@ -260,9 +262,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 BrukerRolle.MOR,
                 termindato,
                 List.of(tilrettelegging1))
-                .medSøker(new SøkerBuilder(BrukerRolle.MOR)
-                        .medSelvstendigNæringsdrivendeInformasjon(List.of(opptjening))
-                        .build())
+                .medSøker(new SøkerBuilder(BrukerRolle.MOR).build())
                 .build();
         var saksnummer1 = mor.søk(søknad1);
 

@@ -40,7 +40,6 @@ import static org.assertj.core.api.Assertions.within;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.MonthDay;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -70,7 +69,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRealitetsbehandlingEllerKlage;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
@@ -233,7 +231,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                                 .selvstendigNæringsdrivende(200_000)
                                 .build())
                         .build())
-                .forelder(far().build())
+                .forelder(far()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build())
+                        .build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(2))
                 .build();
@@ -244,7 +244,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // Merk: Avviket er G-sensitivt og kan bli påvirket av g-regulering
         var avvikendeNæringsinntekt = næringsinntekt * 1.9; // >25% avvik
         // Legger inn orgnummer fra 510/organisasjon ettersom det ikke finnes arbeidsforhold for organisasjonen
-        var opptjening = OpptjeningMaler.egenNaeringOpptjening("889640782", false, avvikendeNæringsinntekt, true);
+        var orgnummer = familie.far().arbeidsforhold().arbeidsgiverIdentifikasjon().value(); // TODO: Må legge inn gyldig orgnummer. Instansiere AF via far. Legg til støtte for å nstansiere arbeidsforold som ikke er knyttetr til bruker.
+        var opptjening = OpptjeningMaler.egenNaeringOpptjening(orgnummer, false, avvikendeNæringsinntekt, true);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medSøker(new SøkerBuilder(BrukerRolle.MOR)
                         .medSelvstendigNæringsdrivendeInformasjon(List.of(opptjening))
@@ -272,6 +273,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isEqualTo(fødselsdato.minusWeeks(3));
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
+        saksbehandler.hentFagsak(saksnummer);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -990,7 +992,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var næringsinntekt = far.næringsinntekt();
         var opptjeningFar = OpptjeningMaler.egenNaeringOpptjening(
                 far.arbeidsforhold().arbeidsgiverIdentifikasjon().value(),
-                fpStartdatoFar.minusYears(4),
+                far.næringStartdato(),
                 VirkedagUtil.helgejustertTilMandag(fpStartdatoFar),
                 false,
                 næringsinntekt,

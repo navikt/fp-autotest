@@ -298,7 +298,7 @@ public class InntektYtelseGenerator {
         var sigrunDto = new SigrunDto(new ArrayList<>());
         var inntektsår = sigrunDto.inntektår();
         var now = LocalDate.now().minusYears(1);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             inntektsår.add(new SigrunDto.InntektsårDto(now.getYear(), gjennomsnittligNæringsinntekt));
             now = now.minusYears(1);
         }

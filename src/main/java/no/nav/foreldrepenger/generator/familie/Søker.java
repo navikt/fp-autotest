@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.generator.familie;
 import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
 import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilans;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
+import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
 import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
 import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CONSUMER_ID;
 
@@ -185,6 +186,11 @@ public abstract class Søker {
 
     public double næringsinntekt() {
         return hentNæringsinntekt(inntektYtelseModell.sigrunModell(), LocalDate.now().getYear() - 1);
+    }
+
+    public LocalDate næringStartdato() {
+        var årstall = startdato(inntektYtelseModell.sigrunModell());
+        return LocalDate.now().withYear(årstall);
     }
 
     public Søknad lagSøknad() {
