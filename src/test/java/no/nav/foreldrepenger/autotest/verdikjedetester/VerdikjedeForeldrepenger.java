@@ -568,8 +568,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK),
                 uttaksperiode(FELLESPERIODE, fpStartdatoFellesperiodeFar, fpStartdatoFellesperiodeFar.plusWeeks(4).minusDays(1), ARBEID),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFellesperiodeFar.plusWeeks(4), fpStartdatoFellesperiodeFar.plusWeeks(17).minusDays(1)));
-        var frilansFom = far.frilansAnnsettelsesFom();
-        var opptjeningFar = OpptjeningMaler.frilansOpptjening(frilansFom, fpStartdatoFellesperiodeFar.minusDays(1));
+        var opptjeningFar = OpptjeningMaler.frilansOpptjening();
         var søknadFar = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
                 .medSøker(new SøkerBuilder(BrukerRolle.FAR).medFrilansInformasjon(opptjeningFar).build())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))

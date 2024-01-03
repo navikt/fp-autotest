@@ -29,7 +29,7 @@
         <fp-prosesstask.version>5.0.2</fp-prosesstask.version>
         <fp-kontrakter.version>9.0.2</fp-kontrakter.version>
         <fpsoknad-felles.version>3.0.2</fpsoknad-felles.version>
-        <foreldrepenge-api.version>0.1.0</foreldrepenge-api.version>
+        <foreldrepenge-api.version>0.1.1</foreldrepenge-api.version>
 
         <slf4j.version>2.0.10</slf4j.version>
         <logback.version>1.4.14</logback.version>

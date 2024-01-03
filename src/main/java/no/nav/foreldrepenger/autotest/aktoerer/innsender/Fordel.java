@@ -32,7 +32,6 @@ import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingB
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
 import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.MottattTidspunkt;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.mapper.SøknadMapper;
@@ -57,12 +56,12 @@ public class Fordel extends DokumentInnsendingHjelper {
      */
     @Override
     public Saksnummer sendInnSøknad(SøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
-        return sendInnSøknad(SøknadMapper.tilSøknad(søknad, mottattdato(søknad)), aktørId, fnr, aktørIdAnnenpart, saksnummer);
+        return sendInnSøknad(SøknadMapper.tilSøknad(søknad, søknad.mottattdato()), aktørId, fnr, aktørIdAnnenpart, saksnummer);
     }
 
     @Override
     public Saksnummer sendInnSøknad(EndringssøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
-        return sendInnSøknad(SøknadMapper.tilEndringssøknad(søknad, mottattdato(søknad)), aktørId, fnr, aktørIdAnnenpart, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
+        return sendInnSøknad(SøknadMapper.tilSøknad(søknad, søknad.mottattdato()), aktørId, fnr, aktørIdAnnenpart, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
     }
 
     @Override
@@ -241,14 +240,6 @@ public class Fordel extends DokumentInnsendingHjelper {
 
     private static String lagUnikEksternReferanseId() {
         return "AR" + String.format("%08d", ++inkrementForEksternReferanse);
-    }
-
-    private static LocalDate mottattdato(MottattTidspunkt m) {
-        if (m.mottattdato() == null) {
-            return LocalDate.now();
-        } else {
-            return m.mottattdato();
-        }
     }
 
 }
