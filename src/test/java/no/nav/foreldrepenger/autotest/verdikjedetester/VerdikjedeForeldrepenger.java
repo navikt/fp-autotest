@@ -105,6 +105,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.UttaksplanPeriodeDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.AnnenforelderBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
@@ -245,7 +246,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var avvikendeNæringsinntekt = næringsinntekt * 1.9; // >25% avvik
         // Legger inn orgnummer fra 510/organisasjon ettersom det ikke finnes arbeidsforhold for organisasjonen
         var orgnummer = familie.far().arbeidsforhold().arbeidsgiverIdentifikasjon().value(); // TODO: Må legge inn gyldig orgnummer. Instansiere AF via far. Legg til støtte for å nstansiere arbeidsforold som ikke er knyttetr til bruker.
-        var opptjening = OpptjeningMaler.egenNaeringOpptjening(orgnummer, false, avvikendeNæringsinntekt, true);
+        var opptjening = OpptjeningMaler.egenNaeringOpptjening(
+                orgnummer,
+                mor.næringStartdato(),
+                LocalDate.now(),
+                false,
+                avvikendeNæringsinntekt,
+                true);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medSøker(new SøkerBuilder(BrukerRolle.MOR)
                         .medSelvstendigNæringsdrivendeInformasjon(List.of(opptjening))
@@ -1374,7 +1381,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         // UTTAK
         var mødrekvoten = fordelingMor.stream()
-                .filter(uttaksPeriode -> uttaksPeriode.konto().equals(MØDREKVOTE))
+                .filter(uttaksPeriode -> uttaksPeriode.konto().equals(UttaksplanPeriodeDto.KontoType.MØDREKVOTE))
                 .findFirst()
                 .orElseThrow();
         var avslåtteSamtidigUttak = saksbehandler.hentAvslåtteUttaksperioder().get(0);

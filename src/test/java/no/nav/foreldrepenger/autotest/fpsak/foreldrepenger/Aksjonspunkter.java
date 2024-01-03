@@ -173,7 +173,11 @@ class Aksjonspunkter extends FpsakTestBase {
 
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(3);
-        var næringOpptjening = OpptjeningMaler.egenNaeringOpptjening(mor.arbeidsforhold().arbeidsgiverIdentifikasjon().value(), true, 30_000, false);
+        var næringOpptjening = OpptjeningMaler.egenNaeringOpptjening(
+                mor.arbeidsforhold().arbeidsgiverIdentifikasjon().value(),
+                true,
+                30_000,
+                false);
         var fpStartdato = fødselsdato.minusWeeks(3);
         var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),

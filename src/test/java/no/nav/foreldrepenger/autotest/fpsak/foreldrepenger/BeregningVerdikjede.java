@@ -286,7 +286,13 @@ class BeregningVerdikjede extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var opptjening = OpptjeningMaler.egenNaeringOpptjening(mor.arbeidsforhold().arbeidsgiverIdentifikasjon().value(), false, 30_000, false);
+        var opptjening = OpptjeningMaler.egenNaeringOpptjening(
+                mor.arbeidsforhold().arbeidsgiverIdentifikasjon().value(),
+                mor.næringStartdato(),
+                LocalDate.now(),
+                false,
+                30_000,
+                false);
         var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
