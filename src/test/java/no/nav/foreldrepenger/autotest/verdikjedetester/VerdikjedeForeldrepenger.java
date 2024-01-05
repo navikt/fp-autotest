@@ -1187,6 +1187,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
                 .setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
+        var avklarFaktaAleneomsorgBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
+                .bekreftBrukerHarAleneomsorg();
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
