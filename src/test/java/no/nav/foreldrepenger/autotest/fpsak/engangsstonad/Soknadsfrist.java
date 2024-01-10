@@ -9,12 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,7 +21,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("foreldrepenger")
 class Soknadsfrist extends FpsakTestBase {
@@ -51,7 +47,7 @@ class Soknadsfrist extends FpsakTestBase {
 
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusMonths(7);
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -103,7 +99,7 @@ class Soknadsfrist extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusMonths(7);
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

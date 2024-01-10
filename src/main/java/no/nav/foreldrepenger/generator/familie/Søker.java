@@ -44,6 +44,7 @@ public abstract class Søker {
     private Innsyn innsyn;
     private Saksnummer saksnummer = null;
     private SøknadDto førstegangssøknad = null;
+    private no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto førstegangssøknadV2 = null;
 
     Søker(Fødselsnummer fødselsnummer, AktørId aktørId, AktørId aktørIdAnnenpart, InntektYtelseModell inntektYtelseModell, Innsender innsender) {
         this.fødselsnummer = fødselsnummer;
@@ -201,6 +202,15 @@ public abstract class Søker {
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
         this.førstegangssøknad = søknad;
+        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, null);
+        LOG.info("Søknad sendt inn og behandling opprettet på {}", this.saksnummer.value());
+        return this.saksnummer;
+    }
+
+    public Saksnummer søk(no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
+        genererUniktNavConsumerIdForDokument();
+        LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
+        this.førstegangssøknadV2 = søknad;
         this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, null);
         LOG.info("Søknad sendt inn og behandling opprettet på {}", this.saksnummer.value());
         return this.saksnummer;

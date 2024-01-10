@@ -41,7 +41,6 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -67,7 +66,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
                 .build();
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1).plusWeeks(1);
-        var søknad = lagEngangstønadAdopsjon(BrukerRolle.MOR, omsorgsovertakelsedato, false)
+        var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false)
                 .medMottattdato(LocalDate.now().minusMonths(1));
         var saksnummer = mor.søk(søknad.build());
 
@@ -178,7 +177,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
 
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

@@ -30,11 +30,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaVergeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.Beregningsresultat;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnV2Builder;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
@@ -59,7 +58,7 @@ class Fodsel extends FpsakTestBase {
 
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -89,7 +88,7 @@ class Fodsel extends FpsakTestBase {
 
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusDays(30L);
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -131,7 +130,7 @@ class Fodsel extends FpsakTestBase {
 
         var far = familie.far();
         var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagEngangstønadFødsel(BrukerRolle.FAR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -163,7 +162,7 @@ class Fodsel extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusDays(30L);
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -214,8 +213,8 @@ class Fodsel extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato)
-                .medBarn(BarnBuilder.fødsel(2, fødselsdato).build());
+        var søknad = lagEngangstønadFødsel(fødselsdato)
+                .medBarn(BarnV2Builder.fødsel(2, fødselsdato).build());
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -267,7 +266,7 @@ class Fodsel extends FpsakTestBase {
 
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -319,7 +318,7 @@ class Fodsel extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusWeeks(1);
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -342,7 +341,7 @@ class Fodsel extends FpsakTestBase {
 
         var medmor = familie.medmor();
         var fødselsdato = familie.barn().fødselsdato();
-        var søknad = lagEngangstønadFødsel(BrukerRolle.MEDMOR, fødselsdato);
+        var søknad = lagEngangstønadFødsel(fødselsdato);
         var saksnummer = medmor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

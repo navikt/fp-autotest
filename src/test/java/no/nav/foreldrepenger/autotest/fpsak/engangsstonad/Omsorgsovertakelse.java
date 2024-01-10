@@ -11,13 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -34,7 +27,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaOmsorgOgForeldreansvarBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadEngangstonadBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -68,7 +64,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
         var papirsøknadAP = saksbehandler.hentAksjonspunktbekreftelse(PapirSoknadEngangstonadBekreftelse.class);
 
 
-        var søknad = lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
+        var søknad = lagEngangstønadOmsorg(omsorgsovertakelsedato);
 //        var saksnummer = medmor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -115,7 +111,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
-        var søknad = lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
+        var søknad = lagEngangstønadOmsorg(omsorgsovertakelsedato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -160,7 +156,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
-        var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato);
+        var søknad = lagEngangstønadOmsorg(omsorgsovertakelsedato);
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -204,7 +200,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
-        var søknad = lagEngangstønadOmsorg(BrukerRolle.FAR, omsorgsovertakelsedato);
+        var søknad = lagEngangstønadOmsorg(omsorgsovertakelsedato);
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

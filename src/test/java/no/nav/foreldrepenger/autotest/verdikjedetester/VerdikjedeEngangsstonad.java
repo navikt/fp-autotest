@@ -7,17 +7,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.neovisionaries.i18n.CountryCode;
-
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-
-import no.nav.foreldrepenger.vtp.kontrakter.v2.StatsborgerskapDto;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import com.neovisionaries.i18n.CountryCode;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
@@ -26,9 +20,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLovligOppholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.StatsborgerskapDto;
 
 @Tag("verdikjede")
 class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
@@ -46,7 +43,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
         var termindato = LocalDate.now().plusWeeks(3);
-        var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(termindato);
         var saksnummer = familie.mor().søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -92,7 +89,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .build();
         var termindato = LocalDate.now().plusWeeks(3);
-        var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(termindato);
         var mor = familie.mor();
         var saksnummer = mor.søk(søknad.build());
 

@@ -75,12 +75,27 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
+    public Saksnummer sendInnSøknad(no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+        return sendInnSøknad(fnr, søknad);
+    }
+
+    @Override
     public Saksnummer sendInnSøknad(EndringssøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         return sendInnSøknad(fnr, søknad);
     }
 
     @Step("[{søknad.søker.rolle}]: Sender inn søknad: {fnr}")
     private Saksnummer sendInnSøknad(Fødselsnummer fnr, SøknadDto søknad) {
+        AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
+        var skjæringsTidspunktForNyBehandling  = LocalDateTime.now();
+        var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+        mottakKlient.sendSøknad(fnr, søknad);
+
+        return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
+    }
+
+    @Step("Sender inn søknad: {fnr}")
+    private Saksnummer sendInnSøknad(Fødselsnummer fnr, no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling  = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);

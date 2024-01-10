@@ -60,6 +60,11 @@ public class Fordel extends DokumentInnsendingHjelper {
     }
 
     @Override
+    public Saksnummer sendInnSøknad(no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+        return sendInnSøknad(SøknadMapper.tilSøknad(søknad, søknad.mottattdato()), aktørId, fnr, aktørIdAnnenpart, saksnummer);
+    }
+
+    @Override
     public Saksnummer sendInnSøknad(EndringssøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         return sendInnSøknad(SøknadMapper.tilSøknad(søknad, søknad.mottattdato()), aktørId, fnr, aktørIdAnnenpart, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
     }

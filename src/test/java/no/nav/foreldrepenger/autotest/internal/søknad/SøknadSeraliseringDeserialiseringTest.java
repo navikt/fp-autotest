@@ -61,10 +61,10 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
 
     @Test
     public void engangsstønadTest() {
-        test(lagEngangstønadFødsel(MOR, LocalDate.now().minusWeeks(4)).build());
-        test(lagEngangstønadTermin(MOR, LocalDate.now().plusWeeks(4)).build());
-        test(lagEngangstønadAdopsjon(MOR, LocalDate.now(), false).build());
-        test(lagEngangstønadOmsorg(MOR, LocalDate.now()).build());
+        test(lagEngangstønadFødsel(LocalDate.now().minusWeeks(4)).build());
+        test(lagEngangstønadTermin(LocalDate.now().plusWeeks(4)).build());
+        test(lagEngangstønadAdopsjon(LocalDate.now(), false).build());
+        test(lagEngangstønadOmsorg(LocalDate.now()).build());
     }
 
     @Test

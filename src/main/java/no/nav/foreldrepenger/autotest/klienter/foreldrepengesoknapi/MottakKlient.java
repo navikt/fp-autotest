@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Kvittering;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.engangsstønad.EngangsstønadDto;
 
 public class MottakKlient {
 
@@ -23,6 +24,20 @@ public class MottakKlient {
         var request = requestMedInnloggetBrukerIdporten(fnr)
                 .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
                         .path(API_SEND_PATH)
+                        .build())
+                .timeout(Duration.ofSeconds(30))
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));
+        return send(request.build(), Kvittering.class);
+    }
+
+    public Kvittering sendSøknad(Fødselsnummer fnr, no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
+        var path = switch (søknad) {
+            case EngangsstønadDto ignored -> API_SEND_PATH + "/engangsstonad";
+            default -> throw new IllegalStateException("Unexpected value: " + søknad);
+        };
+        var request = requestMedInnloggetBrukerIdporten(fnr)
+                .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
+                        .path(path)
                         .build())
                 .timeout(Duration.ofSeconds(30))
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));

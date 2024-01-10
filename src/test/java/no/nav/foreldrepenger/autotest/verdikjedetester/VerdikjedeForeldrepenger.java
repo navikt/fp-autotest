@@ -1832,7 +1832,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         /* Mor's engangsstønad*/
         var mor = familie.mor();
-        var saksnummerMor = mor.søk(lagEngangstønadFødsel(BrukerRolle.MOR, fødselsdato).build());
+        var saksnummerMor = mor.søk(lagEngangstønadFødsel(fødselsdato).build());
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
