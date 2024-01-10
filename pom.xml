@@ -31,7 +31,7 @@
         <fpsoknad-felles.version>3.0.2</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.1.2</foreldrepenge-api.version>
 
-        <slf4j.version>2.0.10</slf4j.version>
+        <slf4j.version>2.0.11</slf4j.version>
         <logback.version>1.4.14</logback.version>
         <allure.version>2.25.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
