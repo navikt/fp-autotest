@@ -10,6 +10,8 @@ import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Støn
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_OSLO;
+import static no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner.NAV_STORD;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordeling;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingFarAleneomsorg;
@@ -25,6 +27,8 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -91,8 +95,8 @@ class Fodsel extends FpsakTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidsforhold(75, LocalDate.now().minusYears(1), 480_000)
-                                .frilans(25, LocalDate.now().minusYears(3), LocalDate.now().minusMonths(1), 120_000)
+                                .arbeidsforhold(NAV_OSLO, 75, LocalDate.now().minusYears(1), 480_000)
+                                .frilans(NAV_STORD, "arb", 25, LocalDate.now().minusYears(3), LocalDate.now().minusMonths(1), 120_000)
                                 .build())
                         .build())
                 .forelder(far().build())
