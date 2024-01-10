@@ -35,19 +35,19 @@ jobs:
           repository: 'navikt/fp-autotest'
       - name: Henter testresultat for fpsak
         if: ${{ !contains(inputs.fpsak, 'skipped') }}
-        uses: actions/download-artifact@f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110 # ratchet:actions/download-artifact@v4
+        uses: actions/download-artifact@6b208ae046db98c579e8a3aa621ab581ff575935 # ratchet:actions/download-artifact@v4
         with:
           name: fpsak-testresultat
           path: .
       - name: Henter testresultat for fptilbake
         if: ${{ !contains(inputs.fptilbake, 'skipped') }}
-        uses: actions/download-artifact@f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110 # ratchet:actions/download-artifact@v4
+        uses: actions/download-artifact@6b208ae046db98c579e8a3aa621ab581ff575935 # ratchet:actions/download-artifact@v4
         with:
           name: fptilbake-testresultat
           path: .
       - name: Henter testresultat for verdikjede
         if: ${{ !contains(inputs.verdikjede, 'skipped') }}
-        uses: actions/download-artifact@f44cd7b40bfd40b6aa1cc1b9b5b7bf03d3c67110 # ratchet:actions/download-artifact@v4
+        uses: actions/download-artifact@6b208ae046db98c579e8a3aa621ab581ff575935 # ratchet:actions/download-artifact@v4
         with:
           name: verdikjede-testresultat
           path: .
