@@ -121,7 +121,7 @@ class Aksjonspunkter extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
-        var søknad = SøknadEngangsstønadMaler.lagEngangstønadOmsorg(BrukerRolle.MOR, omsorgsovertakelsedato);
+        var søknad = SøknadEngangsstønadMaler.lagEngangstønadOmsorg(omsorgsovertakelsedato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);

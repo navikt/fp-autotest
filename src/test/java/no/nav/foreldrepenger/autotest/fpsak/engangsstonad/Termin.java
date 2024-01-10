@@ -9,11 +9,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -30,7 +25,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
@@ -54,7 +52,7 @@ class Termin extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
-        var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var søknad = lagEngangstønadTermin(termindato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -98,7 +96,7 @@ class Termin extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
-        var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var søknad = lagEngangstønadTermin(termindato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -149,7 +147,7 @@ class Termin extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var far = familie.far();
         var termindato = LocalDate.now().plusWeeks(3);
-        var søknad = lagEngangstønadTermin(BrukerRolle.FAR, termindato);
+        var søknad = lagEngangstønadTermin(termindato);
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -184,7 +182,7 @@ class Termin extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
-        var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato);
+        var søknad = lagEngangstønadTermin(termindato);
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
@@ -226,7 +224,7 @@ class Termin extends FpsakTestBase {
                 .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
         var mor = familie.mor();
         var termindato = LocalDate.now().minusDays(26);
-        var søknad = lagEngangstønadTermin(BrukerRolle.MOR, termindato)
+        var søknad = lagEngangstønadTermin(termindato)
                 .medMottattdato(termindato.plusDays(25));
         var saksnummer = mor.søk(søknad.build());
 
