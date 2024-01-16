@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
@@ -257,8 +258,8 @@ class SammenhengendeUttak extends FpsakTestBase {
 
     @Test
     @DisplayName("Mor endringssøknad med aksjonspunkt i uttak")
-    @Description("Mor endringssøknad med aksjonspunkt i uttak. Søker utsettelse tilbake i tid for å få aksjonspunkt." +
-            "Saksbehandler avslår utsettelsen. Mor har også arbeid med arbeidsforholdId i inntektsmelding")
+    @Description("Mor endringssøknad med aksjonspunkt i uttak. Søker for lang mødrekvote for å få aksjonspunkt." +
+            "Saksbehandler avslår. Mor har også arbeid med arbeidsforholdId i inntektsmelding")
     void endringssøknad_med_aksjonspunkt_i_uttak() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
@@ -293,14 +294,29 @@ class SammenhengendeUttak extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        var startUtsettelse = fødselsdato.plusWeeks(6);
         var fordelingEndring = fordeling(
-                utsettelsesperiode(UtsettelsesÅrsak.ARBEID, startUtsettelse, startUtsettelse.plusWeeks(4).minusDays(1))
+                uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(30).minusDays(1))
         );
-        // TODO: Bekreft at det er endringssøknad med mottatt dato frem i tid som er tanken her. 4 uker etter endring ok?
         var søknadE = lagEndringssøknad(søknad, saksnummer, fordelingEndring)
-                .medMottattdato(startUtsettelse.plusWeeks(2));
+                .medMottattdato(fødselsdato.plusWeeks(5));
         var saksnummerE = mor.søk(søknadE.build());
+
+        saksbehandler.hentFagsak(saksnummerE);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+
+        var fastsettUttaksperioderManueltBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+                .avslåManuellePerioder();
+        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+
+        // Behandle totrinnskontroll
+        beslutter.hentFagsak(saksnummerE);
+        beslutter.ventPåOgVelgRevurderingBehandling();
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -316,18 +332,18 @@ class SammenhengendeUttak extends FpsakTestBase {
         assertThat(UttaksPerioderForSøker)
                 .as("Antall uttaksperioder")
                 .hasSize(4);
-        assertThat(UttaksPerioderForSøker.get(2).getUtsettelseType())
-                .as("Uttaks utsettelsesårsak for periode 3")
-                .isEqualTo(UttakresultatUtsettelseÅrsak.ARBEID);
-        assertThat(UttaksPerioderForSøker.get(2).getPeriodeResultatType())
-                .as("Perioderesultatstype for periode 3")
+        assertThat(UttaksPerioderForSøker.get(0).getPeriodeResultatType())
+                .as("Perioderesultatstype for periode 0")
                 .isEqualTo(PeriodeResultatType.INNVILGET);
-        assertThat(UttaksPerioderForSøker.get(3).getUtsettelseType())
-                .as("Uttaks utsettelsesårsak for periode 3")
-                .isEqualTo(UttakresultatUtsettelseÅrsak.ARBEID);
+        assertThat(UttaksPerioderForSøker.get(1).getPeriodeResultatType())
+                .as("Perioderesultatstype for periode 1")
+                .isEqualTo(PeriodeResultatType.INNVILGET);
+        assertThat(UttaksPerioderForSøker.get(2).getPeriodeResultatType())
+                .as("Perioderesultatstype for periode 2")
+                .isEqualTo(PeriodeResultatType.INNVILGET);
         assertThat(UttaksPerioderForSøker.get(3).getPeriodeResultatType())
                 .as("Perioderesultatstype for periode 3")
-                .isEqualTo(PeriodeResultatType.INNVILGET);
+                .isEqualTo(PeriodeResultatType.AVSLÅTT);
     }
 
     @Test
