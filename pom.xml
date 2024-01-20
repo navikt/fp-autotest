@@ -28,7 +28,7 @@
         <fp-felles.versjon>7.0.4</fp-felles.versjon>
         <fp-prosesstask.version>5.0.4</fp-prosesstask.version>
         <fp-kontrakter.version>9.0.2</fp-kontrakter.version>
-        <fpsoknad-felles.version>3.0.2</fpsoknad-felles.version>
+        <fpsoknad-felles.version>3.0.4</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.1.2</foreldrepenge-api.version>
 
         <slf4j.version>2.0.11</slf4j.version>
@@ -211,7 +211,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.2.3</version>
+                    <version>3.2.5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
