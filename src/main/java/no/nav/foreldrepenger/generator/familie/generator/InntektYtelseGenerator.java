@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaVedtakDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.InfotrygdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseType;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektkomponentDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektsperiodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
@@ -207,7 +208,7 @@ public class InntektYtelseGenerator {
                 fraArbeidsforhold.ansettelsesperiodeFom(),
                 fraArbeidsforhold.ansettelsesperiodeTom() != null ? fraArbeidsforhold.ansettelsesperiodeTom() : LocalDate.now() ,
                 beløpPerMnd,
-                InntektsperiodeDto.InntektTypeDto.LØNNSINNTEKT,
+                InntektYtelseType.FASTLØNN,
                 InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
                 fraArbeidsforhold.arbeidsgiver()
 
@@ -220,7 +221,7 @@ public class InntektYtelseGenerator {
                 fom,
                 tom,
                 beløp,
-                InntektsperiodeDto.InntektTypeDto.LØNNSINNTEKT,
+                InntektYtelseType.FASTLØNN,
                 InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
                 organisasjon
 
@@ -256,11 +257,13 @@ public class InntektYtelseGenerator {
             saker.add(sak);
             inntektYtelse.arena(new ArenaDto(saker));
         }
+        var inntektYtelseType = ArenaSakerDto.YtelseTema.AAP.equals(tema) ? InntektYtelseType.AAP :
+                ArenaSakerDto.YtelseTema.DAG.equals(tema) ? InntektYtelseType.DAGPENGER : InntektYtelseType.FASTLØNN;
         var inntektsperiode = new InntektsperiodeDto(
                 fom,
                 tom,
                 beløp,
-                InntektsperiodeDto.InntektTypeDto.YTELSE_FRA_OFFENTLIGE,
+                inntektYtelseType,
                 InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
                 TestOrganisasjoner.NAV
 
@@ -282,11 +285,15 @@ public class InntektYtelseGenerator {
             grunnlagliste.add(ytelsegrunnlag);
             inntektYtelse.infotrygd(new InfotrygdDto(grunnlagliste));
         }
+
+        var inntektYtelseType = GrunnlagDto.Ytelse.BS.equals(tema) ? InntektYtelseType.PLEIEPENGER :
+                InntektYtelseType.SYKEPENGER;
+
         var inntektsperiode = new InntektsperiodeDto(
                 fom,
                 tom,
                 10_000,
-                InntektsperiodeDto.InntektTypeDto.YTELSE_FRA_OFFENTLIGE,
+                inntektYtelseType,
                 InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
                 TestOrganisasjoner.NAV_YTELSE_BETALING
 
