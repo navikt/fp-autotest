@@ -68,7 +68,7 @@ public class TestOrganisasjoner {
 
 
     public TestOrganisasjoner() {
-        ORGANISASJONER.addAll(List.of(NAV, NAV_OSLO, NAV_BERGEN, NAV_STORD));
+        ORGANISASJONER.addAll(List.of(NAV, NAV_OSLO, NAV_BERGEN, NAV_STORD, NAV_YTELSE_BETALING));
     }
 
     public static final PrivatArbeidsgiver PRIVAT_ARBEIDSGIVER = new PrivatArbeidsgiver(UUID.randomUUID());
