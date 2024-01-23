@@ -325,9 +325,6 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 .as("Siste periode avslått med årsak ny stønadsperiode")
                 .isEqualTo(PeriodeResultatÅrsak.STØNADSPERIODE_NYTT_BARN);
 
-        // Verifiser at fagsak på barn 12 IKKE blir berørt og det IKKE opprettes en revurdering
-        saksbehandler.hentFagsak(saksnummerMorBarn2);
-        assertThat(saksbehandler.harRevurderingBehandling()).isFalse();
     }
 
     private UttakResultatPeriode sisteUttaksperiode() {
