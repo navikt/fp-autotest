@@ -13,19 +13,9 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
-
-import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-
-import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -46,12 +36,15 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class ArbeidsforholdVarianter extends FpsakTestBase {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ArbeidsforholdVarianter.class);
 
     @Test
     @DisplayName("Mor søker fødsel, men har ikke arbeidsforhold i AAREG, sender inntektsmelding")
@@ -195,7 +188,8 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
                 .orElseThrow();
         var dto = new ManueltArbeidsforholdDto(saksbehandler.valgtBehandling.uuid, "Dette er en begrunnelse", orgnummer.value(),
                 imMedAksjonspunkt.internArbeidsforholdId(), null, LocalDate.now().minusYears(3), LocalDate.now().plusYears(2),
-                100, ArbeidsforholdKomplettVurderingType.OPPRETT_BASERT_PÅ_INNTEKTSMELDING);
+                100, ArbeidsforholdKomplettVurderingType.OPPRETT_BASERT_PÅ_INNTEKTSMELDING,
+                (long) saksbehandler.valgtBehandling.versjon);
         saksbehandler.lagreOpprettetArbeidsforhold(dto);
         saksbehandler.bekreftAksjonspunkt(ab);
     }
@@ -211,7 +205,8 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
                 "Min bedrift",
                 LocalDate.now().minusYears(3),
                 LocalDate.now().plusYears(2),
-                100, ArbeidsforholdKomplettVurderingType.MANUELT_OPPRETTET_AV_SAKSBEHANDLER);
+                100, ArbeidsforholdKomplettVurderingType.MANUELT_OPPRETTET_AV_SAKSBEHANDLER,
+                (long) overstyrer.valgtBehandling.versjon);
         overstyrer.lagreOpprettetArbeidsforhold(dto);
         overstyrer.bekreftAksjonspunkt(ab);
     }

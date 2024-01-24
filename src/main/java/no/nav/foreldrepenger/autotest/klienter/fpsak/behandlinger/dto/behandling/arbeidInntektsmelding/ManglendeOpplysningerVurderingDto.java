@@ -8,4 +8,5 @@ public record ManglendeOpplysningerVurderingDto(UUID behandlingUuid,
                                                 ArbeidsforholdKomplettVurderingType vurdering,
                                                 String begrunnelse,
                                                 String arbeidsgiverIdent,
-                                                String internArbeidsforholdRef){}
+                                                String internArbeidsforholdRef,
+                                                Long behandlingVersjon){}

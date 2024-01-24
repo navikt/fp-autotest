@@ -815,7 +815,7 @@ public class Saksbehandler {
         var dtoer = arbforSomManglerIM.stream()
                 .map(arbfor -> new ManglendeOpplysningerVurderingDto(valgtBehandling.uuid,
                         ArbeidsforholdKomplettVurderingType.FORTSETT_UTEN_INNTEKTSMELDING, "Dette er en begrunnelse",
-                        arbfor.arbeidsgiverIdent(), arbfor.internArbeidsforholdId()))
+                        arbfor.arbeidsgiverIdent(), arbfor.internArbeidsforholdId(), (long) valgtBehandling.versjon))
                 .toList();
         dtoer.forEach(this::lagreArbeidsforholdValg);
         var ab = hentAksjonspunktbekreftelse(ArbeidInntektsmeldingBekreftelse.class);
