@@ -13,4 +13,5 @@ public record ManueltArbeidsforholdDto(UUID behandlingUuid,
                                        LocalDate fom,
                                        LocalDate tom,
                                        Integer stillingsprosent,
-                                       ArbeidsforholdKomplettVurderingType vurdering) {}
+                                       ArbeidsforholdKomplettVurderingType vurdering,
+                                       Long behandlingVersjon) {}
