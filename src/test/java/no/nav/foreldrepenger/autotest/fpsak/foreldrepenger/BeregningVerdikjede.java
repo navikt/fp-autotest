@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -574,6 +575,58 @@ class BeregningVerdikjede extends FpsakTestBase {
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
     }
+
+    @Test
+    @DisplayName("Mor fødsel med frilans som eneste inntekt")
+    @Description("Mor fødsel med frilans som eneste inntekt. Oppgir ikke frilans i søknaden")
+    void morSøkerFødselMedEttArbeidsforholdOgFrilans_VurderOpptjening_VurderFaktaOmBeregning_AvvikIBeregning() {
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny()
+                                .frilans(100, LocalDate.now().minusYears(3), LocalDate.now().plusMonths(3), 504_000)
+                                .build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(LocalDate.now())
+                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+        var mor = familie.mor();
+        var fødselsdato = familie.barn().fødselsdato();
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
+                .medSøker(new SøkerBuilder(BrukerRolle.MOR).build())
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
+        var saksnummer = mor.søk(søknad.build());
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.VEDTAK_FATTET);
+
+        debugLoggBehandling(saksbehandler.valgtBehandling);
+        // Verifiser Beregningsgrunnlag
+        Assertions.assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallAktivitetStatus())
+                .as("Antall aktivitetstatus")
+                .isEqualTo(1);
+        Assertions.assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().getAktivitetStatus(0))
+                .as("Aktivitetsstatus i beregnignsgrunnlag")
+                .isEqualTo(AktivitetStatus.FRILANSER);
+        Assertions.assertThat(saksbehandler.valgtBehandling.getBeregningsgrunnlag().antallBeregningsgrunnlagPeriodeDto())
+                .as("Antall beregningsgrunnlagsparioder")
+                .isEqualTo(1);
+        var andeler = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
+                .getBeregningsgrunnlagPeriode(0).getBeregningsgrunnlagPrStatusOgAndel();
+        Assertions.assertThat(andeler)
+                .as("Antall andeler")
+                .hasSize(1);
+        Assertions.assertThat(andeler.get(0).getAktivitetStatus())
+                .as("Aktivitetsstatus")
+                .isEqualTo(AktivitetStatus.FRILANSER);
+        Assertions.assertThat(andeler.get(0).getDagsats())
+                .as("Dagsats")
+                .isEqualTo(1938);
+        Assertions.assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
+                .as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
+    }
+
 
     private void verifiserAndelerIPeriode(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriode,
             BGAndelHelper BGAndelHelper) {
