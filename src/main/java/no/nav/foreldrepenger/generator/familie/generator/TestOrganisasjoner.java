@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.generator.familie.generator;
 
-import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Orgnummer;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.Orgnummer;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
 
 public class TestOrganisasjoner {
 
@@ -46,6 +46,14 @@ public class TestOrganisasjoner {
                     LocalDate.of(2015, 1, 1))
     );
 
+    public static final OrganisasjonDto NAV_KLAGE_MIDT = new OrganisasjonDto(
+            new Orgnummer("991078045"),
+            new OrganisasjonDto.OrganisasjonsdetaljerDto(
+                    "NAV KLAGEINSTANS MIDT-NORGE",
+                    LocalDate.of(2003, 1, 1),
+                    LocalDate.of(2015, 1, 1))
+    );
+
 
     public static final OrganisasjonDto NAV_YTELSE_BETALING = new OrganisasjonDto(
             new Orgnummer("991013628"),
@@ -68,7 +76,7 @@ public class TestOrganisasjoner {
 
 
     public TestOrganisasjoner() {
-        ORGANISASJONER.addAll(List.of(NAV, NAV_OSLO, NAV_BERGEN, NAV_STORD, NAV_YTELSE_BETALING));
+        ORGANISASJONER.addAll(List.of(NAV, NAV_OSLO, NAV_BERGEN, NAV_STORD, NAV_KLAGE_MIDT));
     }
 
     public static final PrivatArbeidsgiver PRIVAT_ARBEIDSGIVER = new PrivatArbeidsgiver(UUID.randomUUID());

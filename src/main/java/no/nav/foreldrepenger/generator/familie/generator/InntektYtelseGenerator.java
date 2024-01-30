@@ -265,7 +265,7 @@ public class InntektYtelseGenerator {
                 beløp,
                 inntektYtelseType,
                 InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
-                TestOrganisasjoner.NAV
+                TestOrganisasjoner.NAV_YTELSE_BETALING
 
         );
         return inntektsperiode(inntektsperiode);
