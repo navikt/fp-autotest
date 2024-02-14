@@ -31,13 +31,13 @@
         <fpsoknad-felles.version>3.0.2</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.1.2</foreldrepenge-api.version>
 
-        <slf4j.version>2.0.11</slf4j.version>
+        <slf4j.version>2.0.12</slf4j.version>
         <logback.version>1.4.14</logback.version>
         <allure.version>2.25.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
-        <assertj.version>3.25.2</assertj.version>
-        <aspectj.version>1.9.21</aspectj.version>
-        <junit.version>5.10.1</junit.version>
+        <assertj.version>3.25.3</assertj.version>
+        <aspectj.version>1.9.21.1</aspectj.version>
+        <junit.version>5.10.2</junit.version>
         <jackson.version>2.16.1</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
