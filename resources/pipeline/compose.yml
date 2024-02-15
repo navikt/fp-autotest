@@ -182,11 +182,6 @@ services:
                     "url": "http://fptilbake:8080"
                 },
                 {
-                    "path": "/fpformidling/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpformidling/.default",
-                    "url": "http://fpformidling:8080"
-                },
-                {
                     "path": "/fplos/api",
                     "scopes": "api://vtp.teamforeldrepenger.fplos/.default",
                     "url": "http://fplos:8080"
