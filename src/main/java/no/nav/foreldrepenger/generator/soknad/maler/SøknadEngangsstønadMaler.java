@@ -3,38 +3,38 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.common.oppslag.dkif.Målform;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnV2Builder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.EngangsstønadV2Builder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.UtenlandsoppholdMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.BarnBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.EngangsstønadBuilder;
 
 public final class SøknadEngangsstønadMaler {
 
     private SøknadEngangsstønadMaler() {
     }
 
-    private static EngangsstønadV2Builder lagEngangsstønad() {
-        return new EngangsstønadV2Builder()
+    private static EngangsstønadBuilder lagEngangsstønad() {
+        return new EngangsstønadBuilder()
                 .medSpråkkode(Målform.standard())
                 .medUtenlandsopphold(UtenlandsoppholdMaler.oppholdBareINorge());
     }
 
-    public static EngangsstønadV2Builder lagEngangstønadFødsel(LocalDate familiehendelse) {
+    public static EngangsstønadBuilder lagEngangstønadFødsel(LocalDate familiehendelse) {
         return lagEngangsstønad()
-                .medBarn(BarnV2Builder.fødsel(1, familiehendelse).build());
+                .medBarn(BarnBuilder.fødsel(1, familiehendelse).build());
     }
 
-    public static EngangsstønadV2Builder lagEngangstønadTermin(LocalDate familiehendelse) {
+    public static EngangsstønadBuilder lagEngangstønadTermin(LocalDate familiehendelse) {
         return lagEngangsstønad()
-                .medBarn(BarnV2Builder.termin(1, familiehendelse).build());
+                .medBarn(BarnBuilder.termin(1, familiehendelse).build());
     }
 
-    public static EngangsstønadV2Builder lagEngangstønadAdopsjon(LocalDate omsorgsovertakelsedato, Boolean ektefellesBarn) {
+    public static EngangsstønadBuilder lagEngangstønadAdopsjon(LocalDate omsorgsovertakelsedato, Boolean ektefellesBarn) {
         return lagEngangsstønad()
-                .medBarn(BarnV2Builder.adopsjon(omsorgsovertakelsedato, ektefellesBarn).build());
+                .medBarn(BarnBuilder.adopsjon(omsorgsovertakelsedato, ektefellesBarn).build());
     }
 
-    public static EngangsstønadV2Builder lagEngangstønadOmsorg(LocalDate omsorgsovertakelsedato) {
+    public static EngangsstønadBuilder lagEngangstønadOmsorg(LocalDate omsorgsovertakelsedato) {
         return lagEngangsstønad()
-                .medBarn(BarnV2Builder.omsorgsovertakelse(omsorgsovertakelsedato).build());
+                .medBarn(BarnBuilder.omsorgsovertakelse(omsorgsovertakelsedato).build());
     }
 }

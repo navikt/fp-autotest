@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnV2Builder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.BarnBuilder;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
@@ -214,7 +214,7 @@ class Fodsel extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(fødselsdato)
-                .medBarn(BarnV2Builder.fødsel(2, fødselsdato).build());
+                .medBarn(BarnBuilder.fødsel(2, fødselsdato).build());
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
