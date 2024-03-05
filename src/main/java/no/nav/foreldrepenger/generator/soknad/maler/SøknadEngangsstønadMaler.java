@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.generator.soknad.maler;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import no.nav.foreldrepenger.common.oppslag.dkif.Målform;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.UtenlandsoppholdMaler;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.BarnBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.EngangsstønadBuilder;
 
@@ -15,7 +15,7 @@ public final class SøknadEngangsstønadMaler {
     private static EngangsstønadBuilder lagEngangsstønad() {
         return new EngangsstønadBuilder()
                 .medSpråkkode(Målform.standard())
-                .medUtenlandsopphold(UtenlandsoppholdMaler.oppholdBareINorge());
+                .medOppholdIUtlandet(List.of());
     }
 
     public static EngangsstønadBuilder lagEngangstønadFødsel(LocalDate familiehendelse) {
