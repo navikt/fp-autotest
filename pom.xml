@@ -25,10 +25,10 @@
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
         <vtp.versjon>1.2.2</vtp.versjon>
-        <fp-felles.versjon>7.0.5</fp-felles.versjon>
+        <fp-felles.versjon>7.0.6</fp-felles.versjon>
         <fp-prosesstask.version>5.0.5</fp-prosesstask.version>
-        <fp-kontrakter.version>9.1.4</fp-kontrakter.version>
-        <fpsoknad-felles.version>3.0.5</fpsoknad-felles.version>
+        <fp-kontrakter.version>9.1.6</fp-kontrakter.version>
+        <fpsoknad-felles.version>3.0.6</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.1.3</foreldrepenge-api.version>
 
         <slf4j.version>2.0.12</slf4j.version>
