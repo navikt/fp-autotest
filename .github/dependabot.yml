@@ -12,6 +12,11 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    groups:
+      minor-deps:
+        update-types:
+          - "minor"
+          - "patch"
   - package-ecosystem: maven
     directory: "/"
     registries:
@@ -26,11 +31,20 @@ updates:
         dependency-type: "production"
         exclude-patterns:
           - "no.nav.*"
+        update-types:
+          - "minor"
+          - "patch"
       dev-deps:
         dependency-type: "development"
         exclude-patterns:
           - "no.nav.*"
+        update-types:
+          - "minor"
+          - "patch"
       interne-deps:
         patterns:
           - "no.nav.*"
+        update-types:
+          - "minor"
+          - "patch"
 
