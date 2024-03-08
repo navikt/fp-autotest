@@ -14,7 +14,7 @@ public class Pdf {
                 data[3] == 0x46 && // F
                 data[4] == 0x2D) { // -
 
-            // version 1.3 file terminator
+            // PDF version 1.3 file terminator
             if (data[5] == 0x31 && data[6] == 0x2E && data[7] == 0x33 &&
                     data[data.length - 7] == 0x25 && // %
                     data[data.length - 6] == 0x25 && // %
@@ -26,9 +26,9 @@ public class Pdf {
                 return true;
             }
 
-            // version 1.3 file terminator
+            // PDF version >= 1.4 file terminator %PDF-1.x -- byte 7
             // EOL
-            return data[5] == 0x31 && data[6] == 0x2E && data[7] == 0x34 &&
+            return data[5] == 0x31 && data[6] == 0x2E && data[7] >= 0x34 &&
                     data[data.length - 6] == 0x25 && // %
                     data[data.length - 5] == 0x25 && // %
                     data[data.length - 4] == 0x45 && // E
