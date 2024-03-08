@@ -17,7 +17,7 @@ public class VurderTilbakekrevingVedNegativSimulering extends AksjonspunktBekref
     }
 
     public VurderTilbakekrevingVedNegativSimulering tilbakekrevingUtenVarsel(){
-        setVidereBehandling(VidereBehandling.TILBAKEKR_INFOTRYGD);
+        setVidereBehandling(VidereBehandling.TILBAKEKR_OPPRETT);
         return this;
     }
 
@@ -34,7 +34,7 @@ public class VurderTilbakekrevingVedNegativSimulering extends AksjonspunktBekref
     }
 
     private void tilbakekrevingMedVarsel(String varseltekst){
-        setVidereBehandling(VidereBehandling.TILBAKEKR_INFOTRYGD);
+        setVidereBehandling(VidereBehandling.TILBAKEKR_OPPRETT);
         setVarseltekst(varseltekst);
     }
 
