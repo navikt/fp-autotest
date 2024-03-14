@@ -59,6 +59,7 @@ class LoggTest {
             "Error while loading kafka-streams-version.properties",
             "Vil automatisk prøve igjen",
             "Unable to acquire JDBC",
+            "Kan ikke etterlyse inntektsmeldinger når ingen innteksmeldinger mangler", // Logges av formidling pga timingproblemer i verdikjede
             "FP-018669:Feil ved kall til Abakus: Kunne ikke hente grunnlag fra abakus", // Logges i fpsak som konsekvens av det nedenfor
             "duplicate key value violates unique constraint \\\"uidx_kobling_1\\\"" // Logges i fpabakus
     );
