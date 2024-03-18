@@ -120,7 +120,6 @@ services:
     mem_limit: 1gb
     shm_size: 256mb
     environment:
-      ABAKUS_CALLBACK_URL: http://fpsak:8080/fpsak/api/registerdata/iay/callback
       FPOPPDRAG_OVERRIDE_PROXY_URL: http://localhost:9000/fpoppdrag/api
       UFORE_RS_URL: http://vtp:8060/rest/api/pesys/ufo
       KAFKA_PERSONOVERSIKT_TOPIC: personoversikt.modia-soknadsstatus-hendelse
