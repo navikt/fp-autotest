@@ -36,7 +36,7 @@
         <allure.version>2.25.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <assertj.version>3.25.3</assertj.version>
-        <aspectj.version>1.9.21.1</aspectj.version>
+        <aspectj.version>1.9.21.2</aspectj.version>
         <junit.version>5.10.2</junit.version>
         <jackson.version>2.17.0</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
