@@ -1,0 +1,1 @@
+{"@type":"AvklarLovligOppholdBekreftelse","bekreftedePerioder":[{"vurderingsdato":"2024-03-28","aksjonspunkter":[],"erEosBorger":false,"lovligOppholdVurdering":true,"begrunnelse":"Søker har lovlig opphold"}],"@type":"5019"}

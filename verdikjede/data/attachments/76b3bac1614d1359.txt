@@ -1,0 +1,1 @@
+{"type":"dødshendelse","endringstype":"OPPRETTET","fnr":"09437013001","doedsdato":"2024-03-27"}

@@ -1,0 +1,1 @@
+{"mottattdato":"2024-03-25","språkkode":"NB","barn":{"type":"fødsel","antallBarn":1,"fødselsdato":"2024-02-25","termindato":"2024-02-25","vedleggreferanser":[]},"oppholdIUtlandet":[],"vedlegg":[]}

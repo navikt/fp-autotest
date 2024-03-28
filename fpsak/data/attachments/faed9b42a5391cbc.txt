@@ -1,0 +1,1 @@
+{"begrunnelse":"Dette er begrunnelsen","videreBehandling":"TILBAKEKR_OPPRETT","varseltekst":"Dette er friteksten i varselbrevet. Her skriver saksbehandler litt om hvorfor det er oppstått en feilutbetaling","@type":"5084"}
