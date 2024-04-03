@@ -1,0 +1,58 @@
+{
+  "beregningsgrunnlag" : {
+    "skjæringstidspunkt" : "2022-01-01",
+    "aktivitetStatuser" : [ "MS" ],
+    "beregningsgrunnlagPerioder" : [ {
+      "beregningsgrunnlagPrStatusOgAndelList" : [ {
+        "andelsnr" : 1,
+        "aktivitetStatus" : "MS",
+        "arbeidsforholdType" : "-",
+        "bruttoPrÅr" : 319197.0,
+        "redusertRefusjonPrÅr" : 0.0,
+        "redusertBrukersAndelPrÅr" : 255357.6,
+        "dagsatsBruker" : 982,
+        "dagsatsArbeidsgiver" : 0,
+        "inntektskategori" : "ARBEIDSTAKER",
+        "avkortetPrÅr" : 319197.0,
+        "redusertPrÅr" : 255357.6,
+        "beregnetPrÅr" : 319197.0,
+        "maksimalRefusjonPrÅr" : 0.0,
+        "avkortetRefusjonPrÅr" : 0.0,
+        "avkortetBrukersAndelPrÅr" : 319197.0,
+        "årsbeløpFraTilstøtendeYtelse" : 319197.0,
+        "fastsattAvSaksbehandler" : false,
+        "lagtTilAvSaksbehandler" : false
+      } ],
+      "periode" : {
+        "fom" : "2022-01-01",
+        "tom" : "9999-12-31"
+      },
+      "bruttoPrÅr" : 319197.0,
+      "avkortetPrÅr" : 319197.0,
+      "redusertPrÅr" : 255357.6,
+      "dagsats" : 982,
+      "periodeÅrsaker" : [ ]
+    } ],
+    "sammenligningsgrunnlagPrStatusListe" : [ ],
+    "faktaOmBeregningTilfeller" : [ "VURDER_MILITÆR_SIVILTJENESTE" ],
+    "overstyrt" : false,
+    "grunnbeløp" : 106399.0
+  },
+  "faktaAggregat" : {
+    "faktaArbeidsforholdListe" : [ ],
+    "faktaAktør" : {
+      "skalBeregnesSomMilitær" : true
+    }
+  },
+  "registerAktiviteter" : {
+    "aktiviteter" : [ {
+      "periode" : {
+        "fom" : "2021-08-01",
+        "tom" : "2022-01-31"
+      },
+      "opptjeningAktivitetType" : "MILITÆR_ELLER_SIVILTJENESTE"
+    } ],
+    "skjæringstidspunktOpptjening" : "2022-01-01"
+  },
+  "beregningsgrunnlagTilstand" : "FASTSATT"
+}

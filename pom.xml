@@ -30,6 +30,7 @@
         <fp-kontrakter.version>9.1.8</fp-kontrakter.version>
         <fpsoknad-felles.version>3.0.7</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.1.3</foreldrepenge-api.version>
+        <kalkulus.versjon>0.0.1</kalkulus.versjon>
 
         <slf4j.version>2.0.12</slf4j.version>
         <logback.version>1.5.3</logback.version>
@@ -129,6 +130,11 @@
             <groupId>no.nav.foreldrepenger.vtp</groupId>
             <artifactId>kontrakter</artifactId>
             <version>${vtp.versjon}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kalkulus</groupId>
+            <artifactId>kontrakt</artifactId>
+            <version>${kalkulus.versjon}</version>
         </dependency>
 
         <!-- Eksterne avhengigheter (Http klient, jackson og tilhørende avhengigheter) -->
@@ -321,6 +327,13 @@
             <properties>
                 <includeTestsTags>verdikjede</includeTestsTags>
                 <testPackage>no.nav.foreldrepenger.autotest.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
+            <id>kalkulus</id>
+            <properties>
+                <includeTestsTags>kalkulus</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.kalkulus.**</testPackage>
             </properties>
         </profile>
         <profile>
