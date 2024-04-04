@@ -77,7 +77,7 @@ jobs:
         run: |
           if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent")
-          else if [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
+          elif [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
             services=("fpkalkulus")
           else
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad-mottak" "fpoversikt" "foreldrepengesoknad-api")
