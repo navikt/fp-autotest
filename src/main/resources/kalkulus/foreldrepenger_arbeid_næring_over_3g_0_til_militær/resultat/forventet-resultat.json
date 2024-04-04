@@ -1,0 +1,130 @@
+{
+  "beregningsgrunnlag" : {
+    "skjæringstidspunkt" : "2022-01-01",
+    "aktivitetStatuser" : [ "MS", "AT_SN" ],
+    "beregningsgrunnlagPerioder" : [ {
+      "beregningsgrunnlagPrStatusOgAndelList" : [ {
+        "andelsnr" : 1,
+        "aktivitetStatus" : "AT",
+        "beregningsperiode" : {
+          "fom" : "2021-10-01",
+          "tom" : "2021-12-31"
+        },
+        "arbeidsforholdType" : "ARBEID",
+        "bruttoPrÅr" : 204000.0,
+        "redusertRefusjonPrÅr" : 0.0,
+        "redusertBrukersAndelPrÅr" : 204000.0,
+        "dagsatsBruker" : 785,
+        "dagsatsArbeidsgiver" : 0,
+        "inntektskategori" : "ARBEIDSTAKER",
+        "bgAndelArbeidsforhold" : {
+          "arbeidsgiver" : {
+            "arbeidsgiverOrgnr" : "973861778"
+          },
+          "arbeidsperiodeFom" : "2021-01-01",
+          "arbeidsperiodeTom" : "2022-12-31"
+        },
+        "avkortetPrÅr" : 204000.0,
+        "redusertPrÅr" : 204000.0,
+        "beregnetPrÅr" : 204000.0,
+        "maksimalRefusjonPrÅr" : 0.0,
+        "avkortetRefusjonPrÅr" : 0.0,
+        "avkortetBrukersAndelPrÅr" : 204000.0,
+        "årsbeløpFraTilstøtendeYtelse" : 204000.0,
+        "fastsattAvSaksbehandler" : false,
+        "lagtTilAvSaksbehandler" : false
+      }, {
+        "andelsnr" : 2,
+        "aktivitetStatus" : "SN",
+        "beregningsperiode" : {
+          "fom" : "2018-01-01",
+          "tom" : "2020-12-31"
+        },
+        "arbeidsforholdType" : "NÆRING",
+        "bruttoPrÅr" : 182741.44,
+        "redusertRefusjonPrÅr" : 0.0,
+        "redusertBrukersAndelPrÅr" : 182741.44,
+        "dagsatsBruker" : 703,
+        "dagsatsArbeidsgiver" : 0,
+        "inntektskategori" : "SELVSTENDIG_NÆRINGSDRIVENDE",
+        "avkortetPrÅr" : 182741.44,
+        "redusertPrÅr" : 182741.44,
+        "beregnetPrÅr" : 182741.44,
+        "maksimalRefusjonPrÅr" : 0.0,
+        "avkortetRefusjonPrÅr" : 0.0,
+        "avkortetBrukersAndelPrÅr" : 182741.44,
+        "pgiSnitt" : 386741,
+        "pgi1" : 949492,
+        "pgi2" : 215239,
+        "pgi3" : 202892,
+        "årsbeløpFraTilstøtendeYtelse" : 182741.44,
+        "fastsattAvSaksbehandler" : false,
+        "lagtTilAvSaksbehandler" : false
+      }, {
+        "andelsnr" : 3,
+        "aktivitetStatus" : "MS",
+        "arbeidsforholdType" : "-",
+        "bruttoPrÅr" : 0.0,
+        "redusertRefusjonPrÅr" : 0.0,
+        "redusertBrukersAndelPrÅr" : 0.0,
+        "dagsatsBruker" : 0,
+        "dagsatsArbeidsgiver" : 0,
+        "inntektskategori" : "ARBEIDSTAKER",
+        "avkortetPrÅr" : 0.0,
+        "redusertPrÅr" : 0.0,
+        "beregnetPrÅr" : 0.0,
+        "maksimalRefusjonPrÅr" : 0.0,
+        "avkortetRefusjonPrÅr" : 0.0,
+        "avkortetBrukersAndelPrÅr" : 0.0,
+        "årsbeløpFraTilstøtendeYtelse" : 0.0,
+        "fastsattAvSaksbehandler" : false,
+        "lagtTilAvSaksbehandler" : false
+      } ],
+      "periode" : {
+        "fom" : "2022-01-01",
+        "tom" : "9999-12-31"
+      },
+      "bruttoPrÅr" : 386741.44,
+      "avkortetPrÅr" : 386741.44,
+      "redusertPrÅr" : 386741.44,
+      "dagsats" : 1488,
+      "periodeÅrsaker" : [ ]
+    } ],
+    "sammenligningsgrunnlagPrStatusListe" : [ ],
+    "faktaOmBeregningTilfeller" : [ "VURDER_MILITÆR_SIVILTJENESTE" ],
+    "overstyrt" : false,
+    "grunnbeløp" : 106399.0
+  },
+  "faktaAggregat" : {
+    "faktaArbeidsforholdListe" : [ ],
+    "faktaAktør" : {
+      "skalBeregnesSomMilitær" : true
+    }
+  },
+  "registerAktiviteter" : {
+    "aktiviteter" : [ {
+      "periode" : {
+        "fom" : "2019-01-01",
+        "tom" : "9999-12-31"
+      },
+      "opptjeningAktivitetType" : "NÆRING"
+    }, {
+      "periode" : {
+        "fom" : "2020-01-01",
+        "tom" : "9999-12-31"
+      },
+      "arbeidsgiver" : {
+        "arbeidsgiverOrgnr" : "973861778"
+      },
+      "opptjeningAktivitetType" : "ARBEID"
+    }, {
+      "periode" : {
+        "fom" : "2021-08-01",
+        "tom" : "2022-01-31"
+      },
+      "opptjeningAktivitetType" : "MILITÆR_ELLER_SIVILTJENESTE"
+    } ],
+    "skjæringstidspunktOpptjening" : "2022-01-01"
+  },
+  "beregningsgrunnlagTilstand" : "FASTSATT"
+}

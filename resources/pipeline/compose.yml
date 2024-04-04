@@ -115,6 +115,30 @@ services:
         condition: service_healthy
       vtp:
         condition: service_healthy
+  fpkalkulus:
+      <<: *default-konfigurasjon
+      image: $FPKALKULUS_IMAGE
+      container_name: fpkalkulus
+      mem_limit: 512mb
+      env_file:
+        - *common-properties
+        - fpkalkulus_datasource.env
+      volumes:
+        - *sertifikat-volum
+      ports:
+        - 127.0.0.1:8016:8080
+      healthcheck:
+        test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpkalkulus/internal/health/isReady" ]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+      depends_on:
+        audit.nais:
+          condition: service_started
+        postgres:
+          condition: service_healthy
+        vtp:
+          condition: service_healthy
   fpsak:
     <<: *default-konfigurasjon
     image: $FPSAK_IMAGE

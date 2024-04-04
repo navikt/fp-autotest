@@ -9,6 +9,8 @@ services:
     mem_limit: 4gb
   fpabakus:
     mem_limit: 1gb
+  fpkalkulus:
+    mem_limit: 512mb
   fpsak:
     mem_limit: 3gb
   fpfrontend:

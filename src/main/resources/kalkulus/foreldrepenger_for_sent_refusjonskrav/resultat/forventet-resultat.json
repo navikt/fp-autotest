@@ -1,0 +1,323 @@
+{
+  "beregningsgrunnlag": {
+    "skjæringstidspunkt": "2022-01-01",
+    "aktivitetStatuser": [
+      "AT"
+    ],
+    "beregningsgrunnlagPerioder": [
+      {
+        "beregningsgrunnlagPrStatusOgAndelList": [
+          {
+            "andelsnr": 1,
+            "aktivitetStatus": "AT",
+            "beregningsperiode": {
+              "fom": "2021-10-01",
+              "tom": "2021-12-31"
+            },
+            "arbeidsforholdType": "ARBEID",
+            "bruttoPrÅr": 360000.0,
+            "redusertRefusjonPrÅr": 0.0,
+            "redusertBrukersAndelPrÅr": 360000.0,
+            "dagsatsBruker": 1385,
+            "dagsatsArbeidsgiver": 0,
+            "inntektskategori": "ARBEIDSTAKER",
+            "bgAndelArbeidsforhold": {
+              "arbeidsgiver": {
+                "arbeidsgiverOrgnr": "910909088"
+              },
+              "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
+              "refusjonskravPrÅr": 0,
+              "arbeidsperiodeFom": "2016-03-25",
+              "arbeidsperiodeTom": "9999-12-31"
+            },
+            "avkortetPrÅr": 360000.0,
+            "redusertPrÅr": 360000.0,
+            "beregnetPrÅr": 360000.0,
+            "maksimalRefusjonPrÅr": 0.0,
+            "avkortetRefusjonPrÅr": 0.0,
+            "avkortetBrukersAndelPrÅr": 360000.0,
+            "årsbeløpFraTilstøtendeYtelse": 360000.0,
+            "fastsattAvSaksbehandler": false,
+            "lagtTilAvSaksbehandler": false
+          },
+          {
+            "andelsnr": 2,
+            "aktivitetStatus": "AT",
+            "beregningsperiode": {
+              "fom": "2021-10-01",
+              "tom": "2021-12-31"
+            },
+            "arbeidsforholdType": "ARBEID",
+            "bruttoPrÅr": 240000.0,
+            "redusertRefusjonPrÅr": 0.0,
+            "redusertBrukersAndelPrÅr": 240000.0,
+            "dagsatsBruker": 923,
+            "dagsatsArbeidsgiver": 0,
+            "inntektskategori": "ARBEIDSTAKER",
+            "bgAndelArbeidsforhold": {
+              "arbeidsgiver": {
+                "arbeidsgiverOrgnr": "973861778"
+              },
+              "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-003442432423",
+              "refusjonskravPrÅr": 0,
+              "arbeidsperiodeFom": "2016-03-25",
+              "arbeidsperiodeTom": "9999-12-31"
+            },
+            "avkortetPrÅr": 240000.0,
+            "redusertPrÅr": 240000.0,
+            "beregnetPrÅr": 240000.0,
+            "maksimalRefusjonPrÅr": 0.0,
+            "avkortetRefusjonPrÅr": 0.0,
+            "avkortetBrukersAndelPrÅr": 240000.0,
+            "årsbeløpFraTilstøtendeYtelse": 240000.0,
+            "fastsattAvSaksbehandler": false,
+            "lagtTilAvSaksbehandler": false
+          }
+        ],
+        "periode": {
+          "fom": "2022-01-01",
+          "tom": "2022-01-31"
+        },
+        "bruttoPrÅr": 600000.0,
+        "avkortetPrÅr": 600000.0,
+        "redusertPrÅr": 600000.0,
+        "dagsats": 2308,
+        "periodeÅrsaker": []
+      },
+      {
+        "beregningsgrunnlagPrStatusOgAndelList": [
+          {
+            "andelsnr": 1,
+            "aktivitetStatus": "AT",
+            "beregningsperiode": {
+              "fom": "2021-10-01",
+              "tom": "2021-12-31"
+            },
+            "arbeidsforholdType": "ARBEID",
+            "bruttoPrÅr": 360000.0,
+            "redusertRefusjonPrÅr": 0.0,
+            "redusertBrukersAndelPrÅr": 360000.0,
+            "dagsatsBruker": 1385,
+            "dagsatsArbeidsgiver": 0,
+            "inntektskategori": "ARBEIDSTAKER",
+            "bgAndelArbeidsforhold": {
+              "arbeidsgiver": {
+                "arbeidsgiverOrgnr": "910909088"
+              },
+              "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
+              "refusjonskravPrÅr": 0,
+              "arbeidsperiodeFom": "2016-03-25",
+              "arbeidsperiodeTom": "9999-12-31"
+            },
+            "avkortetPrÅr": 360000.0,
+            "redusertPrÅr": 360000.0,
+            "beregnetPrÅr": 360000.0,
+            "maksimalRefusjonPrÅr": 0.0,
+            "avkortetRefusjonPrÅr": 0.0,
+            "avkortetBrukersAndelPrÅr": 360000.0,
+            "årsbeløpFraTilstøtendeYtelse": 360000.0,
+            "fastsattAvSaksbehandler": false,
+            "lagtTilAvSaksbehandler": false
+          },
+          {
+            "andelsnr": 2,
+            "aktivitetStatus": "AT",
+            "beregningsperiode": {
+              "fom": "2021-10-01",
+              "tom": "2021-12-31"
+            },
+            "arbeidsforholdType": "ARBEID",
+            "bruttoPrÅr": 240000.0,
+            "redusertRefusjonPrÅr": 240000.0,
+            "redusertBrukersAndelPrÅr": 0.0,
+            "dagsatsBruker": 0,
+            "dagsatsArbeidsgiver": 923,
+            "inntektskategori": "ARBEIDSTAKER",
+            "bgAndelArbeidsforhold": {
+              "arbeidsgiver": {
+                "arbeidsgiverOrgnr": "973861778"
+              },
+              "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-003442432423",
+              "refusjonskravPrÅr": 240000.0,
+              "arbeidsperiodeFom": "2016-03-25",
+              "arbeidsperiodeTom": "9999-12-31"
+            },
+            "avkortetPrÅr": 240000.0,
+            "redusertPrÅr": 240000.0,
+            "beregnetPrÅr": 240000.0,
+            "maksimalRefusjonPrÅr": 240000.0,
+            "avkortetRefusjonPrÅr": 240000.0,
+            "avkortetBrukersAndelPrÅr": 0.0,
+            "årsbeløpFraTilstøtendeYtelse": 240000.0,
+            "fastsattAvSaksbehandler": false,
+            "lagtTilAvSaksbehandler": false
+          }
+        ],
+        "periode": {
+          "fom": "2022-02-01",
+          "tom": "2022-02-28"
+        },
+        "bruttoPrÅr": 600000.0,
+        "avkortetPrÅr": 600000.0,
+        "redusertPrÅr": 600000.0,
+        "dagsats": 2308,
+        "periodeÅrsaker": [
+          "ENDRING_I_REFUSJONSKRAV"
+        ]
+      },
+      {
+        "beregningsgrunnlagPrStatusOgAndelList": [
+          {
+            "andelsnr": 1,
+            "aktivitetStatus": "AT",
+            "beregningsperiode": {
+              "fom": "2021-10-01",
+              "tom": "2021-12-31"
+            },
+            "arbeidsforholdType": "ARBEID",
+            "bruttoPrÅr": 360000.0,
+            "redusertRefusjonPrÅr": 360000.0,
+            "redusertBrukersAndelPrÅr": 0.0,
+            "dagsatsBruker": 0,
+            "dagsatsArbeidsgiver": 1385,
+            "inntektskategori": "ARBEIDSTAKER",
+            "bgAndelArbeidsforhold": {
+              "arbeidsgiver": {
+                "arbeidsgiverOrgnr": "910909088"
+              },
+              "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
+              "refusjonskravPrÅr": 360000.0,
+              "arbeidsperiodeFom": "2016-03-25",
+              "arbeidsperiodeTom": "9999-12-31"
+            },
+            "avkortetPrÅr": 360000.0,
+            "redusertPrÅr": 360000.0,
+            "beregnetPrÅr": 360000.0,
+            "maksimalRefusjonPrÅr": 360000.0,
+            "avkortetRefusjonPrÅr": 360000.0,
+            "avkortetBrukersAndelPrÅr": 0.0,
+            "årsbeløpFraTilstøtendeYtelse": 360000.0,
+            "fastsattAvSaksbehandler": false,
+            "lagtTilAvSaksbehandler": false
+          },
+          {
+            "andelsnr": 2,
+            "aktivitetStatus": "AT",
+            "beregningsperiode": {
+              "fom": "2021-10-01",
+              "tom": "2021-12-31"
+            },
+            "arbeidsforholdType": "ARBEID",
+            "bruttoPrÅr": 240000.0,
+            "redusertRefusjonPrÅr": 240000.0,
+            "redusertBrukersAndelPrÅr": 0.0,
+            "dagsatsBruker": 0,
+            "dagsatsArbeidsgiver": 923,
+            "inntektskategori": "ARBEIDSTAKER",
+            "bgAndelArbeidsforhold": {
+              "arbeidsgiver": {
+                "arbeidsgiverOrgnr": "973861778"
+              },
+              "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-003442432423",
+              "refusjonskravPrÅr": 240000.0,
+              "arbeidsperiodeFom": "2016-03-25",
+              "arbeidsperiodeTom": "9999-12-31"
+            },
+            "avkortetPrÅr": 240000.0,
+            "redusertPrÅr": 240000.0,
+            "beregnetPrÅr": 240000.0,
+            "maksimalRefusjonPrÅr": 240000.0,
+            "avkortetRefusjonPrÅr": 240000.0,
+            "avkortetBrukersAndelPrÅr": 0.0,
+            "årsbeløpFraTilstøtendeYtelse": 240000.0,
+            "fastsattAvSaksbehandler": false,
+            "lagtTilAvSaksbehandler": false
+          }
+        ],
+        "periode": {
+          "fom": "2022-03-01",
+          "tom": "9999-12-31"
+        },
+        "bruttoPrÅr": 600000.0,
+        "avkortetPrÅr": 600000.0,
+        "redusertPrÅr": 600000.0,
+        "dagsats": 2308,
+        "periodeÅrsaker": [
+          "ENDRING_I_REFUSJONSKRAV"
+        ]
+      }
+    ],
+    "sammenligningsgrunnlag": {
+      "sammenligningsperiode": {
+        "fom": "2021-01-01",
+        "tom": "2021-12-31"
+      },
+      "rapportertPrÅr": 600000.0,
+      "avvikPromilleNy": 0.0
+    },
+    "sammenligningsgrunnlagPrStatusListe": [
+      {
+        "sammenligningsperiode": {
+          "fom": "2021-01-01",
+          "tom": "2021-12-31"
+        },
+        "rapportertPrÅr": 600000.0,
+        "avvikPromilleNy": 0.0,
+        "sammenligningsgrunnlagType": "SAMMENLIGNING_AT_FL"
+      }
+    ],
+    "faktaOmBeregningTilfeller": [
+      "VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT"
+    ],
+    "overstyrt": false,
+    "grunnbeløp": 106399.0
+  },
+  "registerAktiviteter": {
+    "aktiviteter": [
+      {
+        "periode": {
+          "fom": "2016-03-25",
+          "tom": "9999-12-31"
+        },
+        "arbeidsgiver": {
+          "arbeidsgiverOrgnr": "910909088"
+        },
+        "arbeidsforholdRef": {
+          "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-299663a7c324"
+        },
+        "opptjeningAktivitetType": "ARBEID"
+      },
+      {
+        "periode": {
+          "fom": "2016-03-25",
+          "tom": "9999-12-31"
+        },
+        "arbeidsgiver": {
+          "arbeidsgiverOrgnr": "973861778"
+        },
+        "arbeidsforholdRef": {
+          "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-003442432423"
+        },
+        "opptjeningAktivitetType": "ARBEID"
+      }
+    ],
+    "skjæringstidspunktOpptjening": "2022-01-01"
+  },
+  "refusjonOverstyringer": {
+    "overstyringer": [
+      {
+        "arbeidsgiver": {
+          "arbeidsgiverOrgnr": "910909088"
+        },
+        "erFristUtvidet": false
+      },
+      {
+        "arbeidsgiver": {
+          "arbeidsgiverOrgnr": "973861778"
+        },
+        "erFristUtvidet": false
+      }
+    ]
+  },
+  "beregningsgrunnlagTilstand" : "FASTSATT"
+}

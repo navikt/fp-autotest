@@ -13,7 +13,7 @@ on:
         required: false
         default: '8'
       test-suite:
-        description: 'Test suite å kjøre (fpsak|fptilbake|verdikjede)'
+        description: 'Test suite å kjøre (fpsak|fptilbake|fpkalkulus|verdikjede)'
         type: string
         required: true
     outputs:
@@ -25,7 +25,7 @@ jobs:
     name: Kjører ${{ inputs.test-suite }}-tester mot ${{ github.repository }} ${{ inputs.build-version }}
     permissions:
       id-token: write
-    runs-on: ${{ (github.actor == 'dependabot[bot]' && 'ubuntu-latest') || 'ubuntu-latest-8-cores' }}
+    runs-on: ${{ ((github.actor == 'dependabot[bot]' || inputs.test-suite == 'fpkalkulus') && 'ubuntu-latest') || 'ubuntu-latest-8-cores' }}
     timeout-minutes: 15
     outputs:
       result: ${{ steps.result.outputs.result }}
@@ -77,6 +77,8 @@ jobs:
         run: |
           if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent")
+          elif [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
+            services=("fpkalkulus")
           else
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad-mottak" "fpoversikt" "foreldrepengesoknad-api")
           fi
