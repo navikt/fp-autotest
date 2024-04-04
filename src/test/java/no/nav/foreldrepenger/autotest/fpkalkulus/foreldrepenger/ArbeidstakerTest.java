@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.kalkulus.foreldrepenger;
+package no.nav.foreldrepenger.autotest.fpkalkulus.foreldrepenger;
 
 
 import static no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle.VURDER_AT_OG_FL_I_SAMME_ORGANISASJON;
@@ -32,12 +32,12 @@ import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
-import no.nav.foreldrepenger.autotest.kalkulus.Beregner;
+import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 import no.nav.foreldrepenger.generator.kalkulus.FaktaBeregningLagreDtoBuilder;
 import no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste;
 import no.nav.foreldrepenger.generator.kalkulus.VurderRefusjonTjeneste;
 
-@Tag("arbeidstaker")
+@Tag("fpkalkulus")
 public class ArbeidstakerTest extends Beregner {
 
     @DisplayName("Foreldrepenger - arbeidsforhold tilkommer etter skjæringstidspunktet og søker refusjon")

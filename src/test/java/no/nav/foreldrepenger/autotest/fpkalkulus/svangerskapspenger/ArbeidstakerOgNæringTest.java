@@ -1,11 +1,11 @@
-package no.nav.foreldrepenger.autotest.kalkulus.svangerskapspenger;
+package no.nav.foreldrepenger.autotest.fpkalkulus.svangerskapspenger;
 
 import org.junit.jupiter.api.Tag;
 
-import no.nav.foreldrepenger.autotest.kalkulus.Beregner;
+import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 
 
-@Tag("svangerskapspenger")
+@Tag("fpkalkulus")
 class ArbeidstakerOgNæringTest extends Beregner {
 
 // TODO: Tester tilkommet inntekt som vi ikke trenger enda. Se over senere!

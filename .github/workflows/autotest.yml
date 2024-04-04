@@ -13,7 +13,7 @@ on:
         required: false
         default: '8'
       test-suite:
-        description: 'Test suite å kjøre (fpsak|fptilbake|kalkulus|verdikjede)'
+        description: 'Test suite å kjøre (fpsak|fptilbake|fpkalkulus|verdikjede)'
         type: string
         required: true
     outputs:
@@ -77,6 +77,8 @@ jobs:
         run: |
           if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent")
+          else if [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
+            services=("fpkalkulus")
           else
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad-mottak" "fpoversikt" "foreldrepengesoknad-api")
           fi

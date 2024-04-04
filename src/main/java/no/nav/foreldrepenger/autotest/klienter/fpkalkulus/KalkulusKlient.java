@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.kalkulus;
+package no.nav.foreldrepenger.autotest.klienter.fpkalkulus;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.kalkulus.foreldrepenger;
+package no.nav.foreldrepenger.autotest.fpkalkulus.foreldrepenger;
 
 import static no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste.fastsettInntektVarigEndring;
 import static no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste.fastsettInntektVedAvvik;
@@ -18,9 +18,9 @@ import org.junit.jupiter.api.TestInfo;
 import io.qameta.allure.Description;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
-import no.nav.foreldrepenger.autotest.kalkulus.Beregner;
+import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 
-@Tag("kombinasjon")
+@Tag("fpkalkulus")
 public class ArbeidNæringFrilansTest extends Beregner {
 
     @DisplayName("Foreldrepenger - arbeidsforhold og selvstendig næringsdrivende")

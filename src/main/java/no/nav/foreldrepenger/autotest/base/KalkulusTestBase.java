@@ -9,7 +9,7 @@ import io.qameta.allure.Step;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
-import no.nav.foreldrepenger.autotest.klienter.kalkulus.KalkulusKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpkalkulus.KalkulusKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.generator.kalkulus.TestscenarioRepositoryImpl;
 

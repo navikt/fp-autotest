@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.kalkulus.foreldrepenger;
+package no.nav.foreldrepenger.autotest.fpkalkulus.foreldrepenger;
 
 
 import static no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle.VURDER_MILITÆR_SIVILTJENESTE;
@@ -18,10 +18,10 @@ import io.qameta.allure.Description;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderMilitærDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
-import no.nav.foreldrepenger.autotest.kalkulus.Beregner;
+import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 import no.nav.foreldrepenger.generator.kalkulus.FaktaBeregningLagreDtoBuilder;
 
-@Tag("militær")
+@Tag("fpkalkulus")
 public class MilitærTest extends Beregner {
 
 

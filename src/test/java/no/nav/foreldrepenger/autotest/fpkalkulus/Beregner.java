@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.kalkulus;
+package no.nav.foreldrepenger.autotest.fpkalkulus;
 
 import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmFordelingTjeneste.lagHåndterFordelingRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste.fastsettInntektVedAvvik;

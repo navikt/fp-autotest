@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.kalkulus.svangerskapspenger;
+package no.nav.foreldrepenger.autotest.fpkalkulus.svangerskapspenger;
 
 import java.util.Map;
 
@@ -9,9 +9,9 @@ import org.junit.jupiter.api.TestInfo;
 
 import io.qameta.allure.Description;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
-import no.nav.foreldrepenger.autotest.kalkulus.Beregner;
+import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 
-@Tag("svangerskapspenger")
+@Tag("fpkalkulus")
 class ArbeidstakerTest extends Beregner {
 
 

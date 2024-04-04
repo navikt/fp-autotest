@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.kalkulus.foreldrepenger;
+package no.nav.foreldrepenger.autotest.fpkalkulus.foreldrepenger;
 
 import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmFordelingTjeneste.lagHåndterFordelingRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste.fastsettInntektVarigEndring;
@@ -19,9 +19,9 @@ import io.qameta.allure.Description;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
-import no.nav.foreldrepenger.autotest.kalkulus.Beregner;
+import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 
-@Tag("gradering")
+@Tag("fpkalkulus")
 public class GraderingTest extends Beregner {
 
     @DisplayName("Foreldrepenger - Søker gradering for arbeid med refusjonskrav.")

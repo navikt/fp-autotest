@@ -330,10 +330,10 @@
             </properties>
         </profile>
         <profile>
-            <id>kalkulus</id>
+            <id>fpkalkulus</id>
             <properties>
-                <includeTestsTags>kalkulus</includeTestsTags>
-                <testPackage>no.nav.foreldrepenger.autotest.kalkulus.**</testPackage>
+                <includeTestsTags>fpkalkulus</includeTestsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.fpkalkulus.**</testPackage>
             </properties>
         </profile>
         <profile>
