@@ -121,7 +121,10 @@ jobs:
             echo "result=skipped" >> $GITHUB_OUTPUT
           fi
       - name: Generer testrapport
-        if: (success() || failure()) && steps.setup.outcome == 'success' && github.repository != 'navikt/fp-autotest'
+        if: inputs.test-suite != 'fpkalkulus' &&
+            (success() || failure()) &&
+            steps.setup.outcome == 'success' &&
+            github.repository != 'navikt/fp-autotest'
         id: ghpages
         shell: bash
         run: |
