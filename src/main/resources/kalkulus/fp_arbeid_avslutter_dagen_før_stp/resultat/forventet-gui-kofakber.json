@@ -1,0 +1,104 @@
+{
+  "avklaringsbehov" : [ ],
+  "skjaeringstidspunktBeregning" : "2019-09-16",
+  "skjæringstidspunkt" : "2019-09-16",
+  "aktivitetStatus" : [ "AT" ],
+  "beregningsgrunnlagPeriode" : [ {
+    "beregningsgrunnlagPeriodeFom" : "2019-09-16",
+    "beregningsgrunnlagPeriodeTom" : "9999-12-31",
+    "beregnetPrAar" : 0,
+    "bruttoPrAar" : 0,
+    "bruttoInkludertBortfaltNaturalytelsePrAar" : 0,
+    "periodeAarsaker" : [ ],
+    "beregningsgrunnlagPrStatusOgAndel" : [ {
+      "dtoType" : "GENERELL",
+      "beregningsgrunnlagTom" : "2019-08-31",
+      "beregningsgrunnlagFom" : "2019-06-01",
+      "aktivitetStatus" : "AT",
+      "beregningsperiodeFom" : "2019-06-01",
+      "beregningsperiodeTom" : "2019-08-31",
+      "andelsnr" : 1,
+      "inntektskategori" : "ARBEIDSTAKER",
+      "arbeidsforhold" : {
+        "arbeidsgiverIdent" : "974242931",
+        "startdato" : "2015-08-01",
+        "opphoersdato" : "2019-09-15",
+        "arbeidsforholdType" : "ARBEID"
+      },
+      "fastsattAvSaksbehandler" : false,
+      "lagtTilAvSaksbehandler" : false,
+      "erTilkommetAndel" : false,
+      "skalFastsetteGrunnlag" : false
+    }, {
+      "dtoType" : "GENERELL",
+      "beregningsgrunnlagTom" : "2019-08-31",
+      "beregningsgrunnlagFom" : "2019-06-01",
+      "aktivitetStatus" : "AT",
+      "beregningsperiodeFom" : "2019-06-01",
+      "beregningsperiodeTom" : "2019-08-31",
+      "andelsnr" : 2,
+      "inntektskategori" : "ARBEIDSTAKER",
+      "arbeidsforhold" : {
+        "arbeidsgiverIdent" : "874652202",
+        "startdato" : "2017-10-01",
+        "arbeidsforholdType" : "ARBEID",
+        "belopFraInntektsmeldingPrMnd" : 30000
+      },
+      "fastsattAvSaksbehandler" : false,
+      "lagtTilAvSaksbehandler" : false,
+      "erTilkommetAndel" : false,
+      "skalFastsetteGrunnlag" : false
+    } ]
+  } ],
+  "sammenligningsgrunnlagPrStatus" : [ ],
+  "halvG" : 49929.0,
+  "grunnbeløp" : 99858.0,
+  "faktaOmBeregning" : {
+    "avklarAktiviteter" : {
+      "aktiviteterTomDatoMapping" : [ {
+        "tom" : "2019-09-16",
+        "aktiviteter" : [ {
+            "arbeidsgiverIdent" : "974242931",
+          "fom" : "2015-08-01",
+          "tom" : "2019-09-15",
+          "arbeidsforholdType" : "ARBEID"
+        }, {
+            "arbeidsgiverIdent" : "874652202",
+          "fom" : "2017-10-01",
+          "tom" : "9999-12-31",
+          "arbeidsforholdType" : "ARBEID"
+        } ]
+      } ]
+    },
+    "andelerForFaktaOmBeregning" : [ {
+      "belopReadOnly" : 30000.0,
+      "inntektskategori" : "ARBEIDSTAKER",
+      "aktivitetStatus" : "AT",
+      "arbeidsforhold" : {
+        "arbeidsgiverIdent" : "974242931",
+        "startdato" : "2015-08-01",
+        "opphoersdato" : "2019-09-15",
+        "arbeidsforholdType" : "ARBEID"
+      },
+      "andelsnr" : 1,
+      "skalKunneEndreAktivitet" : false,
+      "lagtTilAvSaksbehandler" : false
+    }, {
+      "belopReadOnly" : 30000,
+      "inntektskategori" : "ARBEIDSTAKER",
+      "aktivitetStatus" : "AT",
+      "refusjonskrav" : 30000,
+      "arbeidsforhold" : {
+        "arbeidsgiverIdent" : "874652202",
+        "startdato" : "2017-10-01",
+        "arbeidsforholdType" : "ARBEID",
+        "belopFraInntektsmeldingPrMnd" : 30000
+      },
+      "andelsnr" : 2,
+      "skalKunneEndreAktivitet" : false,
+      "lagtTilAvSaksbehandler" : false
+    } ]
+  },
+  "hjemmel" : "-",
+  "dekningsgrad" : 100
+}

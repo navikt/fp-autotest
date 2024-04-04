@@ -24,48 +24,41 @@ public class KalkulusTestBase {
         testscenarioRepositoryImpl = new TestscenarioRepositoryImpl();
     }
 
-    @Step("Oppretter testscenario {id} fra Json fil lokalisert i ftkalkulus-verdikjede")
-    protected BeregnRequestDto opprettTestscenario(String id) throws IOException {
-        return testscenarioRepositoryImpl.hentScenario(id, null);
+    @Step("Oppretter testscenario {testInfo.testMethod} fra Json fil lokalisert i ftkalkulus-verdikjede")
+    protected BeregnRequestDto opprettTestscenario(TestInfo testInfo) throws IOException {
+        return testscenarioRepositoryImpl.hentScenario(testInfo, null);
     }
 
-    @Step("Oppretter testscenario {mappeId} fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var {inputPrefix}")
-    protected BeregnRequestDto opprettTestscenario(String mappeId, String inputPrefix) throws IOException {
-        return testscenarioRepositoryImpl.hentScenario(mappeId, inputPrefix);
+    @Step("Oppretter testscenario {testInfo.testMethod} fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var {inputPrefix}")
+    protected BeregnRequestDto opprettTestscenario(TestInfo testInfo, String inputPrefix) throws IOException {
+        return testscenarioRepositoryImpl.hentScenario(testInfo, inputPrefix);
     }
 
-    @Step("Oppretter testscenario {mappeId} fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var {inputPrefix}")
-    protected BeregnRequestDto opprettTestscenario(String mappeId, String inputPrefix, BeregnRequestDto originalRequest) throws IOException {
-        return testscenarioRepositoryImpl.hentScenario(mappeId, inputPrefix, originalRequest);
+    @Step("Oppretter testscenario {testInfo.testMethod} fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var {inputPrefix}")
+    protected BeregnRequestDto opprettTestscenario(TestInfo testInfo, String inputPrefix, BeregnRequestDto originalRequest) throws IOException {
+        return testscenarioRepositoryImpl.hentScenario(testInfo, inputPrefix, originalRequest);
     }
-
 
     @Step("Validerer resultat for test")
     protected BeregningsgrunnlagGrunnlagDto hentForventetResultat(TestInfo testInfo) throws IOException {
-        String testName = getTestName(testInfo);
-        return testscenarioRepositoryImpl.hentForventetResultat(testName);
+        return testscenarioRepositoryImpl.hentForventetResultat(testInfo);
     }
 
 
     @Step("Validerer gui resultat for kofakber for test")
     protected BeregningsgrunnlagDto hentForventetGUIKofakber(TestInfo testInfo) throws IOException {
-        String testName = getTestName(testInfo);
-        return testscenarioRepositoryImpl.hentForventetGUIResultatKofakber(testName);
+        return testscenarioRepositoryImpl.hentForventetGUIResultatKofakber(testInfo);
     }
 
     @Step("Validerer gui resultat for foreslå")
     protected BeregningsgrunnlagDto hentForventetGUIForeslå(TestInfo testInfo) throws IOException {
-        String testName = getTestName(testInfo);
-        return testscenarioRepositoryImpl.hentForventetGUIResultatForeslå(testName);
+        return testscenarioRepositoryImpl.hentForventetGUIResultatForeslå(testInfo);
     }
 
     @Step("Validerer gui resultat for fordel")
     protected BeregningsgrunnlagDto hentForventetGUIFordel(TestInfo testInfo) throws IOException {
-        String testName = getTestName(testInfo);
-        return testscenarioRepositoryImpl.hentForventetGUIResultatFordel(testName);
+        return testscenarioRepositoryImpl.hentForventetGUIResultatFordel(testInfo);
     }
 
-    private String getTestName(TestInfo testInfo) {
-        return testInfo.getTestMethod().orElseThrow(() -> new IllegalArgumentException("Forventer testmetode")).getName();
-    }
+
 }

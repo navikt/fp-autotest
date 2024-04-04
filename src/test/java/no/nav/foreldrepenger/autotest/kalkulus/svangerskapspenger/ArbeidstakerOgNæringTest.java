@@ -8,7 +8,8 @@ import no.nav.foreldrepenger.autotest.kalkulus.Beregner;
 @Tag("svangerskapspenger")
 class ArbeidstakerOgNæringTest extends Beregner {
 
-
+// TODO: Tester tilkommet inntekt som vi ikke trenger enda. Se over senere!
+//
 //    @DisplayName("Svangerskapspenger - Tidsbegrenset arbeidsforhold, sent refusjonskrav, næring tilkommer" +
 //            " grunnet søkt ytelse uten næring på stp")
 //    @Description("Svangerskapspenger - Tidsbegrenset arbeidsforhold, sent refusjonskrav, næring tilkommer" +
@@ -16,7 +17,7 @@ class ArbeidstakerOgNæringTest extends Beregner {
 //    @Test
 //    public void svp_tidsbegrenset_at_tilkommet_sn_grunnet_søkt_ytelse(TestInfo testInfo) throws Exception {
 //
-//        var request = opprettTestscenario("010");
+//        var request = opprettTestscenario(testInfo);
 //
 //        TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
 //        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);

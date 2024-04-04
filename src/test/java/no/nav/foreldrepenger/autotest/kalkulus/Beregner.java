@@ -21,8 +21,8 @@ import no.nav.foreldrepenger.autotest.base.KalkulusTestBase;
 
 public class Beregner extends KalkulusTestBase {
 
-    protected BeregnRequestDto beregnMedAvvik(TestInfo testInfo, String testId, Map<Long, Integer> årsinntektPrAndel, Integer frilansinntekt, boolean skalVerifisere) throws IOException {
-        var request = opprettTestscenario(testId);
+    protected BeregnRequestDto beregnMedAvvik(TestInfo testInfo, Map<Long, Integer> årsinntektPrAndel, Integer frilansinntekt, boolean skalVerifisere) throws IOException {
+        var request = opprettTestscenario(testInfo);
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isZero();
 
@@ -66,13 +66,13 @@ public class Beregner extends KalkulusTestBase {
         return fortsettBeregningRequest;
     }
 
-    protected void behandleUtenAksjonspunkter(TestInfo testInfo, String testId) throws IOException {
-        behandleUtenAksjonspunkter(testInfo, testId, null, true);
+    protected void behandleUtenAksjonspunkter(TestInfo testInfo) throws IOException {
+        behandleUtenAksjonspunkter(testInfo, null, true);
     }
 
-    protected BeregnRequestDto behandleUtenAksjonspunkter(TestInfo testInfo, String testId, String inputPrefix, boolean skalVerifisereSluttresultat) throws IOException {
+    protected BeregnRequestDto behandleUtenAksjonspunkter(TestInfo testInfo, String inputPrefix, boolean skalVerifisereSluttresultat) throws IOException {
 
-        var request = inputPrefix != null ? opprettTestscenario(testId, inputPrefix) : opprettTestscenario(testId);
+        var request = inputPrefix != null ? opprettTestscenario(testInfo, inputPrefix) : opprettTestscenario(testInfo);
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isZero();
 
@@ -122,12 +122,11 @@ public class Beregner extends KalkulusTestBase {
 
 
     protected BeregnRequestDto behandleMedManuellFordeling(TestInfo testInfo,
-                                                             String testId,
                                                              String prefix, Map<Long, Integer> beløpMap,
                                                              Map<Long, Inntektskategori> inntektskategoriMap,
                                                              Map<Long, Integer> refusjonsMap, boolean skalVerifisereResultat) throws IOException {
 
-        var request = prefix == null ? opprettTestscenario(testId) : opprettTestscenario(testId, prefix);
+        var request = prefix == null ? opprettTestscenario(testInfo) : opprettTestscenario(testInfo, prefix);
         var tilstandResponse = behandleTilFordel(request, testInfo);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
 

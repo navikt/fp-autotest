@@ -45,7 +45,7 @@ public class ArbeidstakerTest extends Beregner {
             "Arbeidsforholdet som tilkommer tilhører samme virksomhet som det som var aktivt før skjæringstidspunktet.")
     @Test
     public void foreldrepenger_arbeidsforhold_tilkommer_på_skjæringstidspunktet(TestInfo testInfo) throws Exception {
-        var request = opprettTestscenario("003");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -76,8 +76,6 @@ public class ArbeidstakerTest extends Beregner {
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
-
-//        skrivFaktiskResultatTilFil(testInfo, beregningsgrunnlagGrunnlagDto);
 
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
@@ -88,7 +86,7 @@ public class ArbeidstakerTest extends Beregner {
             "Gjør at refusjon overstiger brutto på skjæringstidspunktet og det må fordelels utifra brutto / inntekt fra IM.")
     @Test
     public void foreldrepenger_arbeidsforhold_tilkommer_mer_refusjon_enn_brutto(TestInfo testInfo) throws Exception {
-        var request = opprettTestscenario("060");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -120,8 +118,6 @@ public class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
-//        skrivFaktiskResultatTilFil(testInfo, beregningsgrunnlagGrunnlagDto);
-
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
     }
@@ -131,7 +127,7 @@ public class ArbeidstakerTest extends Beregner {
     @Test
     public void foreldrepenger_arbeidstaker_uten_inntektsmelding_frilans_samme_org(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("005");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -185,11 +181,11 @@ public class ArbeidstakerTest extends Beregner {
     @Test
     public void foreldrepenger_arbeidstaker_tilkommet_refusjon(TestInfo testInfo) throws Exception {
 
-        var request1 = opprettTestscenario("037", "original");
+        var request1 = opprettTestscenario(testInfo, "original");
 
         kjørUtenAksjonspunkter(request1);
 
-        var request2 = opprettTestscenario("037", "revurdering", request1);
+        var request2 = opprettTestscenario(testInfo, "revurdering", request1);
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request2);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
 
@@ -236,11 +232,11 @@ public class ArbeidstakerTest extends Beregner {
     @Test
     public void foreldrepenger_arbeidstaker_tilkommet_okt_refusjon(TestInfo testInfo) throws Exception {
 
-        var request1 = opprettTestscenario("038", "original");
+        var request1 = opprettTestscenario(testInfo, "original");
 
         kjørUtenAksjonspunkter(request1);
 
-        var request2 = opprettTestscenario("038", "revurdering", request1);
+        var request2 = opprettTestscenario(testInfo, "revurdering", request1);
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request2);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
 
@@ -292,7 +288,7 @@ public class ArbeidstakerTest extends Beregner {
             "og det andre starter på skjæringstidspuntet. Søker har også oppgitt frilans, men dette overstyres i avklar aktiviteter.")
     @Test
     public void foreldrepenger_at_sn_refusjon_for_virksomhet_med_2_arbeidsforhold_og_overstyring_av_beregningaktiviteter(TestInfo testInfo) throws Exception {
-        var request = opprettTestscenario("006");
+        var request = opprettTestscenario(testInfo);
         TilstandResponse tilstandResponse = overstyrer.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
         var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
@@ -342,7 +338,7 @@ public class ArbeidstakerTest extends Beregner {
     @Description("Foreldrepenger - AT/SN med totalt BG over 6G. BG og refusjon fra AG under 6G")
     @Test
     public void fp_at_sn_bg_over_6G_bg_fra_arbeid_under_6G_med_full_refusjon(TestInfo testInfo) throws Exception {
-        behandleUtenAksjonspunkter(testInfo, "007"); // Shaken, not stirred
+        behandleUtenAksjonspunkter(testInfo); // Shaken, not stirred
     }
 
     @DisplayName("Foreldrepenger - AT og SN med varig endring og avvik. Automatisk fordeling av beregningsgrunnlag fra AT til SN")
@@ -350,7 +346,7 @@ public class ArbeidstakerTest extends Beregner {
     @Test
     public void fp_at_sn_med_avvik_beregningsgrunnlag_skal_omfordeles_automatisk_grunnet_refusjon(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("009");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -396,7 +392,7 @@ public class ArbeidstakerTest extends Beregner {
             "Arbeidsforhold som avslutter før skjæringstidspunktet tas med i beregning. ")
     @Test
     public void fp_arbeid_avslutter_dagen_før_stp(TestInfo testInfo) throws Exception {
-        behandleUtenAksjonspunkter(testInfo, "021");
+        behandleUtenAksjonspunkter(testInfo);
     }
 
     @DisplayName("Foreldrepenger - Arbeidstaker med 2 arbeidsforhold, permisjon fra det ene.")
@@ -404,7 +400,7 @@ public class ArbeidstakerTest extends Beregner {
             "Permitert arbeidsforhold skal ikke bli med i beregningen. ")
     @Test
     public void fp_arbeidsforhold_med_permisjon(TestInfo testInfo) throws Exception {
-        behandleUtenAksjonspunkter(testInfo, "078");
+        behandleUtenAksjonspunkter(testInfo);
     }
 
     @DisplayName("Foreldrepenger - Arbeidstaker med 2 arbeidsforhold i samme bedrift, permisjon fra det ene.")
@@ -412,7 +408,7 @@ public class ArbeidstakerTest extends Beregner {
             "Felles inntektsmelding. ")
     @Test
     public void fp_flere_arbeidsforhold_samme_org_en_med_perm(TestInfo testInfo) throws Exception {
-        behandleUtenAksjonspunkter(testInfo, "086");
+        behandleUtenAksjonspunkter(testInfo);
     }
 
     @DisplayName("Foreldrepenger - Tilkommet arbeid med refusjon samtidig som naturalytelse hos en annen arbeidsgiver")
@@ -421,7 +417,7 @@ public class ArbeidstakerTest extends Beregner {
     @Test
     public void fp_tilkommet_arbeid_og_fordeling_av_naturalytelse(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("025");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -467,7 +463,7 @@ public class ArbeidstakerTest extends Beregner {
     @Test
     public void foreldrepenger_avvik_beregning_atfl(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("031");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -526,7 +522,7 @@ public class ArbeidstakerTest extends Beregner {
     @Test
     public void foreldrepenger_for_sent_refusjonskrav(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("091");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);

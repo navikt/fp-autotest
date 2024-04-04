@@ -29,7 +29,7 @@ public class BesteberegningTest extends Beregner {
     @Test
     public void besteberegning_for_arbeidstaker_med_dagpenger_i_opptjeningsperioden_bruker_ikke_seks_beste_måneder(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("004");
+        var request = opprettTestscenario(testInfo);
 
         var tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -71,8 +71,6 @@ public class BesteberegningTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
-//        skrivFaktiskResultatTilFil(testInfo, beregningsgrunnlagGrunnlagDto);
-
         var forventetResultat = hentForventetResultat(testInfo);
 
         assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
@@ -83,7 +81,7 @@ public class BesteberegningTest extends Beregner {
     @Test
     public void besteberegning_for_arbeidstaker_med_dagpenger_i_opptjeningsperioden_bruker_seks_beste_måneder(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("004");
+        var request = opprettTestscenario(testInfo);
 
         var tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -134,7 +132,7 @@ public class BesteberegningTest extends Beregner {
             "Avvik på arbeidsinntekt, 3. ledd gir best beregning for søker.")
     @Test
     public void besteberegning_med_dagpenger_på_skjæringstidspunktet(TestInfo testInfo) throws Exception {
-        var request = opprettTestscenario("026");
+        var request = opprettTestscenario(testInfo);
         var tilstandResponse = overstyrer.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isZero();
 

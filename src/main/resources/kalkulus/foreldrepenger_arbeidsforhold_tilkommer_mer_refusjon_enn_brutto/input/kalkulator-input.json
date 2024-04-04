@@ -1,0 +1,603 @@
+{
+  "refusjonskravDatoer": [
+    {
+      "arbeidsgiver": {
+        "identType": "ORGNUMMER",
+        "ident": "973861778"
+      },
+      "førsteDagMedRefusjonskrav": "2019-07-16",
+      "førsteInnsendingAvRefusjonskrav": "2019-07-15",
+      "harRefusjonFraStart": true
+    },
+    {
+      "arbeidsgiver": {
+        "identType": "ORGNUMMER",
+        "ident": "974761076"
+      },
+      "førsteDagMedRefusjonskrav": "2019-10-01",
+      "førsteInnsendingAvRefusjonskrav": "2019-10-01",
+      "harRefusjonFraStart": false
+    }
+  ],
+  "iayGrunnlag": {
+    "arbeidDto": {
+      "yrkesaktiviteter": [
+        {
+          "arbeidsgiver": {
+            "identType": "ORGNUMMER",
+            "ident": "973861778"
+          },
+          "abakusReferanse": {
+            "abakusReferanse": "127b7791-8f38-4910-9424-0d764d7b2298"
+          },
+          "arbeidType": "ORDINÆRT_ARBEIDSFORHOLD",
+          "aktivitetsAvtaler": [
+            {
+              "periode": {
+                "fom": "2018-04-01",
+                "tom": "9999-12-31"
+              }
+            },
+            {
+              "periode": {
+                "fom": "2018-01-01",
+                "tom": "2018-04-30"
+              },
+              "stillingsprosent": 50.00
+            }
+          ]
+        },
+        {
+          "arbeidsgiver": {
+            "identType": "ORGNUMMER",
+            "ident": "974761076"
+          },
+          "abakusReferanse": {
+            "abakusReferanse": "dc3601cc-4676-4fc5-af86-35f825c91804"
+          },
+          "arbeidType": "ORDINÆRT_ARBEIDSFORHOLD",
+          "aktivitetsAvtaler": [
+            {
+              "periode": {
+                "fom": "2019-10-01",
+                "tom": "9999-12-31"
+              }
+            },
+            {
+              "periode": {
+                "fom": "2019-10-01",
+                "tom": "9999-12-31"
+              },
+              "stillingsprosent": 100.00,
+              "sisteLønnsendringsdato": "2019-10-01"
+            }
+          ]
+        }
+      ]
+    },
+    "inntekterDto": {
+      "utbetalinger": [
+        {
+          "arbeidsgiver": {
+            "identType": "ORGNUMMER",
+            "ident": "973861778"
+          },
+          "inntektsKilde": "INNTEKT_BEREGNING",
+          "utbetalingsPoster": [
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-07-01",
+                "tom": "2018-07-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-08-01",
+                "tom": "2018-08-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-09-01",
+                "tom": "2018-09-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-10-01",
+                "tom": "2018-10-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-11-01",
+                "tom": "2018-11-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-12-01",
+                "tom": "2018-12-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-01-01",
+                "tom": "2019-01-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-02-01",
+                "tom": "2019-02-28"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-03-01",
+                "tom": "2019-03-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-04-01",
+                "tom": "2019-04-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-05-01",
+                "tom": "2019-05-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-06-01",
+                "tom": "2019-06-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-07-01",
+                "tom": "2019-07-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-08-01",
+                "tom": "2019-08-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-09-01",
+                "tom": "2019-09-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-10-01",
+                "tom": "2019-10-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-11-01",
+                "tom": "2019-11-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-12-01",
+                "tom": "2019-12-31"
+              },
+              "beløp": 44733
+            }
+          ]
+        },
+        {
+          "arbeidsgiver": {
+            "identType": "ORGNUMMER",
+            "ident": "974761076"
+          },
+          "inntektsKilde": "INNTEKT_BEREGNING",
+          "utbetalingsPoster": [
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-07-01",
+                "tom": "2018-07-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-08-01",
+                "tom": "2018-08-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-09-01",
+                "tom": "2018-09-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-10-01",
+                "tom": "2018-10-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-11-01",
+                "tom": "2018-11-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-12-01",
+                "tom": "2018-12-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-01-01",
+                "tom": "2019-01-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-02-01",
+                "tom": "2019-02-28"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-03-01",
+                "tom": "2019-03-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-04-01",
+                "tom": "2019-04-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-05-01",
+                "tom": "2019-05-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-06-01",
+                "tom": "2019-06-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-07-01",
+                "tom": "2019-07-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-08-01",
+                "tom": "2019-08-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-09-01",
+                "tom": "2019-09-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-10-01",
+                "tom": "2019-10-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-11-01",
+                "tom": "2019-11-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-12-01",
+                "tom": "2019-12-31"
+              },
+              "beløp": 44733
+            }
+          ]
+        },
+        {
+          "arbeidsgiver": {
+            "identType": "ORGNUMMER",
+            "ident": "973861778"
+          },
+          "inntektsKilde": "INNTEKT_SAMMENLIGNING",
+          "utbetalingsPoster": [
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-07-01",
+                "tom": "2018-07-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-08-01",
+                "tom": "2018-08-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-09-01",
+                "tom": "2018-09-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-10-01",
+                "tom": "2018-10-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-11-01",
+                "tom": "2018-11-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2018-12-01",
+                "tom": "2018-12-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-01-01",
+                "tom": "2019-01-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-02-01",
+                "tom": "2019-02-28"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-03-01",
+                "tom": "2019-03-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-04-01",
+                "tom": "2019-04-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-05-01",
+                "tom": "2019-05-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-06-01",
+                "tom": "2019-06-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-07-01",
+                "tom": "2019-07-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-08-01",
+                "tom": "2019-08-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-09-01",
+                "tom": "2019-09-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-10-01",
+                "tom": "2019-10-31"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-11-01",
+                "tom": "2019-11-30"
+              },
+              "beløp": 44733
+            },
+            {
+              "inntektspostType": "LØNN",
+              "periode": {
+                "fom": "2019-12-01",
+                "tom": "2019-12-31"
+              },
+              "beløp": 44733
+            }
+          ]
+        }
+      ]
+    },
+    "ytelserDto": null,
+    "oppgittOpptjening": null,
+    "inntektsmeldinger": {
+      "inntektsmeldinger": [
+        {
+          "arbeidsgiver": {
+            "identType": "ORGNUMMER",
+            "ident": "973861778"
+          },
+          "inntektBeløp": 45000.00,
+          "naturalYtelser": [],
+          "endringerRefusjon": [],
+          "arbeidsforholdRef": {
+            "abakusReferanse": "127b7791-8f38-4910-9424-0d764d7b2298"
+          },
+          "startDatoPermisjon": "2019-07-16",
+          "refusjonOpphører": "9999-12-31",
+          "refusjonBeløpPerMnd": 35000.00
+        },
+        {
+          "arbeidsgiver": {
+            "identType": "ORGNUMMER",
+            "ident": "974761076"
+          },
+          "inntektBeløp": 45000.00,
+          "naturalYtelser": [],
+          "endringerRefusjon": [],
+          "arbeidsforholdRef": {
+            "abakusReferanse": "dc3601cc-4676-4fc5-af86-35f825c91804"
+          },
+          "startDatoPermisjon": "2019-10-01",
+          "refusjonOpphører": "9999-12-31",
+          "refusjonBeløpPerMnd": 45000.00
+        }
+      ]
+    },
+    "arbeidsforholdInformasjon": null
+  },
+  "opptjeningAktiviteter": {
+    "perioder": [
+      {
+        "opptjeningAktivitetType": "ARBEID",
+        "periode": {
+          "fom": "2019-01-01",
+          "tom": "2020-07-31"
+        },
+        "arbeidsgiver": {
+          "identType": "ORGNUMMER",
+          "ident": "973861778"
+        },
+        "abakusReferanse": {
+          "abakusReferanse": "127b7791-8f38-4910-9424-0d764d7b2298"
+        }
+      }
+    ]
+  },
+  "ytelsespesifiktGrunnlag": {
+    "ytelseType": "FP",
+    "dekningsgrad": 100,
+    "kvalifisererTilBesteberegning": false
+  },
+  "skjæringstidspunkt": "2019-07-16"
+}

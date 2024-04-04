@@ -31,7 +31,7 @@ public class MilitærTest extends Beregner {
     @Test
     public void foreldrepenger_militær_settes_til_3g_dekningsgrad_80(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("070");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -69,8 +69,6 @@ public class MilitærTest extends Beregner {
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
-
-//        skrivFaktiskResultatTilFil(testInfo, beregningsgrunnlagGrunnlagDto);
 
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
@@ -82,7 +80,7 @@ public class MilitærTest extends Beregner {
     @Test
     public void foreldrepenger_arbeid_under_3g_militær_dekker_rest(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("071");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -120,8 +118,6 @@ public class MilitærTest extends Beregner {
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
-
-//        skrivFaktiskResultatTilFil(testInfo, beregningsgrunnlagGrunnlagDto);
 
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
@@ -133,7 +129,7 @@ public class MilitærTest extends Beregner {
     @Test
     public void foreldrepenger_frilans_over_3g_ingenting_til_militær(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("072");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -171,8 +167,6 @@ public class MilitærTest extends Beregner {
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
-
-//        skrivFaktiskResultatTilFil(testInfo, beregningsgrunnlagGrunnlagDto);
 
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
@@ -184,7 +178,7 @@ public class MilitærTest extends Beregner {
     @Test
     public void foreldrepenger_arbeid_næring_over_3g_0_til_militær(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("073");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
@@ -222,8 +216,6 @@ public class MilitærTest extends Beregner {
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
-
-//        skrivFaktiskResultatTilFil(testInfo, beregningsgrunnlagGrunnlagDto);
 
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);

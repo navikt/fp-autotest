@@ -28,7 +28,7 @@ public class ArbeidNæringFrilansTest extends Beregner {
     @Test
     @Disabled // Avhenger av toggle lokalt og at vi nærmer oss dato 1.1.2023. Kan tas tilbake i desember 2022
     public void fp_arbeid_næring_avvik_på_begge(TestInfo testInfo) throws Exception {
-        var request = opprettTestscenario("092");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);

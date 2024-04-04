@@ -28,14 +28,14 @@ public class GraderingTest extends Beregner {
     @Description("Foreldrepenger - Søker gradering for arbeid med refusjonskrav.")
     @Test
     public void fp_to_arbeidsforhold_med_gradering_og_refusjon(TestInfo testInfo) throws Exception {
-        behandleUtenAksjonspunkter(testInfo, "062");
+        behandleUtenAksjonspunkter(testInfo);
     }
 
     @DisplayName("Foreldrepenger - Søker gradering for arbeid uten refusjonskrav og under 6G total refusjon.")
     @Description("Foreldrepenger - Søker gradering for arbeid uten refusjonskrav og under 6G total refusjon.")
     @Test
     public void fp_to_arbeidsforhold_gradering_uten_refusjon_og_under_6G_refusjon_totalt(TestInfo testInfo) throws Exception {
-        behandleUtenAksjonspunkter(testInfo, "063");
+        behandleUtenAksjonspunkter(testInfo);
     }
 
     @DisplayName("Foreldrepenger - Søker gradering for arbeid uten refusjonskrav og over 6G total refusjon.")
@@ -45,7 +45,7 @@ public class GraderingTest extends Beregner {
         var beløpMap = Map.of(1L, 360_000, 2L, 720_000);
         var refusjonMap = Map.of(2L, 500_000);
         var inntektskategoriMap = Map.of(1L, Inntektskategori.ARBEIDSTAKER, 2L, Inntektskategori.ARBEIDSTAKER);
-        behandleMedManuellFordeling(testInfo, "064", null, beløpMap, inntektskategoriMap, refusjonMap, true);
+        behandleMedManuellFordeling(testInfo, null, beløpMap, inntektskategoriMap, refusjonMap, true);
     }
 
     @DisplayName("Foreldrepenger - Søker gradering for tilkommet arbeid uten refusjonskrav.")
@@ -55,14 +55,14 @@ public class GraderingTest extends Beregner {
         var beløpMap = Map.of(1L, 360_000, 2L, 360_000);
         Map<Long, Integer> refusjonMap = Map.of();
         var inntektskategoriMap = Map.of(1L, Inntektskategori.ARBEIDSTAKER, 2L, Inntektskategori.ARBEIDSTAKER);
-        behandleMedManuellFordeling(testInfo, "065", null, beløpMap, inntektskategoriMap, refusjonMap, true);
+        behandleMedManuellFordeling(testInfo, null, beløpMap, inntektskategoriMap, refusjonMap, true);
     }
 
     @DisplayName("Foreldrepenger - Søker gradering for tilkommet arbeid med refusjonskrav.")
     @Description("Foreldrepenger - Søker gradering for tilkommet arbeid med refusjonskrav.")
     @Test
     public void fp_arbeid_uten_refusjon_tilkommet_arbeid_med_gradering_med_refusjon(TestInfo testInfo) throws Exception {
-        behandleUtenAksjonspunkter(testInfo, "066");
+        behandleUtenAksjonspunkter(testInfo);
     }
 
     @DisplayName("Foreldrepenger - Søker gradering for tilkommet arbeid med refusjonskrav i perioder uten gradering.")
@@ -72,7 +72,7 @@ public class GraderingTest extends Beregner {
         var beløpMap = Map.of(1L, 360_000, 2L, 360_000);
         Map<Long, Integer> refusjonMap = Map.of();
         var inntektskategoriMap = Map.of(1L, Inntektskategori.ARBEIDSTAKER, 2L, Inntektskategori.ARBEIDSTAKER);
-        behandleMedManuellFordeling(testInfo, "067", null, beløpMap, inntektskategoriMap, refusjonMap, true);
+        behandleMedManuellFordeling(testInfo, null, beløpMap, inntektskategoriMap, refusjonMap, true);
     }
 
 
@@ -82,7 +82,7 @@ public class GraderingTest extends Beregner {
     @Test
     public void foreldrepenger_søker_gradering_for_næring_med_arbeid_over_6G(TestInfo testInfo) throws Exception {
 
-        var request = opprettTestscenario("032");
+        var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);

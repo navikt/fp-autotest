@@ -6,8 +6,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
+
+import org.junit.jupiter.api.TestInfo;
 
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.FpkalkulusYtelser;
@@ -30,38 +33,38 @@ public class TestscenarioRepositoryImpl {
     public static final String FORVENTET_GUI_FORESLÅ_JSON_FIL_NAVN = "forventet-gui-foreslå.json";
     public static final String FORVENTET_GUI_FORDEL_JSON_FIL_NAVN = "forventet-gui-fordel.json";
 
+    private final static String INPUT_PREFIKS = "input";
+    private final static String RESULTAT_PREFIKS = "resultat";
 
-    private final File rootDir = new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource("scenarios")).getFile());
-    private final File rootDirResultat = new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource("resultat")).getFile());
+    private final File rootDir = new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource("kalkulus")).getFile());
 
-
-    public BeregnRequestDto hentScenario(String scenarioId, String inputPrefix) throws FileNotFoundException {
-        return lesOgReturnerScenarioFraJsonfil(scenarioId, inputPrefix);
+    public BeregnRequestDto hentScenario(TestInfo testInfo, String inputPrefix) throws FileNotFoundException {
+        return lesOgReturnerScenarioFraJsonfil(testInfo, inputPrefix);
     }
 
-    public BeregnRequestDto hentScenario(String scenarioId, String inputPrefix, BeregnRequestDto request) throws FileNotFoundException {
-        return lesOgReturnerScenarioFraJsonfil(scenarioId, inputPrefix, request);
+    public BeregnRequestDto hentScenario(TestInfo testInfo, String inputPrefix, BeregnRequestDto request) throws FileNotFoundException {
+        return lesOgReturnerScenarioFraJsonfil(testInfo, inputPrefix, request);
     }
 
-    public BeregningsgrunnlagGrunnlagDto hentForventetResultat(String testId) throws FileNotFoundException {
-        return LesOgReturnerForventetResultatFraJsonfil(testId, FORVENTET_RESULTAT_JSON_FIL_NAVN, BeregningsgrunnlagGrunnlagDto.class);
+    public BeregningsgrunnlagGrunnlagDto hentForventetResultat(TestInfo testInfo) throws FileNotFoundException {
+        return LesOgReturnerForventetResultatFraJsonfil(testInfo, FORVENTET_RESULTAT_JSON_FIL_NAVN, BeregningsgrunnlagGrunnlagDto.class);
     }
 
 
-    public BeregningsgrunnlagDto hentForventetGUIResultatKofakber(String testId) throws FileNotFoundException {
-        return lesOgReturnerForventetGUIResultatFraJsonfil(testId, FORVENTET_GUI_KOFAKBER_JSON_FIL_NAVN);
+    public BeregningsgrunnlagDto hentForventetGUIResultatKofakber(TestInfo testInfo) throws FileNotFoundException {
+        return lesOgReturnerForventetGUIResultatFraJsonfil(testInfo, FORVENTET_GUI_KOFAKBER_JSON_FIL_NAVN);
     }
 
-    public BeregningsgrunnlagDto hentForventetGUIResultatForeslå(String testId) throws FileNotFoundException {
-        return lesOgReturnerForventetGUIResultatFraJsonfil(testId, FORVENTET_GUI_FORESLÅ_JSON_FIL_NAVN);
+    public BeregningsgrunnlagDto hentForventetGUIResultatForeslå(TestInfo testInfo) throws FileNotFoundException {
+        return lesOgReturnerForventetGUIResultatFraJsonfil(testInfo, FORVENTET_GUI_FORESLÅ_JSON_FIL_NAVN);
     }
 
-    public BeregningsgrunnlagDto hentForventetGUIResultatFordel(String testId) throws FileNotFoundException {
-        return lesOgReturnerForventetGUIResultatFraJsonfil(testId, FORVENTET_GUI_FORDEL_JSON_FIL_NAVN);
+    public BeregningsgrunnlagDto hentForventetGUIResultatFordel(TestInfo testInfo) throws FileNotFoundException {
+        return lesOgReturnerForventetGUIResultatFraJsonfil(testInfo, FORVENTET_GUI_FORDEL_JSON_FIL_NAVN);
     }
 
-    private BeregningsgrunnlagDto lesOgReturnerForventetGUIResultatFraJsonfil(String scenarioId, String filnavn) throws FileNotFoundException {
-        var scenarioFiles = hentResultatFil(scenarioId);
+    private BeregningsgrunnlagDto lesOgReturnerForventetGUIResultatFraJsonfil(TestInfo testInfo, String filnavn) throws FileNotFoundException {
+        var scenarioFiles = hentResultatFil(testInfo);
         if (scenarioFiles == null) {
             return null;
         }
@@ -79,10 +82,10 @@ public class TestscenarioRepositoryImpl {
         return null;
     }
 
-    private <T> T LesOgReturnerForventetResultatFraJsonfil(String testId, String forventetResultatJsonFilNavn, Class<T> klasse) throws FileNotFoundException {
-        var resultFiles = hentResultatFil(testId);
+    private <T> T LesOgReturnerForventetResultatFraJsonfil(TestInfo testInfo, String forventetResultatJsonFilNavn, Class<T> klasse) throws FileNotFoundException {
+        var resultFiles = hentResultatFil(testInfo);
         if (resultFiles == null) {
-            throw new FileNotFoundException("Fant ikke resultat for test [" + testId + "]");
+            throw new FileNotFoundException("Fant ikke resultat for test [" + getTestName(testInfo) + "]");
         }
 
         try {
@@ -98,27 +101,26 @@ public class TestscenarioRepositoryImpl {
         return null;
     }
 
-    private BeregnRequestDto lesOgReturnerScenarioFraJsonfil(String scenarioId,
+    private BeregnRequestDto lesOgReturnerScenarioFraJsonfil(TestInfo testInfo,
                                                                String inputPrefix) throws FileNotFoundException {
-        var kalkulatorInputDto = finnKalkulatorInpu(scenarioId, inputPrefix);
+        var kalkulatorInputDto = finnKalkulatorInput(testInfo, inputPrefix);
         return genererNyRequest(kalkulatorInputDto,
                 AktørId.dummy().getAktørId(), Saksnummer.fra(UUID.randomUUID().toString().substring(0, 19).replace("-", "")));
     }
 
-    private BeregnRequestDto lesOgReturnerScenarioFraJsonfil(String scenarioId,
+    private BeregnRequestDto lesOgReturnerScenarioFraJsonfil(TestInfo testInfo,
                                                                String inputPrefix,
                                                                BeregnRequestDto originalRequest) throws FileNotFoundException {
-        var kalkulatorInputDto = finnKalkulatorInpu(scenarioId, inputPrefix);
+        var kalkulatorInputDto = finnKalkulatorInput(testInfo, inputPrefix);
         var saksnummer = originalRequest.saksnummer();
         var aktørId = originalRequest.aktør().getIdent();
-        var request = genererNyRequest(kalkulatorInputDto, aktørId, saksnummer);
-        return request;
+        return genererNyRequest(kalkulatorInputDto, aktørId, saksnummer);
     }
 
-    private KalkulatorInputDto finnKalkulatorInpu(String scenarioId, String inputPrefix) throws FileNotFoundException {
-        File scenarioFiles = hentScenarioFileneSomStarterMed(scenarioId);
+    private KalkulatorInputDto finnKalkulatorInput(TestInfo testInfo, String inputPrefix) throws FileNotFoundException {
+        File scenarioFiles = hentKalkulatorInputFor(testInfo);
         if (scenarioFiles == null) {
-            throw new FileNotFoundException("Fant ikke scenario med scenario nummer [" + scenarioId + "]");
+            throw new FileNotFoundException("Fant ikke scenario med mappenavn [" + getTestName(testInfo) + "]");
         }
 
         try {
@@ -166,24 +168,31 @@ public class TestscenarioRepositoryImpl {
         return null;
     }
 
-    private File hentResultatFil(String testId) {
-        File[] filesFiltered = rootDirResultat.listFiles((dir, name) -> name.equals(testId));
-        if (filesFiltered != null && filesFiltered.length > 0) {
-            return filesFiltered[0];
+    private File hentResultatFil(TestInfo testInfo) {
+        var filesFiltered = Arrays.stream(Objects.requireNonNull(rootDir.listFiles((dir, name) -> name.startsWith(getTestName(testInfo)))))
+                .map(file -> file.listFiles((dir, name) -> name.startsWith(RESULTAT_PREFIKS)))
+                .findFirst();
+        if (filesFiltered.isPresent() && filesFiltered.get().length > 0) {
+            return filesFiltered.get()[0];
         }
         return null;
     }
 
-    private File hentScenarioFileneSomStarterMed(String scenarioNummer) {
-        File[] filesFiltered = rootDir.listFiles((dir, name) -> name.startsWith(scenarioNummer));
-
-        if (filesFiltered != null && filesFiltered.length > 1) {
-            throw new IllegalStateException("Det er mer enn ett scenario med nummer: " + scenarioNummer);
+    private File hentKalkulatorInputFor(TestInfo testInfo) {
+        var filesFiltered = Arrays.stream(Objects.requireNonNull(rootDir.listFiles((dir, name) -> name.startsWith(getTestName(testInfo)))))
+                .map(file -> file.listFiles((dir, name) -> name.startsWith(INPUT_PREFIKS)))
+                .findFirst();
+        if (filesFiltered.isPresent() && filesFiltered.get().length > 1) {
+            throw new IllegalStateException("Det er mer enn ett scenario med nummer: " + getTestName(testInfo));
         }
 
-        if (filesFiltered != null && filesFiltered.length > 0) {
-            return filesFiltered[0];
+        if (filesFiltered.isPresent() && filesFiltered.get().length > 0) {
+            return filesFiltered.get()[0];
         }
         return null;
+    }
+
+    private String getTestName(TestInfo testInfo) {
+        return testInfo.getTestMethod().orElseThrow(() -> new IllegalArgumentException("Forventer testmetode")).getName();
     }
 }
