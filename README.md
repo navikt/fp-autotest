@@ -46,3 +46,5 @@ For å se hvordan fp-autotest er bygget gå [her](docs/arkitektur.md).
 
 ## Swagger
 Felles swagger for alle fss applikasjoner er tilgjengelig på http://localhost:9200
+
+test
