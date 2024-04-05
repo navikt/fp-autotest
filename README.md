@@ -49,3 +49,4 @@ Felles swagger for alle fss applikasjoner er tilgjengelig på http://localhost:9
 
 test
 test
+test
