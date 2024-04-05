@@ -610,7 +610,7 @@ services:
   ## Swagger
   fpswagger:
     <<: *default-konfigurasjon
-    image: ghcr.io/navikt/fp-swagger:latest
+    image: $FPSWAGGER_IMAGE
     container_name: fpswagger
     mem_limit: 128mb
     environment:
