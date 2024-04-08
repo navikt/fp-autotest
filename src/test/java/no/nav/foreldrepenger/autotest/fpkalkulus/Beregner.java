@@ -158,7 +158,7 @@ public class Beregner extends KalkulusTestBase {
 
         var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_TILKOMMET_INNTEKT);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isZero();
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isNull();
 
         tilstandResponse = behandleFraVurderRefusjonTilFordel(request);
         return tilstandResponse;
