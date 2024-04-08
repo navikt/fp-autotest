@@ -1,299 +1,299 @@
 {
-  "skjaeringstidspunktBeregning": "2019-07-01",
-  "skjæringstidspunkt": "2019-07-01",
-  "aktivitetStatus": [
-    "AT"
-  ],
-  "beregningsgrunnlagPeriode": [
-    {
-      "beregningsgrunnlagPeriodeFom": "2019-07-01",
-      "beregningsgrunnlagPeriodeTom": "2019-07-15",
-      "beregnetPrAar": 536796.0,
-      "bruttoPrAar": 536796.0,
-      "bruttoInkludertBortfaltNaturalytelsePrAar": 536796.0,
-      "periodeAarsaker": [],
-      "beregningsgrunnlagPrStatusOgAndel": [
+    "skjaeringstidspunktBeregning": "2019-07-01",
+    "skjæringstidspunkt": "2019-07-01",
+    "aktivitetStatus": [
+        "AT"
+    ],
+    "beregningsgrunnlagPeriode": [
         {
-          "beregningsgrunnlagTom": "2019-06-30",
-          "beregningsgrunnlagFom": "2019-04-01",
-          "aktivitetStatus": "AT",
-          "beregningsperiodeFom": "2019-04-01",
-          "beregningsperiodeTom": "2019-06-30",
-          "beregnetPrAar": 536796.0,
-          "fastsattForrigePrAar": null,
-          "overstyrtPrAar": null,
-          "bruttoPrAar": 536796.0,
-          "avkortetPrAar": null,
-          "redusertPrAar": null,
-          "erTidsbegrensetArbeidsforhold": null,
-          "erNyIArbeidslivet": null,
-          "lonnsendringIBeregningsperioden": null,
-          "andelsnr": 1,
-          "besteberegningPrAar": null,
-          "inntektskategori": "ARBEIDSTAKER",
-          "arbeidsforhold": {
-            "arbeidsgiverIdent": "973861778",
-            "startdato": "2018-04-01",
-            "opphoersdato": "2019-06-30",
-            "arbeidsforholdType": "ARBEID"
-          },
-          "fastsattAvSaksbehandler": false,
-          "lagtTilAvSaksbehandler": false,
-          "dagsats": null,
-          "originalDagsatsFraTilstøtendeYtelse": null,
-          "fordeltPrAar": null,
-          "erTilkommetAndel": false,
-          "skalFastsetteGrunnlag": false
+            "beregningsgrunnlagPeriodeFom": "2019-07-01",
+            "beregningsgrunnlagPeriodeTom": "2019-07-15",
+            "beregnetPrAar": 536796.0,
+            "bruttoPrAar": 536796.0,
+            "bruttoInkludertBortfaltNaturalytelsePrAar": 536796.0,
+            "periodeAarsaker": [],
+            "beregningsgrunnlagPrStatusOgAndel": [
+                {
+                    "beregningsgrunnlagTom": "2019-06-30",
+                    "beregningsgrunnlagFom": "2019-04-01",
+                    "aktivitetStatus": "AT",
+                    "beregningsperiodeFom": "2019-04-01",
+                    "beregningsperiodeTom": "2019-06-30",
+                    "beregnetPrAar": 536796.0,
+                    "fastsattForrigePrAar": null,
+                    "overstyrtPrAar": null,
+                    "bruttoPrAar": 536796.0,
+                    "avkortetPrAar": null,
+                    "redusertPrAar": null,
+                    "erTidsbegrensetArbeidsforhold": null,
+                    "erNyIArbeidslivet": null,
+                    "lonnsendringIBeregningsperioden": null,
+                    "andelsnr": 1,
+                    "besteberegningPrAar": null,
+                    "inntektskategori": "ARBEIDSTAKER",
+                    "arbeidsforhold": {
+                        "arbeidsgiverIdent": "973861778",
+                        "startdato": "2018-04-01",
+                        "opphoersdato": "2019-06-30",
+                        "arbeidsforholdType": "ARBEID"
+                    },
+                    "fastsattAvSaksbehandler": false,
+                    "lagtTilAvSaksbehandler": false,
+                    "dagsats": null,
+                    "originalDagsatsFraTilstøtendeYtelse": null,
+                    "fordeltPrAar": null,
+                    "erTilkommetAndel": false,
+                    "skalFastsetteGrunnlag": false
+                }
+            ]
+        },
+        {
+            "beregningsgrunnlagPeriodeFom": "2019-07-16",
+            "beregningsgrunnlagPeriodeTom": "9999-12-31",
+            "beregnetPrAar": 536796.0,
+            "bruttoPrAar": 536796.0,
+            "bruttoInkludertBortfaltNaturalytelsePrAar": 536796.0,
+            "periodeAarsaker": [
+                "ENDRING_I_REFUSJONSKRAV"
+            ],
+            "beregningsgrunnlagPrStatusOgAndel": [
+                {
+                    "beregningsgrunnlagTom": "2019-06-30",
+                    "beregningsgrunnlagFom": "2019-04-01",
+                    "aktivitetStatus": "AT",
+                    "beregningsperiodeFom": "2019-04-01",
+                    "beregningsperiodeTom": "2019-06-30",
+                    "beregnetPrAar": 536796.0,
+                    "fastsattForrigePrAar": null,
+                    "overstyrtPrAar": null,
+                    "bruttoPrAar": 536796.0,
+                    "avkortetPrAar": null,
+                    "redusertPrAar": null,
+                    "erTidsbegrensetArbeidsforhold": null,
+                    "erNyIArbeidslivet": null,
+                    "lonnsendringIBeregningsperioden": null,
+                    "andelsnr": 1,
+                    "besteberegningPrAar": null,
+                    "inntektskategori": "ARBEIDSTAKER",
+                    "arbeidsforhold": {
+                        "arbeidsgiverIdent": "973861778",
+                        "startdato": "2018-04-01",
+                        "opphoersdato": "2019-06-30",
+                        "arbeidsforholdType": "ARBEID"
+                    },
+                    "fastsattAvSaksbehandler": false,
+                    "lagtTilAvSaksbehandler": false,
+                    "dagsats": null,
+                    "originalDagsatsFraTilstøtendeYtelse": null,
+                    "fordeltPrAar": null,
+                    "erTilkommetAndel": false,
+                    "skalFastsetteGrunnlag": false
+                },
+                {
+                    "beregningsgrunnlagTom": "2019-06-30",
+                    "beregningsgrunnlagFom": "2019-04-01",
+                    "aktivitetStatus": "AT",
+                    "beregningsperiodeFom": "2019-04-01",
+                    "beregningsperiodeTom": "2019-06-30",
+                    "beregnetPrAar": null,
+                    "fastsattForrigePrAar": null,
+                    "overstyrtPrAar": null,
+                    "bruttoPrAar": null,
+                    "avkortetPrAar": null,
+                    "redusertPrAar": null,
+                    "erTidsbegrensetArbeidsforhold": null,
+                    "erNyIArbeidslivet": null,
+                    "lonnsendringIBeregningsperioden": null,
+                    "andelsnr": 2,
+                    "besteberegningPrAar": null,
+                    "inntektskategori": "-",
+                    "arbeidsforhold": {
+                        "arbeidsgiverIdent": "973861778",
+                        "startdato": "2019-07-16",
+                        "opphoersdato": "2020-07-31",
+                        "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
+                        "arbeidsforholdType": "ARBEID",
+                        "refusjonPrAar": 536799.96,
+                        "belopFraInntektsmeldingPrMnd": 44733.33
+                    },
+                    "fastsattAvSaksbehandler": false,
+                    "lagtTilAvSaksbehandler": false,
+                    "dagsats": null,
+                    "originalDagsatsFraTilstøtendeYtelse": null,
+                    "fordeltPrAar": null,
+                    "erTilkommetAndel": true,
+                    "skalFastsetteGrunnlag": false
+                }
+            ]
         }
-      ]
+    ],
+    "sammenligningsgrunnlag": {
+        "sammenligningsgrunnlagFom": "2018-07-01",
+        "sammenligningsgrunnlagTom": "2019-06-30",
+        "rapportertPrAar": 536796.0,
+        "avvikPromille": 0.0,
+        "avvikProsent": 0.0,
+        "sammenligningsgrunnlagType": "SAMMENLIGNING_ATFL_SN",
+        "differanseBeregnet": 0.0
     },
-    {
-      "beregningsgrunnlagPeriodeFom": "2019-07-16",
-      "beregningsgrunnlagPeriodeTom": "9999-12-31",
-      "beregnetPrAar": 536796.0,
-      "bruttoPrAar": 536796.0,
-      "bruttoInkludertBortfaltNaturalytelsePrAar": 536796.0,
-      "periodeAarsaker": [
-        "ENDRING_I_REFUSJONSKRAV"
-      ],
-      "beregningsgrunnlagPrStatusOgAndel": [
+    "sammenligningsgrunnlagPrStatus": [
         {
-          "beregningsgrunnlagTom": "2019-06-30",
-          "beregningsgrunnlagFom": "2019-04-01",
-          "aktivitetStatus": "AT",
-          "beregningsperiodeFom": "2019-04-01",
-          "beregningsperiodeTom": "2019-06-30",
-          "beregnetPrAar": 536796.0,
-          "fastsattForrigePrAar": null,
-          "overstyrtPrAar": null,
-          "bruttoPrAar": 536796.0,
-          "avkortetPrAar": null,
-          "redusertPrAar": null,
-          "erTidsbegrensetArbeidsforhold": null,
-          "erNyIArbeidslivet": null,
-          "lonnsendringIBeregningsperioden": null,
-          "andelsnr": 1,
-          "besteberegningPrAar": null,
-          "inntektskategori": "ARBEIDSTAKER",
-          "arbeidsforhold": {
-            "arbeidsgiverIdent": "973861778",
-            "startdato": "2018-04-01",
-            "opphoersdato": "2019-06-30",
-            "arbeidsforholdType": "ARBEID"
-          },
-          "fastsattAvSaksbehandler": false,
-          "lagtTilAvSaksbehandler": false,
-          "dagsats": null,
-          "originalDagsatsFraTilstøtendeYtelse": null,
-          "fordeltPrAar": null,
-          "erTilkommetAndel": false,
-          "skalFastsetteGrunnlag": false
-        },
-        {
-          "beregningsgrunnlagTom": "2019-06-30",
-          "beregningsgrunnlagFom": "2019-04-01",
-          "aktivitetStatus": "AT",
-          "beregningsperiodeFom": "2019-04-01",
-          "beregningsperiodeTom": "2019-06-30",
-          "beregnetPrAar": null,
-          "fastsattForrigePrAar": null,
-          "overstyrtPrAar": null,
-          "bruttoPrAar": null,
-          "avkortetPrAar": null,
-          "redusertPrAar": null,
-          "erTidsbegrensetArbeidsforhold": null,
-          "erNyIArbeidslivet": null,
-          "lonnsendringIBeregningsperioden": null,
-          "andelsnr": 2,
-          "besteberegningPrAar": null,
-          "inntektskategori": "-",
-          "arbeidsforhold": {
-            "arbeidsgiverIdent": "973861778",
-            "startdato": "2019-07-16",
-            "opphoersdato": "2020-07-31",
-            "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
-            "arbeidsforholdType": "ARBEID",
-            "refusjonPrAar": 536799.96,
-            "belopFraInntektsmeldingPrMnd": 44733.33
-          },
-          "fastsattAvSaksbehandler": false,
-          "lagtTilAvSaksbehandler": false,
-          "dagsats": null,
-          "originalDagsatsFraTilstøtendeYtelse": null,
-          "fordeltPrAar": null,
-          "erTilkommetAndel": true,
-          "skalFastsetteGrunnlag": false
+            "sammenligningsgrunnlagFom": "2018-07-01",
+            "sammenligningsgrunnlagTom": "2019-06-30",
+            "rapportertPrAar": 536796.0,
+            "avvikPromille": 0.0,
+            "avvikProsent": 0.0,
+            "sammenligningsgrunnlagType": "SAMMENLIGNING_ATFL_SN",
+            "differanseBeregnet": 0.0
         }
-      ]
-    }
-  ],
-  "sammenligningsgrunnlag": {
-    "sammenligningsgrunnlagFom": "2018-07-01",
-    "sammenligningsgrunnlagTom": "2019-06-30",
-    "rapportertPrAar": 536796.0,
-    "avvikPromille": 0.0,
-    "avvikProsent": 0.0,
-    "sammenligningsgrunnlagType": "SAMMENLIGNING_ATFL_SN",
-    "differanseBeregnet": 0.0
-  },
-  "sammenligningsgrunnlagPrStatus": [
-    {
-      "sammenligningsgrunnlagFom": "2018-07-01",
-      "sammenligningsgrunnlagTom": "2019-06-30",
-      "rapportertPrAar": 536796.0,
-      "avvikPromille": 0.0,
-      "avvikProsent": 0.0,
-      "sammenligningsgrunnlagType": "SAMMENLIGNING_ATFL_SN",
-      "differanseBeregnet": 0.0
-    }
-  ],
-  "halvG": 49929.0,
-  "grunnbeløp": 99858.0,
-  "faktaOmBeregning": {
-    "avklarAktiviteter": {
-      "aktiviteterTomDatoMapping": [
-        {
-          "tom": "2019-07-01",
-          "aktiviteter": [
-            {
-              "arbeidsgiverIdent": "973861778",
-              "fom": "2018-08-01",
-              "tom": "2019-06-30",
-              "arbeidsforholdType": "ARBEID"
-            }
-          ]
+    ],
+    "halvG": 49929.0,
+    "grunnbeløp": 99858.0,
+    "faktaOmBeregning": {
+        "avklarAktiviteter": {
+            "aktiviteterTomDatoMapping": [
+                {
+                    "tom": "2019-07-01",
+                    "aktiviteter": [
+                        {
+                            "arbeidsgiverIdent": "973861778",
+                            "fom": "2018-08-01",
+                            "tom": "2019-06-30",
+                            "arbeidsforholdType": "ARBEID"
+                        }
+                    ]
+                },
+                {
+                    "tom": "2019-05-13",
+                    "aktiviteter": [
+                        {
+                            "arbeidsgiverIdent": "974761076",
+                            "fom": "2019-05-02",
+                            "tom": "2019-05-12",
+                            "arbeidsforholdType": "ARBEID"
+                        }
+                    ]
+                }
+            ]
         },
-        {
-          "tom": "2019-05-13",
-          "aktiviteter": [
+        "andelerForFaktaOmBeregning": [
             {
-              "arbeidsgiverIdent": "974761076",
-              "fom": "2019-05-02",
-              "tom": "2019-05-12",
-              "arbeidsforholdType": "ARBEID"
+                "belopReadOnly": 44733.0,
+                "fastsattBelop": 44733.0,
+                "inntektskategori": "ARBEIDSTAKER",
+                "aktivitetStatus": "AT",
+                "arbeidsforhold": {
+                    "arbeidsgiverIdent": "973861778",
+                    "startdato": "2018-04-01",
+                    "opphoersdato": "2019-06-30",
+                    "arbeidsforholdType": "ARBEID"
+                },
+                "andelsnr": 1,
+                "skalKunneEndreAktivitet": false,
+                "lagtTilAvSaksbehandler": false
             }
-          ]
-        }
-      ]
+        ]
     },
-    "andelerForFaktaOmBeregning": [
-      {
-        "belopReadOnly": 44733.0,
-        "fastsattBelop": 44733.0,
-        "inntektskategori": "ARBEIDSTAKER",
-        "aktivitetStatus": "AT",
-        "arbeidsforhold": {
-          "arbeidsgiverIdent": "973861778",
-          "startdato": "2018-04-01",
-          "opphoersdato": "2019-06-30",
-          "arbeidsforholdType": "ARBEID"
-        },
-        "andelsnr": 1,
-        "skalKunneEndreAktivitet": false,
-        "lagtTilAvSaksbehandler": false
-      }
-    ]
-  },
-  "hjemmel": "F_14_7_8_30",
-  "faktaOmFordeling": {
-    "fordelBeregningsgrunnlag": {
-      "fordelBeregningsgrunnlagPerioder": [
-        {
-          "fom": "2019-07-01",
-          "tom": "2019-07-15",
-          "fordelBeregningsgrunnlagAndeler": [
-            {
-              "andelsnr": 1,
-              "arbeidsforhold": {
-                "arbeidsgiverIdent": "973861778",
-                "startdato": "2018-04-01",
-                "opphoersdato": "2019-06-30",
-                "arbeidsforholdType": "ARBEID"
-              },
-              "inntektskategori": "ARBEIDSTAKER",
-              "aktivitetStatus": "AT",
-              "lagtTilAvSaksbehandler": false,
-              "fastsattAvSaksbehandler": false,
-              "andelIArbeid": [
-                0
-              ],
-              "refusjonskravPrAar": 0,
-              "nyttArbeidsforhold": false,
-              "arbeidsforholdType": "ARBEID"
-            }
-          ],
-          "harPeriodeAarsakGraderingEllerRefusjon": false,
-          "skalKunneEndreRefusjon": false
-        },
-        {
-          "fom": "2019-07-16",
-          "tom": "9999-12-31",
-          "fordelBeregningsgrunnlagAndeler": [
-            {
-              "andelsnr": 1,
-              "arbeidsforhold": {
-                "arbeidsgiverIdent": "973861778",
-                "startdato": "2018-04-01",
-                "opphoersdato": "2019-06-30",
-                "arbeidsforholdType": "ARBEID"
-              },
-              "inntektskategori": "ARBEIDSTAKER",
-              "aktivitetStatus": "AT",
-              "lagtTilAvSaksbehandler": false,
-              "fastsattAvSaksbehandler": false,
-              "andelIArbeid": [
-                0
-              ],
-              "refusjonskravPrAar": 0,
-              "nyttArbeidsforhold": false,
-              "arbeidsforholdType": "ARBEID"
-            },
-            {
-              "andelsnr": 2,
-              "arbeidsforhold": {
-                "arbeidsgiverIdent": "973861778",
-                "startdato": "2019-07-16",
-                "opphoersdato": "2020-07-31",
-                "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
-                "arbeidsforholdType": "ARBEID",
-                "refusjonPrAar": 536799.96
-              },
-              "inntektskategori": "-",
-              "aktivitetStatus": "AT",
-              "lagtTilAvSaksbehandler": false,
-              "fastsattAvSaksbehandler": false,
-              "andelIArbeid": [
-                0
-              ],
-              "refusjonskravPrAar": 536800,
-              "belopFraInntektsmeldingPrAar": 536800,
-              "refusjonskravFraInntektsmeldingPrAar": 536800,
-              "nyttArbeidsforhold": true,
-              "arbeidsforholdType": "ARBEID"
-            }
-          ],
-          "harPeriodeAarsakGraderingEllerRefusjon": true,
-          "skalKunneEndreRefusjon": false
+    "hjemmel": "F_14_7_8_30",
+    "faktaOmFordeling": {
+        "fordelBeregningsgrunnlag": {
+            "fordelBeregningsgrunnlagPerioder": [
+                {
+                    "fom": "2019-07-01",
+                    "tom": "2019-07-15",
+                    "fordelBeregningsgrunnlagAndeler": [
+                        {
+                            "andelsnr": 1,
+                            "arbeidsforhold": {
+                                "arbeidsgiverIdent": "973861778",
+                                "startdato": "2018-04-01",
+                                "opphoersdato": "2019-06-30",
+                                "arbeidsforholdType": "ARBEID"
+                            },
+                            "inntektskategori": "ARBEIDSTAKER",
+                            "aktivitetStatus": "AT",
+                            "lagtTilAvSaksbehandler": false,
+                            "fastsattAvSaksbehandler": false,
+                            "andelIArbeid": [
+                                0
+                            ],
+                            "refusjonskravPrAar": 0,
+                            "nyttArbeidsforhold": false,
+                            "arbeidsforholdType": "ARBEID"
+                        }
+                    ],
+                    "harPeriodeAarsakGraderingEllerRefusjon": false,
+                    "skalKunneEndreRefusjon": false
+                },
+                {
+                    "fom": "2019-07-16",
+                    "tom": "9999-12-31",
+                    "fordelBeregningsgrunnlagAndeler": [
+                        {
+                            "andelsnr": 1,
+                            "arbeidsforhold": {
+                                "arbeidsgiverIdent": "973861778",
+                                "startdato": "2018-04-01",
+                                "opphoersdato": "2019-06-30",
+                                "arbeidsforholdType": "ARBEID"
+                            },
+                            "inntektskategori": "ARBEIDSTAKER",
+                            "aktivitetStatus": "AT",
+                            "lagtTilAvSaksbehandler": false,
+                            "fastsattAvSaksbehandler": false,
+                            "andelIArbeid": [
+                                0
+                            ],
+                            "refusjonskravPrAar": 0,
+                            "nyttArbeidsforhold": false,
+                            "arbeidsforholdType": "ARBEID"
+                        },
+                        {
+                            "andelsnr": 2,
+                            "arbeidsforhold": {
+                                "arbeidsgiverIdent": "973861778",
+                                "startdato": "2019-07-16",
+                                "opphoersdato": "2020-07-31",
+                                "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
+                                "arbeidsforholdType": "ARBEID",
+                                "refusjonPrAar": 536799.96
+                            },
+                            "inntektskategori": "-",
+                            "aktivitetStatus": "AT",
+                            "lagtTilAvSaksbehandler": false,
+                            "fastsattAvSaksbehandler": false,
+                            "andelIArbeid": [
+                                0
+                            ],
+                            "refusjonskravPrAar": 536800,
+                            "belopFraInntektsmeldingPrAar": 536800,
+                            "refusjonskravFraInntektsmeldingPrAar": 536800,
+                            "nyttArbeidsforhold": true,
+                            "arbeidsforholdType": "ARBEID"
+                        }
+                    ],
+                    "harPeriodeAarsakGraderingEllerRefusjon": true,
+                    "skalKunneEndreRefusjon": false
+                }
+            ],
+            "arbeidsforholdTilFordeling": [
+                {
+                    "arbeidsgiverIdent": "973861778",
+                    "startdato": "2019-07-16",
+                    "opphoersdato": "2020-07-31",
+                    "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
+                    "arbeidsforholdType": "ARBEID",
+                    "refusjonPrAar": 536799.96,
+                    "perioderMedGraderingEllerRefusjon": [
+                        {
+                            "erRefusjon": true,
+                            "erGradering": false,
+                            "fom": "2019-07-16"
+                        }
+                    ]
+                }
+            ]
         }
-      ],
-      "arbeidsforholdTilFordeling": [
-        {
-          "arbeidsgiverIdent": "973861778",
-          "startdato": "2019-07-16",
-          "opphoersdato": "2020-07-31",
-          "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
-          "arbeidsforholdType": "ARBEID",
-          "refusjonPrAar": 536799.96,
-          "perioderMedGraderingEllerRefusjon": [
-            {
-              "erRefusjon": true,
-              "erGradering": false,
-              "fom": "2019-07-16"
-            }
-          ]
-        }
-      ]
-    }
-  },
-  "dekningsgrad": 100
+    },
+    "dekningsgrad": 100
 }

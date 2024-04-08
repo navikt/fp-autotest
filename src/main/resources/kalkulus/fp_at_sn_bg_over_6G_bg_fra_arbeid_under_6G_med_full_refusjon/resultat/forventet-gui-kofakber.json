@@ -1,132 +1,134 @@
 {
-  "avklaringsbehov": [],
-  "skjaeringstidspunktBeregning": "2020-01-01",
-  "skjæringstidspunkt": "2020-01-01",
-  "aktivitetStatus": [
-    "AT_SN"
-  ],
-  "beregningsgrunnlagPeriode": [
-    {
-      "beregningsgrunnlagPeriodeFom": "2020-01-01",
-      "beregningsgrunnlagPeriodeTom": "9999-12-31",
-      "beregnetPrAar": 0,
-      "bruttoPrAar": 0,
-      "bruttoInkludertBortfaltNaturalytelsePrAar": 0,
-      "periodeAarsaker": [],
-      "beregningsgrunnlagPrStatusOgAndel": [
+    "avklaringsbehov": [],
+    "skjaeringstidspunktBeregning": "2020-01-01",
+    "skjæringstidspunkt": "2020-01-01",
+    "aktivitetStatus": [
+        "AT_SN"
+    ],
+    "beregningsgrunnlagPeriode": [
         {
-          "beregningsgrunnlagFom": "2019-10-01",
-          "beregningsgrunnlagTom": "2019-12-31",
-          "aktivitetStatus": "AT",
-          "beregningsperiodeFom": "2019-10-01",
-          "beregningsperiodeTom": "2019-12-31",
-          "beregnetPrAar": null,
-          "fastsattForrigePrAar": null,
-          "overstyrtPrAar": null,
-          "bruttoPrAar": null,
-          "avkortetPrAar": null,
-          "redusertPrAar": null,
-          "erTidsbegrensetArbeidsforhold": null,
-          "erNyIArbeidslivet": null,
-          "lonnsendringIBeregningsperioden": null,
-          "andelsnr": 1,
-          "besteberegningPrAar": null,
-          "inntektskategori": "ARBEIDSTAKER",
-          "arbeidsforhold": {
-            "arbeidsgiverIdent": "910909088",
-            "startdato": "2012-11-16",
-            "opphoersdato": null,
-            "arbeidsforholdType": "ARBEID",
-            "belopFraInntektsmeldingPrMnd": 28987
-          },
-          "fastsattAvSaksbehandler": false,
-          "lagtTilAvSaksbehandler": false,
-          "dagsats": null,
-          "originalDagsatsFraTilstøtendeYtelse": null,
-          "fordeltPrAar": null,
-          "erTilkommetAndel": false,
-          "skalFastsetteGrunnlag": false
-        },
-        {
-          "aktivitetStatus": "SN",
-          "andelsnr": 2,
-          "inntektskategori": "JORDBRUKER",
-          "arbeidsforhold": {
-            "arbeidsforholdType": "NÆRING"
-          },
-          "fastsattAvSaksbehandler": false,
-          "lagtTilAvSaksbehandler": false,
-          "erTilkommetAndel": false,
-          "skalFastsetteGrunnlag": false,
-          "pgiVerdier": [],
-          "næringer": [
-            {
-              "orgnr": "988356859",
-              "erVarigEndret": false,
-              "erNyoppstartet": false,
-              "virksomhetType": "JORDBRUK_SKOGBRUK",
-              "kanRegnskapsførerKontaktes": false,
-              "erNyIArbeidslivet": false,
-              "oppgittInntekt": 0
-            }
-          ]
+            "beregningsgrunnlagPeriodeFom": "2020-01-01",
+            "beregningsgrunnlagPeriodeTom": "9999-12-31",
+            "beregnetPrAar": 0,
+            "bruttoPrAar": 0,
+            "bruttoInkludertBortfaltNaturalytelsePrAar": 0,
+            "periodeAarsaker": [],
+            "beregningsgrunnlagPrStatusOgAndel": [
+                {
+                    "dtoType": "AT",
+                    "beregningsgrunnlagFom": "2019-10-01",
+                    "beregningsgrunnlagTom": "2019-12-31",
+                    "aktivitetStatus": "AT",
+                    "beregningsperiodeFom": "2019-10-01",
+                    "beregningsperiodeTom": "2019-12-31",
+                    "beregnetPrAar": null,
+                    "fastsattForrigePrAar": null,
+                    "overstyrtPrAar": null,
+                    "bruttoPrAar": null,
+                    "avkortetPrAar": null,
+                    "redusertPrAar": null,
+                    "erTidsbegrensetArbeidsforhold": null,
+                    "erNyIArbeidslivet": null,
+                    "lonnsendringIBeregningsperioden": null,
+                    "andelsnr": 1,
+                    "besteberegningPrAar": null,
+                    "inntektskategori": "ARBEIDSTAKER",
+                    "arbeidsforhold": {
+                        "arbeidsgiverIdent": "910909088",
+                        "startdato": "2012-11-16",
+                        "opphoersdato": null,
+                        "arbeidsforholdType": "ARBEID",
+                        "belopFraInntektsmeldingPrMnd": 28987
+                    },
+                    "fastsattAvSaksbehandler": false,
+                    "lagtTilAvSaksbehandler": false,
+                    "dagsats": null,
+                    "originalDagsatsFraTilstøtendeYtelse": null,
+                    "fordeltPrAar": null,
+                    "erTilkommetAndel": false,
+                    "skalFastsetteGrunnlag": false
+                },
+                {
+                    "dtoType": "SN",
+                    "aktivitetStatus": "SN",
+                    "andelsnr": 2,
+                    "inntektskategori": "JORDBRUKER",
+                    "arbeidsforhold": {
+                        "arbeidsforholdType": "NÆRING"
+                    },
+                    "fastsattAvSaksbehandler": false,
+                    "lagtTilAvSaksbehandler": false,
+                    "erTilkommetAndel": false,
+                    "skalFastsetteGrunnlag": false,
+                    "pgiVerdier": [],
+                    "næringer": [
+                        {
+                            "orgnr": "988356859",
+                            "erVarigEndret": false,
+                            "erNyoppstartet": false,
+                            "virksomhetType": "JORDBRUK_SKOGBRUK",
+                            "kanRegnskapsførerKontaktes": false,
+                            "erNyIArbeidslivet": false,
+                            "oppgittInntekt": 0
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    }
-  ],
-  "sammenligningsgrunnlagPrStatus": [],
-  "halvG": 49929.0,
-  "grunnbeløp": 99858.0,
-  "faktaOmBeregning": {
-    "avklarAktiviteter": {
-      "aktiviteterTomDatoMapping": [
-        {
-          "tom": "2020-01-01",
-          "aktiviteter": [
+    ],
+    "sammenligningsgrunnlagPrStatus": [],
+    "halvG": 49929.0,
+    "grunnbeløp": 99858.0,
+    "faktaOmBeregning": {
+        "avklarAktiviteter": {
+            "aktiviteterTomDatoMapping": [
+                {
+                    "tom": "2020-01-01",
+                    "aktiviteter": [
+                        {
+                            "fom": "2005-08-24",
+                            "tom": "9999-12-31",
+                            "arbeidsforholdType": "NÆRING"
+                        },
+                        {
+                            "arbeidsgiverIdent": "910909088",
+                            "fom": "2012-11-16",
+                            "tom": "2019-12-31",
+                            "arbeidsforholdType": "ARBEID"
+                        }
+                    ]
+                }
+            ]
+        },
+        "andelerForFaktaOmBeregning": [
             {
-              "fom": "2005-08-24",
-              "tom": "9999-12-31",
-              "arbeidsforholdType": "NÆRING"
+                "belopReadOnly": 28987,
+                "inntektskategori": "ARBEIDSTAKER",
+                "aktivitetStatus": "AT",
+                "refusjonskrav": 28987,
+                "arbeidsforhold": {
+                    "arbeidsgiverIdent": "910909088",
+                    "startdato": "2012-11-16",
+                    "opphoersdato": null,
+                    "arbeidsforholdType": "ARBEID",
+                    "belopFraInntektsmeldingPrMnd": 28987
+                },
+                "andelsnr": 1,
+                "skalKunneEndreAktivitet": false,
+                "lagtTilAvSaksbehandler": false
             },
             {
-              "arbeidsgiverIdent": "910909088",
-              "fom": "2012-11-16",
-              "tom": "2019-12-31",
-              "arbeidsforholdType": "ARBEID"
+                "inntektskategori": "JORDBRUKER",
+                "aktivitetStatus": "SN",
+                "arbeidsforhold": {
+                    "arbeidsforholdType": "NÆRING"
+                },
+                "andelsnr": 2,
+                "skalKunneEndreAktivitet": false,
+                "lagtTilAvSaksbehandler": false
             }
-          ]
-        }
-      ]
+        ]
     },
-    "andelerForFaktaOmBeregning": [
-      {
-        "belopReadOnly": 28987,
-        "inntektskategori": "ARBEIDSTAKER",
-        "aktivitetStatus": "AT",
-        "refusjonskrav": 28987,
-        "arbeidsforhold": {
-          "arbeidsgiverIdent": "910909088",
-          "startdato": "2012-11-16",
-          "opphoersdato": null,
-          "arbeidsforholdType": "ARBEID",
-          "belopFraInntektsmeldingPrMnd": 28987
-        },
-        "andelsnr": 1,
-        "skalKunneEndreAktivitet": false,
-        "lagtTilAvSaksbehandler": false
-      },
-      {
-        "inntektskategori": "JORDBRUKER",
-        "aktivitetStatus": "SN",
-        "arbeidsforhold": {
-          "arbeidsforholdType": "NÆRING"
-        },
-        "andelsnr": 2,
-        "skalKunneEndreAktivitet": false,
-        "lagtTilAvSaksbehandler": false
-      }
-    ]
-  },
-  "hjemmel": "-",
-  "dekningsgrad": 100
+    "hjemmel": "-",
+    "dekningsgrad": 100
 }

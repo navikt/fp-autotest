@@ -1,34 +1,34 @@
 {
-  "refusjonskravDatoer": [],
-  "iayGrunnlag": {
-    "arbeidDto": {
-      "yrkesaktiviteter": []
-    },
-    "inntekterDto": {
-      "utbetalinger": []
-    },
-    "ytelserDto": null,
-    "oppgittOpptjening": null,
-    "inntektsmeldinger": null,
-    "arbeidsforholdInformasjon": null
-  },
-  "opptjeningAktiviteter": {
-    "perioder": [
-      {
-        "opptjeningAktivitetType": "MILITÆR_ELLER_SIVILTJENESTE",
-        "periode": {
-          "fom": "2021-08-01",
-          "tom": "2022-01-31"
+    "refusjonskravDatoer": [],
+    "iayGrunnlag": {
+        "arbeidDto": {
+            "yrkesaktiviteter": []
         },
-        "arbeidsgiver": null,
-        "abakusReferanse": null
-      }
-    ]
-  },
-  "ytelsespesifiktGrunnlag": {
-    "ytelseType": "FP",
-    "dekningsgrad": 80,
-    "kvalifisererTilBesteberegning": false
-  },
-  "skjæringstidspunkt": "2022-01-01"
+        "inntekterDto": {
+            "utbetalinger": []
+        },
+        "ytelserDto": null,
+        "oppgittOpptjening": null,
+        "inntektsmeldinger": null,
+        "arbeidsforholdInformasjon": null
+    },
+    "opptjeningAktiviteter": {
+        "perioder": [
+            {
+                "opptjeningAktivitetType": "MILITÆR_ELLER_SIVILTJENESTE",
+                "periode": {
+                    "fom": "2021-08-01",
+                    "tom": "2022-01-31"
+                },
+                "arbeidsgiver": null,
+                "abakusReferanse": null
+            }
+        ]
+    },
+    "ytelsespesifiktGrunnlag": {
+        "ytelseType": "FP",
+        "dekningsgrad": 80,
+        "kvalifisererTilBesteberegning": false
+    },
+    "skjæringstidspunkt": "2022-01-01"
 }

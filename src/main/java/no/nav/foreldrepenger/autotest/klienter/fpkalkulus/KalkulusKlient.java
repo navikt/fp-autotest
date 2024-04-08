@@ -11,6 +11,7 @@ import io.qameta.allure.Step;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.HentBeregningsgrunnlagGUIRequest;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.HentBeregningsgrunnlagRequestDto;
+import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
 import no.nav.folketrygdloven.kalkulus.request.v1.HåndterBeregningListeRequest;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
@@ -24,6 +25,7 @@ public class KalkulusKlient {
     private static final String KALKULUS_DETALJERT_GRUNNLAG_URL = "/grunnlag";
     private static final String KALKULUS_GUI_GRUNNLAG_URL = "/grunnlag/gui";
     private static final String KALKULUS_BEREGN_URL = "/beregn";
+    private static final String KALKULUS_AVKLARINGSBEHOV_URL = "/avklaringsbehov";
 
     private final SaksbehandlerRolle saksbehandlerRolle;
 
@@ -61,7 +63,13 @@ public class KalkulusKlient {
     }
 
     @Step("Håndter aksjonspunkt")
-    public OppdateringRespons håndterBeregning(HåndterBeregningListeRequest request) {
-        return null; // TODO
+    public OppdateringRespons håndterBeregning(HåndterBeregningRequestDto håndterRequestDto) {
+        håndterRequestDto.håndterBeregningDtoList().forEach(dto -> dto.setBegrunnelse("Løst av verdikjeden"));
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
+                .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
+                        .path(KALKULUS_AVKLARINGSBEHOV_URL)
+                        .build())
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(håndterRequestDto)));
+        return send(request.build(), OppdateringRespons.class);
     }
 }

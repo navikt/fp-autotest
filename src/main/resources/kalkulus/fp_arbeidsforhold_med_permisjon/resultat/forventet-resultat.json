@@ -25,8 +25,9 @@
                             "arbeidsgiver": {
                                 "arbeidsgiverOrgnr": "993110469"
                             },
+                            "arbeidsforholdRef": "d6335c24-b9f8-444a-b310-650db2a5e194",
                             "refusjonskravPrÅr": 540000.0,
-                            "arbeidsperiodeFom": "2019-04-04",
+                            "arbeidsperiodeFom": "2020-04-04",
                             "arbeidsperiodeTom": "9999-12-31"
                         },
                         "avkortetPrÅr": 540000.0,
@@ -71,10 +72,23 @@
             {
                 "periode": {
                     "fom": "2019-04-04",
+                    "tom": "2020-04-03"
+                },
+                "arbeidsgiver": {
+                    "arbeidsgiverOrgnr": "991076573"
+                },
+                "opptjeningAktivitetType": "ARBEID"
+            },
+            {
+                "periode": {
+                    "fom": "2020-04-04",
                     "tom": "9999-12-31"
                 },
                 "arbeidsgiver": {
                     "arbeidsgiverOrgnr": "993110469"
+                },
+                "arbeidsforholdRef": {
+                    "abakusReferanse": "d6335c24-b9f8-444a-b310-650db2a5e194"
                 },
                 "opptjeningAktivitetType": "ARBEID"
             }

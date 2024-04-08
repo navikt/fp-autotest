@@ -78,7 +78,7 @@ public class ArbeidstakerTest extends Beregner {
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - arbeidsforhold tilkommer etter skjæringstidspunktet, refusjon > brutto ved stp")
@@ -119,7 +119,7 @@ public class ArbeidstakerTest extends Beregner {
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - arbeidstaker uten inntektsmelding og frilans i samme organisasjon")
@@ -139,7 +139,7 @@ public class ArbeidstakerTest extends Beregner {
         var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
         var forventetGUIKofakber = hentForventetGUIKofakber(testInfo);
 
-        assertThat(beregningsgrunnlagDto).isEqualTo(forventetGUIKofakber);
+        assertThat(beregningsgrunnlagDto).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields().isEqualTo(forventetGUIKofakber);
 
         Map<Long, Integer> beløpMap = Map.of(1L, 20000, 2L, 25000);
         var faktaBeregningLagreDto = FaktaBeregningLagreDtoBuilder.ny()
@@ -173,12 +173,13 @@ public class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - arbeidstaker uten inntektsmelding, sender inntektsmelding for revurdering")
     @Description("Foreldrepenger - arbeidstaker uten inntektsmelding, sender inntektsmelding for revurdering.")
     @Test
+    @Disabled // Krever koblingrelasjon
     public void foreldrepenger_arbeidstaker_tilkommet_refusjon(TestInfo testInfo) throws Exception {
 
         var request1 = opprettTestscenario(testInfo, "original");
@@ -211,7 +212,7 @@ public class ArbeidstakerTest extends Beregner {
 
         var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request2));
         var forventetGuiFordel = hentForventetGUIFordel(testInfo);
-        assertThat(beregningsgrunnlagDto).isEqualToComparingFieldByField(forventetGuiFordel);
+        assertThat(beregningsgrunnlagDto).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields().isEqualTo(forventetGuiFordel);
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
@@ -224,12 +225,13 @@ public class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request2);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - arbeidstaker med revurdering, økt refusjon i revurdering.")
     @Description("Foreldrepenger - arbeidstaker med revurdering, økt refusjon i revurdering.")
     @Test
+    @Disabled // Krever koblingrelasjon
     public void foreldrepenger_arbeidstaker_tilkommet_okt_refusjon(TestInfo testInfo) throws Exception {
 
         var request1 = opprettTestscenario(testInfo, "original");
@@ -279,7 +281,7 @@ public class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request2);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
     }
 
 
@@ -330,7 +332,7 @@ public class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = overstyrer.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
     }
 
 
@@ -384,7 +386,7 @@ public class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - Arbeistaker med arbeid som slutter dagen før skjæringstidspunktet.")
@@ -453,123 +455,7 @@ public class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
-    }
-
-    @DisplayName("Foreldrepenger - både arbeidstaker og frilans med avvik i beregning for både frilans- og arbeidstakerandel")
-    @Description("Foreldrepenger - både arbeidstaker og frilans med avvik i beregning for både frilans- og arbeidstakerandel" +
-            "Forventer avvik og aksjonspunkt for FL- og AT-andel.")
-    @Disabled
-    @Test
-    public void foreldrepenger_avvik_beregning_atfl(TestInfo testInfo) throws Exception {
-
-        var request = opprettTestscenario(testInfo);
-
-        TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
-        var beregningsgrunnlagDtoKofakber = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
-
-        var faktaBeregningLagreDto = FaktaBeregningLagreDtoBuilder.ny()
-                .medFaktaOmBeregningTilfeller(List.of(VURDER_MOTTAR_YTELSE))
-                .medMottarYtelse(lagMottarYtelseDto(Map.of(1L, false), beregningsgrunnlagDtoKofakber))
-                .build();
-        var håndterRequest = lagFaktaOmBeregningHåndterRequest(request, faktaBeregningLagreDto);
-        saksbehandler.håndterBeregning(håndterRequest);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
-        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
-        var forventetGUIForeslå = hentForventetGUIForeslå(testInfo);
-        assertThat(beregningsgrunnlagDto).isEqualToComparingFieldByField(forventetGUIForeslå);
-
-        saksbehandler.håndterBeregning(lagHåndterListeRequest(request, ForeslåBeregningTjeneste.fastsettInntektVedAvvik(Map.of(2L, 150000), 80000)));
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        var hentRequest = getHentDetaljertListeRequest(request);
-        var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
-        var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
-    }
-
-    @DisplayName("Foreldrepenger - Et refusjonskrav sendt etter frist og et sendt tidsnok, ulike arbeidsforhold")
-    @Description("Foreldrepenger -Et refusjonskrav sendt etter frist og et sendt tidsnok, ulike arbeidsforhold." +
-            " Bekrefter at refusjonskravet ikke skal med fra start")
-    @Disabled
-    @Test
-    public void foreldrepenger_for_sent_refusjonskrav(TestInfo testInfo) throws Exception {
-
-        var request = opprettTestscenario(testInfo);
-
-        TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
-        var beregningsgrunnlagDtoKofakber = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
-
-        Map<String, Boolean> refusjonskravGyldighet = beregningsgrunnlagDtoKofakber.getFaktaOmBeregning().getRefusjonskravSomKommerForSentListe().stream()
-                .collect(Collectors.toMap(RefusjonskravSomKommerForSentDto::getArbeidsgiverIdent, r -> false));
-
-        var faktaBeregningLagreDto = FaktaBeregningLagreDtoBuilder.ny()
-                .medFaktaOmBeregningTilfeller(List.of(VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT))
-                .medRefusjonskravGyldighet(vurderRefusjonskravGyldighet(refusjonskravGyldighet))
-                .build();
-        var håndterRequest = lagFaktaOmBeregningHåndterRequest(request, faktaBeregningLagreDto);
-        saksbehandler.håndterBeregning(håndterRequest);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
-
-        var hentRequest = getHentDetaljertListeRequest(request);
-        var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
-        var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
     }
 
     private void kjørUtenAksjonspunkter(BeregnRequestDto request) {

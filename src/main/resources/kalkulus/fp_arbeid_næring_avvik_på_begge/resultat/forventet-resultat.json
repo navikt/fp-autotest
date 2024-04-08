@@ -1,137 +1,137 @@
 {
-  "beregningsgrunnlag": {
-    "skjæringstidspunkt": "2022-11-01",
-    "aktivitetStatuser": [
-      "AT_SN"
-    ],
-    "beregningsgrunnlagPerioder": [
-      {
-        "beregningsgrunnlagPrStatusOgAndelList": [
-          {
-            "andelsnr": 1,
-            "aktivitetStatus": "AT",
-            "beregningsperiode": {
-              "fom": "2022-08-01",
-              "tom": "2022-10-31"
-            },
-            "arbeidsforholdType": "ARBEID",
-            "bruttoPrÅr": 300000.0,
-            "redusertRefusjonPrÅr": 0.0,
-            "redusertBrukersAndelPrÅr": 300000.0,
-            "dagsatsBruker": 1154,
-            "dagsatsArbeidsgiver": 0,
-            "inntektskategori": "ARBEIDSTAKER",
-            "bgAndelArbeidsforhold": {
-              "arbeidsgiver": {
-                "arbeidsgiverOrgnr": "891046642"
-              },
-              "arbeidsperiodeFom": "2016-12-14",
-              "arbeidsperiodeTom": "9999-12-31"
-            },
-            "overstyrtPrÅr": 300000.0,
-            "avkortetPrÅr": 300000.0,
-            "redusertPrÅr": 300000.0,
-            "beregnetPrÅr": 600000.0,
-            "maksimalRefusjonPrÅr": 0.0,
-            "avkortetRefusjonPrÅr": 0.0,
-            "avkortetBrukersAndelPrÅr": 300000.0,
-            "årsbeløpFraTilstøtendeYtelse": 300000.0,
-            "fastsattAvSaksbehandler": false,
-            "lagtTilAvSaksbehandler": false
-          },
-          {
-            "andelsnr": 2,
-            "aktivitetStatus": "SN",
-            "beregningsperiode": {
-              "fom": "2019-01-01",
-              "tom": "2021-12-31"
-            },
-            "arbeidsforholdType": "NÆRING",
-            "bruttoPrÅr": 249577.17,
-            "redusertRefusjonPrÅr": 0.0,
-            "redusertBrukersAndelPrÅr": 249577.17,
-            "dagsatsBruker": 960,
-            "dagsatsArbeidsgiver": 0,
-            "inntektskategori": "SELVSTENDIG_NÆRINGSDRIVENDE",
-            "avkortetPrÅr": 249577.17,
-            "redusertPrÅr": 249577.17,
-            "beregnetPrÅr": 249577.17,
-            "maksimalRefusjonPrÅr": 0.0,
-            "avkortetRefusjonPrÅr": 0.0,
-            "avkortetBrukersAndelPrÅr": 249577.17,
-            "pgiSnitt": 549577,
-            "pgi1": 532283,
-            "pgi2": 552671,
-            "pgi3": 563778,
-            "årsbeløpFraTilstøtendeYtelse": 249577.17,
-            "fastsattAvSaksbehandler": false,
-            "lagtTilAvSaksbehandler": false
-          }
+    "beregningsgrunnlag": {
+        "skjæringstidspunkt": "2022-11-01",
+        "aktivitetStatuser": [
+            "AT_SN"
         ],
-        "periode": {
-          "fom": "2022-11-01",
-          "tom": "9999-12-31"
+        "beregningsgrunnlagPerioder": [
+            {
+                "beregningsgrunnlagPrStatusOgAndelList": [
+                    {
+                        "andelsnr": 1,
+                        "aktivitetStatus": "AT",
+                        "beregningsperiode": {
+                            "fom": "2022-08-01",
+                            "tom": "2022-10-31"
+                        },
+                        "arbeidsforholdType": "ARBEID",
+                        "bruttoPrÅr": 300000.0,
+                        "redusertRefusjonPrÅr": 0.0,
+                        "redusertBrukersAndelPrÅr": 300000.0,
+                        "dagsatsBruker": 1154,
+                        "dagsatsArbeidsgiver": 0,
+                        "inntektskategori": "ARBEIDSTAKER",
+                        "bgAndelArbeidsforhold": {
+                            "arbeidsgiver": {
+                                "arbeidsgiverOrgnr": "891046642"
+                            },
+                            "arbeidsperiodeFom": "2016-12-14",
+                            "arbeidsperiodeTom": "9999-12-31"
+                        },
+                        "overstyrtPrÅr": 300000.0,
+                        "avkortetPrÅr": 300000.0,
+                        "redusertPrÅr": 300000.0,
+                        "beregnetPrÅr": 600000.0,
+                        "maksimalRefusjonPrÅr": 0.0,
+                        "avkortetRefusjonPrÅr": 0.0,
+                        "avkortetBrukersAndelPrÅr": 300000.0,
+                        "årsbeløpFraTilstøtendeYtelse": 300000.0,
+                        "fastsattAvSaksbehandler": false,
+                        "lagtTilAvSaksbehandler": false
+                    },
+                    {
+                        "andelsnr": 2,
+                        "aktivitetStatus": "SN",
+                        "beregningsperiode": {
+                            "fom": "2019-01-01",
+                            "tom": "2021-12-31"
+                        },
+                        "arbeidsforholdType": "NÆRING",
+                        "bruttoPrÅr": 249577.17,
+                        "redusertRefusjonPrÅr": 0.0,
+                        "redusertBrukersAndelPrÅr": 249577.17,
+                        "dagsatsBruker": 960,
+                        "dagsatsArbeidsgiver": 0,
+                        "inntektskategori": "SELVSTENDIG_NÆRINGSDRIVENDE",
+                        "avkortetPrÅr": 249577.17,
+                        "redusertPrÅr": 249577.17,
+                        "beregnetPrÅr": 249577.17,
+                        "maksimalRefusjonPrÅr": 0.0,
+                        "avkortetRefusjonPrÅr": 0.0,
+                        "avkortetBrukersAndelPrÅr": 249577.17,
+                        "pgiSnitt": 549577,
+                        "pgi1": 532283,
+                        "pgi2": 552671,
+                        "pgi3": 563778,
+                        "årsbeløpFraTilstøtendeYtelse": 249577.17,
+                        "fastsattAvSaksbehandler": false,
+                        "lagtTilAvSaksbehandler": false
+                    }
+                ],
+                "periode": {
+                    "fom": "2022-11-01",
+                    "tom": "9999-12-31"
+                },
+                "bruttoPrÅr": 549577.17,
+                "avkortetPrÅr": 549577.17,
+                "redusertPrÅr": 549577.17,
+                "dagsats": 2114,
+                "periodeÅrsaker": []
+            }
+        ],
+        "sammenligningsgrunnlag": {
+            "sammenligningsperiode": {
+                "fom": "2021-10-01",
+                "tom": "2022-09-30"
+            },
+            "rapportertPrÅr": 300000.0,
+            "avvikPromilleNy": 1000.0
         },
-        "bruttoPrÅr": 549577.17,
-        "avkortetPrÅr": 549577.17,
-        "redusertPrÅr": 549577.17,
-        "dagsats": 2114,
-        "periodeÅrsaker": []
-      }
-    ],
-    "sammenligningsgrunnlag": {
-      "sammenligningsperiode": {
-        "fom": "2021-10-01",
-        "tom": "2022-09-30"
-      },
-      "rapportertPrÅr": 300000.0,
-      "avvikPromilleNy": 1000.0
+        "sammenligningsgrunnlagPrStatusListe": [
+            {
+                "sammenligningsperiode": {
+                    "fom": "2021-10-01",
+                    "tom": "2022-09-30"
+                },
+                "sammenligningsgrunnlagType": "SAMMENLIGNING_AT_FL",
+                "rapportertPrÅr": 300000.0,
+                "avvikPromilleNy": 1000.0
+            },
+            {
+                "sammenligningsperiode": {
+                    "fom": "2022-01-01",
+                    "tom": "2022-01-31"
+                },
+                "sammenligningsgrunnlagType": "SAMMENLIGNING_SN",
+                "rapportertPrÅr": 800000.0,
+                "avvikPromilleNy": 455.6645352
+            }
+        ],
+        "faktaOmBeregningTilfeller": [],
+        "overstyrt": false,
+        "grunnbeløp": 111477.0
     },
-    "sammenligningsgrunnlagPrStatusListe": [
-      {
-        "sammenligningsperiode": {
-          "fom": "2021-10-01",
-          "tom": "2022-09-30"
-        },
-        "sammenligningsgrunnlagType": "SAMMENLIGNING_AT_FL",
-        "rapportertPrÅr": 300000.0,
-        "avvikPromilleNy": 1000.0
-      },
-      {
-        "sammenligningsperiode": {
-          "fom": "2022-01-01",
-          "tom": "2022-01-31"
-        },
-        "sammenligningsgrunnlagType": "SAMMENLIGNING_SN",
-        "rapportertPrÅr": 800000.0,
-        "avvikPromilleNy": 455.6645352
-      }
-    ],
-    "faktaOmBeregningTilfeller": [],
-    "overstyrt": false,
-    "grunnbeløp": 111477.0
-  },
-  "registerAktiviteter": {
-    "aktiviteter": [
-      {
-        "periode": {
-          "fom": "2004-04-30",
-          "tom": "9999-12-31"
-        },
-        "opptjeningAktivitetType": "NÆRING"
-      },
-      {
-        "periode": {
-          "fom": "2016-12-24",
-          "tom": "2023-02-01"
-        },
-        "arbeidsgiver": {
-          "arbeidsgiverOrgnr": "891046642"
-        },
-        "opptjeningAktivitetType": "ARBEID"
-      }
-    ],
-    "skjæringstidspunktOpptjening": "2022-11-01"
-  },
-  "beregningsgrunnlagTilstand" : "FASTSATT"
+    "registerAktiviteter": {
+        "aktiviteter": [
+            {
+                "periode": {
+                    "fom": "2004-04-30",
+                    "tom": "9999-12-31"
+                },
+                "opptjeningAktivitetType": "NÆRING"
+            },
+            {
+                "periode": {
+                    "fom": "2016-12-24",
+                    "tom": "2023-02-01"
+                },
+                "arbeidsgiver": {
+                    "arbeidsgiverOrgnr": "891046642"
+                },
+                "opptjeningAktivitetType": "ARBEID"
+            }
+        ],
+        "skjæringstidspunktOpptjening": "2022-11-01"
+    },
+    "beregningsgrunnlagTilstand": "FASTSATT"
 }
