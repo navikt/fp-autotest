@@ -34,7 +34,7 @@
 
         <slf4j.version>2.0.12</slf4j.version>
         <logback.version>1.5.3</logback.version>
-        <allure.version>2.26.0</allure.version>
+        <allure.version>2.27.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <assertj.version>3.25.3</assertj.version>
         <aspectj.version>1.9.22</aspectj.version>
