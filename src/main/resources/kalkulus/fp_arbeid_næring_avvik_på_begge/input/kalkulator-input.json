@@ -1,518 +1,518 @@
 {
-  "refusjonskravDatoer": [
-    {
-      "arbeidsgiver": {
-        "identType": "ORGNUMMER",
-        "ident": "891046642"
-      },
-      "førsteDagMedRefusjonskrav": "2022-11-01",
-      "førsteInnsendingAvRefusjonskrav": "2022-11-01",
-      "harRefusjonFraStart": true
-    }
-  ],
-  "iayGrunnlag": {
-    "arbeidDto": {
-      "yrkesaktiviteter": [
+    "refusjonskravDatoer": [
         {
-          "arbeidsgiver": {
-            "identType": "ORGNUMMER",
-            "ident": "891046642"
-          },
-          "abakusReferanse": {
-            "abakusReferanse": "2e77918f-f807-4121-9567-3653bc233c3e"
-          },
-          "arbeidType": "ORDINÆRT_ARBEIDSFORHOLD",
-          "aktivitetsAvtaler": [
-            {
-              "periode": {
-                "fom": "2016-12-14",
-                "tom": "9999-12-31"
-              }
+            "arbeidsgiver": {
+                "identType": "ORGNUMMER",
+                "ident": "891046642"
             },
-            {
-              "periode": {
-                "fom": "2019-06-01",
-                "tom": "9999-12-31"
-              },
-              "sisteLønnsendringsdato": "2017-04-01",
-              "stillingsprosent": 100
-            }
-          ]
+            "førsteDagMedRefusjonskrav": "2022-11-01",
+            "førsteInnsendingAvRefusjonskrav": "2022-11-01",
+            "harRefusjonFraStart": true
         }
-      ]
+    ],
+    "iayGrunnlag": {
+        "arbeidDto": {
+            "yrkesaktiviteter": [
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "891046642"
+                    },
+                    "abakusReferanse": {
+                        "abakusReferanse": "2e77918f-f807-4121-9567-3653bc233c3e"
+                    },
+                    "arbeidType": "ORDINÆRT_ARBEIDSFORHOLD",
+                    "aktivitetsAvtaler": [
+                        {
+                            "periode": {
+                                "fom": "2016-12-14",
+                                "tom": "9999-12-31"
+                            }
+                        },
+                        {
+                            "periode": {
+                                "fom": "2019-06-01",
+                                "tom": "9999-12-31"
+                            },
+                            "sisteLønnsendringsdato": "2017-04-01",
+                            "stillingsprosent": 100
+                        }
+                    ]
+                }
+            ]
+        },
+        "inntekterDto": {
+            "utbetalinger": [
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "891046642"
+                    },
+                    "inntektsKilde": "INNTEKT_BEREGNING",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-09-01",
+                                "tom": "2021-09-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-10-01",
+                                "tom": "2021-10-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-11-01",
+                                "tom": "2021-11-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-12-01",
+                                "tom": "2021-12-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-01-01",
+                                "tom": "2022-01-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-02-01",
+                                "tom": "2022-02-28"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-03-01",
+                                "tom": "2022-03-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-04-01",
+                                "tom": "2022-04-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-05-01",
+                                "tom": "2022-05-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-06-01",
+                                "tom": "2022-06-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-07-01",
+                                "tom": "2022-07-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-08-01",
+                                "tom": "2022-08-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-09-01",
+                                "tom": "2022-09-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-10-01",
+                                "tom": "2022-10-31"
+                            },
+                            "beløp": 25000
+                        }
+                    ]
+                },
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "891046642"
+                    },
+                    "inntektsKilde": "INNTEKT_SAMMENLIGNING",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-09-01",
+                                "tom": "2021-09-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-10-01",
+                                "tom": "2021-10-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-11-01",
+                                "tom": "2021-11-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-12-01",
+                                "tom": "2021-12-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-01-01",
+                                "tom": "2022-01-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-02-01",
+                                "tom": "2022-02-28"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-03-01",
+                                "tom": "2022-03-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-04-01",
+                                "tom": "2022-04-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-05-01",
+                                "tom": "2022-05-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-06-01",
+                                "tom": "2022-06-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-07-01",
+                                "tom": "2022-07-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-08-01",
+                                "tom": "2022-08-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-09-01",
+                                "tom": "2022-09-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-10-01",
+                                "tom": "2022-10-31"
+                            },
+                            "beløp": 25000
+                        }
+                    ]
+                },
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "891046642"
+                    },
+                    "inntektsKilde": "INNTEKT_OPPTJENING",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-09-01",
+                                "tom": "2021-09-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-10-01",
+                                "tom": "2021-10-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-11-01",
+                                "tom": "2021-11-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2021-12-01",
+                                "tom": "2021-12-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-01-01",
+                                "tom": "2022-01-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-02-01",
+                                "tom": "2022-02-28"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-03-01",
+                                "tom": "2022-03-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-04-01",
+                                "tom": "2022-04-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-05-01",
+                                "tom": "2022-05-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-06-01",
+                                "tom": "2022-06-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-07-01",
+                                "tom": "2022-07-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-08-01",
+                                "tom": "2022-08-31"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-09-01",
+                                "tom": "2022-09-30"
+                            },
+                            "beløp": 25000
+                        },
+                        {
+                            "inntektspostType": "LØNN",
+                            "periode": {
+                                "fom": "2022-10-01",
+                                "tom": "2022-10-31"
+                            },
+                            "beløp": 25000
+                        }
+                    ]
+                },
+                {
+                    "arbeidsgiver": null,
+                    "inntektsKilde": "SIGRUN",
+                    "utbetalingsPoster": [
+                        {
+                            "inntektspostType": "SELVSTENDIG_NÆRINGSDRIVENDE",
+                            "periode": {
+                                "fom": "2021-01-01",
+                                "tom": "2021-12-31"
+                            },
+                            "beløp": 500000
+                        },
+                        {
+                            "inntektspostType": "SELVSTENDIG_NÆRINGSDRIVENDE",
+                            "periode": {
+                                "fom": "2020-01-01",
+                                "tom": "2020-12-31"
+                            },
+                            "beløp": 500000
+                        },
+                        {
+                            "inntektspostType": "SELVSTENDIG_NÆRINGSDRIVENDE",
+                            "periode": {
+                                "fom": "2019-01-01",
+                                "tom": "2019-12-31"
+                            },
+                            "beløp": 500000
+                        }
+                    ]
+                }
+            ]
+        },
+        "ytelserDto": null,
+        "oppgittOpptjening": {
+            "egenNæring": [
+                {
+                    "periode": {
+                        "fom": "2004-04-30",
+                        "tom": "9999-12-31"
+                    },
+                    "aktør": {
+                        "identType": "ORGNUMMER",
+                        "ident": "993110469"
+                    },
+                    "virksomhetType": "ANNEN",
+                    "nyoppstartet": false,
+                    "varigEndring": true,
+                    "endringDato": "2022-01-01",
+                    "nærRelasjon": false,
+                    "nyIArbeidslivet": false,
+                    "bruttoInntekt": 500000
+                }
+            ]
+        },
+        "inntektsmeldinger": {
+            "inntektsmeldinger": [
+                {
+                    "arbeidsgiver": {
+                        "identType": "ORGNUMMER",
+                        "ident": "891046642"
+                    },
+                    "inntektBeløp": 50000,
+                    "naturalYtelser": [],
+                    "endringerRefusjon": [],
+                    "arbeidsforholdRef": null,
+                    "startDatoPermisjon": "2022-11-01",
+                    "refusjonOpphører": null,
+                    "refusjonBeløpPerMnd": null
+                }
+            ]
+        },
+        "arbeidsforholdInformasjon": null
     },
-    "inntekterDto": {
-      "utbetalinger": [
-        {
-          "arbeidsgiver": {
-            "identType": "ORGNUMMER",
-            "ident": "891046642"
-          },
-          "inntektsKilde": "INNTEKT_BEREGNING",
-          "utbetalingsPoster": [
+    "opptjeningAktiviteter": {
+        "perioder": [
             {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-09-01",
-                "tom": "2021-09-30"
-              },
-              "beløp": 25000
+                "opptjeningAktivitetType": "NÆRING",
+                "periode": {
+                    "fom": "2004-04-30",
+                    "tom": "9999-12-31"
+                },
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "993110469"
+                },
+                "abakusReferanse": null
             },
             {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-10-01",
-                "tom": "2021-10-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-11-01",
-                "tom": "2021-11-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-12-01",
-                "tom": "2021-12-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-01-01",
-                "tom": "2022-01-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-02-01",
-                "tom": "2022-02-28"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-03-01",
-                "tom": "2022-03-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-04-01",
-                "tom": "2022-04-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-05-01",
-                "tom": "2022-05-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-06-01",
-                "tom": "2022-06-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-07-01",
-                "tom": "2022-07-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-08-01",
-                "tom": "2022-08-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-09-01",
-                "tom": "2022-09-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-10-01",
-                "tom": "2022-10-31"
-              },
-              "beløp": 25000
+                "opptjeningAktivitetType": "ARBEID",
+                "periode": {
+                    "fom": "2016-12-24",
+                    "tom": "2023-02-01"
+                },
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "891046642"
+                },
+                "abakusReferanse": {
+                    "abakusReferanse": "2e77918f-f807-4121-9567-3653bc233c3e"
+                }
             }
-          ]
-        },
-        {
-          "arbeidsgiver": {
-            "identType": "ORGNUMMER",
-            "ident": "891046642"
-          },
-          "inntektsKilde": "INNTEKT_SAMMENLIGNING",
-          "utbetalingsPoster": [
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-09-01",
-                "tom": "2021-09-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-10-01",
-                "tom": "2021-10-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-11-01",
-                "tom": "2021-11-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-12-01",
-                "tom": "2021-12-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-01-01",
-                "tom": "2022-01-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-02-01",
-                "tom": "2022-02-28"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-03-01",
-                "tom": "2022-03-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-04-01",
-                "tom": "2022-04-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-05-01",
-                "tom": "2022-05-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-06-01",
-                "tom": "2022-06-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-07-01",
-                "tom": "2022-07-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-08-01",
-                "tom": "2022-08-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-09-01",
-                "tom": "2022-09-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-10-01",
-                "tom": "2022-10-31"
-              },
-              "beløp": 25000
-            }
-          ]
-        },
-        {
-          "arbeidsgiver": {
-            "identType": "ORGNUMMER",
-            "ident": "891046642"
-          },
-          "inntektsKilde": "INNTEKT_OPPTJENING",
-          "utbetalingsPoster": [
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-09-01",
-                "tom": "2021-09-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-10-01",
-                "tom": "2021-10-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-11-01",
-                "tom": "2021-11-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2021-12-01",
-                "tom": "2021-12-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-01-01",
-                "tom": "2022-01-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-02-01",
-                "tom": "2022-02-28"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-03-01",
-                "tom": "2022-03-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-04-01",
-                "tom": "2022-04-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-05-01",
-                "tom": "2022-05-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-06-01",
-                "tom": "2022-06-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-07-01",
-                "tom": "2022-07-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-08-01",
-                "tom": "2022-08-31"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-09-01",
-                "tom": "2022-09-30"
-              },
-              "beløp": 25000
-            },
-            {
-              "inntektspostType": "LØNN",
-              "periode": {
-                "fom": "2022-10-01",
-                "tom": "2022-10-31"
-              },
-              "beløp": 25000
-            }
-          ]
-        },
-        {
-          "arbeidsgiver": null,
-          "inntektsKilde": "SIGRUN",
-          "utbetalingsPoster": [
-            {
-              "inntektspostType": "SELVSTENDIG_NÆRINGSDRIVENDE",
-              "periode": {
-                "fom": "2021-01-01",
-                "tom": "2021-12-31"
-              },
-              "beløp": 500000
-            },
-            {
-              "inntektspostType": "SELVSTENDIG_NÆRINGSDRIVENDE",
-              "periode": {
-                "fom": "2020-01-01",
-                "tom": "2020-12-31"
-              },
-              "beløp": 500000
-            },
-            {
-              "inntektspostType": "SELVSTENDIG_NÆRINGSDRIVENDE",
-              "periode": {
-                "fom": "2019-01-01",
-                "tom": "2019-12-31"
-              },
-              "beløp": 500000
-            }
-          ]
-        }
-      ]
+        ]
     },
-    "ytelserDto": null,
-    "oppgittOpptjening": {
-      "egenNæring": [
-        {
-          "periode": {
-            "fom": "2004-04-30",
-            "tom": "9999-12-31"
-          },
-          "aktør": {
-            "identType": "ORGNUMMER",
-            "ident": "993110469"
-          },
-          "virksomhetType": "ANNEN",
-          "nyoppstartet": false,
-          "varigEndring": true,
-          "endringDato": "2022-01-01",
-          "nærRelasjon": false,
-          "nyIArbeidslivet": false,
-          "bruttoInntekt": 500000
-        }
-      ]
+    "ytelsespesifiktGrunnlag": {
+        "ytelseType": "FP",
+        "dekningsgrad": 100,
+        "kvalifisererTilBesteberegning": false
     },
-    "inntektsmeldinger": {
-      "inntektsmeldinger": [
-        {
-          "arbeidsgiver": {
-            "identType": "ORGNUMMER",
-            "ident": "891046642"
-          },
-          "inntektBeløp": 50000,
-          "naturalYtelser": [],
-          "endringerRefusjon": [],
-          "arbeidsforholdRef": null,
-          "startDatoPermisjon": "2022-11-01",
-          "refusjonOpphører": null,
-          "refusjonBeløpPerMnd": null
-        }
-      ]
-    },
-    "arbeidsforholdInformasjon": null
-  },
-  "opptjeningAktiviteter": {
-    "perioder": [
-      {
-        "opptjeningAktivitetType": "NÆRING",
-        "periode": {
-          "fom": "2004-04-30",
-          "tom": "9999-12-31"
-        },
-        "arbeidsgiver": {
-          "identType": "ORGNUMMER",
-          "ident": "993110469"
-        },
-        "abakusReferanse": null
-      },
-      {
-        "opptjeningAktivitetType": "ARBEID",
-        "periode": {
-          "fom": "2016-12-24",
-          "tom": "2023-02-01"
-        },
-        "arbeidsgiver": {
-          "identType": "ORGNUMMER",
-          "ident": "891046642"
-        },
-        "abakusReferanse": {
-          "abakusReferanse": "2e77918f-f807-4121-9567-3653bc233c3e"
-        }
-      }
-    ]
-  },
-  "ytelsespesifiktGrunnlag": {
-    "ytelseType": "FP",
-    "dekningsgrad": 100,
-    "kvalifisererTilBesteberegning": false
-  },
-  "skjæringstidspunkt": "2022-11-01"
+    "skjæringstidspunkt": "2022-11-01"
 }

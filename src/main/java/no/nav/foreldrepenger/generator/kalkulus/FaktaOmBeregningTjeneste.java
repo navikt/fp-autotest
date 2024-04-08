@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
+import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.ArbeidstakerandelUtenIMMottarYtelseDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FaktaBeregningLagreDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FaktaOmBeregningHåndteringDto;
@@ -18,7 +19,6 @@ import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.MottarYtelseDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.RefusjonskravPrArbeidsgiverVurderingDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderATogFLiSammeOrganisasjonAndelDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.VurderATogFLiSammeOrganisasjonDto;
-import no.nav.folketrygdloven.kalkulus.request.v1.HåndterBeregningListeRequest;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 
 public class FaktaOmBeregningTjeneste {
@@ -27,7 +27,7 @@ public class FaktaOmBeregningTjeneste {
         // Skal ikkje instansieres
     }
 
-    public static HåndterBeregningListeRequest lagFaktaOmBeregningHåndterRequest(BeregnRequestDto request, FaktaBeregningLagreDto fakta) {
+    public static HåndterBeregningRequestDto lagFaktaOmBeregningHåndterRequest(BeregnRequestDto request, FaktaBeregningLagreDto fakta) {
         return lagHåndterListeRequest(request, new FaktaOmBeregningHåndteringDto(fakta));
     }
 

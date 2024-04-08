@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
+import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
+import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FaktaOmFordelingHåndteringDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelBeregningsgrunnlagAndelDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelBeregningsgrunnlagDto;
@@ -27,11 +29,11 @@ public class FaktaOmFordelingTjeneste {
     }
 
 
-    public static HåndterBeregningListeRequest lagHåndterFordelingRequest(BeregnRequestDto request,
-                                                                          BeregningsgrunnlagDto beregningsgrunnlagDto,
-                                                                          Map<Long, Integer> beløpMap,
-                                                                          Map<Long, Inntektskategori> inntektskategoriMap,
-                                                                          Map<Long, Integer> refusjonskravMap) {
+    public static HåndterBeregningRequestDto lagHåndterFordelingRequest(BeregnRequestDto request,
+                                                                        BeregningsgrunnlagDto beregningsgrunnlagDto,
+                                                                        Map<Long, Integer> beløpMap,
+                                                                        Map<Long, Inntektskategori> inntektskategoriMap,
+                                                                        Map<Long, Integer> refusjonskravMap) {
         return lagHåndterListeRequest(request, lagFordelHåndterDto(beregningsgrunnlagDto, beløpMap, inntektskategoriMap, refusjonskravMap));
     }
 
@@ -71,13 +73,13 @@ public class FaktaOmFordelingTjeneste {
                             lagRedigerbarAndel(a, matchendeBgAndel),
                             new FordelFastsatteVerdierDto(refusjonskravMap.getOrDefault(a.getAndelsnr(), null), andelsnrBeløpMap.get(a.getAndelsnr()), inntektskategoriMap.get(a.getAndelsnr()), andelsnrBeløpMap.get(a.getAndelsnr())),
                             matchendeBgAndel == null || Inntektskategori.UDEFINERT.equals(matchendeBgAndel.getInntektskategori()) ? null : matchendeBgAndel.getInntektskategori(),
-                            matchendeBgAndel.getArbeidsforhold() == null ? null : getIntValueOrNull(matchendeBgAndel.getArbeidsforhold().getRefusjonPrAar().verdi()),
-                            getIntValueOrNull(matchendeBgAndel.getBruttoPrAar().verdi()));
+                            matchendeBgAndel.getArbeidsforhold() == null ? null : getIntValueOrNull(matchendeBgAndel.getArbeidsforhold().getRefusjonPrAar()),
+                            getIntValueOrNull(matchendeBgAndel.getBruttoPrAar()));
                 }).collect(Collectors.toList());
     }
 
-    private static Integer getIntValueOrNull(BigDecimal value) {
-        return value == null ? null : value.intValue();
+    private static Integer getIntValueOrNull(Beløp value) {
+        return value == null ? null : value.verdi().intValue();
     }
 
     private static FordelRedigerbarAndelDto lagRedigerbarAndel(no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.FordelBeregningsgrunnlagAndelDto a, BeregningsgrunnlagPrStatusOgAndelDto bgAndel) {

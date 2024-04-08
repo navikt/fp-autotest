@@ -1,100 +1,110 @@
 {
-  "beregningsgrunnlag" : {
-    "skjæringstidspunkt" : "2020-01-01",
-    "aktivitetStatuser" : [ "AT_SN" ],
-    "beregningsgrunnlagPerioder" : [ {
-      "beregningsgrunnlagPrStatusOgAndelList" : [ {
-        "andelsnr" : 1,
-        "aktivitetStatus" : "AT",
-        "beregningsperiode" : {
-          "fom" : "2019-10-01",
-          "tom" : "2019-12-31"
-        },
-        "arbeidsforholdType" : "ARBEID",
-        "bruttoPrÅr" : 347844.0,
-        "redusertRefusjonPrÅr" : 347844.0,
-        "redusertBrukersAndelPrÅr" : 0.0,
-        "dagsatsBruker" : 0,
-        "dagsatsArbeidsgiver" : 1338,
-        "inntektskategori" : "ARBEIDSTAKER",
-        "bgAndelArbeidsforhold" : {
-          "arbeidsgiver" : {
-            "arbeidsgiverOrgnr" : "910909088"
-          },
-          "refusjonskravPrÅr" : 347844.0,
-          "arbeidsperiodeFom" : "2012-11-16",
-          "arbeidsperiodeTom" : "9999-12-31"
-        },
-        "avkortetPrÅr" : 347844.0,
-        "redusertPrÅr" : 347844.0,
-        "beregnetPrÅr" : 347844.0,
-        "maksimalRefusjonPrÅr" : 347844.0,
-        "avkortetRefusjonPrÅr" : 347844.0,
-        "avkortetBrukersAndelPrÅr" : 0.0,
-        "årsbeløpFraTilstøtendeYtelse" : 347844.0,
-        "fastsattAvSaksbehandler" : false,
-        "lagtTilAvSaksbehandler" : false
-      }, {
-        "andelsnr" : 2,
-        "aktivitetStatus" : "SN",
-        "beregningsperiode" : {
-          "fom" : "2016-01-01",
-          "tom" : "2018-12-31"
-        },
-        "arbeidsforholdType" : "NÆRING",
-        "bruttoPrÅr" : 279533.22,
-        "redusertRefusjonPrÅr" : 0.0,
-        "redusertBrukersAndelPrÅr" : 251304.0,
-        "dagsatsBruker" : 967,
-        "dagsatsArbeidsgiver" : 0,
-        "inntektskategori" : "JORDBRUKER",
-        "avkortetPrÅr" : 251304.0,
-        "redusertPrÅr" : 251304.0,
-        "beregnetPrÅr" : 279533.22,
-        "maksimalRefusjonPrÅr" : 0.0,
-        "avkortetRefusjonPrÅr" : 0.0,
-        "avkortetBrukersAndelPrÅr" : 251304.0,
-        "pgiSnitt" : 627377,
-        "pgi1" : 671101,
-        "pgi2" : 708580,
-        "pgi3" : 671826,
-        "årsbeløpFraTilstøtendeYtelse" : 279533.22,
-        "fastsattAvSaksbehandler" : false,
-        "lagtTilAvSaksbehandler" : false
-      } ],
-      "periode" : {
-        "fom" : "2020-01-01",
-        "tom" : "9999-12-31"
-      },
-      "bruttoPrÅr" : 627377.22,
-      "avkortetPrÅr" : 599148.0,
-      "redusertPrÅr" : 599148.0,
-      "dagsats" : 2305,
-      "periodeÅrsaker" : [ ]
-    } ],
-    "sammenligningsgrunnlagPrStatusListe" : [ ],
-    "faktaOmBeregningTilfeller" : [ ],
-    "overstyrt" : false,
-    "grunnbeløp" : 99858.0
-  },
-  "registerAktiviteter" : {
-    "aktiviteter" : [ {
-      "periode" : {
-        "fom" : "2005-08-24",
-        "tom" : "9999-12-31"
-      },
-      "opptjeningAktivitetType" : "NÆRING"
-    }, {
-      "periode" : {
-        "fom" : "2012-11-16",
-        "tom" : "2019-12-31"
-      },
-      "arbeidsgiver" : {
-        "arbeidsgiverOrgnr" : "910909088"
-      },
-      "opptjeningAktivitetType" : "ARBEID"
-    } ],
-    "skjæringstidspunktOpptjening" : "2020-01-01"
-  },
-  "beregningsgrunnlagTilstand" : "FASTSATT"
+    "beregningsgrunnlag": {
+        "skjæringstidspunkt": "2020-01-01",
+        "aktivitetStatuser": [
+            "AT_SN"
+        ],
+        "beregningsgrunnlagPerioder": [
+            {
+                "beregningsgrunnlagPrStatusOgAndelList": [
+                    {
+                        "andelsnr": 1,
+                        "aktivitetStatus": "AT",
+                        "beregningsperiode": {
+                            "fom": "2019-10-01",
+                            "tom": "2019-12-31"
+                        },
+                        "arbeidsforholdType": "ARBEID",
+                        "bruttoPrÅr": 347844.0,
+                        "redusertRefusjonPrÅr": 347844.0,
+                        "redusertBrukersAndelPrÅr": 0.0,
+                        "dagsatsBruker": 0,
+                        "dagsatsArbeidsgiver": 1338,
+                        "inntektskategori": "ARBEIDSTAKER",
+                        "bgAndelArbeidsforhold": {
+                            "arbeidsgiver": {
+                                "arbeidsgiverOrgnr": "910909088"
+                            },
+                            "refusjonskravPrÅr": 347844.0,
+                            "arbeidsperiodeFom": "2012-11-16",
+                            "arbeidsperiodeTom": "9999-12-31"
+                        },
+                        "avkortetPrÅr": 347844.0,
+                        "redusertPrÅr": 347844.0,
+                        "beregnetPrÅr": 347844.0,
+                        "maksimalRefusjonPrÅr": 347844.0,
+                        "avkortetRefusjonPrÅr": 347844.0,
+                        "avkortetBrukersAndelPrÅr": 0.0,
+                        "årsbeløpFraTilstøtendeYtelse": 347844.0,
+                        "fastsattAvSaksbehandler": false,
+                        "lagtTilAvSaksbehandler": false
+                    },
+                    {
+                        "andelsnr": 2,
+                        "aktivitetStatus": "SN",
+                        "beregningsperiode": {
+                            "fom": "2016-01-01",
+                            "tom": "2018-12-31"
+                        },
+                        "arbeidsforholdType": "NÆRING",
+                        "bruttoPrÅr": 279533.22,
+                        "redusertRefusjonPrÅr": 0.0,
+                        "redusertBrukersAndelPrÅr": 251304.0,
+                        "dagsatsBruker": 967,
+                        "dagsatsArbeidsgiver": 0,
+                        "inntektskategori": "JORDBRUKER",
+                        "avkortetPrÅr": 251304.0,
+                        "redusertPrÅr": 251304.0,
+                        "beregnetPrÅr": 279533.22,
+                        "maksimalRefusjonPrÅr": 0.0,
+                        "avkortetRefusjonPrÅr": 0.0,
+                        "avkortetBrukersAndelPrÅr": 251304.0,
+                        "pgiSnitt": 627377,
+                        "pgi1": 671101,
+                        "pgi2": 708580,
+                        "pgi3": 671826,
+                        "årsbeløpFraTilstøtendeYtelse": 279533.22,
+                        "fastsattAvSaksbehandler": false,
+                        "lagtTilAvSaksbehandler": false
+                    }
+                ],
+                "periode": {
+                    "fom": "2020-01-01",
+                    "tom": "9999-12-31"
+                },
+                "bruttoPrÅr": 627377.22,
+                "avkortetPrÅr": 599148.0,
+                "redusertPrÅr": 599148.0,
+                "dagsats": 2305,
+                "periodeÅrsaker": []
+            }
+        ],
+        "sammenligningsgrunnlagPrStatusListe": [],
+        "faktaOmBeregningTilfeller": [],
+        "overstyrt": false,
+        "grunnbeløp": 99858.0
+    },
+    "registerAktiviteter": {
+        "aktiviteter": [
+            {
+                "periode": {
+                    "fom": "2005-08-24",
+                    "tom": "9999-12-31"
+                },
+                "opptjeningAktivitetType": "NÆRING"
+            },
+            {
+                "periode": {
+                    "fom": "2012-11-16",
+                    "tom": "2019-12-31"
+                },
+                "arbeidsgiver": {
+                    "arbeidsgiverOrgnr": "910909088"
+                },
+                "opptjeningAktivitetType": "ARBEID"
+            }
+        ],
+        "skjæringstidspunktOpptjening": "2020-01-01"
+    },
+    "beregningsgrunnlagTilstand": "FASTSATT"
 }

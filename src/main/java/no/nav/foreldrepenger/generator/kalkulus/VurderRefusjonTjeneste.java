@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
+import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.refusjon.VurderRefusjonAndelBeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.refusjon.VurderRefusjonBeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.request.v1.HåndterBeregningListeRequest;
 
 // TODO: sjekk responser
 public class VurderRefusjonTjeneste {
@@ -18,11 +18,11 @@ public class VurderRefusjonTjeneste {
         // Skal ikkje instansieres
     }
 
-    public static HåndterBeregningListeRequest lagVurderRefusjonRequest(BeregnRequestDto request, VurderRefusjonBeregningsgrunnlagDto dto) {
+    public static HåndterBeregningRequestDto lagVurderRefusjonRequest(BeregnRequestDto request, VurderRefusjonBeregningsgrunnlagDto dto) {
         return lagHåndterListeRequest(request, dto);
     }
 
-    public static HåndterBeregningListeRequest lagVurderRefusjonRequest(BeregnRequestDto request, VurderRefusjonAndelBeregningsgrunnlagDto andelDto) {
+    public static HåndterBeregningRequestDto lagVurderRefusjonRequest(BeregnRequestDto request, VurderRefusjonAndelBeregningsgrunnlagDto andelDto) {
         VurderRefusjonBeregningsgrunnlagDto dto = new VurderRefusjonBeregningsgrunnlagDto(Collections.singletonList(andelDto));
         return lagHåndterListeRequest(request, dto);
     }

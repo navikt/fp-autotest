@@ -116,7 +116,7 @@ public class GraderingTest extends Beregner {
 
         var beregningsgrunnlagDtoFordel = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
         var forventetResultatFordel = hentForventetGUIFordel(testInfo);
-        assertThat(beregningsgrunnlagDtoFordel).isEqualToComparingFieldByField(forventetResultatFordel);
+        assertThat(beregningsgrunnlagDtoFordel).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields().isEqualTo(forventetResultatFordel);
 
         var bruttoPrAar = beregningsgrunnlagDtoFordel.getBeregningsgrunnlagPeriode().get(0).getBruttoPrAar();
         Map<Long, Integer> beløpMap = Map.of(1L, bruttoPrAar.verdi().intValue()/2, 2L, bruttoPrAar.verdi().intValue()/2);
@@ -132,7 +132,7 @@ public class GraderingTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
     }
 
 }

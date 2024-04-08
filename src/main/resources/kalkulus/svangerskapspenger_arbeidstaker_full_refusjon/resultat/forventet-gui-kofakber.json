@@ -1,85 +1,80 @@
 {
-  "avklaringsbehov" : [ ],
-  "skjaeringstidspunktBeregning" : "2020-01-29",
-  "skjæringstidspunkt" : "2020-01-29",
-  "aktivitetStatus" : [ "AT" ],
-  "beregningsgrunnlagPeriode" : [ {
-    "beregningsgrunnlagPeriodeFom" : "2020-01-29",
-    "beregningsgrunnlagPeriodeTom" : "9999-12-31",
-    "beregnetPrAar" : 0,
-    "bruttoPrAar" : 0,
-    "bruttoInkludertBortfaltNaturalytelsePrAar" : 0,
-    "periodeAarsaker" : [ ],
-    "beregningsgrunnlagPrStatusOgAndel" : [ {
-      "beregningsgrunnlagFom" : "2019-10-01",
-      "beregningsgrunnlagTom" : "2019-12-31",
-      "aktivitetStatus" : "AT",
-      "beregningsperiodeFom" : "2019-10-01",
-      "beregningsperiodeTom" : "2019-12-31",
-      "beregnetPrAar" : null,
-      "fastsattForrigePrAar" : null,
-      "overstyrtPrAar" : null,
-      "bruttoPrAar" : null,
-      "avkortetPrAar" : null,
-      "redusertPrAar" : null,
-      "erTidsbegrensetArbeidsforhold" : null,
-      "erNyIArbeidslivet" : null,
-      "lonnsendringIBeregningsperioden" : null,
-      "andelsnr" : 1,
-      "besteberegningPrAar" : null,
-      "inntektskategori" : "ARBEIDSTAKER",
-      "arbeidsforhold" : {
-        "arbeidsgiverIdent" : "910909088",
-        "startdato" : "2016-03-25",
-        "eksternArbeidsforholdId" : "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
-        "arbeidsforholdId" : "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
-        "arbeidsforholdType" : "ARBEID",
-        "belopFraInntektsmeldingPrMnd" : 30000
-      },
-      "fastsattAvSaksbehandler" : false,
-      "lagtTilAvSaksbehandler" : false,
-      "dagsats" : null,
-      "originalDagsatsFraTilstøtendeYtelse" : null,
-      "fordeltPrAar" : null,
-      "erTilkommetAndel" : false,
-      "skalFastsetteGrunnlag" : false
-    } ]
-  } ],
-  "sammenligningsgrunnlagPrStatus" : [ ],
-  "halvG" : 49929.0,
-  "grunnbeløp" : 99858.0,
-  "faktaOmBeregning" : {
-    "avklarAktiviteter" : {
-      "aktiviteterTomDatoMapping" : [ {
-        "tom" : "2020-01-29",
-        "aktiviteter" : [ {
-            "arbeidsgiverIdent" : "910909088",
-            "eksternArbeidsforholdId" : "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
-          "fom" : "2016-03-25",
-          "tom" : "9999-12-31",
-          "arbeidsforholdId" : "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
-          "arbeidsforholdType" : "ARBEID"
-        } ]
-      } ]
+    "avklaringsbehov": [],
+    "skjaeringstidspunktBeregning": "2020-01-29",
+    "skjæringstidspunkt": "2020-01-29",
+    "aktivitetStatus": ["AT"],
+    "beregningsgrunnlagPeriode": [{
+        "beregningsgrunnlagPeriodeFom": "2020-01-29",
+        "beregningsgrunnlagPeriodeTom": "9999-12-31",
+        "beregnetPrAar": 0,
+        "bruttoPrAar": 0,
+        "bruttoInkludertBortfaltNaturalytelsePrAar": 0,
+        "periodeAarsaker": [],
+        "beregningsgrunnlagPrStatusOgAndel": [{
+            "dtoType": "GENERELL",
+            "aktivitetStatus": "AT",
+            "beregningsperiodeFom": "2019-10-01",
+            "beregningsperiodeTom": "2019-12-31",
+            "andelsnr": 1,
+            "inntektskategori": "ARBEIDSTAKER",
+            "arbeidsforhold": {
+                "arbeidsgiverIdent": "910909088",
+                "startdato": "2016-03-25",
+                "arbeidsforholdId": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
+                "arbeidsforholdType": "ARBEID",
+                "belopFraInntektsmeldingPrMnd": 30000
+            },
+            "fastsattAvSaksbehandler": false,
+            "lagtTilAvSaksbehandler": false,
+            "erTilkommetAndel": false,
+            "skalFastsetteGrunnlag": false
+        }
+        ]
+    }
+    ],
+    "sammenligningsgrunnlagPrStatus": [],
+    "halvG": 49929.00,
+    "grunnbeløp": 99858.00,
+    "faktaOmBeregning": {
+        "saksopplysninger": {
+            "arbeidsforholdMedLønnsendring": [],
+            "lønnsendringSaksopplysning": [],
+            "kortvarigeArbeidsforhold": []
+        },
+        "avklarAktiviteter": {
+            "aktiviteterTomDatoMapping": [{
+                "tom": "2020-01-29",
+                "aktiviteter": [{
+                    "arbeidsgiverIdent": "910909088",
+                    "fom": "2016-03-25",
+                    "tom": "9999-12-31",
+                    "arbeidsforholdId": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
+                    "arbeidsforholdType": "ARBEID"
+                }
+                ]
+            }
+            ],
+            "skjæringstidspunkt": "2020-01-29"
+        },
+        "andelerForFaktaOmBeregning": [{
+            "belopReadOnly": 30000,
+            "inntektskategori": "ARBEIDSTAKER",
+            "aktivitetStatus": "AT",
+            "refusjonskrav": 30000,
+            "arbeidsforhold": {
+                "arbeidsgiverIdent": "910909088",
+                "startdato": "2016-03-25",
+                "arbeidsforholdId": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
+                "arbeidsforholdType": "ARBEID",
+                "belopFraInntektsmeldingPrMnd": 30000
+            },
+            "andelsnr": 1,
+            "skalKunneEndreAktivitet": false,
+            "lagtTilAvSaksbehandler": false
+        }
+        ]
     },
-    "andelerForFaktaOmBeregning" : [ {
-      "belopReadOnly" : 30000,
-      "inntektskategori" : "ARBEIDSTAKER",
-      "aktivitetStatus" : "AT",
-      "refusjonskrav" : 30000,
-      "arbeidsforhold" : {
-        "arbeidsgiverIdent" : "910909088",
-        "startdato" : "2016-03-25",
-        "eksternArbeidsforholdId" : "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
-        "arbeidsforholdId" : "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
-        "arbeidsforholdType" : "ARBEID",
-        "belopFraInntektsmeldingPrMnd" : 30000
-      },
-      "andelsnr" : 1,
-      "skalKunneEndreAktivitet" : false,
-      "lagtTilAvSaksbehandler" : false
-    } ]
-  },
-  "hjemmel" : "-",
-  "dekningsgrad" : 100
+    "hjemmel": "-",
+    "dekningsgrad": 100,
+    "erOverstyrtInntekt": false
 }

@@ -1,176 +1,179 @@
 {
-  "avklaringsbehov": [
-    {
-      "definisjon": "VURDER_FAKTA_ATFL_SN",
-      "status": "OPPR"
-    }
-  ],
-  "skjaeringstidspunktBeregning": "2020-01-01",
-  "skjæringstidspunkt": "2020-01-01",
-  "aktivitetStatus": [
-    "AT_FL"
-  ],
-  "beregningsgrunnlagPeriode": [
-    {
-      "beregningsgrunnlagPeriodeFom": "2020-01-01",
-      "beregningsgrunnlagPeriodeTom": "9999-12-31",
-      "beregnetPrAar": 0,
-      "bruttoPrAar": 0,
-      "bruttoInkludertBortfaltNaturalytelsePrAar": 0,
-      "periodeAarsaker": [],
-      "beregningsgrunnlagPrStatusOgAndel": [
+    "avklaringsbehov": [
         {
-          "beregningsgrunnlagTom": "2019-12-31",
-          "beregningsgrunnlagFom": "2019-10-01",
-          "aktivitetStatus": "AT",
-          "beregningsperiodeFom": "2019-10-01",
-          "beregningsperiodeTom": "2019-12-31",
-          "beregnetPrAar": null,
-          "fastsattForrigePrAar": null,
-          "overstyrtPrAar": null,
-          "bruttoPrAar": null,
-          "avkortetPrAar": null,
-          "redusertPrAar": null,
-          "erTidsbegrensetArbeidsforhold": null,
-          "erNyIArbeidslivet": null,
-          "lonnsendringIBeregningsperioden": null,
-          "andelsnr": 2,
-          "besteberegningPrAar": null,
-          "inntektskategori": "ARBEIDSTAKER",
-          "arbeidsforhold": {
-            "arbeidsgiverIdent": "973861778",
-            "startdato": "2019-07-01",
-            "opphoersdato": "2020-03-31",
-            "arbeidsforholdType": "ARBEID"
-          },
-          "fastsattAvSaksbehandler": false,
-          "lagtTilAvSaksbehandler": false,
-          "dagsats": null,
-          "originalDagsatsFraTilstøtendeYtelse": null,
-          "fordeltPrAar": null,
-          "erTilkommetAndel": false,
-          "skalFastsetteGrunnlag": false
-        },
-        {
-          "beregningsgrunnlagTom": "2019-12-31",
-          "beregningsgrunnlagFom": "2019-10-01",
-          "aktivitetStatus": "FL",
-          "beregningsperiodeFom": "2019-10-01",
-          "beregningsperiodeTom": "2019-12-31",
-          "andelsnr": 1,
-          "inntektskategori": "FRILANSER",
-          "arbeidsforhold": {
-            "arbeidsforholdType": "FRILANS"
-          },
-          "fastsattAvSaksbehandler": false,
-          "lagtTilAvSaksbehandler": false,
-          "erTilkommetAndel": false,
-          "skalFastsetteGrunnlag": false
+            "definisjon": "VURDER_FAKTA_ATFL_SN",
+            "status": "OPPR",
+            "kanLoses": true
         }
-      ]
-    }
-  ],
-  "sammenligningsgrunnlagPrStatus": [],
-  "halvG": 49929.0,
-  "grunnbeløp": 99858.0,
-  "faktaOmBeregning": {
-    "frilansAndel": {
-      "andelsnr": 1,
-      "arbeidsforhold": {
-        "arbeidsforholdType": "FRILANS"
-      },
-      "inntektskategori": "FRILANSER",
-      "lagtTilAvSaksbehandler": false,
-      "fastsattAvSaksbehandler": false,
-      "andelIArbeid": []
-    },
-    "faktaOmBeregningTilfeller": [
-      "VURDER_MOTTAR_YTELSE",
-      "VURDER_AT_OG_FL_I_SAMME_ORGANISASJON"
     ],
-    "arbeidstakerOgFrilanserISammeOrganisasjonListe": [
-      {
-        "andelsnr": 2,
-        "arbeidsforhold": {
-          "arbeidsgiverIdent": "973861778",
-          "startdato": "2019-07-01",
-          "opphoersdato": "2020-03-31",
-          "arbeidsforholdType": "ARBEID"
-        },
-        "inntektskategori": "ARBEIDSTAKER",
-        "aktivitetStatus": "AT",
-        "lagtTilAvSaksbehandler": false,
-        "fastsattAvSaksbehandler": false,
-        "andelIArbeid": []
-      }
+    "skjaeringstidspunktBeregning": "2020-01-01",
+    "skjæringstidspunkt": "2020-01-01",
+    "aktivitetStatus": [
+        "AT_FL"
     ],
-    "vurderMottarYtelse": {
-      "erFrilans": true,
-      "frilansInntektPrMnd": 44733.0,
-      "arbeidstakerAndelerUtenIM": [
+    "beregningsgrunnlagPeriode": [
         {
-          "andelsnr": 2,
-          "arbeidsforhold": {
-            "arbeidsgiverIdent": "973861778",
-            "startdato": "2019-07-01",
-            "opphoersdato": "2020-03-31",
-            "arbeidsforholdType": "ARBEID"
-          },
-          "inntektskategori": "ARBEIDSTAKER",
-          "lagtTilAvSaksbehandler": false,
-          "fastsattAvSaksbehandler": false,
-          "andelIArbeid": [],
-          "inntektPrMnd": 44733.0
+            "beregningsgrunnlagPeriodeFom": "2020-01-01",
+            "beregningsgrunnlagPeriodeTom": "9999-12-31",
+            "beregnetPrAar": 0,
+            "bruttoPrAar": 0,
+            "bruttoInkludertBortfaltNaturalytelsePrAar": 0,
+            "periodeAarsaker": [],
+            "beregningsgrunnlagPrStatusOgAndel": [
+                {
+                    "dtoType": "AT",
+                    "beregningsgrunnlagTom": "2019-12-31",
+                    "beregningsgrunnlagFom": "2019-10-01",
+                    "aktivitetStatus": "AT",
+                    "beregningsperiodeFom": "2019-10-01",
+                    "beregningsperiodeTom": "2019-12-31",
+                    "beregnetPrAar": null,
+                    "fastsattForrigePrAar": null,
+                    "overstyrtPrAar": null,
+                    "bruttoPrAar": null,
+                    "avkortetPrAar": null,
+                    "redusertPrAar": null,
+                    "erTidsbegrensetArbeidsforhold": null,
+                    "erNyIArbeidslivet": null,
+                    "lonnsendringIBeregningsperioden": null,
+                    "andelsnr": 2,
+                    "besteberegningPrAar": null,
+                    "inntektskategori": "ARBEIDSTAKER",
+                    "arbeidsforhold": {
+                        "arbeidsgiverIdent": "973861778",
+                        "startdato": "2019-07-01",
+                        "opphoersdato": "2020-03-31",
+                        "arbeidsforholdType": "ARBEID"
+                    },
+                    "fastsattAvSaksbehandler": false,
+                    "lagtTilAvSaksbehandler": false,
+                    "dagsats": null,
+                    "originalDagsatsFraTilstøtendeYtelse": null,
+                    "fordeltPrAar": null,
+                    "erTilkommetAndel": false,
+                    "skalFastsetteGrunnlag": false
+                },
+                {
+                    "dtoType": "AT",
+                    "beregningsgrunnlagTom": "2019-12-31",
+                    "beregningsgrunnlagFom": "2019-10-01",
+                    "aktivitetStatus": "FL",
+                    "beregningsperiodeFom": "2019-10-01",
+                    "beregningsperiodeTom": "2019-12-31",
+                    "andelsnr": 1,
+                    "inntektskategori": "FRILANSER",
+                    "arbeidsforhold": {
+                        "arbeidsforholdType": "FRILANS"
+                    },
+                    "fastsattAvSaksbehandler": false,
+                    "lagtTilAvSaksbehandler": false,
+                    "erTilkommetAndel": false,
+                    "skalFastsetteGrunnlag": false
+                }
+            ]
         }
-      ]
-    },
-    "avklarAktiviteter": {
-      "aktiviteterTomDatoMapping": [
-        {
-          "tom": "2020-01-01",
-          "aktiviteter": [
+    ],
+    "sammenligningsgrunnlagPrStatus": [],
+    "halvG": 49929.0,
+    "grunnbeløp": 99858.0,
+    "faktaOmBeregning": {
+        "frilansAndel": {
+            "andelsnr": 1,
+            "arbeidsforhold": {
+                "arbeidsforholdType": "FRILANS"
+            },
+            "inntektskategori": "FRILANSER",
+            "lagtTilAvSaksbehandler": false,
+            "fastsattAvSaksbehandler": false,
+            "andelIArbeid": []
+        },
+        "faktaOmBeregningTilfeller": [
+            "VURDER_MOTTAR_YTELSE",
+            "VURDER_AT_OG_FL_I_SAMME_ORGANISASJON"
+        ],
+        "arbeidstakerOgFrilanserISammeOrganisasjonListe": [
             {
-              "fom": "2019-07-01",
-              "tom": "2020-03-31",
-              "arbeidsforholdType": "FRILANS"
+                "andelsnr": 2,
+                "arbeidsforhold": {
+                    "arbeidsgiverIdent": "973861778",
+                    "startdato": "2019-07-01",
+                    "opphoersdato": "2020-03-31",
+                    "arbeidsforholdType": "ARBEID"
+                },
+                "inntektskategori": "ARBEIDSTAKER",
+                "aktivitetStatus": "AT",
+                "lagtTilAvSaksbehandler": false,
+                "fastsattAvSaksbehandler": false,
+                "andelIArbeid": []
+            }
+        ],
+        "vurderMottarYtelse": {
+            "erFrilans": true,
+            "frilansInntektPrMnd": 44733.0,
+            "arbeidstakerAndelerUtenIM": [
+                {
+                    "andelsnr": 2,
+                    "arbeidsforhold": {
+                        "arbeidsgiverIdent": "973861778",
+                        "startdato": "2019-07-01",
+                        "opphoersdato": "2020-03-31",
+                        "arbeidsforholdType": "ARBEID"
+                    },
+                    "inntektskategori": "ARBEIDSTAKER",
+                    "lagtTilAvSaksbehandler": false,
+                    "fastsattAvSaksbehandler": false,
+                    "andelIArbeid": [],
+                    "inntektPrMnd": 44733.0
+                }
+            ]
+        },
+        "avklarAktiviteter": {
+            "aktiviteterTomDatoMapping": [
+                {
+                    "tom": "2020-01-01",
+                    "aktiviteter": [
+                        {
+                            "fom": "2019-07-01",
+                            "tom": "2020-03-31",
+                            "arbeidsforholdType": "FRILANS"
+                        },
+                        {
+                            "arbeidsgiverIdent": "973861778",
+                            "fom": "2019-07-01",
+                            "tom": "2020-03-31",
+                            "arbeidsforholdType": "ARBEID"
+                        }
+                    ]
+                }
+            ]
+        },
+        "andelerForFaktaOmBeregning": [
+            {
+                "inntektskategori": "FRILANSER",
+                "aktivitetStatus": "FL",
+                "arbeidsforhold": {
+                    "arbeidsforholdType": "FRILANS"
+                },
+                "andelsnr": 1,
+                "skalKunneEndreAktivitet": false,
+                "lagtTilAvSaksbehandler": false
             },
             {
-              "arbeidsgiverIdent": "973861778",
-              "fom": "2019-07-01",
-              "tom": "2020-03-31",
-              "arbeidsforholdType": "ARBEID"
+                "inntektskategori": "ARBEIDSTAKER",
+                "aktivitetStatus": "AT",
+                "arbeidsforhold": {
+                    "arbeidsgiverIdent": "973861778",
+                    "startdato": "2019-07-01",
+                    "opphoersdato": "2020-03-31",
+                    "arbeidsforholdType": "ARBEID"
+                },
+                "andelsnr": 2,
+                "skalKunneEndreAktivitet": false,
+                "lagtTilAvSaksbehandler": false
             }
-          ]
-        }
-      ]
+        ],
+        "vurderMilitaer": {}
     },
-    "andelerForFaktaOmBeregning": [
-      {
-        "inntektskategori": "FRILANSER",
-        "aktivitetStatus": "FL",
-        "arbeidsforhold": {
-          "arbeidsforholdType": "FRILANS"
-        },
-        "andelsnr": 1,
-        "skalKunneEndreAktivitet": false,
-        "lagtTilAvSaksbehandler": false
-      },
-      {
-        "inntektskategori": "ARBEIDSTAKER",
-        "aktivitetStatus": "AT",
-        "arbeidsforhold": {
-          "arbeidsgiverIdent": "973861778",
-          "startdato": "2019-07-01",
-          "opphoersdato": "2020-03-31",
-          "arbeidsforholdType": "ARBEID"
-        },
-        "andelsnr": 2,
-        "skalKunneEndreAktivitet": false,
-        "lagtTilAvSaksbehandler": false
-      }
-    ],
-    "vurderMilitaer": {}
-  },
-  "hjemmel": "-",
-  "dekningsgrad": 100
+    "hjemmel": "-",
+    "dekningsgrad": 100
 }

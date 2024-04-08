@@ -60,7 +60,7 @@ public class Beregner extends KalkulusTestBase {
             var hentRequest = getHentDetaljertListeRequest(request);
             var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
             var forventetResultat = hentForventetResultat(testInfo);
-            assertThat(beregningsgrunnlagGrunnlagDto).isEqualTo(forventetResultat);
+            assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);;
         }
 
         return fortsettBeregningRequest;
@@ -82,7 +82,7 @@ public class Beregner extends KalkulusTestBase {
         var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
         var forventetGUIKofakber = hentForventetGUIKofakber(testInfo);
         if (forventetGUIKofakber != null) {
-            assertThat(beregningsgrunnlagDto).isEqualToComparingFieldByField(forventetGUIKofakber);
+            assertThat(beregningsgrunnlagDto).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields().isEqualTo(forventetGUIKofakber);
         }
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
@@ -113,9 +113,7 @@ public class Beregner extends KalkulusTestBase {
             var hentRequest = getHentDetaljertListeRequest(request);
             var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
             var forventetResultat = hentForventetResultat(testInfo);
-            var s = beregningsgrunnlagGrunnlagDto.toString();
-            var s1 = forventetResultat.toString();
-            assertThat(beregningsgrunnlagGrunnlagDto).isEqualTo(forventetResultat);
+            assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
         }
         return request;
     }
@@ -148,7 +146,7 @@ public class Beregner extends KalkulusTestBase {
             var hentRequest = getHentDetaljertListeRequest(request);
             var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
             var forventetResultat = hentForventetResultat(testInfo);
-            assertThat(beregningsgrunnlagGrunnlagDto).isEqualTo(forventetResultat);
+            assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);;
         }
 
         return request;
