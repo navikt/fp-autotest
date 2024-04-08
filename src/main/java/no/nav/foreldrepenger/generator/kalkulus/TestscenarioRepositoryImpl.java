@@ -169,8 +169,8 @@ public class TestscenarioRepositoryImpl {
     }
 
     private File hentResultatFil(TestInfo testInfo) {
-        var filesFiltered = Arrays.stream(Objects.requireNonNull(rootDir.listFiles((dir, name) -> name.startsWith(getTestName(testInfo)))))
-                .map(file -> file.listFiles((dir, name) -> name.startsWith(RESULTAT_PREFIKS)))
+        var filesFiltered = Arrays.stream(Objects.requireNonNull(rootDir.listFiles((dir, name) -> name.equalsIgnoreCase(getTestName(testInfo)))))
+                .map(file -> file.listFiles((dir, name) -> name.equalsIgnoreCase(RESULTAT_PREFIKS)))
                 .findFirst();
         if (filesFiltered.isPresent() && filesFiltered.get().length > 0) {
             return filesFiltered.get()[0];
@@ -179,8 +179,8 @@ public class TestscenarioRepositoryImpl {
     }
 
     private File hentKalkulatorInputFor(TestInfo testInfo) {
-        var filesFiltered = Arrays.stream(Objects.requireNonNull(rootDir.listFiles((dir, name) -> name.startsWith(getTestName(testInfo)))))
-                .map(file -> file.listFiles((dir, name) -> name.startsWith(INPUT_PREFIKS)))
+        var filesFiltered = Arrays.stream(Objects.requireNonNull(rootDir.listFiles((dir, name) -> name.equalsIgnoreCase(getTestName(testInfo)))))
+                .map(file -> file.listFiles((dir, name) -> name.equalsIgnoreCase(INPUT_PREFIKS)))
                 .findFirst();
         if (filesFiltered.isPresent() && filesFiltered.get().length > 1) {
             throw new IllegalStateException("Det er mer enn ett scenario med nummer: " + getTestName(testInfo));
