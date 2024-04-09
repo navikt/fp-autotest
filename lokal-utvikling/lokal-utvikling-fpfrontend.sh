@@ -4,7 +4,7 @@
 ARGUMENT=${1}
 
 if [[ $ARGUMENT == down ]]; then
-    docker-compose -f docker-compose-lokal/compose.yml down
+    docker compose -f docker-compose-lokal/compose.yml down
     exit 0
 fi
 
@@ -16,5 +16,5 @@ else
     cp docker-compose-lokal/.env .env
 fi
 
-docker-compose -f docker-compose-lokal/compose.yml pull
-docker-compose -f docker-compose-lokal/compose.yml up --detach --scale fpfrontend=0
+docker compose -f docker-compose-lokal/compose.yml pull
+docker compose -f docker-compose-lokal/compose.yml up --detach --scale fpfrontend=0

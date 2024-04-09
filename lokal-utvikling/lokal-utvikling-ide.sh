@@ -3,7 +3,7 @@
 # feks: ./lokal-utvikling-ide.sh fpsak fpformidling
 
 if [[ $1 == down ]]; then
-    docker-compose -f docker-compose-lokal/compose.yml down
+    docker compose -f docker-compose-lokal/compose.yml down
     exit 0
 fi
 
@@ -23,6 +23,6 @@ else
     cp docker-compose-lokal/.env .env
 fi
 
-docker-compose -f docker-compose-lokal/compose.yml pull
-docker-compose -f docker-compose-lokal/compose.yml up --detach ${scale}
+docker compose -f docker-compose-lokal/compose.yml pull
+docker compose -f docker-compose-lokal/compose.yml up --detach ${scale}
 

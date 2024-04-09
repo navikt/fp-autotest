@@ -49,4 +49,4 @@ else
 fi
 
 
-echo ".env fil opprettet - Klart for docker-compose up"
+echo ".env fil opprettet - Klart for docker compose up"
