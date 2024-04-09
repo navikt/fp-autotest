@@ -7,3 +7,8 @@
 5. Kopier innholdet av filen "~/.ssh/id_rsa.pub" og lim inn i "Key".
 6. Velg "Add SSH key".
 7. Trykk på "Enable SSO", "Authorize" (NAV) og følg anvisningene videre for å godkjenne token gjennom SSO.
+8. Configurer git til å bruke nøkkelen din.
+   ```bash
+   git config --global gpg.format ssh
+   git config --global user.signingkey ~/.ssh/id_rsa.pub 
+   ```
