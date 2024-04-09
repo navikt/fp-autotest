@@ -1,12 +1,11 @@
 package no.nav.foreldrepenger.generator.kalkulus;
 
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
+import no.nav.folketrygdloven.fpkalkulus.kontrakt.EnkelFpkalkulusRequestDto;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.HentBeregningsgrunnlagGUIRequest;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.HentBeregningsgrunnlagRequestDto;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.HåndterBeregningDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
-import no.nav.folketrygdloven.kalkulus.request.v1.HåndterBeregningRequest;
 
 import java.util.Collections;
 
@@ -38,7 +37,7 @@ public class LagRequestTjeneste {
         return new HentBeregningsgrunnlagGUIRequest(request.behandlingUuid(), request.kalkulatorInput());
     }
 
-    public static HentBeregningsgrunnlagRequestDto getHentDetaljertListeRequest(BeregnRequestDto request) {
-        return new HentBeregningsgrunnlagRequestDto(request.behandlingUuid());
+    public static EnkelFpkalkulusRequestDto getHentDetaljertListeRequest(BeregnRequestDto request) {
+        return new EnkelFpkalkulusRequestDto(request.behandlingUuid(), request.saksnummer());
     }
 }
