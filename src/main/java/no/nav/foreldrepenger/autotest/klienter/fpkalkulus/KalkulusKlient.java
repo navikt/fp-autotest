@@ -9,10 +9,9 @@ import java.net.http.HttpRequest;
 
 import io.qameta.allure.Step;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
+import no.nav.folketrygdloven.fpkalkulus.kontrakt.EnkelFpkalkulusRequestDto;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.HentBeregningsgrunnlagGUIRequest;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.HentBeregningsgrunnlagRequestDto;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
-import no.nav.folketrygdloven.kalkulus.request.v1.HåndterBeregningListeRequest;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
@@ -34,12 +33,12 @@ public class KalkulusKlient {
     }
 
 
-    public BeregningsgrunnlagGrunnlagDto hentDetaljertBeregningsgrunnlag(HentBeregningsgrunnlagRequestDto hentBeregningsgrunnlagRequestDto) {
+    public BeregningsgrunnlagGrunnlagDto hentDetaljertBeregningsgrunnlag(EnkelFpkalkulusRequestDto hentBeregningsgrunnlagRequest) {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
                 .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
                         .path(KALKULUS_DETALJERT_GRUNNLAG_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(hentBeregningsgrunnlagRequestDto)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(hentBeregningsgrunnlagRequest)));
         return send(request.build(), BeregningsgrunnlagGrunnlagDto.class);
     }
 
