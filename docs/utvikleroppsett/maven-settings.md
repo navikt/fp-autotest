@@ -2,17 +2,21 @@
 
 1. Sett opp settings-security.xml
 
-    * Kjør ```mvn --encrypt-master-password etvalgfrittpassord```
+    * Kjør 
+        ```bash
+        mvn --encrypt-master-password etvalgfrittpassord
+        ```
     * Under mappen "~/.m2" opprett en fil med navnet "settings-security.xml" med innholder:
 
-        ```
+        ```xml
         <settingsSecurity>
             <master>string som ble returnert fra kommando over</master>
         </settingsSecurity>
         ```
 2.  Krypter din PAT (personal access token fra tidligere):
-
-    ```mvn --encrypt-password DITT_GENERERTE_PERSONAL_ACCESS_TOKEN_HER```
+    ```bash 
+    mvn --encrypt-password DITT_GENERERTE_PERSONAL_ACCESS_TOKEN_HER
+    ```
 3. Lag en fil kalt "settings.xml" med XML-en under og lagre denne i "~/.m2".
 
     * Oppdater med dine verdier for "DITT_GITHUBBRUKERNAVN_HER" og "DITT_KRYPTERT_PAT_FRA_STEG_2_HER.

@@ -39,14 +39,14 @@ echo ENGANGSSTONAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-mana
 echo FPOVERSIKT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-oversikt")" >> .env
 echo FPSWAGGER_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-swagger")" >> .env
 
-case "$OSTYPE" in
-  darwin*) # MAC OS
-      echo ORACLE_IMAGE="ghcr.io/navikt/fp-autotest/oracle-arm:19" >> .env
-      echo ORACLE_HEALTHCHECK="/opt/oracle/checkDBStatus.sh" >> .env ;;
-  *)
-      echo ORACLE_IMAGE="gvenzl/oracle-xe:21.3.0-slim-faststart" >> .env
-      echo ORACLE_HEALTHCHECK="/opt/oracle/healthcheck.sh" >> .env;;
-esac
+
+if [[ $(arch) == *'arm'* ]]; then
+    echo ORACLE_IMAGE="ghcr.io/navikt/fp-autotest/oracle-arm:19" >> .env
+    echo ORACLE_HEALTHCHECK="/opt/oracle/checkDBStatus.sh" >> .env
+else
+    echo ORACLE_IMAGE="gvenzl/oracle-xe:21.3.0-slim-faststart" >> .env
+    echo ORACLE_HEALTHCHECK="/opt/oracle/healthcheck.sh" >> .env
+fi
 
 
-echo ".env fil opprettet - Klart for docker-compose up"
+echo ".env fil opprettet - Klart for docker compose up"
