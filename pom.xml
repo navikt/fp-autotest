@@ -41,7 +41,6 @@
         <junit.version>5.10.2</junit.version>
         <jackson.version>2.17.0</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
-        <jakarta.el.version>4.0.2</jakarta.el.version>
         <jersey.version>3.1.6</jersey.version>
     </properties>
 
@@ -155,9 +154,9 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
-            <version>${jakarta.el.version}</version>
+            <groupId>org.glassfish.expressly</groupId>
+            <artifactId>expressly</artifactId>
+            <version>5.0.0</version>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
