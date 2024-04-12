@@ -114,7 +114,7 @@ public class TestscenarioRepositoryImpl {
         var kalkulatorInputDto = finnKalkulatorInput(testInfo, inputPrefix);
         var saksnummer = originalRequest.saksnummer();
         var aktørId = originalRequest.aktør().getIdent();
-        return genererNyRequest(kalkulatorInputDto, aktørId, saksnummer);
+        return genererNyRequest(kalkulatorInputDto, aktørId, saksnummer, originalRequest.behandlingUuid());
     }
 
     private KalkulatorInputDto finnKalkulatorInput(TestInfo testInfo, String inputPrefix) throws FileNotFoundException {
@@ -139,13 +139,20 @@ public class TestscenarioRepositoryImpl {
     private BeregnRequestDto genererNyRequest(KalkulatorInputDto kalkulatorInputDto,
                                               String aktørId,
                                               Saksnummer saksnummer) {
+        return genererNyRequest(kalkulatorInputDto, aktørId, saksnummer, null);
+    }
+
+    private BeregnRequestDto genererNyRequest(KalkulatorInputDto kalkulatorInputDto,
+                                              String aktørId,
+                                              Saksnummer saksnummer, UUID originalKobling) {
         return new BeregnRequestDto(
                 saksnummer,
                 UUID.randomUUID(),
                 new AktørIdPersonident(aktørId),
                 getYtelseSomSkalBeregnes(kalkulatorInputDto),
                 BeregningSteg.FASTSETT_STP_BER,
-                kalkulatorInputDto
+                kalkulatorInputDto,
+                originalKobling
         );
     }
 

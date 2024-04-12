@@ -3,6 +3,7 @@
         {
             "definisjon": "VURDER_REFUSJONSKRAV",
             "status": "UTFO",
+            "kanLoses": true,
             "begrunnelse": "Løst av verdikjeden"
         }
     ],
@@ -21,6 +22,7 @@
             "periodeAarsaker": [],
             "beregningsgrunnlagPrStatusOgAndel": [
                 {
+                    "dtoType": "AT",
                     "aktivitetStatus": "AT",
                     "beregningsperiodeFom": "2019-10-01",
                     "beregningsperiodeTom": "2019-12-31",
@@ -41,7 +43,6 @@
                         "startdato": "2019-07-01",
                         "opphoersdato": "2020-03-31",
                         "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
-                        "eksternArbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
                         "arbeidsforholdType": "ARBEID",
                         "refusjonPrAar": 180000.0,
                         "belopFraInntektsmeldingPrMnd": 30000.0
@@ -67,6 +68,7 @@
             ],
             "beregningsgrunnlagPrStatusOgAndel": [
                 {
+                    "dtoType": "AT",
                     "aktivitetStatus": "AT",
                     "beregningsperiodeFom": "2019-10-01",
                     "beregningsperiodeTom": "2019-12-31",
@@ -87,7 +89,6 @@
                         "startdato": "2019-07-01",
                         "opphoersdato": "2020-03-31",
                         "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
-                        "eksternArbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
                         "arbeidsforholdType": "ARBEID",
                         "refusjonPrAar": 360000.0,
                         "belopFraInntektsmeldingPrMnd": 30000.0
@@ -108,8 +109,8 @@
             "sammenligningsgrunnlagFom": "2019-01-01",
             "sammenligningsgrunnlagTom": "2019-12-31",
             "rapportertPrAar": 360000.0,
-            "avvikPromille": 0.0,
-            "avvikProsent": 0.0,
+            "avvikPromille": 0E-10,
+            "avvikProsent": 0E-11,
             "sammenligningsgrunnlagType": "SAMMENLIGNING_AT_FL",
             "differanseBeregnet": 0.0
         }
@@ -124,7 +125,6 @@
                     "aktiviteter": [
                         {
                             "arbeidsgiverIdent": "973861778",
-                            "eksternArbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
                             "fom": "2019-07-01",
                             "tom": "2020-03-31",
                             "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
@@ -146,7 +146,6 @@
                     "startdato": "2019-07-01",
                     "opphoersdato": "2020-03-31",
                     "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
-                    "eksternArbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
                     "arbeidsforholdType": "ARBEID",
                     "refusjonPrAar": 180000.0,
                     "belopFraInntektsmeldingPrMnd": 30000.0
@@ -170,7 +169,6 @@
                     "arbeidsgiverOrgnr": "973861778"
                 },
                 "internArbeidsforholdRef": "127b7791-8f38-4910-9424-0d764d7b2298",
-                "eksternArbeidsforholdRef": "127b7791-8f38-4910-9424-0d764d7b2298",
                 "skalKunneFastsetteDelvisRefusjon": true
             }
         ]

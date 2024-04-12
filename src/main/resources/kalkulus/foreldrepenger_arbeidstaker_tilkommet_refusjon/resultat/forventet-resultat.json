@@ -108,7 +108,7 @@
                 },
                 "sammenligningsgrunnlagType": "SAMMENLIGNING_AT_FL",
                 "rapportertPrÅr": 360000.0,
-                "avvikPromilleNy": 0.0
+                "avvikPromilleNy": 0E-10
             }
         ],
         "faktaOmBeregningTilfeller": [],
