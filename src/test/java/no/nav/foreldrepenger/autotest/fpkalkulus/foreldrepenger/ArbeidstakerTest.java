@@ -3,12 +3,10 @@ package no.nav.foreldrepenger.autotest.fpkalkulus.foreldrepenger;
 
 import static no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle.VURDER_AT_OG_FL_I_SAMME_ORGANISASJON;
 import static no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle.VURDER_MOTTAR_YTELSE;
-import static no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle.VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT;
 import static no.nav.foreldrepenger.generator.kalkulus.AvklarAktiviteterTjeneste.lagOverstyrAktiviteterDto;
 import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmBeregningTjeneste.lagATFLISammeOrgDto;
 import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmBeregningTjeneste.lagFaktaOmBeregningHåndterRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmBeregningTjeneste.lagMottarYtelseDto;
-import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmBeregningTjeneste.vurderRefusjonskravGyldighet;
 import static no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste.fastsettInntektVarigEndring;
 import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getFortsettBeregningListeRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentDetaljertListeRequest;
@@ -19,9 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -31,10 +27,8 @@ import io.qameta.allure.Description;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
-import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.RefusjonskravSomKommerForSentDto;
 import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 import no.nav.foreldrepenger.generator.kalkulus.FaktaBeregningLagreDtoBuilder;
-import no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste;
 import no.nav.foreldrepenger.generator.kalkulus.VurderRefusjonTjeneste;
 
 @Tag("fpkalkulus")
@@ -179,7 +173,6 @@ public class ArbeidstakerTest extends Beregner {
     @DisplayName("Foreldrepenger - arbeidstaker uten inntektsmelding, sender inntektsmelding for revurdering")
     @Description("Foreldrepenger - arbeidstaker uten inntektsmelding, sender inntektsmelding for revurdering.")
     @Test
-    @Disabled // Krever koblingrelasjon
     public void foreldrepenger_arbeidstaker_tilkommet_refusjon(TestInfo testInfo) throws Exception {
 
         var request1 = opprettTestscenario(testInfo, "original");
@@ -231,7 +224,6 @@ public class ArbeidstakerTest extends Beregner {
     @DisplayName("Foreldrepenger - arbeidstaker med revurdering, økt refusjon i revurdering.")
     @Description("Foreldrepenger - arbeidstaker med revurdering, økt refusjon i revurdering.")
     @Test
-    @Disabled // Krever koblingrelasjon
     public void foreldrepenger_arbeidstaker_tilkommet_okt_refusjon(TestInfo testInfo) throws Exception {
 
         var request1 = opprettTestscenario(testInfo, "original");
@@ -268,7 +260,7 @@ public class ArbeidstakerTest extends Beregner {
 
         var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request2));
         var forventetGuiFordel = hentForventetGUIFordel(testInfo);
-        assertThat(beregningsgrunnlagDto).isEqualToComparingFieldByField(forventetGuiFordel);
+        assertThat(beregningsgrunnlagDto).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields().isEqualTo(forventetGuiFordel);
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);

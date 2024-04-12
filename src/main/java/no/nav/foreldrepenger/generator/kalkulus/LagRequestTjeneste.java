@@ -30,7 +30,8 @@ public class LagRequestTjeneste {
                 request.aktør(),
                 request.ytelseSomSkalBeregnes(),
                 stegType,
-                request.kalkulatorInput());
+                request.kalkulatorInput(),
+                null);
     }
 
     public static HentBeregningsgrunnlagGUIRequest getHentGUIListeRequest(BeregnRequestDto request) {
