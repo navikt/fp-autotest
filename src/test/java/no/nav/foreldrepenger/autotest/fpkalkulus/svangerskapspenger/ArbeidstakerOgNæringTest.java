@@ -20,11 +20,11 @@ class ArbeidstakerOgNæringTest extends Beregner {
 //        var request = opprettTestscenario(testInfo);
 //
 //        TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
-//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 //
 //        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
 //        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 //
 //        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
 //        Map<String, Boolean> refusjonskravGyldighet = beregningsgrunnlagDto.getFaktaOmBeregning().getRefusjonskravSomKommerForSentListe().stream()
@@ -42,7 +42,7 @@ class ArbeidstakerOgNæringTest extends Beregner {
 //
 //        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
 //        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 //
 //        beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
 //        var perioder = beregningsgrunnlagDto.getBeregningsgrunnlagPeriode();
@@ -58,15 +58,15 @@ class ArbeidstakerOgNæringTest extends Beregner {
 //
 //        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
 //        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 //
 //        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
 //        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isZero();
+//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 //
 //        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_TILKOMMET_INNTEKT);
 //        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 //
 //        beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
 //        var håndterBeregningListeRequest = FaktaOmFordelingTjeneste.lagHåndterTilkommetInntektsforholdRequest(request, beregningsgrunnlagDto, LocalDateTimeline.empty(), Map.of(
@@ -77,11 +77,11 @@ class ArbeidstakerOgNæringTest extends Beregner {
 //
 //        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
 //        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 //
 //        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
 //        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 //
 //        beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
 //        var forventetGUIFordel = hentForventetGUIFordel(testInfo);
@@ -95,7 +95,7 @@ class ArbeidstakerOgNæringTest extends Beregner {
 //
 //        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
 //        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+//        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 //
 //        var hentRequest = getHentDetaljertListeRequest(request);
 //        var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
@@ -103,7 +103,5 @@ class ArbeidstakerOgNæringTest extends Beregner {
 //        var forventetResultat = hentForventetResultat(testInfo);
 //        assertThat(beregningsgrunnlagGrunnlagDto).isEqualToComparingFieldByField(forventetResultat);
 //    }
-
-
 
 }

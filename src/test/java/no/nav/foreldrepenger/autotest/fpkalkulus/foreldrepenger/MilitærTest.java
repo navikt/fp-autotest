@@ -5,7 +5,7 @@ import static no.nav.folketrygdloven.kalkulus.kodeverk.FaktaOmBeregningTilfelle.
 import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmBeregningTjeneste.lagFaktaOmBeregningHåndterRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getFortsettBeregningListeRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentDetaljertListeRequest;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -22,23 +22,23 @@ import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 import no.nav.foreldrepenger.generator.kalkulus.FaktaBeregningLagreDtoBuilder;
 
 @Tag("fpkalkulus")
-public class MilitærTest extends Beregner {
+class MilitærTest extends Beregner {
 
 
     @DisplayName("Foreldrepenger - Kun militær i opptjeningen ")
     @Description("Foreldrepenger - Søker har kun militær status i opptjeningen. " +
             "Berengingsgrunnlaget settes likt 3G. 80% dekningsgrad")
     @Test
-    public void foreldrepenger_militær_settes_til_3g_dekningsgrad_80(TestInfo testInfo) throws Exception {
+    void foreldrepenger_militær_settes_til_3g_dekningsgrad_80(TestInfo testInfo) throws Exception {
 
         var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 
         var faktaBeregningLagreDto = FaktaBeregningLagreDtoBuilder.ny()
                 .medFaktaOmBeregningTilfeller(List.of(VURDER_MILITÆR_SIVILTJENESTE))
@@ -49,23 +49,23 @@ public class MilitærTest extends Beregner {
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
@@ -78,16 +78,16 @@ public class MilitærTest extends Beregner {
     @Description("Foreldrepenger - Militær og arbeidstaker i opptjening. " +
             "Arbeid utgjør mindre enn 3G, så militærandelen fyller på resterende.")
     @Test
-    public void foreldrepenger_arbeid_under_3g_militær_dekker_rest(TestInfo testInfo) throws Exception {
+    void foreldrepenger_arbeid_under_3g_militær_dekker_rest(TestInfo testInfo) throws Exception {
 
         var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 
         var faktaBeregningLagreDto = FaktaBeregningLagreDtoBuilder.ny()
                 .medFaktaOmBeregningTilfeller(List.of(VURDER_MILITÆR_SIVILTJENESTE))
@@ -98,23 +98,23 @@ public class MilitærTest extends Beregner {
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
@@ -127,16 +127,16 @@ public class MilitærTest extends Beregner {
     @Description("Foreldrepenger - Militær og frilans i opptjening. " +
             "Frilans utgjør mer enn 3G, ingenting tildeles militærandel.")
     @Test
-    public void foreldrepenger_frilans_over_3g_ingenting_til_militær(TestInfo testInfo) throws Exception {
+    void foreldrepenger_frilans_over_3g_ingenting_til_militær(TestInfo testInfo) throws Exception {
 
         var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 
         var faktaBeregningLagreDto = FaktaBeregningLagreDtoBuilder.ny()
                 .medFaktaOmBeregningTilfeller(List.of(VURDER_MILITÆR_SIVILTJENESTE))
@@ -147,23 +147,23 @@ public class MilitærTest extends Beregner {
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
@@ -176,16 +176,16 @@ public class MilitærTest extends Beregner {
     @Description("Foreldrepenger - Arbeidstaker, næring og militær i opptjeningen. " +
             "Arbeid og næring utgjør mer enn 3G, derfor 0 til militær.")
     @Test
-    public void foreldrepenger_arbeid_næring_over_3g_0_til_militær(TestInfo testInfo) throws Exception {
+    void foreldrepenger_arbeid_næring_over_3g_0_til_militær(TestInfo testInfo) throws Exception {
 
         var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 
         var faktaBeregningLagreDto = FaktaBeregningLagreDtoBuilder.ny()
                 .medFaktaOmBeregningTilfeller(List.of(VURDER_MILITÆR_SIVILTJENESTE))
@@ -196,23 +196,23 @@ public class MilitærTest extends Beregner {
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
@@ -222,8 +222,7 @@ public class MilitærTest extends Beregner {
     }
 
     private VurderMilitærDto lagMilitærVurdering(boolean erMilitær) {
-        VurderMilitærDto vurderMilitærDto = new VurderMilitærDto(erMilitær);
-        return vurderMilitærDto;
+        return new VurderMilitærDto(erMilitær);
     }
 
 }

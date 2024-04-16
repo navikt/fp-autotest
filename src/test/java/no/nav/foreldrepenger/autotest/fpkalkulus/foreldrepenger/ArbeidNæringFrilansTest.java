@@ -5,7 +5,7 @@ import static no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste
 import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getFortsettBeregningListeRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentDetaljertListeRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterListeRequest;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 
@@ -21,46 +21,46 @@ import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
 import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
 
 @Tag("fpkalkulus")
-public class ArbeidNæringFrilansTest extends Beregner {
+class ArbeidNæringFrilansTest extends Beregner {
 
     @DisplayName("Foreldrepenger - arbeidsforhold og selvstendig næringsdrivende")
     @Description("Foreldrepenger - arbeidsforhold og selvstendig næringsdrivende, gjøres avviksvurdering på begge to. Finner avvik på begge.")
     @Test
     @Disabled // Avhenger av toggle lokalt og at vi nærmer oss dato 1.1.2023. Kan tas tilbake i desember 2022
-    public void fp_arbeid_næring_avvik_på_begge(TestInfo testInfo) throws Exception {
+    void fp_arbeid_næring_avvik_på_begge(TestInfo testInfo) throws Exception {
         var request = opprettTestscenario(testInfo);
 
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 
         saksbehandler.håndterBeregning(lagHåndterListeRequest(request, fastsettInntektVedAvvik(Map.of(1L, 300000))));
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(1);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 
         var håndterBeregningDto = fastsettInntektVarigEndring(null, false);
         saksbehandler.håndterBeregning(lagHåndterListeRequest(request, håndterBeregningDto));
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto().size()).isEqualTo(0);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
