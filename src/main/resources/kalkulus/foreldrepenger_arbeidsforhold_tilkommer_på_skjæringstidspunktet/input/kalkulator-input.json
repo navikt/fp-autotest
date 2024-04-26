@@ -3,7 +3,7 @@
         {
             "arbeidsgiver": {
                 "identType": "ORGNUMMER",
-                "ident": "973861778"
+                "ident": "974652269"
             },
             "førsteDagMedRefusjonskrav": "2019-07-16",
             "førsteInnsendingAvRefusjonskrav": "2019-07-15",
@@ -16,7 +16,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "abakusReferanse": {
                         "abakusReferanse": "e17084ba-98d5-4dab-a75a-4dc670872ecd"
@@ -107,7 +107,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "abakusReferanse": {
                         "abakusReferanse": "a45741d0-866a-4c70-98c6-319e9416c763"
@@ -149,7 +149,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "abakusReferanse": {
                         "abakusReferanse": "127b7791-8f38-4910-9424-0d764d7b2298"
@@ -179,7 +179,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "inntektsKilde": "INNTEKT_BEREGNING",
                     "utbetalingsPoster": [
@@ -332,7 +332,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "inntektsKilde": "INNTEKT_SAMMENLIGNING",
                     "utbetalingsPoster": [
@@ -491,7 +491,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "inntektBeløp": 44733.33,
                     "naturalYtelser": [],
@@ -517,7 +517,7 @@
                 },
                 "arbeidsgiver": {
                     "identType": "ORGNUMMER",
-                    "ident": "973861778"
+                    "ident": "974652269"
                 },
                 "abakusReferanse": {
                     "abakusReferanse": "a45741d0-866a-4c70-98c6-319e9416c763"
@@ -545,7 +545,7 @@
                 },
                 "arbeidsgiver": {
                     "identType": "ORGNUMMER",
-                    "ident": "973861778"
+                    "ident": "974652269"
                 },
                 "abakusReferanse": {
                     "abakusReferanse": "127b7791-8f38-4910-9424-0d764d7b2298"

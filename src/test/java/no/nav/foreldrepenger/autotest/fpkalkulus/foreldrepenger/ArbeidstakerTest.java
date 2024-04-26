@@ -198,7 +198,7 @@ class ArbeidstakerTest extends Beregner {
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
-        var andelDto = VurderRefusjonTjeneste.lagVurderRefusjonAndelDto("973861778",
+        var andelDto = VurderRefusjonTjeneste.lagVurderRefusjonAndelDto("974652269",
                 "127b7791-8f38-4910-9424-0d764d7b2298", LocalDate.of(2020, 3, 1));
         var håndterRequest = VurderRefusjonTjeneste.lagVurderRefusjonRequest(request2, andelDto);
         saksbehandler.håndterBeregning(håndterRequest);
@@ -253,7 +253,7 @@ class ArbeidstakerTest extends Beregner {
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
-        var andelDto = VurderRefusjonTjeneste.lagVurderRefusjonAndelDto("973861778",
+        var andelDto = VurderRefusjonTjeneste.lagVurderRefusjonAndelDto("974652269",
                 "127b7791-8f38-4910-9424-0d764d7b2298", LocalDate.of(2020, 3, 1), 15000);
         var håndterRequest = VurderRefusjonTjeneste.lagVurderRefusjonRequest(request2, andelDto);
         saksbehandler.håndterBeregning(håndterRequest);

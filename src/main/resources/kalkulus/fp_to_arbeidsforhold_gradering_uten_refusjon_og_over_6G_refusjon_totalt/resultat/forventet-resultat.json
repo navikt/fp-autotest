@@ -23,7 +23,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "910909088"
+                                "arbeidsgiverOrgnr": "874652202"
                             },
                             "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
                             "arbeidsperiodeFom": "2016-03-25",
@@ -56,7 +56,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "973861778"
+                                "arbeidsgiverOrgnr": "974652269"
                             },
                             "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-003442432423",
                             "refusjonskravPrÅr": 500000.0,
@@ -105,7 +105,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "910909088"
+                                "arbeidsgiverOrgnr": "874652202"
                             },
                             "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
                             "arbeidsperiodeFom": "2016-03-25",
@@ -137,7 +137,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "973861778"
+                                "arbeidsgiverOrgnr": "974652269"
                             },
                             "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-003442432423",
                             "refusjonskravPrÅr": 720000.0,
@@ -185,7 +185,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "910909088"
+                                "arbeidsgiverOrgnr": "874652202"
                             },
                             "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
                             "arbeidsperiodeFom": "2016-03-25",
@@ -218,7 +218,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "973861778"
+                                "arbeidsgiverOrgnr": "974652269"
                             },
                             "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-003442432423",
                             "refusjonskravPrÅr": 500000.0,
@@ -267,7 +267,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "910909088"
+                                "arbeidsgiverOrgnr": "874652202"
                             },
                             "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-299663a7c324",
                             "arbeidsperiodeFom": "2016-03-25",
@@ -299,7 +299,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "973861778"
+                                "arbeidsgiverOrgnr": "974652269"
                             },
                             "arbeidsforholdRef": "3f15eb0a-7d0e-48e0-86b1-003442432423",
                             "refusjonskravPrÅr": 720000.0,
@@ -353,7 +353,7 @@
                     "tom": "9999-12-31"
                 },
                 "arbeidsgiver": {
-                    "arbeidsgiverOrgnr": "910909088"
+                    "arbeidsgiverOrgnr": "874652202"
                 },
                 "arbeidsforholdRef": {
                     "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-299663a7c324"
@@ -366,7 +366,7 @@
                     "tom": "9999-12-31"
                 },
                 "arbeidsgiver": {
-                    "arbeidsgiverOrgnr": "973861778"
+                    "arbeidsgiverOrgnr": "974652269"
                 },
                 "arbeidsforholdRef": {
                     "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-003442432423"

@@ -23,7 +23,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "910909088"
+                                "arbeidsgiverOrgnr": "874652202"
                             },
                             "refusjonskravPrÅr": 347844.0,
                             "arbeidsperiodeFom": "2012-11-16",
@@ -99,7 +99,7 @@
                     "tom": "2019-12-31"
                 },
                 "arbeidsgiver": {
-                    "arbeidsgiverOrgnr": "910909088"
+                    "arbeidsgiverOrgnr": "874652202"
                 },
                 "opptjeningAktivitetType": "ARBEID"
             }

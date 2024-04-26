@@ -40,7 +40,7 @@
                     "besteberegningPrAar": null,
                     "inntektskategori": "ARBEIDSTAKER",
                     "arbeidsforhold": {
-                        "arbeidsgiverIdent": "973861778",
+                        "arbeidsgiverIdent": "974652269",
                         "startdato": "2019-07-01",
                         "opphoersdato": "2020-03-31",
                         "arbeidsforholdType": "ARBEID"
@@ -95,7 +95,7 @@
             {
                 "andelsnr": 2,
                 "arbeidsforhold": {
-                    "arbeidsgiverIdent": "973861778",
+                    "arbeidsgiverIdent": "974652269",
                     "startdato": "2019-07-01",
                     "opphoersdato": "2020-03-31",
                     "arbeidsforholdType": "ARBEID"
@@ -114,7 +114,7 @@
                 {
                     "andelsnr": 2,
                     "arbeidsforhold": {
-                        "arbeidsgiverIdent": "973861778",
+                        "arbeidsgiverIdent": "974652269",
                         "startdato": "2019-07-01",
                         "opphoersdato": "2020-03-31",
                         "arbeidsforholdType": "ARBEID"
@@ -138,7 +138,7 @@
                             "arbeidsforholdType": "FRILANS"
                         },
                         {
-                            "arbeidsgiverIdent": "973861778",
+                            "arbeidsgiverIdent": "974652269",
                             "fom": "2019-07-01",
                             "tom": "2020-03-31",
                             "arbeidsforholdType": "ARBEID"
@@ -162,7 +162,7 @@
                 "inntektskategori": "ARBEIDSTAKER",
                 "aktivitetStatus": "AT",
                 "arbeidsforhold": {
-                    "arbeidsgiverIdent": "973861778",
+                    "arbeidsgiverIdent": "974652269",
                     "startdato": "2019-07-01",
                     "opphoersdato": "2020-03-31",
                     "arbeidsforholdType": "ARBEID"

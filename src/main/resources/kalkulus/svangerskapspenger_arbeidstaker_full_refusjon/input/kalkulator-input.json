@@ -3,7 +3,7 @@
         {
             "arbeidsgiver": {
                 "identType": "ORGNUMMER",
-                "ident": "910909088"
+                "ident": "874652202"
             },
             "førsteDagMedRefusjonskrav": "2020-01-29",
             "førsteInnsendingAvRefusjonskrav": "2020-01-01",
@@ -16,7 +16,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "abakusReferanse": {
                         "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-299663a7c324"
@@ -45,7 +45,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "inntektsKilde": "INNTEKT_BEREGNING",
                     "utbetalingsPoster": [
@@ -158,7 +158,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "inntektsKilde": "INNTEKT_SAMMENLIGNING",
                     "utbetalingsPoster": [
@@ -277,7 +277,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "inntektBeløp": 30000,
                     "naturalYtelser": [],
@@ -303,7 +303,7 @@
                 },
                 "arbeidsgiver": {
                     "identType": "ORGNUMMER",
-                    "ident": "910909088"
+                    "ident": "874652202"
                 },
                 "abakusReferanse": {
                     "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-299663a7c324"
@@ -320,7 +320,7 @@
                 "utbetalingsgradArbeidsforholdDto": {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "uttakArbeidType": "AT"
                 },

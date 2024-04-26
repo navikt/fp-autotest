@@ -24,7 +24,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "973861778"
+                                "arbeidsgiverOrgnr": "974652269"
                             },
                             "arbeidsperiodeFom": "2021-01-01",
                             "arbeidsperiodeTom": "2022-12-31"
@@ -127,7 +127,7 @@
                     "tom": "9999-12-31"
                 },
                 "arbeidsgiver": {
-                    "arbeidsgiverOrgnr": "973861778"
+                    "arbeidsgiverOrgnr": "974652269"
                 },
                 "opptjeningAktivitetType": "ARBEID"
             },

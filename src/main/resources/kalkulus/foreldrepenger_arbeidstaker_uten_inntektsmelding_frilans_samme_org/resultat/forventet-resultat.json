@@ -47,7 +47,7 @@
                         "inntektskategori": "ARBEIDSTAKER",
                         "bgAndelArbeidsforhold": {
                             "arbeidsgiver": {
-                                "arbeidsgiverOrgnr": "973861778"
+                                "arbeidsgiverOrgnr": "974652269"
                             },
                             "arbeidsperiodeFom": "2019-07-01",
                             "arbeidsperiodeTom": "2020-03-31"
@@ -96,7 +96,7 @@
         "faktaArbeidsforholdListe": [
             {
                 "arbeidsgiver": {
-                    "arbeidsgiverOrgnr": "973861778"
+                    "arbeidsgiverOrgnr": "974652269"
                 },
                 "harMottattYtelse": true
             }
@@ -120,7 +120,7 @@
                     "tom": "2020-03-31"
                 },
                 "arbeidsgiver": {
-                    "arbeidsgiverOrgnr": "973861778"
+                    "arbeidsgiverOrgnr": "974652269"
                 },
                 "opptjeningAktivitetType": "ARBEID"
             }

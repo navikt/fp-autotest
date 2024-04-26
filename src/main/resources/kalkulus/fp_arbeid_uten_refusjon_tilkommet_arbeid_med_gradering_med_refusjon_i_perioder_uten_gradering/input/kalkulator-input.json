@@ -5,7 +5,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "abakusReferanse": {
                         "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-299663a7c324"
@@ -30,7 +30,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "abakusReferanse": {
                         "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-3442432423"
@@ -59,7 +59,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "inntektsKilde": "INNTEKT_BEREGNING",
                     "utbetalingsPoster": [
@@ -236,7 +236,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "inntektsKilde": "INNTEKT_SAMMENLIGNING",
                     "utbetalingsPoster": [
@@ -419,7 +419,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "inntektBeløp": 30000,
                     "naturalYtelser": [],
@@ -447,7 +447,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "inntektBeløp": 60000,
                     "naturalYtelser": [],
@@ -473,7 +473,7 @@
                 },
                 "arbeidsgiver": {
                     "identType": "ORGNUMMER",
-                    "ident": "910909088"
+                    "ident": "874652202"
                 },
                 "abakusReferanse": {
                     "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-299663a7c324"
@@ -487,7 +487,7 @@
                 },
                 "arbeidsgiver": {
                     "identType": "ORGNUMMER",
-                    "ident": "973861778"
+                    "ident": "974652269"
                 },
                 "abakusReferanse": {
                     "abakusReferanse": "3f15eb0a-7d0e-48e0-86b1-3442432423"
@@ -505,7 +505,7 @@
                     "aktivitetStatus": "AT",
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "arbeidsforholdRef": null,
                     "graderinger": [

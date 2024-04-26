@@ -3,7 +3,7 @@
         {
             "arbeidsgiver": {
                 "identType": "ORGNUMMER",
-                "ident": "973861778"
+                "ident": "974652269"
             },
             "førsteDagMedRefusjonskrav": "2020-01-01",
             "førsteInnsendingAvRefusjonskrav": "2020-01-01",
@@ -16,7 +16,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "abakusReferanse": {
                         "abakusReferanse": "127b7791-8f38-4910-9424-0d764d7b2298"
@@ -45,7 +45,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "inntektsKilde": "INNTEKT_BEREGNING",
                     "utbetalingsPoster": [
@@ -254,7 +254,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "973861778"
+                        "ident": "974652269"
                     },
                     "inntektBeløp": 44733.33,
                     "naturalYtelser": [],
@@ -280,7 +280,7 @@
                 },
                 "arbeidsgiver": {
                     "identType": "ORGNUMMER",
-                    "ident": "973861778"
+                    "ident": "974652269"
                 },
                 "abakusReferanse": {
                     "abakusReferanse": "127b7791-8f38-4910-9424-0d764d7b2298"

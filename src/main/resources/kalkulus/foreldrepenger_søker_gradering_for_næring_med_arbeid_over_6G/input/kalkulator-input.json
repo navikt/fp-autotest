@@ -1272,7 +1272,7 @@
                     },
                     "aktør": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "virksomhetType": "ANNEN",
                     "nyoppstartet": false,
@@ -1313,7 +1313,7 @@
                 },
                 "arbeidsgiver": {
                     "identType": "ORGNUMMER",
-                    "ident": "910909088"
+                    "ident": "874652202"
                 },
                 "abakusReferanse": null
             },
