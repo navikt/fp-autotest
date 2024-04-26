@@ -39,7 +39,7 @@
                     "besteberegningPrAar": null,
                     "inntektskategori": "ARBEIDSTAKER",
                     "arbeidsforhold": {
-                        "arbeidsgiverIdent": "973861778",
+                        "arbeidsgiverIdent": "974652269",
                         "startdato": "2019-07-01",
                         "opphoersdato": "2020-03-31",
                         "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
@@ -85,7 +85,7 @@
                     "besteberegningPrAar": null,
                     "inntektskategori": "ARBEIDSTAKER",
                     "arbeidsforhold": {
-                        "arbeidsgiverIdent": "973861778",
+                        "arbeidsgiverIdent": "974652269",
                         "startdato": "2019-07-01",
                         "opphoersdato": "2020-03-31",
                         "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
@@ -124,7 +124,7 @@
                     "tom": "2020-01-01",
                     "aktiviteter": [
                         {
-                            "arbeidsgiverIdent": "973861778",
+                            "arbeidsgiverIdent": "974652269",
                             "fom": "2019-07-01",
                             "tom": "2020-03-31",
                             "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
@@ -142,7 +142,7 @@
                 "aktivitetStatus": "AT",
                 "refusjonskrav": 30000.0,
                 "arbeidsforhold": {
-                    "arbeidsgiverIdent": "973861778",
+                    "arbeidsgiverIdent": "974652269",
                     "startdato": "2019-07-01",
                     "opphoersdato": "2020-03-31",
                     "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
@@ -166,7 +166,7 @@
                 "fastsattNyttRefusjonskravFom": "2020-03-01",
                 "tidligsteMuligeRefusjonsdato": "2020-01-01",
                 "arbeidsgiver": {
-                    "arbeidsgiverOrgnr": "973861778"
+                    "arbeidsgiverOrgnr": "974652269"
                 },
                 "internArbeidsforholdRef": "127b7791-8f38-4910-9424-0d764d7b2298",
                 "skalKunneFastsetteDelvisRefusjon": true

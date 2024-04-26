@@ -397,7 +397,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "inntektsKilde": "INNTEKT_OPPTJENING",
                     "utbetalingsPoster": [
@@ -541,7 +541,7 @@
                 {
                     "arbeidsgiver": {
                         "identType": "ORGNUMMER",
-                        "ident": "910909088"
+                        "ident": "874652202"
                     },
                     "inntektsKilde": "INNTEKT_SAMMENLIGNING",
                     "utbetalingsPoster": [

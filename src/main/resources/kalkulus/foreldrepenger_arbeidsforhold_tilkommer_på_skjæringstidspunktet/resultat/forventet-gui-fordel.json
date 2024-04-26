@@ -32,7 +32,7 @@
                     "besteberegningPrAar": null,
                     "inntektskategori": "ARBEIDSTAKER",
                     "arbeidsforhold": {
-                        "arbeidsgiverIdent": "973861778",
+                        "arbeidsgiverIdent": "974652269",
                         "startdato": "2018-04-01",
                         "opphoersdato": "2019-06-30",
                         "arbeidsforholdType": "ARBEID"
@@ -76,7 +76,7 @@
                     "besteberegningPrAar": null,
                     "inntektskategori": "ARBEIDSTAKER",
                     "arbeidsforhold": {
-                        "arbeidsgiverIdent": "973861778",
+                        "arbeidsgiverIdent": "974652269",
                         "startdato": "2018-04-01",
                         "opphoersdato": "2019-06-30",
                         "arbeidsforholdType": "ARBEID"
@@ -108,7 +108,7 @@
                     "besteberegningPrAar": null,
                     "inntektskategori": "-",
                     "arbeidsforhold": {
-                        "arbeidsgiverIdent": "973861778",
+                        "arbeidsgiverIdent": "974652269",
                         "startdato": "2019-07-16",
                         "opphoersdato": "2020-07-31",
                         "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
@@ -156,7 +156,7 @@
                     "tom": "2019-07-01",
                     "aktiviteter": [
                         {
-                            "arbeidsgiverIdent": "973861778",
+                            "arbeidsgiverIdent": "974652269",
                             "fom": "2018-08-01",
                             "tom": "2019-06-30",
                             "arbeidsforholdType": "ARBEID"
@@ -183,7 +183,7 @@
                 "inntektskategori": "ARBEIDSTAKER",
                 "aktivitetStatus": "AT",
                 "arbeidsforhold": {
-                    "arbeidsgiverIdent": "973861778",
+                    "arbeidsgiverIdent": "974652269",
                     "startdato": "2018-04-01",
                     "opphoersdato": "2019-06-30",
                     "arbeidsforholdType": "ARBEID"
@@ -205,7 +205,7 @@
                         {
                             "andelsnr": 1,
                             "arbeidsforhold": {
-                                "arbeidsgiverIdent": "973861778",
+                                "arbeidsgiverIdent": "974652269",
                                 "startdato": "2018-04-01",
                                 "opphoersdato": "2019-06-30",
                                 "arbeidsforholdType": "ARBEID"
@@ -232,7 +232,7 @@
                         {
                             "andelsnr": 1,
                             "arbeidsforhold": {
-                                "arbeidsgiverIdent": "973861778",
+                                "arbeidsgiverIdent": "974652269",
                                 "startdato": "2018-04-01",
                                 "opphoersdato": "2019-06-30",
                                 "arbeidsforholdType": "ARBEID"
@@ -251,7 +251,7 @@
                         {
                             "andelsnr": 2,
                             "arbeidsforhold": {
-                                "arbeidsgiverIdent": "973861778",
+                                "arbeidsgiverIdent": "974652269",
                                 "startdato": "2019-07-16",
                                 "opphoersdato": "2020-07-31",
                                 "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
@@ -278,7 +278,7 @@
             ],
             "arbeidsforholdTilFordeling": [
                 {
-                    "arbeidsgiverIdent": "973861778",
+                    "arbeidsgiverIdent": "974652269",
                     "startdato": "2019-07-16",
                     "opphoersdato": "2020-07-31",
                     "arbeidsforholdId": "127b7791-8f38-4910-9424-0d764d7b2298",
