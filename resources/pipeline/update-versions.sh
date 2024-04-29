@@ -38,6 +38,7 @@ echo SVANGERSKAPSPENGESOKNAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev
 echo ENGANGSSTONAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/foreldrepengesoknad/engangsstonad")" >> .env
 echo FPOVERSIKT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-oversikt")" >> .env
 echo FPSWAGGER_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-swagger")" >> .env
+echo FPTILGANG_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-tilgang")" >> .env
 
 
 if [[ $(arch) == *'arm'* ]]; then

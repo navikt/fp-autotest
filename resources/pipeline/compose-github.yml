@@ -33,3 +33,5 @@ services:
     mem_limit: 1gb
   fpoversikt:
     mem_limit: 1gb
+  fptilgang:
+    mem_limit: 1gb
