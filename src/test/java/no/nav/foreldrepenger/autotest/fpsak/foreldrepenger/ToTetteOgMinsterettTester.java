@@ -34,9 +34,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsetteUttakEtterNesteSakDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
@@ -77,8 +74,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
      */
     @Test
     @DisplayName("Mor brukt opp minsterett. Nytt barn opphører gammel sak fom 3 uker før termin og avslår perioder etter dette")
-    @Description("Mor har FP og får innvilget ny FP - revurder tidligste FP og avslå perioder inn i ny stønadsperiode. "
-            + "Skal ikke havne i aksjonspunkt 5067 fordi mor har brukt opp minsteretten")
+    @Description("Mor har FP og får innvilget ny FP - revurder tidligste FP og avslå perioder inn i ny stønadsperiode. ")
     void nytt_barn_opphører_gammel_sak_pga_minsterett_oppbrukt() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
@@ -158,9 +154,9 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
      *   MOR Barn 1 (FS):   ---x------ ---------                                    saldo: 0|3|15|13    INNVILGET (18 brukt, 4 av 22 uker igjen av minsterett)
      *   FAR Barn 1 (FS):      x--                  ----------                      saldo: 0|0|3|13     INNVILGET (2 uker brukt ifm fødsel, 10 brukt andre periode)
      *   MOR Barn 2 (FS):                               ---y------                  saldo: 0|9|15|13    INNVILGET (28 brukt)
-     *   FAR Barn 1 (RE):      x--                  ------                          saldo: 0|0|9|13     Delvis innvilget/avslag: Forventer AP 5067. Vurder overlapp med sak 2. Avslå FK som strekker seg forbi startdato for mors nye sak.
+     *   FAR Barn 1 (RE):      x--                  ------                          saldo: 0|0|9|13     Delvis innvilget/avslag: Avslå FK som strekker seg forbi startdato for mors nye sak.
      *   MOR Barn 1 (ENDR):    x                                  ---- ----         saldo: 0|0|15|12    Tar ut resten av minsrteretten på barn 1 (22 brukt, 0 av 22 uker igjen av minsterett)
-     *   MOR Barn 1 (RE):   ---x------ ---------                  ----              saldo: 0|0|15|12    Delvis innvilget/avslag. Søker om mer enn minstretten. Forventer AP 5067. Vurder overlapp med sak 2.
+     *   MOR Barn 1 (RE):   ---x------ ---------                  ----              saldo: 0|0|15|12    Delvis innvilget/avslag. Søker om mer enn minstretten.
      */
     @Test
     @DisplayName("Mor og far beholder minsteretten ved to tette og kan ta ut denne etter fødsel av siste barn")
@@ -262,13 +258,8 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerFarBarn1);
         saksbehandler.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakEtterNesteSakDto.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         beslutter.hentFagsak(saksnummerFarBarn1);
         beslutter.ventPåOgVelgRevurderingBehandling();
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(
-                beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                        .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling()));
         beslutter.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var saldoFarRevurdering = saksbehandler.valgtBehandling.getSaldoer().stonadskontoer();
@@ -304,14 +295,8 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummerMorBarn1Endring);
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakEtterNesteSakDto.class);
-
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
         beslutter.hentFagsak(saksnummerMorBarn1Endring);
         beslutter.ventPåOgVelgRevurderingBehandling();
-        beslutter.fattVedtakOgVentTilAvsluttetBehandling(
-                beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
-                        .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling()));
         beslutter.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Forventer at siste periode er avslått med avlsagstype STØNADSPERIODE_NYTT_BARN
