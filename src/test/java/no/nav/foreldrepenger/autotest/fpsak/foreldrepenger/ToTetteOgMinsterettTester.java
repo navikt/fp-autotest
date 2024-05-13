@@ -27,6 +27,8 @@ import java.util.Comparator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
@@ -38,6 +40,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -62,6 +65,8 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class ToTetteOgMinsterettTester extends FpsakTestBase {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ToTetteOgMinsterettTester.class);
 
 
     /**
@@ -131,7 +136,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
             saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         }
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).isEqualTo(BehandlingResultatType.OPPHØR);
-        var sisteUttaksperiode = sisteUttaksperiode();
+        var sisteUttaksperiode = sisteUttaksperiode(saksbehandler.valgtBehandling.getUttakResultatPerioder());
         assertThat(sisteUttaksperiode.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
                 .isEqualTo(helgejustertTilMandag(startdatoForeldrepengerMorBarn2));
@@ -154,7 +159,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
      *   MOR Barn 1 (FS):   ---x------ ---------                                    saldo: 0|3|15|13    INNVILGET (18 brukt, 4 av 22 uker igjen av minsterett)
      *   FAR Barn 1 (FS):      x--                  ----------                      saldo: 0|0|3|13     INNVILGET (2 uker brukt ifm fødsel, 10 brukt andre periode)
      *   MOR Barn 2 (FS):                               ---y------                  saldo: 0|9|15|13    INNVILGET (28 brukt)
-     *   FAR Barn 1 (RE):      x--                  ------                          saldo: 0|0|9|13     Delvis innvilget/avslag: Avslå FK som strekker seg forbi startdato for mors nye sak.
+     *   FAR Barn 1 (RE):      x--                  ----                            saldo: 0|0|9|13     Delvis innvilget/avslag: Avslå FK som strekker seg forbi startdato for mors nye sak.
      *   MOR Barn 1 (ENDR):    x                                  ---- ----         saldo: 0|0|15|12    Tar ut resten av minsrteretten på barn 1 (22 brukt, 0 av 22 uker igjen av minsterett)
      *   MOR Barn 1 (RE):   ---x------ ---------                  ----              saldo: 0|0|15|12    Delvis innvilget/avslag. Søker om mer enn minstretten.
      */
@@ -168,14 +173,10 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
     void mor_og_far_beholder_minsteretten_ved_to_tette_og_kan_ta_ut_denne_etter_fødel_av_siste_barn() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidMedOpptjeningUnder6G()
-                                .build())
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidMedOpptjeningUnder6G()
-                                .build())
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusWeeks(40))
@@ -230,16 +231,16 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
 
         // MOR (barn 2): Førstegangssøknad på Barn 2 (termin 40 uker etter barn 1)
         var termindatoBarn2 = fødselsdatoBarn1.plusWeeks(40);
+        var morStartdatoBarn2 = termindatoBarn2.minusWeeks(3);
         var fordelingMorBarn2 = fordeling(
-                uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, termindatoBarn2.minusWeeks(3), termindatoBarn2.minusDays(1)),
-                uttaksperiode(MØDREKVOTE, termindatoBarn2, termindatoBarn2.plusWeeks(6).minusDays(1))
-        );
+                uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, morStartdatoBarn2, termindatoBarn2.minusDays(1)),
+                uttaksperiode(MØDREKVOTE, termindatoBarn2, termindatoBarn2.plusWeeks(6).minusDays(1)));
         var søknadMorBarn2 = lagSøknadForeldrepengerTermin(termindatoBarn2, MOR)
                 .medFordeling(fordelingMorBarn2)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .medMottattdato(termindatoBarn2.minusWeeks(3));
+                .medMottattdato(morStartdatoBarn2);
         var saksnummerMorBarn2 = mor.søk(søknadMorBarn2.build());
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummerMorBarn2, termindatoBarn2.minusWeeks(3));
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummerMorBarn2, morStartdatoBarn2);
 
         saksbehandler.hentFagsak(saksnummerMorBarn2);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -255,27 +256,30 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 .containsExactly(REBEREGN_FERIEPENGER);
 
         // FAR (barn 1): Revurdering pga overlapp med nytt barn
-        saksbehandler.hentFagsak(saksnummerFarBarn1);
-        saksbehandler.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
-
         beslutter.hentFagsak(saksnummerFarBarn1);
-        beslutter.ventPåOgVelgRevurderingBehandling();
+        beslutter.ventPåOgVelgRevurderingBehandling(OPPHØR_YTELSE_NYTT_BARN);
         beslutter.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        var saldoFarRevurdering = saksbehandler.valgtBehandling.getSaldoer().stonadskontoer();
+        var saldoFarRevurdering = beslutter.valgtBehandling.getSaldoer().stonadskontoer();
         assertThat(saldoFarRevurdering.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT)).isFalse();
         assertThat(saldoFarRevurdering.containsKey(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE)).isTrue();
-        assertThat(saldoFarRevurdering.get(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE).saldo())
-                .isZero();
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker())
+        assertThat(saldoFarRevurdering.get(Saldoer.SaldoVisningStønadskontoType.MINSTERETT_NESTE_STØNADSPERIODE).saldo()).isZero();
+        assertThat(beslutter.valgtBehandling.getBehandlingÅrsaker())
                 .map(BehandlingÅrsak::behandlingArsakType)
                 .containsExactly(BehandlingÅrsakType.OPPHØR_YTELSE_NYTT_BARN); // TODO: (TFP-5356) Skal ikke føre til opphør
 
         // Forventer at siste periode er avslått med avlsagstype STØNADSPERIODE_NYTT_BARN
-        var sisteUttaksperiodeFarBarn1 = sisteUttaksperiode();
+        var uttakResultatPerioderFarRevurdering = beslutter.valgtBehandling.getUttakResultatPerioder();
+        var sisteUttaksperiodeFarBarn1 = sisteUttaksperiode(uttakResultatPerioderFarRevurdering);
+        LOG.info("Far har {} perioder hvor siste periode starter fra {} til {} og er {} med årsak {}",
+                uttakResultatPerioderFarRevurdering.getPerioderSøker().size(),
+                sisteUttaksperiodeFarBarn1.getFom(),
+                sisteUttaksperiodeFarBarn1.getTom(),
+                sisteUttaksperiodeFarBarn1.getPeriodeResultatType(),
+                sisteUttaksperiodeFarBarn1.getPeriodeResultatÅrsak());
         assertThat(sisteUttaksperiodeFarBarn1.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
-                .isEqualTo(helgejustertTilMandag(fødselsdatoBarn1.plusWeeks(36).plusWeeks(6)));
+                .isEqualTo(fordeling.getLast().tidsperiode().fom().plusWeeks(6)); // tatt ut 2 uker ifm fødsel. 6 uker igjen av to tette.
         assertThat(sisteUttaksperiodeFarBarn1.getPeriodeResultatÅrsak().isAvslåttÅrsak()).isTrue();
         assertThat(sisteUttaksperiodeFarBarn1.getPeriodeResultatÅrsak())
                 .as("Siste periode avslått med årsak ny stønadsperiode")
@@ -292,16 +296,13 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         var endringssøknadMorBarn1 = lagEndringssøknad(søknadBarn1, saksnummerMorBarn1, fordelingEndringBarn1);
         var saksnummerMorBarn1Endring = mor.søk(endringssøknadMorBarn1.build());
 
-        saksbehandler.hentFagsak(saksnummerMorBarn1Endring);
-        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
-
         beslutter.hentFagsak(saksnummerMorBarn1Endring);
-        beslutter.ventPåOgVelgRevurderingBehandling();
+        beslutter.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
         beslutter.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Forventer at siste periode er avslått med avlsagstype STØNADSPERIODE_NYTT_BARN
         // TODO: (TFP-5356) Skal ikke føre til opphør eller skal det det i denne sammenhengen?
-        var sisteUttaksperiodeMorBarn1 = sisteUttaksperiode();
+        var sisteUttaksperiodeMorBarn1 = sisteUttaksperiode(beslutter.valgtBehandling.getUttakResultatPerioder());
         assertThat(sisteUttaksperiodeMorBarn1.getFom())
                 .as("Siste periode knekt ved startdato ny sak")
                 .isEqualTo(helgejustertTilMandag(termindatoBarn2.plusWeeks(10)));
@@ -312,8 +313,8 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
 
     }
 
-    private UttakResultatPeriode sisteUttaksperiode() {
-        return saksbehandler.valgtBehandling.getUttakResultatPerioder()
+    private UttakResultatPeriode sisteUttaksperiode(UttakResultatPerioder uttakResultatPerioder) {
+        return uttakResultatPerioder
                 .getPerioderSøker()
                 .stream()
                 .max(Comparator.comparing(UttakResultatPeriode::getFom))
