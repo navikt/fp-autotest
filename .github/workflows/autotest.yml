@@ -24,7 +24,6 @@ jobs:
   autotest:
     name: Kjører ${{ inputs.test-suite }}-tester mot ${{ github.repository }} ${{ inputs.build-version }}
     permissions:
-     contents: read
      id-token: write
     runs-on: ${{ ((github.actor == 'dependabot[bot]' || inputs.test-suite == 'fpkalkulus') && 'ubuntu-latest') || 'ubuntu-latest-8-cores' }}
     timeout-minutes: 15
