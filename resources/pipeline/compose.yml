@@ -183,7 +183,6 @@ services:
       FPOPPDRAG_OVERRIDE_PROXY_URL: http://localhost:9000/fpoppdrag/api
       UFORE_RS_URL: http://vtp:8060/rest/api/pesys/ufo
       EXTRA_CLASS_PATH: :vtp-lib/*
-      BRUK_NY_FAKTA_UTTAK: true
     env_file:
       - *common-properties
       - fpsak_datasource.env
