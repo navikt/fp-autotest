@@ -696,7 +696,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isEqualTo(14 * 5);
         assertThat(saksbehandler.valgtBehandling.getSaldoer().stonadskontoer().get(SaldoVisningStønadskontoType.MINSTERETT).saldo())
                 .as("Saldoen for stønadskonton MINSTRETT")
-                .isEqualTo(8 * 5);
+                .isEqualTo(10 * 5);
 
         // UTTAK
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
