@@ -1892,16 +1892,16 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var avslåttUtsettelseperiodeFørsteDel = avslåtteUttaksperioder.get(0);
         assertThat(avslåttUtsettelseperiodeFørsteDel.getFom()).isEqualTo(utsettelsesperiode.tidsperiode().fom());
-        assertThat(avslåttUtsettelseperiodeFørsteDel.getTom()).isCloseTo(utsettelsesperiode.tidsperiode().fom().plusWeeks(32), within(2, ChronoUnit.DAYS)); // splitt tar ikke hensyn til helger
+        assertThat(avslåttUtsettelseperiodeFørsteDel.getTom()).isCloseTo(utsettelsesperiode.tidsperiode().fom().plusWeeks(30), within(2, ChronoUnit.DAYS)); // splitt tar ikke hensyn til helger
         assertThat(avslåttUtsettelseperiodeFørsteDel.getAktiviteter().get(0).getTrekkdagerDesimaler())  // Trekker opp til minstretten
                 .as("Trekkdager")
-                .isEqualByComparingTo(BigDecimal.valueOf(32 * 5));
+                .isEqualByComparingTo(BigDecimal.valueOf(30 * 5));
         assertThat(avslåttUtsettelseperiodeFørsteDel.getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
                 .isEqualTo(AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT);
 
         var avslåttUtsettelseperiodeAndreDel = avslåtteUttaksperioder.get(1);
-        assertThat(avslåttUtsettelseperiodeAndreDel.getFom()).isCloseTo(utsettelsesperiode.tidsperiode().fom().plusWeeks(32), within(2, ChronoUnit.DAYS)); // splitt tar ikke hensyn til helger
+        assertThat(avslåttUtsettelseperiodeAndreDel.getFom()).isCloseTo(utsettelsesperiode.tidsperiode().fom().plusWeeks(30), within(2, ChronoUnit.DAYS)); // splitt tar ikke hensyn til helger
         assertThat(avslåttUtsettelseperiodeAndreDel.getTom()).isEqualTo(utsettelsesperiode.tidsperiode().tom());
         assertThat(avslåttUtsettelseperiodeAndreDel.getAktiviteter().get(0).getTrekkdagerDesimaler()) // avslag på siste rest av utsettelsen, men trekker ikke av minsteretten!
                 .as("Trekkdager")
