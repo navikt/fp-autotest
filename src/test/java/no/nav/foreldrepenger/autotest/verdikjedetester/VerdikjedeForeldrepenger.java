@@ -1911,7 +1911,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isEqualTo(IKKE_STØNADSDAGER_IGJEN);
 
         var avslåtttUttaksperiode1 = avslåtteUttaksperioder.get(2);
-        assertThat(avslåtttUttaksperiode1.getFom()).isEqualTo(uttaksperiodeEtterUtsettelse1.tidsperiode().fom().plusWeeks(6));
+        assertThat(avslåtttUttaksperiode1.getFom()).isEqualTo(uttaksperiodeEtterUtsettelse1.tidsperiode().fom().plusWeeks(8));
         assertThat(avslåtttUttaksperiode1.getTom()).isEqualTo(uttaksperiodeEtterUtsettelse1.tidsperiode().tom());
         assertThat(avslåtttUttaksperiode1.getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
