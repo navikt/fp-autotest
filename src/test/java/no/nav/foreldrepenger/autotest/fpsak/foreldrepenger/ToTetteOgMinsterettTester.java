@@ -171,7 +171,6 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
             + "Mor søker termin på barn 2 (40 uker etter barn 1) som førere til revurdering på far."
             + "Far sin sak revurderes og avslår uker som strekker seg forbi startdato barn 2 og som ikke er minstrett."
             + "Mor søker endring på barn 1 om å ta 8 uker (bare 4 uker gjenstår av minstrett) etter de 6 første ukene for barn 2. Delvis innvilget")
-    @Disabled("Påvente fiks å fpsak for å ikke få loop av revurderinger")
     void mor_og_far_beholder_minsteretten_ved_to_tette_og_kan_ta_ut_denne_etter_fødel_av_siste_barn() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
