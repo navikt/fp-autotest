@@ -36,12 +36,12 @@
         <logback.version>1.5.6</logback.version>
         <allure.version>2.27.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
-        <assertj.version>3.25.3</assertj.version>
+        <assertj.version>3.26.0</assertj.version>
         <aspectj.version>1.9.22</aspectj.version>
         <junit.version>5.10.2</junit.version>
         <jackson.version>2.17.1</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
-        <jersey.version>3.1.6</jersey.version>
+        <jersey.version>3.1.7</jersey.version>
     </properties>
 
     <dependencyManagement>
@@ -170,7 +170,7 @@
         <dependency>
             <groupId>io.smallrye</groupId>
             <artifactId>jandex</artifactId>
-            <version>3.1.8</version>
+            <version>3.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
