@@ -597,10 +597,10 @@ services:
     container_name: foreldrepengeoversikt
     ports:
       - 127.0.0.1:9066:9066
-    environment:
-      PORT: 9066
     env_file:
       - *common-properties
+    environment:
+      PORT: 9066
     depends_on:
       - foreldrepengesoknad-api
       - wonderwall-foreldrepengeoversikt
@@ -610,11 +610,11 @@ services:
     container_name: foreldrepengesoknad
     ports:
       - 127.0.0.1:9067:9067
+    env_file:
+      - *common-properties
     environment:
       INNSYN: https://foreldrepengeoversikt:9066
       PORT: 9067
-    env_file:
-      - *common-properties
     depends_on:
       - foreldrepengesoknad-api
       - wonderwall-foreldrepengesoknad
@@ -624,6 +624,8 @@ services:
     container_name: svangerskapspengesoknad
     ports:
       - 127.0.0.1:9068:9068
+    env_file:
+      - *common-properties
     environment:
       INNSYN: https://foreldrepengeoversikt:9066
       PORT: 9068
@@ -636,6 +638,8 @@ services:
     container_name: engangsstonad
     ports:
       - 127.0.0.1:9069:9069
+    env_file:
+      - *common-properties
     environment:
       INNSYN: https://foreldrepengeoversikt:9066
       PORT: 9069
