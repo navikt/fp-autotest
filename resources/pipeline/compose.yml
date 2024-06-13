@@ -598,8 +598,6 @@ services:
     ports:
       - 127.0.0.1:9066:9066
     environment:
-      APPRES_CMS_URL: https://www.nav.no/dekoratoren
-      HOST_URL: http://localhost:9100/rest
       PORT: 9066
     env_file:
       - *common-properties
@@ -613,7 +611,7 @@ services:
     ports:
       - 127.0.0.1:9067:9067
     environment:
-      APPRES_CMS_URL: https://www.nav.no/dekoratoren
+      INNSYN: https://foreldrepengeoversikt:9066
       PORT: 9067
     env_file:
       - *common-properties
@@ -625,9 +623,9 @@ services:
     image: $SVANGERSKAPSPENGESOKNAD_IMAGE
     container_name: svangerskapspengesoknad
     ports:
-      - 127.0.0.1:9068:8080
+      - 127.0.0.1:9068:9068
     environment:
-      APPRES_CMS_URL: https://www.nav.no/dekoratoren
+      INNSYN: https://foreldrepengeoversikt:9066
       PORT: 9068
     depends_on:
       - foreldrepengesoknad-api
@@ -637,9 +635,9 @@ services:
     image: $ENGANGSSTONAD_IMAGE
     container_name: engangsstonad
     ports:
-      - 127.0.0.1:9069:8080
+      - 127.0.0.1:9069:9069
     environment:
-      APPRES_CMS_URL: https://www.nav.no/dekoratoren
+      INNSYN: https://foreldrepengeoversikt:9066
       PORT: 9069
     depends_on:
       - foreldrepengesoknad-api
