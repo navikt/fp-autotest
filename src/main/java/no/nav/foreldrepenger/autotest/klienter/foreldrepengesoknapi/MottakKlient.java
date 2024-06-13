@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
-import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetBrukerIdporten;
+import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetBruker;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
@@ -21,7 +21,7 @@ public class MottakKlient {
     private static final String API_ENDRING_PATH = API_SEND_PATH + "/endre";
 
     public Kvittering sendSøknad(Fødselsnummer fnr, SøknadDto søknad) {
-        var request = requestMedInnloggetBrukerIdporten(fnr)
+        var request = requestMedInnloggetBruker(fnr)
                 .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
                         .path(API_SEND_PATH)
                         .build())
@@ -35,7 +35,7 @@ public class MottakKlient {
             case EngangsstønadDto ignored -> API_SEND_PATH + "/engangsstonad";
             default -> throw new IllegalStateException("Unexpected value: " + søknad);
         };
-        var request = requestMedInnloggetBrukerIdporten(fnr)
+        var request = requestMedInnloggetBruker(fnr)
                 .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
                         .path(path)
                         .build())
@@ -45,7 +45,7 @@ public class MottakKlient {
     }
 
     public Kvittering sendSøknad(Fødselsnummer fnr, EndringssøknadDto søknad) {
-        var request = requestMedInnloggetBrukerIdporten(fnr)
+        var request = requestMedInnloggetBruker(fnr)
                 .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
                         .path(API_ENDRING_PATH)
                         .build())

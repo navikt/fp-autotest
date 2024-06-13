@@ -810,6 +810,7 @@ services:
       - *common-properties
     depends_on:
       - redis
+      - wonderwall-selvbetjening-sso-server
   wonderwall-foreldrepengesoknad:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
@@ -834,6 +835,7 @@ services:
       - *common-properties
     depends_on:
       - redis
+      - wonderwall-selvbetjening-sso-server
   wonderwall-svangerskapspengesoknad:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
@@ -858,6 +860,7 @@ services:
       - *common-properties
     depends_on:
       - redis
+      - wonderwall-selvbetjening-sso-server
   wonderwall-engangsstonad:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
@@ -882,3 +885,4 @@ services:
       - *common-properties
     depends_on:
       - redis
+      - wonderwall-selvbetjening-sso-server
