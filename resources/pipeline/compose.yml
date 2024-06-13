@@ -4,8 +4,6 @@ x-common-env: &common-properties
   "common.env"
 x-default-konfigurasjon: &default-konfigurasjon
   restart: on-failure
-#  extra_hosts:
-#    - "host.docker.internal:host-gateway"
 
 volumes:
   oracle-data:
@@ -150,29 +148,29 @@ services:
       vtp:
         condition: service_healthy
   fpkalkulus:
-      <<: *default-konfigurasjon
-      image: $FPKALKULUS_IMAGE
-      container_name: fpkalkulus
-      mem_limit: 512mb
-      env_file:
-        - *common-properties
-        - fpkalkulus_datasource.env
-      volumes:
-        - *sertifikat-volum
-      ports:
-        - 127.0.0.1:8016:8080
-      healthcheck:
-        test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpkalkulus/internal/health/isReady" ]
-        interval: 5s
-        timeout: 5s
-        retries: 10
-      depends_on:
-        audit.nais:
-          condition: service_started
-        postgres:
-          condition: service_healthy
-        vtp:
-          condition: service_healthy
+    <<: *default-konfigurasjon
+    image: $FPKALKULUS_IMAGE
+    container_name: fpkalkulus
+    mem_limit: 512mb
+    env_file:
+      - *common-properties
+      - fpkalkulus_datasource.env
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - 127.0.0.1:8016:8080
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpkalkulus/internal/health/isReady" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      audit.nais:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      vtp:
+        condition: service_healthy
   fpsak:
     <<: *default-konfigurasjon
     image: $FPSAK_IMAGE
@@ -218,7 +216,6 @@ services:
     container_name: fpfrontend
     mem_limit: 128mb
     environment:
-      AZURE_APP_CLIENT_ID: vtp
       PORT: 9090
       HOST: http://localhost
       CORS_ALLOWED_METHODS: GET, POST
@@ -279,8 +276,6 @@ services:
       --log-level=debug
     ports:
       - 127.0.0.1:9000:9000
-    environment:
-      AZURE_APP_CLIENT_ID: vtp
     env_file:
       - *common-properties
   fpfordel:
@@ -550,6 +545,7 @@ services:
       AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://vtp:8060/rest/azuread/token
       AZURE_APP_CLIENT_ID: lokal:teamforeldrepenger:fpsoknad-mottak
       AZURE_APP_JWK: /tokenx/jwk.json
+      TOKEN_X_PRIVATE_JWK: /tokenx/jwk.json
       OIDC_STS_ISSUER_URL: http://vtp:8060 # TODO Erstat med samme syntax som resten av applikasjonene
     env_file:
       - *common-properties
@@ -566,6 +562,7 @@ services:
     depends_on:
       - vtp
       - fpfordel
+
   ## SELVBETJENING SPESIFIKK
   foreldrepengesoknad-api:
     <<: *default-konfigurasjon
@@ -577,6 +574,7 @@ services:
       NAIS_CLUSTER_NAME: test
       IDPORTEN_WELL_KNOWN_URL: http://vtp:8060/rest/idporten/.well-known/openid-configuration
       IDPORTEN_CLIENT_ID: vtp
+      TOKEN_X_PRIVATE_JWK: /tokenx/jwk.json
     env_file:
       - *common-properties
     volumes:
@@ -592,54 +590,62 @@ services:
     depends_on:
       - fpsoknad-mottak
       - fpoversikt
+
   foreldrepengeoversikt:
     <<: *default-konfigurasjon
     image: $FORELDREPENGEOVERSIKT_IMAGE
     container_name: foreldrepengeoversikt
     ports:
-      - 127.0.0.1:9066:8080
+      - 127.0.0.1:9066:9066
+    env_file:
+      - *common-properties
     environment:
-      APPRES_CMS_URL: https://www.nav.no/dekoratoren
-      REST_API_URL: http://localhost:9002/rest
-      LOGIN_URL: http://localhost:8060/rest/idporten/login
+      PORT: 9066
     depends_on:
       - foreldrepengesoknad-api
+      - wonderwall-foreldrepengeoversikt
   foreldrepengesoknad:
     <<: *default-konfigurasjon
     image: $FORELDREPENGESOKNAD_IMAGE
     container_name: foreldrepengesoknad
     ports:
-      - 127.0.0.1:9067:8080
+      - 127.0.0.1:9067:9067
+    env_file:
+      - *common-properties
     environment:
-      APPRES_CMS_URL: https://www.nav.no/dekoratoren
-      REST_API_URL: http://localhost:9002/rest
-      LOGIN_URL: http://localhost:8060/rest/idporten/login
+      INNSYN: https://foreldrepengeoversikt:9066
+      PORT: 9067
     depends_on:
       - foreldrepengesoknad-api
+      - wonderwall-foreldrepengesoknad
   svangerskapspengesoknad:
     <<: *default-konfigurasjon
     image: $SVANGERSKAPSPENGESOKNAD_IMAGE
     container_name: svangerskapspengesoknad
     ports:
-      - 127.0.0.1:9068:8080
+      - 127.0.0.1:9068:9068
+    env_file:
+      - *common-properties
     environment:
-      APPRES_CMS_URL: https://www.nav.no/dekoratoren
-      REST_API_URL: http://localhost:9002/rest
-      LOGIN_URL: http://localhost:8060/rest/idporten/login
+      INNSYN: https://foreldrepengeoversikt:9066
+      PORT: 9068
     depends_on:
       - foreldrepengesoknad-api
+      - wonderwall-svangerskapspengesoknad
   engangsstonad:
     <<: *default-konfigurasjon
     image: $ENGANGSSTONAD_IMAGE
     container_name: engangsstonad
     ports:
-      - 127.0.0.1:9065:8080
+      - 127.0.0.1:9069:9069
+    env_file:
+      - *common-properties
     environment:
-      APPRES_CMS_URL: https://www.nav.no/dekoratoren
-      REST_API_URL: http://localhost:9002/rest
-      LOGIN_URL: http://localhost:8060/rest/idporten/login
+      INNSYN: https://foreldrepengeoversikt:9066
+      PORT: 9069
     depends_on:
       - foreldrepengesoknad-api
+      - wonderwall-engangsstonad
   ## Swagger
   fpswagger:
     <<: *default-konfigurasjon
@@ -647,7 +653,6 @@ services:
     container_name: fpswagger
     mem_limit: 128mb
     environment:
-      AZURE_APP_CLIENT_ID: vtp
       PORT: 9190
       HOST: http://localhost
       NODE_ENV: development
@@ -748,10 +753,138 @@ services:
       --log-level=debug
     ports:
       - 127.0.0.1:9200:9200
-    environment:
-      AZURE_APP_CLIENT_ID: vtp
     env_file:
       - *common-properties
     depends_on:
       fpsak:
         condition: service_started
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - 127.0.0.1:6379:6379
+  wonderwall-selvbetjening-sso-server:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-selvbetjening-sso-server
+    command: |
+      --openid.provider=idporten
+      --ingress=http://localhost:9111
+      --bind-address=0.0.0.0:9111
+      --redis.uri=redis://redis:6379
+      --sso.enabled=true
+      --sso.mode=server
+      --sso.domain=localhost
+      --sso.session-cookie-name=selvbetjening-session
+      --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
+      --sso.server-default-redirect-url=http://localhost:9000
+      --session.refresh-auto=false
+      --auto-login=true
+      --log-level=debug
+    ports:
+      - 127.0.0.1:9111:9111
+    env_file:
+      - *common-properties
+    depends_on:
+      - redis
+  wonderwall-foreldrepengeoversikt:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-foreldrepengeoversikt
+    command: |
+      --openid.provider=idporten
+      --sso.enabled=true
+      --sso.mode=proxy
+      --sso.session-cookie-name=selvbetjening-session
+      --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
+      --sso.server-url=http://localhost:9111
+      --redis.uri=redis://redis:6379
+      --session.refresh-auto=false
+      --auto-login=true
+      --log-level=debug
+      --bind-address=0.0.0.0:9100
+      --ingress=http://localhost:9100
+      --upstream-host=foreldrepengeoversikt:9066
+    ports:
+      - 127.0.0.1:9100:9100
+    env_file:
+      - *common-properties
+    depends_on:
+      - redis
+      - wonderwall-selvbetjening-sso-server
+  wonderwall-foreldrepengesoknad:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-foreldrepengesoknad
+    command: |
+      --openid.provider=idporten
+      --sso.enabled=true
+      --sso.mode=proxy
+      --sso.session-cookie-name=selvbetjening-session
+      --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
+      --sso.server-url=http://localhost:9111
+      --redis.uri=redis://redis:6379
+      --session.refresh-auto=false
+      --auto-login=true
+      --log-level=debug
+      --ingress=http://localhost:9101
+      --bind-address=0.0.0.0:9101
+      --upstream-host=foreldrepengesoknad:9067
+    ports:
+      - 127.0.0.1:9101:9101
+    env_file:
+      - *common-properties
+    depends_on:
+      - redis
+      - wonderwall-selvbetjening-sso-server
+  wonderwall-svangerskapspengesoknad:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-svangerskapspengesoknad
+    command: |
+      --openid.provider=idporten
+      --sso.enabled=true
+      --sso.mode=proxy
+      --sso.session-cookie-name=selvbetjening-session
+      --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
+      --sso.server-url=http://localhost:9111
+      --redis.uri=redis://redis:6379
+      --session.refresh-auto=false
+      --auto-login=true
+      --log-level=debug
+      --ingress=http://localhost:9102
+      --bind-address=0.0.0.0:9102
+      --upstream-host=svangerskapspengesoknad:9068
+    ports:
+      - 127.0.0.1:9102:9102
+    env_file:
+      - *common-properties
+    depends_on:
+      - redis
+      - wonderwall-selvbetjening-sso-server
+  wonderwall-engangsstonad:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-engangsstonad
+    command: |
+      --openid.provider=idporten
+      --sso.enabled=true
+      --sso.mode=proxy
+      --sso.session-cookie-name=selvbetjening-session
+      --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
+      --sso.server-url=http://localhost:9111
+      --redis.uri=redis://redis:6379
+      --session.refresh-auto=false
+      --auto-login=true
+      --log-level=debug
+      --ingress=http://localhost:9103
+      --bind-address=0.0.0.0:9103
+      --upstream-host=engangsstonad:9069
+    ports:
+      - 127.0.0.1:9103:9103
+    env_file:
+      - *common-properties
+    depends_on:
+      - redis
+      - wonderwall-selvbetjening-sso-server
