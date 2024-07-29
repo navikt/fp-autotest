@@ -35,7 +35,7 @@
         <slf4j.version>2.0.13</slf4j.version>
         <logback.version>1.5.6</logback.version>
         <allure.version>2.28.0</allure.version>
-        <allure.maven.version>2.12.0</allure.maven.version>
+        <allure.maven.version>2.13.0</allure.maven.version>
         <assertj.version>3.26.3</assertj.version>
         <aspectj.version>1.9.22.1</aspectj.version>
         <junit.version>5.10.3</junit.version>
@@ -170,7 +170,7 @@
         <dependency>
             <groupId>io.smallrye</groupId>
             <artifactId>jandex</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
