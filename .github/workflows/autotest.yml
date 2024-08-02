@@ -142,7 +142,7 @@ jobs:
         run: tar -czf ${{ inputs.test-suite }}.tar.gz -C target/allure-report .
       - name: Laste opp testresultat
         if: (success() || failure()) && steps.ghpages.outcome == 'success'
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # ratchet:actions/upload-artifact@v4
+        uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029 # ratchet:actions/upload-artifact@v4
         with:
           name: ${{ inputs.test-suite }}-testresultat
           path: ${{ inputs.test-suite }}.tar.gz
@@ -156,7 +156,7 @@ jobs:
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
       - name: Laste opp logger
         if: failure() && !cancelled()
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # ratchet:actions/upload-artifact@v4
+        uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029 # ratchet:actions/upload-artifact@v4
         with:
           name: logs-${{ inputs.test-suite }}
           path: container-logs
