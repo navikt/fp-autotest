@@ -200,6 +200,8 @@ services:
         condition: service_healthy
       vtp:
         condition: service_healthy
+      fptilgang:
+        condition: service_started
       fpabakus:
         condition: service_started
       fpformidling:
@@ -481,6 +483,8 @@ services:
       oracle:
         condition: service_healthy
       vtp:
+        condition: service_healthy
+      fptilgang:
         condition: service_healthy
   fpoversikt:
     <<: *default-konfigurasjon
