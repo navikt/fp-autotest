@@ -1,3 +1,4 @@
+ALTER SESSION SET CONTAINER=FREEPDB1;
 alter session set "_oracle_script"=true;
 
 -- ##################################################
