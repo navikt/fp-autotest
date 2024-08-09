@@ -1,0 +1,1 @@
+{"@type":"AvklarBrukerBosattBekreftelse","bekreftedePerioder":[{"aksjonspunkter":[],"bosattVurdering":true}],"@type":"5020"}

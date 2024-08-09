@@ -1,0 +1,1 @@
+{"begrunnelse":"Test","harGyldigGrunn":true,"ansesMottattDato":"2024-04-09","@type":"5043"}

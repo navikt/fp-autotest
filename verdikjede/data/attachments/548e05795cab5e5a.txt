@@ -1,0 +1,1 @@
+{"vurderingBehov":[{"fom":"2024-08-16","tom":"2024-12-05","type":"UTTAK","årsak":"AKTIVITETSKRAV_IKKE_OPPGITT","vurdering":"GODKJENT"}],"@type":"5074"}

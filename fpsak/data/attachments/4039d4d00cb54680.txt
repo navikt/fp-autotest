@@ -1,0 +1,1 @@
+{"begrunnelse":"Test","mottattDato":"2024-08-09","fristDato":"2024-08-13","innsynDokumenter":[],"innsynResultatType":"INNV","sattPaVent":false,"@type":"5037"}

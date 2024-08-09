@@ -1,0 +1,1 @@
+{"@type":"AvklarBrukerHarGyldigPeriodeBekreftelse","bekreftedePerioder":[{"aksjonspunkter":[],"medlemskapManuellVurderingType":"MEDLEM"}],"@type":"5021"}
