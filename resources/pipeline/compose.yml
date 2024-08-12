@@ -21,7 +21,7 @@ services:
     container_name: oracle
     environment:
       TZ: Europe/Oslo
-      ORACLE_SID: XE # Mac
+      ORACLE_SID: $ORACLE_USE_SID
       ORACLE_PDB: FREEPDB1 # Mac
       ORACLE_PWD: oracle # Mac
       ORACLE_PASSWORD: oracle # Windows

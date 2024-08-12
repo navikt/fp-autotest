@@ -44,9 +44,11 @@ echo FPTILGANG_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-manageme
 if [[ $(arch) == *'arm'* ]]; then
     echo ORACLE_IMAGE="ghcr.io/navikt/fp-autotest/oracle-arm:19" >> .env
     echo ORACLE_HEALTHCHECK="/opt/oracle/checkDBStatus.sh" >> .env
+    echo ORACLE_USE_SID="XE" >> .env
 else
     echo ORACLE_IMAGE="gvenzl/oracle-free:23.4-slim-faststart" >> .env
     echo ORACLE_HEALTHCHECK="/opt/oracle/healthcheck.sh" >> .env
+    echo ORACLE_USE_SID="FREE" >> .env
 fi
 
 
