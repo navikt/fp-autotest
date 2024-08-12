@@ -46,7 +46,7 @@ if [[ $(arch) == *'arm'* ]]; then
     echo ORACLE_HEALTHCHECK="/opt/oracle/checkDBStatus.sh" >> .env
     echo ORACLE_USE_SID="XE" >> .env
 else
-    echo ORACLE_IMAGE="gvenzl/oracle-free:23.4-slim-faststart" >> .env
+    echo ORACLE_IMAGE="gvenzl/oracle-free:23.5-slim-faststart" >> .env
     echo ORACLE_HEALTHCHECK="/opt/oracle/healthcheck.sh" >> .env
     echo ORACLE_USE_SID="FREE" >> .env
 fi
