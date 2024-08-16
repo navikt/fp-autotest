@@ -123,9 +123,10 @@ class Termin extends FpsakTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
-
-        Vent.til(() -> saksbehandler.harAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK_MANUELT),
-                60, "Fikk ikke aksjonspunkt 5028 foreslå vedtak manuelt");
+        Vent.til(() -> {
+            saksbehandler.velgSisteBehandling();
+            return saksbehandler.harAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK_MANUELT);
+            },60, "Fikk ikke aksjonspunkt 5028 foreslå vedtak manuelt");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
