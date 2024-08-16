@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
 
 import org.junit.jupiter.api.DisplayName;
@@ -506,6 +507,7 @@ class Fodsel extends FpsakTestBase {
         aksjonspunktBekreftelse.morSøkerFødsel(fordeling, fødselsdato, fpff.periodeFom.minusWeeks(3));
 
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -834,7 +836,7 @@ class Fodsel extends FpsakTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
                 .bekreftBrukerHarAleneomsorg();
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
-
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // verifiserer uttak
