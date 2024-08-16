@@ -16,6 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -199,6 +201,7 @@ class SammenhengendeUttak extends FpsakTestBase {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
             saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
         } else {
             saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();

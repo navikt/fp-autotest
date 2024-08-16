@@ -43,6 +43,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -797,6 +799,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
         vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+
         saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1135,6 +1139,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .godkjenn()
                 .setBegrunnelse("Besteberegning godkjent av autotest.");
         saksbehandler.bekreftAksjonspunkt(bekreftKorrektBesteberegninging);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1194,6 +1199,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
                 .bekreftBrukerHarAleneomsorg();
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -1373,6 +1380,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
         avklarFaktaAdopsjonsdokumentasjonBekreftelseMor.setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseMor);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1796,6 +1804,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
                 .setBegrunnelse("Adopsjon behandlet av Autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
@@ -2030,6 +2039,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
         }
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 

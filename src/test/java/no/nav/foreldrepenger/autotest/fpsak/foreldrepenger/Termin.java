@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
@@ -122,7 +123,7 @@ class Termin extends FpsakTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
-
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.velgSisteBehandling();
