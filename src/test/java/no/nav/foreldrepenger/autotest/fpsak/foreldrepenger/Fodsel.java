@@ -535,6 +535,8 @@ class Fodsel extends FpsakTestBase {
         aksjonspunktBekreftelseEndringssøknad.setFordeling(fordelingEndringssøknad);
         aksjonspunktBekreftelseEndringssøknad.setAnnenForelderInformert(true);
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelseEndringssøknad);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
