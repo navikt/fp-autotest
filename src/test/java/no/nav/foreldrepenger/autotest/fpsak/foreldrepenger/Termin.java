@@ -17,6 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.autotest.util.vent.Vent;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -121,9 +123,11 @@ class Termin extends FpsakTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
-        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK_MANUELT)) {
-            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
-        }
+
+        Vent.til(() -> saksbehandler.harAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK_MANUELT),
+                60, "Fikk ikke aksjonspunkt 5028 foreslå vedtak manuelt");
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.velgSisteBehandling();
