@@ -68,7 +68,7 @@ public class AksjonspunktKoder {
 
     public static final String SJEKK_MANGLENDE_FØDSEL = "5027";
 
-    public static final String VEDTAK_UTEN_TOTRINNSKONTROLL = "5018";
+    public static final String LEDIG_TIL_FRI_BRUK = "5018";
 
     public static final String VURDERE_ANNEN_YTELSE_FØR_VEDTAK = "5033";
     public static final String VURDERE_DOKUMENT_FØR_VEDTAK = "5034";
