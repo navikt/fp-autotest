@@ -420,6 +420,7 @@ services:
     mem_limit: 512mb
     environment:
       BRREG_PROXY: http://vtp:8060/rest/dummy/brreg
+      BRREG_DIRECT_URL: http://vtp:8060/rest/dummy/brreg
     env_file:
       - fprisk_datasource.env
       - *common-properties
