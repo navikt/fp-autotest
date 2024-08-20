@@ -895,6 +895,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                     .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
             vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
         }
 
 
@@ -2109,6 +2110,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
             saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
         } else {
             saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
