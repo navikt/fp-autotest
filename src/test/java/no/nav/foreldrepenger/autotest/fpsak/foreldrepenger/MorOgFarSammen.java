@@ -249,6 +249,7 @@ class MorOgFarSammen extends FpsakTestBase {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
+            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
             saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
         } else {
             saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
