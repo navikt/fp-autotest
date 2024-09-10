@@ -17,7 +17,6 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarLovligOppholdBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkåretBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
 import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
@@ -53,10 +52,6 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        var avklarLovligOppholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarLovligOppholdBekreftelse.class);
-        avklarLovligOppholdBekreftelse.bekreftBrukerHarLovligOpphold();
-        saksbehandler.bekreftAksjonspunkt(avklarLovligOppholdBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderMedlemskapsvilkåretBekreftelse.class);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
@@ -111,10 +106,6 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
 
         avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
-        var avklarLovligOppholdBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarLovligOppholdBekreftelse.class);
-        avklarLovligOppholdBekreftelse.bekreftBrukerHarLovligOpphold();
-        saksbehandler.bekreftAksjonspunkt(avklarLovligOppholdBekreftelse);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderMedlemskapsvilkåretBekreftelse.class);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
 

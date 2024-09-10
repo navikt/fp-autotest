@@ -18,13 +18,8 @@ public class AksjonspunktKoder {
     public static final String AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE = "7030";
 
     public static final String AVKLAR_ADOPSJONSDOKUMENTAJON = "5004";
-    public static final String AVKLAR_FAKTA_FOR_PERSONSTATUS = "5022";
-    public static final String AVKLAR_GYLDIG_MEDLEMSKAPSPERIODE = "5021";
-    public static final String AVKLAR_LOVLIG_OPPHOLD = "5019";
     public static final String AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN = "5005";
-    public static final String AVKLAR_OM_ER_BOSATT = "5020";
     public static final String AVKLAR_OM_SØKER_ER_MANN_SOM_ADOPTERER_ALENE = "5006";
-    public static final String AVKLAR_OPPHOLDSRETT = "5023";
     public static final String AVKLAR_TERMINBEKREFTELSE = "5001";
     public static final String AVKLAR_TILLEGGSOPPLYSNINGER = "5009";
     public static final String AVKLAR_VILKÅR_FOR_OMSORGSOVERTAKELSE = "5008";
