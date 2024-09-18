@@ -113,8 +113,10 @@ class Termin extends FpsakTestBase {
 
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD);
         saksbehandler.gjenopptaBehandling();
-        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
-        saksbehandler.gjenopptaBehandling();
+        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE)) {
+            saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE);
+            saksbehandler.gjenopptaBehandling();
+        }
 
         // Løs 5085, ikke vent på inntektsmeldinger
         saksbehandler.fortsettUteninntektsmeldinger();
