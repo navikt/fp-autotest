@@ -63,8 +63,8 @@ class LoggTest {
             "duplicate key value violates unique constraint \\\"uidx_kobling_1\\\"" // Logges i fpabakus
     );
 
-    private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang");
-    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api");
+    private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fpkalkulus");
+    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api", "fpkalkulus");
     private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
 
     private static String toNumericPattern(String s) {
