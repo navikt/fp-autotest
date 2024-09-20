@@ -4,6 +4,7 @@ public enum HistorikkinnslagType {
 
     BREV_SENT,
     BREV_BESTILT,
+    MIN_SIDE_ARBEIDSGIVER,
     BEH_STARTET_PÅ_NYTT,
     BEH_STARTET,
     BEH_OPPDATERT_NYE_OPPL,
