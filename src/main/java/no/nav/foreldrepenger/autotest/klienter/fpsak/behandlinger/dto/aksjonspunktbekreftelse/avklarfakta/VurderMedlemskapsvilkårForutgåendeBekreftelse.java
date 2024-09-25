@@ -1,23 +1,23 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta;
 
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 
-@BekreftelseKode(kode = "5101")
-public class VurderMedlemskapsvilkåretBekreftelse extends AksjonspunktBekreftelse {
+import java.time.LocalDate;
+
+@BekreftelseKode(kode = "5102")
+public class VurderMedlemskapsvilkårForutgåendeBekreftelse extends AksjonspunktBekreftelse {
 
     protected Avslagsårsak avslagskode;
     protected LocalDate medlemFom;
     protected LocalDate opphørFom;
 
-    public VurderMedlemskapsvilkåretBekreftelse() {
+    public VurderMedlemskapsvilkårForutgåendeBekreftelse() {
 
     }
 
-    public VurderMedlemskapsvilkåretBekreftelse(Avslagsårsak avslagskode) {
+    public VurderMedlemskapsvilkårForutgåendeBekreftelse(Avslagsårsak avslagskode) {
         this.avslagskode = avslagskode;
     }
 }
