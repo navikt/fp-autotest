@@ -30,9 +30,9 @@ jobs:
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # ratchet:actions/checkout@v4
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
         if: github.repository == 'navikt/fp-autotest'
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # ratchet:actions/checkout@v4
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
         if: github.repository != 'navikt/fp-autotest'
         with:
           repository: 'navikt/fp-autotest'
