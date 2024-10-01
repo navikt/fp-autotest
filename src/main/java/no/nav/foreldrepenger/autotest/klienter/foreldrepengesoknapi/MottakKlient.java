@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.common.domain.Kvittering;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.engangsstønad.EngangsstønadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.svangerskapspenger.SvangerskapspengesøknadDto;
 
 public class MottakKlient {
 
@@ -33,6 +34,7 @@ public class MottakKlient {
     public Kvittering sendSøknad(Fødselsnummer fnr, no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
         var path = switch (søknad) {
             case EngangsstønadDto ignored -> API_SEND_PATH + "/engangsstonad";
+            case SvangerskapspengesøknadDto ignored -> API_SEND_PATH + "/svangerskapspenger";
             default -> throw new IllegalStateException("Unexpected value: " + søknad);
         };
         var request = requestMedInnloggetBruker(fnr)

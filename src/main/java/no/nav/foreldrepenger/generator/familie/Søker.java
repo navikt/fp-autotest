@@ -225,6 +225,15 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
+    public Saksnummer søk(no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad, Saksnummer saksnummer) {
+        genererUniktNavConsumerIdForDokument();
+        LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
+        this.førstegangssøknadV2 = søknad;
+        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
+        LOG.info("Søknad sendt inn og behandling opprettet på fagsak {}", saksnummer.value());
+        return this.saksnummer;
+    }
+
     public Saksnummer søk(EndringssøknadDto søknad) {
         genererUniktNavConsumerIdForDokument();
         this.saksnummer = ((EndringssøknadForeldrepengerDto) søknad).saksnummer();
