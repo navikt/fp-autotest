@@ -15,7 +15,7 @@ public final class SøknadEngangsstønadMaler {
     private static EngangsstønadBuilder lagEngangsstønad() {
         return new EngangsstønadBuilder()
                 .medSpråkkode(Målform.standard())
-                .medOppholdIUtlandet(List.of());
+                .medUtenlandsopphold(List.of());
     }
 
     public static EngangsstønadBuilder lagEngangstønadFødsel(LocalDate familiehendelse) {

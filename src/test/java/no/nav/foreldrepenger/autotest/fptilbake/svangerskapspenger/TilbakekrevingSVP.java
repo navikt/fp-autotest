@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.fptilbake.svangerskapspenger;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad;
-import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler.virksomhet;
+import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.ArbeidsforholdMaler.virksomhet;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -22,12 +22,11 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBuilder;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -54,7 +53,7 @@ class TilbakekrevingSVP extends FptilbakeTestBase {
                 LocalDate.now(),
                 virksomhet((Orgnummer) arbeidsgiver.arbeidsgiverIdentifikator()))
                 .build();
-        var søknad = lagSvangerskapspengerSøknad(BrukerRolle.MOR, termindato, List.of(tilrettelegging));
+        var søknad = lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
         arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);

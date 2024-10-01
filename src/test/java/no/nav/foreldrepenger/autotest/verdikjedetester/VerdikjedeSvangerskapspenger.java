@@ -21,7 +21,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.TilretteleggingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
@@ -29,10 +28,9 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.OpptjeningMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("verdikjede")
@@ -59,9 +57,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 LocalDate.now(),
                 ArbeidsforholdMaler.virksomhet(((Orgnummer) orgnummer)))
                 .build();
-        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
-                BrukerRolle.MOR,
-                termindato,
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
@@ -117,9 +113,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer),
                 tilrettelegginsprosent)
                 .build();
-        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
-                BrukerRolle.MOR,
-                termindato,
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
@@ -179,9 +173,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 LocalDate.now(),
                 ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1))
                 .build();
-        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
-                BrukerRolle.MOR,
-                termindato,
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
@@ -244,7 +236,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsforhold = mor.arbeidsforhold();
         var arbeidsgiverIdentifikator = arbeidsforhold.arbeidsgiverIdentifikasjon();
         var næringsinntekt = mor.næringsinntekt();
-        var opptjening = OpptjeningMaler.egenNaeringOpptjening(
+        var næring = OpptjeningMaler.egenNaeringOpptjening(
                 arbeidsgiverIdentifikator.value(),
                 mor.næringStartdato(),
                 LocalDate.now(),
@@ -258,11 +250,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 LocalDate.now().minusMonths(2),
                 ArbeidsforholdMaler.virksomhet((Orgnummer) arbeidsgiverIdentifikator))
                 .build();
-        var søknad1 = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
-                BrukerRolle.MOR,
-                termindato,
+        var søknad1 = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging1))
-                .medSøker(new SøkerBuilder(BrukerRolle.MOR).build())
                 .build();
         var saksnummer1 = mor.søk(søknad1);
 
@@ -305,13 +294,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 LocalDate.now(),
                 ArbeidsforholdMaler.selvstendigNæringsdrivende())
                 .build();
-        var søknad2 = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
-                BrukerRolle.MOR,
-                termindato,
-                List.of(tilrettelegging2))
-                .medSøker(new SøkerBuilder(BrukerRolle.MOR)
-                        .medSelvstendigNæringsdrivendeInformasjon(List.of(opptjening))
-                        .build())
+        var søknad2 = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging2))
+                .medSelvstendigNæringsdrivendeInformasjon(næring)
                 .build();
         var saksnummer2 = mor.søk(søknad2);
 
@@ -396,9 +380,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 LocalDate.now(),
                 ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer2))
                 .build();
-        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
-                BrukerRolle.MOR,
-                termindato,
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging1, tilrettelegging2));
         var saksnummer = mor.søk(søknad.build());
 
@@ -474,9 +456,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer),
                 40.0)
                 .build();
-        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
-                BrukerRolle.MOR,
-                termindato,
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
