@@ -36,7 +36,7 @@ jobs:
     continue-on-error: true
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # ratchet:actions/checkout@v4
         with:
           repository: 'navikt/fp-autotest'
       - name: Henter testresultat for fpsak
@@ -95,7 +95,7 @@ jobs:
     timeout-minutes: 2
     steps:
       - name: Henter ut historie til trigger
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # ratchet:actions/checkout@v4
         with:
           repository: ${{ github.repository }}
           path: ${{ github.repository }}

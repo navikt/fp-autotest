@@ -30,9 +30,9 @@ jobs:
     outputs:
       result: ${{ steps.result.outputs.result }}
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # ratchet:actions/checkout@v4
         if: github.repository == 'navikt/fp-autotest'
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # ratchet:actions/checkout@v4
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # ratchet:actions/checkout@v4
         if: github.repository != 'navikt/fp-autotest'
         with:
           repository: 'navikt/fp-autotest'
@@ -48,7 +48,7 @@ jobs:
           distribution: 'temurin'
           java-version: 21
       - name: Cache for maven dependencies autotest
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        uses: actions/cache@2cdf405574d6ef1f33a1d12acccd3ae82f47b3f2
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-autotest-${{ hashFiles('**/pom.xml') }}
@@ -142,7 +142,7 @@ jobs:
         run: tar -czf ${{ inputs.test-suite }}.tar.gz -C target/allure-report .
       - name: Laste opp testresultat
         if: (success() || failure()) && steps.ghpages.outcome == 'success'
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # ratchet:actions/upload-artifact@v4
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # ratchet:actions/upload-artifact@v4
         with:
           name: ${{ inputs.test-suite }}-testresultat
           path: ${{ inputs.test-suite }}.tar.gz
@@ -156,7 +156,7 @@ jobs:
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
       - name: Laste opp logger
         if: failure() && !cancelled()
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # ratchet:actions/upload-artifact@v4
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9 # ratchet:actions/upload-artifact@v4
         with:
           name: logs-${{ inputs.test-suite }}
           path: container-logs
