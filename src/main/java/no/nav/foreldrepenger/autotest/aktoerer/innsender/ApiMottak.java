@@ -157,7 +157,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
                                              String eksternReferanseId, DokumenttypeId dokumenttypeId) {
         var journalpostModell = new JournalpostModell();
         journalpostModell.setTittel(tittel);
-        journalpostModell.setJournalStatus(Journalstatus.MIDLERTIDIG_JOURNALFØRT);
+        journalpostModell.setJournalStatus(Journalstatus.MOTTATT);
         journalpostModell.setMottattDato(LocalDateTime.now());
         journalpostModell.setMottakskanal(mottakskanal);
         journalpostModell.setArkivtema(Arkivtema.FOR);
