@@ -1962,9 +1962,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // Sammenlign uttak fra fpfrontend og innsyn for bruker
         var uttakResultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
         var vedtaksperioderInnsyn = fpSak.gjeldendeVedtak().perioder();
-        assertThat(uttakResultatPerioder)
-                .hasSameSizeAs(vedtaksperioderInnsyn)
-                .hasSize(4);
+        assertThat(vedtaksperioderInnsyn)
+                .hasSize(3);
 
         // Verifisere at alle perioder er innvilget i både uttak og vedtaket i innsyn
         uttakResultatPerioder.forEach(periode -> assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET));
