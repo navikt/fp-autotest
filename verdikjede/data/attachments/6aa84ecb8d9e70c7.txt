@@ -1,0 +1,1 @@
+{"mottattdato":"2024-10-17","barn":{"termindato":"2025-01-17"},"rolle":"MOR","språkkode":"NB","andreInntekterSiste10Mnd":[],"utenlandsopphold":[],"tilrettelegging":[{"type":"delvis","arbeidsforhold":{"type":"virksomhet","id":"889640782"},"behovForTilretteleggingFom":"2024-10-17","tilrettelagtArbeidFom":"2024-10-17","stillingsprosent":40.0}],"avtaltFerie":[],"vedlegg":[]}
