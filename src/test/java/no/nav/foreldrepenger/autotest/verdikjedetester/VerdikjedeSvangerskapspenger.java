@@ -37,7 +37,6 @@ import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.OpptjeningMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("verdikjede")
@@ -525,10 +524,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                         LocalDate.now(),
                         virksomhetDto)
                 .build();
-        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
-                BrukerRolle.MOR,
-                termindato,
-                List.of(tilrettelegging));
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging));
         var af = new AvtaltFerieDto(virksomhetDto, LocalDate.now().plusWeeks(1), LocalDate.now().plusWeeks(4));
         søknad.medAvtaltFerie(List.of(af));
         var saksnummer = mor.søk(søknad.build());
@@ -564,10 +560,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                         virksomhetDto, 50.0)
                 .build();
 
-        var nySøknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
-                BrukerRolle.MOR,
-                termindato,
-                List.of(nyTilrettelegging));
+        var nySøknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato, List.of(nyTilrettelegging));
 
         var nyAf = new AvtaltFerieDto(virksomhetDto, LocalDate.now().plusWeeks(3), LocalDate.now().plusWeeks(4));
         nySøknad.medAvtaltFerie(List.of(nyAf));
