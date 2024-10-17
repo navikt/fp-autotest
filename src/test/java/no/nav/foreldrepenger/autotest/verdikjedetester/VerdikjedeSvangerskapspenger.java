@@ -1,12 +1,19 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static java.util.function.Predicate.not;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.AvklartOpphold;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.svangerskapspenger.AvtaltFerieDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.ArbeidsforholdMaler;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -496,6 +503,85 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(svpSakEtterVedtak.familiehendelse().fødselsdato()).isNull();
         assertThat(svpSakEtterVedtak.familiehendelse().antallBarn()).isZero();
         assertThat(svpSakEtterVedtak.familiehendelse().omsorgsovertakelse()).isNull();
+    }
+
+    @Test
+    @DisplayName("7: Søknad med avtalt ferieperiode")
+    @Description("Søknaden inneholder en avtalt ferieperiode")
+    void søknadInneholderAvtaltFerieTest() {
+        var familie = FamilieGenerator.ny()
+                .forelder(mor()
+                        .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
+                        .build())
+                .forelder(far().build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build();
+        var mor = familie.mor();
+        var termindato = LocalDate.now().plusMonths(3);
+        var orgnummer = (Orgnummer) mor.arbeidsforhold().arbeidsgiverIdentifikasjon();
+        var virksomhetDto = ArbeidsforholdMaler.virksomhet(orgnummer);
+        var tilrettelegging = TilretteleggingBuilder.ingen(
+                        LocalDate.now(),
+                        LocalDate.now(),
+                        virksomhetDto)
+                .build();
+        var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
+                BrukerRolle.MOR,
+                termindato,
+                List.of(tilrettelegging));
+        var af = new AvtaltFerieDto(virksomhetDto, LocalDate.now().plusWeeks(1), LocalDate.now().plusWeeks(4));
+        søknad.medAvtaltFerie(List.of(af));
+        var saksnummer = mor.søk(søknad.build());
+
+        var arbeidsgiver = mor.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
+
+        saksbehandler.hentFagsak(saksnummer);
+        var avklarFaktaFødselOgTilrettelegging = saksbehandler
+                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+        avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
+
+        var avklarteOppholdsperioder = avklarFaktaFødselOgTilrettelegging.getBekreftetSvpArbeidsforholdList().getFirst().getAvklarteOppholdPerioder();
+        assertThat(avklarteOppholdsperioder).first()
+                .matches(not(AvklartOpphold::forVisning), "avklart opphold skal være redigerbart, dvs ikke for visning")
+                .matches(l -> l.oppholdKilde() == AvklartOpphold.SvpOppholdKilde.SØKNAD, "søknad er kilde til oppholdet")
+                .matches(l -> Objects.equals(l.fom(), af.fom()), "fom datoer er like")
+                .matches(l -> Objects.equals(l.tom(), af.tom()), "tom datoer er like");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
+
+        var bekreftSvangerskapspengervilkår = saksbehandler
+                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+        bekreftSvangerskapspengervilkår
+                .godkjenn()
+                .setBegrunnelse("Godkjenner vilkår");
+        saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        var nyTilrettelegging = TilretteleggingBuilder.delvis(
+                        LocalDate.now(),
+                        LocalDate.now().plusWeeks(2),
+                        virksomhetDto, 50.0)
+                .build();
+
+        var nySøknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(
+                BrukerRolle.MOR,
+                termindato,
+                List.of(nyTilrettelegging));
+
+        var nyAf = new AvtaltFerieDto(virksomhetDto, LocalDate.now().plusWeeks(3), LocalDate.now().plusWeeks(4));
+        nySøknad.medAvtaltFerie(List.of(nyAf));
+        mor.søk(nySøknad.build());
+        saksbehandler.velgSisteBehandling();
+        var nyAvklarteOppholdsperioder = saksbehandler.hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
+                .getBekreftetSvpArbeidsforholdList().getFirst()
+                .getAvklarteOppholdPerioder();
+        assertThat(nyAvklarteOppholdsperioder).hasSize(2);
+        nyAvklarteOppholdsperioder.sort(Comparator.comparing(AvklartOpphold::fom));
+        assertThat(nyAvklarteOppholdsperioder.getFirst().fom()).isEqualTo(LocalDate.now().plusWeeks(1));
+        assertThat(nyAvklarteOppholdsperioder.getFirst().tom()).isEqualTo(LocalDate.now().plusWeeks(2).minusDays(1));
+        assertThat(nyAvklarteOppholdsperioder.getLast().fom()).isEqualTo(LocalDate.now().plusWeeks(3));
+        assertThat(nyAvklarteOppholdsperioder.getLast().tom()).isEqualTo(LocalDate.now().plusWeeks(4));
     }
 
     private Integer regnUtForventetDagsats(Integer samletMånedsbeløp, Double tilrettelegginsprosent) {
