@@ -605,6 +605,7 @@ services:
     env_file:
       - *common-properties
     environment:
+      PUBLIC_PATH: /foreldrepenger/oversikt
       PORT: 9066
     depends_on:
       - foreldrepengesoknad-api
@@ -618,6 +619,7 @@ services:
     env_file:
       - *common-properties
     environment:
+      PUBLIC_PATH: /foreldrepenger/soknad
       INNSYN: https://foreldrepengeoversikt:9066
       PORT: 9067
     depends_on:
@@ -632,6 +634,7 @@ services:
     env_file:
       - *common-properties
     environment:
+      PUBLIC_PATH: /svangerskapspenger/soknad
       INNSYN: https://foreldrepengeoversikt:9066
       PORT: 9068
     depends_on:
@@ -646,6 +649,7 @@ services:
     env_file:
       - *common-properties
     environment:
+      PUBLIC_PATH: /engangsstonad/soknad
       INNSYN: https://foreldrepengeoversikt:9066
       PORT: 9069
     depends_on:
