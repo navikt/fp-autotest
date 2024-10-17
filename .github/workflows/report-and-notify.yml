@@ -168,7 +168,7 @@ jobs:
           fi
       - name: Slack Notification
         if: success()
-        uses: rtCamp/action-slack-notify@4e5fb42d249be6a45a298f3c9543b111b02f7907 # ratchet:rtCamp/action-slack-notify@v2.3.0
+        uses: rtCamp/action-slack-notify@65e6fc1ce697e2df8149d9ae9909acc5ec5599ce # ratchet:rtCamp/action-slack-notify@v2.3.1
         env:
           SLACK_CHANNEL: vtp-autotest-resultat
           SLACK_COLOR: ${{ env.SLACK_COLOR }}
@@ -181,7 +181,7 @@ jobs:
           MSG_MINIMAL: true
       - name: Slack Notification
         if: failure()
-        uses: rtCamp/action-slack-notify@4e5fb42d249be6a45a298f3c9543b111b02f7907 # ratchet:rtCamp/action-slack-notify@v2.3.0
+        uses: rtCamp/action-slack-notify@65e6fc1ce697e2df8149d9ae9909acc5ec5599ce # ratchet:rtCamp/action-slack-notify@v2.3.1
         env:
           SLACK_CHANNEL: vtp-autotest-resultat
           SLACK_COLOR: #df1515
