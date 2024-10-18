@@ -1,0 +1,1 @@
+{"type":"fødselshendelse","endringstype":"OPPRETTET","fnrMor":"23468643464","fnrFar":"26458623375","foedselsdato":"2024-10-09"}

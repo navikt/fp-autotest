@@ -1,0 +1,1 @@
+{"type":"dødshendelse","endringstype":"OPPRETTET","fnr":"22478834016","doedsdato":"2024-10-17"}

@@ -1,0 +1,1 @@
+{"begrunnelse":"Adopsjon behandlet av Autotest","omsorgsovertakelseDato":"2024-08-18","fodselsdatoer":{"1":"2014-10-18"},"barnetsAnkomstTilNorgeDato":"2024-08-18","@type":"5004"}
