@@ -1,0 +1,1 @@
+{"mottattdato":"2024-10-21","barn":{"termindato":"2025-01-21"},"rolle":"MOR","språkkode":"NB","andreInntekterSiste10Mnd":[],"utenlandsopphold":[],"tilrettelegging":[{"type":"ingen","arbeidsforhold":{"type":"virksomhet","id":"992260432"},"behovForTilretteleggingFom":"2024-08-21","slutteArbeidFom":"2024-08-21"}],"avtaltFerie":[],"vedlegg":[]}

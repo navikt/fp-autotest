@@ -1,0 +1,1 @@
+{"tema":"FODSL","soker":"MOR","soknadstype":"FP","mottattDato":"2024-10-21","tidsromPermisjon":{"permisjonsPerioder":[{"periodeFom":"2024-12-01","periodeTom":"2025-01-04","periodeType":"FELLESPERIODE"}],"graderingPeriode":[],"utsettelsePeriode":[]},"annenForelderInformert":true,"@type":"5057"}
