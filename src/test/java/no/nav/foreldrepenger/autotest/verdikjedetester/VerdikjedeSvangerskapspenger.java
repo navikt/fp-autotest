@@ -28,9 +28,9 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.OpptjeningMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.ArbeidsforholdMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("verdikjede")
@@ -52,10 +52,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var termindato = LocalDate.now().plusMonths(3);
         var arbeidsforholdMor = mor.arbeidsforhold();
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
-        var tilrettelegging = TilretteleggingBuilder.ingen(
-                LocalDate.now(),
-                LocalDate.now(),
-                ArbeidsforholdMaler.virksomhet(((Orgnummer) orgnummer)))
+        var tilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet(((Orgnummer) orgnummer)), LocalDate.now())
+                .ingen(LocalDate.now())
                 .build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging));
@@ -107,11 +105,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
         var tilrettelegginsprosent = 40.0;
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegging = TilretteleggingBuilder.delvis(
-                LocalDate.now(),
-                LocalDate.now(),
-                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer),
-                tilrettelegginsprosent)
+        var tilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet(((Orgnummer) orgnummer)), LocalDate.now())
+                .delvis(LocalDate.now(), tilrettelegginsprosent)
                 .build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging));
@@ -168,10 +163,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var orgnummer1 = arbeidsforhold1.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
         var tilrettelegginsprosent = 0.0;
-        var tilrettelegging = TilretteleggingBuilder.ingen(
-                LocalDate.now(),
-                LocalDate.now(),
-                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1))
+        var tilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1), LocalDate.now())
+                .ingen(LocalDate.now())
                 .build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging));
@@ -245,10 +238,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 false);
         var termindato = LocalDate.now().plusMonths(3);
         var tilrettelegginsprosent = 0.0;
-        var tilrettelegging1 = TilretteleggingBuilder.ingen(
-                LocalDate.now().minusMonths(2),
-                LocalDate.now().minusMonths(2),
-                ArbeidsforholdMaler.virksomhet((Orgnummer) arbeidsgiverIdentifikator))
+        var tilrettelegging1 = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) arbeidsgiverIdentifikator), LocalDate.now().minusMonths(2))
+                .ingen(LocalDate.now().minusMonths(2))
                 .build();
         var søknad1 = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging1))
@@ -289,11 +280,10 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .isTrue();
 
         /* SØKNAD 2 */
-        var tilrettelegging2 = TilretteleggingBuilder.ingen(
-                LocalDate.now(),
-                LocalDate.now(),
-                ArbeidsforholdMaler.selvstendigNæringsdrivende())
-                .build();
+        var tilrettelegging2 =
+                new TilretteleggingBehovBuilder(ArbeidsforholdMaler.selvstendigNæringsdrivende(), LocalDate.now())
+                        .ingen(LocalDate.now())
+                        .build();
         var søknad2 = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging2))
                 .medSelvstendigNæringsdrivendeInformasjon(næring)
                 .build();
@@ -370,15 +360,11 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var orgnummer2 = arbeidsforhold2.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
         var tilrettelegginsprosent = 0.0;
-        var tilrettelegging1 = TilretteleggingBuilder.ingen(
-                LocalDate.now(),
-                LocalDate.now(),
-                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1))
+        var tilrettelegging1 = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1), LocalDate.now())
+                .ingen(LocalDate.now())
                 .build();
-        var tilrettelegging2 = TilretteleggingBuilder.ingen(
-                LocalDate.now(),
-                LocalDate.now(),
-                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer2))
+        var tilrettelegging2 = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer2), LocalDate.now())
+                .ingen(LocalDate.now())
                 .build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging1, tilrettelegging2));
@@ -450,11 +436,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsforholdMor = mor.arbeidsforhold();
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegging = TilretteleggingBuilder.delvis(
-                LocalDate.now(),
-                LocalDate.now(),
-                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer),
-                40.0)
+        var tilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer), LocalDate.now())
+                .delvis(LocalDate.now(), 40.0)
                 .build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging));

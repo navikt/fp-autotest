@@ -26,7 +26,7 @@ import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.MedlemsskapMaler;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.ArbeidsforholdMaler;
 
 public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBase {
@@ -77,7 +77,9 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
 
     @Test
     public void svangerskapspengersøknadTest() {
-        var delvisTilrettelegging = TilretteleggingBuilder.delvis(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdMaler.privatArbeidsgiver(new Fødselsnummer("12345678910")), 50.0).build();
+        var delvisTilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.privatArbeidsgiver(new Fødselsnummer("12345678910")), LocalDate.now())
+                .delvis(LocalDate.now().plusDays(5), 50.0)
+                .build();
         test(lagSvangerskapspengerSøknad(LocalDate.now().plusWeeks(4), List.of(delvisTilrettelegging)).build());
     }
 

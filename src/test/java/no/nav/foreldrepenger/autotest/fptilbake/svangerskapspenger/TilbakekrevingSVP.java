@@ -26,7 +26,7 @@ import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBehovBuilder;
 
 @Tag("tilbakekreving")
 @Tag("fptilbake")
@@ -48,10 +48,8 @@ class TilbakekrevingSVP extends FptilbakeTestBase {
         var mor = familie.mor();
         var termindato = LocalDate.now().plusMonths(3);
         var arbeidsgiver = mor.arbeidsgiver();
-        var tilrettelegging = TilretteleggingBuilder.ingen(
-                LocalDate.now(),
-                LocalDate.now(),
-                virksomhet((Orgnummer) arbeidsgiver.arbeidsgiverIdentifikator()))
+        var tilrettelegging = new TilretteleggingBehovBuilder(virksomhet((Orgnummer) arbeidsgiver.arbeidsgiverIdentifikator()), LocalDate.now())
+                .ingen(LocalDate.now())
                 .build();
         var søknad = lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
