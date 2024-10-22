@@ -213,6 +213,8 @@ services:
         condition: service_started
       fptilbake:
         condition: service_started
+      fpinntektsmelding:
+        condition: service_started
   fpfrontend:
     <<: *default-konfigurasjon
     image: $FPFRONTEND_IMAGE
@@ -595,7 +597,7 @@ services:
       vtp:
         condition: service_healthy
       fager-api:
-        condition: service_healthy
+        condition: service_started
 
   fager-api:
     image: ghcr.io/navikt/arbeidsgiver-notifikasjon-produsent-api/fake-produsent-api:latest
