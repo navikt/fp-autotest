@@ -27,8 +27,8 @@
         <vtp.versjon>1.2.4</vtp.versjon>
         <fp-felles.versjon>7.3.1</fp-felles.versjon>
         <fp-prosesstask.version>5.0.16</fp-prosesstask.version>
-        <fp-kontrakter.version>9.1.20</fp-kontrakter.version>
-        <fpsoknad-felles.version>3.1.9</fpsoknad-felles.version>
+        <fp-kontrakter.version>9.1.21</fp-kontrakter.version>
+        <fpsoknad-felles.version>3.1.10</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.2.0</foreldrepenge-api.version>
         <kalkulus.versjon>0.0.6</kalkulus.versjon>
 
