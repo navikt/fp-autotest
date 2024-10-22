@@ -78,6 +78,7 @@ class LoggTest {
     @BeforeAll
     public static void setup() {
         IKKE_SJEKK_LENGDE_AV_CONTAINERE = Optional.ofNullable(System.getProperty("ikkeSjekkLengdeAvContainer"))
+                .or(() -> Optional.ofNullable(System.getenv("ikkeSjekkLengdeAvContainer")))
                 .orElse("sjekker alle");
         LOG.info("Sjekker ikke lengden av følgende containere: {}", IKKE_SJEKK_LENGDE_AV_CONTAINERE);
     }
