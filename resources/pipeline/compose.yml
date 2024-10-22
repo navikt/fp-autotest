@@ -605,10 +605,6 @@ services:
       - "127.0.0.1:8072:8080"
     environment:
       ALWAYS_SUCCESSFUL_RESPONSE: true
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8072/rest/isReady" ]
-      interval: 30s
-      timeout: 5s
 
   ## SELVBETJENING SPESIFIKK
   foreldrepengesoknad-api:
