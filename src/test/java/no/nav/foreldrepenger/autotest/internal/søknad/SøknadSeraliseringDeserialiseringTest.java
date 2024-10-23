@@ -9,9 +9,6 @@ import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepenger
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad;
-import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBuilder.delvis;
-import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBuilder.hel;
-import static no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBuilder.ingen;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,7 +18,6 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.MedlemsskapMaler;
@@ -66,13 +62,6 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
         test(lagEngangstønadTermin(LocalDate.now().plusWeeks(4)).build());
         test(lagEngangstønadAdopsjon(LocalDate.now(), false).build());
         test(lagEngangstønadOmsorg(LocalDate.now()).build());
-    }
-
-    @Test
-    public void tilretteleggingTest() {
-        test(hel(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdMaler.virksomhet(new Orgnummer("992261005"))).build());
-        test(delvis(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdMaler.privatArbeidsgiver(new Fødselsnummer("12345678910")), 50.0).build());
-        test(ingen(LocalDate.now(), LocalDate.now().plusDays(5), ArbeidsforholdMaler.selvstendigNæringsdrivende()).build());
     }
 
     @Test
