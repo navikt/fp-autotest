@@ -645,6 +645,7 @@ services:
       - *common-properties
     environment:
       PORT: 9066
+      PUBLIC_PATH: /foreldrepenger/oversikt
     depends_on:
       - foreldrepengesoknad-api
       - wonderwall-foreldrepengeoversikt
@@ -657,7 +658,8 @@ services:
     env_file:
       - *common-properties
     environment:
-      INNSYN: https://foreldrepengeoversikt:9066
+      INNSYN: https://foreldrepengeoversikt:9066/foreldrepenger/oversikt
+      PUBLIC_PATH: /foreldrepenger/soknad
       PORT: 9067
     depends_on:
       - foreldrepengesoknad-api
@@ -671,7 +673,8 @@ services:
     env_file:
       - *common-properties
     environment:
-      INNSYN: https://foreldrepengeoversikt:9066
+      INNSYN: https://foreldrepengeoversikt:9066/foreldrepenger/oversikt
+      PUBLIC_PATH: /svangerskapspenger/soknad
       PORT: 9068
     depends_on:
       - foreldrepengesoknad-api
@@ -685,7 +688,8 @@ services:
     env_file:
       - *common-properties
     environment:
-      INNSYN: https://foreldrepengeoversikt:9066
+      INNSYN: https://foreldrepengeoversikt:9066/foreldrepenger/oversikt
+      PUBLIC_PATH: /engangsstonad/soknad
       PORT: 9069
     depends_on:
       - foreldrepengesoknad-api
