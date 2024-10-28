@@ -5,9 +5,6 @@ x-common-env: &common-properties
 x-default-konfigurasjon: &default-konfigurasjon
   restart: on-failure
 
-volumes:
-  oracle-data:
-
 services:
   audit.nais:
     <<: *default-konfigurasjon
@@ -21,18 +18,14 @@ services:
     container_name: oracle
     environment:
       TZ: Europe/Oslo
-      ORACLE_SID: $ORACLE_USE_SID
-      ORACLE_PDB: FREEPDB1 # Mac
-      ORACLE_PWD: oracle # Mac
-      ORACLE_PASSWORD: oracle # Windows
+      ORACLE_SID: FREE
+      ORACLE_PASSWORD: oracle
     ports:
       - "127.0.0.1:1521:1521"
     volumes:
-      - oracle-data:/opt/oracle/oradata
       - ./oracle-init/:/docker-entrypoint-initdb.d/ # Windows
-      - ./oracle-init/:/opt/oracle/scripts/setup # Mac
     healthcheck:
-      test: ["CMD-SHELL", $ORACLE_HEALTHCHECK]
+      test: ["CMD-SHELL", "/opt/oracle/healthcheck.sh"]
       interval: 10s
       timeout: 5s
       retries: 10

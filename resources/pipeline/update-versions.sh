@@ -16,6 +16,7 @@ imageVersion () {
 }
 
 echo POSTGRES_IMAGE="postgres:16" > .env
+echo ORACLE_IMAGE="gvenzl/oracle-free:23-slim-faststart" >> .env
 echo AUDIT_NAIS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-autotest/audit-nais-mock")" >> .env
 echo VTP_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/vtp")" >> .env
 echo FPABAKUS_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-abakus")" >> .env
@@ -40,17 +41,5 @@ echo FPOVERSIKT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-managem
 echo FPSWAGGER_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-swagger")" >> .env
 echo FPTILGANG_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-tilgang")" >> .env
 echo FPINNTEKTSMELDING_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/ft-inntektsmelding")" >> .env
-
-
-if [[ $(arch) == *'arm'* ]]; then
-    echo ORACLE_IMAGE="ghcr.io/navikt/fp-autotest/oracle-arm:19" >> .env
-    echo ORACLE_HEALTHCHECK="/opt/oracle/checkDBStatus.sh" >> .env
-    echo ORACLE_USE_SID="XE" >> .env
-else
-    echo ORACLE_IMAGE="gvenzl/oracle-free:23-slim-faststart" >> .env
-    echo ORACLE_HEALTHCHECK="/opt/oracle/healthcheck.sh" >> .env
-    echo ORACLE_USE_SID="FREE" >> .env
-fi
-
 
 echo ".env fil opprettet - Klart for docker compose up"
