@@ -144,7 +144,7 @@ class Førstegangsbehandling extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgivere = mor.arbeidsgivere();
-        var arbeidsgiver1 = arbeidsgivere.toList().get(0);
+        var arbeidsgiver1 = arbeidsgivere.toList().getFirst();
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(20_833);
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmelding1);
@@ -190,10 +190,10 @@ class Førstegangsbehandling extends FpsakTestBase {
         assertThat(tilkjentYtelsePerioder)
                 .as("Antall tilkjent ytelses peridoer")
                 .hasSize(1);
-        assertThat(tilkjentYtelsePerioder.get(0).getFom())
+        assertThat(tilkjentYtelsePerioder.getFirst().getFom())
                 .as("Tilkjent ytelses fom")
                 .isEqualTo(termindato.minusMonths(2));
-        assertThat(tilkjentYtelsePerioder.get(0).getTom())
+        assertThat(tilkjentYtelsePerioder.getFirst().getTom())
                 .as("Tilkjent ytelses tom")
                 .isEqualTo(termindato.minusWeeks(3).minusDays(1));
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(100))
@@ -216,7 +216,7 @@ class Førstegangsbehandling extends FpsakTestBase {
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(6);
         var arbeidsforholdene = mor.arbeidsforholdene();
-        var arbeidsforhold1 = arbeidsforholdene.get(0).arbeidsgiverIdentifikasjon();
+        var arbeidsforhold1 = arbeidsforholdene.getFirst().arbeidsgiverIdentifikasjon();
         var forsteTilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) arbeidsforhold1), termindato.minusMonths(3))
                 .delvis(termindato.minusMonths(3), 50.0)
                 .build();
@@ -295,11 +295,14 @@ class Førstegangsbehandling extends FpsakTestBase {
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(6);
         var arbeidsforholdene = mor.arbeidsforholdene();
-        var arbeidsforhold1 = arbeidsforholdene.get(0).arbeidsgiverIdentifikasjon();
-        var forsteTilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) arbeidsforhold1), termindato.minusMonths(1))
-                .hel(termindato.minusWeeks(3).minusDays(3))
+        var arbeidsforhold1 = arbeidsforholdene.getFirst().arbeidsgiverIdentifikasjon();
+        var helTilretteleggingFom = termindato.minusWeeks(3).minusDays(3);
+        var behovForTilretteleggingFom = helTilretteleggingFom.minusWeeks(1);
+        var førsteTilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) arbeidsforhold1),
+                behovForTilretteleggingFom)
+                .hel(helTilretteleggingFom)
                 .build();
-        var søknad = lagSvangerskapspengerSøknad(termindato, List.of(forsteTilrettelegging));
+        var søknad = lagSvangerskapspengerSøknad(termindato, List.of(førsteTilrettelegging));
         var saksnummerSVP = mor.søk(søknad.build());
 
         var arbeidsgivere = mor.arbeidsgivere();
@@ -321,7 +324,8 @@ class Førstegangsbehandling extends FpsakTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummerFP = mor.søk(søknadFP.build());
         var arbeidsgiver = mor.arbeidsgiver();
-        arbeidsgiver.sendInntektsmeldingerFP(saksnummerFP, termindato.minusWeeks(4));
+        var startdatoForeldrepenger = termindato.minusWeeks(4);
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummerFP, startdatoForeldrepenger);
         saksbehandler.hentFagsak(saksnummerFP);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
@@ -344,7 +348,7 @@ class Førstegangsbehandling extends FpsakTestBase {
         // Litt datogamble
         assertThat(tilkjentYtelsePerioder.get(1).getFom())
                 .as("Avslått tilkjent ytelse Fom")
-                .isEqualTo(VirkedagUtil.helgejustertTilMandag(termindato.minusWeeks(4)));
+                .isEqualTo(VirkedagUtil.helgejustertTilMandag(startdatoForeldrepenger));
         assertThat(tilkjentYtelsePerioder.get(1).getDagsats())
                 .as("Avslått tilkjent ytelse med dagsats 0")
                 .isZero();
