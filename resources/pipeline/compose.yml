@@ -36,12 +36,13 @@ services:
     shm_size: 128mb
     environment:
       TZ: Europe/Oslo
+      PGPORT: 5999
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
     volumes:
       - ./postgres-init:/docker-entrypoint-initdb.d/
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:5999:5999"
     healthcheck:
       test: [ "CMD-SHELL", "while ! /usr/bin/pg_isready -U admin -t 1; do sleep 1; done" ]
       interval: 2s
