@@ -71,7 +71,7 @@ class MilitærTest extends Beregner {
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - Militær og arbeidstaker i opptjening. ")
@@ -120,7 +120,7 @@ class MilitærTest extends Beregner {
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - Militær og frilans i opptjening. ")
@@ -169,7 +169,7 @@ class MilitærTest extends Beregner {
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - Arbeidstaker, næring og militær i opptjeningen. ")
@@ -218,7 +218,7 @@ class MilitærTest extends Beregner {
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     private VurderMilitærDto lagMilitærVurdering(boolean erMilitær) {

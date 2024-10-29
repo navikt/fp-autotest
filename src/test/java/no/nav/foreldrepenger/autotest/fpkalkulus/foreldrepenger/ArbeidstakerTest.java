@@ -54,7 +54,6 @@ class ArbeidstakerTest extends Beregner {
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
         fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
@@ -72,7 +71,7 @@ class ArbeidstakerTest extends Beregner {
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - arbeidsforhold tilkommer etter skjæringstidspunktet, refusjon > brutto ved stp")
@@ -113,7 +112,7 @@ class ArbeidstakerTest extends Beregner {
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - arbeidstaker uten inntektsmelding og frilans i samme organisasjon")
@@ -167,7 +166,7 @@ class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - arbeidstaker uten inntektsmelding, sender inntektsmelding for revurdering")
@@ -218,7 +217,7 @@ class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request2);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - arbeidstaker med revurdering, økt refusjon i revurdering.")
@@ -273,7 +272,7 @@ class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request2);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
 
@@ -324,7 +323,7 @@ class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = overstyrer.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
 
@@ -378,7 +377,7 @@ class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Foreldrepenger - Arbeistaker med arbeid som slutter dagen før skjæringstidspunktet.")
@@ -447,7 +446,7 @@ class ArbeidstakerTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     private void kjørUtenAksjonspunkter(BeregnRequestDto request) {

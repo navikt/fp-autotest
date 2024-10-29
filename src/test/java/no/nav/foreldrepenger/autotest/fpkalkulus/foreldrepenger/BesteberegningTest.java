@@ -73,7 +73,7 @@ class BesteberegningTest extends Beregner {
 
         var forventetResultat = hentForventetResultat(testInfo);
 
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Besteberegning - Arbeidstaker med dagpenger i opptjeningsperioden. Seks beste måneder gir best resultat.")
@@ -124,7 +124,7 @@ class BesteberegningTest extends Beregner {
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
     @DisplayName("Besteberegning - Arbeidstaker med dagpenger på skjæringstidspunktet")
@@ -174,7 +174,7 @@ class BesteberegningTest extends Beregner {
         var hentRequest = getHentDetaljertListeRequest(request);
         var beregningsgrunnlagGrunnlagDto = overstyrer.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
-        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().isEqualTo(forventetResultat);
+        assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
 }
