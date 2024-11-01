@@ -2,10 +2,10 @@ package no.nav.foreldrepenger.autotest.fpkalkulus.foreldrepenger;
 
 import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmFordelingTjeneste.lagHåndterFordelingRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste.fastsettInntektVarigEndring;
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getFortsettBeregningListeRequest;
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentDetaljertListeRequest;
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentGUIListeRequest;
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterListeRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getFortsettBeregningRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentDetaljertRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentGUIRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
@@ -87,34 +87,34 @@ class GraderingTest extends Beregner {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 
         var håndterBeregningDto = fastsettInntektVarigEndring(0, true);
-        saksbehandler.håndterBeregning(lagHåndterListeRequest(request, håndterBeregningDto));
+        saksbehandler.håndterBeregning(lagHåndterRequest(request, håndterBeregningDto));
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 
-        var beregningsgrunnlagDtoFordel = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
+        var beregningsgrunnlagDtoFordel = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIRequest(request));
         var forventetResultatFordel = hentForventetGUIFordel(testInfo);
         assertThat(beregningsgrunnlagDtoFordel).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields().isEqualTo(forventetResultatFordel);
 
@@ -125,11 +125,11 @@ class GraderingTest extends Beregner {
                 2L, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE);
         saksbehandler.håndterBeregning(lagHåndterFordelingRequest(request, beregningsgrunnlagDtoFordel, beløpMap, inntektskategoriMap, Map.of()));
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var hentRequest = getHentDetaljertListeRequest(request);
+        var hentRequest = getHentDetaljertRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);

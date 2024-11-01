@@ -8,10 +8,10 @@ import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmBeregningTjeneste.
 import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmBeregningTjeneste.lagFaktaOmBeregningHåndterRequest;
 import static no.nav.foreldrepenger.generator.kalkulus.FaktaOmBeregningTjeneste.lagMottarYtelseDto;
 import static no.nav.foreldrepenger.generator.kalkulus.ForeslåBeregningTjeneste.fastsettInntektVarigEndring;
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getFortsettBeregningListeRequest;
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentDetaljertListeRequest;
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentGUIListeRequest;
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterListeRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getFortsettBeregningRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentDetaljertRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.getHentGUIRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -44,30 +44,30 @@ class ArbeidstakerTest extends Beregner {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
-        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
-        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
-
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var hentRequest = getHentDetaljertListeRequest(request);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FAST_BERGRUNN);
+        tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
+        assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
+
+        var hentRequest = getHentDetaljertRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
@@ -84,31 +84,31 @@ class ArbeidstakerTest extends Beregner {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var hentRequest = getHentDetaljertListeRequest(request);
+        var hentRequest = getHentDetaljertRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
 
         var forventetResultat = hentForventetResultat(testInfo);
@@ -125,11 +125,11 @@ class ArbeidstakerTest extends Beregner {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
 
-        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
+        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIRequest(request));
         var forventetGUIKofakber = hentForventetGUIKofakber(testInfo);
 
         assertThat(beregningsgrunnlagDto).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields().isEqualTo(forventetGUIKofakber);
@@ -143,27 +143,27 @@ class ArbeidstakerTest extends Beregner {
         var håndterRequest = lagFaktaOmBeregningHåndterRequest(request, faktaBeregningLagreDto);
         saksbehandler.håndterBeregning(håndterRequest);
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var hentRequest = getHentDetaljertListeRequest(request);
+        var hentRequest = getHentDetaljertRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
@@ -182,19 +182,19 @@ class ArbeidstakerTest extends Beregner {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request2);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.VURDER_REF_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
         var andelDto = VurderRefusjonTjeneste.lagVurderRefusjonAndelDto("974652269",
@@ -202,19 +202,19 @@ class ArbeidstakerTest extends Beregner {
         var håndterRequest = VurderRefusjonTjeneste.lagVurderRefusjonRequest(request2, andelDto);
         saksbehandler.håndterBeregning(håndterRequest);
 
-        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request2));
+        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIRequest(request2));
         var forventetGuiFordel = hentForventetGUIFordel(testInfo);
         assertThat(beregningsgrunnlagDto).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields().isEqualTo(forventetGuiFordel);
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var hentRequest = getHentDetaljertListeRequest(request2);
+        var hentRequest = getHentDetaljertRequest(request2);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
@@ -233,23 +233,23 @@ class ArbeidstakerTest extends Beregner {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request2);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.VURDER_REF_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
         var andelDto = VurderRefusjonTjeneste.lagVurderRefusjonAndelDto("974652269",
@@ -257,19 +257,19 @@ class ArbeidstakerTest extends Beregner {
         var håndterRequest = VurderRefusjonTjeneste.lagVurderRefusjonRequest(request2, andelDto);
         saksbehandler.håndterBeregning(håndterRequest);
 
-        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request2));
+        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIRequest(request2));
         var forventetGuiFordel = hentForventetGUIFordel(testInfo);
         assertThat(beregningsgrunnlagDto).usingRecursiveComparison().ignoringCollectionOrder().ignoringExpectedNullFields().isEqualTo(forventetGuiFordel);
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request2, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request2, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var hentRequest = getHentDetaljertListeRequest(request2);
+        var hentRequest = getHentDetaljertRequest(request2);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
@@ -284,43 +284,43 @@ class ArbeidstakerTest extends Beregner {
         var request = opprettTestscenario(testInfo);
         TilstandResponse tilstandResponse = overstyrer.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
-        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIListeRequest(request));
+        var beregningsgrunnlagDto = saksbehandler.hentGUIBeregningsgrunnlag(getHentGUIRequest(request));
 
         Map<LocalDate, Boolean> skalBrukes = Map.of(
                 LocalDate.of(2015, 8, 1), false,
                 LocalDate.of(2019, 1, 1), false);
-        var håndterRequest = lagHåndterListeRequest(request, lagOverstyrAktiviteterDto(beregningsgrunnlagDto, skalBrukes));
+        var håndterRequest = lagHåndterRequest(request, lagOverstyrAktiviteterDto(beregningsgrunnlagDto, skalBrukes));
         overstyrer.håndterBeregning(håndterRequest);
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = overstyrer.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var hentRequest = getHentDetaljertListeRequest(request);
+        var hentRequest = getHentDetaljertRequest(request);
         var beregningsgrunnlagGrunnlagDto = overstyrer.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
@@ -344,37 +344,37 @@ class ArbeidstakerTest extends Beregner {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).hasSize(1);
         var håndterBeregningDto = fastsettInntektVarigEndring(321_540, true);
-        saksbehandler.håndterBeregning(lagHåndterListeRequest(request, håndterBeregningDto));
+        saksbehandler.håndterBeregning(lagHåndterRequest(request, håndterBeregningDto));
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var hentRequest = getHentDetaljertListeRequest(request);
+        var hentRequest = getHentDetaljertRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
@@ -415,35 +415,35 @@ class ArbeidstakerTest extends Beregner {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var hentRequest = getHentDetaljertListeRequest(request);
+        var hentRequest = getHentDetaljertRequest(request);
         var beregningsgrunnlagGrunnlagDto = saksbehandler.hentDetaljertBeregningsgrunnlag(hentRequest);
         var forventetResultat = hentForventetResultat(testInfo);
         assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
@@ -453,31 +453,31 @@ class ArbeidstakerTest extends Beregner {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        var fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.KOFAKBER);
+        var fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.KOFAKBER);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORS_BERGRUNN_2);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORS_BERGRUNN_2);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_VILKAR_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FORDEL_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FORDEL_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
-        fortsettBeregningRequest = getFortsettBeregningListeRequest(request, BeregningSteg.FAST_BERGRUNN);
+        fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.FAST_BERGRUNN);
         tilstandResponse = saksbehandler.kjørBeregning(fortsettBeregningRequest);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
     }

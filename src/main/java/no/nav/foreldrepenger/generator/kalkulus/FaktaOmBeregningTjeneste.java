@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.generator.kalkulus;
 
 import static no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.ARBEIDSTAKER;
 import static no.nav.folketrygdloven.kalkulus.kodeverk.AktivitetStatus.FRILANSER;
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterListeRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterRequest;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class FaktaOmBeregningTjeneste {
     }
 
     public static HåndterBeregningRequestDto lagFaktaOmBeregningHåndterRequest(BeregnRequestDto request, FaktaBeregningLagreDto fakta) {
-        return lagHåndterListeRequest(request, new FaktaOmBeregningHåndteringDto(fakta));
+        return lagHåndterRequest(request, new FaktaOmBeregningHåndteringDto(fakta));
     }
 
     public static List<RefusjonskravPrArbeidsgiverVurderingDto> vurderRefusjonskravGyldighet(Map<String, Boolean> skalUtvideGyldighet) {

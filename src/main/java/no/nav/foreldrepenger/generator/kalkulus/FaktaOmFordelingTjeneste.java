@@ -1,9 +1,8 @@
 package no.nav.foreldrepenger.generator.kalkulus;
 
 
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterListeRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterRequest;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,7 +17,6 @@ import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelBeregnings
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelFastsatteVerdierDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelRedigerbarAndelDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
-import no.nav.folketrygdloven.kalkulus.request.v1.HåndterBeregningListeRequest;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagPrStatusOgAndelDto;
 
@@ -34,7 +32,7 @@ public class FaktaOmFordelingTjeneste {
                                                                         Map<Long, Integer> beløpMap,
                                                                         Map<Long, Inntektskategori> inntektskategoriMap,
                                                                         Map<Long, Integer> refusjonskravMap) {
-        return lagHåndterListeRequest(request, lagFordelHåndterDto(beregningsgrunnlagDto, beløpMap, inntektskategoriMap, refusjonskravMap));
+        return lagHåndterRequest(request, lagFordelHåndterDto(beregningsgrunnlagDto, beløpMap, inntektskategoriMap, refusjonskravMap));
     }
 
     private static FaktaOmFordelingHåndteringDto lagFordelHåndterDto(BeregningsgrunnlagDto beregningsgrunnlagDto, Map<Long, Integer> andelsnrBeløpmap, Map<Long, Inntektskategori> inntektskategoriMap, Map<Long, Integer> refusjonskravMap) {

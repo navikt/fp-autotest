@@ -15,15 +15,11 @@ public class LagRequestTjeneste {
         // Skal ikkje instansieres
     }
 
-    public static HåndterBeregningRequestDto lagHåndterListeRequest(BeregnRequestDto request, HåndterBeregningDto håndterBeregningDto) {
-        return new HåndterBeregningRequestDto(request.behandlingUuid(), request.kalkulatorInput(), Collections.singletonList(håndterBeregningDto));
-    }
-
     public static HåndterBeregningRequestDto lagHåndterRequest(BeregnRequestDto request, HåndterBeregningDto håndterBeregningDto) {
         return new HåndterBeregningRequestDto(request.behandlingUuid(), request.kalkulatorInput(), Collections.singletonList(håndterBeregningDto));
     }
 
-    public static BeregnRequestDto getFortsettBeregningListeRequest(BeregnRequestDto request, BeregningSteg stegType) {
+    public static BeregnRequestDto getFortsettBeregningRequest(BeregnRequestDto request, BeregningSteg stegType) {
         return new BeregnRequestDto(
                 request.saksnummer(),
                 request.behandlingUuid(),
@@ -34,11 +30,11 @@ public class LagRequestTjeneste {
                 null);
     }
 
-    public static HentBeregningsgrunnlagGUIRequest getHentGUIListeRequest(BeregnRequestDto request) {
+    public static HentBeregningsgrunnlagGUIRequest getHentGUIRequest(BeregnRequestDto request) {
         return new HentBeregningsgrunnlagGUIRequest(request.behandlingUuid(), request.kalkulatorInput());
     }
 
-    public static EnkelFpkalkulusRequestDto getHentDetaljertListeRequest(BeregnRequestDto request) {
+    public static EnkelFpkalkulusRequestDto getHentDetaljertRequest(BeregnRequestDto request) {
         return new EnkelFpkalkulusRequestDto(request.behandlingUuid(), request.saksnummer());
     }
 }

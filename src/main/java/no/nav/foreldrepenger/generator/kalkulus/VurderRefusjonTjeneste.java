@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.generator.kalkulus;
 
 
-import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterListeRequest;
+import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHåndterRequest;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -19,12 +19,12 @@ public class VurderRefusjonTjeneste {
     }
 
     public static HåndterBeregningRequestDto lagVurderRefusjonRequest(BeregnRequestDto request, VurderRefusjonBeregningsgrunnlagDto dto) {
-        return lagHåndterListeRequest(request, dto);
+        return lagHåndterRequest(request, dto);
     }
 
     public static HåndterBeregningRequestDto lagVurderRefusjonRequest(BeregnRequestDto request, VurderRefusjonAndelBeregningsgrunnlagDto andelDto) {
         VurderRefusjonBeregningsgrunnlagDto dto = new VurderRefusjonBeregningsgrunnlagDto(Collections.singletonList(andelDto));
-        return lagHåndterListeRequest(request, dto);
+        return lagHåndterRequest(request, dto);
     }
 
     public static VurderRefusjonAndelBeregningsgrunnlagDto lagVurderRefusjonAndelDto(String agIdent, String arbeidsforholdRef, LocalDate fastsattRefusjonFOM) {
