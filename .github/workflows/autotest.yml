@@ -106,7 +106,7 @@ jobs:
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil
           fi
       - name: Sjekker minneforbruk
-        if: failure() && !cancelled()
+        if: failure() || cancelled()
         run: |
           docker stats --no-stream
           free -m
@@ -148,14 +148,14 @@ jobs:
           path: ${{ inputs.test-suite }}.tar.gz
           retention-days: 1
       - name: Dumper logger for feilsøking
-        if: failure() && !cancelled()
+        if: failure() || cancelled()
         shell: bash
         run: |
           mkdir container-logs
           cd container-logs
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
       - name: Laste opp logger
-        if: failure() && !cancelled()
+        if: failure() || cancelled()
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # ratchet:actions/upload-artifact@v4
         with:
           name: logs-${{ inputs.test-suite }}
