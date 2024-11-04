@@ -51,7 +51,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
                     String.format("Forventet at det ble mottatt %d ny(e) inntektsmelding(er), men det ble "
                             + "bare mottatt %d på saksnummer %s", antallNyeInntektsmeldinger,
                             (antallInntektsmeldingerMottattPåSak(saksnummerTemp) - antallGamleInntekstmeldinger),
-                            saksnummer.value()));
+                            saksnummer.value()), "inntektsmeldinger er mottatt");
         } else {
             saksnummer = ventTilFagsakErOpprettetPåFnr(fnr);
         }
@@ -95,7 +95,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
             }
             return null;
         }, "Det er hverken opprettet en ny fagsak eller oppdatert en eksistrende fagsak etter innsending. "
-                + "Noe har gått galt ved innsending av søknad/inntektsmelding på søker med fnr " + fnr.value());
+                + "Noe har gått galt ved innsending av søknad/inntektsmelding på søker med fnr " + fnr.value(), "fagsak og behandling er opprettet");
     }
 
     private Saksnummer ventTilFagsakErOpprettetPåFnr(Fødselsnummer fnr) {
@@ -119,7 +119,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
                 return tempSaksnummer;
             }
             return null;
-        }, "Ingen fagsak opprettet på sak");
+        }, "Ingen fagsak opprettet på sak", "fagsak er opprettet på sak");
     }
 
     private List<HistorikkInnslag> historikkinnslagEtterSkjæringstidspunkt(Saksnummer saksnummer, LocalDateTime skjæringstidpunktRundetNed) {

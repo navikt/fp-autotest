@@ -41,7 +41,8 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak med tilstand " + behandlingTilstand + " for sak " + saksnummer, PROGRESSIV_VENTETID);
+        }, () -> "Finner ikke sak med tilstand " + behandlingTilstand + " for sak " + saksnummer, PROGRESSIV_VENTETID,
+                "åpen es behandling med tilstand " + behandlingTilstand);
     }
 
     public SvpSak hentSvpSakMedÅpenBehandlingTilstand(Saksnummer saksnummer, BehandlingTilstand behandlingTilstand) {
@@ -55,7 +56,8 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak med tilstand " + behandlingTilstand + " for sak " + saksnummer, PROGRESSIV_VENTETID);
+        }, () -> "Finner ikke sak med tilstand " + behandlingTilstand + " for sak " + saksnummer, PROGRESSIV_VENTETID,
+                "åpen svp behandling med tilstand " + behandlingTilstand);
     }
 
     public EsSak hentEsSakUtenÅpenBehandling(Saksnummer saksnummer) {
@@ -69,7 +71,8 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, PROGRESSIV_VENTETID);
+        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, PROGRESSIV_VENTETID,
+                "es sak uten åpen behandling");
     }
 
     public SvpSak hentSvpSakUtenÅpenBehandling(Saksnummer saksnummer) {
@@ -83,7 +86,8 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, PROGRESSIV_VENTETID);
+        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, PROGRESSIV_VENTETID,
+                "svp sak uten åpen behandling");
     }
 
     public FpSak hentFpSakUtenÅpenBehandling(Saksnummer saksnummer) {
@@ -97,6 +101,7 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, PROGRESSIV_VENTETID);
+        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, PROGRESSIV_VENTETID,
+                "fp sak uten åpen behandling");
     }
 }

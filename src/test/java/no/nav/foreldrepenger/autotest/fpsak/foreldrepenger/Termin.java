@@ -127,7 +127,7 @@ class Termin extends FpsakTestBase {
         Vent.til(() -> {
             saksbehandler.velgSisteBehandling();
             return saksbehandler.harAksjonspunkt(AksjonspunktKoder.FORESLÅ_VEDTAK_MANUELT);
-            }, "Fikk ikke aksjonspunkt 5028 foreslå vedtak manuelt");
+            }, "Fikk ikke aksjonspunkt 5028 foreslå vedtak manuelt", "5028 aksjonspunkt");
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();

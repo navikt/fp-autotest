@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingType;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
@@ -116,19 +115,15 @@ public class TilbakekrevingSaksbehandler {
     }
 
     public void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype) {
-        ventPåOgVelgSisteBehandling(behandlingstype, null, null);
-    }
-
-    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, Integer antallBehandlingerSomMatcherType) {
-        ventPåOgVelgSisteBehandling(behandlingstype, null, antallBehandlingerSomMatcherType);
+        ventPåOgVelgSisteBehandling(behandlingstype, null);
     }
 
     @Step("Venter på at fagsak får behandlingstype {behandlingstype.kode} ")
-    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType,
+    private void ventPåOgVelgSisteBehandling(BehandlingType behandlingstype,
                                              Integer antallBehandlingerSomMatcherType) {
         // 1) Vi venter til det er opprettet en behandling ved forventet type, årsak, status og antall
         var behandling = Vent.på(() -> {
-            var matchedeBehandlinger = hentAlleBehandlingerAvTypen(behandlingstype, behandlingÅrsakType);
+            var matchedeBehandlinger =hentAlleBehandlingerAvTypen(behandlingstype);
             if (matchedeBehandlinger == null || matchedeBehandlinger.isEmpty()) {
                 return null;
             }
@@ -139,14 +134,14 @@ public class TilbakekrevingSaksbehandler {
                         .orElseThrow();
             }
             return null; // Vi har matchede behandlinger, men ikke av forventet antall!
-        }, "Saken har ikke fått behandling av type: " + behandlingstype);
+        }, "Saken har ikke fått behandling av type: " + behandlingstype, "fagsak for behandlingtype " + behandlingstype);
 
         // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
         venterPåFerdigProssesseringOgOppdaterBehandling(behandling.uuid);
         LOG.info("Behandling opprettet og oppdatert!");
     }
 
-    private Set<Behandling> hentAlleBehandlingerAvTypen(BehandlingType behandlingstype, BehandlingÅrsakType behandlingÅrsakType) {
+    private Set<Behandling> hentAlleBehandlingerAvTypen(BehandlingType behandlingstype) {
         return behandlingerKlient.alle(saksnummer).stream()
                 .filter(b -> b.type.equals(behandlingstype))
                 .collect(Collectors.toSet());
@@ -244,7 +239,7 @@ public class TilbakekrevingSaksbehandler {
         Vent.til(() -> {
             refreshBehandling();
             return valgtBehandling.behandlingPaaVent;
-        }, "Behandling kom aldri på vent");
+        }, "Behandling kom aldri på vent", "behandling er på vent");
     }
 
     public void ventTilBehandlingHarAktivtAksjonspunkt(int aksjonspunktKode) {
@@ -255,7 +250,7 @@ public class TilbakekrevingSaksbehandler {
         Vent.til(() -> {
             venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling.uuid);
             return harAktivtAksjonspunkt(aksjonspunktKode);
-        }, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
+        }, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd", "aksjonspunkt er opprettet " + aksjonspunktKode);
     }
 
     public void ventTilBehandlingsstatus(BehandlingStatus forventetStatus) {
@@ -294,7 +289,7 @@ public class TilbakekrevingSaksbehandler {
          */
         if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_VENT))) {
             Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type())),
-                    "Behandlingen er på vent og er ikke blitt gjenopptatt!");
+                    "Behandlingen er på vent og er ikke blitt gjenopptatt!", "behandling er avsluttet");
         }
 
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
@@ -321,7 +316,7 @@ public class TilbakekrevingSaksbehandler {
                         .append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
-        });
+        }, "behandling er ferdig prosessert");
     }
 
     private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(UUID behandlingsuuid) {
@@ -335,6 +330,6 @@ public class TilbakekrevingSaksbehandler {
         var prosessTaskOpprettInputDto = new ProsessTaskOpprettInputDto();
         prosessTaskOpprettInputDto.setTaskType("batch.automatisk.saksbehandling");
         prosesstaskKlient.create(prosessTaskOpprettInputDto);
-        Vent.til(() -> hentAksjonspunkt(autopunkt) == null, "Kravgrunnlag skal være sendt og plukket opp av batch!");
+        Vent.til(() -> hentAksjonspunkt(autopunkt) == null, "Kravgrunnlag skal være sendt og plukket opp av batch!", "sender kravgrunnlag batch");
     }
 }

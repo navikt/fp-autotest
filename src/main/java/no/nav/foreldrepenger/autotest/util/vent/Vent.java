@@ -16,23 +16,24 @@ public final class Vent {
     private Vent() {
     }
 
-    public static void til(Callable<Boolean> callable, String failReason) {
-        til(callable, () -> failReason);
+    public static void til(Callable<Boolean> callable, String failReason, String loggForklaring) {
+        til(callable, () -> failReason, loggForklaring);
     }
 
-    public static void til(Callable<Boolean> callable, Callable<String> errorMessageProducer) {
-        på(callable, errorMessageProducer);
+    public static void til(Callable<Boolean> callable, Callable<String> errorMessageProducer, String loggForklaring) {
+        på(callable, errorMessageProducer ,loggForklaring);
     }
 
-    public static <T> T på(Callable<T> callable, String failReason) {
-        return på(callable, () -> failReason);
+    public static <T> T på(Callable<T> callable, String failReason, String loggForklaring) {
+        return på(callable, () -> failReason, loggForklaring);
     }
 
-    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer) {
-        return på(callable, errorMessageProducer, 50);
+    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, String loggForklaring) {
+        return på(callable, errorMessageProducer, 50, loggForklaring);
     }
 
-    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, int progressivVentetid) {
+    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, int progressivVentetid, String loggForklaring) {
+        LOG.info("Venter på {}", loggForklaring);
         var start = LocalDateTime.now();
         var end = start.plusSeconds(TIMEOUT_SEKUNDER);
         var advarsel = start.plusSeconds((int) (TIMEOUT_SEKUNDER * 0.75));
