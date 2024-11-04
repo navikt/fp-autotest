@@ -345,7 +345,7 @@ public class Saksbehandler {
                         .append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
-        }, "behandling er ferdig prosessert");
+        }, 50, "behandling er ferdig prosessert", 40);
     }
 
     private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(int behandlingId) {

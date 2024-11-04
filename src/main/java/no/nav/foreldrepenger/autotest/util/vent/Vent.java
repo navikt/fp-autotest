@@ -29,14 +29,18 @@ public final class Vent {
     }
 
     public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, String loggForklaring) {
-        return på(callable, errorMessageProducer, 50, loggForklaring);
+        return på(callable, errorMessageProducer, 50, loggForklaring, TIMEOUT_SEKUNDER);
     }
 
-    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, int progressivVentetid, String loggForklaring) {
+    public static <T> T på(Callable<T> callable,
+                           Callable<String> errorMessageProducer,
+                           int progressivVentetid,
+                           String loggForklaring,
+                           int timeoutSekunder) {
         LOG.info("Venter på {}", loggForklaring);
         var start = LocalDateTime.now();
-        var end = start.plusSeconds(TIMEOUT_SEKUNDER);
-        var advarsel = start.plusSeconds((int) (TIMEOUT_SEKUNDER * 0.75));
+        var end = start.plusSeconds(timeoutSekunder);
+        var advarsel = start.plusSeconds((int) (timeoutSekunder * 0.75));
         var logget = false;
 
         long progressivVentetidMs = progressivVentetid;
@@ -48,11 +52,11 @@ public final class Vent {
                 if (!logget && now.isAfter(advarsel)) {
                     logget = true;
                     var ste = getCallerCallerClassName();
-                    LOG.warn("Async venting av {} har tatt mer enn 75% av timeout på {} sekunder!", ste, TIMEOUT_SEKUNDER);
+                    LOG.warn("Async venting av {} har tatt mer enn 75% av timeout på {} sekunder!", ste, timeoutSekunder);
                 }
                 if (now.isAfter(end)) {
                     throw new IllegalStateException(
-                            "Async venting timet ut etter " + TIMEOUT_SEKUNDER + " sekunder fordi: " + errorMessageProducer.call());
+                            "Async venting timet ut etter " + timeoutSekunder + " sekunder fordi: " + errorMessageProducer.call());
                 }
                 sleep(progressivVentetidMs);
                 progressivVentetidMs = Math.min(750, 2 * progressivVentetidMs);
