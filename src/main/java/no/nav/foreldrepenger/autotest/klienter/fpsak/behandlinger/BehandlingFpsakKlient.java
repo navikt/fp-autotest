@@ -30,7 +30,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.KlageInfo;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Vilkar;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ArbeidOgInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManglendeOpplysningerVurderingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
@@ -213,21 +212,6 @@ public class BehandlingFpsakKlient implements BehandlingerKlient {
                 .GET();
         return send(request.build(), Feriepengegrunnlag.class);
     }
-
-
-    public List<Vilkar> behandlingVilkår(UUID behandlingUuid) {
-        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
-                .uri(fromUri(FPSAK_BASE)
-                        .path(BEHANDLING_VILKAAR_URL)
-                        .queryParam(UUID_NAME, behandlingUuid)
-                        .build())
-                .GET();
-        return Optional.ofNullable(send(request.build(), new TypeReference<List<Vilkar>>() {}))
-                .orElse(List.of());
-    }
-
-
-
 
     public void overstyr(OverstyrAksjonspunkter aksjonspunkter) {
         var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
