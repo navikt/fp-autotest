@@ -48,7 +48,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
             final var saksnummerTemp = saksnummer;
             var forventetAntallInnteksmeldinger = antallGamleInntekstmeldinger + antallNyeInntektsmeldinger;
             Vent.til(() -> antallInntektsmeldingerMottattPåSak(saksnummerTemp) == forventetAntallInnteksmeldinger,
-                    60, String.format("Forventet at det ble mottatt %d ny(e) inntektsmelding(er), men det ble "
+                    String.format("Forventet at det ble mottatt %d ny(e) inntektsmelding(er), men det ble "
                             + "bare mottatt %d på saksnummer %s", antallNyeInntektsmeldinger,
                             (antallInntektsmeldingerMottattPåSak(saksnummerTemp) - antallGamleInntekstmeldinger),
                             saksnummer.value()));
@@ -94,7 +94,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
                 }
             }
             return null;
-        }, 30, "Det er hverken opprettet en ny fagsak eller oppdatert en eksistrende fagsak etter innsending. "
+        }, "Det er hverken opprettet en ny fagsak eller oppdatert en eksistrende fagsak etter innsending. "
                 + "Noe har gått galt ved innsending av søknad/inntektsmelding på søker med fnr " + fnr.value());
     }
 
@@ -119,7 +119,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
                 return tempSaksnummer;
             }
             return null;
-        }, 30, "Ingen fagsak opprettet på sak");
+        }, "Ingen fagsak opprettet på sak");
     }
 
     private List<HistorikkInnslag> historikkinnslagEtterSkjæringstidspunkt(Saksnummer saksnummer, LocalDateTime skjæringstidpunktRundetNed) {

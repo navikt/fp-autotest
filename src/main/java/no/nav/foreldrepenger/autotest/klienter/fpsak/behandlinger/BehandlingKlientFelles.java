@@ -162,7 +162,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
             var requestTilStatusEndepunkt = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, this.apiName)
                     .uri(URI.create(hentRedirectUriFraLocationHeader(response)))
                     .GET();
-            return Vent.på(() -> getBehandlingHvisTilgjenglig(requestTilStatusEndepunkt), 30,
+            return Vent.på(() -> getBehandlingHvisTilgjenglig(requestTilStatusEndepunkt),
                     "Behandling ikke tilgjenglig etter X sekund");
         }
         throw new RuntimeException("Uventet tilstand. Skal ikke være mulig!");

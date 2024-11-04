@@ -139,7 +139,7 @@ public class TilbakekrevingSaksbehandler {
                         .orElseThrow();
             }
             return null; // Vi har matchede behandlinger, men ikke av forventet antall!
-        }, 30, "Saken har ikke fått behandling av type: " + behandlingstype);
+        }, "Saken har ikke fått behandling av type: " + behandlingstype);
 
         // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
         venterPåFerdigProssesseringOgOppdaterBehandling(behandling.uuid);
@@ -244,7 +244,7 @@ public class TilbakekrevingSaksbehandler {
         Vent.til(() -> {
             refreshBehandling();
             return valgtBehandling.behandlingPaaVent;
-        }, 60, "Behandling kom aldri på vent");
+        }, "Behandling kom aldri på vent");
     }
 
     public void ventTilBehandlingHarAktivtAksjonspunkt(int aksjonspunktKode) {
@@ -255,7 +255,7 @@ public class TilbakekrevingSaksbehandler {
         Vent.til(() -> {
             venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling.uuid);
             return harAktivtAksjonspunkt(aksjonspunktKode);
-        }, 60, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
+        }, "Aksjonspunkt" + aksjonspunktKode + "ble aldri oppnådd");
     }
 
     public void ventTilBehandlingsstatus(BehandlingStatus forventetStatus) {
@@ -293,8 +293,8 @@ public class TilbakekrevingSaksbehandler {
          *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
          */
         if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_VENT))) {
-            Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type()))
-                    ,10, "Behandlingen er på vent og er ikke blitt gjenopptatt!");
+            Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type())),
+                    "Behandlingen er på vent og er ikke blitt gjenopptatt!");
         }
 
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
@@ -311,7 +311,7 @@ public class TilbakekrevingSaksbehandler {
      * gjenopptatt, vil den bare returnere behandlingen før prosesseringene er ferdig. Må legge inn noe spesiallokikk for håndtering av dette.
      */
     private Behandling ventTilBehandlingErFerdigProsessertOgReturner(UUID behandlinguuid) {
-        return Vent.på(() -> behandlingerKlient.hentBehandlingHvisTilgjenglig(behandlinguuid), 90, () -> {
+        return Vent.på(() -> behandlingerKlient.hentBehandlingHvisTilgjenglig(behandlinguuid), () -> {
             var prosessTasker = hentProsesstaskerForBehandling(behandlinguuid);
             var prosessTaskList = new StringBuilder();
             for (ProsessTaskDataDto prosessTaskListItemDto : prosessTasker) {
@@ -335,6 +335,6 @@ public class TilbakekrevingSaksbehandler {
         var prosessTaskOpprettInputDto = new ProsessTaskOpprettInputDto();
         prosessTaskOpprettInputDto.setTaskType("batch.automatisk.saksbehandling");
         prosesstaskKlient.create(prosessTaskOpprettInputDto);
-        Vent.til(() -> hentAksjonspunkt(autopunkt) == null, 10, "Kravgrunnlag skal være sendt og plukket opp av batch!");
+        Vent.til(() -> hentAksjonspunkt(autopunkt) == null, "Kravgrunnlag skal være sendt og plukket opp av batch!");
     }
 }

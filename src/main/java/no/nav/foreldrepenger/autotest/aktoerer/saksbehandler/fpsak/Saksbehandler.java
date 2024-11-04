@@ -131,7 +131,7 @@ public class Saksbehandler {
         Vent.til(() -> {
             refreshFagsak(valgtFagsak.saksnummer());
             return harFagsakstatus(status);
-        }, 10, "Fagsak har ikke status " + Set.of(status));
+        }, "Fagsak har ikke status " + Set.of(status));
     }
 
     private boolean harFagsakstatus(FagsakStatus... status) {
@@ -233,7 +233,7 @@ public class Saksbehandler {
                         .orElseThrow();
             }
             return null; // Vi har matchede behandlinger, men ikke av forventet antall!
-            }, 30, "Saken har ikke fått behandling av type: " + behandlingstype);
+            }, "Saken har ikke fått behandling av type: " + behandlingstype);
 
         // 2) Hvis vi venter på en REVURDERING og behandling er køet, men ikke gjennopptatt venter vi til AP 7011 er utført.
         if (BehandlingType.REVURDERING.equals(behandlingstype) && erBehandlingKøetOgIkkeGjenopptatt(behandling.uuid)) {
@@ -243,7 +243,7 @@ public class Saksbehandler {
                             .orElseThrow()
                             .getStatus()
                             .equals("UTFO")
-                    , 30, "Køet behandling er ikke gjenopptatt av fpsak!");
+                    , "Køet behandling er ikke gjenopptatt av fpsak!");
         }
 
         // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
@@ -282,7 +282,7 @@ public class Saksbehandler {
      */
     public void ventTilBehandlingsstatus(BehandlingStatus forventetStatus) {
         debugBehandlingsstatus(forventetStatus, valgtBehandling.uuid);
-        venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling.uuid);
+        venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling.uuid, valgtBehandling.id);
         var behandlingsstatus = getBehandlingsstatus();
         if (forventetStatus.equals(behandlingsstatus)) {
             return;
@@ -305,15 +305,15 @@ public class Saksbehandler {
     }
 
     private void venterPåFerdigProssesseringOgOppdaterBehandling(Behandling behandling) {
-        venterPåFerdigProssesseringOgOppdaterBehandling(behandling.uuid);
+        venterPåFerdigProssesseringOgOppdaterBehandling(behandling.uuid, behandling.id);
     }
 
-    private void venterPåFerdigProssesseringOgOppdaterBehandling(UUID behandlingsuuid) {
+    private void venterPåFerdigProssesseringOgOppdaterBehandling(UUID behandlingsuuid, int behandlingId) {
         // Sjekker om behandlingen prosesserer. Siden vi vil vente på at den er ferdig for å få den siste
         // behandling.versjon. Og å hindre at tester henter data fra behandlingen som kan endre seg ettersom
         // behandlingen ikke har stoppet opp
 
-        valgtBehandling = ventTilBehandlingErFerdigProsessertOgReturner(behandlingsuuid);
+        valgtBehandling = ventTilBehandlingErFerdigProsessertOgReturner(behandlingsuuid, behandlingId);
 
         // TODO: fiks dette!
         oppdaterLazyFelterForBehandling();
@@ -332,9 +332,9 @@ public class Saksbehandler {
      * Status endepunktet i fpsak fungerer med unntak når saken er satt på vent. Hvis vi sjekke status før behandlingen er
      * gjenopptatt, vil den bare returnere behandlingen før prosesseringene er ferdig. Må legge inn noe spesiallokikk for håndtering av dette.
      */
-    private Behandling ventTilBehandlingErFerdigProsessertOgReturner(UUID behandlinguuid) {
-        return Vent.på(() -> behandlingerKlient.hentBehandlingHvisTilgjenglig(behandlinguuid), 90, () -> {
-            var prosessTasker = hentProsesstaskerForBehandling(behandlinguuid);
+    private Behandling ventTilBehandlingErFerdigProsessertOgReturner(UUID behandlinguuid, int behandlingId) {
+        return Vent.på(() -> behandlingerKlient.hentBehandlingHvisTilgjenglig(behandlinguuid), () -> {
+            var prosessTasker = hentProsesstaskerForBehandling(behandlingId);
             var prosessTaskList = new StringBuilder();
             for (ProsessTaskDataDto prosessTaskListItemDto : prosessTasker) {
                 prosessTaskList.append(prosessTaskListItemDto.getTaskType())
@@ -346,9 +346,9 @@ public class Saksbehandler {
         });
     }
 
-    private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(UUID behandlingsuuid) {
+    private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(int behandlingId) {
         return prosesstaskKlient.alleProsesstaskPåBehandling().stream()
-                .filter(p -> Objects.equals(behandlingsuuid.toString(), p.getTaskParametre().getProperty("behandlingId")))
+                .filter(p -> Objects.equals(String.valueOf(behandlingId), p.getTaskParametre().getProperty("behandlingId")))
                 .toList();
     }
 
@@ -384,7 +384,7 @@ public class Saksbehandler {
         Vent.til(() -> {
             refreshBehandling();
             return valgtBehandling.behandlingPaaVent;
-        }, 60, "Behandling kom aldri på vent");
+        }, "Behandling kom aldri på vent");
     }
 
     @Step("Setter behandling på vent")
@@ -579,8 +579,8 @@ public class Saksbehandler {
          *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
          */
         if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_VENT))) {
-            Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type()))
-                    ,10, "Behandlingen er på vent og er ikke blitt gjenopptatt!");
+            Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type())),
+                    "Behandlingen er på vent og er ikke blitt gjenopptatt!");
         }
 
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
@@ -633,15 +633,15 @@ public class Saksbehandler {
     }
 
     public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkinnslagType type) {
-        return hentHistorikkinnslagAvType(type, valgtBehandling.uuid);
+        return hentHistorikkinnslagAvType(type, valgtBehandling.uuid, valgtBehandling.id);
     }
 
-    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkinnslagType type, UUID behandlingsId) {
-        venterPåFerdigProssesseringOgOppdaterBehandling(behandlingsId);
+    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkinnslagType type, UUID behandlingsUuid, int behandlingId) {
+        venterPåFerdigProssesseringOgOppdaterBehandling(behandlingsUuid, behandlingId);
         if (List.of(HistorikkinnslagType.VEDLEGG_MOTTATT, HistorikkinnslagType.REVURD_OPPR).contains(type)) {
-            behandlingsId = null;
+            behandlingsUuid = null;
         }
-        return hentHistorikkinnslagPåBehandling(behandlingsId).stream()
+        return hentHistorikkinnslagPåBehandling(behandlingsUuid).stream()
                 .filter(innslag -> type.equals(innslag.type()))
                 .findFirst()
                 .orElse(null);
@@ -649,13 +649,13 @@ public class Saksbehandler {
 
     public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
         Vent.til(() -> harHistorikkinnslagPåBehandling(type),
-                45, () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
+                () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
                         + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
     }
 
     public void ventTilHistorikkinnslag(Set<HistorikkinnslagType> typer) {
         Vent.til(() -> harHistorikkinnslagPåBehandling(typer),
-                45, () -> "Saken  hadde ikke historikkinslag " + typer + "\nHistorikkInnslag:"
+                () -> "Saken  hadde ikke historikkinslag " + typer + "\nHistorikkInnslag:"
                         + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
     }
 
@@ -691,7 +691,7 @@ public class Saksbehandler {
         Vent.til(() -> {
             var response = risikovurderingKlient.getRisikovurdering(valgtBehandling.uuid);
             return response.risikoklasse().equals(forventetRisikoklasse);
-        }, 45, "Har ikke riktig risikoklassifiseringsstatus");
+        }, "Har ikke riktig risikoklassifiseringsstatus");
     }
 
     /* VERIFISERINGER */

@@ -11,30 +11,31 @@ import org.slf4j.LoggerFactory;
 public final class Vent {
 
     private static final Logger LOG = LoggerFactory.getLogger(Vent.class);
+    private static final int TIMEOUT_SEKUNDER = 15;
 
     private Vent() {
     }
 
-    public static void til(Callable<Boolean> callable, int timeoutInSeconds, String failReason) {
-        til(callable, timeoutInSeconds, () -> failReason);
+    public static void til(Callable<Boolean> callable, String failReason) {
+        til(callable, () -> failReason);
     }
 
-    public static void til(Callable<Boolean> callable, int timeoutInSeconds, Callable<String> errorMessageProducer) {
-        på(callable, timeoutInSeconds, errorMessageProducer);
+    public static void til(Callable<Boolean> callable, Callable<String> errorMessageProducer) {
+        på(callable, errorMessageProducer);
     }
 
-    public static <T> T på(Callable<T> callable, int timeoutInSeconds, String failReason) {
-        return på(callable, timeoutInSeconds, () -> failReason);
+    public static <T> T på(Callable<T> callable, String failReason) {
+        return på(callable, () -> failReason);
     }
 
-    public static <T> T på(Callable<T> callable, int timeoutInSeconds, Callable<String> errorMessageProducer) {
-        return på(callable, timeoutInSeconds, errorMessageProducer, 50);
+    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer) {
+        return på(callable, errorMessageProducer, 50);
     }
 
-    public static <T> T på(Callable<T> callable, int timeoutInSeconds, Callable<String> errorMessageProducer, int progressivVentetid) {
+    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, int progressivVentetid) {
         var start = LocalDateTime.now();
-        var end = start.plusSeconds(timeoutInSeconds);
-        var advarsel = start.plusSeconds((int) (timeoutInSeconds * 0.75));
+        var end = start.plusSeconds(TIMEOUT_SEKUNDER);
+        var advarsel = start.plusSeconds((int) (TIMEOUT_SEKUNDER * 0.75));
         var logget = false;
 
         long progressivVentetidMs = progressivVentetid;
@@ -46,11 +47,11 @@ public final class Vent {
                 if (!logget && now.isAfter(advarsel)) {
                     logget = true;
                     var ste = getCallerCallerClassName();
-                    LOG.warn("Async venting av {} har tatt mer enn 75% av timeout på {} sekunder!", ste, timeoutInSeconds);
+                    LOG.warn("Async venting av {} har tatt mer enn 75% av timeout på {} sekunder!", ste, TIMEOUT_SEKUNDER);
                 }
                 if (now.isAfter(end)) {
                     throw new IllegalStateException(
-                            "Async venting timet ut etter " + timeoutInSeconds + " sekunder fordi: " + errorMessageProducer.call());
+                            "Async venting timet ut etter " + TIMEOUT_SEKUNDER + " sekunder fordi: " + errorMessageProducer.call());
                 }
                 sleep(progressivVentetidMs);
                 progressivVentetidMs = Math.min(750, 2 * progressivVentetidMs);
