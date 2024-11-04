@@ -293,6 +293,7 @@ public class Saksbehandler {
     }
 
     protected void refreshBehandling() {
+        LOG.info("Refresh behandling");
         venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling);
     }
 
@@ -530,6 +531,7 @@ public class Saksbehandler {
     }
 
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
+        LOG.info("Løser aksjonspunkt {}", bekreftelser);
         debugAksjonspunktbekreftelser(bekreftelser, valgtBehandling.uuid);
         var aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling.uuid, valgtBehandling.versjon, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
@@ -538,6 +540,7 @@ public class Saksbehandler {
     }
 
     private void verifsierAPErHåndtert(List<AksjonspunktBekreftelse> bekreftelser) {
+        LOG.info("Verifiserer at aksjonspunkt er håndtert", bekreftelser);
         for (var bekreftelse : bekreftelser) {
             if (bekreftelse instanceof FatterVedtakBekreftelse f && f.harAvvisteAksjonspunkt()) {
                 verifiserAtAPErOpprettetPåNytt(f);

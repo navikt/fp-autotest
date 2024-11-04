@@ -39,7 +39,7 @@ public final class HttpRequestProvider {
         return HttpRequest.newBuilder()
                 .header(ACCEPT, MediaType.APPLICATION_JSON)
                 .header(CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .timeout(Duration.ofSeconds(30));
+                .timeout(Duration.ofSeconds(5));
     }
 
     private static HttpRequest.Builder medBearerTokenOgConsumerId(HttpRequest.Builder requestBuilder, String token) {
