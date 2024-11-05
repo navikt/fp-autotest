@@ -91,7 +91,9 @@ public final class JavaHttpKlient {
 
     private static <T> HttpResponse<T> sendLogg(HttpRequest request, HttpResponse.BodyHandler<T> responseHandler) throws IOException, InterruptedException {
         LOG.info("Sender request {}", request.uri());
-        return klient.send(request, responseHandler);
+        var respons = klient.send(request, responseHandler);
+        LOG.info("Response fra {} {}", request.uri(), respons.statusCode());
+        return respons;
     }
 
     private static <T> boolean retryOn5xxFailures(HttpResponse<T> response, int antallForsøk) {
