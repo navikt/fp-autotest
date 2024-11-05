@@ -30,7 +30,7 @@ public final class JavaHttpKlient {
 
     private static final HttpClient klient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_1_1)
-            .connectTimeout(Duration.ofSeconds(60))
+            .connectTimeout(Duration.ofSeconds(3))
             .build();
 
     private JavaHttpKlient() {
@@ -72,13 +72,13 @@ public final class JavaHttpKlient {
 
     private static <T> HttpResponse<T> send(HttpRequest request, HttpResponse.BodyHandler<T> responseHandler) {
         try {
-            var response = klient.send(request, responseHandler);
+            var response = sendLogg(request, responseHandler);
             var antallForsøk = 1;
             while (retryOn5xxFailures(response, antallForsøk)) {
                 LOG.warn("5xx feil mot {} for {}. gang. Prøver på nytt.", request.uri(), antallForsøk);
                 int ventSekunder = Math.min(2000, 1000 * antallForsøk++);
                 sleep(ventSekunder);
-                response = klient.send(request, responseHandler);
+                response = sendLogg(request, responseHandler);
             }
             return response;
         } catch (IOException e) {
@@ -87,6 +87,11 @@ public final class JavaHttpKlient {
             Thread.currentThread().interrupt();
             throw new TekniskException("F-432938", "InterruptedException ved henting av data.", e);
         }
+    }
+
+    private static <T> HttpResponse<T> sendLogg(HttpRequest request, HttpResponse.BodyHandler<T> responseHandler) throws IOException, InterruptedException {
+        LOG.info("Sender request {}", request.uri());
+        return klient.send(request, responseHandler);
     }
 
     private static <T> boolean retryOn5xxFailures(HttpResponse<T> response, int antallForsøk) {
