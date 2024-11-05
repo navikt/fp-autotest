@@ -1,12 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
-import java.lang.reflect.InvocationTargetException;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Aksjonspunkt {
@@ -51,16 +48,6 @@ public class Aksjonspunkt {
     public void setBekreftelse(AksjonspunktBekreftelse bekreftelse) {
         this.bekreftelse = bekreftelse;
     }
-
-    public AksjonspunktBekreftelse getBekreftelse(Fagsystem fagsystem) {
-        try {
-            return AksjonspunktBekreftelse.fromAksjonspunkt(this, fagsystem);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                | NoSuchMethodException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
 
     @Override
     public String toString() {
