@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.SettBehand
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.ArbeidInntektsmeldingBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
@@ -69,7 +69,7 @@ import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 
 public class Saksbehandler {
-    private final Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
 
     private static final Set<HistorikkinnslagType> GJENOPPTATT = Set.of(HistorikkinnslagType.BEH_GJEN, HistorikkinnslagType.BEH_MAN_GJEN);
 
@@ -471,14 +471,16 @@ public class Saksbehandler {
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) {
         var aksjonspunktKode = type.getDeclaredAnnotation(BekreftelseKode.class).kode();
         LOG.info("Henter aksjonspunktbekreftelse for {} ({})", aksjonspunktKode, type.getSimpleName());
-        return hentAksjonspunktbekreftelse(aksjonspunktKode);
-    }
-
-    private <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(String kode) {
-        var aksjonspunkt = hentAksjonspunkt(kode);
-        var bekreftelse = aksjonspunkt.getBekreftelse(Fagsystem.FPSAK);
-        bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
-        return (T) bekreftelse;
+        var aksjonspunkt = hentAksjonspunkt(aksjonspunktKode);
+        LOG.info("funnet aksjonspunkt {}", aksjonspunkt);
+        try {
+            T bekreftelse = type.getConstructor().newInstance();
+            LOG.info("Funnet aksjonspunktbekreftelse {}", bekreftelse);
+            bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
+            return bekreftelse;
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /*
@@ -486,6 +488,7 @@ public class Saksbehandler {
      */
     public Aksjonspunkt hentAksjonspunkt(String kode) {
         var apkt = behandlingerKlient.hentAlleAksjonspunkter(valgtBehandling.uuid);
+        LOG.info("hentet aksjonspunkt for kode {}, {}", kode, apkt);
         return apkt.stream()
                 .filter(ap -> ap.getDefinisjon().equals(kode))
                 .findFirst()

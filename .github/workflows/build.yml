@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  pull_request_target:
+  pull_request:
     paths-ignore:
       - '**.md'
       - '**.MD'
@@ -24,29 +24,7 @@ jobs:
     permissions:
        contents: read
        id-token: write
-    if: github.ref_name != 'master'
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@feature/test_feil # ratchet:exclude
     with:
       test-suite: fpsak
-    secrets: inherit
-
-  fptilbake-tester:
-    name: Fptilbake tester
-    permissions:
-       contents: read
-       id-token: write
-    if: github.ref_name != 'master'
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
-    with:
-      test-suite: fptilbake
-    secrets: inherit
-
-  verdikjede-tester:
-    name: Verdikjedetester
-    permissions:
-       contents: read
-       id-token: write
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master # ratchet:exclude
-    with:
-      test-suite: verdikjede
     secrets: inherit

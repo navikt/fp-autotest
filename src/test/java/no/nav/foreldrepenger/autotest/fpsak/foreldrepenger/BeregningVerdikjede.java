@@ -317,6 +317,8 @@ class BeregningVerdikjede extends FpsakTestBase {
 
         // FORDEL BEREGNINGSGRUNNLAG //
         var graderingsperiode = fordeling.get(2);
+
+        
         var fordelBeregningsgrunnlagBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class)
                 .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.tidsperiode().fom(), 500_000, 500_000,

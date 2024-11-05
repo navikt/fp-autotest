@@ -49,7 +49,7 @@ import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 // TODO: Se på hva som kan være felles på tvers av Saksbhenalder for fpska og fptiblaek
 public class TilbakekrevingSaksbehandler {
 
-    private final Logger LOG = LoggerFactory.getLogger(TilbakekrevingSaksbehandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TilbakekrevingSaksbehandler.class);
 
     private static final Set<HistorikkinnslagType> GJENOPPTATT = Set.of(HistorikkinnslagType.BEH_GJEN, HistorikkinnslagType.BEH_MAN_GJEN);
 

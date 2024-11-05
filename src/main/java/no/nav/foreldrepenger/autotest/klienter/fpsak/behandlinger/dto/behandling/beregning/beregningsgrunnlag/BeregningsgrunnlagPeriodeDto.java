@@ -18,6 +18,7 @@ public class BeregningsgrunnlagPeriodeDto {
     }
 
     public LocalDate getBeregningsgrunnlagPeriodeFom() {
+        
         return beregningsgrunnlagPeriodeFom;
     }
 

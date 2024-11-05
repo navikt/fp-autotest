@@ -1,15 +1,17 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling;
 
-import java.lang.reflect.InvocationTargetException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Aksjonspunkt {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Aksjonspunkt.class);
 
     @JsonIgnore
     private AksjonspunktBekreftelse bekreftelse;
@@ -50,15 +52,6 @@ public class Aksjonspunkt {
 
     public void setBekreftelse(AksjonspunktBekreftelse bekreftelse) {
         this.bekreftelse = bekreftelse;
-    }
-
-    public AksjonspunktBekreftelse getBekreftelse(Fagsystem fagsystem) {
-        try {
-            return AksjonspunktBekreftelse.fromAksjonspunkt(this, fagsystem);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                | NoSuchMethodException e) {
-            throw new IllegalStateException(e);
-        }
     }
 
 
