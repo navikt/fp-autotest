@@ -199,7 +199,7 @@ class BeregningVerdikjede extends FpsakTestBase {
 
         // AVKLAR AKTIVITETER //
         var avklarAktiviteterBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarAktiviteterBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarAktiviteterBekreftelse())
                 .setSkalBrukes(false, arbeidsgiverIdentifikator);
         saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse);
 
@@ -246,19 +246,19 @@ class BeregningVerdikjede extends FpsakTestBase {
         // FAKTA OM BEREGNING: Vurder besteberegning og fastsett månedsinntekt fra
         // ytelse
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
                 .leggTilAndelerYtelse(10000.0, Inntektskategori.ARBEIDSTAKER)
                 .settSkalHaBesteberegningForKunYtelse(true)
                 .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         // FORESLÅ VEDTAK //
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
         var apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(List.of(apFaktaOmBeregning));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -318,7 +318,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         // FORDEL BEREGNINGSGRUNNLAG //
         var graderingsperiode = fordeling.get(2);
         var fordelBeregningsgrunnlagBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FordelBeregningsgrunnlagBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new FordelBeregningsgrunnlagBekreftelse())
                 .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.tidsperiode().fom(), 500_000, 500_000,
                         Inntektskategori.ARBEIDSTAKER, 1)
                 .settFastsattBeløpOgInntektskategori(graderingsperiode.tidsperiode().fom(), 235_138, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2)
@@ -328,12 +328,12 @@ class BeregningVerdikjede extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
 
         // FORESLÅ VEDTAK //
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
         var apFordelBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.FORDEL_BEREGNINGSGRUNNLAG);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(List.of(apFordelBeregning));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -412,29 +412,29 @@ class BeregningVerdikjede extends FpsakTestBase {
 
         // FAKTA OM FØDSEL
         var vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse())
                 .bekreftDokumentasjonForeligger(1, fødselsdato);
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
         // FAKTA OM BEREGNING: Vurder gyldighet for refusjonskrav som har kommet for
         // sent
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
                 .leggTilRefusjonGyldighetVurdering(arbeidsgiverIdentifikator, true)
                 .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(360_000, 1);
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         // FORESLÅ VEDTAK //
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(List.of(
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN),
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS),

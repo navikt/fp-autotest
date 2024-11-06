@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 
-@BekreftelseKode(kode = "5002", fagsystem = Fagsystem.FPTILBAKE)
 public class ApVilkårsvurdering extends AksjonspunktBekreftelse {
 
     protected List<ApVilkårsvurderingDetaljer> vilkarsVurdertePerioder = new ArrayList<>();
@@ -27,5 +24,10 @@ public class ApVilkårsvurdering extends AksjonspunktBekreftelse {
             apVilkårsvurderingDetaljer.vilkarResultatInfo.addGeneriskResultat();
             apVilkårsvurderingDetaljer.vilkarResultatInfo.aktsomhetInfo.addGeneriskAktsomhet();
         }
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5002";
     }
 }

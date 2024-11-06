@@ -2,15 +2,10 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 
-@BekreftelseKode(kode = "5011")
 public class VurderingAvOmsorgsvilkoret extends AksjonspunktBekreftelse {
 
     protected String avslagskode;
     protected boolean erVilkarOk;
-
-    public VurderingAvOmsorgsvilkoret() {
-        super();
-    }
 
     public VurderingAvOmsorgsvilkoret bekreftGodkjent() {
         erVilkarOk = true;
@@ -23,4 +18,8 @@ public class VurderingAvOmsorgsvilkoret extends AksjonspunktBekreftelse {
         return this;
     }
 
+    @Override
+    public String aksjonspunktKode() {
+        return "5011";
+    }
 }

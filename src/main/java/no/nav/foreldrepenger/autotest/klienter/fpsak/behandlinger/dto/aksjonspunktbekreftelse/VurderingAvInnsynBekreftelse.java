@@ -6,7 +6,6 @@ import java.util.List;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnsynResultatType;
 
-@BekreftelseKode(kode = "5037")
 public class VurderingAvInnsynBekreftelse extends AksjonspunktBekreftelse {
 
     public LocalDate mottattDato;
@@ -14,10 +13,6 @@ public class VurderingAvInnsynBekreftelse extends AksjonspunktBekreftelse {
     public List<Object> innsynDokumenter = new ArrayList<>();
     public String innsynResultatType;
     public Boolean sattPaVent;
-
-    public VurderingAvInnsynBekreftelse() {
-        super();
-    }
 
     public VurderingAvInnsynBekreftelse setMottattDato(LocalDate mottattDato) {
         this.mottattDato = mottattDato;
@@ -35,4 +30,8 @@ public class VurderingAvInnsynBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
+    @Override
+    public String aksjonspunktKode() {
+        return "5037";
+    }
 }

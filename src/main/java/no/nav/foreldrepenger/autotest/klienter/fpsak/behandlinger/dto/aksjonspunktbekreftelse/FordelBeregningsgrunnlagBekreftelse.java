@@ -11,14 +11,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.FordelBeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode = "5046")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FordelBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<FastsettBeregningsgrunnlagPeriodeDto> endretBeregningsgrunnlagPerioder;
 
-    public FordelBeregningsgrunnlagBekreftelse() {
-        super();
+    @Override
+    public String aksjonspunktKode() {
+        return "5046";
     }
 
     @Override

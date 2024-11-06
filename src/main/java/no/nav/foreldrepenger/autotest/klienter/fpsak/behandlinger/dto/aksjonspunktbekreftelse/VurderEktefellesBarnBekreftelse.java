@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-@BekreftelseKode(kode = "5005")
 public class VurderEktefellesBarnBekreftelse extends AksjonspunktBekreftelse {
 
     protected Boolean ektefellesBarn;
@@ -17,5 +16,10 @@ public class VurderEktefellesBarnBekreftelse extends AksjonspunktBekreftelse {
     public VurderEktefellesBarnBekreftelse bekreftBarnErIkkeEktefellesBarn() {
         ektefellesBarn = false;
         return this;
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5005";
     }
 }

@@ -57,17 +57,17 @@ class Adopsjon extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
         var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
                 .bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         beslutter.hentFagsak(saksnummer);
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -99,18 +99,18 @@ class Adopsjon extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBarnetsAnkomstTilNorgeDato(LocalDate.now())
                 .endreFødselsdato(1, LocalDate.now().minusYears(16));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
         var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
                 .bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         beslutter.hentFagsak(saksnummer);
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -145,11 +145,11 @@ class Adopsjon extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
         var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
                 .bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
 
@@ -163,10 +163,10 @@ class Adopsjon extends FpsakTestBase {
         assertThat(overstyrer.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingstatus")
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        overstyrer.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -199,22 +199,22 @@ class Adopsjon extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
         var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
                 .bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
         var mannAdoptererAleneBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(MannAdoptererAleneBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new MannAdoptererAleneBekreftelse())
                 .bekreftMannAdoptererAlene();
         saksbehandler.bekreftAksjonspunkt(mannAdoptererAleneBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -243,15 +243,15 @@ class Adopsjon extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
         var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
                 .bekreftBarnErEktefellesBarn();
         saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
         var mannAdoptererAleneBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(MannAdoptererAleneBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new MannAdoptererAleneBekreftelse())
                 .bekreftMannAdoptererIkkeAlene();
         saksbehandler.bekreftAksjonspunkt(mannAdoptererAleneBekreftelse);
 
@@ -262,11 +262,11 @@ class Adopsjon extends FpsakTestBase {
                 .as("Avslagsårsak")
                 .isEqualTo(Avslagsårsak.EKTEFELLES_SAMBOERS_BARN);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);

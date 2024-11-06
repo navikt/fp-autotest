@@ -57,18 +57,18 @@ class Termin extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
         avklarFaktaTerminBekreftelse
                 .setAntallBarn(1)
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -101,7 +101,7 @@ class Termin extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
         avklarFaktaTerminBekreftelse
                 .setAntallBarn(1)
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
@@ -118,11 +118,11 @@ class Termin extends FpsakTestBase {
         assertThat(overstyrer.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        overstyrer.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_FØDSELSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -152,7 +152,7 @@ class Termin extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
         avklarFaktaTerminBekreftelse
                 .setAntallBarn(1)
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
@@ -230,11 +230,11 @@ class Termin extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse());
         vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         assertThat(saksbehandler.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
@@ -242,7 +242,7 @@ class Termin extends FpsakTestBase {
 
         beslutter.hentFagsak(saksnummer);
 
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.SJEKK_MANGLENDE_FØDSEL));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
     }

@@ -77,11 +77,11 @@ class Medlemskap extends FpsakTestBase {
         assertThat(overstyrer.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        overstyrer.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse())
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.OVERSTYRING_AV_MEDLEMSKAPSVILKÅRET));
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
@@ -110,10 +110,10 @@ class Medlemskap extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse(Avslagsårsak.SØKER_ER_IKKE_BOSATT));
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         saksbehandler.hentFagsak(saksnummer);
@@ -143,10 +143,10 @@ class Medlemskap extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderMedlemskapsvilkårForutgåendeBekreftelse.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse());
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();

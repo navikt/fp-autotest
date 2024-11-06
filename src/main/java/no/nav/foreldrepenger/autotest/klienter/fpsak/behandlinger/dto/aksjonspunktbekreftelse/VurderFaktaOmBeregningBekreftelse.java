@@ -11,15 +11,10 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 
-@BekreftelseKode(kode = "5058")
 //TODO: Rydd opp i denne. Ganske uoversiktlig.
 public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
 
     protected FaktaOmBeregningLagreDto fakta = new FaktaOmBeregningLagreDto();
-
-    public VurderFaktaOmBeregningBekreftelse() {
-        super();
-    }
 
     public VurderFaktaOmBeregningBekreftelse leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle kode) {
         fakta.leggTilFaktaOmBeregningTilfeller(kode);
@@ -107,6 +102,11 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
     public VurderFaktaOmBeregningBekreftelse leggTilMottarYtelseFrilans(boolean frilansMottarYtelse) {
         fakta.leggTilMottarYtelse(frilansMottarYtelse, List.of());
         return this;
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5058";
     }
 
     @Override

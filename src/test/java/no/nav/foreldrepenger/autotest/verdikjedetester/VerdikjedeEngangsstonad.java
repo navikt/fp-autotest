@@ -48,11 +48,11 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
         avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderMedlemskapsvilkårForutgåendeBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse());
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
 
@@ -92,7 +92,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
 
         var esSak = mor.innsyn().hentEsSakMedÅpenBehandlingTilstand(saksnummer, BehandlingTilstand.UNDER_BEHANDLING);
         assertThat(esSak.saksnummer().value()).isEqualTo(saksnummer.value());
@@ -106,7 +106,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
 
         avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderMedlemskapsvilkårForutgåendeBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse());
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
 
         var esSakEtterVedtak = mor.innsyn().hentEsSakUtenÅpenBehandling(saksnummer);

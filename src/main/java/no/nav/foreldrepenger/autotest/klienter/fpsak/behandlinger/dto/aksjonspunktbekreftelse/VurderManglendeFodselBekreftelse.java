@@ -6,7 +6,6 @@ import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.UidentifisertBarn;
 
-@BekreftelseKode(kode = "5027")
 public class VurderManglendeFodselBekreftelse extends AksjonspunktBekreftelse {
 
     protected Integer antallBarnFodt; // brukes ikke i ES?
@@ -40,4 +39,8 @@ public class VurderManglendeFodselBekreftelse extends AksjonspunktBekreftelse {
         brukAntallBarnITps = true;
     }
 
+    @Override
+    public String aksjonspunktKode() {
+        return "5027";
+    }
 }

@@ -158,13 +158,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(månedsinntekt * 12, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         var avklarFaktaAleneomsorgBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAleneomsorgBekreftelse())
                 .bekreftBrukerHarAleneomsorg()
                 .setBegrunnelse("Bekreftelse sendt fra Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
@@ -261,12 +261,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderVarigEndringEllerNyoppstartetSNBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderVarigEndringEllerNyoppstartetSNBekreftelse())
                 .setErVarigEndretNaering(false)
                 .setBegrunnelse("Ingen endring");
         saksbehandler.bekreftAksjonspunkt(vurderVarigEndringEllerNyoppstartetSNBekreftelse);
         var vurderVarigEndringEllerNyoppstartetSNBekreftelse1 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderVarigEndringEllerNyoppstartetSNBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderVarigEndringEllerNyoppstartetSNBekreftelse())
                 .setErVarigEndretNaering(true)
                 .setBruttoBeregningsgrunnlag((int)avvikendeNæringsinntekt)
                 .setBegrunnelse("Vurder varig endring for selvstendig næringsdrivende begrunnelse");
@@ -312,14 +312,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isEqualTo(RE_HENDELSE_DØD_FORELDER);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new FastsettUttaksperioderManueltBekreftelse())
                 .avslåManuellePerioder();
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new FastsetteUttakKontrollerOpplysningerOmDødDto());
 
         if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
-            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering())
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         }
@@ -377,12 +377,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         fordelingDtoMor.permisjonsPerioder.add(foreldrepengerFørFødsel);
         fordelingDtoMor.permisjonsPerioder.add(mødrekvote);
         var papirSoknadForeldrepengerBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(PapirSoknadForeldrepengerBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new PapirSoknadForeldrepengerBekreftelse())
                 .morSøkerTermin(fordelingDtoMor, termindato, fpMottatDato, DekningsgradDto.AATI);
         saksbehandler.bekreftAksjonspunkt(papirSoknadForeldrepengerBekreftelse);
 
         var avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaTerminBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse())
                 .setUtstedtdato(termindato.minusWeeks(10))
                 .setBegrunnelse("Begrunnelse fra autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
@@ -393,14 +393,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isTrue();
 
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse());
         vurderFaktaOmBeregningBekreftelse
                 .leggTilAndelerYtelse(10000.0, Inntektskategori.ARBEIDSTAKER)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new FastsettUttaksperioderManueltBekreftelse())
                 .avslåManuellePerioderMedPeriodeResultatÅrsak(IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
@@ -474,7 +474,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingerFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
 
         /*
          * Fellesperioden skal splittes slik at første periode på 8 uker blir avslått og
@@ -585,7 +585,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("FRILANS"))
                 .as("Forventer at det er registert en opptjeningsaktivitet med aktivitettype FRILANSER som har frilansinntekt på skjæringstidspunktet!")
                 .isTrue();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -674,12 +674,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
                 .setAnnenforelderHarRett(false)
                 .setBegrunnelse("Bare far har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false, false);
 
@@ -792,10 +792,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+                .hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering());
         vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
 
         saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
 
@@ -864,7 +864,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaUttakPerioder = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
                 .godkjenn(overføringsperiodeEndring.tidsperiode());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
@@ -888,10 +888,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // Løser AP 5084 negativ simulering! Oppretter tilbakekreving og sjekk at den er opprette. Ikke løs det.
         if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
             var vurderTilbakekrevingVedNegativSimulering = saksbehandler
-                    .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+                    .hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering());
             vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+            saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         }
 
 
@@ -1132,11 +1132,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isTrue();
 
         var bekreftKorrektBesteberegninging = saksbehandler
-                .hentAksjonspunktbekreftelse(KontrollerBesteberegningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new KontrollerBesteberegningBekreftelse())
                 .godkjenn()
                 .setBegrunnelse("Besteberegning godkjent av autotest.");
         saksbehandler.bekreftAksjonspunkt(bekreftKorrektBesteberegninging);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1189,14 +1189,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
         var avklarFaktaAleneomsorgBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAleneomsorgBekreftelse())
                 .bekreftBrukerHarAleneomsorg();
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1218,24 +1218,24 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // Revurdering / Berørt sak til far
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
                 .leggTilRefusjonGyldighetVurdering(arbeidsgiver.arbeidsgiverIdentifikator(), false)
                 .setBegrunnelse("Refusjonskrav er sendt inn for sent og skal ikke tas med i beregning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
         var vurderRefusjonBeregningsgrunnlagBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderRefusjonBeregningsgrunnlagBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new VurderRefusjonBeregningsgrunnlagBekreftelse());
         vurderRefusjonBeregningsgrunnlagBekreftelse
                 .setFastsattRefusjonFomForAllePerioder(LocalDate.now().minusMonths(3))
                 .setBegrunnelse("Fordi autotest sier det!");
         saksbehandler.bekreftAksjonspunkt(vurderRefusjonBeregningsgrunnlagBekreftelse);
 
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+                .hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering());
         vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         // AG sender inn ny korrigert IM med endring i refusjon mens behandlingen er hos beslutter. Behandlingen skal
         // rulles tilbake og behandles på nytt fra første AP i revurderingen.
@@ -1251,21 +1251,21 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse());
         vurderFaktaOmBeregningBekreftelse2
                 .leggTilRefusjonGyldighetVurdering(arbeidsgiver.arbeidsgiverIdentifikator(), false)
                 .setBegrunnelse("Refusjonskrav er sendt inn for sent og skal ikke tas med i beregning!");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 
         var vurderRefusjonBeregningsgrunnlagBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderRefusjonBeregningsgrunnlagBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new VurderRefusjonBeregningsgrunnlagBekreftelse());
         vurderRefusjonBeregningsgrunnlagBekreftelse2
                 .setFastsattRefusjonFomForAllePerioder(LocalDate.now().minusMonths(3))
                 .setBegrunnelse("Fordi autotest sier det!");
         saksbehandler.bekreftAksjonspunkt(vurderRefusjonBeregningsgrunnlagBekreftelse2);
 
         var vurderTilbakekrevingVedNegativSimulering2 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+                .hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering());
         vurderTilbakekrevingVedNegativSimulering2.tilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering2);
 
@@ -1334,17 +1334,17 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBegrunnelse("Adopsjon behandlet av Autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
 
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
                 .setAnnenforelderHarRett(true)
                 .setBegrunnelse("Både far og mor har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummerFar, false, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1374,10 +1374,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerMor);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelseMor = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse());
         avklarFaktaAdopsjonsdokumentasjonBekreftelseMor.setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseMor);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -1415,7 +1415,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
          * Siste periode delvis innvilges og avslås pga manglende dager igjen på felleskonto
          */
         var fastsettUttaksperioderManueltBekreftelseMor = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new FastsettUttaksperioderManueltBekreftelse());
 
         // Siste periode skal slippes og delvis innvilges med resterende saldo
         var fastsatteUttaksperioder = fastsettUttaksperioderManueltBekreftelseMor.getPerioder();
@@ -1483,7 +1483,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isTrue();
 
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
                 .leggTilAndelerYtelse(4000.0, Inntektskategori.ARBEIDSTAKER);
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
@@ -1505,24 +1505,24 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+                .hentAksjonspunktbekreftelse(new KlageFormkravNfp())
                 .godkjennAlleFormkrav()
                 .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("Super duper klage!");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
         var vurderingAvKlageNfpBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderingAvKlageNfpBekreftelse())
                 .bekreftMedholdGunst("PROSESSUELL_FEIL")
                 .fritekstBrev("Fritektst til brev fra klagebehandler.")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgKlageBehandling();
-        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
 
@@ -1541,11 +1541,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isTrue();
 
         var vurderFaktaOmBeregningBekreftelse2 = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
                 .leggTilAndelerYtelse(10_000.0, Inntektskategori.ARBEIDSTAKER);
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse2);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(KontrollerRealitetsbehandlingEllerKlage.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new KontrollerRealitetsbehandlingEllerKlage());
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, false);
 
 
@@ -1616,12 +1616,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isEqualTo(BehandlingÅrsakType.RE_HENDELSE_DØDFØDSEL);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new FastsettUttaksperioderManueltBekreftelse());
         fastsettUttaksperioderManueltBekreftelse
                 .avslåManuellePerioderMedPeriodeResultatÅrsak(PeriodeResultatÅrsak.BARNET_ER_DØD);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(FastsetteUttakKontrollerOpplysningerOmDødDto.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new FastsetteUttakKontrollerOpplysningerOmDødDto());
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, false);
 
@@ -1722,7 +1722,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaUttak = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
                 .godkjennSykdom();
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttak);
 
@@ -1797,10 +1797,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBegrunnelse("Adopsjon behandlet av Autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
@@ -1870,7 +1870,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         * */
         saksbehandler.hentFagsak(saksnummerFar);
         var vurderUttakDokBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
                 .ikkeDokumentert(utsettelsesperiode.tidsperiode())
                 .ikkeDokumentert(uttaksperiodeEtterUtsettelse1.tidsperiode())
                 .setBegrunnelse("Mor er ikke i aktivitet for siste uttaksperiode!");
@@ -2031,10 +2031,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
         if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
-            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering())
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+            saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         }
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
@@ -2101,10 +2101,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
 
         if (saksbehandler.harAksjonspunkt(VURDER_FEILUTBETALING_KODE)) {
-            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+            var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering())
                     .avventSamordningIngenTilbakekreving();
             saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+            saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
             saksbehandler.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
         } else {
             saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();

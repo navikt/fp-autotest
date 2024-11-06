@@ -5,15 +5,10 @@ import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.InntektPrAndel;
 
-@BekreftelseKode(kode = "5038")
 public class VurderBeregnetInntektsAvvikBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<InntektPrAndel> inntektPrAndelList = new ArrayList<>();
     protected Integer inntektFrilanser;
-
-    public VurderBeregnetInntektsAvvikBekreftelse() {
-        super();
-    }
 
     public VurderBeregnetInntektsAvvikBekreftelse leggTilInntekt(Integer inntekt, Integer andelsnr) {
         inntektPrAndelList.add(new InntektPrAndel(inntekt, andelsnr.longValue()));
@@ -25,4 +20,8 @@ public class VurderBeregnetInntektsAvvikBekreftelse extends AksjonspunktBekrefte
         return this;
     }
 
+    @Override
+    public String aksjonspunktKode() {
+        return "5038";
+    }
 }

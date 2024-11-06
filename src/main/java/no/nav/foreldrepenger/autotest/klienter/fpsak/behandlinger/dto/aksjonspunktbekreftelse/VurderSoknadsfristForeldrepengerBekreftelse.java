@@ -2,15 +2,10 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.time.LocalDate;
 
-@BekreftelseKode(kode = "5043")
 public class VurderSoknadsfristForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
 
     protected Boolean harGyldigGrunn;
     protected LocalDate ansesMottattDato;
-
-    public VurderSoknadsfristForeldrepengerBekreftelse() {
-        super();
-    }
 
     public VurderSoknadsfristForeldrepengerBekreftelse bekreftHarGyldigGrunn(LocalDate ansesMottattDato) {
         this.harGyldigGrunn = true;
@@ -22,5 +17,10 @@ public class VurderSoknadsfristForeldrepengerBekreftelse extends AksjonspunktBek
     public VurderSoknadsfristForeldrepengerBekreftelse bekreftHarIkkeGyldigGrunn() {
         harGyldigGrunn = false;
         return this;
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5043";
     }
 }

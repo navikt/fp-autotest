@@ -102,13 +102,13 @@ class RegresjonPreWLB extends FpsakTestBase {
         // Må bekrefte at mor er ufør inntil det kommer mock + modell
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
                 .setAnnenforelderHarRett(false)
                 .setBegrunnelse("Mor har ikke rett og er uføretrygded i følge pesys!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
         var kontrollerAktivitetskravBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
                 .ikkeDokumentert(uttaksperiode1.tidsperiode())
                 .ikkeDokumentert(utsettelsesperiode1.tidsperiode())
                 .ikkeDokumentert(uttaksperiode2.tidsperiode())
@@ -117,9 +117,9 @@ class RegresjonPreWLB extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
 
         // 2trinn pga bekreftet at mor er ufør
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         beslutter.hentFagsak(saksnummer);
-        var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse())
                 .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFørstegangsbehandling);
 
@@ -205,25 +205,25 @@ class RegresjonPreWLB extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
                 .setAnnenforelderHarRett(true)
                 .setBegrunnelse("Mor gar rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
         var avklarFaktaUttakPerioder = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderUttakDokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
                 .ikkeGodkjenn(uttaksperiodeIfmFødsel.tidsperiode())
                 .godkjennMorsAktivitet(VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(FastsettUttaksperioderManueltBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new FastsettUttaksperioderManueltBekreftelse())
                 .avslåPeriode(uttaksperiodeIfmFødsel.tidsperiode().fom(), uttaksperiodeIfmFødsel.tidsperiode().tom(), DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         beslutter.hentFagsak(saksnummer);
-        var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var bekreftelseFørstegangsbehandling = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse())
                 .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelseFørstegangsbehandling);
 

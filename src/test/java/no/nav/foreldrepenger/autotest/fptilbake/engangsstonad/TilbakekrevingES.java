@@ -69,19 +69,19 @@ class TilbakekrevingES extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedato);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
         var vurderEktefellesBarnBekreftelse = saksbehandler
-                   .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                   .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
                 .bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
         var bekreftelse = beslutter
-                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse())
                 .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
@@ -93,20 +93,20 @@ class TilbakekrevingES extends FptilbakeTestBase {
 //        saksbehandler.opprettBehandlingRevurdering(RE_FEIL_ELLER_ENDRET_FAKTA);
 //        saksbehandler.ventPåOgVelgRevurderingBehandling(RE_FEIL_ELLER_ENDRET_FAKTA);
 //
-//        var varselOmRevurderingBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
+//        var varselOmRevurderingBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VarselOmRevurderingBekreftelse());
 //        varselOmRevurderingBekreftelse.bekreftIkkeSendVarsel();
 //        saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 //        var avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering = saksbehandler
-//                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+//                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
 //                .setBarnetsAnkomstTilNorgeDato(omsorgsovertakelsedato);
 //        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseRevurdering);
 //        var vurderEktefellesBarnBekreftelseRevurdering = saksbehandler
-//                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+//                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
 //                .bekreftBarnErEktefellesBarn();
 //        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelseRevurdering);
 //
 //        var vurderTilbakekrevingVedNegativSimulering = saksbehandler
-//                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+//                .hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering());
 //        vurderTilbakekrevingVedNegativSimulering.setTilbakekrevingUtenVarsel();
 //        saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
 //        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true);
@@ -180,19 +180,19 @@ class TilbakekrevingES extends FptilbakeTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         var avklarFaktaVergeBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaVergeBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaVergeBekreftelse())
                 .bekreftSøkerErKontaktperson()
                 .bekreftSøkerErIkkeUnderTvungenForvaltning()
                 .setVerge(familie.far().fødselsnummer());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaVergeBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderMedlemskapsvilkårForutgåendeBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse());
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 

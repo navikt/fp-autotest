@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode = "5035")
 public class VurderingAvKlageNfpBekreftelse extends AksjonspunktBekreftelse {
 
     private static final String VURDERING_STADFEST = "STADFESTE_YTELSESVEDTAK";
@@ -20,10 +19,6 @@ public class VurderingAvKlageNfpBekreftelse extends AksjonspunktBekreftelse {
     protected String klageVurderingOmgjoer;
     protected String fritekstTilBrev;
     protected LocalDate vedtaksdatoPaklagdBehandling;
-
-    public VurderingAvKlageNfpBekreftelse() {
-        super();
-    }
 
     // Omgjør vedtaket
     public VurderingAvKlageNfpBekreftelse bekreftMedholdGunst(String årsak) {
@@ -56,6 +51,11 @@ public class VurderingAvKlageNfpBekreftelse extends AksjonspunktBekreftelse {
     public VurderingAvKlageNfpBekreftelse fritekstBrev(String fritekst) {
         fritekstTilBrev = fritekst;
         return this;
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5035";
     }
 
     @Override

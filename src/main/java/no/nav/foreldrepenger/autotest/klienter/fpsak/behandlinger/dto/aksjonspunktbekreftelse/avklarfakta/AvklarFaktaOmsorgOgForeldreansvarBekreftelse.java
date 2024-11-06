@@ -4,11 +4,9 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode = "5008")
 public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBekreftelse {
 
     protected LocalDate omsorgsovertakelseDato;
@@ -16,6 +14,11 @@ public class AvklarFaktaOmsorgOgForeldreansvarBekreftelse extends AksjonspunktBe
 
     public AvklarFaktaOmsorgOgForeldreansvarBekreftelse() {
         super();
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5008";
     }
 
     @Override

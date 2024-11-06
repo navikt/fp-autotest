@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 
-@BekreftelseKode(kode = "5026")
 public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
 
     protected String begrunnelseForVarsel;
@@ -12,10 +11,6 @@ public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
     protected String sendVarsel;
     protected LocalDate frist;
     protected String ventearsak;
-
-    public VarselOmRevurderingBekreftelse() {
-        super();
-    }
 
     public VarselOmRevurderingBekreftelse setFrist(LocalDate frist) {
         this.frist = frist;
@@ -34,4 +29,8 @@ public class VarselOmRevurderingBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
+    @Override
+    public String aksjonspunktKode() {
+        return "5026";
+    }
 }

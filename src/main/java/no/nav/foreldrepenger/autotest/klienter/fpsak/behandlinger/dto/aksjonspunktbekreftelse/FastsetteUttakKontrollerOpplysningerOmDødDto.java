@@ -7,13 +7,13 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode = "5076")
 public class FastsetteUttakKontrollerOpplysningerOmDødDto extends AksjonspunktBekreftelse {
 
     protected List<UttakResultatPeriode> perioder = new ArrayList<>();
 
-    public FastsetteUttakKontrollerOpplysningerOmDødDto() {
-        super();
+    @Override
+    public String aksjonspunktKode() {
+        return "5076";
     }
 
     @Override

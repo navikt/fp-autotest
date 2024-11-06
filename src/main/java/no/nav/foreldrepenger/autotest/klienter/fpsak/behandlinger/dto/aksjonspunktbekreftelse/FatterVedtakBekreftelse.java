@@ -7,14 +7,9 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 
-@BekreftelseKode(kode = "5016")
 public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<AksjonspunktGodkjenningDto> aksjonspunktGodkjenningDtos = new ArrayList<>();
-
-    public FatterVedtakBekreftelse() {
-        super();
-    }
 
     public FatterVedtakBekreftelse godkjennAksjonspunkter(List<Aksjonspunkt> aksjonspunkter) {
         aksjonspunkter.forEach(this::godkjennAksjonspunkt);
@@ -63,8 +58,13 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
                 .toList();
     }
 
+    @Override
+    public String aksjonspunktKode() {
+        return "5016";
+    }
+
     public static class AksjonspunktGodkjenningDto {
-        protected String aksjonspunktKode;
+        public String aksjonspunktKode;
         protected List<String> arsaker = new ArrayList<>();
         protected String begrunnelse = null;
         protected boolean godkjent = false;

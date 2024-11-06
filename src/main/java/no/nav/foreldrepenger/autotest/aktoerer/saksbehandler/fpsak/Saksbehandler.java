@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +38,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.Behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.SettBehandlingPaVentDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.ArbeidInntektsmeldingBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
@@ -294,7 +292,6 @@ public class Saksbehandler {
     }
 
     protected void refreshBehandling() {
-        LOG.info("Refresh behandling");
         venterPåFerdigProssesseringOgOppdaterBehandling(valgtBehandling);
     }
 
@@ -464,20 +461,9 @@ public class Saksbehandler {
                 .collect(Collectors.toSet());
     }
 
-    /**
-     * AKSJONSPUNKT
-     */
-
-    public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(Class<T> type) {
-        var aksjonspunktKode = type.getDeclaredAnnotation(BekreftelseKode.class).kode();
-        LOG.info("Henter aksjonspunktbekreftelse for {} ({})", aksjonspunktKode, type.getSimpleName());
-        try {
-            T bekreftelse = type.getConstructor().newInstance();
-            bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
-            return bekreftelse;
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
+    public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(T bekreftelse) {
+        bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
+        return bekreftelse;
     }
 
     /*
@@ -508,13 +494,13 @@ public class Saksbehandler {
     /*
      * Bekrefte aksjonspunkt bekreftelse
      */
-    public <T extends AksjonspunktBekreftelse> void bekreftAksjonspunktMedDefaultVerdier(Class<T> type) {
+    public <T extends AksjonspunktBekreftelse> void bekreftAksjonspunktMedDefaultVerdier(T type) {
         bekreftAksjonspunkt(hentAksjonspunktbekreftelse(type));
     }
 
     public void bekreftAksjonspunkt(AksjonspunktBekreftelse bekreftelse) {
         bekreftAksjonspunktbekreftelserer(List.of(bekreftelse));
-        LOG.info("Aksjonspunktbekreftelse for {} er sendt inn og AP er løst", bekreftelse.kode());
+        LOG.info("Aksjonspunktbekreftelse for {} er sendt inn og AP er løst", bekreftelse.aksjonspunktKode());
     }
 
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
@@ -539,11 +525,11 @@ public class Saksbehandler {
 
     private void verifsierAtAPErFerdigbehandlet(AksjonspunktBekreftelse bekreftelse) {
         var ap = valgtBehandling.getAksjonspunkt().stream()
-                .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equalsIgnoreCase(bekreftelse.kode()))
+                .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equalsIgnoreCase(bekreftelse.aksjonspunktKode()))
                 .findFirst()
                 .orElseThrow(); // Vil ikke inntreffe ettersom hentAksjonspunkt() vil alltid bli kalt først.
         if (!ap.getStatus().equalsIgnoreCase("UTFO")) {
-            throw new RuntimeException("AP bekreftelse er sendt inn programatisk for AP [" + bekreftelse.kode() +
+            throw new RuntimeException("AP bekreftelse er sendt inn programatisk for AP [" + bekreftelse.aksjonspunktKode() +
                     "] uten at det løste AP. Forventet status på AP er UTFO, men er [" + ap.getStatus() + "]");
         }
     }
@@ -553,7 +539,7 @@ public class Saksbehandler {
         for (var kode : avvisteAksjonspunktkoder) {
             var AP = hentAksjonspunkt(kode);
             if (!AP.getStatus().equalsIgnoreCase("OPPR")) {
-                throw new RuntimeException("AP [" + bekreftelse.kode() + "] skal være avvist av beslutter og " +
+                throw new RuntimeException("AP [" + bekreftelse.aksjonspunktKode() + "] skal være avvist av beslutter og " +
                         "opprettet nytt, men har status [" + AP.getStatus() + "]");
             }
         }
@@ -810,7 +796,7 @@ public class Saksbehandler {
                         arbfor.arbeidsgiverIdent(), arbfor.internArbeidsforholdId(), (long) valgtBehandling.versjon))
                 .toList();
         dtoer.forEach(this::lagreArbeidsforholdValg);
-        var ab = hentAksjonspunktbekreftelse(ArbeidInntektsmeldingBekreftelse.class);
+        var ab = hentAksjonspunktbekreftelse(new ArbeidInntektsmeldingBekreftelse());
         bekreftAksjonspunkt(ab);
     }
 

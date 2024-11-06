@@ -28,9 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -47,6 +44,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsa
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
@@ -152,16 +150,16 @@ class Fodsel extends FpsakTestBase {
                 .isTrue();
 
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntektFrilans(overstyrtFrilanserInntekt)
                 .leggTilInntekt(overstyrtInntekt, 2)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -211,16 +209,16 @@ class Fodsel extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         debugLoggBehandling(saksbehandler.valgtBehandling);
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(overstyrtInntekt, 1)
                 .leggTilInntekt(overstyrtInntekt, 2)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -263,15 +261,15 @@ class Fodsel extends FpsakTestBase {
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(overstyrtInntekt, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -411,15 +409,15 @@ class Fodsel extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAnnenForeldreHarRett.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
                 .setAnnenforelderHarRett(true)
                 .setBegrunnelse("Mor har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(VurderUttakDokumentasjonBekreftelse.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -496,7 +494,7 @@ class Fodsel extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var aksjonspunktBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(PapirSoknadForeldrepengerBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new PapirSoknadForeldrepengerBekreftelse());
         var fordeling = new FordelingDto();
         var fpff = new PermisjonPeriodeDto(FORELDREPENGER_FØR_FØDSEL,
                 fpStartdato, fødselsdato.minusDays(1));
@@ -507,7 +505,7 @@ class Fodsel extends FpsakTestBase {
         aksjonspunktBekreftelse.morSøkerFødsel(fordeling, fødselsdato, fpff.periodeFom.minusWeeks(3));
 
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -526,7 +524,7 @@ class Fodsel extends FpsakTestBase {
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
         var aksjonspunktBekreftelseEndringssøknad = saksbehandler
-                .hentAksjonspunktbekreftelse(PapirSoknadEndringForeldrepengerBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new PapirSoknadEndringForeldrepengerBekreftelse());
         var fordelingEndringssøknad = new FordelingDto();
         // Legger til fellesperiode på slutten
         var fellesperiode = new PermisjonPeriodeDto(FELLESPERIODE,
@@ -535,7 +533,7 @@ class Fodsel extends FpsakTestBase {
         aksjonspunktBekreftelseEndringssøknad.setFordeling(fordelingEndringssøknad);
         aksjonspunktBekreftelseEndringssøknad.setAnnenForelderInformert(true);
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelseEndringssøknad);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -636,7 +634,7 @@ class Fodsel extends FpsakTestBase {
 
         // Bekreft Opptjening
         var vurderPerioderOpptjeningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderPerioderOpptjeningBekreftelse())
                 .godkjennAllOpptjening();
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
@@ -661,18 +659,18 @@ class Fodsel extends FpsakTestBase {
 
         // Bekreft inntekt i beregning
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(overstyrtInntekt, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         // Foreslå vedtak
-        var foreslåVedtakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(ForeslåVedtakBekreftelse.class);
+        var foreslåVedtakBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new ForeslåVedtakBekreftelse());
         saksbehandler.bekreftAksjonspunkt(foreslåVedtakBekreftelse);
 
         // Totrinnskontroll
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -731,7 +729,7 @@ class Fodsel extends FpsakTestBase {
 
         // Bekreft Opptjening
         var vurderPerioderOpptjeningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderPerioderOpptjeningBekreftelse())
                 .godkjennAllOpptjening();
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
@@ -757,7 +755,7 @@ class Fodsel extends FpsakTestBase {
 
         // Bekreft inntekt i beregning
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(overstyrtInntekt, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
@@ -797,11 +795,11 @@ class Fodsel extends FpsakTestBase {
         assertThat(resultatPerioder.get(3).getAndeler().get(0).getRefusjon()).isEqualTo(forventetRefusjon.intValue());
 
         // Foreslå vedtak
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         // Totrinnskontroll
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -835,10 +833,10 @@ class Fodsel extends FpsakTestBase {
         // Saksbehandler må avklare aleneomsorgen fordi far er gift og bor på sammested med ektefelle
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAleneomsorgBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAleneomsorgBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAleneomsorgBekreftelse())
                 .bekreftBrukerHarAleneomsorg();
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // verifiserer uttak
@@ -884,15 +882,15 @@ class Fodsel extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderPerioderOpptjeningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderPerioderOpptjeningBekreftelse())
                 .godkjennAllOpptjening();
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
         var bekreftelse = beslutter
-                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse())
                 .godkjennAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
@@ -1115,14 +1113,14 @@ class Fodsel extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         var fodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse())
                 .bekreftDokumentasjonForeligger(2, fødselsdato);
         saksbehandler.bekreftAksjonspunkt(fodselBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse())
                 .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 

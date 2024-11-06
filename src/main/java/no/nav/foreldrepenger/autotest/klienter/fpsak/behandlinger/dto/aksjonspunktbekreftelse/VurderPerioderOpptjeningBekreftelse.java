@@ -8,14 +8,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.opptjening.OpptjeningAktivitet;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-@BekreftelseKode(kode = "5051")
 public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<OpptjeningAktivitet> opptjeningsaktiviteter = new ArrayList<>();
-
-    public VurderPerioderOpptjeningBekreftelse() {
-        super();
-    }
 
     public VurderPerioderOpptjeningBekreftelse godkjennAllOpptjening() {
         opptjeningsaktiviteter.forEach(aktivitet -> aktivitet.vurder(true, "Godkjent", false));
@@ -54,6 +49,11 @@ public class VurderPerioderOpptjeningBekreftelse extends AksjonspunktBekreftelse
         return opptjeningsaktiviteter.stream()
                 .filter(aktivitet -> aktivitet.getAktivitetType().equals(aktivitetType))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5051";
     }
 
     @Override

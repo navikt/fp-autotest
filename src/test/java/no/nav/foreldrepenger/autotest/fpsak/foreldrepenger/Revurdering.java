@@ -87,14 +87,14 @@ class Revurdering extends FpsakTestBase {
                 .setBegrunnelse("avvist");
         overstyrer.overstyr(overstyrMedlemskapsvilkaaret);
 
-        var vurderTilbakekrevingVedNegativSimulering = overstyrer.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class)
+        var vurderTilbakekrevingVedNegativSimulering = overstyrer.hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering())
                 .tilbakekrevingMedVarsel();
         overstyrer.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-        overstyrer.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        overstyrer.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgRevurderingBehandling();
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse())
                 .godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(bekreftelse);
         beslutter.ventTilAvsluttetBehandlingOgDetOpprettesTilbakekreving();
@@ -281,7 +281,7 @@ class Revurdering extends FpsakTestBase {
         // Manuell behandling for å få endringssdato satt til første uttaksdag
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_OPPLYSNINGER_OM_FORDELING);
         saksbehandler.velgSisteBehandling();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentUttaksperioder())
@@ -321,13 +321,13 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         var vurderSoknadsfristForeldrepengerBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderSoknadsfristForeldrepengerBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderSoknadsfristForeldrepengerBekreftelse())
                 .bekreftHarIkkeGyldigGrunn();
         saksbehandler.bekreftAksjonspunkt(vurderSoknadsfristForeldrepengerBekreftelse);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(bekreftelse);
 

@@ -72,13 +72,13 @@ public final class JavaHttpKlient {
 
     private static <T> HttpResponse<T> send(HttpRequest request, HttpResponse.BodyHandler<T> responseHandler) {
         try {
-            var response = sendLogg(request, responseHandler);
+            var response = klient.send(request, responseHandler);
             var antallForsøk = 1;
             while (retryOn5xxFailures(response, antallForsøk)) {
                 LOG.warn("5xx feil mot {} for {}. gang. Prøver på nytt.", request.uri(), antallForsøk);
                 int ventSekunder = Math.min(2000, 1000 * antallForsøk++);
                 sleep(ventSekunder);
-                response = sendLogg(request, responseHandler);
+                response = klient.send(request, responseHandler);
             }
             return response;
         } catch (IOException e) {
@@ -87,13 +87,6 @@ public final class JavaHttpKlient {
             Thread.currentThread().interrupt();
             throw new TekniskException("F-432938", "InterruptedException ved henting av data.", e);
         }
-    }
-
-    private static <T> HttpResponse<T> sendLogg(HttpRequest request, HttpResponse.BodyHandler<T> responseHandler) throws IOException, InterruptedException {
-        LOG.info("Sender request {}", request.uri());
-        var respons = klient.send(request, responseHandler);
-        LOG.info("Response fra {} {}", request.uri(), respons.statusCode());
-        return respons;
     }
 
     private static <T> boolean retryOn5xxFailures(HttpResponse<T> response, int antallForsøk) {

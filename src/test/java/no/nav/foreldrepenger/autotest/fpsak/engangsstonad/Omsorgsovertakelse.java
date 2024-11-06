@@ -61,7 +61,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
         var saksnummer = medmor.søkPapirsøknadForeldrepenger();
 
         saksbehandler.hentFagsak(saksnummer);
-        var papirsøknadAP = saksbehandler.hentAksjonspunktbekreftelse(PapirSoknadEngangstonadBekreftelse.class);
+        var papirsøknadAP = saksbehandler.hentAksjonspunktbekreftelse(new PapirSoknadEngangstonadBekreftelse());
 
 
         var søknad = lagEngangstønadOmsorg(omsorgsovertakelsedato);
@@ -69,21 +69,21 @@ class Omsorgsovertakelse extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaOmsorgOgForeldreansvarBekreftelse());
         avklarFaktaOmsorgOgForeldreansvarBekreftelse
                 .setVilkårType(OMSORGSVILKÅRET);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
         VurderingAvOmsorgsvilkoret vurderingAvOmsorgsvilkoret = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderingAvOmsorgsvilkoret.class);
+                .hentAksjonspunktbekreftelse(new VurderingAvOmsorgsvilkoret());
         vurderingAvOmsorgsvilkoret.bekreftGodkjent();
         saksbehandler.bekreftAksjonspunkt(vurderingAvOmsorgsvilkoret);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
@@ -116,22 +116,22 @@ class Omsorgsovertakelse extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaOmsorgOgForeldreansvarBekreftelse());
         avklarFaktaOmsorgOgForeldreansvarBekreftelse
                 .setVilkårType(OMSORGSVILKÅRET);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
         VurderingAvOmsorgsvilkoret vurderingAvOmsorgsvilkoret = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderingAvOmsorgsvilkoret.class);
+                .hentAksjonspunktbekreftelse(new VurderingAvOmsorgsvilkoret());
         vurderingAvOmsorgsvilkoret
                 .bekreftAvvist(Avslagsårsak.MOR_IKKE_DØD);
         saksbehandler.bekreftAksjonspunkt(vurderingAvOmsorgsvilkoret);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
@@ -161,21 +161,21 @@ class Omsorgsovertakelse extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaOmsorgOgForeldreansvarBekreftelse());
         avklarFaktaOmsorgOgForeldreansvarBekreftelse
                 .setVilkårType(OMSORGSVILKÅRET);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
         VurderingAvOmsorgsvilkoret vurderingAvOmsorgsvilkoret = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderingAvOmsorgsvilkoret.class);
+                .hentAksjonspunktbekreftelse(new VurderingAvOmsorgsvilkoret());
         vurderingAvOmsorgsvilkoret.bekreftGodkjent();
         saksbehandler.bekreftAksjonspunkt(vurderingAvOmsorgsvilkoret);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_OMSORGSVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
@@ -205,21 +205,21 @@ class Omsorgsovertakelse extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaOmsorgOgForeldreansvarBekreftelse());
         avklarFaktaOmsorgOgForeldreansvarBekreftelse
                 .setVilkårType(FORELDREANSVARSVILKÅRET_2_LEDD);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
         var vurderingAvForeldreansvarAndreLedd = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderingAvForeldreansvarAndreLedd.class);
+                .hentAksjonspunktbekreftelse(new VurderingAvForeldreansvarAndreLedd());
         vurderingAvForeldreansvarAndreLedd.bekreftGodkjent();
         saksbehandler.bekreftAksjonspunkt(vurderingAvForeldreansvarAndreLedd);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(
                 saksbehandler.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_FORELDREANSVARSVILKÅRET_2_LEDD));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);

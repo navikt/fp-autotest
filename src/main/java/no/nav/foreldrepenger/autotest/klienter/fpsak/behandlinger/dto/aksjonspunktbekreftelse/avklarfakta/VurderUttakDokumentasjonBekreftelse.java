@@ -10,14 +10,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.LukketPeriodeMedVedlegg;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
 
-@BekreftelseKode(kode = AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE)
 public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse {
 
     private List<DokumentasjonVurderingBehov> vurderingBehov;
@@ -105,6 +103,11 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         }
 
         return fom.isEqual(vb.fom) && tom.isEqual(vb.tom);
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE;
     }
 
     @Override
