@@ -574,11 +574,13 @@ services:
       ARBEIDSGIVER_NOTIFIKASJON_SCOPES: api://vtp.teamforeldrepenger.vtp/.default
       ALTINN_URL: http://vtp:8060/rest/altinn-rettigheter-proxy/ekstern/altinn/api/serviceowner/reportees
       INNTEKTSMELDING_SKJEMA_LENKE: http://localhost:9300/fp-im-dialog
+      DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
     env_file:
       - *common-properties
       - fpinntektsmelding_datasource.env
     volumes:
       - *sertifikat-volum
+      - ./tokenx:/tokenx
     ports:
       - "127.0.0.1:8040:8080"
     healthcheck:
@@ -639,8 +641,8 @@ services:
       NODE_ENV: development
       EXPRESS_PORT: 9050
       EXPRESS_HOST: "::"
-      API_SCOPE: api://vtp.teamforeldrepenger.vtp/.default
-      API_URL: http://fpinntektsmelding:8040/fpinntektsmelding
+      API_SCOPE: lokal
+      API_URL: http://fpinntektsmelding:8080/fpinntektsmelding
       ENV: dev
       NESTED_PATH: /fp-im-dialog
     depends_on:
