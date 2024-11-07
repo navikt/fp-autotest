@@ -3,10 +3,8 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FordelingDto;
 
-@BekreftelseKode(kode = "5057")
 public class PapirSoknadEndringForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
 
     // FamilieHendelseType
@@ -30,5 +28,10 @@ public class PapirSoknadEndringForeldrepengerBekreftelse extends AksjonspunktBek
 
     public void setAnnenForelderInformert(boolean annenForelderInformert) {
         this.annenForelderInformert = annenForelderInformert;
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5057";
     }
 }

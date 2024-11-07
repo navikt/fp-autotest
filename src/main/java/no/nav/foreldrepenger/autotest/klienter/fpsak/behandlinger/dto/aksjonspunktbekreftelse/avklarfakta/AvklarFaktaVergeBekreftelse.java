@@ -3,10 +3,8 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
-@BekreftelseKode(kode = "5030")
 public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
 
     protected String fnr;
@@ -18,10 +16,6 @@ public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
     protected Boolean sokerErUnderTvungenForvaltning;
     protected Boolean vergeErKontaktPerson;
     protected String vergeType;
-
-    public AvklarFaktaVergeBekreftelse() {
-        super();
-    }
 
     public AvklarFaktaVergeBekreftelse setVerge(Fødselsnummer fnr) {
         this.fnr = fnr.value();
@@ -75,4 +69,8 @@ public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
+    @Override
+    public String aksjonspunktKode() {
+        return "5030";
+    }
 }

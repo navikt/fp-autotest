@@ -58,18 +58,18 @@ class TilbakekrevingSVP extends FptilbakeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging())
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
         var bekreftSvangerskapspengervilkår = saksbehandler
-                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class)
+                .hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår())
                 .godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
         saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Her mangler hele SVP revurderingen!

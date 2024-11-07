@@ -79,12 +79,12 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
         opprettArbeidsforholdFraIM5085(orgnummer);
 
         // FORESLÅ VEDTAK //
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
         var ap = beslutter.hentAksjonspunkt(VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(Collections.singletonList(ap));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -129,7 +129,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
         saksbehandler.velgSisteBehandling();
         // VURDER OPPTJENING: Godkjenn fiktivt arbeidsforhold i opptjening //
         var vurderPerioderOpptjeningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderPerioderOpptjeningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderPerioderOpptjeningBekreftelse())
                 .godkjennAllOpptjening();
         saksbehandler.bekreftAksjonspunkt(vurderPerioderOpptjeningBekreftelse);
 
@@ -137,20 +137,20 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
         // mottatt ytelse
         var fastsattInntekt = new FastsettMaanedsinntektUtenInntektsmeldingAndel(1L, 25_000);
         var ab = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
                 .leggTilMaanedsinntektUtenInntektsmelding(List.of(fastsattInntekt))
                 .leggTilMottarYtelse(List.of(new ArbeidstakerandelUtenIMMottarYtelse(1L, false)));
         saksbehandler.bekreftAksjonspunkt(ab);
 
         // AVVIK I BEREGNING //
         var aksjonspunktBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(300_000, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(aksjonspunktBekreftelse);
 
         // FORESLÅ VEDTAK //
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         // FATTE VEDTAK //
         beslutter.hentFagsak(saksnummer);
@@ -158,7 +158,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
         var apAvvikBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS);
         var apFaktaOmBeregning = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
         var apVurderOpptjening = beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_PERIODER_MED_OPPTJENING);
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(
                 List.of(apAvvikBeregning, apFaktaOmBeregning, apArbeid, apVurderOpptjening));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
@@ -180,7 +180,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
 
     private void opprettArbeidsforholdFraIM5085(Orgnummer orgnummer) {
         var ab = saksbehandler
-                .hentAksjonspunktbekreftelse(ArbeidInntektsmeldingBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new ArbeidInntektsmeldingBekreftelse());
         var arbeidOgInntektsmeldingDto = saksbehandler.valgtBehandling.getArbeidOgInntektsmeldingDto();
         var imMedAksjonspunkt = arbeidOgInntektsmeldingDto.inntektsmeldinger().stream()
                 .filter(im -> im.arbeidsgiverIdent().equals(orgnummer.value()) && im.årsak().equals(ArbeidInntektsmeldingAksjonspunktÅrsak.INNTEKTSMELDING_UTEN_ARBEIDSFORHOLD))
@@ -196,7 +196,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
 
     private void opprettManueltArbeidsforhold5085() {
         overstyrer.åpneForNyArbeidsforholdVurdering(new BehandlingIdVersjonDto(overstyrer.valgtBehandling));
-        var ab = overstyrer.hentAksjonspunktbekreftelse(ArbeidInntektsmeldingBekreftelse.class);
+        var ab = overstyrer.hentAksjonspunktbekreftelse(new ArbeidInntektsmeldingBekreftelse());
         var dto = new ManueltArbeidsforholdDto(
                 overstyrer.valgtBehandling.uuid,
                 "Dette er en begrunnelse",

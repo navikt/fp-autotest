@@ -152,16 +152,16 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(mor.månedsinntekt() * 6, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+                .hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering());
         vurderTilbakekrevingVedNegativSimulering.tilbakekrevingMedVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-        var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(KontrollerRevuderingsbehandling.class);
+        var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(new KontrollerRevuderingsbehandling());
         saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, true);
 
@@ -260,15 +260,15 @@ class TilbakekrevingFP extends FptilbakeTestBase {
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(mor.månedsinntekt() * 6, 1)
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(VurderTilbakekrevingVedNegativSimulering.class);
+        var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(new VurderTilbakekrevingVedNegativSimulering());
         vurderTilbakekrevingVedNegativSimulering.tilbakekrevingUtenVarsel();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
-        var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(KontrollerRevuderingsbehandling.class);
+        var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(new KontrollerRevuderingsbehandling());
         saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, true);
 

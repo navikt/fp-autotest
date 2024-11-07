@@ -9,15 +9,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 
-@BekreftelseKode(kode = "5059")
 public class VurderRefusjonBeregningsgrunnlagBekreftelse extends AksjonspunktBekreftelse {
 
     private final List<VurderRefusjonAndelBeregningsgrunnlagDto> fastsatteAndeler = new ArrayList<>();
-
-    public VurderRefusjonBeregningsgrunnlagBekreftelse() {
-        super();
-    }
-
 
     public List<VurderRefusjonAndelBeregningsgrunnlagDto> getFastsatteAndeler() {
         return fastsatteAndeler;
@@ -28,6 +22,11 @@ public class VurderRefusjonBeregningsgrunnlagBekreftelse extends AksjonspunktBek
             vurderRefusjonAndelBeregningsgrunnlagDto.setFastsattRefusjonFom(fastsattRefusjonFom);
         }
         return this;
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5059";
     }
 
     @Override

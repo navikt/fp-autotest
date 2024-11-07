@@ -64,17 +64,17 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
         var bekreftSvangerskapspengervilkår = saksbehandler
-                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+                .hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
         bekreftSvangerskapspengervilkår
                 .godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -117,17 +117,17 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("En begrunnelse fra autotest");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
         var bekreftSvangerskapspengervilkår = saksbehandler
-                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+                .hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
         bekreftSvangerskapspengervilkår
                 .godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -175,13 +175,13 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
         avklarFaktaFødselOgTilrettelegging.setSkalBrukesTilFalseForArbeidsforhold(arbeidsforholdene.get(1).arbeidsforholdId());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
         var bekreftSvangerskapspengervilkår = saksbehandler
-                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+                .hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
         bekreftSvangerskapspengervilkår.godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
@@ -253,17 +253,17 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer1);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
         var bekreftSvangerskapspengervilkår = saksbehandler
-                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+                .hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
         bekreftSvangerskapspengervilkår.godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -292,7 +292,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer2);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         var avklarFaktaFødselOgTilrettelegging2 = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
         avklarFaktaFødselOgTilrettelegging2.setBegrunnelse("Begrunnelse");
         avklarFaktaFødselOgTilrettelegging2.getBekreftetSvpArbeidsforholdList().get(0).setTilretteleggingBehovFom(LocalDate.now().minusDays(7));
         avklarFaktaFødselOgTilrettelegging2.getBekreftetSvpArbeidsforholdList().get(0).setTilretteleggingDatoer(
@@ -300,7 +300,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging2);
 
         var bekreftSvangerskapspengervilkår2 = saksbehandler
-                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+                .hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
         bekreftSvangerskapspengervilkår2.godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår2);
@@ -382,18 +382,18 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
         var bekreftSvangerskapspengervilkår = saksbehandler
-                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+                .hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
         bekreftSvangerskapspengervilkår
                 .godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -448,7 +448,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaFødselOgTilrettelegging.class);
+                .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
 
         var svpSak = mor.innsyn().hentSvpSakMedÅpenBehandlingTilstand(saksnummer, BehandlingTilstand.UNDER_BEHANDLING);
         assertThat(svpSak.saksnummer().value()).isEqualTo(saksnummer.value());
@@ -463,12 +463,12 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging);
 
         var bekreftSvangerskapspengervilkår = saksbehandler
-                .hentAksjonspunktbekreftelse(BekreftSvangerskapspengervilkår.class);
+                .hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
         bekreftSvangerskapspengervilkår
                 .godkjenn()
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var svpSakEtterVedtak = mor.innsyn().hentSvpSakUtenÅpenBehandling(saksnummer);

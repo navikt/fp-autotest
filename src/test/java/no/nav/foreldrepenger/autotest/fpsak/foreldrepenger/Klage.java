@@ -62,7 +62,7 @@ class Klage extends FpsakTestBase {
 
         var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+                .hentAksjonspunktbekreftelse(new KlageFormkravNfp())
                 .godkjennAlleFormkrav()
                 .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla");
@@ -70,7 +70,7 @@ class Klage extends FpsakTestBase {
         var fritekstBrev = "Fritektst til brev fra NFP.";
         var begrunnelse = "Begrunnelse NFP.";
         var vurderingAvKlageNfpBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderingAvKlageNfpBekreftelse())
                 .bekreftMedholdUGunst("ULIK_VURDERING")
                 .fritekstBrev(fritekstBrev)
                 .setBegrunnelse(begrunnelse);
@@ -86,17 +86,17 @@ class Klage extends FpsakTestBase {
                 .isEqualTo("UTFO");
 
         var vurderingAvKlageNfpBekreftelse1 = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderingAvKlageNfpBekreftelse())
                 .bekreftMedholdUGunst("ULIK_VURDERING")
                 .fritekstBrev(fritekstBrev)
                 .setBegrunnelse(begrunnelse);
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse1);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgKlageBehandling();
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
@@ -139,16 +139,16 @@ class Klage extends FpsakTestBase {
 
         var førstegangsbehandling = klagebehandler.førstegangsbehandling();
         var klageFormkravNfp = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+                .hentAksjonspunktbekreftelse(new KlageFormkravNfp())
                 .klageErIkkeKonkret()
                 .setPåklagdVedtak(førstegangsbehandling.uuid)
                 .setBegrunnelse("blabla");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgKlageBehandling();
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         assertThat(beslutter.valgtBehandling.behandlingsresultat.type())

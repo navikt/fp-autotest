@@ -14,13 +14,13 @@ public abstract class VerdikjedeTestBase extends FpsakTestBase {
         if (!revurdering) {
             saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
         }
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
         if (beslutter.harRevurderingBehandling() && revurdering) {
             beslutter.ventPåOgVelgRevurderingBehandling();
         }
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         if (tilbakekreving) {
             beslutter.bekreftAksjonspunkt(bekreftelse);

@@ -58,19 +58,19 @@ class Revurdering extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaAdopsjonsdokumentasjonBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
                 .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
         var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderEktefellesBarnBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
                 .bekreftBarnErIkkeEktefellesBarn();
         saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
-        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(
                 beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
@@ -84,7 +84,7 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.REVURD_OPPR);
 
         VarselOmRevurderingBekreftelse varselOmRevurderingBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VarselOmRevurderingBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new VarselOmRevurderingBekreftelse());
         varselOmRevurderingBekreftelse.bekreftSendVarsel(Venteårsak.UTV_FRIST, "Send brev");
         saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 

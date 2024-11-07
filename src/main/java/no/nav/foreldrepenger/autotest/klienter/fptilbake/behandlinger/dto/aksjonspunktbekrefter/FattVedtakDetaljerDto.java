@@ -5,7 +5,7 @@ import java.util.List;
 
 public class FattVedtakDetaljerDto {
 
-    protected String aksjonspunktKode;
+    public String aksjonspunktKode;
     protected boolean godkjent;
     protected List<ReturnerVedtakÅrsaker> arsaker = new ArrayList<>();
 

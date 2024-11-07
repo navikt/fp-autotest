@@ -5,11 +5,8 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.Fagsystem;
 import no.nav.foreldrepenger.generator.familie.Familie;
 
-@BekreftelseKode(kode = "5030", fagsystem = Fagsystem.FPTILBAKE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApVerge extends AksjonspunktBekreftelse {
 
@@ -35,5 +32,10 @@ public class ApVerge extends AksjonspunktBekreftelse {
         this.navn = "Sleip Advokat";
         this.organisasjonsnummer = orgnummer;
         this.vergeType = "ADVOKAT";
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5030";
     }
 }

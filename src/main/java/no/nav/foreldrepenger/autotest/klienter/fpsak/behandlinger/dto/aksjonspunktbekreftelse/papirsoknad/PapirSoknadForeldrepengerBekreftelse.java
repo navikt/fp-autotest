@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.AnnenForelderDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.DekningsgradDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.EgenVirksomhetDto;
@@ -13,7 +12,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.FrilansDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@BekreftelseKode(kode = "5040")
 public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftelse {
 
     protected String tema = "FODSL";
@@ -70,5 +68,10 @@ public class PapirSoknadForeldrepengerBekreftelse extends AksjonspunktBekreftels
         this.mottattDato = mottattDato;
         this.dekningsgrad = dekningsgrad;
         return this;
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5040";
     }
 }

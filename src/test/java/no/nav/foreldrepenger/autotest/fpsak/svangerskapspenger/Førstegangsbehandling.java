@@ -75,9 +75,9 @@ class Førstegangsbehandling extends FpsakTestBase {
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new BekreftSvangerskapspengervilkår());
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var tilkjentYtelsePerioder = saksbehandler.valgtBehandling.getBeregningResultatForeldrepenger()
@@ -162,9 +162,9 @@ class Førstegangsbehandling extends FpsakTestBase {
         arbeidsgiver3.sendInntektsmeldinger(saksnummer, inntektsmelding3);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunkt(new BekreftSvangerskapspengervilkår());
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Verifisering av Beregning
@@ -227,9 +227,9 @@ class Førstegangsbehandling extends FpsakTestBase {
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
 
         saksbehandler.hentFagsak(saksnummerSVP);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunkt(new BekreftSvangerskapspengervilkår());
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var andreTilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) arbeidsforhold1), termindato.minusMonths(3))
@@ -240,9 +240,9 @@ class Førstegangsbehandling extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummerSVP);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunkt(new BekreftSvangerskapspengervilkår());
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Verifisering av Beregning
@@ -309,9 +309,9 @@ class Førstegangsbehandling extends FpsakTestBase {
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
 
         saksbehandler.hentFagsak(saksnummerSVP);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(AvklarFaktaFødselOgTilrettelegging.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(BekreftSvangerskapspengervilkår.class);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakManueltBekreftelse.class);
+        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());
+        saksbehandler.bekreftAksjonspunkt(new BekreftSvangerskapspengervilkår());
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
 

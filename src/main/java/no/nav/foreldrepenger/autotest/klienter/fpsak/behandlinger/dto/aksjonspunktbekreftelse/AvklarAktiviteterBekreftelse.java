@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 
-@BekreftelseKode(kode = "5052")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
 
@@ -45,6 +44,11 @@ public class AvklarAktiviteterBekreftelse extends AksjonspunktBekreftelse {
                     .filter(aktivitet -> aktivitet.opptjeningAktivitetType.equals(opptjeningsAktivitetType))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Fant ikke beregningsaktivitet med opptjeningsaktivetetstype " + opptjeningsAktivitetType));
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5052";
     }
 
     @Override

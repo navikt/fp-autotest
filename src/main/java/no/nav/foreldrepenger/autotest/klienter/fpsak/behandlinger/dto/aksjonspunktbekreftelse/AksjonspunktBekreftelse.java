@@ -7,24 +7,14 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
 public abstract class AksjonspunktBekreftelse {
 
-    @JsonProperty("@type")
     protected String kode;
     protected String begrunnelse;
 
-    @SuppressWarnings("unused")
-    protected AksjonspunktBekreftelse() {
-        if (null == this.getClass().getAnnotation(BekreftelseKode.class)) {
-            throw new RuntimeException("Kode annotation er ikke satt for " + this.getClass().getTypeName());
-        }
-        kode = this.getClass().getAnnotation(BekreftelseKode.class).kode();
-    }
+    @JsonProperty("@type")
+    public abstract String aksjonspunktKode();
 
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
 
-    }
-
-    public String kode() {
-        return kode;
     }
 
     public AksjonspunktBekreftelse setBegrunnelse(String begrunnelse) {

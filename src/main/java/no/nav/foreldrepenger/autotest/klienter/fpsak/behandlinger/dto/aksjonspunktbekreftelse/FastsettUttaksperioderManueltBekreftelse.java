@@ -22,13 +22,13 @@ import no.nav.foreldrepenger.autotest.util.localdate.Virkedager;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.LukketPeriodeMedVedlegg;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
-@BekreftelseKode(kode = "5071")
 public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekreftelse {
 
     protected List<UttakResultatPeriode> perioder = new ArrayList<>();
 
-    public FastsettUttaksperioderManueltBekreftelse() {
-        super();
+    @Override
+    public String aksjonspunktKode() {
+        return "5071";
     }
 
     @Override

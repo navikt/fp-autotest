@@ -57,7 +57,7 @@ class Innsyn extends FpsakTestBase {
         saksbehandler.ventPåOgVelgDokumentInnsynBehandling();
 
         VurderingAvInnsynBekreftelse vurderingAvInnsynBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new VurderingAvInnsynBekreftelse());
         vurderingAvInnsynBekreftelse.setMottattDato(LocalDate.now())
                 .setMottattDato(LocalDate.now())
                 .setInnsynResultatType(InnsynResultatType.INNVILGET)
@@ -65,7 +65,7 @@ class Innsyn extends FpsakTestBase {
                 .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunkt(vurderingAvInnsynBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         AllureHelper.debugLoggBehandlingsliste(saksbehandler.behandlinger);
@@ -107,13 +107,13 @@ class Innsyn extends FpsakTestBase {
         saksbehandler.ventPåOgVelgDokumentInnsynBehandling();
 
         VurderingAvInnsynBekreftelse vurderingAvInnsynBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderingAvInnsynBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new VurderingAvInnsynBekreftelse());
         vurderingAvInnsynBekreftelse.setMottattDato(LocalDate.now())
                 .setInnsynResultatType(InnsynResultatType.AVVIST)
                 .setBegrunnelse("Test");
         saksbehandler.bekreftAksjonspunkt(vurderingAvInnsynBekreftelse);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())

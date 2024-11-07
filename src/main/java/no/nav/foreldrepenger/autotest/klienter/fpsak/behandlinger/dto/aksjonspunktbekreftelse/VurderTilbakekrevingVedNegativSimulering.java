@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse;
 
-@BekreftelseKode(kode="5084")
 public class VurderTilbakekrevingVedNegativSimulering extends AksjonspunktBekreftelse {
 
     protected VidereBehandling videreBehandling;
@@ -38,4 +37,8 @@ public class VurderTilbakekrevingVedNegativSimulering extends AksjonspunktBekref
         setVarseltekst(varseltekst);
     }
 
+    @Override
+    public String aksjonspunktKode() {
+        return "5084";
+    }
 }

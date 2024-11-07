@@ -127,7 +127,7 @@ class Aksjonspunkter extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         var avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(AvklarFaktaOmsorgOgForeldreansvarBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new AvklarFaktaOmsorgOgForeldreansvarBekreftelse())
                 .setVilkårType(OMSORGSVILKÅRET);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaOmsorgOgForeldreansvarBekreftelse);
 
@@ -195,12 +195,12 @@ class Aksjonspunkter extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderManglendeFodselBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse())
                 .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
 
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderFaktaOmBeregningBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
                 .leggTilNyIArbeidslivet(true);
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
@@ -285,11 +285,11 @@ class Aksjonspunkter extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(VurderBeregnetInntektsAvvikBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderBeregnetInntektsAvvikBekreftelse())
                 .leggTilInntekt(800_000, 1);
         saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
 
-        saksbehandler.hentAksjonspunktbekreftelse(VurderFaresignalerDto.class);
+        saksbehandler.hentAksjonspunktbekreftelse(new VurderFaresignalerDto());
 //        vurderFaresignalerDto.setHarInnvirketBehandlingen(true);
 //        vurderFaresignalerDto.setBegrunnelse("HELLO");
 //        saksbehandler.bekreftAksjonspunkt(vurderFaresignalerDto);

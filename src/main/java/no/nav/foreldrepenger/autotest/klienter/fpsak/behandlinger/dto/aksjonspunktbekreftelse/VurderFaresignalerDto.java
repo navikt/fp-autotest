@@ -2,8 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 
 import java.util.Objects;
 
-@BekreftelseKode(kode = "5095")
-public class VurderFaresignalerDto extends AksjonspunktBekreftelse{
+public class VurderFaresignalerDto extends AksjonspunktBekreftelse {
 
     private Boolean harInnvirketBehandlingen;
 
@@ -30,6 +29,11 @@ public class VurderFaresignalerDto extends AksjonspunktBekreftelse{
     @Override
     public int hashCode() {
         return Objects.hash(harInnvirketBehandlingen);
+    }
+
+    @Override
+    public String aksjonspunktKode() {
+        return "5095";
     }
 
     @Override

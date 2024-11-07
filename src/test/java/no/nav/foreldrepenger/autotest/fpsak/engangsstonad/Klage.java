@@ -56,7 +56,7 @@ class Klage extends FpsakTestBase {
 
         klagebehandler.ventPåOgVelgKlageBehandling();
 
-        KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(KlageFormkravNfp.class);
+        KlageFormkravNfp klageFormkravNfp = klagebehandler.hentAksjonspunktbekreftelse(new KlageFormkravNfp());
         klageFormkravNfp
                 .godkjennAlleFormkrav()
                 .setPåklagdVedtak(klagebehandler.førstegangsbehandling().uuid)
@@ -64,20 +64,20 @@ class Klage extends FpsakTestBase {
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
         VurderingAvKlageNfpBekreftelse vurderingAvKlageNfpBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class);
+                .hentAksjonspunktbekreftelse(new VurderingAvKlageNfpBekreftelse());
         vurderingAvKlageNfpBekreftelse
                 .bekreftMedholdGunst("PROSESSUELL_FEIL")
                 .fritekstBrev("Fritektst til brev fra klagebehandler.")
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
         beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgKlageBehandling();
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
@@ -109,7 +109,7 @@ class Klage extends FpsakTestBase {
         klagebehandler.ventPåOgVelgKlageBehandling();
 
         var klageFormkravNfp = klagebehandler
-                .hentAksjonspunktbekreftelse(KlageFormkravNfp.class)
+                .hentAksjonspunktbekreftelse(new KlageFormkravNfp())
                 .godkjennAlleFormkrav()
                 .setPåklagdVedtak(klagebehandler.førstegangsbehandling().uuid)
                 .setBegrunnelse("blabla");
@@ -118,13 +118,13 @@ class Klage extends FpsakTestBase {
         var fritekstbrev1 = "Fritekst brev nfp.";
         var begrunnelse1 = "Fordi.";
         var vurderingAvKlageNfpBekreftelse = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderingAvKlageNfpBekreftelse())
                 .bekreftMedholdGunst("NYE_OPPLYSNINGER")
                 .fritekstBrev(fritekstbrev1)
                 .setBegrunnelse(begrunnelse1);
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         assertThat(klagebehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.KLAGE_MEDHOLD);
@@ -136,7 +136,7 @@ class Klage extends FpsakTestBase {
         beslutter.ventPåOgVelgKlageBehandling();
 
         var fatterVedtakBekreftelse = beslutter
-                .hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse())
                 .avvisAksjonspunkt(beslutter.hentAksjonspunkt(AksjonspunktKoder.MANUELL_VURDERING_AV_KLAGE_NFP), VurderÅrsak.FEIL_REGEL)
                 .setBegrunnelse("Avvist av beslutter");
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
@@ -152,17 +152,17 @@ class Klage extends FpsakTestBase {
         var fritekstbrev2 = "Fritekst brev nr 2 .";
         var begrunnelse2 = "Fordi.";
         var vurderingAvKlageNfpBekreftelse1 = klagebehandler
-                .hentAksjonspunktbekreftelse(VurderingAvKlageNfpBekreftelse.class)
+                .hentAksjonspunktbekreftelse(new VurderingAvKlageNfpBekreftelse())
                 .bekreftMedholdDelvisGunst("NYE_OPPLYSNINGER")
                 .fritekstBrev(fritekstbrev2)
                 .setBegrunnelse(begrunnelse2);
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse1);
 
-        klagebehandler.bekreftAksjonspunktMedDefaultVerdier(ForeslåVedtakBekreftelse.class);
+        klagebehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
         beslutter.ventPåOgVelgKlageBehandling();
-        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(FatterVedtakBekreftelse.class);
+        FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 

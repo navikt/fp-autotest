@@ -3,11 +3,9 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftelseKode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.AnnenForelderDto;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 
-@BekreftelseKode(kode = "5012")
 public class PapirSoknadEngangstonadBekreftelse extends AksjonspunktBekreftelse {
     protected String tema = "OMSRGO";
     protected String soknadstype = "ES";
@@ -33,4 +31,8 @@ public class PapirSoknadEngangstonadBekreftelse extends AksjonspunktBekreftelse 
         return this;
     }
 
+    @Override
+    public String aksjonspunktKode() {
+        return "5012";
+    }
 }
