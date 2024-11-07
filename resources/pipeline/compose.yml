@@ -570,14 +570,17 @@ services:
     mem_limit: 512mb
     environment:
       FPDOKGEN_URL: http://fpdokgen:8080
-      ARBEIDSGIVER_NOTIFIKASJON_URL: http://fager-api:8080/api/graphql
+      ARBEIDSGIVER_NOTIFIKASJON_URL: http://vtp:8060/rest/api/fager/graphql
       ARBEIDSGIVER_NOTIFIKASJON_SCOPES: api://vtp.teamforeldrepenger.vtp/.default
       ALTINN_URL: http://vtp:8060/rest/altinn-rettigheter-proxy/ekstern/altinn/api/serviceowner/reportees
+      INNTEKTSMELDING_SKJEMA_LENKE: http://localhost:9300/fp-im-dialog
+      DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
     env_file:
       - *common-properties
       - fpinntektsmelding_datasource.env
     volumes:
       - *sertifikat-volum
+      - ./tokenx:/tokenx
     ports:
       - "127.0.0.1:8040:8080"
     healthcheck:
@@ -590,17 +593,61 @@ services:
         condition: service_healthy
       vtp:
         condition: service_healthy
-      fager-api:
-        condition: service_started
 
-  fager-api:
-    image: ghcr.io/navikt/arbeidsgiver-notifikasjon-produsent-api/fake-produsent-api:latest
-    container_name: fager-api
-    mem_limit: 256mb
+  wonderwall-fpinntektsmelding-frontend:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-fpinntektsmelding-frontend
+    command: |
+      --openid.provider=idporten
+      --sso.enabled=true
+      --sso.mode=proxy
+      --sso.session-cookie-name=selvbetjening-session
+      --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
+      --sso.server-url=http://localhost:9111
+      --redis.uri=redis://redis:6379
+      --session.refresh-auto=false
+      --auto-login=true
+      --log-level=debug
+      --bind-address=0.0.0.0:9300
+      --ingress=http://localhost:9300
+      --upstream-host=fpinntektsmelding-frontend:9050
     ports:
-      - "127.0.0.1:8072:8080"
+      - "127.0.0.1:9300:9300"
+    env_file:
+      - *common-properties
+    depends_on:
+      - redis
+      - wonderwall-selvbetjening-sso-server
+
+  fpinntektsmelding-frontend:
+    <<: *default-konfigurasjon
+    image: $FPINNTEKTSMELDINGFRONTEND_IMAGE
+    container_name: fpinntektsmelding-frontend
+    ports:
+      - "127.0.0.1:9050:9050"
+    env_file:
+      - *common-properties
     environment:
-      ALWAYS_SUCCESSFUL_RESPONSE: true
+      AZURE_APP_CLIENT_ID: ""
+      AZURE_APP_CLIENT_SECRET: ""
+      AZURE_OPENID_CONFIG_ISSUER: ""
+      AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: ""
+      AZURE_OPENID_CONFIG_JWKS_URI: ""
+      AZURE_APP_WELL_KNOWN_URL: ""
+      AZURE_APP_JWK: ""
+      AZURE_APP_JWKS: ""
+      AZURE_APP_PRE_AUTHORIZED_APPS: ""
+      NODE_ENV: development
+      EXPRESS_PORT: 9050
+      EXPRESS_HOST: "::"
+      API_SCOPE: lokal
+      API_URL: http://fpinntektsmelding:8080/fpinntektsmelding
+      ENV: dev
+      NESTED_PATH: /fp-im-dialog
+    depends_on:
+      - fpinntektsmelding
+      - wonderwall-fpinntektsmelding-frontend
 
   ## SELVBETJENING SPESIFIKK
   foreldrepengesoknad-api:

@@ -35,3 +35,5 @@ services:
     mem_limit: 1gb
   fptilgang:
     mem_limit: 1gb
+  fpinntektsmelding:
+    mem_limit: 1gb
