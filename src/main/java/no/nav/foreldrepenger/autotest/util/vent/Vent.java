@@ -16,28 +16,19 @@ public final class Vent {
     private Vent() {
     }
 
-    public static void til(Callable<Boolean> callable, String failReason, String loggForklaring) {
-        til(callable, () -> failReason, loggForklaring);
+    public static <T> T på(Callable<T> callable, String failReason) {
+        return på(callable, () -> failReason);
     }
 
-    public static void til(Callable<Boolean> callable, Callable<String> errorMessageProducer, String loggForklaring) {
-        på(callable, errorMessageProducer ,loggForklaring);
+    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer) {
+        return på(callable, errorMessageProducer, TIMEOUT_SEKUNDER, 50);
     }
 
-    public static <T> T på(Callable<T> callable, String failReason, String loggForklaring) {
-        return på(callable, () -> failReason, loggForklaring);
+    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, int timeoutSekunder) {
+        return på(callable, errorMessageProducer, timeoutSekunder, 50);
     }
 
-    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, String loggForklaring) {
-        return på(callable, errorMessageProducer, 50, loggForklaring, TIMEOUT_SEKUNDER);
-    }
-
-    public static <T> T på(Callable<T> callable,
-                           Callable<String> errorMessageProducer,
-                           int progressivVentetid,
-                           String loggForklaring,
-                           int timeoutSekunder) {
-        LOG.info("Venter på {}", loggForklaring);
+    public static <T> T på(Callable<T> callable, Callable<String> errorMessageProducer, int timeoutSekunder, int progressivVentetid) {
         var start = LocalDateTime.now();
         var end = start.plusSeconds(timeoutSekunder);
         var advarsel = start.plusSeconds((int) (timeoutSekunder * 0.75));

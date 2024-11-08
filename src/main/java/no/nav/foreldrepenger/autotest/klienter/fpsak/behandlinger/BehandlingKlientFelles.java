@@ -163,7 +163,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
                     .uri(URI.create(hentRedirectUriFraLocationHeader(response)))
                     .GET();
             return Vent.på(() -> getBehandlingHvisTilgjenglig(requestTilStatusEndepunkt),
-                    "Behandling ikke tilgjenglig etter X sekund", "behandling er tilgjengelig");
+                    "Behandling ikke tilgjenglig etter X sekund");
         }
         throw new RuntimeException("Uventet tilstand. Skal ikke være mulig!");
     }

@@ -7,7 +7,6 @@ import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingss
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -127,10 +126,10 @@ public class Saksbehandler {
             return;
         }
         // TODO: Timeouts burde være så lav som mulig i pipeline, men veldig høy lokalt pga forskjellig typer PCer.
-        Vent.til(() -> {
+        Vent.på(() -> {
             refreshFagsak(valgtFagsak.saksnummer());
             return harFagsakstatus(status);
-        }, "Fagsak har ikke status " + Set.of(status), "fagsak status " + Arrays.toString(status));
+        }, "Fagsak har ikke status " + Set.of(status));
     }
 
     private boolean harFagsakstatus(FagsakStatus... status) {
@@ -232,17 +231,17 @@ public class Saksbehandler {
                         .orElseThrow();
             }
             return null; // Vi har matchede behandlinger, men ikke av forventet antall!
-            }, "Saken har ikke fått behandling av type: " + behandlingstype, "behandling med type " + behandlingstype);
+            }, "Saken har ikke fått behandling av type: " + behandlingstype);
 
         // 2) Hvis vi venter på en REVURDERING og behandling er køet, men ikke gjennopptatt venter vi til AP 7011 er utført.
         if (BehandlingType.REVURDERING.equals(behandlingstype) && erBehandlingKøetOgIkkeGjenopptatt(behandling.uuid)) {
-            Vent.til(() -> behandlingerKlient.hentAlleAksjonspunkter(behandling.uuid).stream()
+            Vent.på(() -> behandlingerKlient.hentAlleAksjonspunkter(behandling.uuid).stream()
                             .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equals(AUTO_KØET_BEHANDLING))
                             .findFirst()
                             .orElseThrow()
                             .getStatus()
                             .equals("UTFO")
-                    , "Køet behandling er ikke gjenopptatt av fpsak!", "køet behandling er gjenopptatt");
+                    , "Køet behandling er ikke gjenopptatt av fpsak!");
         }
 
         // 3) Venter til enten behandling avsluttet eller det har oppstått et aksjonspunkt
@@ -342,7 +341,7 @@ public class Saksbehandler {
                         .append("\n");
             }
             return "Behandling status var ikke klar men har ikke feilet\n" + prosessTaskList;
-        }, 50, "behandling er ferdig prosessert", 40);
+        }, 40);
     }
 
     private List<ProsessTaskDataDto> hentProsesstaskerForBehandling(int behandlingId) {
@@ -555,8 +554,8 @@ public class Saksbehandler {
          *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
          */
         if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_VENT))) {
-            Vent.til(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type())),
-                    "Behandlingen er på vent og er ikke blitt gjenopptatt!", "behandling er avsluttet");
+            Vent.på(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type())),
+                    "Behandlingen er på vent og er ikke blitt gjenopptatt!");
         }
 
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
@@ -624,17 +623,15 @@ public class Saksbehandler {
     }
 
     public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
-        Vent.til(() -> harHistorikkinnslagPåBehandling(type),
+        Vent.på(() -> harHistorikkinnslagPåBehandling(type),
                 () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
-                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())),
-                "historikkinnslag av type " + type);
+                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
     }
 
     public void ventTilHistorikkinnslag(Set<HistorikkinnslagType> typer) {
-        Vent.til(() -> harHistorikkinnslagPåBehandling(typer),
+        Vent.på(() -> harHistorikkinnslagPåBehandling(typer),
                 () -> "Saken  hadde ikke historikkinslag " + typer + "\nHistorikkInnslag:"
-                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())),
-                "historikkinnslag av type " + typer);
+                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
     }
 
     /*
@@ -666,10 +663,10 @@ public class Saksbehandler {
      * Risikovurderingsklient
      */
     public void ventTilRisikoKlassefiseringsstatus(RisikoklasseType forventetRisikoklasse) {
-        Vent.til(() -> {
+        Vent.på(() -> {
             var response = risikovurderingKlient.getRisikovurdering(valgtBehandling.uuid);
             return response.risikoklasse().equals(forventetRisikoklasse);
-        }, "Har ikke riktig risikoklassifiseringsstatus", "risikoklassifisering " + forventetRisikoklasse);
+        }, "Har ikke riktig risikoklassifiseringsstatus");
     }
 
     /* VERIFISERINGER */

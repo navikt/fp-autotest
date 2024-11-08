@@ -42,8 +42,8 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak med tilstand " + behandlingTilstand + " for sak " + saksnummer, API_PROGRESSIV_VENTETID,
-                "åpen es behandling med tilstand " + behandlingTilstand, API_TIMEOUT_SEKUNDER);
+        }, () -> "Finner ikke sak med tilstand " + behandlingTilstand + " for sak " + saksnummer, API_TIMEOUT_SEKUNDER, API_PROGRESSIV_VENTETID
+        );
     }
 
     public SvpSak hentSvpSakMedÅpenBehandlingTilstand(Saksnummer saksnummer, BehandlingTilstand behandlingTilstand) {
@@ -57,8 +57,8 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak med tilstand " + behandlingTilstand + " for sak " + saksnummer, API_PROGRESSIV_VENTETID,
-                "åpen svp behandling med tilstand " + behandlingTilstand, API_TIMEOUT_SEKUNDER);
+        }, () -> "Finner ikke sak med tilstand " + behandlingTilstand + " for sak " + saksnummer, API_TIMEOUT_SEKUNDER, API_PROGRESSIV_VENTETID
+        );
     }
 
     public EsSak hentEsSakUtenÅpenBehandling(Saksnummer saksnummer) {
@@ -72,8 +72,8 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, API_PROGRESSIV_VENTETID,
-                "es sak uten åpen behandling", API_TIMEOUT_SEKUNDER);
+        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, API_TIMEOUT_SEKUNDER, API_PROGRESSIV_VENTETID
+        );
     }
 
     public SvpSak hentSvpSakUtenÅpenBehandling(Saksnummer saksnummer) {
@@ -87,8 +87,8 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, API_PROGRESSIV_VENTETID,
-                "svp sak uten åpen behandling", API_TIMEOUT_SEKUNDER);
+        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, API_TIMEOUT_SEKUNDER, API_PROGRESSIV_VENTETID
+        );
     }
 
     public FpSak hentFpSakUtenÅpenBehandling(Saksnummer saksnummer) {
@@ -102,7 +102,7 @@ public class Innsyn {
                 return null;
             }
             return sak.get();
-        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, API_PROGRESSIV_VENTETID,
-                "fp sak uten åpen behandling", API_TIMEOUT_SEKUNDER);
+        }, () -> "Finner ikke sak uten åpen behandling for sak " + saksnummer, API_TIMEOUT_SEKUNDER, API_PROGRESSIV_VENTETID
+        );
     }
 }
