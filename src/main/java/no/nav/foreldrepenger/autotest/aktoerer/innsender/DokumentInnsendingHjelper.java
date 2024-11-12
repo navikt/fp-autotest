@@ -52,7 +52,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
                     antallNyeInntektsmeldinger, (antallInntektsmeldingerMottattPåSak(saksnummerTemp) - antallGamleInntekstmeldinger),
                     saksnummer.value());
             Vent.på(() -> antallInntektsmeldingerMottattPåSak(saksnummerTemp) == forventetAntallInnteksmeldinger, () -> failReason,
-                    25);
+                    35);
         } else {
             saksnummer = ventTilFagsakErOpprettetPåFnr(fnr);
         }
