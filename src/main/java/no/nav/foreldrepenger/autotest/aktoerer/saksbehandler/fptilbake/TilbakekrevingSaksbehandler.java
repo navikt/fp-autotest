@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkTyper;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingFptilbakeKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
@@ -51,9 +51,6 @@ public class TilbakekrevingSaksbehandler {
 
     private final Logger LOG = LoggerFactory.getLogger(TilbakekrevingSaksbehandler.class);
 
-    private static final Set<HistorikkinnslagType> GJENOPPTATT = Set.of(HistorikkinnslagType.BEH_GJEN, HistorikkinnslagType.BEH_MAN_GJEN);
-
-    public List<Behandling> behandlingList;
     public Behandling valgtBehandling;
     public Saksnummer saksnummer;
 
@@ -287,8 +284,9 @@ public class TilbakekrevingSaksbehandler {
          * 2) Behandlingen er ikke tatt av vent enda og vi venter på at behandlingen GJENOPPRETTET
          *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
          */
-        if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_VENT))) {
-            Vent.på(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type())),
+        if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.erAvTypen(HistorikkTyper.BEH_VENT))) {
+            Vent.på(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.erAvTypen(
+                            HistorikkTyper.BEH_GJEN, HistorikkTyper.BEH_MAN_GJEN)),
                     "Behandlingen er på vent og er ikke blitt gjenopptatt!");
         }
 

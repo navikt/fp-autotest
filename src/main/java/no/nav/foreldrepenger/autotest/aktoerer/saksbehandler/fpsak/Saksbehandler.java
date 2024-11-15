@@ -7,6 +7,7 @@ import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingss
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +55,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkTyper;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
@@ -67,8 +68,6 @@ import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 
 public class Saksbehandler {
     private final Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
-
-    private static final Set<HistorikkinnslagType> GJENOPPTATT = Set.of(HistorikkinnslagType.BEH_GJEN, HistorikkinnslagType.BEH_MAN_GJEN);
 
     public Fagsak valgtFagsak;
     public Behandling valgtBehandling;
@@ -375,19 +374,19 @@ public class Saksbehandler {
     @Step("Setter behandling på vent")
     public void settBehandlingPåVent(LocalDate frist, Venteårsak årsak) {
         behandlingerKlient.settPaVent(new SettBehandlingPaVentDto(valgtBehandling, frist, årsak));
-        ventTilHistorikkinnslag(HistorikkinnslagType.BEH_VENT);
+        ventTilHistorikkinnslag(HistorikkTyper.BEH_VENT);
     }
 
     @Step("Gjenopptar Behandling")
     public void gjenopptaBehandling() {
         valgtBehandling = behandlingerKlient.gjenoppta(new BehandlingIdVersjonDto(valgtBehandling));
-        ventTilHistorikkinnslag(GJENOPPTATT);
+        ventTilHistorikkinnslag(HistorikkTyper.BEH_GJEN, HistorikkTyper.BEH_MAN_GJEN);
     }
 
     @Step("Henlegger behandling")
     public void henleggBehandling(BehandlingResultatType årsak) {
         behandlingerKlient.henlegg(new BehandlingHenlegg(valgtBehandling.uuid, valgtBehandling.versjon, årsak, "Henlagt"));
-        ventTilHistorikkinnslag(HistorikkinnslagType.AVBRUTT_BEH);
+        ventTilHistorikkinnslag(HistorikkTyper.AVBRUTT_BEH);
     }
 
     /*
@@ -553,8 +552,9 @@ public class Saksbehandler {
          * 2) Behandlingen er ikke tatt av vent enda og vi venter på at behandlingen GJENOPPRETTET
          *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
          */
-        if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.type().equals(HistorikkinnslagType.BEH_VENT))) {
-            Vent.på(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> GJENOPPTATT.contains(h.type())),
+        if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.erAvTypen(HistorikkTyper.BEH_VENT))) {
+            Vent.på(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.erAvTypen(
+                            HistorikkTyper.BEH_GJEN, HistorikkTyper.BEH_MAN_GJEN)),
                     "Behandlingen er på vent og er ikke blitt gjenopptatt!");
         }
 
@@ -591,46 +591,36 @@ public class Saksbehandler {
                 .toList();
     }
 
-    public boolean harHistorikkinnslagPåBehandling(HistorikkinnslagType type) {
-        return harHistorikkinnslagPåBehandling(Set.of(type), valgtBehandling.uuid);
+    public boolean harHistorikkinnslagPåBehandling(HistorikkTyper... type) {
+        return harHistorikkinnslagPåBehandling(valgtBehandling.uuid, type);
     }
 
-    public boolean harHistorikkinnslagPåBehandling(Set<HistorikkinnslagType> type) {
-        return harHistorikkinnslagPåBehandling(type, valgtBehandling.uuid);
-    }
-
-    private boolean harHistorikkinnslagPåBehandling(Set<HistorikkinnslagType> type, UUID behandlingsId) {
-        if (type.contains(HistorikkinnslagType.VEDLEGG_MOTTATT) || type.contains(HistorikkinnslagType.REVURD_OPPR)) {
+    private boolean harHistorikkinnslagPåBehandling(UUID behandlingsId, HistorikkTyper... type) {
+        if (Arrays.stream(type).anyMatch(t -> Set.of(HistorikkTyper.VEDLEGG_MOTTATT, HistorikkTyper.REVURD_OPPR).contains(t))) {
             behandlingsId = null;
         }
         return hentHistorikkinnslagPåBehandling(behandlingsId).stream()
-                .anyMatch(innslag -> type.contains(innslag.type()));
+                .anyMatch(innslag -> innslag.erAvTypen(type));
     }
 
-    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkinnslagType type) {
+    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkTyper type) {
         return hentHistorikkinnslagAvType(type, valgtBehandling.uuid, valgtBehandling.id);
     }
 
-    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkinnslagType type, UUID behandlingsUuid, int behandlingId) {
+    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkTyper type, UUID behandlingsUuid, int behandlingId) {
         venterPåFerdigProssesseringOgOppdaterBehandling(behandlingsUuid, behandlingId);
-        if (List.of(HistorikkinnslagType.VEDLEGG_MOTTATT, HistorikkinnslagType.REVURD_OPPR).contains(type)) {
+        if (Set.of(HistorikkTyper.VEDLEGG_MOTTATT, HistorikkTyper.REVURD_OPPR).contains(type)) {
             behandlingsUuid = null;
         }
         return hentHistorikkinnslagPåBehandling(behandlingsUuid).stream()
-                .filter(innslag -> type.equals(innslag.type()))
+                .filter(innslag -> innslag.erAvTypen(type))
                 .findFirst()
                 .orElse(null);
     }
 
-    public void ventTilHistorikkinnslag(HistorikkinnslagType type) {
+    public void ventTilHistorikkinnslag(HistorikkTyper... type) {
         Vent.på(() -> harHistorikkinnslagPåBehandling(type),
                 () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
-                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
-    }
-
-    public void ventTilHistorikkinnslag(Set<HistorikkinnslagType> typer) {
-        Vent.på(() -> harHistorikkinnslagPåBehandling(typer),
-                () -> "Saken  hadde ikke historikkinslag " + typer + "\nHistorikkInnslag:"
                         + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
     }
 

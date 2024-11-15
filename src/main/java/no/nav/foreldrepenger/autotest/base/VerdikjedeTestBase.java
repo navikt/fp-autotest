@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.base;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkTyper;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 
@@ -28,8 +28,8 @@ public abstract class VerdikjedeTestBase extends FpsakTestBase {
         } else {
             beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         }
-        if (saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.BREV_BESTILT)) {
-            saksbehandler.ventTilHistorikkinnslag(HistorikkinnslagType.BREV_SENT);
+        if (saksbehandler.harHistorikkinnslagPåBehandling(HistorikkTyper.BREV_BESTILT)) {
+            saksbehandler.ventTilHistorikkinnslag(HistorikkTyper.BREV_SENT);
         }
     }
 

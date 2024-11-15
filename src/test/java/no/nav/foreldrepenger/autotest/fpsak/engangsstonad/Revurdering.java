@@ -24,8 +24,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderEktefellesBarnBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkTyper;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
@@ -81,7 +80,7 @@ class Revurdering extends FpsakTestBase {
 
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_FEIL_ELLER_ENDRET_FAKTA);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        saksbehandler.harHistorikkinnslagPåBehandling(HistorikkinnslagType.REVURD_OPPR);
+        saksbehandler.harHistorikkinnslagPåBehandling(HistorikkTyper.REVURD_OPPR);
 
         VarselOmRevurderingBekreftelse varselOmRevurderingBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new VarselOmRevurderingBekreftelse());
@@ -89,10 +88,7 @@ class Revurdering extends FpsakTestBase {
         saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 
         assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
-                .as("Historikkinnslag på revurdering")
-                .extracting(HistorikkInnslag::type)
-                .contains(  HistorikkinnslagType.BREV_BESTILT,
-                            HistorikkinnslagType.BEH_VENT);
+                .anyMatch(innslag -> innslag.erAvTypen(HistorikkTyper.BREV_BESTILT, HistorikkTyper.BEH_VENT));
 
         assertThat(saksbehandler.valgtBehandling.erSattPåVent())
                 .as("Behandlingen er ikke satt på vent etter varsel for revurdering")

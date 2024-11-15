@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 
 public final class AllureHelper {
 
@@ -43,15 +42,6 @@ public final class AllureHelper {
     @Step("Fritekstlogg {fritekst}")
     public static void debugFritekst(String fritekst) {
         // Dette legger til et punkt i allure rapporten som matcher det som står i @Step
-    }
-
-    public static void debugLoggHistorikkinnslag(List<HistorikkInnslag> historikkInnslagList) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Historikkinnslag\n");
-        for (HistorikkInnslag historikkInnslag : historikkInnslagList) {
-            sb.append("\t").append("{").append(historikkInnslag.type()).append("}");
-        }
-        loggHistorikkinnslag(sb.toString());
     }
 
     @Step("Informasjon om historikkinnslag: {historikkinnslag}")
