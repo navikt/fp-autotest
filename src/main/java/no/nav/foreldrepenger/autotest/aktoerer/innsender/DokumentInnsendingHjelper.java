@@ -1,9 +1,6 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkAktør.ARBEIDSGIVER;
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkAktør.SØKER;
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType.BEH_STARTET;
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkinnslagType.VEDLEGG_MOTTATT;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -15,6 +12,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
@@ -65,8 +63,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
             return 0;
         }
         return (int) historikkKlient.hentHistorikk(saksnummer).stream()
-                .filter(h -> VEDLEGG_MOTTATT.equals(h.type()))
-                .filter(h -> ARBEIDSGIVER.equals(h.aktoer()))
+                .filter(h -> h.erAvTypen(ARBEIDSGIVER, HistorikkType.VEDLEGG_MOTTATT))
                 .count();
     }
 
@@ -89,7 +86,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
             for (var fagsak : fagsakKlient.søk(fnr)) {
                 var saksnummer = fagsak.saksnummer();
                 for (var h : historikkinnslagEtterSkjæringstidspunkt(saksnummer, skjæringstidpunktRundetNed)) {
-                    if (erSøknadMottatt(h)) {
+                    if (h.erSøknadMottatt()) {
                         return saksnummer;
                     }
                 }
@@ -129,9 +126,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
                 .toList();
     }
 
-    private boolean erSøknadMottatt(HistorikkInnslag h) {
-        return BEH_STARTET.equals(h.type()) && SØKER.equals(h.aktoer());
-    }
+
 
     protected int antallEksistrendeFagsakerPåSøker(Fødselsnummer fnr) {
         return fagsakKlient.søk(fnr).size();
