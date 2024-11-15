@@ -33,7 +33,7 @@ public record HistorikkInnslag(UUID behandlingUuid,
     }
 
     private boolean harTittelEllerSkjemlenkeTilsvarendeType(HistorikkType t) {
-        return t.tittel().equals(tittel()) || (t.skjermlenke() != null && t.skjermlenke().equals(skjermlenke()));
+        return (tittel != null && tittel.contains(t.tittel())) || (t.skjermlenke() != null && t.skjermlenke().equals(skjermlenke()));
     }
 }
 
