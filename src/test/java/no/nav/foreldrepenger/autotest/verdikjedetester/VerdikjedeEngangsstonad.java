@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkårForutgåendeBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkTyper;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -64,7 +64,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .isPositive();
 
         var dokumentId = saksbehandler
-                .hentHistorikkinnslagAvType(HistorikkTyper.BREV_SENT)
+                .hentHistorikkinnslagAvType(HistorikkType.BREV_SENT)
                 .dokumenter().get(0)
                 .dokumentId();
         var pdf = saksbehandler.hentJournalførtDokument(dokumentId, "ARKIV");

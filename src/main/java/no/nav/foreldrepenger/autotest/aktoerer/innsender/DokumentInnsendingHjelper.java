@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkTyper;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.journalpost.JournalforingKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
@@ -63,7 +63,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
             return 0;
         }
         return (int) historikkKlient.hentHistorikk(saksnummer).stream()
-                .filter(h -> h.erAvTypen(ARBEIDSGIVER, HistorikkTyper.VEDLEGG_MOTTATT))
+                .filter(h -> h.erAvTypen(ARBEIDSGIVER, HistorikkType.VEDLEGG_MOTTATT))
                 .count();
     }
 

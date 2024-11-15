@@ -17,14 +17,14 @@ public record HistorikkInnslag(UUID behandlingUuid,
 
 
     public boolean erSøknadMottatt() {
-        return erAvTypen(HistorikkTyper.BEH_STARTET) && HistorikkAktør.SØKER.equals(aktør.type);
+        return erAvTypen(HistorikkType.BEH_STARTET) && HistorikkAktør.SØKER.equals(aktør.type);
     }
 
-    public boolean erAvTypen(HistorikkTyper... type) {
+    public boolean erAvTypen(HistorikkType... type) {
         return erAvTypen(null, type);
     }
 
-    public boolean erAvTypen(HistorikkAktør aktør, HistorikkTyper... type) {
+    public boolean erAvTypen(HistorikkAktør aktør, HistorikkType... type) {
         if (aktør != null && !aktør.equals(this.aktør().type)) {
             return false;
         }
@@ -32,7 +32,7 @@ public record HistorikkInnslag(UUID behandlingUuid,
         return Arrays.stream(type).anyMatch(this::harTittelEllerSkjemlenkeTilsvarendeType);
     }
 
-    private boolean harTittelEllerSkjemlenkeTilsvarendeType(HistorikkTyper t) {
+    private boolean harTittelEllerSkjemlenkeTilsvarendeType(HistorikkType t) {
         return t.tittel().equals(tittel()) || (t.skjermlenke() != null && t.skjermlenke().equals(skjermlenke()));
     }
 }

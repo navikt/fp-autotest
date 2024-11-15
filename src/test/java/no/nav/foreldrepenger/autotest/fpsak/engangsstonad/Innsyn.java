@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnsynResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvInnsynBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkTyper;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
@@ -72,7 +72,7 @@ class Innsyn extends FpsakTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNSYN_INNVILGET);
         assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
-                .anyMatch(innslag -> innslag.erAvTypen(HistorikkTyper.BREV_BESTILT));
+                .anyMatch(innslag -> innslag.erAvTypen(HistorikkType.BREV_BESTILT));
     }
 
     @Test
@@ -115,6 +115,6 @@ class Innsyn extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNSYN_AVVIST);
-        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling()).anyMatch(innslag -> innslag.erAvTypen(HistorikkTyper.BREV_BESTILT));
+        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling()).anyMatch(innslag -> innslag.erAvTypen(HistorikkType.BREV_BESTILT));
     }
 }

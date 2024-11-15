@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
-public enum HistorikkTyper {
+public enum HistorikkType {
     BREV_SENT("Brev sendt"),
     BREV_BESTILT("Brev bestilt"),
     BEH_STARTET("Behandling startet"),
@@ -16,11 +16,11 @@ public enum HistorikkTyper {
     private final String tittel;
     private final String skjermlenke;
 
-    HistorikkTyper(String tittel) {
+    HistorikkType(String tittel) {
         this(tittel, null);
     }
 
-    HistorikkTyper(String tittel, String skjermlenke) {
+    HistorikkType(String tittel, String skjermlenke) {
         this.tittel = tittel;
         this.skjermlenke = skjermlenke;
     }

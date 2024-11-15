@@ -60,7 +60,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.papirsøknad.PermisjonPeriodeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkTyper;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
@@ -119,7 +119,7 @@ class Fodsel extends FpsakTestBase {
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkTyper.VEDLEGG_MOTTATT);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.VEDLEGG_MOTTATT);
 
         debugLoggBehandling(saksbehandler.valgtBehandling);
         // Verifiser Beregningsgrunnlag
@@ -428,7 +428,7 @@ class Fodsel extends FpsakTestBase {
                 .as("Forventer ingen avslåtte peridoer")
                 .isEmpty();
         assertThat(beslutter.hentHistorikkinnslagPåBehandling())
-                .anyMatch(innslag -> innslag.erAvTypen(HistorikkTyper.BREV_BESTILT));
+                .anyMatch(innslag -> innslag.erAvTypen(HistorikkType.BREV_BESTILT));
     }
 
     @Test
