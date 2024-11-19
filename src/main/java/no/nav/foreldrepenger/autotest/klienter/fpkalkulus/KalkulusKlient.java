@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
+import java.time.Duration;
 
 import io.qameta.allure.Step;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
@@ -54,6 +55,7 @@ public class KalkulusKlient {
 
     public TilstandResponse kjørBeregning(BeregnRequestDto beregnRequestDto) {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
+                .timeout(Duration.ofSeconds(10))
                 .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
                         .path(KALKULUS_BEREGN_URL)
                         .build())
