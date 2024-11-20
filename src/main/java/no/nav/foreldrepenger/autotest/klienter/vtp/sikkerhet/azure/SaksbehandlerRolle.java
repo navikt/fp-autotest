@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure;
 
 public enum SaksbehandlerRolle {
-    SAKSBEHANDLER("saksbeh"),
-    SAKSBEHANDLER_KODE_6("saksbeh6"),
-    SAKSBEHANDLER_KODE_7("saksbeh7"),
-    BESLUTTER("beslut"),
-    OVERSTYRER("oversty"),
-    KLAGEBEHANDLER("klageb"),
-    VEILEDER("veil");
+    SAKSBEHANDLER("S123456"),
+    SAKSBEHANDLER_KODE_6("S666666"),
+    SAKSBEHANDLER_KODE_7("S777777"),
+    BESLUTTER("B123456"),
+    OVERSTYRER("O123456"),
+    KLAGEBEHANDLER("K123456"),
+    VEILEDER("V123456");
 
     final String kode;
 
