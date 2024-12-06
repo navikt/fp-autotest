@@ -5,7 +5,7 @@ import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilan
 import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
 import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
 import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
-import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CONSUMER_ID;
+import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -298,6 +298,6 @@ public abstract class Søker {
 
     // Fpfordel stiller krav til at Nav-ConsumerId er unik på tvers av ulike dokumenter!
     private void genererUniktNavConsumerIdForDokument() {
-        MDCOperations.putToMDC(NAV_CONSUMER_ID, UUID.randomUUID().toString());
+        MDCOperations.putToMDC(HEADER_NAV_CONSUMER_ID, UUID.randomUUID().toString());
     }
 }
