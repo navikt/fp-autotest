@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.v1.HentRisikovurderingDto;
 import no.nav.foreldrepenger.kontrakter.risk.v1.RisikovurderingResultatDto;
 
@@ -25,12 +26,13 @@ public class RisikovurderingKlient {
         this.saksbehandlerRolle = saksbehandlerRolle;
     }
 
-    public RisikovurderingResultatDto getRisikovurdering(UUID uuid) {
+    public RisikovurderingResultatDto getRisikovurdering(UUID uuid, Saksnummer saksnummer) {
+        var reqSaksnummer = new no.nav.foreldrepenger.kontrakter.risk.kodeverk.Saksnummer(saksnummer.value());
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPRISK_BASE)
                         .path(RISIKOVURDERING_HENT_URL)
                         .build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(new HentRisikovurderingDto(uuid))));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(new HentRisikovurderingDto(uuid, reqSaksnummer))));
         return send(request.build(), RisikovurderingResultatDto.class);
     }
 }

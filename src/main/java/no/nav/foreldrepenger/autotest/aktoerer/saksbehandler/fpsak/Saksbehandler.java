@@ -654,7 +654,7 @@ public class Saksbehandler {
      */
     public void ventTilRisikoKlassefiseringsstatus(RisikoklasseType forventetRisikoklasse) {
         Vent.på(() -> {
-            var response = risikovurderingKlient.getRisikovurdering(valgtBehandling.uuid);
+            var response = risikovurderingKlient.getRisikovurdering(valgtBehandling.uuid, valgtFagsak.saksnummer());
             return response.risikoklasse().equals(forventetRisikoklasse);
         }, "Har ikke riktig risikoklassifiseringsstatus");
     }

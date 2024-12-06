@@ -3,9 +3,9 @@ package no.nav.foreldrepenger.autotest.klienter;
 import static jakarta.ws.rs.core.HttpHeaders.ACCEPT;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static no.nav.vedtak.log.mdc.MDCOperations.HTTP_HEADER_ALT_CALL_ID;
-import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CALL_ID;
-import static no.nav.vedtak.log.mdc.MDCOperations.NAV_CONSUMER_ID;
+import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_ALT_CALLID;
+import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CALLID;
+import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID;
 
 import java.net.http.HttpRequest;
 import java.time.Duration;
@@ -45,9 +45,9 @@ public final class HttpRequestProvider {
     private static HttpRequest.Builder medBearerTokenOgConsumerId(HttpRequest.Builder requestBuilder, String token) {
         return requestBuilder
                 .header(AUTHORIZATION, OIDC_AUTH_HEADER_PREFIX + token)
-                .header(NAV_CONSUMER_ID, getConsumerId())
-                .header(NAV_CALL_ID, getCallId())
-                .header(HTTP_HEADER_ALT_CALL_ID, getCallId());
+                .header(HEADER_NAV_CONSUMER_ID, getConsumerId())
+                .header(HEADER_NAV_CALLID, getCallId())
+                .header(HEADER_NAV_ALT_CALLID, getCallId());
     }
 
 
