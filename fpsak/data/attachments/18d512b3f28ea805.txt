@@ -1,0 +1,1 @@
+{"antallBarnFodt":1,"fodselsdato":"2024-11-08","dokumentasjonForeligger":true,"brukAntallBarnITps":false,"uidentifiserteBarn":[{"fodselsdato":"2024-11-08"}],"@type":"5027"}

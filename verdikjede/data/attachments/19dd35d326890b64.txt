@@ -1,0 +1,1 @@
+{"mottattdato":"2024-12-08","språkkode":"NB","barn":{"type":"termin","antallBarn":1,"termindato":"2024-12-29","terminbekreftelseDato":"2024-11-29"},"utenlandsopphold":[],"vedlegg":[]}

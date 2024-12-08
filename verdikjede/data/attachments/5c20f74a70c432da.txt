@@ -1,0 +1,1 @@
+{"begrunnelse":"Refusjonskrav er sendt inn for sent og skal ikke tas med i beregning!","fakta":{"faktaOmBeregningTilfeller":["VURDER_REFUSJONSKRAV_SOM_HAR_KOMMET_FOR_SENT"],"refusjonskravGyldighet":[{"arbeidsgiverId":"992260432","skalUtvideGyldighet":false}]},"@type":"5058"}

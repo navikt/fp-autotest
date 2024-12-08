@@ -1,0 +1,1 @@
+{"type":"dødshendelse","endringstype":"OPPRETTET","fnr":"04467938229","doedsdato":"2024-12-07"}
