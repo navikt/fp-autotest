@@ -25,7 +25,7 @@
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
         <vtp.versjon>1.2.4</vtp.versjon>
-        <fp-felles.versjon>7.4.1</fp-felles.versjon>
+        <fp-felles.versjon>7.4.3</fp-felles.versjon>
         <fp-prosesstask.version>5.0.21</fp-prosesstask.version>
         <fp-kontrakter.version>9.2.0</fp-kontrakter.version>
         <fpsoknad-felles.version>3.2.3</fpsoknad-felles.version>
