@@ -16,7 +16,7 @@ public class LagRequestTjeneste {
     }
 
     public static HåndterBeregningRequestDto lagHåndterRequest(BeregnRequestDto request, HåndterBeregningDto håndterBeregningDto) {
-        return new HåndterBeregningRequestDto(request.behandlingUuid(), request.kalkulatorInput(), Collections.singletonList(håndterBeregningDto));
+        return new HåndterBeregningRequestDto(request.behandlingUuid(), request.saksnummer(), request.kalkulatorInput(), Collections.singletonList(håndterBeregningDto));
     }
 
     public static BeregnRequestDto getFortsettBeregningRequest(BeregnRequestDto request, BeregningSteg stegType) {
@@ -31,7 +31,7 @@ public class LagRequestTjeneste {
     }
 
     public static HentBeregningsgrunnlagGUIRequest getHentGUIRequest(BeregnRequestDto request) {
-        return new HentBeregningsgrunnlagGUIRequest(request.behandlingUuid(), request.kalkulatorInput());
+        return new HentBeregningsgrunnlagGUIRequest(request.behandlingUuid(), request.saksnummer(), request.kalkulatorInput());
     }
 
     public static EnkelFpkalkulusRequestDto getHentDetaljertRequest(BeregnRequestDto request) {
