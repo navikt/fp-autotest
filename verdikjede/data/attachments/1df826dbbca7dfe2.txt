@@ -1,0 +1,1 @@
+{"begrunnelse":"Besteberegning godkjent av autotest.","besteberegningErKorrekt":true,"@type":"5062"}

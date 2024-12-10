@@ -1,0 +1,1 @@
+{"begrunnelse":"Fordi autotest sier det!","fastsatteAndeler":[{"arbeidsgiverOrgnr":"992260475","internArbeidsforholdRef":"e226a9eb-9a00-4c9b-84da-859c9eab4ec5","fastsattRefusjonFom":"2024-09-10"}],"@type":"5059"}

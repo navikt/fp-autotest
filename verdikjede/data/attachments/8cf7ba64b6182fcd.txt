@@ -1,0 +1,1 @@
+{"type":"dødfødselhendelse","endringstype":"OPPRETTET","fnr":"09459433470","doedfoedselsdato":"2024-12-03"}

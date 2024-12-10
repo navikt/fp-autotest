@@ -1,0 +1,1 @@
+{"begrunnelse":"Fordi.","klageVurdering":"MEDHOLD_I_KLAGE","klageMedholdArsak":"NYE_OPPLYSNINGER","klageVurderingOmgjoer":"DELVIS_MEDHOLD_I_KLAGE","fritekstTilBrev":"Fritekst brev nr 2 .","vedtaksdatoPaklagdBehandling":"2024-12-10","@type":"5035"}
