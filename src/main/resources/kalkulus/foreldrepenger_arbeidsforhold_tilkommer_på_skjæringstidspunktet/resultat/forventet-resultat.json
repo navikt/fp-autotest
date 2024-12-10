@@ -34,7 +34,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 536796.0,
-                        "årsbeløpFraTilstøtendeYtelse": 536796.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }
@@ -79,7 +79,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": 0.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -108,7 +108,7 @@
                         "maksimalRefusjonPrÅr": 536796.0,
                         "avkortetRefusjonPrÅr": 536796.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": 536796.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }

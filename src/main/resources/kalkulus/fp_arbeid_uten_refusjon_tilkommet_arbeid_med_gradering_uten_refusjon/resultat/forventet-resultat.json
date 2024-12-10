@@ -35,7 +35,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 608106.0,
-                        "årsbeløpFraTilstøtendeYtelse": 720000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }
@@ -81,7 +81,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 304053.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -109,7 +109,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 304053.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     }
@@ -157,7 +157,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 304053.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -185,7 +185,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 304053.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     }
@@ -233,7 +233,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 304053.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -261,7 +261,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 304053.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     }
@@ -309,7 +309,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 304053.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -337,7 +337,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 304053.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     }

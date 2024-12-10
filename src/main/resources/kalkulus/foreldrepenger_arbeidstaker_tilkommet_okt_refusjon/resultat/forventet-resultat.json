@@ -36,7 +36,7 @@
                         "maksimalRefusjonPrÅr": 180000.0,
                         "avkortetRefusjonPrÅr": 180000.0,
                         "avkortetBrukersAndelPrÅr": 180000.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }
@@ -82,7 +82,7 @@
                         "maksimalRefusjonPrÅr": 360000.0,
                         "avkortetRefusjonPrÅr": 360000.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": 360000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }

@@ -35,7 +35,7 @@
                         "maksimalRefusjonPrÅr": 277500.0,
                         "avkortetRefusjonPrÅr": 277500.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": 277500.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -64,7 +64,7 @@
                         "pgi1": 652702,
                         "pgi2": 466537,
                         "pgi3": 203818,
-                        "årsbeløpFraTilstøtendeYtelse": 321540.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }
@@ -109,7 +109,7 @@
                         "maksimalRefusjonPrÅr": 277500.0,
                         "avkortetRefusjonPrÅr": 277500.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": 277500.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -139,7 +139,7 @@
                         "pgi1": 652702,
                         "pgi2": 466537,
                         "pgi3": 203818,
-                        "årsbeløpFraTilstøtendeYtelse": 0.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -171,7 +171,7 @@
                         "maksimalRefusjonPrÅr": 321540.0,
                         "avkortetRefusjonPrÅr": 321540.0,
                         "avkortetBrukersAndelPrÅr": 0.0,
-                        "årsbeløpFraTilstøtendeYtelse": 321540.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }

@@ -35,7 +35,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 300000.0,
-                        "årsbeløpFraTilstøtendeYtelse": 300000.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -63,7 +63,7 @@
                         "pgi1": 532283,
                         "pgi2": 552671,
                         "pgi3": 563778,
-                        "årsbeløpFraTilstøtendeYtelse": 249577.17,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }

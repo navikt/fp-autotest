@@ -34,7 +34,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 581298.0,
-                        "årsbeløpFraTilstøtendeYtelse": 663552.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -63,7 +63,7 @@
                         "pgi1": 494006,
                         "pgi2": 384757,
                         "pgi3": 331908,
-                        "årsbeløpFraTilstøtendeYtelse": 0.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": false,
                         "lagtTilAvSaksbehandler": false
                     }
@@ -108,7 +108,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 331776.0,
-                        "årsbeløpFraTilstøtendeYtelse": 331776.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -138,7 +138,7 @@
                         "pgi1": 494006,
                         "pgi2": 384757,
                         "pgi3": 331908,
-                        "årsbeløpFraTilstøtendeYtelse": 331776.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     }
@@ -185,7 +185,7 @@
                         "maksimalRefusjonPrÅr": 0.0,
                         "avkortetRefusjonPrÅr": 0.0,
                         "avkortetBrukersAndelPrÅr": 331776.0,
-                        "årsbeløpFraTilstøtendeYtelse": 331776.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     },
@@ -215,7 +215,7 @@
                         "pgi1": 494006,
                         "pgi2": 384757,
                         "pgi3": 331908,
-                        "årsbeløpFraTilstøtendeYtelse": 331776.0,
+                        "årsbeløpFraTilstøtendeYtelse": null,
                         "fastsattAvSaksbehandler": true,
                         "lagtTilAvSaksbehandler": false
                     }
