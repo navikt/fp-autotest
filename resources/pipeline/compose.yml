@@ -789,7 +789,7 @@ services:
                     "name": "fp-fordel"
                 },
                 {
-                    "path": "/fpabakus/api",
+                    "path": "/fpabakus/forvaltning/api",
                     "scopes": "api://vtp.teamforeldrepenger.fpabakus/swagger",
                     "url": "http://fpabakus:8080",
                     "name": "fp-abakus"
@@ -807,34 +807,16 @@ services:
                     "name": "fp-abonnent"
                 },
                 {
-                    "path": "/fpsak/ekstern/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpsak/swagger",
-                    "url": "http://fpsak:8080",
-                    "name": "fp-sak ekstern API"
-                },
-                {
-                    "path": "/fpfordel/ekstern/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/swagger",
-                    "url": "http://fpfordel:8080",
-                    "name": "fp-fordel ekstern API"
+                    "path": "/fpinntektsmelding/forvaltning/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpinntektsmelding/swagger",
+                    "url": "http://fpinntektsmelding:8080",
+                    "name": "fp-inntektsmelding"
                 },
                 {
                     "path": "/api",
                     "scopes": "api://vtp.teamforeldrepenger.fpoversikt/swagger",
                     "url": "http://fpoversikt:8080",
                     "name": "fp-oversikt"
-                },
-                {
-                    "path": "/fpabakus/ekstern/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpabakus/swagger",
-                    "url": "http://fpabakus:8080",
-                    "name": "fp-abakus ekstern API"
-                },
-                {
-                    "path": "/fpinntektsmelding/forvaltning/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpinntektsmelding/swagger",
-                    "url": "http://fpinntektsmelding:8080",
-                    "name": "fp-inntektsmelding"
                 }
             ]
         }
