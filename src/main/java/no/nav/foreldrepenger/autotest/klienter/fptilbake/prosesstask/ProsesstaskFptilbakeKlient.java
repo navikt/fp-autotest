@@ -7,9 +7,9 @@ import java.util.List;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsessTaskKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskKlientFelles;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
-import no.nav.vedtak.felles.prosesstask.rest.dto.StatusFilterDto;
 
 public class ProsesstaskFptilbakeKlient implements ProsessTaskKlient {
 
@@ -30,7 +30,7 @@ public class ProsesstaskFptilbakeKlient implements ProsessTaskKlient {
     }
 
     @Override
-    public List<ProsessTaskDataDto> list(StatusFilterDto statusFilterDto) {
+    public List<ProsessTaskDataDto> list(List<ProsessTaskStatus> statusFilterDto) {
         return prosesstaskKlient.list(statusFilterDto);
     }
 
