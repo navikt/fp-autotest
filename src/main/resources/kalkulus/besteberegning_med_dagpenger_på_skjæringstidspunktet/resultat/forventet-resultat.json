@@ -1,9 +1,13 @@
 {
     "beregningsgrunnlag": {
         "skjæringstidspunkt": "2020-05-04",
-        "aktivitetStatuser": [
-            "AT",
-            "DP"
+        "aktivitetStatuserMedHjemmel": [{
+            "aktivitetStatus": "AT",
+            "hjemmel": "F_14_7_8_30"
+        }, {
+            "aktivitetStatus": "DP",
+            "hjemmel": "F_14_7_8_49"
+        }
         ],
         "beregningsgrunnlagPerioder": [
             {
