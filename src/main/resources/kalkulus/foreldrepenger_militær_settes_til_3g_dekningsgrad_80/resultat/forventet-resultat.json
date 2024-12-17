@@ -1,8 +1,10 @@
 {
     "beregningsgrunnlag": {
         "skjæringstidspunkt": "2022-01-01",
-        "aktivitetStatuser": [
-            "MS"
+        "aktivitetStatuserMedHjemmel": [{
+            "aktivitetStatus": "MS",
+            "hjemmel": "F_14_7"
+        }
         ],
         "beregningsgrunnlagPerioder": [
             {
