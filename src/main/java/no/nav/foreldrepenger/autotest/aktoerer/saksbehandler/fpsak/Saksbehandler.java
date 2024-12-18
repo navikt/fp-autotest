@@ -621,7 +621,7 @@ public class Saksbehandler {
     public void ventTilHistorikkinnslag(HistorikkType... type) {
         Vent.på(() -> harHistorikkinnslagPåBehandling(type),
                 () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
-                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())));
+                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())), 25);
     }
 
     /*
