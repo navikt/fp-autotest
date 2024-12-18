@@ -1,0 +1,1 @@
+{"vurderingBehov":[{"fom":"2025-10-01","tom":"2025-10-14","type":"UTTAK","årsak":"AKTIVITETSKRAV_ARBEID","vurdering":"GODKJENT"}],"@type":"5074"}

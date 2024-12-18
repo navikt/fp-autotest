@@ -1,0 +1,1 @@
+{"omsorgsovertakelseDato":"2025-01-18","fodselsdatoer":{"1":"2008-12-18"},"barnetsAnkomstTilNorgeDato":"2024-12-18","@type":"5004"}

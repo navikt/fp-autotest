@@ -1,0 +1,1 @@
+{"id":999968,"uuid":"988c860f-c8bb-4233-b051-5404bbd3bafb","versjon":4,"fagsakId":999965,"type":"BT-002","status":"UTRED","opprettet":"2024-12-18T15:30:43","behandlingHenlagt":false,"behandlingPaaVent":false,"behandlingÅrsaker":[],"harVerge":false,"vilkår":[]}
