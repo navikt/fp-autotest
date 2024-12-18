@@ -43,7 +43,7 @@ jobs:
           repositories: '[{"id": "github", "name": "github", "url": "https://maven.pkg.github.com/${{ github.repository }}", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" }}]'
           servers: '[{ "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.READER_TOKEN}}" }]' # TODO: Endre til GITHUB_TOKEN etter fp-kalkulus lansering
           output_file: settings.xml
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # ratchet:actions/setup-java@v3
+      - uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # ratchet:actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: 21
@@ -142,7 +142,7 @@ jobs:
         run: tar -czf ${{ inputs.test-suite }}.tar.gz -C target/allure-report .
       - name: Laste opp testresultat
         if: (success() || failure()) && steps.ghpages.outcome == 'success'
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # ratchet:actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # ratchet:actions/upload-artifact@v4
         with:
           name: ${{ inputs.test-suite }}-testresultat
           path: ${{ inputs.test-suite }}.tar.gz
@@ -156,7 +156,7 @@ jobs:
           docker ps -a --format '{{.Names}}' | while read pod; do docker logs $pod > $pod.log 2>&1; done
       - name: Laste opp logger
         if: failure() || cancelled()
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # ratchet:actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # ratchet:actions/upload-artifact@v4
         with:
           name: logs-${{ inputs.test-suite }}
           path: container-logs
