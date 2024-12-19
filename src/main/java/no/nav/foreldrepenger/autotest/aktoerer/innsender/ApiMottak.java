@@ -3,11 +3,13 @@ package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.ALTINN;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi.MottakKlient;
+import no.nav.foreldrepenger.autotest.klienter.inntektsmelding.InntektsmeldingKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.common.domain.AktørId;
@@ -35,8 +37,10 @@ public class ApiMottak extends DokumentInnsendingHjelper {
 
     private final MottakKlient mottakKlient;
     private final PdlLeesahKlient pdlLeesahKlient;
+    private final InntektsmeldingKlient inntektsmeldingKlient;
 
     public ApiMottak() {
+        inntektsmeldingKlient = new InntektsmeldingKlient();
         mottakKlient = new MottakKlient();
         pdlLeesahKlient = new PdlLeesahKlient();
     }
@@ -44,18 +48,28 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     @Override
     public Saksnummer sendInnInntektsmelding(InntektsmeldingBuilder inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
         // aktørId ignoreres ettersom det trengs bare i xmlen
+        var res = inntektsmeldingKlient.hentInntektsmeldingForespørslerFor(saksnummer);
+        LOG.info("Hentet {} forespørsel: {}", res.inntektmeldingForespørsler().size(), res.inntektmeldingForespørsler());
+        //TODO: trenger forbedringer (se kommentaren på neste TODO :))
+        res.inntektmeldingForespørsler().forEach(it -> inntektsmeldingKlient.sendInntektsmelding(it, BigDecimal.valueOf(30000L), fnr));
         return sendInnInntektsmelding(List.of(inntektsmeldingBuilder), fnr, saksnummer);
     }
 
     @Override
     public Saksnummer sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
+        var res = inntektsmeldingKlient.hentInntektsmeldingForespørslerFor(saksnummer);
+        LOG.info("Hentet {} forespørsel: {}", res.inntektmeldingForespørsler().size(), res.inntektmeldingForespørsler());
+        //TODO: trenger å modernisere InntektsmeldingBuilder siden den er veldig XML rettet
+        // Man kunne kallt /opplysninger endepunktet i backend til å hente inntekter?
+        // Finn en bedre metode til å bygge SendInntektsmeldingRequestDto som sendes videre til fpinntektsmelding
+        res.inntektmeldingForespørsler().forEach(it -> inntektsmeldingKlient.sendInntektsmelding(it, BigDecimal.valueOf(30000L), fnr));
         return sendInnInntektsmelding(inntektsmeldingBuilder, fnr, saksnummer);
     }
 
     @Step("Sender inn IM for bruker {fnr}")
     public Saksnummer sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr, Saksnummer saksnummer) {
         var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
-        journalførInnteksmeldinger(inntektsmeldinger, fnr);
+        //journalførInnteksmeldinger(inntektsmeldinger, fnr); //trenges ikke lenger siden fpinntektsmelding gjør denne byten.
         return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallGamleInntekstmeldinger);
     }
 
