@@ -39,8 +39,6 @@ public class InntektsmeldingBuilder {
     private SkjemainnholdBuilder skjemainnholdBuilderKladd;
     private no.nav.foreldrepenger.generator.inntektsmelding.builders.RefusjonBuilder refusjonBuilderKladd;
 
-
-
     public InntektsmeldingBuilder() {
         inntektsmeldingKladd = new InntektsmeldingM();
         arbeidsforholdBuilderKladd = new ArbeidsforholdBuilder();
