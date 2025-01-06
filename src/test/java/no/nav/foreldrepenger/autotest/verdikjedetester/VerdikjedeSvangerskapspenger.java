@@ -33,6 +33,7 @@ import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.Arb
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
+//TODO: test historikkinnslag @sirimykland
 @Tag("verdikjede")
 class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 

@@ -34,6 +34,7 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 import java.time.LocalDate;
 
+//TODO: test historikkinnslag @espenwaaga
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class Klage extends FpsakTestBase {

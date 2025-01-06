@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBehovBuilder;
 
+//TODO: test historikkinnslag @sirimykland
 @Tag("tilbakekreving")
 @Tag("fptilbake")
 class TilbakekrevingSVP extends FptilbakeTestBase {

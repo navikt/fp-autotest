@@ -80,6 +80,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.SivilstandDto;
 
+//TODO: test historikkinnslag @espenwaaga
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class Fodsel extends FpsakTestBase {

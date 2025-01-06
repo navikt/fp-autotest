@@ -38,6 +38,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
 
+//TODO: test historikkinnslag @thao1
 @Tag("fpsak")
 @Tag("engangsstonad")
 class Fodsel extends FpsakTestBase {

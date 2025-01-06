@@ -39,6 +39,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
 
+//TODO: test historikkinnslag @palfi
 @Tag("tilbakekreving")
 @Tag("fptilbake")
 class TilbakekrevingES extends FptilbakeTestBase {

@@ -39,6 +39,7 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
+//TODO: test historikkinnslag @thao1
 @Tag("tilbakekreving")
 @Tag("fptilbake")
 class TilbakekrevingFP extends FptilbakeTestBase {

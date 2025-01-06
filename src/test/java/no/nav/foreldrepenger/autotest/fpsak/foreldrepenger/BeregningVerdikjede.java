@@ -54,6 +54,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
 import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
 
+//TODO: test historikkinnslag @espenwaaga
 @Tag("fpsak")
 class BeregningVerdikjede extends FpsakTestBase {
 
