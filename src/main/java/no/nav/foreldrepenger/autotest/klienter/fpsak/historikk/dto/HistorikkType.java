@@ -1,7 +1,8 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
 public enum HistorikkType {
-    BREV_SENDT("Brev sendt"),
+    BREV_SENT("Brev sendt"),
+    BREV_BESTILT("Brev bestilt"),
     BEH_STARTET("Behandling startet"),
     BEH_MAN_GJEN("Gjenoppta behandling"),
     BEH_GJEN("Behandling gjenopptatt"),
