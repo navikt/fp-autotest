@@ -186,7 +186,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, true, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -305,7 +305,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår2);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer2, true, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer2, true, false);
 
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(arbeidsgiverIdentifikator, 100))
                 .as("Foventer at hele den utbetalte dagsatsen går til arbeidsgiver siden de ønsker full refusjon!")

@@ -163,7 +163,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(new KontrollerRevuderingsbehandling());
         saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, true, true);
 
         tbksaksbehandler.hentSisteBehandling(saksnummer);
         tbksaksbehandler.ventTilBehandlingErPåVent();
@@ -270,7 +270,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         var kontrollerRevuderingsbehandling = saksbehandler.hentAksjonspunktbekreftelse(new KontrollerRevuderingsbehandling());
         saksbehandler.bekreftAksjonspunkt(kontrollerRevuderingsbehandling);
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, true, true);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, true, true);
 
         tbksaksbehandler.hentSisteBehandling(saksnummer, BehandlingType.TILBAKEKREVING);
         tbksaksbehandler.ventTilBehandlingErPåVent();

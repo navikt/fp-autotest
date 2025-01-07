@@ -427,8 +427,7 @@ class Fodsel extends FpsakTestBase {
         assertThat(saksbehandler.hentAvslåtteUttaksperioder())
                 .as("Forventer ingen avslåtte peridoer")
                 .isEmpty();
-        assertThat(beslutter.hentHistorikkinnslagPåBehandling())
-                .anyMatch(innslag -> innslag.erAvTypen(HistorikkType.BREV_BESTILT));
+        beslutter.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
     }
 
     @Test
