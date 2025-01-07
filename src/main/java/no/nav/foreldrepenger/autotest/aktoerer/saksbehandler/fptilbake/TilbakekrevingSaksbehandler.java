@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.historikk.HistorikkTypeFptilbake;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingFptilbakeKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
@@ -284,9 +284,9 @@ public class TilbakekrevingSaksbehandler {
          * 2) Behandlingen er ikke tatt av vent enda og vi venter på at behandlingen GJENOPPRETTET
          *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
          */
-        if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.erAvTypen(HistorikkType.BEH_VENT))) {
+        if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.erAvTypen(HistorikkTypeFptilbake.BEH_VENT))) {
             Vent.på(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.erAvTypen(
-                            HistorikkType.BEH_GJEN, HistorikkType.BEH_MAN_GJEN)),
+                            HistorikkTypeFptilbake.BEH_GJEN, HistorikkTypeFptilbake.BEH_MAN_GJEN)),
                     "Behandlingen er på vent og er ikke blitt gjenopptatt!");
         }
 

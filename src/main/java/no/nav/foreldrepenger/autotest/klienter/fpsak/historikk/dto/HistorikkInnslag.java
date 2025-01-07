@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.historikk.HistorikkTypeFptilbake;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,23 @@ public record HistorikkInnslag(UUID behandlingUuid,
     }
 
     private boolean harTittelEllerSkjemlenkeTilsvarendeType(HistorikkType t) {
+        return (tittel != null && tittel.contains(t.tittel())) || (t.skjermlenke() != null && t.skjermlenke().equals(skjermlenke()));
+    }
+
+
+    public boolean erAvTypen(HistorikkTypeFptilbake... type) {
+        return erAvTypen(null, type);
+    }
+
+    public boolean erAvTypen(HistorikkAktør aktør, HistorikkTypeFptilbake... type) {
+        if (aktør != null && !aktør.equals(this.aktør().type)) {
+            return false;
+        }
+
+        return Arrays.stream(type).anyMatch(this::harTittelEllerSkjemlenkeTilsvarendeType);
+    }
+
+    private boolean harTittelEllerSkjemlenkeTilsvarendeType(HistorikkTypeFptilbake t) {
         return (tittel != null && tittel.contains(t.tittel())) || (t.skjermlenke() != null && t.skjermlenke().equals(skjermlenke()));
     }
 }
