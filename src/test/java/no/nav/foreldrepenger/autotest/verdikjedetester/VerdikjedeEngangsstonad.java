@@ -54,7 +54,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
 
         saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse());
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -63,8 +63,9 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .as("Beregnet tilkjent ytelse")
                 .isPositive();
 
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dokumentId = saksbehandler
-                .hentHistorikkinnslagAvType(HistorikkType.BREV_SENT)
+                .hentHistorikkinnslagAvType(HistorikkType.BREV_SENDT)
                 .dokumenter().get(0)
                 .dokumentId();
         var pdf = saksbehandler.hentJournalførtDokument(dokumentId, "ARKIV");
@@ -107,7 +108,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
         saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse());
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(saksnummer, false, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
 
         var esSakEtterVedtak = mor.innsyn().hentEsSakUtenÅpenBehandling(saksnummer);
         assertThat(esSakEtterVedtak.saksnummer().value()).isEqualTo(saksnummer.value());

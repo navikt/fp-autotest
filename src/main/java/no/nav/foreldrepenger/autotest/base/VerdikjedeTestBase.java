@@ -9,8 +9,14 @@ import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 // TODO: Fiks opp i testbasene
 public abstract class VerdikjedeTestBase extends FpsakTestBase {
 
-    public void foreslårOgFatterVedtakVenterTilAvsluttetBehandlingOgSjekkerOmBrevErSendt(Saksnummer saksnummer, boolean revurdering,
-                                                                                         boolean tilbakekreving) {
+    public void foreslårOgFatterVedtakVenterTilAvsluttetBehandling(Saksnummer saksnummer,
+                                                                   boolean revurdering,
+                                                                   boolean tilbakekreving) {
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, revurdering, tilbakekreving, true);
+    }
+
+    public void foreslårOgFatterVedtakVenterTilAvsluttetBehandling(Saksnummer saksnummer, boolean revurdering,
+                                                                   boolean tilbakekreving, boolean ventPåSendtBrev) {
         if (!revurdering) {
             saksbehandler.ventTilRisikoKlassefiseringsstatus(RisikoklasseType.IKKE_HØY);
         }
@@ -28,8 +34,8 @@ public abstract class VerdikjedeTestBase extends FpsakTestBase {
         } else {
             beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
         }
-        if (saksbehandler.harHistorikkinnslagPåBehandling(HistorikkType.BREV_BESTILT)) {
-            saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENT);
+        if (ventPåSendtBrev) {
+            saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         }
     }
 

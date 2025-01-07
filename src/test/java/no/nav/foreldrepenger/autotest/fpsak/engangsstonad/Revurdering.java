@@ -87,8 +87,7 @@ class Revurdering extends FpsakTestBase {
         varselOmRevurderingBekreftelse.bekreftSendVarsel(Venteårsak.UTV_FRIST, "Send brev");
         saksbehandler.bekreftAksjonspunkt(varselOmRevurderingBekreftelse);
 
-        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
-                .anyMatch(innslag -> innslag.erAvTypen(HistorikkType.BREV_BESTILT, HistorikkType.BEH_VENT));
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
 
         assertThat(saksbehandler.valgtBehandling.erSattPåVent())
                 .as("Behandlingen er ikke satt på vent etter varsel for revurdering")

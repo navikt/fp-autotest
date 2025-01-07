@@ -71,8 +71,7 @@ class Innsyn extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNSYN_INNVILGET);
-        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling())
-                .anyMatch(innslag -> innslag.erAvTypen(HistorikkType.BREV_BESTILT));
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
     }
 
     @Test
@@ -115,6 +114,6 @@ class Innsyn extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNSYN_AVVIST);
-        assertThat(saksbehandler.hentHistorikkinnslagPåBehandling()).anyMatch(innslag -> innslag.erAvTypen(HistorikkType.BREV_BESTILT));
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
     }
 }
