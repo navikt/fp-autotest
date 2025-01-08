@@ -267,9 +267,6 @@
                     <reportDirectory>target/allure-report</reportDirectory>
                     <reportingOutputDirectory>target/allure-report</reportingOutputDirectory>
                     <reportVersion>${allure.version}</reportVersion>
-                    <allureDownloadUrl>
-                        https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/${allure.version}/allure-commandline-${allure.version}.zip
-                    </allureDownloadUrl>
                 </configuration>
             </plugin>
             <plugin>
