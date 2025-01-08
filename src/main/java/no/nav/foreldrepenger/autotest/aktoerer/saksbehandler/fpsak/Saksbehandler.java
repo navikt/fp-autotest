@@ -546,18 +546,6 @@ public class Saksbehandler {
     public void ventTilAvsluttetBehandling() {
         LOG.info("Venter til behandling er avsluttet ...");
 
-        /**
-         * Hvis vi har en BEH_VENT på behandlingen OG saken IKKE er GJENOPPRETTET da er vi enten i
-         * 1) En feiltilstand og behandlingen kan ikke avsluttes
-         * 2) Behandlingen er ikke tatt av vent enda og vi venter på at behandlingen GJENOPPRETTET
-         *    Venter da til den er gjenopprettet, for så og vente på potensiell prosessering.
-         */
-        if (hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.erAvTypen(HistorikkType.BEH_VENT))) {
-            Vent.på(() -> hentHistorikkinnslagPåBehandling().stream().anyMatch(h -> h.erAvTypen(
-                            HistorikkType.BEH_GJEN, HistorikkType.BEH_MAN_GJEN)),
-                    "Behandlingen er på vent og er ikke blitt gjenopptatt!");
-        }
-
         ventTilBehandlingsstatus(BehandlingStatus.AVSLUTTET);
         LOG.info("Alle manuelle aksjonspunkt er løst og behandlingen har status AVSLUTTET");
     }
@@ -621,7 +609,7 @@ public class Saksbehandler {
     public void ventTilHistorikkinnslag(HistorikkType... type) {
         Vent.på(() -> harHistorikkinnslagPåBehandling(type),
                 () -> "Saken  hadde ikke historikkinslag " + type + "\nHistorikkInnslag:"
-                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())), 25);
+                        + String.join("\t\n", String.valueOf(hentHistorikkinnslagPåBehandling())), 35);
     }
 
     /*
