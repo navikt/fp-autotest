@@ -120,6 +120,7 @@ jobs:
           else
             echo "result=skipped" >> $GITHUB_OUTPUT
           fi
+
       - name: Generer testrapport
         if: inputs.test-suite != 'fpkalkulus' &&
             (success() || failure()) &&
@@ -127,6 +128,7 @@ jobs:
             github.repository != 'navikt/fp-autotest'
         id: ghpages
         shell: bash
+        continue-on-error: true
         run: |
           git fetch origin gh-pages
           mkdir gh-pages
@@ -139,10 +141,12 @@ jobs:
       - name: Tar testresultat
         if: (success() || failure()) && steps.ghpages.outcome == 'success'
         shell: bash
+        continue-on-error: true
         run: tar -czf ${{ inputs.test-suite }}.tar.gz -C target/allure-report .
       - name: Laste opp testresultat
         if: (success() || failure()) && steps.ghpages.outcome == 'success'
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # ratchet:actions/upload-artifact@v4
+        continue-on-error: true
         with:
           name: ${{ inputs.test-suite }}-testresultat
           path: ${{ inputs.test-suite }}.tar.gz
