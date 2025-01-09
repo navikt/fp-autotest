@@ -5,7 +5,7 @@ public enum HistorikkType {
     BEH_STARTET("Behandling er startet"),
     BEH_MAN_GJEN("Behandlingen er gjenopptatt"),
     BEH_GJEN("Køet behandling er gjenopptatt"),
-    BEH_VENT("Behandling er satt på vent"),
+    BEH_VENT("Behandlingen er satt på vent"),
     VEDLEGG_MOTTATT("Vedlegg er mottatt"),
     REVURD_OPPR("Revurdering er opprettet"),
     SPOLT_TILBAKE("Behandlingen er flyttet"),
