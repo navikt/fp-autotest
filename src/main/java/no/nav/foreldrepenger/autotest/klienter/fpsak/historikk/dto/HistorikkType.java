@@ -1,16 +1,16 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
 public enum HistorikkType {
-    BREV_SENDT("Brev sendt"),
-    BEH_STARTET("Behandling startet"),
-    BEH_MAN_GJEN("Gjenoppta behandling"),
-    BEH_GJEN("Behandling gjenopptatt"),
-    BEH_VENT("Behandling på vent"),
-    VEDLEGG_MOTTATT("Vedlegg mottatt"),
-    REVURD_OPPR("Revurdering opprettet"),
+    BREV_SENDT("Brev er sendt"),
+    BEH_STARTET("Behandling er startet"),
+    BEH_MAN_GJEN("Behandlingen er gjenopptatt"),
+    BEH_GJEN("Køet behandling er gjenopptatt"),
+    BEH_VENT("Behandlingen er satt på vent"),
+    VEDLEGG_MOTTATT("Vedlegg er mottatt"),
+    REVURD_OPPR("Revurdering er opprettet"),
     SPOLT_TILBAKE("Behandlingen er flyttet"),
     AVBRUTT_BEH("Behandling er henlagt"),
-    VEDTAK_FATTET("Vedtak fattet", "VEDTAK");
+    VEDTAK_FATTET("Vedtak er fattet", "VEDTAK");
 
     private final String tittel;
     private final String skjermlenke;
