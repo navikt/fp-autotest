@@ -12,6 +12,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.EndreUtlandMarkering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Sok;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
@@ -24,6 +25,7 @@ public class FagsakKlient {
 
     private static final String FAGSAK_URL = "/fagsak";
     private static final String FAGSAK_SØK_URL = FAGSAK_URL + "/sok";
+    private static final String ENDRE_FAGSAK_MARKERING = FAGSAK_URL + "/endre-utland";
 
     private final SaksbehandlerRolle saksbehandlerRolle;
 
@@ -44,6 +46,15 @@ public class FagsakKlient {
 
     public List<Fagsak> søk(Fødselsnummer fnr) {
         return søk(new Sok(fnr.value()));
+    }
+
+    public void endreFagsakMarkering(EndreUtlandMarkering endreUtlandMarkering) {
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
+                .uri(fromUri(BaseUriProvider.FPSAK_BASE)
+                        .path(ENDRE_FAGSAK_MARKERING)
+                        .build())
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(endreUtlandMarkering)));
+        send(request.build());
     }
 
     private List<Fagsak> søk(Sok søk) {

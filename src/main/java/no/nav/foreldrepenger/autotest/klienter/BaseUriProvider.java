@@ -6,6 +6,7 @@ public class BaseUriProvider {
     protected static final String LOCALHOST = "http://localhost";
     public static final URI VTP_ROOT = URI.create(LOCALHOST + ":8060");
     public static final URI VTP_API_BASE = URI.create(VTP_ROOT + "/rest/api");
+    public static final URI FPLOS_BASE = URI.create(LOCALHOST + ":8071/fplos/api");
     public static final URI FPSAK_BASE = URI.create(LOCALHOST + ":8080/fpsak/api");
     public static final URI FPRISK_BASE = URI.create(LOCALHOST + ":8075/fprisk/api");
     public static final URI FPTILBAKE_BASE = URI.create(LOCALHOST + ":8030/fptilbake/api");

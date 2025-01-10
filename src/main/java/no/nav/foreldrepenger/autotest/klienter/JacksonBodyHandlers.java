@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter;
 import static no.nav.foreldrepenger.common.mapper.DefaultJsonMapper.MAPPER;
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -49,6 +50,15 @@ public final class JacksonBodyHandlers {
             return fellesObjectmapper.writeValueAsString(obj);
         } catch (IOException var2) {
             throw new TekniskException("F-208314", "Kunne ikke serialisere objekt til JSON", var2);
+        }
+    }
+
+    public static HttpRequest.BodyPublisher toJsonBodyPublisher(Object obj) {
+        try {
+            var json = fellesObjectmapper.writeValueAsString(obj);
+            return HttpRequest.BodyPublishers.ofString(json);
+        } catch (IOException e) {
+            throw new TekniskException("F-208314", "Kunne ikke serialisere objekt til JSON", e);
         }
     }
 }
