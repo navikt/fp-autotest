@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter;
 import java.net.URI;
 
 public class BaseUriProvider {
-    protected static final String LOCALHOST = "http://127.0.0.1";
+    protected static final String LOCALHOST = "http://localhost";
     public static final URI VTP_ROOT = URI.create(LOCALHOST + ":8060");
     public static final URI VTP_API_BASE = URI.create(VTP_ROOT + "/rest/api");
     public static final URI FPSAK_BASE = URI.create(LOCALHOST + ":8080/fpsak/api");

@@ -35,34 +35,50 @@ public class InntektsmeldingKlient {
     }
 
     public ListForespørslerResponse hentInntektsmeldingForespørslerFor(Saksnummer saksnummer) {
-        var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.SAKSBEHANDLER, API_NAME).uri(
-                fromUri(BaseUriProvider.FPINNTEKTSMELDING_BASE).path(FORESPØRSEL_UUID + "/" + saksnummer.value()).build()).GET();
+        var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.SAKSBEHANDLER, API_NAME)
+                .uri(fromUri(BaseUriProvider.FPINNTEKTSMELDING_BASE)
+                        .path(FORESPØRSEL_UUID + "/" + saksnummer.value())
+                        .build()).GET();
 
         return send(request.build(), ListForespørslerResponse.class);
     }
 
     public void sendInntektsmelding(InntektsmeldingForespørselDto opprettInntektsmeldingDTO, BigDecimal inntekt, Fødselsnummer fnr) {
-        var forespørsel = new SendInntektsmeldingRequestDto(opprettInntektsmeldingDTO.uuid(), opprettInntektsmeldingDTO.aktørid(),
-                opprettInntektsmeldingDTO.ytelsetype(), opprettInntektsmeldingDTO.arbeidsgiverident(),
-                new KontaktpersonDto("Inntektsmelding Innsender", "55555555"), opprettInntektsmeldingDTO.skjæringstidspunkt(), inntekt,
-                Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        var inntektsmeldingRequest = new SendInntektsmeldingRequestDto(
+                opprettInntektsmeldingDTO.uuid(),
+                opprettInntektsmeldingDTO.aktørid(),
+                opprettInntektsmeldingDTO.ytelsetype(),
+                opprettInntektsmeldingDTO.arbeidsgiverident(),
+                new KontaktpersonDto("Inntektsmelding Innsender", "55555555"),
+                opprettInntektsmeldingDTO.startDato(),
+                inntekt,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList());
 
         var request = requestMedInnloggetBruker(fnr).uri(
                         fromUri(BaseUriProvider.FPINNTEKTSMELDING_BASE).path(FORESPØRSEL_OPPRETT).build())
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(forespørsel)));
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(inntektsmeldingRequest)));
         send(request.build());
     }
 
     public record ListForespørslerResponse(List<InntektsmeldingForespørselDto> inntektmeldingForespørsler) {
     }
 
-    public record InntektsmeldingForespørselDto(UUID uuid, LocalDate skjæringstidspunkt, String arbeidsgiverident, String aktørid,
-                                                String ytelsetype) {
+    public record InntektsmeldingForespørselDto(UUID uuid,
+                                                LocalDate skjæringstidspunkt,
+                                                String arbeidsgiverident,
+                                                String aktørid,
+                                                String ytelsetype,
+                                                LocalDate startDato) {
     }
 
-    public record SendInntektsmeldingRequestDto(@NotNull @Valid UUID foresporselUuid, @NotNull @Valid String aktorId,
-                                                @NotNull @Valid String ytelse, @NotNull @Valid String arbeidsgiverIdent,
-                                                @NotNull @Valid KontaktpersonDto kontaktperson, @NotNull LocalDate startdato,
+    public record SendInntektsmeldingRequestDto(@NotNull @Valid UUID foresporselUuid,
+                                                @NotNull @Valid String aktorId,
+                                                @NotNull @Valid String ytelse,
+                                                @NotNull @Valid String arbeidsgiverIdent,
+                                                @NotNull @Valid KontaktpersonDto kontaktperson,
+                                                @NotNull LocalDate startdato,
                                                 @NotNull @Min(0) @Max(Integer.MAX_VALUE) @Digits(integer = 20, fraction = 2) BigDecimal inntekt,
                                                 @NotNull List<@Valid RefusjonDto> refusjon,
                                                 @NotNull List<@Valid BortfaltNaturalytelseDto> bortfaltNaturalytelsePerioder,

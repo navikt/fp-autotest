@@ -114,7 +114,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
 
-;
 
 @Tag("verdikjede")
 class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
@@ -154,6 +153,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(BigDecimal.valueOf(avvikendeMånedsinntekt))
                 .medRefusjonBeløpPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -1175,6 +1177,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
 
         var arbeidsgiver = far.arbeidsgiver();
+
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1320,6 +1325,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummerFar = far.søk(søknadFar.build());
 
         var arbeidsgiverFar = far.arbeidsgiver();
+
+        saksbehandler.hentFagsak(saksnummerFar);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         arbeidsgiverFar.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1576,6 +1584,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoMor);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -1708,6 +1719,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -1783,6 +1797,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, omsorgsovertagelsesdato);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -1978,6 +1995,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummerMor = mor.søk(søknadMor.build());
 
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(3));
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -2058,6 +2077,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummerMor = mor.søk(lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .build());
+
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(3));
 
         saksbehandler.hentFagsak(saksnummerMor);

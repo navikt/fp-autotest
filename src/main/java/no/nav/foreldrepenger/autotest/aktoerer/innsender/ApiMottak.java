@@ -55,7 +55,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         var res = inntektsmeldingKlient.hentInntektsmeldingForespørslerFor(saksnummer);
         LOG.info("Hentet {} forespørsel: {}", res.inntektmeldingForespørsler().size(), res.inntektmeldingForespørsler());
         //TODO: trenger forbedringer (se kommentaren på neste TODO :))
-        res.inntektmeldingForespørsler().forEach(it -> inntektsmeldingKlient.sendInntektsmelding(it, BigDecimal.valueOf(30000L), fnr));
+        res.inntektmeldingForespørsler().forEach(it -> inntektsmeldingKlient.sendInntektsmelding(it, BigDecimal.valueOf(40000L), fnr));
         return sendInnInntektsmeldinger(List.of(inntektsmelding), fnr, saksnummer);
     }
 
@@ -69,7 +69,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         //TODO: trenger å modernisere InntektsmeldingBuilder siden den er veldig XML rettet
         // Man kunne kallt /opplysninger endepunktet i backend til å hente inntekter?
         // Finn en bedre metode til å bygge SendInntektsmeldingRequestDto som sendes videre til fpinntektsmelding
-        res.inntektmeldingForespørsler().forEach(it -> inntektsmeldingKlient.sendInntektsmelding(it, BigDecimal.valueOf(30000L), fnr));
+        res.inntektmeldingForespørsler().forEach(it -> inntektsmeldingKlient.sendInntektsmelding(it, BigDecimal.valueOf(40000L), fnr));
         return sendInnInntektsmeldinger(inntektsmeldinger, fnr, saksnummer);
     }
 
@@ -83,6 +83,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     private void journalførInnteksmeldinger(List<Inntektsmelding> inntektsmeldinger, Fødselsnummer fnr) {
         LOG.info("Sender inn {} IM(er) for søker {}...", inntektsmeldinger.size(), fnr.value());
         for (var inntektsmelding : inntektsmeldinger) {
+            //TODO: Her trenger vi å generere en DTO mot fp-inntektsmelding
             var xml = InntektsmeldingXmlMapper.opprettInntektsmeldingXML(inntektsmelding);
             var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml, ALTINN, null, DokumenttypeId.INNTEKTSMELDING);
             journalpostKlient.journalførR(journalpostModell);
