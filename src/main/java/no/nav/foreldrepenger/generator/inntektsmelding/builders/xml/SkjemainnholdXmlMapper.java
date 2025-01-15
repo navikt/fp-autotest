@@ -9,8 +9,9 @@ import java.util.Optional;
 
 import jakarta.validation.constraints.NotNull;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.YtelseKodeliste;
+import no.nav.inntektsmelding.xml.kodeliste._20210216.NaturalytelseKodeliste;
+import no.nav.inntektsmelding.xml.kodeliste._20210216.YtelseKodeliste;
+import no.nav.inntektsmelding.xml.kodeliste._20210216.ÅrsakInnsendingKodeliste;
 import no.seres.xsd.nav.inntektsmelding_m._20181211.Arbeidsgiver;
 import no.seres.xsd.nav.inntektsmelding_m._20181211.ArbeidsgiverPrivat;
 import no.seres.xsd.nav.inntektsmelding_m._20181211.Avsendersystem;
@@ -34,7 +35,7 @@ class SkjemainnholdXmlMapper {
         var objectFactory = new ObjectFactory();
         var skjemainnhold = new Skjemainnhold();
 
-        skjemainnhold.setAarsakTilInnsending("Ny");
+        skjemainnhold.setAarsakTilInnsending(ÅrsakInnsendingKodeliste.NY.value());
         skjemainnhold.setAvsendersystem(createAvsendersystem(objectFactory, Optional.ofNullable(im.avsender().system()).orElse("FS22"),
                 Optional.ofNullable(im.avsender().versjon()).orElse("1.0")));
         skjemainnhold.setYtelse(mapTilYtelseKode(im.ytelseType()).value());
