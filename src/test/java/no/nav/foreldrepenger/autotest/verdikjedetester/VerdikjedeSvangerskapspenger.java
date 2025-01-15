@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -248,7 +250,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP()
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummer1, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer1);
@@ -373,11 +375,11 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsgivere = mor.arbeidsgivere().toList();
         var arbeidsgiver1 = arbeidsgivere.get(0);
         var inntektsmedling1 = arbeidsgiver1.lagInntektsmeldingSVP()
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmedling1);
         var arbeidsgiver2 = arbeidsgivere.get(1);
         var inntektsmedling2 = arbeidsgiver2.lagInntektsmeldingSVP()
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
         arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmedling2);
 
         saksbehandler.hentFagsak(saksnummer);

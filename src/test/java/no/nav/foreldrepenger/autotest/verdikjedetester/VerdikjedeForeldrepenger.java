@@ -43,6 +43,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -468,8 +470,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var arbeidsgiver = far.arbeidsgiver();
         var inntektsmeldingerFar = arbeidsgiver.lagInntektsmeldingerFP(fpStartdatoFar);
-        inntektsmeldingerFar.get(0).medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
-        inntektsmeldingerFar.get(1).medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+        inntektsmeldingerFar.get(0).medRefusjonsBelopPerMnd(Prosent.valueOf(100));
+        inntektsmeldingerFar.get(1).medRefusjonsBelopPerMnd(Prosent.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingerFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -660,14 +662,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var arbeidsgiver1 = far.arbeidsgiver(TestOrganisasjoner.NAV.orgnummer().value());
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(fpStartdatoIfmFødselFar)
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
         arbeidsgiver1.sendInntektsmeldinger(saksnummerFar, inntektsmelding1);
 
         var arbeidsgiver2 = far.arbeidsgiver(TestOrganisasjoner.NAV_BERGEN.orgnummer().value());
         var orgNummerFar2 = arbeidsgiver2.arbeidsgiverIdentifikator();
         var opphørsDatoForRefusjon = fpStartdatoEtterUke6Far.plusMonths(2).minusDays(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(fpStartdatoIfmFødselFar)
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100))
+                .medRefusjonsBelopPerMnd(Prosent.valueOf(100))
                 .medRefusjonsOpphordato(opphørsDatoForRefusjon);
         arbeidsgiver2.sendInntektsmeldinger(saksnummerFar, inntektsmelding2);
 
@@ -1201,7 +1203,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         // AG sender inn en IM med endring i refusjon som skal føre til revurdering på far sin sak.
         var inntektsmeldingEndringFar = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar)
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(50));
+                .medRefusjonsBelopPerMnd(Prosent.valueOf(50));
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar);
 
         // Revurdering / Berørt sak til far
@@ -1229,7 +1231,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // AG sender inn ny korrigert IM med endring i refusjon mens behandlingen er hos beslutter. Behandlingen skal
         // rulles tilbake og behandles på nytt fra første AP i revurderingen.
         var inntektsmeldingEndringFar2 = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar)
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar2);
 
         saksbehandler.hentFagsak(saksnummerFar);

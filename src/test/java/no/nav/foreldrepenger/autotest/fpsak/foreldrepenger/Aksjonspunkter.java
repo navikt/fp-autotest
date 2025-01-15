@@ -13,6 +13,8 @@ import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsav
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -190,7 +192,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);

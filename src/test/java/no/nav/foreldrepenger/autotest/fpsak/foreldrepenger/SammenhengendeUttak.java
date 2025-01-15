@@ -18,6 +18,8 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -100,7 +102,7 @@ class SammenhengendeUttak extends FpsakTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
-        inntektsmelding.medUtsettelse(UttakresultatUtsettelseÅrsak.ARBEID.getKode(), fødsel.plusWeeks(15),
+        inntektsmelding.medUtsettelse(Inntektsmelding.UtsettelseÅrsak.ARBEID, fødsel.plusWeeks(15),
                 fødsel.plusWeeks(18).minusDays(1));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 

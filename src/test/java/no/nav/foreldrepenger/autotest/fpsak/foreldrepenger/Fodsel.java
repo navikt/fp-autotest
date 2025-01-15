@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -114,7 +116,7 @@ class Fodsel extends FpsakTestBase {
         var refusjon = BigDecimal.valueOf(overstyrtInntekt / 12);
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medBeregnetInntekt(ProsentAndel.valueOf(50))
+                .medBeregnetInntekt(Prosent.valueOf(50))
                 .medRefusjonsBelopPerMnd(refusjon);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 

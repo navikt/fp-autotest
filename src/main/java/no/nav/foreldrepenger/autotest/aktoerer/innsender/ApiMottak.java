@@ -13,7 +13,8 @@ import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.xml.InntektsmeldingXmlMapper;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -42,52 +43,69 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
-    public Saksnummer sendInnInntektsmelding(InntektsmeldingBuilder inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
+    public Saksnummer sendInnInntektsmelding(Inntektsmelding inntektsmeldingBuilder,
+                                             AktørId aktørId,
+                                             Fødselsnummer fnr,
+                                             Saksnummer saksnummer) {
         // aktørId ignoreres ettersom det trengs bare i xmlen
         return sendInnInntektsmelding(List.of(inntektsmeldingBuilder), fnr, saksnummer);
     }
 
     @Override
-    public Saksnummer sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldingBuilder, AktørId aktørId, Fødselsnummer fnr, Saksnummer saksnummer) {
+    public Saksnummer sendInnInntektsmelding(List<Inntektsmelding> inntektsmeldingBuilder,
+                                             AktørId aktørId,
+                                             Fødselsnummer fnr,
+                                             Saksnummer saksnummer) {
         return sendInnInntektsmelding(inntektsmeldingBuilder, fnr, saksnummer);
     }
 
     @Step("Sender inn IM for bruker {fnr}")
-    public Saksnummer sendInnInntektsmelding(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr, Saksnummer saksnummer) {
+    private Saksnummer sendInnInntektsmelding(List<Inntektsmelding> inntektsmeldinger, Fødselsnummer fnr, Saksnummer saksnummer) {
         var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
         journalførInnteksmeldinger(inntektsmeldinger, fnr);
         return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallGamleInntekstmeldinger);
     }
 
-    private void journalførInnteksmeldinger(List<InntektsmeldingBuilder> inntektsmeldinger, Fødselsnummer fnr) {
+    private void journalførInnteksmeldinger(List<Inntektsmelding> inntektsmeldinger, Fødselsnummer fnr) {
         LOG.info("Sender inn {} IM(er) for søker {}...", inntektsmeldinger.size(), fnr.value());
-        for (InntektsmeldingBuilder inntektsmelding : inntektsmeldinger) {
-            var xml = inntektsmelding.createInntektesmeldingXML();
-            var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml,
-                    ALTINN, null, DokumenttypeId.INNTEKTSMELDING);
+        for (var inntektsmelding : inntektsmeldinger) {
+            var xml = InntektsmeldingXmlMapper.opprettInntektsmeldingXML(inntektsmelding);
+            var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml, ALTINN, null, DokumenttypeId.INNTEKTSMELDING);
             journalpostKlient.journalførR(journalpostModell);
         }
     }
 
     @Override
-    public Saksnummer sendInnSøknad(SøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+    public Saksnummer sendInnSøknad(SøknadDto søknad,
+                                    AktørId aktørId,
+                                    Fødselsnummer fnr,
+                                    AktørId aktørIdAnnenpart,
+                                    Saksnummer saksnummer) {
         return sendInnSøknad(fnr, søknad);
     }
 
     @Override
-    public Saksnummer sendInnSøknad(no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+    public Saksnummer sendInnSøknad(no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad,
+                                    AktørId aktørId,
+                                    Fødselsnummer fnr,
+                                    AktørId aktørIdAnnenpart,
+                                    Saksnummer saksnummer) {
         return sendInnSøknad(fnr, søknad);
     }
 
     @Override
-    public Saksnummer sendInnSøknad(EndringssøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+    public Saksnummer sendInnSøknad(EndringssøknadDto søknad,
+                                    AktørId aktørId,
+                                    Fødselsnummer fnr,
+                                    AktørId aktørIdAnnenpart,
+                                    Saksnummer saksnummer) {
         return sendInnSøknad(fnr, søknad);
     }
 
     @Step("[{søknad.søker.rolle}]: Sender inn søknad: {fnr}")
     private Saksnummer sendInnSøknad(Fødselsnummer fnr, SøknadDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
-        var skjæringsTidspunktForNyBehandling  = LocalDateTime.now();
+        var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
         mottakKlient.sendSøknad(fnr, søknad);
 
@@ -95,9 +113,10 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Step("Sender inn søknad: {fnr}")
-    private Saksnummer sendInnSøknad(Fødselsnummer fnr, no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
+    private Saksnummer sendInnSøknad(Fødselsnummer fnr,
+                                     no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
-        var skjæringsTidspunktForNyBehandling  = LocalDateTime.now();
+        var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
         mottakKlient.sendSøknad(fnr, søknad);
 
@@ -107,7 +126,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     @Step("[{søknad.søker.rolle}]: Sender inn endrignssøknad: {fnr}")
     private Saksnummer sendInnSøknad(Fødselsnummer fnr, EndringssøknadDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
-        var skjæringsTidspunktForNyBehandling  = LocalDateTime.now();
+        var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
         mottakKlient.sendSøknad(fnr, søknad);
 
@@ -120,7 +139,10 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
-    public Saksnummer sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+    public Saksnummer sendInnPapirsøknadEEndringForeldrepenger(AktørId aktørId,
+                                                               Fødselsnummer fnr,
+                                                               AktørId aktørIdAnnenpart,
+                                                               Saksnummer saksnummer) {
         return sendInnPapirsøknad(fnr, DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL, saksnummer);
     }
 
@@ -130,13 +152,12 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     private Saksnummer sendInnPapirsøknad(Fødselsnummer fnr, DokumenttypeId dokumenttypeId, Saksnummer saksnummer) {
-        var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null,
-                SKAN_IM, "skanIkkeUnik.pdf", dokumenttypeId);
+        var journalpostModell = lagJournalpost(fnr, dokumenttypeId.getTermnavn(), null, SKAN_IM, "skanIkkeUnik.pdf", dokumenttypeId);
         if (saksnummer != null) {
             journalpostModell.setSakId(saksnummer.value());
         }
 
-        var skjæringsTidspunktForNyBehandling  = LocalDateTime.now();
+        var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
         journalpostKlient.journalførR(journalpostModell);
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
@@ -148,13 +169,17 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     public void sendInnKlage(Fødselsnummer fnr) {
-        var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null,
-                SKAN_IM, null, DokumenttypeId.KLAGE_DOKUMENT);
+        var journalpostModell = lagJournalpost(fnr, DokumenttypeId.KLAGE_DOKUMENT.getTermnavn(), null, SKAN_IM, null,
+                DokumenttypeId.KLAGE_DOKUMENT);
         journalpostKlient.journalførR(journalpostModell);
     }
 
-    private JournalpostModell lagJournalpost(Fødselsnummer fnr, String tittel, String innhold, Mottakskanal mottakskanal,
-                                             String eksternReferanseId, DokumenttypeId dokumenttypeId) {
+    private JournalpostModell lagJournalpost(Fødselsnummer fnr,
+                                             String tittel,
+                                             String innhold,
+                                             Mottakskanal mottakskanal,
+                                             String eksternReferanseId,
+                                             DokumenttypeId dokumenttypeId) {
         var journalpostModell = new JournalpostModell();
         journalpostModell.setTittel(tittel);
         journalpostModell.setJournalStatus(Journalstatus.MOTTATT);
@@ -175,15 +200,14 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         dokumentModell.setInnhold(innhold);
         dokumentModell.setDokumentType(dokumenttypeId);
         dokumentModell.setDokumentTilknyttetJournalpost(DokumentTilknyttetJournalpost.HOVEDDOKUMENT);
-        dokumentModell.getDokumentVariantInnholdListe().add(new DokumentVariantInnhold(
-                Arkivfiltype.XML, Variantformat.ORIGINAL, innhold != null ? innhold.getBytes() : new byte[0]
-        ));
-        dokumentModell.getDokumentVariantInnholdListe().add(new DokumentVariantInnhold(
-                Arkivfiltype.XML, Variantformat.FULLVERSJON, innhold != null ? innhold.getBytes() : new byte[0]
-        ));
-        dokumentModell.getDokumentVariantInnholdListe().add(new DokumentVariantInnhold(
-                Arkivfiltype.PDF, Variantformat.ARKIV, new byte[0]
-        ));
+        dokumentModell.getDokumentVariantInnholdListe()
+                .add(new DokumentVariantInnhold(Arkivfiltype.XML, Variantformat.ORIGINAL,
+                        innhold != null ? innhold.getBytes() : new byte[0]));
+        dokumentModell.getDokumentVariantInnholdListe()
+                .add(new DokumentVariantInnhold(Arkivfiltype.XML, Variantformat.FULLVERSJON,
+                        innhold != null ? innhold.getBytes() : new byte[0]));
+        dokumentModell.getDokumentVariantInnholdListe()
+                .add(new DokumentVariantInnhold(Arkivfiltype.PDF, Variantformat.ARKIV, new byte[0]));
         return dokumentModell;
     }
 
