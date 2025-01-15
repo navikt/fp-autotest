@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import no.nav.foreldrepenger.autotest.util.CollectionUtils;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.seres.xsd.nav.inntektsmelding_m._20181211.EndringIRefusjon;
 import no.seres.xsd.nav.inntektsmelding_m._20181211.ObjectFactory;
@@ -17,19 +18,19 @@ class RefusjonXmlMapper {
     }
 
     public static Refusjon map(Inntektsmelding.Refusjon imref, ObjectFactory objectFactory) {
-        Objects.requireNonNull(imref.refusjonBeloepPrMnd(), "refusjonsBelopPerMnd kan ikke være null");
+        Objects.requireNonNull(imref.refusjonBeløpPrMnd(), "refusjonsBelopPerMnd kan ikke være null");
 
         var refusjon = objectFactory.createRefusjon();
-        refusjon.setRefusjonsbeloepPrMnd(objectFactory.createRefusjonRefusjonsbeloepPrMnd(imref.refusjonBeloepPrMnd()));
+        refusjon.setRefusjonsbeloepPrMnd(objectFactory.createRefusjonRefusjonsbeloepPrMnd(imref.refusjonBeløpPrMnd()));
 
-        if (imref.refusjonOpphoersdato() != null) {
-            refusjon.setRefusjonsopphoersdato(objectFactory.createRefusjonRefusjonsopphoersdato(imref.refusjonOpphoersdato()));
+        if (imref.refusjonOpphørsdato() != null) {
+            refusjon.setRefusjonsopphoersdato(objectFactory.createRefusjonRefusjonsopphoersdato(imref.refusjonOpphørsdato()));
         }
 
-        if (imref.refusjonEndring() != null && !imref.refusjonEndring().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(imref.refusjonEndringList())) {
             var endringIRefusjonsListe = objectFactory.createEndringIRefusjonsListe();
             endringIRefusjonsListe.getEndringIRefusjon()
-                    .addAll(imref.refusjonEndring()
+                    .addAll(imref.refusjonEndringList()
                             .stream()
                             .map(endring -> createEndringIRefusjon(objectFactory, endring.fom(), endring.beloepPrMnd()))
                             .toList());

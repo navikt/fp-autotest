@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.generator.inntektsmelding.builders.xml;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import no.nav.foreldrepenger.autotest.util.CollectionUtils;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.inntektsmelding.xml.kodeliste._20210216.ÅrsakUtsettelseKodeliste;
 import no.seres.xsd.nav.inntektsmelding_m._20181211.Arbeidsforhold;
@@ -25,15 +26,15 @@ class ArbeidsforholdXmlMapper {
         inntekt.setBeloep(objectFactory.createInntektBeloep(imArb.beregnetInntekt()));
         arbeidsforhold.setBeregnetInntekt(objectFactory.createArbeidsforholdBeregnetInntekt(inntekt));
 
-        arbeidsforhold.setFoersteFravaersdag(objectFactory.createArbeidsforholdFoersteFravaersdag(imArb.foersteFravaarsdag()));
+        arbeidsforhold.setFoersteFravaersdag(objectFactory.createArbeidsforholdFoersteFravaersdag(imArb.førsteFraværsdag()));
         arbeidsforhold.setArbeidsforholdId(objectFactory.createArbeidsforholdArbeidsforholdId(imArb.arbeidsforholdId()));
 
-        if (imArb.utsettelse() != null && !imArb.utsettelse().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(imArb.utsettelserList())) {
             var utsettelseAvForeldrepengerListe = objectFactory.createUtsettelseAvForeldrepengerListe();
             utsettelseAvForeldrepengerListe.getUtsettelseAvForeldrepenger()
-                    .addAll(imArb.utsettelse()
+                    .addAll(imArb.utsettelserList()
                             .stream()
-                            .map(utsettelse -> createUtsettelseAvForeldrepenger(objectFactory, utsettelse.aarsak(), utsettelse.fom(),
+                            .map(utsettelse -> createUtsettelseAvForeldrepenger(objectFactory, utsettelse.årsak(), utsettelse.fom(),
                                     utsettelse.tom()))
                             .toList());
             arbeidsforhold.setUtsettelseAvForeldrepengerListe(

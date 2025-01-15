@@ -92,7 +92,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
-import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.common.innsyn.Dekningsgrad;
@@ -154,7 +153,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var avvikendeMånedsinntekt = månedsinntekt * 1.3;
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(BigDecimal.valueOf(avvikendeMånedsinntekt))
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
+                .medRefusjonBeløpPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -470,8 +469,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var arbeidsgiver = far.arbeidsgiver();
         var inntektsmeldingerFar = arbeidsgiver.lagInntektsmeldingerFP(fpStartdatoFar);
-        inntektsmeldingerFar.get(0).medRefusjonsBelopPerMnd(Prosent.valueOf(100));
-        inntektsmeldingerFar.get(1).medRefusjonsBelopPerMnd(Prosent.valueOf(100));
+        inntektsmeldingerFar.get(0).medRefusjonBeløpPerMnd(Prosent.valueOf(100));
+        inntektsmeldingerFar.get(1).medRefusjonBeløpPerMnd(Prosent.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingerFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -662,14 +661,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var arbeidsgiver1 = far.arbeidsgiver(TestOrganisasjoner.NAV.orgnummer().value());
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(fpStartdatoIfmFødselFar)
-                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
+                .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
         arbeidsgiver1.sendInntektsmeldinger(saksnummerFar, inntektsmelding1);
 
         var arbeidsgiver2 = far.arbeidsgiver(TestOrganisasjoner.NAV_BERGEN.orgnummer().value());
         var orgNummerFar2 = arbeidsgiver2.arbeidsgiverIdentifikator();
         var opphørsDatoForRefusjon = fpStartdatoEtterUke6Far.plusMonths(2).minusDays(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(fpStartdatoIfmFødselFar)
-                .medRefusjonsBelopPerMnd(Prosent.valueOf(100))
+                .medRefusjonBeløpPerMnd(Prosent.valueOf(100))
                 .medRefusjonsOpphordato(opphørsDatoForRefusjon);
         arbeidsgiver2.sendInntektsmeldinger(saksnummerFar, inntektsmelding2);
 
@@ -1203,7 +1202,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         // AG sender inn en IM med endring i refusjon som skal føre til revurdering på far sin sak.
         var inntektsmeldingEndringFar = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar)
-                .medRefusjonsBelopPerMnd(Prosent.valueOf(50));
+                .medRefusjonBeløpPerMnd(Prosent.valueOf(50));
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar);
 
         // Revurdering / Berørt sak til far
@@ -1231,7 +1230,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // AG sender inn ny korrigert IM med endring i refusjon mens behandlingen er hos beslutter. Behandlingen skal
         // rulles tilbake og behandles på nytt fra første AP i revurderingen.
         var inntektsmeldingEndringFar2 = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar)
-                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
+                .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar2);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1673,10 +1672,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     }
 
     @Test
-    @DisplayName("14: Mor, fødsel, sykdom uke 5 til 10, må søke om utsettelse fra uke 5-6")
-    @Description("Mor søker fødsel hvor hun oppgir annenpart. Mor er syk fra uke 5 til 10. Hun må søke utsettelse fra " +
+    @DisplayName("14: Mor, fødsel, sykdom uke 5 til 10, må søke om utsettelserList fra uke 5-6")
+    @Description("Mor søker fødsel hvor hun oppgir annenpart. Mor er syk fra uke 5 til 10. Hun må søke utsettelserList fra " +
             "uke 5 til 6 ettersom det er innenfor de første 6 ukene etter fødsel. Ukene etter trenger hun ikke søke om" +
-            "utsettelse og blir automatisk innvilget uten trekk.")
+            "utsettelserList og blir automatisk innvilget uten trekk.")
     void mor_fødsel_sykdom_innefor_første_6_ukene_utsettelse() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
@@ -1749,12 +1748,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Utsettelsesperiode dagsats")
                 .isZero();
         assertThat(tilkjentYtelsePerioder.getPerioder().get(3).getFom())
-                .as("Periode etter fri utsettelse fom")
+                .as("Periode etter fri utsettelserList fom")
                 .isEqualTo(uttaksperiodeEtterUtsettelseOgOpphold.tidsperiode().fom());
     }
 
     @Test
-    @DisplayName("15: Mor, adopsjon, sykdom uke 3 til 8, trenger ikke søke utsettelse for uke 3 til 6")
+    @DisplayName("15: Mor, adopsjon, sykdom uke 3 til 8, trenger ikke søke utsettelserList for uke 3 til 6")
     @Description("Mor søker adopsjon hvor hun oppgir annenpart. Mor er syk innenfor de første 6 ukene og etter. Sykdom" +
             "fra uke 3 til 8. Ikke noe krav til å søke om utsettlse og saken blir automatisk behandlet og innvilget.")
     void mor_adopsjon_sykdom_uke_3_til_8_automatisk_invilget() {
@@ -1813,7 +1812,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @Test
     @DisplayName("16: Mor engangstønad. Bare far har rett (BFHR). Utsettelse uten at mor er i aktivitet. Trekker alt utenom minstretten.")
     @Description("Mor har en ferdig behanldet engagnstønad liggende. Far søker derette foreldrepenger hvor han oppgir at bare han har rett. "
-            + "Far søker først 2 uker foreldrepenger ifm fødselen og deretter 40 uker utsettelse hvor mors aktivit ikke er dokumentert. "
+            + "Far søker først 2 uker foreldrepenger ifm fødselen og deretter 40 uker utsettelserList hvor mors aktivit ikke er dokumentert. "
             + "Utsettelsen avslås og trekker dager løpende, men skal ikke trekke noe av minsteretten. Etter utsettelsen så tar far ut en "
             + "periode med foreldrepenger med aktivitetskrav hvor mor er i aktivitet, etterfulgt av en periode hvor han bruker sine resterende "
             + "6 uker med foreldrepenger uten aktivitetskrav. Første uttaksperiode etter utsettelsen innvilges delvis med disse 6 "

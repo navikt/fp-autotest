@@ -11,7 +11,7 @@ public record Inntektsmelding(@NotNull YtelseType ytelseType,
                               @NotNull Arbeidsgiver arbeidsgiver,
                               @NotNull Arbeidsforhold arbeidsforhold,
                               Refusjon refusjon,
-                              List<OpphoerAvNaturalytelse> opphoerAvNaturalytelse,
+                              List<OpphørAvNaturalytelse> opphørAvNaturalytelseList,
                               AvsenderSysten avsender) {
 
     public enum YtelseType {
@@ -19,16 +19,22 @@ public record Inntektsmelding(@NotNull YtelseType ytelseType,
         SVANGERSKAPSPENGER
     }
 
-    public record Arbeidsgiver(@NotNull String arbeidsgiverIdentifikator, String kontaktnummer, String navn, boolean erPrivatArbeidsgiver) {
+    public record Arbeidsgiver(@NotNull String arbeidsgiverIdentifikator,
+                               String kontaktnummer,
+                               String navn,
+                               boolean erPrivatArbeidsgiver) {
     }
 
     public record Arbeidsforhold(@NotNull BigDecimal beregnetInntekt,
-                                 @NotNull LocalDate foersteFravaarsdag, // erstatter forendrepengerStartdato + foersteFravaarsdag)
-                                 List<Utsettelse> utsettelse,
+                                 @NotNull LocalDate førsteFraværsdag,
+                                 // erstatter forendrepengerStartdato + førsteFraværsdag)
+                                 List<Utsettelse> utsettelserList,
                                  String arbeidsforholdId) {
     }
 
-    public record Utsettelse(LocalDate fom, LocalDate tom, UtsettelseÅrsak aarsak) {
+    public record Utsettelse(LocalDate fom,
+                             LocalDate tom,
+                             UtsettelseÅrsak årsak) {
     }
 
     public enum UtsettelseÅrsak {
@@ -36,19 +42,21 @@ public record Inntektsmelding(@NotNull YtelseType ytelseType,
         ARBEID
     }
 
-    public record Refusjon(BigDecimal refusjonBeloepPrMnd,
-                           List<EndringRefusjon> refusjonEndring,
-                           LocalDate refusjonOpphoersdato) {
+    public record Refusjon(BigDecimal refusjonBeløpPrMnd,
+                           List<EndringRefusjon> refusjonEndringList,
+                           LocalDate refusjonOpphørsdato) {
 
     }
 
-    public record EndringRefusjon(LocalDate fom, BigDecimal beloepPrMnd) {
+
+    public record EndringRefusjon(LocalDate fom,
+                                  BigDecimal beloepPrMnd) {
     }
 
-    public record OpphoerAvNaturalytelse(@NotNull NaturalytelseType natyralYtelseType,
-                                         @NotNull BigDecimal beloepPrMnd,
-                                         @NotNull LocalDate fom,
-                                         LocalDate tom) {
+    public record OpphørAvNaturalytelse(@NotNull NaturalytelseType natyralYtelseType,
+                                        @NotNull BigDecimal beloepPrMnd,
+                                        @NotNull LocalDate fom,
+                                        LocalDate tom) {
     }
 
     public enum NaturalytelseType {

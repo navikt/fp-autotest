@@ -44,7 +44,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
@@ -55,7 +54,6 @@ import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.Opptje
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
 
 @Tag("fpsak")
 class BeregningVerdikjede extends FpsakTestBase {
@@ -87,10 +85,10 @@ class BeregningVerdikjede extends FpsakTestBase {
         var tredjeYtelse = lagBortfaltNaturalytelse(754, fpStartdato.plusDays(60));
 
         inntektsmelding
-                .medOpphoerAvNaturalytelseListe(førsteYtelse.beløpPrMnd, førsteYtelse.fom, Inntektsmelding.NaturalytelseType.ELEKTRISK_KOMMUNIKASJON)
-                .medOpphoerAvNaturalytelseListe(andreYtelse.beløpPrMnd, andreYtelse.fom,
+                .medOpphørAvNaturalytelseListe(førsteYtelse.beløpPrMnd, førsteYtelse.fom, Inntektsmelding.NaturalytelseType.ELEKTRISK_KOMMUNIKASJON)
+                .medOpphørAvNaturalytelseListe(andreYtelse.beløpPrMnd, andreYtelse.fom,
                         Inntektsmelding.NaturalytelseType.FRI_TRANSPORT)
-                .medOpphoerAvNaturalytelseListe(tredjeYtelse.beløpPrMnd, tredjeYtelse.fom,
+                .medOpphørAvNaturalytelseListe(tredjeYtelse.beløpPrMnd, tredjeYtelse.fom,
                         Inntektsmelding.NaturalytelseType.KOST_DAGER);
 
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
@@ -146,7 +144,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmeldingForTilkommendeArbeidsforhold = arbeidsgiver.lagInntektsmeldingTilkommendeArbeidsforholdEtterFPstartdato(fpStartdato)
                 .medBeregnetInntekt(inntektPerMåned)
-                .medRefusjonsBelopPerMnd(inntektPerMåned);
+                .medRefusjonBeløpPerMnd(inntektPerMåned);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmeldingForTilkommendeArbeidsforhold);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -194,7 +192,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
         var månedsinntekt = mor.månedsinntekt(arbeidsgiverIdentifikator);
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medRefusjonsBelopPerMnd(månedsinntekt);
+                .medRefusjonBeløpPerMnd(månedsinntekt);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -310,7 +308,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
+                .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -404,10 +402,10 @@ class BeregningVerdikjede extends FpsakTestBase {
         var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(Prosent.valueOf(50))
-                .medRefusjonsBelopPerMnd(29_000);
+                .medRefusjonBeløpPerMnd(29_000);
         var inntektsmeldingTilkommendeArbeidsforhold = arbeidsgiver.lagInntektsmeldingTilkommendeArbeidsforholdEtterFPstartdato(fpStartdato)
                 .medBeregnetInntekt(Prosent.valueOf(50))
-                .medRefusjonsBelopPerMnd(Prosent.valueOf(100));
+                .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding, inntektsmeldingTilkommendeArbeidsforhold);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -566,12 +564,12 @@ class BeregningVerdikjede extends FpsakTestBase {
         var arbeidsgivere = mor.arbeidsgivere();
         var arbeidsgiver1 = arbeidsgivere.toList().get(0);
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(fpStartdato)
-                .medRefusjonsBelopPerMnd(100);
+                .medRefusjonBeløpPerMnd(100);
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmelding1);
 
         var arbeidsgiver2 = arbeidsgivere.toList().get(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(fpStartdato)
-                .medRefusjonsBelopPerMnd(100);
+                .medRefusjonBeløpPerMnd(100);
         arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmelding2);
 
         saksbehandler.hentFagsak(saksnummer);

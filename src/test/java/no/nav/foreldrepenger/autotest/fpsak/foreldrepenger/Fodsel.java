@@ -65,7 +65,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -117,7 +116,7 @@ class Fodsel extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(Prosent.valueOf(50))
-                .medRefusjonsBelopPerMnd(refusjon);
+                .medRefusjonBeløpPerMnd(refusjon);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -201,10 +200,10 @@ class Fodsel extends FpsakTestBase {
         List<InntektsmeldingBuilder> inntektsmeldinger = arbeidsgiver.lagInntektsmeldingerFP(fpStartdato);
         inntektsmeldinger.get(0)
                 .medBeregnetInntekt(BigDecimal.valueOf(inntektPrMåned))
-                .medRefusjonsBelopPerMnd(refusjon);
+                .medRefusjonBeløpPerMnd(refusjon);
         inntektsmeldinger.get(1)
                 .medBeregnetInntekt(BigDecimal.valueOf(inntektPrMåned))
-                .medRefusjonsBelopPerMnd(refusjon);
+                .medRefusjonBeløpPerMnd(refusjon);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmeldinger);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -255,7 +254,7 @@ class Fodsel extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(15_000)
-                .medRefusjonsBelopPerMnd(refusjon);
+                .medRefusjonBeløpPerMnd(refusjon);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -718,7 +717,7 @@ class Fodsel extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(startDatoForeldrepenger)
                 .medBeregnetInntekt(inntektPerMaaned)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(refusjon))
+                .medRefusjonBeløpPerMnd(BigDecimal.valueOf(refusjon))
                 .medEndringIRefusjonslist(endringRefusjonMap);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 

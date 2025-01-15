@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import jakarta.validation.constraints.NotNull;
+import no.nav.foreldrepenger.autotest.util.CollectionUtils;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.inntektsmelding.xml.kodeliste._20210216.NaturalytelseKodeliste;
 import no.nav.inntektsmelding.xml.kodeliste._20210216.YtelseKodeliste;
@@ -51,11 +52,11 @@ class SkjemainnholdXmlMapper {
         }
 
         skjemainnhold.setStartdatoForeldrepengeperiode(
-                objectFactory.createSkjemainnholdStartdatoForeldrepengeperiode(im.arbeidsforhold().foersteFravaarsdag()));
+                objectFactory.createSkjemainnholdStartdatoForeldrepengeperiode(im.arbeidsforhold().førsteFraværsdag()));
 
-        if (im.opphoerAvNaturalytelse() != null && !im.opphoerAvNaturalytelse().isEmpty()) {
+        if (CollectionUtils.isNotEmpty(im.opphørAvNaturalytelseList())) {
             skjemainnhold.setOpphoerAvNaturalytelseListe(objectFactory.createSkjemainnholdOpphoerAvNaturalytelseListe(
-                    mapOpphoerAvNaturalytelse(objectFactory, im.opphoerAvNaturalytelse())));
+                    mapOpphoerAvNaturalytelse(objectFactory, im.opphørAvNaturalytelseList())));
         }
 
         var arbeidsforhold = ArbeidsforholdXmlMapper.map(im.arbeidsforhold(), objectFactory);
@@ -109,7 +110,6 @@ class SkjemainnholdXmlMapper {
         naturalytelseDetaljer.setBeloepPrMnd(of.createNaturalytelseDetaljerBeloepPrMnd(belopPrMnd));
         naturalytelseDetaljer.setFom(of.createNaturalytelseDetaljerFom(fom));
         naturalytelseDetaljer.setNaturalytelseType(of.createNaturalytelseDetaljerNaturalytelseType(kodelisteNaturalytelse.value()));
-
         return naturalytelseDetaljer;
 
     }
@@ -122,9 +122,9 @@ class SkjemainnholdXmlMapper {
     }
 
     private static OpphoerAvNaturalytelseListe mapOpphoerAvNaturalytelse(ObjectFactory of,
-                                                                         List<Inntektsmelding.OpphoerAvNaturalytelse> opphoerAvNaturalytelse) {
+                                                                         List<Inntektsmelding.OpphørAvNaturalytelse> opphørAvNaturalytelse) {
         var opphoerAvNaturalytelseListe = new OpphoerAvNaturalytelseListe();
-        opphoerAvNaturalytelse.forEach(opphoer -> opphoerAvNaturalytelseListe.getOpphoerAvNaturalytelse()
+        opphørAvNaturalytelse.forEach(opphoer -> opphoerAvNaturalytelseListe.getOpphoerAvNaturalytelse()
                 .add(createNaturalytelseDetaljer(of, opphoer.beloepPrMnd(), opphoer.fom(),
                         mapTilKodelisete(opphoer.natyralYtelseType()))));
         return opphoerAvNaturalytelseListe;
