@@ -43,24 +43,24 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
-    public Saksnummer sendInnInntektsmelding(Inntektsmelding inntektsmeldingBuilder,
+    public Saksnummer sendInnInntektsmelding(Inntektsmelding inntektsmelding,
                                              AktørId aktørId,
                                              Fødselsnummer fnr,
                                              Saksnummer saksnummer) {
         // aktørId ignoreres ettersom det trengs bare i xmlen
-        return sendInnInntektsmelding(List.of(inntektsmeldingBuilder), fnr, saksnummer);
+        return sendInnInntektsmeldinger(List.of(inntektsmelding), fnr, saksnummer);
     }
 
     @Override
-    public Saksnummer sendInnInntektsmelding(List<Inntektsmelding> inntektsmeldingBuilder,
+    public Saksnummer sendInnInntektsmelding(List<Inntektsmelding> inntektsmeldinger,
                                              AktørId aktørId,
                                              Fødselsnummer fnr,
                                              Saksnummer saksnummer) {
-        return sendInnInntektsmelding(inntektsmeldingBuilder, fnr, saksnummer);
+        return sendInnInntektsmeldinger(inntektsmeldinger, fnr, saksnummer);
     }
 
     @Step("Sender inn IM for bruker {fnr}")
-    private Saksnummer sendInnInntektsmelding(List<Inntektsmelding> inntektsmeldinger, Fødselsnummer fnr, Saksnummer saksnummer) {
+    private Saksnummer sendInnInntektsmeldinger(List<Inntektsmelding> inntektsmeldinger, Fødselsnummer fnr, Saksnummer saksnummer) {
         var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
         journalførInnteksmeldinger(inntektsmeldinger, fnr);
         return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallGamleInntekstmeldinger);
