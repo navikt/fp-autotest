@@ -4,11 +4,14 @@ import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 
 public abstract class Arbeidsgiver {
@@ -106,19 +109,23 @@ public abstract class Arbeidsgiver {
     }
 
     public Saksnummer sendInntektsmeldingerSVP(Saksnummer saksnummer) {
-        return innsender.sendInnInntektsmelding(lagInntektsmeldingerSVP(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(lagInntektsmeldingerSVP().stream()), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
     public Saksnummer sendInntektsmeldingerFP(Saksnummer saksnummer, LocalDate startdatoForeldrepenger) {
-        return innsender.sendInnInntektsmelding(lagInntektsmeldingerFP(startdatoForeldrepenger), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(lagInntektsmeldingerFP(startdatoForeldrepenger).stream()), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
     public Saksnummer sendInntektsmeldinger(Saksnummer saksnummer, InntektsmeldingBuilder... inntektsmelding) {
-        return innsender.sendInnInntektsmelding(List.of(inntektsmelding), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(Arrays.stream(inntektsmelding)), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
     public Saksnummer sendInntektsmeldinger(Saksnummer saksnummer, List<InntektsmeldingBuilder> inntektsmeldinger) {
-        return innsender.sendInnInntektsmelding(inntektsmeldinger, arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+        return innsender.sendInnInntektsmelding(buildInntektsmeldinger(inntektsmeldinger.stream()), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
+    }
+
+    private List<Inntektsmelding> buildInntektsmeldinger(Stream<InntektsmeldingBuilder> inntektsmeldingStream) {
+        return inntektsmeldingStream.map(InntektsmeldingBuilder::build).toList();
     }
 
     protected void guardFlereEllerIngenArbeidsforhold() {

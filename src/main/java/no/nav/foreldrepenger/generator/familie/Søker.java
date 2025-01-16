@@ -276,7 +276,7 @@ public abstract class Søker {
     // TODO: Gjøres på en annen måte?
     public void sendIMBasertPåInntekskomponenten(InntektsmeldingBuilder inntektsmelding) {
         genererUniktNavConsumerIdForDokument();
-        innsender.sendInnInntektsmelding(inntektsmelding, aktørId, fødselsnummer, this.saksnummer);
+        innsender.sendInnInntektsmelding(inntektsmelding.build(), aktørId, fødselsnummer, this.saksnummer);
     }
 
     private void guardFlereArbeidsgivere() {

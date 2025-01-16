@@ -554,7 +554,7 @@ class MorOgFarSammen extends FpsakTestBase {
     @Test
     @DisplayName("Koblet sak. Far utsetter fra start med senere uttaksdato")
     @Description("Sender inn søknad mor. Sender inn søknad far uten overlapp. Sender inn endringssøknad far med " +
-            "fri utsettelse og uttaksperioder med start senere. Sender inn IM")
+            "fri utsettelserList og uttaksperioder med start senere. Sender inn IM")
     void kobletSakFarUtsetterStartdato() {
         var fødselsdato = LocalDate.now().minusMonths(4);
         var farOpprinneligStartdato = fødselsdato.plusWeeks(10).plusDays(1);

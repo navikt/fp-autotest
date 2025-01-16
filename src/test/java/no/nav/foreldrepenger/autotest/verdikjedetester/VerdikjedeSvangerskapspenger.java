@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.TilretteleggingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
-import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
@@ -35,6 +36,8 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("verdikjede")
 class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
+
+    protected static final Prosent HUNDRE_PROSENT_AV_BEREGNET_INNTEKT = Prosent.valueOf(100);
 
     @Test
     @DisplayName("1: Mor søker fullt uttak med inntekt under 6G")
@@ -248,7 +251,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP()
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+                .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
         arbeidsgiver.sendInntektsmeldinger(saksnummer1, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer1);
@@ -373,11 +376,11 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsgivere = mor.arbeidsgivere().toList();
         var arbeidsgiver1 = arbeidsgivere.get(0);
         var inntektsmedling1 = arbeidsgiver1.lagInntektsmeldingSVP()
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+                .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmedling1);
         var arbeidsgiver2 = arbeidsgivere.get(1);
         var inntektsmedling2 = arbeidsgiver2.lagInntektsmeldingSVP()
-                .medRefusjonsBelopPerMnd(ProsentAndel.valueOf(100));
+                .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
         arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmedling2);
 
         saksbehandler.hentFagsak(saksnummer);

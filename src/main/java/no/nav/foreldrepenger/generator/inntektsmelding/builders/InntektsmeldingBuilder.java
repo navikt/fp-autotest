@@ -1,244 +1,166 @@
 package no.nav.foreldrepenger.generator.inntektsmelding.builders;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import no.nav.foreldrepenger.autotest.util.CollectionUtils;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-
-import no.nav.foreldrepenger.common.domain.felles.ProsentAndel;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.NaturalytelseKodeliste;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.YtelseKodeliste;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.ÅrsakBeregnetInntektEndringKodeliste;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.ÅrsakInnsendingKodeliste;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.ÅrsakUtsettelseKodeliste;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.Arbeidsforhold;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.Arbeidsgiver;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.ArbeidsgiverPrivat;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.Avsendersystem;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.EndringIRefusjon;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.GjenopptakelseNaturalytelseListe;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.GraderingIForeldrepenger;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.InntektsmeldingM;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.ObjectFactory;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.Omsorgspenger;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.OpphoerAvNaturalytelseListe;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.Periode;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.PleiepengerPeriodeListe;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.SykepengerIArbeidsgiverperioden;
-import no.seres.xsd.nav.inntektsmelding_m._20181211.UtsettelseAvForeldrepenger;
+import java.util.Objects;
 
 public class InntektsmeldingBuilder {
-    private InntektsmeldingM inntektsmeldingKladd;
-    private ArbeidsforholdBuilder arbeidsforholdBuilderKladd;
-    private SkjemainnholdBuilder skjemainnholdBuilderKladd;
-    private no.nav.foreldrepenger.generator.inntektsmelding.builders.RefusjonBuilder refusjonBuilderKladd;
 
+    private String arbeidstakerFnr;
+    private Inntektsmelding.YtelseType ytelseType;
+    private Inntektsmelding.Arbeidsgiver arbeidsgiver;
+    // Arbeidsforhold
+    private BigDecimal beregnetInntekt;
+    private LocalDate førsteFraværsdag; // erstatter forendrepengerStartdato + førsteFraværsdag)
+    private List<Inntektsmelding.Utsettelse> utsettelserList;
+    private String arbeidsforholdId; // skal fases ut på sikt med ny løsning
+    // Refusjon
+    private BigDecimal refusjonBeløpPrMnd;
+    private List<Inntektsmelding.EndringRefusjon> refusjonEndringList;
+    private LocalDate refusjonOpphørdato;
+    private List<Inntektsmelding.OpphørAvNaturalytelse> opphørAvNaturalytelseList;
+    // AvsenderSystem
+    private String avsendersystem;
+    private String systemVersjon;
 
+    private InntektsmeldingBuilder() {
+        opphørAvNaturalytelseList = new ArrayList<>();
+        refusjonEndringList = new ArrayList<>();
+        utsettelserList = new ArrayList<>();
+    }
 
-    public InntektsmeldingBuilder() {
-        inntektsmeldingKladd = new InntektsmeldingM();
-        arbeidsforholdBuilderKladd = new ArbeidsforholdBuilder();
-        skjemainnholdBuilderKladd = new SkjemainnholdBuilder();
+    public static InntektsmeldingBuilder builder() {
+        return new InntektsmeldingBuilder();
     }
-    public InntektsmeldingBuilder medPleiepengerPeriodeListe(PleiepengerPeriodeListe pleiepengerPeriodeListe) {
-        this.skjemainnholdBuilderKladd.medPleiepengerPeriodeListe(pleiepengerPeriodeListe);
+
+    public InntektsmeldingBuilder medArbeidsgiver(String virksomhetsnummer, String kontaktinformasjonTelefon) {
+        this.arbeidsgiver = new Inntektsmelding.Arbeidsgiver(virksomhetsnummer, kontaktinformasjonTelefon, "Corpolarsen", false);
         return this;
     }
-    public InntektsmeldingBuilder medOmsorgspenger(Omsorgspenger omsorgspenger) {
-        this.skjemainnholdBuilderKladd.medOmsorgspenger(omsorgspenger);
+
+    public InntektsmeldingBuilder medArbeidsgiverPrivat(String arbeidsgiverFnr, String kontaktinformasjonTelefon) {
+        this.arbeidsgiver = new Inntektsmelding.Arbeidsgiver(arbeidsgiverFnr, kontaktinformasjonTelefon, "Privatelarsen", true);
         return this;
     }
-    public InntektsmeldingBuilder medArbeidsgiver(String virksomhetsnummer, String kontaktinformasjonTLF){
-        this.skjemainnholdBuilderKladd.medArbeidsgiver(virksomhetsnummer, kontaktinformasjonTLF);
+
+    public InntektsmeldingBuilder medOpphørAvNaturalytelseListe(BigDecimal belopPrMnd,
+                                                                LocalDate fom,
+                                                                Inntektsmelding.NaturalytelseType naturalytelseType) {
+        this.opphørAvNaturalytelseList.add(new Inntektsmelding.OpphørAvNaturalytelse(naturalytelseType, belopPrMnd, fom, null));
         return this;
     }
-    public InntektsmeldingBuilder medArbeidsgiver(Arbeidsgiver arbeidsgiver){
-        this.skjemainnholdBuilderKladd.medArbeidsgiver(arbeidsgiver);
+
+    // Om tom er satt så vil bortfallt naturalytelse tilkomme fra dagen etter tom.
+    public InntektsmeldingBuilder medOpphørAvNaturalytelseListe(BigDecimal beløpPrMnd,
+                                                                LocalDate fom,
+                                                                LocalDate tom,
+                                                                Inntektsmelding.NaturalytelseType naturalytelseType) {
+        this.opphørAvNaturalytelseList.add(new Inntektsmelding.OpphørAvNaturalytelse(naturalytelseType, beløpPrMnd, fom, tom));
         return this;
     }
-    public InntektsmeldingBuilder medArbeidsgiverPrivat(String arbeidsgiverFnr, String kontaktinformasjonTLF) {
-        skjemainnholdBuilderKladd.medArbeidsgiverPrivat(arbeidsgiverFnr, kontaktinformasjonTLF);
+
+    public InntektsmeldingBuilder medArbeidstakerFnr(String arbeidstakerFnr) {
+        this.arbeidstakerFnr = arbeidstakerFnr;
         return this;
     }
-    public InntektsmeldingBuilder medArbeidsgiverPrivat(ArbeidsgiverPrivat arbeidsgiverPrivat) {
-        this.skjemainnholdBuilderKladd.medArbeidsgiverPrivat(arbeidsgiverPrivat);
+
+    public InntektsmeldingBuilder medYtelse(Inntektsmelding.YtelseType ytelseType) {
+        this.ytelseType = ytelseType;
         return this;
     }
-    public InntektsmeldingBuilder medOpphoerAvNaturalytelseListe(BigDecimal belopPrMnd, LocalDate fom, NaturalytelseKodeliste kodelisteNaturalytelse) {
-        this.skjemainnholdBuilderKladd.medOpphoerAvNaturalytelseListe(belopPrMnd, fom, kodelisteNaturalytelse);
-        return this;
-    }
-    public InntektsmeldingBuilder medOpphoerAvNaturalytelseListe(OpphoerAvNaturalytelseListe opphoerAvNaturalytelseListe) {
-        this.skjemainnholdBuilderKladd.medOpphoerAvNaturalytelseListe(opphoerAvNaturalytelseListe);
-        return this;
-    }
-    public InntektsmeldingBuilder medGjenopptakelseNaturalytelseListe(GjenopptakelseNaturalytelseListe gjenopptakelseNaturalytelseListe) {
-        this.skjemainnholdBuilderKladd.medGjenopptakelseNaturalytelseListe(gjenopptakelseNaturalytelseListe);
-        return this;
-    }
-    public InntektsmeldingBuilder medArbeidstakerFNR(String arbeidstakerFNR) {
-        this.skjemainnholdBuilderKladd.medArbeidstakerFNR(arbeidstakerFNR);
-        return this;
-    }
-    public InntektsmeldingBuilder medSykepengerIArbeidsgiverperioden(SykepengerIArbeidsgiverperioden sykepengerIArbeidsgiverperioden) {
-        this.skjemainnholdBuilderKladd.medSykepengerIArbeidsgiverperioden(sykepengerIArbeidsgiverperioden);
-        return this;
-    }
-    public InntektsmeldingBuilder medNaerRelasjon(Boolean naerRelasjon) {
-        this.skjemainnholdBuilderKladd.medNaerRelasjon(naerRelasjon);
-        return this;
-    }
-    public InntektsmeldingBuilder medAarsakTilInnsending(ÅrsakInnsendingKodeliste aarsakTilInnsending) {
-        this.skjemainnholdBuilderKladd.medAarsakTilInnsending(aarsakTilInnsending);
-        return this;
-    }
-    public InntektsmeldingBuilder medStartdatoForeldrepengerperiodenFOM(LocalDate startidspunktForeldrepenger) {
-        this.skjemainnholdBuilderKladd.medStartdatoForeldrepengerperiodenFOM(startidspunktForeldrepenger);
-        return this;
-    }
-    public InntektsmeldingBuilder medYtelse(YtelseKodeliste ytelse) {
-        this.skjemainnholdBuilderKladd.medYtelse(ytelse);
-        return this;
-    }
-    public InntektsmeldingBuilder medAvsendersystem(Avsendersystem avsendersystem) {
-        this.skjemainnholdBuilderKladd.medAvsendersystem(avsendersystem);
-        return this;
-    }
+
     public InntektsmeldingBuilder medAvsendersystem(String avsenderSystem, String systemVersjon) {
-        this.skjemainnholdBuilderKladd.medAvsendersystem(avsenderSystem, systemVersjon);
+        this.avsendersystem = avsenderSystem;
+        this.systemVersjon = systemVersjon;
         return this;
     }
-    public InntektsmeldingBuilder medArbeidsforhold(Arbeidsforhold arbeidsforhold) {
-        this.skjemainnholdBuilderKladd.medArbeidsforhold(arbeidsforhold);
-        return this;
-    }
+
     public InntektsmeldingBuilder medFørsteFraværsdag(LocalDate førsteFraværsdag) {
-        this.arbeidsforholdBuilderKladd.medFørsteFraværsdag(førsteFraværsdag);
+        this.førsteFraværsdag = førsteFraværsdag;
         return this;
     }
 
-    public InntektsmeldingBuilder medRefusjonsBelopPerMnd(int refusjonsBelopPerMnd) {
-        return medRefusjonsBelopPerMnd(BigDecimal.valueOf(refusjonsBelopPerMnd));
+    public InntektsmeldingBuilder medRefusjonBeløpPerMnd(int refusjonBeløpPerMnd) {
+        return medRefusjonBeløpPerMnd(BigDecimal.valueOf(refusjonBeløpPerMnd));
     }
 
-    public InntektsmeldingBuilder medRefusjonsBelopPerMnd(BigDecimal refusjonsBelopPerMnd) {
-        if(refusjonBuilderKladd == null) {
-            refusjonBuilderKladd = new no.nav.foreldrepenger.generator.inntektsmelding.builders.RefusjonBuilder();
-        }
-        this.refusjonBuilderKladd.medRefusjonsBelopPerMnd(refusjonsBelopPerMnd);
+    public InntektsmeldingBuilder medRefusjonBeløpPerMnd(Prosent prosentAvBeregnetInntekt) {
+        return medRefusjonBeløpPerMnd(this.beregnetInntekt.multiply(BigDecimal.valueOf(prosentAvBeregnetInntekt.prosent() / 100.0)));
+    }
+
+    public InntektsmeldingBuilder medRefusjonBeløpPerMnd(BigDecimal refusjonsBelopPerMnd) {
+        this.refusjonBeløpPrMnd = refusjonsBelopPerMnd;
         return this;
     }
 
-    public InntektsmeldingBuilder medRefusjonsBelopPerMnd(ProsentAndel prosentAvBeregnetInntekt) {
-        if(refusjonBuilderKladd == null) {
-            refusjonBuilderKladd = new no.nav.foreldrepenger.generator.inntektsmelding.builders.RefusjonBuilder();
-        }
-        var multiplikand = prosentAvBeregnetInntekt.prosent() / 100.0;
-        var refusjonsBelopPerMnd = arbeidsforholdBuilderKladd.beregnetInntektBelop.multiply(BigDecimal.valueOf(multiplikand));
-        this.refusjonBuilderKladd.medRefusjonsBelopPerMnd(refusjonsBelopPerMnd);
-        return this;
-    }
-
-    public InntektsmeldingBuilder medEndringIRefusjonslist(List<EndringIRefusjon> endringIRefusjonList) {
-        if(refusjonBuilderKladd == null) {
-            refusjonBuilderKladd = new no.nav.foreldrepenger.generator.inntektsmelding.builders.RefusjonBuilder();
-        }
-        this.refusjonBuilderKladd.medEndringIRefusjonslist(endringIRefusjonList);
-        return this;
-    }
     public InntektsmeldingBuilder medEndringIRefusjonslist(Map<LocalDate, BigDecimal> endringRefusjonMap) {
-        if(refusjonBuilderKladd == null) {
-            refusjonBuilderKladd = new no.nav.foreldrepenger.generator.inntektsmelding.builders.RefusjonBuilder();
-        }
-        this.refusjonBuilderKladd.medEndringIRefusjonslist(endringRefusjonMap);
-        return this;
-    }
-    public InntektsmeldingBuilder medRefusjonsOpphordato(LocalDate refusjonsOpphordato) {
-        if(refusjonBuilderKladd == null) {
-            refusjonBuilderKladd = new RefusjonBuilder();
-        }
-        this.refusjonBuilderKladd.medRefusjonsOpphordato(refusjonsOpphordato);
+        this.refusjonEndringList.addAll(endringRefusjonMap.entrySet()
+                .stream()
+                .map(entry -> new Inntektsmelding.EndringRefusjon(entry.getKey(), entry.getValue()))
+                .toList());
         return this;
     }
 
-    public InntektsmeldingBuilder medBeregnetInntekt(int beregnetInntektBelop) {
-        return medBeregnetInntekt(BigDecimal.valueOf(beregnetInntektBelop));
-    }
-
-    public InntektsmeldingBuilder medBeregnetInntekt(BigDecimal beregnetInntektBelop) {
-        this.arbeidsforholdBuilderKladd.medBeregnetInntekt(beregnetInntektBelop);
+    public InntektsmeldingBuilder medRefusjonsOpphordato(LocalDate refusjonOpphørdato) {
+        this.refusjonOpphørdato = refusjonOpphørdato;
         return this;
     }
 
-    public InntektsmeldingBuilder medBeregnetInntekt(ProsentAndel prosentIForholdTilRegistrertInntekt) {
-        var multiplikand = prosentIForholdTilRegistrertInntekt.prosent() / 100.0;
-        var beregnetInntektBelop = arbeidsforholdBuilderKladd.beregnetInntektBelop.multiply(BigDecimal.valueOf(multiplikand));
-        this.arbeidsforholdBuilderKladd.medBeregnetInntekt(beregnetInntektBelop);
+    public InntektsmeldingBuilder medBeregnetInntekt(int beregnetInntektBeløp) {
+        return medBeregnetInntekt(BigDecimal.valueOf(beregnetInntektBeløp));
+    }
+
+    public InntektsmeldingBuilder medBeregnetInntekt(BigDecimal beregnetInntektBeløp) {
+        this.beregnetInntekt = beregnetInntektBeløp;
         return this;
     }
 
-    public InntektsmeldingBuilder medÅrsakVedEndring(ÅrsakBeregnetInntektEndringKodeliste aarsakVedEndring){
-        this.arbeidsforholdBuilderKladd.medÅrsakVedEndring(aarsakVedEndring);
+    public InntektsmeldingBuilder medBeregnetInntekt(Prosent prosentIForholdTilRegistrertInntekt) {
+        this.beregnetInntekt = this.beregnetInntekt.multiply(
+                BigDecimal.valueOf(prosentIForholdTilRegistrertInntekt.prosent() / 100.0));
         return this;
     }
-    public InntektsmeldingBuilder medUtsettelse(String årsak, LocalDate periodeFom, LocalDate periodeTom){
-        this.arbeidsforholdBuilderKladd.medUtsettelse(årsak, periodeFom, periodeTom);
+
+    public InntektsmeldingBuilder medUtsettelse(Inntektsmelding.UtsettelseÅrsak utsettelseÅrsak,
+                                                LocalDate periodeFom,
+                                                LocalDate periodeTom) {
+        this.utsettelserList.add(new Inntektsmelding.Utsettelse(periodeFom, periodeTom, utsettelseÅrsak));
         return this;
     }
-    public InntektsmeldingBuilder medUtsettelse(ÅrsakUtsettelseKodeliste aarsakTilUtsettelse, LocalDate periodeFom, LocalDate periodeTom){
-        arbeidsforholdBuilderKladd.medUtsettelse(aarsakTilUtsettelse, periodeFom, periodeTom);
-        return this;
-    }
-    public InntektsmeldingBuilder medUtsettelse(List<UtsettelseAvForeldrepenger> utsettelseAvForeldrepengerList){
-        this.arbeidsforholdBuilderKladd.medUtsettelse(utsettelseAvForeldrepengerList);
-        return this;
-    }
-    public InntektsmeldingBuilder medGradering(BigDecimal arbeidsprosent, LocalDate fom, LocalDate tom) {
-        arbeidsforholdBuilderKladd.medGradering(arbeidsprosent, fom, tom);
-        return this;
-    }
-    public InntektsmeldingBuilder medGradering(List<GraderingIForeldrepenger> graderingIForeldrepengerList){
-        this.arbeidsforholdBuilderKladd.medGradering(graderingIForeldrepengerList);
-        return this;
-    }
-    public InntektsmeldingBuilder medAvtaltFerie(List<Periode> avtaltFerieListeList){
-        this.arbeidsforholdBuilderKladd.medAvtaltFerie(avtaltFerieListeList);
-        return this;
-    }
+
     public InntektsmeldingBuilder medArbeidsforholdId(String arbeidsforholdId) {
-        this.arbeidsforholdBuilderKladd.medArbeidsforholdId(arbeidsforholdId);
+        this.arbeidsforholdId = arbeidsforholdId;
         return this;
     }
 
-    public String createInntektesmeldingXML() {
-        return createInntektsmeldingXML(this.build());
-    }
-    private String createInntektsmeldingXML(InntektsmeldingM inntektsmelding) {
-        try (var sw = new StringWriter()){
-            var objectFactory = new ObjectFactory();
-            var jaxbContext = JAXBContext.newInstance(InntektsmeldingM.class);
-            var jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); // Prettyprinter output
-            jaxbMarshaller.marshal(objectFactory.createMelding(inntektsmelding), sw);
-            return sw.toString();
-        } catch (JAXBException | IOException e) {
-            throw new IllegalArgumentException("Noe gikk galt ved oversetting av inntektsmelding til XML", e);
+    public Inntektsmelding build() {
+        Objects.requireNonNull(this.ytelseType, "YtelseType kan ikke være null.");
+        Objects.requireNonNull(this.arbeidstakerFnr, "ArbeidstakerFnr kan ikke være null.");
+        Objects.requireNonNull(this.arbeidsgiver, "Arbeidsgiver kan ikke være null.");
+        Objects.requireNonNull(this.beregnetInntekt, "Beregnet inntekt kan ikke være null.");
+        if (Inntektsmelding.YtelseType.FORELDREPENGER.equals(this.ytelseType)) {
+            // Foreløppig trenger ikke å være satt for gamle Altinn SVP IM.
+            Objects.requireNonNull(this.førsteFraværsdag, "FørsteFraværsdag kan ikke være null.");
         }
-    }
 
+        var arbeidsforhold = new Inntektsmelding.Arbeidsforhold(this.beregnetInntekt, this.førsteFraværsdag, this.utsettelserList, this.arbeidsforholdId);
 
-    public InntektsmeldingM build() {
-        this.skjemainnholdBuilderKladd.medArbeidsforhold(arbeidsforholdBuilderKladd.build());
-        if (refusjonBuilderKladd != null) {
-            this.skjemainnholdBuilderKladd.medRefusjon(refusjonBuilderKladd.build());
+        var avsenderSystem = new Inntektsmelding.AvsenderSysten(this.avsendersystem, this.systemVersjon);
+
+        Inntektsmelding.Refusjon refusjon = null;
+        if (this.refusjonBeløpPrMnd != null
+                || CollectionUtils.isNotEmpty(this.refusjonEndringList)
+                || this.refusjonOpphørdato != null) {
+            Objects.requireNonNull(refusjonBeløpPrMnd, "Refusjon beloep pr mnd kan ikke være null.");
+            refusjon = new Inntektsmelding.Refusjon(this.refusjonBeløpPrMnd, this.refusjonEndringList, this.refusjonOpphørdato);
         }
-        this.inntektsmeldingKladd.setSkjemainnhold(skjemainnholdBuilderKladd.build());
-        return inntektsmeldingKladd;
+
+        return new Inntektsmelding(this.ytelseType, this.arbeidstakerFnr, this.arbeidsgiver, arbeidsforhold, refusjon,
+                this.opphørAvNaturalytelseList, avsenderSystem);
     }
 }

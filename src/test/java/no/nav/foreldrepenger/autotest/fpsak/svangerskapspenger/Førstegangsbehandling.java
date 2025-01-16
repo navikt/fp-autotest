@@ -152,13 +152,13 @@ class Førstegangsbehandling extends FpsakTestBase {
         var arbeidsgiver2 = arbeidsgivere.toList().get(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(62_500)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(27_778));
+                .medRefusjonBeløpPerMnd(BigDecimal.valueOf(27_778));
         arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmelding2);
 
         var arbeidsgiver3 = arbeidsgivere.toList().get(2);
         var inntektsmelding3 = arbeidsgiver3.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(50_000)
-                .medRefusjonsBelopPerMnd(BigDecimal.valueOf(46_667));
+                .medRefusjonBeløpPerMnd(BigDecimal.valueOf(46_667));
         arbeidsgiver3.sendInntektsmeldinger(saksnummer, inntektsmelding3);
 
         saksbehandler.hentFagsak(saksnummer);

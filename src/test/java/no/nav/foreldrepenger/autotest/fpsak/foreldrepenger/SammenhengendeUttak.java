@@ -18,6 +18,8 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -55,7 +57,7 @@ class SammenhengendeUttak extends FpsakTestBase {
     @Test
     @DisplayName("Utsettelse av forskjellige årsaker")
     @Description("Mor søker fødsel med mange utsettelseperioder. Hensikten er å sjekke at alle årsaker fungerer." +
-            "Kun arbeid (og ferie) skal oppgis i IM. Verifiserer på 0 trekkdager for perioder med utsettelse. " +
+            "Kun arbeid (og ferie) skal oppgis i IM. Verifiserer på 0 trekkdager for perioder med utsettelserList. " +
             "Kun perioder som krever dokumentasjon skal bli manuelt behandlet i fakta om uttak. Ingen AP i uttak.")
     void utsettelse_med_avvik() {
         var familie = FamilieGenerator.ny()
@@ -100,7 +102,7 @@ class SammenhengendeUttak extends FpsakTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
-        inntektsmelding.medUtsettelse(UttakresultatUtsettelseÅrsak.ARBEID.getKode(), fødsel.plusWeeks(15),
+        inntektsmelding.medUtsettelse(Inntektsmelding.UtsettelseÅrsak.ARBEID, fødsel.plusWeeks(15),
                 fødsel.plusWeeks(18).minusDays(1));
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
@@ -145,8 +147,8 @@ class SammenhengendeUttak extends FpsakTestBase {
 
 
     @Test
-    @DisplayName("Endringssøknad med utsettelse")
-    @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med utsettelse fra bruker. Vedtak fortsatt løpende.")
+    @DisplayName("Endringssøknad med utsettelserList")
+    @Description("Førstegangsbehandling til positivt vedtak. Endringssøknad med utsettelserList fra bruker. Vedtak fortsatt løpende.")
     void endringssøknadMedUtsettelse() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
@@ -352,7 +354,7 @@ class SammenhengendeUttak extends FpsakTestBase {
     @Test
     @DisplayName("Utsettelser og gradering fra førstegangsbehandling skal ikke gå til manuell behandling")
     @Description("Utsettelser og gradering fra førstegangsbehandling skal ikke gå til manuell behandling hvis innenfor søknadsfrist." +
-            "Førstegangsbehandling avslutter med utsettelse. Søker sender inn endringssøknad hvor en tar ut 1 uke etter utsettelsen.")
+            "Førstegangsbehandling avslutter med utsettelserList. Søker sender inn endringssøknad hvor en tar ut 1 uke etter utsettelsen.")
     void utsettelser_og_gradering_fra_førstegangsbehandling_skal_ikke_gå_til_manuell_behandling_ved_endringssøknad() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()

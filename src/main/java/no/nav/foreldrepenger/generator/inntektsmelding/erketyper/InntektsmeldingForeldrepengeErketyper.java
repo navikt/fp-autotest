@@ -6,9 +6,8 @@ import java.time.LocalDate;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.YtelseKodeliste;
-import no.nav.inntektsmelding.xml.kodeliste._20180702.ÅrsakInnsendingKodeliste;
 
 public class InntektsmeldingForeldrepengeErketyper {
 
@@ -17,12 +16,11 @@ public class InntektsmeldingForeldrepengeErketyper {
 
     public static InntektsmeldingBuilder lagInntektsmelding(Integer beløp, Fødselsnummer fnr, LocalDate fpStartdato, ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
         if (arbeidsgiverIdentifikator instanceof Orgnummer o) {
-            return new InntektsmeldingBuilder()
+            return InntektsmeldingBuilder.builder()
                     .medBeregnetInntekt(BigDecimal.valueOf(beløp))
-                    .medArbeidstakerFNR(fnr.value())
-                    .medYtelse(YtelseKodeliste.FORELDREPENGER)
-                    .medAarsakTilInnsending(ÅrsakInnsendingKodeliste.NY)
-                    .medStartdatoForeldrepengerperiodenFOM(fpStartdato)
+                    .medArbeidstakerFnr(fnr.value())
+                    .medYtelse(Inntektsmelding.YtelseType.FORELDREPENGER)
+                    .medFørsteFraværsdag(fpStartdato)
                     .medAvsendersystem("FS22", "1.0")
                     .medArbeidsgiver(o.value(), "41925090");
         }
@@ -32,12 +30,11 @@ public class InntektsmeldingForeldrepengeErketyper {
     public static InntektsmeldingBuilder lagInntektsmeldingPrivateArbeidsgiver(Integer beløp, Fødselsnummer fnr,
                                                                                LocalDate fpStartdato,
                                                                                Fødselsnummer fnrArbeidsgiver) {
-        return new InntektsmeldingBuilder()
+        return InntektsmeldingBuilder.builder()
                 .medBeregnetInntekt(BigDecimal.valueOf(beløp))
-                .medArbeidstakerFNR(fnr.value())
-                .medYtelse(YtelseKodeliste.FORELDREPENGER)
-                .medAarsakTilInnsending(ÅrsakInnsendingKodeliste.NY)
-                .medStartdatoForeldrepengerperiodenFOM(fpStartdato)
+                .medArbeidstakerFnr(fnr.value())
+                .medYtelse(Inntektsmelding.YtelseType.FORELDREPENGER)
+                .medFørsteFraværsdag(fpStartdato)
                 .medAvsendersystem("FS22", "1.0")
                 .medArbeidsgiverPrivat(fnrArbeidsgiver.value(), "41925090");
     }

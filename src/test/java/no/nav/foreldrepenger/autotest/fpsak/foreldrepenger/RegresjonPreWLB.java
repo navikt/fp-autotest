@@ -48,7 +48,7 @@ class RegresjonPreWLB extends FpsakTestBase {
     @Test
     @DisplayName("Bare far har rett. Mor Ufør. Perioder uten at mor er i aktivitet skal trekke fra foreldrepenger uten aktivitetskrav.")
     @Description("Bare far har rett (BFHR) og mor mottak uføretrygd. Far har 15 uker uten aktivitetskrav som kan tas ut utover en "
-            + "periode på 46 uker. Far søker uttak og utsettelser uten at aktivitetskravet er oppfylt. Her vil uttaket bli innvilget"
+            + "periode på 46 uker. Far søker uttak og utsettelserList uten at aktivitetskravet er oppfylt. Her vil uttaket bli innvilget"
             + "fra de 15 ukene uten aktivitetskrav, mens utsettelsen trekker dager. Far prøver å ta ut foreldrepenger uten aktivitetskrav"
             + "etter uke 46 og for avslag pga manglende stønadsdager igjen på konto.")
     void BFHRMorUføreTrekkerDagerFortløpendeNårVilkårIkkeErOppfylt() {
@@ -76,7 +76,7 @@ class RegresjonPreWLB extends FpsakTestBase {
         * Far søker etter dette 5 uker etter en avslått periode med uttsettelse hvor det samme skjer.
         * Far søker 5 uker fra uke 38 til 43.
         * Han skal få innvilge totalt 12 av 15 uker med foreldrepenger uten aktivitetskrav, men får avslag på de siste 3 fordi
-        *   disse dagene må tas ut innen uke 46 (+ eventuelle innvilgede utsettelser).
+        *   disse dagene må tas ut innen uke 46 (+ eventuelle innvilgede utsettelserList).
         * */
         var uttaksperiode1 = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(5).minusDays(1), ARBEID);
         var utsettelsesperiode1 = utsettelsesperiode(UtsettelsesÅrsak.FRI, fpStartdatoFar.plusWeeks(5), fpStartdatoFar.plusWeeks(10).minusDays(1), TRENGER_HJELP);
