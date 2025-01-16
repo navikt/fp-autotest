@@ -2,10 +2,11 @@ package no.nav.foreldrepenger.autotest.klienter.fplos;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetSaksbehandler;
-import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJsonBodyPublisher;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.sendStringRequest;
 
+import java.net.http.HttpRequest;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -58,7 +59,7 @@ public class FplosKlient {
                     .uri(fromUri(BaseUriProvider.FPLOS_BASE)
                             .path("/avdelingsleder/sakslister")
                             .build())
-                    .POST(toJsonBodyPublisher(AvdelingEnhet.defaultEnhet));
+                    .POST(HttpRequest.BodyPublishers.ofString(toJson(AvdelingEnhet.defaultEnhet)));
             var sakslisteIdResponse = Optional.of(send(request.build(), new TypeReference<SakslisteId>() {}))
                     .map(SakslisteId::sakslisteId)
                     .orElseThrow();
@@ -79,7 +80,7 @@ public class FplosKlient {
                     .uri(fromUri(BaseUriProvider.FPLOS_BASE)
                             .path("/avdelingsleder/sakslister/sortering")
                             .build())
-                    .POST(toJsonBodyPublisher(sorteringDto));
+                    .POST(HttpRequest.BodyPublishers.ofString(toJson(sorteringDto)));
             send(sorteringReq.build());
             return this;
         }
@@ -95,7 +96,7 @@ public class FplosKlient {
                     .uri(fromUri(BaseUriProvider.FPLOS_BASE)
                             .path("/avdelingsleder/sakslister/sortering-tidsintervall-dato")
                             .build())
-                    .POST(toJsonBodyPublisher(fomFilter));
+                    .POST(HttpRequest.BodyPublishers.ofString(toJson(fomFilter)));
             send(filterReq.build());
            return this;
         }
