@@ -154,8 +154,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medBeregnetInntekt(BigDecimal.valueOf(avvikendeMånedsinntekt))
                 .medRefusjonBeløpPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
 
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        ventPåImForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -473,6 +472,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var inntektsmeldingerFar = arbeidsgiver.lagInntektsmeldingerFP(fpStartdatoFar);
         inntektsmeldingerFar.get(0).medRefusjonBeløpPerMnd(Prosent.valueOf(100));
         inntektsmeldingerFar.get(1).medRefusjonBeløpPerMnd(Prosent.valueOf(100));
+
+        ventPåImForespørsel(saksnummerFar);
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingerFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -664,6 +665,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var arbeidsgiver1 = far.arbeidsgiver(TestOrganisasjoner.NAV.orgnummer().value());
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(fpStartdatoIfmFødselFar)
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
+
+        ventPåImForespørsel(saksnummerFar);
         arbeidsgiver1.sendInntektsmeldinger(saksnummerFar, inntektsmelding1);
 
         var arbeidsgiver2 = far.arbeidsgiver(TestOrganisasjoner.NAV_BERGEN.orgnummer().value());
@@ -966,6 +969,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummerMor = mor.søk(søknadMor.build());
 
         var arbeidsgiverMor = mor.arbeidsgiver();
+
+        ventPåImForespørsel(saksnummerMor);
         arbeidsgiverMor.sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -1018,6 +1023,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummerFar = far.søk(søknadFar.build());
 
         var arbeidsgiverFar = far.arbeidsgiver();
+        ventPåImForespørsel(saksnummerFar);
         arbeidsgiverFar.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1174,12 +1180,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(AnnenforelderBuilder.ukjentForelder())
                 .medMottattdato(fpStartdatoFar.minusWeeks(3));
         var saksnummerFar = far.søk(søknadFar.build());
-
-
         var arbeidsgiver = far.arbeidsgiver();
 
-        saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        ventPåImForespørsel(saksnummerFar);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1208,6 +1211,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // AG sender inn en IM med endring i refusjon som skal føre til revurdering på far sin sak.
         var inntektsmeldingEndringFar = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar)
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(50));
+
+        ventPåImForespørsel(saksnummerFar);
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar);
 
         // Revurdering / Berørt sak til far
@@ -1236,6 +1241,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // rulles tilbake og behandles på nytt fra første AP i revurderingen.
         var inntektsmeldingEndringFar2 = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar)
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
+
+        //ventPåImForespørsel(saksnummerFar);
         arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar2);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1326,8 +1333,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var arbeidsgiverFar = far.arbeidsgiver();
 
-        saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        ventPåImForespørsel(saksnummerFar);
         arbeidsgiverFar.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -1368,6 +1374,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(far));
         var saksnummerMor = mor.søk(søknadMor.build());
         var arbeidsgiverMor = mor.arbeidsgiver();
+
+        ventPåImForespørsel(saksnummerMor);
         arbeidsgiverMor.sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -1585,8 +1593,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
 
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        ventPåImForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoMor);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -1720,8 +1727,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
 
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        ventPåImForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -1795,11 +1801,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(omsorgsovertagelsesdato.minusWeeks(3));
         var saksnummer = mor.søk(søknad.build());
-
         var arbeidsgiver = mor.arbeidsgiver();
 
-        saksbehandler.hentFagsak(saksnummer);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        ventPåImForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, omsorgsovertagelsesdato);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -1869,6 +1873,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medMottattdato(fødselsdato.minusWeeks(1));
         var saksnummerFar = far.søk(søknad.build());
         var arbeidsgiver = far.arbeidsgiver();
+
+        ventPåImForespørsel(saksnummerFar);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         /*
@@ -1995,8 +2001,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummerMor = mor.søk(søknadMor.build());
 
-        saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        ventPåImForespørsel(saksnummerMor);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(3));
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -2011,6 +2016,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .build();
         var saksnummerFar = far.søk(søknadFar);
 
+        ventPåImForespørsel(saksnummerFar);
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato.minusWeeks(1));
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -2078,8 +2084,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .build());
 
-        saksbehandler.hentFagsak(saksnummerMor);
-        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+        ventPåImForespørsel(saksnummerMor);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato.minusWeeks(3));
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -2095,6 +2100,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medMottattdato(termindato.minusWeeks(1));
         var saksnummerFar = far.søk(søknadFar.build());
 
+        ventPåImForespørsel(saksnummerFar);
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato);
 
         saksbehandler.hentFagsak(saksnummerFar);
@@ -2151,6 +2157,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var saksnummerMor = mor.søk(søknadMor.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
+        ventPåImForespørsel(saksnummerMor);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
 
         return saksnummerMor;

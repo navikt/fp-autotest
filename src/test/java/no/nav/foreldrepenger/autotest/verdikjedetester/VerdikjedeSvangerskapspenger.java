@@ -63,6 +63,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
+        ventPåImForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -116,6 +117,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
+        ventPåImForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -252,6 +254,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP()
                 .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
+        ventPåImForespørsel(saksnummer1);
         arbeidsgiver.sendInntektsmeldinger(saksnummer1, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer1);
@@ -372,6 +375,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging1, tilrettelegging2));
         var saksnummer = mor.søk(søknad.build());
+        ventPåImForespørsel(saksnummer);
 
         var arbeidsgivere = mor.arbeidsgivere().toList();
         var arbeidsgiver1 = arbeidsgivere.get(0);
@@ -447,6 +451,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();
+        ventPåImForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);

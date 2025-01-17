@@ -1,9 +1,9 @@
-package no.nav.foreldrepenger.autotest.klienter.inntektsmelding;
+package no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto;
 
 /**
  * Hvorfor inntekt i inntektsmeldingen er endret fra snittet de siste tre måneder
  */
-public enum Endringsårsak {
+public enum EndringsårsakDto {
     PERMITTERING,
     NY_STILLING,
     NY_STILLINGSPROSENT,

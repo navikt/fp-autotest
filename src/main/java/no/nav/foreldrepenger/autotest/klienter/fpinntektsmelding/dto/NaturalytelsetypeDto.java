@@ -1,6 +1,6 @@
-package no.nav.foreldrepenger.autotest.klienter.inntektsmelding;
+package no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto;
 
-public enum Naturalytelsetype {
+public enum NaturalytelsetypeDto {
     ELEKTRISK_KOMMUNIKASJON,
     AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS,
     LOSJI,
