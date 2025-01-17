@@ -379,7 +379,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         ventPåImForespørsel(saksnummer);
 
         var arbeidsgivere = mor.arbeidsgivere().toList();
-        var arbeidsgiver1 = arbeidsgivere.get(0);
+        var arbeidsgiver1 = arbeidsgivere.getFirst();
         var inntektsmedling1 = arbeidsgiver1.lagInntektsmeldingSVP()
                 .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
         arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmedling1);
