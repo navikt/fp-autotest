@@ -53,7 +53,7 @@ public abstract class Arbeidsgiver {
 
     public List<InntektsmeldingBuilder> lagInntektsmeldingerFP(LocalDate startdatoForeldrepenger) {
         var im = new ArrayList<InntektsmeldingBuilder>();
-        if (arbeidsforhold.size() == 1 && erAktivtArbeidsforhold(arbeidsforhold.get(0), startdatoForeldrepenger)) {
+        if (arbeidsforhold.size() == 1 && erAktivtArbeidsforhold(arbeidsforhold.getFirst(), startdatoForeldrepenger)) {
             im.add(lagInntektsmeldingFP(startdatoForeldrepenger));
         } else {
             var stillingsprosentSamlet = arbeidsforhold.stream()

@@ -55,7 +55,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         var res = InntektsmeldingKlient.hentInntektsmeldingForespørslerFor(saksnummer);
         LOG.info("Hentet {} forespørsel: {}", res.inntektmeldingForespørsler().size(), res.inntektmeldingForespørsler());
         var forespørsel = res.inntektmeldingForespørsler().getFirst();
-        return sendInnInntektsmeldinger(InntektsmeldingPortalMapper.map(inntektsmelding, forespørsel.uuid(), forespørsel.aktørid(), forespørsel.startDato()), fnr, saksnummer);
+        return sendInnInntektsmeldinger(InntektsmeldingPortalMapper.map(inntektsmelding, forespørsel), fnr, saksnummer);
     }
 
     @Override
@@ -64,12 +64,12 @@ public class ApiMottak extends DokumentInnsendingHjelper {
                                              Fødselsnummer fnr,
                                              Saksnummer saksnummer) {
         if (inntektsmeldinger != null && inntektsmeldinger.size() > 1) {
-            fail("Forventer at det sendes kun 1 inntektsmelding per arbeidsgiver for {}", saksnummer);
+            fail("Forventer at det sendes kun 1 inntektsmelding per arbeidsgiver for %s", saksnummer);
         }
         var forespørsler = InntektsmeldingKlient.hentInntektsmeldingForespørslerFor(saksnummer);
 
         if (forespørsler == null || forespørsler.inntektmeldingForespørsler().isEmpty()) {
-            fail("Forventer å motta enn eller flere forespørsel for {}", saksnummer);
+            fail("Forventer å motta enn eller flere forespørsel for %s", saksnummer);
         }
         LOG.info("Hentet {} forespørsel for {}", forespørsler.inntektmeldingForespørsler().size(), saksnummer);
 
@@ -83,7 +83,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
                 .toList();
 
         if (forespørslerFiltrert.size() > 1) {
-            fail("Forventer å finne kun 1 forespørsel for AG: {} på sak: {}", im.arbeidsgiver().arbeidsgiverIdentifikator(),
+            fail("Forventer å finne kun 1 forespørsel for AG: %s på sak: %s", im.arbeidsgiver().arbeidsgiverIdentifikator(),
                     saksnummer);
         }
 
@@ -92,7 +92,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         //return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, 1, antallGamleInntekstmeldinger);
 
         var forespørsel = forespørslerFiltrert.getFirst();
-        var request = InntektsmeldingPortalMapper.map(im, forespørsel.uuid(), forespørsel.aktørid(), forespørsel.startDato());
+        var request = InntektsmeldingPortalMapper.map(im, forespørsel);
         return sendInnInntektsmeldinger(request, fnr, saksnummer);
     }
 

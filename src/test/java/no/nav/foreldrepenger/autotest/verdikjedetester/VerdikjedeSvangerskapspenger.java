@@ -176,6 +176,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgivere = mor.arbeidsgivere();
+        ventPåImForespørsel(saksnummer);
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);

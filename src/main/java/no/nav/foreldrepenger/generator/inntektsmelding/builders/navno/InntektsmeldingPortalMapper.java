@@ -2,17 +2,17 @@ package no.nav.foreldrepenger.generator.inntektsmelding.builders.navno;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.AktørIdDto;
-import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.ArbeidsgiverDto;
+import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.InntektsmeldingKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.NaturalytelsetypeDto;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.YtelseType;
+import no.nav.foreldrepenger.autotest.util.CollectionUtils;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 
 public class InntektsmeldingPortalMapper {
@@ -21,16 +21,16 @@ public class InntektsmeldingPortalMapper {
         // skjul ctor
     }
 
-    public static SendInntektsmeldingDto map(Inntektsmelding im, UUID forespørselUuid, AktørIdDto aktørIdDto, LocalDate startDato) {
+    public static SendInntektsmeldingDto map(Inntektsmelding im, InntektsmeldingKlient.InntektsmeldingForespørselDto forespørsel) {
         return new SendInntektsmeldingDto(
-                forespørselUuid,
-                aktørIdDto,
-                mapYtelseType(im.ytelseType()),
-                new ArbeidsgiverDto(im.arbeidsgiver().arbeidsgiverIdentifikator()),
+                forespørsel.uuid(),
+                forespørsel.aktørid(),
+                forespørsel.ytelsetype(),
+                forespørsel.arbeidsgiverident(),
                 new SendInntektsmeldingDto.KontaktpersonRequestDto(im.arbeidsgiver().navn(), im.arbeidsgiver().kontaktnummer()),
-                startDato,
+                forespørsel.startDato(),
                 im.arbeidsforhold().beregnetInntekt(),
-                mapRefusjon(im.refusjon(), im.arbeidsforhold().førsteFraværsdag()),
+                mapRefusjon(im.refusjon(), forespørsel.startDato()),
                 mapBortfalteNaturalytelser(im.opphørAvNaturalytelseList()),
                 Collections.emptyList());
 
@@ -40,8 +40,14 @@ public class InntektsmeldingPortalMapper {
         if (refusjon == null) {
             return Collections.emptyList();
         }
-
-        return List.of(new SendInntektsmeldingDto.Refusjon(refusjonStartDato, refusjon.refusjonBeløpPrMnd()));
+        var resultatList = new ArrayList<>(List.of(new SendInntektsmeldingDto.Refusjon(refusjonStartDato, refusjon.refusjonBeløpPrMnd())));
+        if (CollectionUtils.isNotEmpty(refusjon.refusjonEndringList())) {
+            resultatList.addAll(refusjon.refusjonEndringList().stream().map(endring -> new SendInntektsmeldingDto.Refusjon(endring.fom(), endring.beloepPrMnd())).toList());
+        }
+        if (refusjon.refusjonOpphørsdato() != null) {
+            resultatList.add(new SendInntektsmeldingDto.Refusjon(refusjon.refusjonOpphørsdato(), BigDecimal.ZERO));
+        }
+        return resultatList;
     }
 
     private static List<SendInntektsmeldingDto.BortfaltNaturalytelseRequestDto> mapBortfalteNaturalytelser(List<Inntektsmelding.OpphørAvNaturalytelse> opphørteNaturalytelser) {
