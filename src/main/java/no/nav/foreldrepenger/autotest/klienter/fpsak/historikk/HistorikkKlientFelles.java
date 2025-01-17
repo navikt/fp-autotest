@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class HistorikkKlientFelles implements HistorikkKlient {
 
-    private static final String HISTORIKK_URL_FORMAT = "/historikk";
+    private static final String HISTORIKK_URL_FORMAT = "/historikk/v2";
 
     private final URI baseUrl;
     private final SaksbehandlerRolle saksbehandlerRolle;
