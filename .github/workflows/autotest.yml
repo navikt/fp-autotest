@@ -76,7 +76,7 @@ jobs:
         shell: bash
         run: |
           if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
-            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpkalkulus" "fpinntektsmelding")
+            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpkalkulus")
           elif [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
             services=("fpkalkulus")
           else
