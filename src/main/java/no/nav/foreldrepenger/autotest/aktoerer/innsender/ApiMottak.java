@@ -51,11 +51,33 @@ public class ApiMottak extends DokumentInnsendingHjelper {
                                              AktørId aktørId,
                                              Fødselsnummer fnr,
                                              Saksnummer saksnummer) {
-        // aktørId ignoreres ettersom det trengs bare i xmlen
-        var res = InntektsmeldingKlient.hentInntektsmeldingForespørslerFor(saksnummer);
-        LOG.info("Hentet {} forespørsel: {}", res.inntektmeldingForespørsler().size(), res.inntektmeldingForespørsler());
-        var forespørsel = res.inntektmeldingForespørsler().getFirst();
-        return sendInnInntektsmeldinger(InntektsmeldingPortalMapper.map(inntektsmelding, forespørsel), fnr, saksnummer);
+
+        var forespørsler = InntektsmeldingKlient.hentInntektsmeldingForespørslerFor(saksnummer);
+
+        if (forespørsler == null || forespørsler.inntektmeldingForespørsler().isEmpty()) {
+            fail("Forventer å motta enn eller flere forespørsel for %s", saksnummer);
+        }
+        LOG.info("Hentet {} forespørsel for {}", forespørsler.inntektmeldingForespørsler().size(), saksnummer);
+
+        var forespørslerFiltrert = forespørsler.inntektmeldingForespørsler()
+                .stream()
+                .filter(forespørselDto -> forespørselDto.arbeidsgiverident()
+                        .ident()
+                        .equals(inntektsmelding.arbeidsgiver().arbeidsgiverIdentifikator()))
+                .toList();
+
+        if (forespørslerFiltrert.size() > 1) {
+            fail("Forventer å finne kun 1 forespørsel for AG: %s på sak: %s", inntektsmelding.arbeidsgiver().arbeidsgiverIdentifikator(),
+                    saksnummer);
+        }
+
+        //var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
+        //journalførInnteksmeldinger(inntektsmeldinger, fnr);
+        //return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, 1, antallGamleInntekstmeldinger);
+
+        var forespørsel = forespørslerFiltrert.getFirst();
+        var request = InntektsmeldingPortalMapper.map(inntektsmelding, forespørsel);
+        return sendInnInntektsmeldinger(request, fnr, saksnummer);
     }
 
     @Override

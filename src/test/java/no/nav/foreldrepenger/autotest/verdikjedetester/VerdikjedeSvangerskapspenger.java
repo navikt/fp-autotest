@@ -256,7 +256,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingSVP()
                 .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
         ventPåInntektsmeldingForespørsel(saksnummer1);
-        arbeidsgiver.sendInntektsmeldinger(saksnummer1, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer1, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer1);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
@@ -382,11 +382,11 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsgiver1 = arbeidsgivere.getFirst();
         var inntektsmedling1 = arbeidsgiver1.lagInntektsmeldingSVP()
                 .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
-        arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmedling1);
+        arbeidsgiver1.sendInntektsmelding(saksnummer, inntektsmedling1);
         var arbeidsgiver2 = arbeidsgivere.get(1);
         var inntektsmedling2 = arbeidsgiver2.lagInntektsmeldingSVP()
                 .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
-        arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmedling2);
+        arbeidsgiver2.sendInntektsmelding(saksnummer, inntektsmedling2);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler

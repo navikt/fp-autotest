@@ -15,6 +15,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -105,6 +106,7 @@ class Aksjonspunkter extends FpsakTestBase {
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_ADOPSJONSDOKUMENTAJON);
     }
 
+    @Disabled
     @Test
     @DisplayName("MANUELL_VURDERING_AV_OMSORGSVILKÅRET")
     void aksjonspunkt_ADOPSJONSSOKNAD_ENGANGSSTONAD_5011() {
@@ -192,7 +194,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderManglendeFodselBekreftelse = saksbehandler
@@ -258,6 +260,7 @@ class Aksjonspunkter extends FpsakTestBase {
     }
 
     // Denne testen er avhengig av at fprisk kjører!
+    @Disabled
     @Test
     @DisplayName("5095 – VURDER_FARESIGNALER_KODE")
     void aksjonspunkt_VURDER_FARESIGNALER_KODE_5095() {

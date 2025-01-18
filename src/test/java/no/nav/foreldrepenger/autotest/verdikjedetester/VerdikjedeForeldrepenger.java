@@ -43,6 +43,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 
 import org.junit.jupiter.api.DisplayName;
@@ -155,7 +156,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medRefusjonBeløpPerMnd(BigDecimal.valueOf(månedsinntekt * 0.6));
 
         ventPåInntektsmeldingForespørsel(saksnummer);
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
@@ -196,7 +197,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).behandlingArsakType())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().getFirst().behandlingArsakType())
                 .as("Årsakskode til revuderingen")
                 .isEqualTo(RE_HENDELSE_FØDSEL);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
@@ -308,7 +309,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).behandlingArsakType())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().getFirst().behandlingArsakType())
                 .as("Behandlingsårsakstype")
                 .isEqualTo(RE_HENDELSE_DØD_FORELDER);
 
@@ -469,12 +470,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
 
         var arbeidsgiver = far.arbeidsgiver();
-        var inntektsmeldingerFar = arbeidsgiver.lagInntektsmeldingerFP(fpStartdatoFar);
-        inntektsmeldingerFar.get(0).medRefusjonBeløpPerMnd(Prosent.valueOf(100));
-        inntektsmeldingerFar.get(1).medRefusjonBeløpPerMnd(Prosent.valueOf(100));
+        var inntektsmeldingFar = arbeidsgiver.lagInntektsmeldingerFP(fpStartdatoFar, true).getFirst();
+        inntektsmeldingFar.medRefusjonBeløpPerMnd(Prosent.valueOf(100));
 
         ventPåInntektsmeldingForespørsel(saksnummerFar);
-        arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingerFar);
+        arbeidsgiver.sendInntektsmelding(saksnummerFar, inntektsmeldingFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
@@ -494,7 +494,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 graderingsperiodeFørste.tidsperiode().tom(),
                 fpStartdatoFar.plusWeeks(8).minusDays(1));
         overstyringUttak.avslåPeriode(
-                oppslittedePerioderFørstePeriode.get(0),
+                oppslittedePerioderFørstePeriode.getFirst(),
                 PeriodeResultatÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT,
                 true);
         overstyringUttak.innvilgPeriode(
@@ -506,7 +506,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 graderingsperiodeSiste.tidsperiode().tom(),
                 fpStartdatoFar.plusWeeks(47).minusDays(1));
         overstyringUttak.innvilgPeriode(
-                oppslittedePerioderAndrePeriode.get(0),
+                oppslittedePerioderAndrePeriode.getFirst(),
                 PeriodeResultatÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE);
         overstyringUttak.avslåPeriode(
                 oppslittedePerioderAndrePeriode.get(1),
@@ -667,7 +667,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
 
         ventPåInntektsmeldingForespørsel(saksnummerFar);
-        arbeidsgiver1.sendInntektsmeldinger(saksnummerFar, inntektsmelding1);
+        arbeidsgiver1.sendInntektsmelding(saksnummerFar, inntektsmelding1);
 
         var arbeidsgiver2 = far.arbeidsgiver(TestOrganisasjoner.NAV_BERGEN.orgnummer().value());
         var orgNummerFar2 = arbeidsgiver2.arbeidsgiverIdentifikator();
@@ -675,7 +675,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(fpStartdatoIfmFødselFar)
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100))
                 .medRefusjonsOpphordato(opphørsDatoForRefusjon);
-        arbeidsgiver2.sendInntektsmeldinger(saksnummerFar, inntektsmelding2);
+        arbeidsgiver2.sendInntektsmelding(saksnummerFar, inntektsmelding2);
 
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
@@ -713,7 +713,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(uttakResultatPeriode.getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
                 .isEqualTo(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_BFR_AKT_KRAV_OPPFYLT);
-        assertThat(uttakResultatPeriode.getAktiviteter().get(0).getTrekkdagerDesimaler())
+        assertThat(uttakResultatPeriode.getAktiviteter().getFirst().getTrekkdagerDesimaler())
                 .as("Trekkdager")
                 .isZero();
         assertThat(uttakResultatPeriode.getAktiviteter().get(1).getTrekkdagerDesimaler())
@@ -730,13 +730,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var andelerForAT1 = saksbehandler.hentBeregningsresultatPerioderMedAndelIArbeidsforhold(orgNummerFar1);
         var andelerForAT2 = saksbehandler.hentBeregningsresultatPerioderMedAndelIArbeidsforhold(orgNummerFar2);
         // IFM fødsel
-        assertThat(beregningsresultatPerioder.get(0).getDagsats())
+        assertThat(beregningsresultatPerioder.getFirst().getDagsats())
                 .as("Dagsatsen for perioden")
                 .isEqualTo(1616);
-        assertThat(andelerForAT1.get(0).getTilSoker())
+        assertThat(andelerForAT1.getFirst().getTilSoker())
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isEqualTo(462);
-        assertThat(andelerForAT2.get(0).getRefusjon())
+        assertThat(andelerForAT2.getFirst().getRefusjon())
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til arbeidsgiver")
                 .isEqualTo(923);
 
@@ -1039,13 +1039,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .getBeregningsgrunnlagPeriode(0);
         var dagsats = beregningsgrunnlagPeriode.getDagsats();
         var redusertPrAar = beregningsgrunnlagPeriode.getRedusertPrAar();
-        var prosentfaktorAvDagsatsTilAF = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndel().get(0)
+        var prosentfaktorAvDagsatsTilAF = beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndel().getFirst()
                 .getRedusertPrAar() / redusertPrAar;
         var dagsatsTilAF = (int) Math.round(dagsats * prosentfaktorAvDagsatsTilAF);
 
         var perioderMedAndelIArbeidsforhold = saksbehandler
                 .hentBeregningsresultatPerioderMedAndelIArbeidsforhold(arbeidsgiverFar.arbeidsgiverIdentifikator());
-        assertThat(perioderMedAndelIArbeidsforhold.get(0).getTilSoker())
+        assertThat(perioderMedAndelIArbeidsforhold.getFirst().getTilSoker())
                 .as("Forventer at dagsatsen for arbeidsforholdet blir beregnet først – rest går til søker for SN")
                 .isEqualTo(dagsatsTilAF);
         assertThat(perioderMedAndelIArbeidsforhold.get(1).getTilSoker())
@@ -1059,7 +1059,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isTrue();
 
         var perioderMedAndelISN = saksbehandler.hentBeregningsresultatPerioderMedAndelISN();
-        assertThat(perioderMedAndelISN.get(0).getTilSoker())
+        assertThat(perioderMedAndelISN.getFirst().getTilSoker())
                 .as("Forventer at resten av dagsatsen går til søker for SN")
                 .isEqualTo(dagsats - dagsatsTilAF);
         assertThat(perioderMedAndelISN.get(1).getTilSoker())
@@ -1213,7 +1213,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(50));
 
         ventPåInntektsmeldingForespørsel(saksnummerFar);
-        arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar);
+        arbeidsgiver.sendInntektsmelding(saksnummerFar, inntektsmeldingEndringFar);
 
         // Revurdering / Berørt sak til far
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -1243,7 +1243,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
 
         //ventPåImForespørsel(saksnummerFar);
-        arbeidsgiver.sendInntektsmeldinger(saksnummerFar, inntektsmeldingEndringFar2);
+        arbeidsgiver.sendInntektsmelding(saksnummerFar, inntektsmeldingEndringFar2);
 
         saksbehandler.hentFagsak(saksnummerFar);
         assertThat(saksbehandler.behandlinger)
@@ -1279,7 +1279,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             assertThat(perioder)
                     .as("Berørt behandlings tilkjent ytelse perioder")
                     .hasSize(2);
-            assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0))
+            assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.getFirst(), 0))
                     .as("Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!")
                     .isTrue();
             assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(1), 100))
@@ -1290,7 +1290,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             assertThat(perioder)
                     .as("Berørt behandlings tilkjent ytelse perioder")
                     .hasSize(3);
-            assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(0), 0))
+            assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.getFirst(), 0))
                     .as("Forventer at hele summen utbetales til søker i første periode, og derfor ingenting til arbeidsgiver!")
                     .isTrue();
             assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilRiktigPart(perioder.get(1), 0))
@@ -1402,10 +1402,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .filter(uttaksPeriode -> uttaksPeriode.konto().equals(UttaksplanPeriodeDto.KontoType.MØDREKVOTE))
                 .findFirst()
                 .orElseThrow();
-        var avslåtteSamtidigUttak = saksbehandler.hentAvslåtteUttaksperioder().get(0);
+        var avslåtteSamtidigUttak = saksbehandler.hentAvslåtteUttaksperioder().getFirst();
         assertThat(avslåtteSamtidigUttak.getFom()).isEqualTo(mødrekvoten.tidsperiode().fom());
         assertThat(avslåtteSamtidigUttak.getTom()).isEqualTo(mødrekvoten.tidsperiode().tom());
-        assertThat(avslåtteSamtidigUttak.getAktiviteter().get(0).getTrekkdagerDesimaler()).isZero();
+        assertThat(avslåtteSamtidigUttak.getAktiviteter().getFirst().getTrekkdagerDesimaler()).isZero();
         assertThat(avslåtteSamtidigUttak.getPeriodeResultatÅrsak())
                 .as("Perioden burde være avslått fordi annenpart tar ut mødrekovte med 100% utbetalingsgrad samtidig")
                 .isEqualTo(PeriodeResultatÅrsak.DEN_ANDRE_PART_OVERLAPPENDE_UTTAK_IKKE_SØKT_INNVILGET_SAMTIDIG_UTTAK);
@@ -1537,7 +1537,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.velgSisteBehandling();
 
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).behandlingArsakType())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().getFirst().behandlingArsakType())
                 .as("Behandlingsårsakstype")
                 .isEqualTo(BehandlingÅrsakType.RE_KLAGE_MED_END_INNTEKT);
 
@@ -1619,7 +1619,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
 
-        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().get(0).behandlingArsakType())
+        assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker().getFirst().behandlingArsakType())
                 .as("Behandlingsårsak revurdering")
                 .isEqualTo(BehandlingÅrsakType.RE_HENDELSE_DØDFØDSEL);
 
@@ -1645,7 +1645,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isEqualTo(75);
 
         var uttakResultatPerioder = saksbehandler.valgtBehandling.hentUttaksperioder();
-        var uttaksperiode_0 = uttakResultatPerioder.get(0);
+        var uttaksperiode_0 = uttakResultatPerioder.getFirst();
         var uttaksperiode_1 = uttakResultatPerioder.get(1);
         assertThat(uttaksperiode_0.getPeriodeResultatType())
                 .as("Uttaksresultattype for første periode")
@@ -1663,7 +1663,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(uttaksperiode_1.getPeriodeType())
                 .as("Forventer at første periode er FORELDREPENGER_FØR_FØDSEL pga dødfødsel etter termin")
                 .isEqualTo(FORELDREPENGER_FØR_FØDSEL.name());
-        assertThat(uttaksperiode_1.getAktiviteter().get(0).getTrekkdagerDesimaler())
+        assertThat(uttaksperiode_1.getAktiviteter().getFirst().getTrekkdagerDesimaler())
                 .as("Verifiser at søker tar ut hele FORELDREPENGER_FØR_FØDSEL kvoten")
                 .isEqualByComparingTo(BigDecimal.valueOf(3 * 5));
 
@@ -1674,7 +1674,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(uttaksperiode_2.getPeriodeType())
                 .as("Forventer at første periode er MØDREKVTOEN pga dødfødsel etter termin")
                 .isEqualTo(MØDREKVOTE.name());
-        assertThat(uttaksperiode_2.getAktiviteter().get(0).getTrekkdagerDesimaler())
+        assertThat(uttaksperiode_2.getAktiviteter().getFirst().getTrekkdagerDesimaler())
                 .as("Forventer at det tas ut 6 uker av den gjenværende delen av stønadsperioden")
                 .isEqualByComparingTo(BigDecimal.valueOf(6 * 5));
 
@@ -1717,7 +1717,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 uttaksperiodeEtterUtsettelseOgOpphold,
                 uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(36).minusDays(1))
         );
-        var fpStartdato = fordeling.get(0).tidsperiode().fom();
+        var fpStartdato = fordeling.getFirst().tidsperiode().fom();
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medFordeling(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
@@ -1908,10 +1908,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Forventer at det er 4 avslåtte uttaksperioder")
                 .hasSize(4);
 
-        var avslåttUtsettelseperiodeFørsteDel = avslåtteUttaksperioder.get(0);
+        var avslåttUtsettelseperiodeFørsteDel = avslåtteUttaksperioder.getFirst();
         assertThat(avslåttUtsettelseperiodeFørsteDel.getFom()).isEqualTo(utsettelsesperiode.tidsperiode().fom());
         assertThat(avslåttUtsettelseperiodeFørsteDel.getTom()).isCloseTo(utsettelsesperiode.tidsperiode().fom().plusWeeks(30), within(2, ChronoUnit.DAYS)); // splitt tar ikke hensyn til helger
-        assertThat(avslåttUtsettelseperiodeFørsteDel.getAktiviteter().get(0).getTrekkdagerDesimaler())  // Trekker opp til minstretten
+        assertThat(avslåttUtsettelseperiodeFørsteDel.getAktiviteter().getFirst().getTrekkdagerDesimaler())  // Trekker opp til minstretten
                 .as("Trekkdager")
                 .isEqualByComparingTo(BigDecimal.valueOf(30 * 5));
         assertThat(avslåttUtsettelseperiodeFørsteDel.getPeriodeResultatÅrsak())
@@ -1921,7 +1921,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var avslåttUtsettelseperiodeAndreDel = avslåtteUttaksperioder.get(1);
         assertThat(avslåttUtsettelseperiodeAndreDel.getFom()).isCloseTo(utsettelsesperiode.tidsperiode().fom().plusWeeks(30), within(2, ChronoUnit.DAYS)); // splitt tar ikke hensyn til helger
         assertThat(avslåttUtsettelseperiodeAndreDel.getTom()).isEqualTo(utsettelsesperiode.tidsperiode().tom());
-        assertThat(avslåttUtsettelseperiodeAndreDel.getAktiviteter().get(0).getTrekkdagerDesimaler()) // avslag på siste rest av utsettelsen, men trekker ikke av minsteretten!
+        assertThat(avslåttUtsettelseperiodeAndreDel.getAktiviteter().getFirst().getTrekkdagerDesimaler()) // avslag på siste rest av utsettelsen, men trekker ikke av minsteretten!
                 .as("Trekkdager")
                 .isZero();
         assertThat(avslåttUtsettelseperiodeAndreDel.getPeriodeResultatÅrsak())
@@ -2056,10 +2056,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
         for (var periode : uttak) {
             assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
-            assertThat(periode.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FEDREKVOTE);
-            assertThat(periode.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
+            assertThat(periode.getAktiviteter().getFirst().getStønadskontoType()).isEqualTo(FEDREKVOTE);
+            assertThat(periode.getAktiviteter().getFirst().getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
         }
-        var trekkdager = uttak.stream().mapToInt(p -> p.getAktiviteter().get(0).getTrekkdagerDesimaler().intValue()).sum();
+        var trekkdager = uttak.stream().mapToInt(p -> p.getAktiviteter().getFirst().getTrekkdagerDesimaler().intValue()).sum();
         assertThat(trekkdager).isEqualTo(10);
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -2131,12 +2131,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var uttak = saksbehandler.valgtBehandling.hentUttaksperioder();
         for (var periode : uttak) {
             assertThat(periode.getPeriodeResultatType()).isEqualTo(PeriodeResultatType.INNVILGET);
-            assertThat(periode.getAktiviteter().get(0).getStønadskontoType()).isEqualTo(FEDREKVOTE);
-            assertThat(periode.getAktiviteter().get(0).getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
+            assertThat(periode.getAktiviteter().getFirst().getStønadskontoType()).isEqualTo(FEDREKVOTE);
+            assertThat(periode.getAktiviteter().getFirst().getUtbetalingsgrad()).isEqualTo(BigDecimal.valueOf(100));
         }
-        var trekkdager = uttak.stream().mapToInt(p -> p.getAktiviteter().get(0).getTrekkdagerDesimaler().intValue()).sum();
+        var trekkdager = uttak.stream().mapToInt(p -> p.getAktiviteter().getFirst().getTrekkdagerDesimaler().intValue()).sum();
         assertThat(trekkdager).isEqualTo(10);
-        assertThat(uttak.get(0).getFom()).isEqualTo(helgejustertTilMandag(fødselsdato));
+        assertThat(uttak.getFirst().getFom()).isEqualTo(helgejustertTilMandag(fødselsdato));
     }
 
     private Saksnummer sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,

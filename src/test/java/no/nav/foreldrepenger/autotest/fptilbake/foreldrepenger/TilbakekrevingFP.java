@@ -303,7 +303,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         if (redusert){
             inntektsmelding.medBeregnetInntekt(Prosent.valueOf(50));
         }
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
     }
 
     public static boolean isWeekend(final LocalDate ld)
