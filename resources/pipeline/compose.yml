@@ -274,7 +274,6 @@ services:
       --auto-login=true
       --session.max-lifetime=12h0m0s
       --session.inactivity-timeout=12h0m0s
-      --session.refresh=true
       --log-level=debug
     ports:
       - "127.0.0.1:9000:9000"
@@ -609,7 +608,6 @@ services:
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
       --redis.uri=redis://redis:6379
-      --session.refresh-auto=false
       --auto-login=true
       --log-level=debug
       --bind-address=0.0.0.0:9300
@@ -865,7 +863,6 @@ services:
       --sso.session-cookie-name=selvbetjening-session
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-default-redirect-url=http://localhost:9000
-      --session.refresh-auto=false
       --auto-login=true
       --log-level=debug
     ports:
@@ -886,7 +883,6 @@ services:
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
       --redis.uri=redis://redis:6379
-      --session.refresh-auto=false
       --auto-login=true
       --log-level=debug
       --bind-address=0.0.0.0:9100
@@ -911,7 +907,6 @@ services:
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
       --redis.uri=redis://redis:6379
-      --session.refresh-auto=false
       --auto-login=true
       --log-level=debug
       --ingress=http://localhost:9101
@@ -936,7 +931,6 @@ services:
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
       --redis.uri=redis://redis:6379
-      --session.refresh-auto=false
       --auto-login=true
       --log-level=debug
       --ingress=http://localhost:9102
@@ -961,7 +955,6 @@ services:
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
       --redis.uri=redis://redis:6379
-      --session.refresh-auto=false
       --auto-login=true
       --log-level=debug
       --ingress=http://localhost:9103
