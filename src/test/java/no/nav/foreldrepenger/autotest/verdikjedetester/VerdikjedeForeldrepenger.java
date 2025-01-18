@@ -1242,7 +1242,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var inntektsmeldingEndringFar2 = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar)
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
 
-        //ventPåImForespørsel(saksnummerFar);
         arbeidsgiver.sendInntektsmelding(saksnummerFar, inntektsmeldingEndringFar2);
 
         saksbehandler.hentFagsak(saksnummerFar);
