@@ -32,10 +32,8 @@ public class InntektsmeldingKlient {
     }
 
     public static ListForespørslerResponse hentInntektsmeldingForespørslerFor(Saksnummer saksnummer) {
-        var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.SAKSBEHANDLER, API_NAME)
-                .uri(fromUri(BaseUriProvider.FPINNTEKTSMELDING_BASE)
-                        .path(FORESPØRSEL_UUID + "/" + saksnummer.value())
-                        .build()).GET();
+        var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.SAKSBEHANDLER, API_NAME).uri(
+                fromUri(BaseUriProvider.FPINNTEKTSMELDING_BASE).path(FORESPØRSEL_UUID + "/" + saksnummer.value()).build()).GET();
 
         return send(request.build(), ListForespørslerResponse.class);
     }
