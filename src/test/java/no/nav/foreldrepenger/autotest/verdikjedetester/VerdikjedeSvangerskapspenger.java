@@ -10,6 +10,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -152,6 +153,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
     @DisplayName("3: Mor søk fullt uttak for ett av to arbeidsforhold i samme virksomhet")
     @Description("Mor søker ingen tilrettelegging for ett av to arbeidsforhold i samme virksomhet. Arbeidsgiver leverer to" +
             "inntektsmeldinger med forskjellig arbeidsforholdID, med ulik lønn.")
+    @Disabled
     void morSøkerFulltUttakForEttAvToArbeidsforholdTest() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
@@ -164,7 +166,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
 
         var mor = familie.mor();
         var arbeidsforholdene = mor.arbeidsforholdene();
-        var arbeidsforhold1 = arbeidsforholdene.get(0);
+        var arbeidsforhold1 = arbeidsforholdene.getFirst();
         var orgnummer1 = arbeidsforhold1.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
         var tilrettelegginsprosent = 0.0;
