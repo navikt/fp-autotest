@@ -86,7 +86,7 @@ public class TestOrganisasjoner {
 
 
     public String arbeidsforholdId() {
-        return null;
+        return "ARB001-001";
     }
 
     public OrganisasjonDto tilfeldigOrg() {
