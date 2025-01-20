@@ -147,19 +147,19 @@ class Førstegangsbehandling extends FpsakTestBase {
         var arbeidsgiver1 = arbeidsgivere.toList().getFirst();
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(20_833);
-        arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmelding1);
+        arbeidsgiver1.sendInntektsmelding(saksnummer, inntektsmelding1);
 
         var arbeidsgiver2 = arbeidsgivere.toList().get(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(62_500)
                 .medRefusjonBeløpPerMnd(BigDecimal.valueOf(27_778));
-        arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmelding2);
+        arbeidsgiver2.sendInntektsmelding(saksnummer, inntektsmelding2);
 
         var arbeidsgiver3 = arbeidsgivere.toList().get(2);
         var inntektsmelding3 = arbeidsgiver3.lagInntektsmeldingSVP()
                 .medBeregnetInntekt(50_000)
                 .medRefusjonBeløpPerMnd(BigDecimal.valueOf(46_667));
-        arbeidsgiver3.sendInntektsmeldinger(saksnummer, inntektsmelding3);
+        arbeidsgiver3.sendInntektsmelding(saksnummer, inntektsmelding3);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new AvklarFaktaFødselOgTilrettelegging());

@@ -117,7 +117,7 @@ class Fodsel extends FpsakTestBase {
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(Prosent.valueOf(50))
                 .medRefusjonBeløpPerMnd(refusjon);
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.VEDLEGG_MOTTATT);
@@ -204,7 +204,9 @@ class Fodsel extends FpsakTestBase {
         inntektsmeldinger.get(1)
                 .medBeregnetInntekt(BigDecimal.valueOf(inntektPrMåned))
                 .medRefusjonBeløpPerMnd(refusjon);
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmeldinger);
+
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmeldinger.getFirst());
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmeldinger.get(1));
 
         saksbehandler.hentFagsak(saksnummer);
         debugLoggBehandling(saksbehandler.valgtBehandling);
@@ -255,7 +257,7 @@ class Fodsel extends FpsakTestBase {
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medBeregnetInntekt(15_000)
                 .medRefusjonBeløpPerMnd(refusjon);
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -457,7 +459,7 @@ class Fodsel extends FpsakTestBase {
                 .medBeregnetInntekt(BigDecimal.valueOf(mor.månedsinntekt()))
                 .medArbeidsforholdId(null);
 
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -575,12 +577,12 @@ class Fodsel extends FpsakTestBase {
         var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(startDatoForeldrepenger)
                 .medBeregnetInntekt(inntektPerMåned)
                 .medArbeidsforholdId("1");
-        arbeidsgiver1.sendInntektsmeldinger(saksnummer, inntektsmelding1);
+        arbeidsgiver1.sendInntektsmelding(saksnummer, inntektsmelding1);
         var arbeidsgiver2 = arbeidsgivere.toList().get(1);
         var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(startDatoForeldrepenger)
                 .medBeregnetInntekt(inntektPerMåned)
                 .medArbeidsforholdId("9");
-        arbeidsgiver2.sendInntektsmeldinger(saksnummer, inntektsmelding2);
+        arbeidsgiver2.sendInntektsmelding(saksnummer, inntektsmelding2);
 
         saksbehandler.hentFagsak(saksnummer);
         assertThat(saksbehandler.valgtBehandling.erSattPåVent())
@@ -624,7 +626,7 @@ class Fodsel extends FpsakTestBase {
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(startDatoForeldrepenger)
                 .medBeregnetInntekt(inntektPerMaaned);
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         debugLoggBehandling(saksbehandler.valgtBehandling);
@@ -719,7 +721,7 @@ class Fodsel extends FpsakTestBase {
                 .medBeregnetInntekt(inntektPerMaaned)
                 .medRefusjonBeløpPerMnd(BigDecimal.valueOf(refusjon))
                 .medEndringIRefusjonslist(endringRefusjonMap);
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         debugLoggBehandling(saksbehandler.valgtBehandling);

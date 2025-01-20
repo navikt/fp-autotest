@@ -10,7 +10,8 @@ public enum HistorikkType {
     REVURD_OPPR("Revurdering er opprettet"),
     SPOLT_TILBAKE("Behandlingen er flyttet"),
     AVBRUTT_BEH("Behandling er henlagt"),
-    VEDTAK_FATTET("Vedtak er fattet", "VEDTAK");
+    VEDTAK_FATTET("Vedtak er fattet", "VEDTAK"),
+    MIN_SIDE_ARBEIDSGIVER("Min side - arbeidsgiver");
 
     private final String tittel;
     private final String skjermlenke;

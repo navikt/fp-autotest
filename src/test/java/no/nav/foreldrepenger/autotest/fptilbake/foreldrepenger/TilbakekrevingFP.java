@@ -292,15 +292,18 @@ class TilbakekrevingFP extends FptilbakeTestBase {
     }
 
     private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, Saksnummer saksnummer) {
+        ventPåInntektsmeldingForespørsel(saksnummer);
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer, false);
     }
+
     private void lagOgSendInntektsmelding(Familie familie, LocalDate fpStartdato, Saksnummer saksnummer, Boolean redusert) {
+        ventPåInntektsmeldingForespørsel(saksnummer);
         var arbeidsgiver = familie.mor().arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
         if (redusert){
             inntektsmelding.medBeregnetInntekt(Prosent.valueOf(50));
         }
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
     }
 
     public static boolean isWeekend(final LocalDate ld)

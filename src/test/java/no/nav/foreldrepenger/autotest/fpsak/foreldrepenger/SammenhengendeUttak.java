@@ -104,7 +104,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
         inntektsmelding.medUtsettelse(Inntektsmelding.UtsettelseÅrsak.ARBEID, fødsel.plusWeeks(15),
                 fødsel.plusWeeks(18).minusDays(1));
-        arbeidsgiver.sendInntektsmeldinger(saksnummer, inntektsmelding);
+        arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderUttakDokumentasjonBekreftelse = saksbehandler

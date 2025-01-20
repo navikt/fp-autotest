@@ -54,6 +54,7 @@ class TilbakekrevingSVP extends FptilbakeTestBase {
         var søknad = lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad.build());
 
+        ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);

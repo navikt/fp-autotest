@@ -1,20 +1,22 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.ALTINN;
 import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi.MottakKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.InntektsmeldingKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.xml.InntektsmeldingXmlMapper;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.navno.InntektsmeldingPortalMapper;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
@@ -47,8 +49,27 @@ public class ApiMottak extends DokumentInnsendingHjelper {
                                              AktørId aktørId,
                                              Fødselsnummer fnr,
                                              Saksnummer saksnummer) {
-        // aktørId ignoreres ettersom det trengs bare i xmlen
-        return sendInnInntektsmeldinger(List.of(inntektsmelding), fnr, saksnummer);
+        var forespørsler = InntektsmeldingKlient.hentInntektsmeldingForespørslerFor(saksnummer);
+        if (forespørsler == null || forespørsler.inntektmeldingForespørsler() == null || forespørsler.inntektmeldingForespørsler()
+                .isEmpty()) {
+            fail("Forventer å motta enn eller flere forespørsel for %s", saksnummer);
+            return null;
+        } else {
+            LOG.info("Hentet {} forespørsel for {}", forespørsler.inntektmeldingForespørsler().size(), saksnummer);
+        }
+        var forespørslerFiltrert = forespørsler.inntektmeldingForespørsler()
+                .stream()
+                .filter(forespørselDto -> forespørselDto.arbeidsgiverident()
+                        .ident()
+                        .equals(inntektsmelding.arbeidsgiver().arbeidsgiverIdentifikator()))
+                .findFirst();
+
+        if (forespørslerFiltrert.isEmpty()) {
+            fail("Forventer å finne enn forespørsel for AG: %s på sak: %s", inntektsmelding.arbeidsgiver().arbeidsgiverIdentifikator(),
+                    saksnummer);
+        }
+        var request = InntektsmeldingPortalMapper.map(inntektsmelding, forespørslerFiltrert.orElseThrow());
+        return sendInnInntektsmelding(request, fnr, saksnummer);
     }
 
     @Override
@@ -56,23 +77,21 @@ public class ApiMottak extends DokumentInnsendingHjelper {
                                              AktørId aktørId,
                                              Fødselsnummer fnr,
                                              Saksnummer saksnummer) {
-        return sendInnInntektsmeldinger(inntektsmeldinger, fnr, saksnummer);
+        if (inntektsmeldinger == null || inntektsmeldinger.isEmpty()) {
+            fail("Forventer å motta en inntektsmelding for %s", saksnummer);
+            return null;
+        } else if (inntektsmeldinger.size() > 1) {
+            fail("Forventer at det sendes kun 1 inntektsmelding per arbeidsgiver for %s", saksnummer);
+            return null;
+        }
+        return sendInnInntektsmelding(inntektsmeldinger.getFirst(), aktørId, fnr, saksnummer);
     }
 
     @Step("Sender inn IM for bruker {fnr}")
-    private Saksnummer sendInnInntektsmeldinger(List<Inntektsmelding> inntektsmeldinger, Fødselsnummer fnr, Saksnummer saksnummer) {
+    private Saksnummer sendInnInntektsmelding(SendInntektsmeldingDto request, Fødselsnummer fnr, Saksnummer saksnummer) {
         var antallGamleInntekstmeldinger = antallInntektsmeldingerMottattPåSak(saksnummer);
-        journalførInnteksmeldinger(inntektsmeldinger, fnr);
-        return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, inntektsmeldinger.size(), antallGamleInntekstmeldinger);
-    }
-
-    private void journalførInnteksmeldinger(List<Inntektsmelding> inntektsmeldinger, Fødselsnummer fnr) {
-        LOG.info("Sender inn {} IM(er) for søker {}...", inntektsmeldinger.size(), fnr.value());
-        for (var inntektsmelding : inntektsmeldinger) {
-            var xml = InntektsmeldingXmlMapper.opprettInntektsmeldingXML(inntektsmelding);
-            var journalpostModell = lagJournalpost(fnr, "Inntektsmelding", xml, ALTINN, null, DokumenttypeId.INNTEKTSMELDING);
-            journalpostKlient.journalførR(journalpostModell);
-        }
+        InntektsmeldingKlient.sendInntektsmelding(request, fnr);
+        return ventTilAlleInntekstmeldingeneErMottatt(fnr, saksnummer, 1, antallGamleInntekstmeldinger);
     }
 
     @Override

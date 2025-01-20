@@ -34,7 +34,7 @@ public class Arbeidsgivere {
                 .orElseThrow();
     }
 
-    public PersonArbeidsgiver arbeidsgiver(Fødselsnummer fødselsnummer) {
+    public Arbeidsgiver arbeidsgiver(Fødselsnummer fødselsnummer) {
         return alleArbeidsgivere.stream()
                 .filter(PersonArbeidsgiver.class::isInstance)
                 .map(PersonArbeidsgiver.class::cast)

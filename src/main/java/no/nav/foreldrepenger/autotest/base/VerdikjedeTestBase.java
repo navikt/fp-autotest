@@ -39,4 +39,9 @@ public abstract class VerdikjedeTestBase extends FpsakTestBase {
         }
     }
 
+    protected void ventPåInntektsmeldingForespørsel(Saksnummer saksnummer) {
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
+    }
+
 }
