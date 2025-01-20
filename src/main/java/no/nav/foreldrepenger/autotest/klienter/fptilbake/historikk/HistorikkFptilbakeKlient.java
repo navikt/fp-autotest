@@ -20,6 +20,6 @@ public class HistorikkFptilbakeKlient implements HistorikkKlient {
 
     @Override
     public List<HistorikkInnslag> hentHistorikk(Saksnummer saksnummer) {
-        return historikkKlientFelles.hentHistorikk(saksnummer);
+        return historikkKlientFelles.hentHistorikk(saksnummer, "/v2");
     }
 }

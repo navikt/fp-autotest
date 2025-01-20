@@ -31,8 +31,12 @@ public class HistorikkKlientFelles implements HistorikkKlient {
 
     @Override
     public List<HistorikkInnslag> hentHistorikk(Saksnummer saksnummer) {
+        return hentHistorikk(saksnummer, "");
+    }
+
+    public List<HistorikkInnslag> hentHistorikk(Saksnummer saksnummer, String path) {
         var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, this.apiName)
-                .uri(fromUri(baseUrl).path(HISTORIKK_URL_FORMAT)
+                .uri(fromUri(baseUrl).path(HISTORIKK_URL_FORMAT).path(path)
                         .queryParam("saksnummer", saksnummer.value())
                         .build())
                 .GET();
