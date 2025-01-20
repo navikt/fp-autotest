@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 
 public class HistorikkKlientFelles implements HistorikkKlient {
 
-    private static final String HISTORIKK_URL_FORMAT = "/historikk/v2";
+    private static final String HISTORIKK_URL_FORMAT = "/historikk";
 
     private final URI baseUrl;
     private final SaksbehandlerRolle saksbehandlerRolle;
@@ -31,8 +31,12 @@ public class HistorikkKlientFelles implements HistorikkKlient {
 
     @Override
     public List<HistorikkInnslag> hentHistorikk(Saksnummer saksnummer) {
+        return hentHistorikk(saksnummer, "");
+    }
+
+    public List<HistorikkInnslag> hentHistorikk(Saksnummer saksnummer, String path) {
         var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, this.apiName)
-                .uri(fromUri(baseUrl).path(HISTORIKK_URL_FORMAT)
+                .uri(fromUri(baseUrl).path(HISTORIKK_URL_FORMAT).path(path)
                         .queryParam("saksnummer", saksnummer.value())
                         .build())
                 .GET();
