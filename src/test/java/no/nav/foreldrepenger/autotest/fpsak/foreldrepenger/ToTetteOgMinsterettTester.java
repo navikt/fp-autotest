@@ -63,6 +63,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
  *              Mor søker endring på barn 1 om å ta ut resten av minsteretten etter de 6 første ukene for barn 2.
  *              Far tar ut 2 uker ifm fødsel og endringssøker om å ta ut resten av minsteretten sin på barn 1 (6 uker) etter mors peridoer for barn 2.
  */
+//TODO: test historikkinnslag @sirimykland
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class ToTetteOgMinsterettTester extends FpsakTestBase {

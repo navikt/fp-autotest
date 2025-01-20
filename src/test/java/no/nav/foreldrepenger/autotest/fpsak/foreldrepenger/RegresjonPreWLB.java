@@ -40,6 +40,7 @@ import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
+//TODO: test historikkinnslag @espenwaaga
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class RegresjonPreWLB extends FpsakTestBase {

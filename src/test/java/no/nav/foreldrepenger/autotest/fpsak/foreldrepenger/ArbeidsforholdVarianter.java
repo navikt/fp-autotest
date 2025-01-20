@@ -42,6 +42,7 @@ import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
+//TODO: test historikkinnslag @palfi
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class ArbeidsforholdVarianter extends FpsakTestBase {

@@ -55,6 +55,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
 
+//TODO: test historikkinnslag @espenwaaga
 @Tag("fpsak")
 class BeregningVerdikjede extends FpsakTestBase {
 

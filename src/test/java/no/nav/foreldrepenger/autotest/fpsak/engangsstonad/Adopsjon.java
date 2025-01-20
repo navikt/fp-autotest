@@ -29,6 +29,7 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
+// TODO: test historikkinnslag @thao1
 @Tag("fpsak")
 @Tag("engangsstonad")
 class Adopsjon extends FpsakTestBase {

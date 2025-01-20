@@ -35,6 +35,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.GeografiskTilknytningDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.MedlemskapDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonstatusDto;
 
+//TODO: test historikkinnslag @thao1
 @Tag("fpsak")
 @Tag("engangsstonad")
 class Medlemskap extends FpsakTestBase {

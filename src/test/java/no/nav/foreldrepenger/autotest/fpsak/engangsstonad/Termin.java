@@ -30,6 +30,7 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
+//TODO: test historikkinnslag @palfi
 @Tag("fpsak")
 @Tag("engangsstonad")
 class Termin extends FpsakTestBase {

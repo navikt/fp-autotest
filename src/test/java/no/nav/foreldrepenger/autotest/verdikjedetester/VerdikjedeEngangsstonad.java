@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.StatsborgerskapDto;
 
+//TODO: test historikkinnslag @palfi
 @Tag("verdikjede")
 class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
 

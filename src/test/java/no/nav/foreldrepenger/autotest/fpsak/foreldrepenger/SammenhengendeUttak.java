@@ -48,6 +48,7 @@ import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttakMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
+//TODO: test historikkinnslag @sirimykland
 @Tag("fpsak")
 @Tag("foreldrepenger")
 class SammenhengendeUttak extends FpsakTestBase {
