@@ -16,6 +16,7 @@ public class Beregningsgrunnlag {
     private List<BeregningsgrunnlagPeriodeDto> beregningsgrunnlagPeriode;
     private Double halvG;
     private FaktaOmBeregningDto faktaOmBeregning;
+    private RefusjonTilVurderingDto refusjonTilVurdering;
     private List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;
     private FaktaOmFordelingDto faktaOmFordeling;
     private String ledetekstAvkortet;
@@ -61,5 +62,9 @@ public class Beregningsgrunnlag {
 
     public Double getHalvG() {
         return halvG;
+    }
+
+    public RefusjonTilVurderingDto getRefusjonTilVurdering() {
+        return refusjonTilVurdering;
     }
 }

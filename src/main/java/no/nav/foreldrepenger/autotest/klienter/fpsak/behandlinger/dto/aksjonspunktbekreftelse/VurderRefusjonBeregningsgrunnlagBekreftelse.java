@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ArbeidsforholdDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.RefusjonTilVurderingAndelDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 
@@ -32,11 +32,11 @@ public class VurderRefusjonBeregningsgrunnlagBekreftelse extends AksjonspunktBek
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         super.oppdaterMedDataFraBehandling(fagsak, behandling);
-        for (ArbeidsforholdDto arbeidsforhold : behandling.getArbeidOgInntektsmeldingDto().arbeidsforhold()) {
+        for (RefusjonTilVurderingAndelDto andel : behandling.getBeregningsgrunnlag().getRefusjonTilVurdering().getAndeler()) {
             var vurderRefusjonAndelBeregningsgrunnlagDto = new VurderRefusjonAndelBeregningsgrunnlagDto(
-                    new Orgnummer(arbeidsforhold.arbeidsgiverIdent()),
+                    new Orgnummer(andel.getArbeidsgiver().getArbeidsgiverOrgnr()),
                     null,
-                    arbeidsforhold.internArbeidsforholdId(),
+                    andel.getInternArbeidsforholdRef(),
                     null);
             fastsatteAndeler.add(vurderRefusjonAndelBeregningsgrunnlagDto);
 
