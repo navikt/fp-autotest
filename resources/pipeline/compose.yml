@@ -122,6 +122,8 @@ services:
     depends_on:
       audit.nais:
         condition: service_started
+      redis:
+        condition: service_started
       vtp:
         condition: service_healthy
   fpabakus:
