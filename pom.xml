@@ -300,6 +300,13 @@
             </properties>
         </profile>
         <profile>
+            <id>fplos</id>
+            <properties>
+                <testsTags>fplos</testsTags>
+                <testPackage>no.nav.foreldrepenger.autotest.fplos.**</testPackage>
+            </properties>
+        </profile>
+        <profile>
             <id>foreldrepenger</id>
             <properties>
                 <includeTestsTags>foreldrepenger</includeTestsTags>
