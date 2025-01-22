@@ -41,7 +41,7 @@ public class FplosKlient {
     }
 
     public String hentLister() {
-        var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.OPPGAVESTYRER, API_NAME)
+        var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPLOS_BASE)
                         .path("/avdelingsleder/sakslister")
                         .queryParam("avdelingEnhet", "4867")
@@ -51,23 +51,25 @@ public class FplosKlient {
                 .orElseThrow(() -> new RuntimeException("Ussj")).body();
     }
 
-    static class SakslisteBuilder {
-        private final SakslisteId sakslisteId;
+    public static class SakslisteBuilder {
+        private final LosSakslisteId sakslisteId;
+        private final SaksbehandlerRolle saksbehandlerRolle;
 
-        private SakslisteBuilder() {
-            var request = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.OPPGAVESTYRER, API_NAME)
+        private SakslisteBuilder(SaksbehandlerRolle saksbehandlerRolle) {
+            this.saksbehandlerRolle = saksbehandlerRolle;
+            var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, API_NAME)
                     .uri(fromUri(BaseUriProvider.FPLOS_BASE)
                             .path("/avdelingsleder/sakslister")
                             .build())
                     .POST(HttpRequest.BodyPublishers.ofString(toJson(AvdelingEnhet.defaultEnhet)));
-            var sakslisteIdResponse = Optional.of(send(request.build(), new TypeReference<SakslisteId>() {}))
-                    .map(SakslisteId::sakslisteId)
+            var sakslisteIdResponse = Optional.of(send(request.build(), new TypeReference<LosSakslisteId>() {}))
+                    .map(LosSakslisteId::sakslisteId)
                     .orElseThrow();
-            this.sakslisteId = new SakslisteId(sakslisteIdResponse);
+            this.sakslisteId = new LosSakslisteId(sakslisteIdResponse);
         }
 
         public static SakslisteBuilder nyListe() {
-            return new SakslisteBuilder();
+            return new SakslisteBuilder(SaksbehandlerRolle.OPPGAVESTYRER);
         }
 
         public SakslisteBuilder medSortering() {
@@ -76,7 +78,7 @@ public class FplosKlient {
                     "OPPRBEH",
                     AvdelingEnhet.defaultEnhet
             );
-            var sorteringReq = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.OPPGAVESTYRER, API_NAME)
+            var sorteringReq = requestMedInnloggetSaksbehandler(saksbehandlerRolle, API_NAME)
                     .uri(fromUri(BaseUriProvider.FPLOS_BASE)
                             .path("/avdelingsleder/sakslister/sortering")
                             .build())
@@ -92,7 +94,7 @@ public class FplosKlient {
                     null,
                     AvdelingEnhet.defaultEnhet
             );
-            var filterReq = requestMedInnloggetSaksbehandler(SaksbehandlerRolle.OPPGAVESTYRER, API_NAME)
+            var filterReq = requestMedInnloggetSaksbehandler(saksbehandlerRolle, API_NAME)
                     .uri(fromUri(BaseUriProvider.FPLOS_BASE)
                             .path("/avdelingsleder/sakslister/sortering-tidsintervall-dato")
                             .build())
@@ -101,20 +103,19 @@ public class FplosKlient {
            return this;
         }
 
-        public SakslisteId build() {
+        public LosSakslisteId build() {
             return sakslisteId;
         }
     }
 
-    record SakslisteId(int sakslisteId) { }
     record AvdelingEnhet(String avdelingEnhet) {
         static final AvdelingEnhet defaultEnhet = new AvdelingEnhet("4867");
     }
-    record SakslisteSorteringIntervallDato(SakslisteId sakslisteId,
+    record SakslisteSorteringIntervallDato(LosSakslisteId sakslisteId,
                                            LocalDate fomDato,
                                            LocalDate tomDato,
                                            AvdelingEnhet avdelingEnhet) { }
-    record Sortering(SakslisteId sakslisteId,
+    record Sortering(LosSakslisteId sakslisteId,
                      String sakslisteSorteringValg,
                      AvdelingEnhet avdelingEnhet) { }
 

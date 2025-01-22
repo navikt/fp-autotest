@@ -59,4 +59,12 @@ class Fplos extends FpsakTestBase {
                 o.andreKriterier().contains("SAMMENSATT_KONTROLL"), "har egenskap SAMMENSATT_KONTROLL");
     }
 
+    @Test
+    @DisplayName("Enkel sjekk på at opprettelse av saksliste ikke gir feil")
+    @Description("Lager en enkel saksliste med enkle kriterier LOS")
+    void opprettSaksliste() {
+        var sakslisteId = oppgavestyrer.opprettSaksliste();
+        assertThat(sakslisteId).isNotNull();
+    }
+
 }
