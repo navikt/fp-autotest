@@ -102,7 +102,7 @@ jobs:
         run: |
           if [[ ${{ inputs.test-suite }} == 'fptilbake' ]]; then
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil -DikkeSjekkLengdeAvContainer=fpdokgen,fpabonnent
-          elif [[ ${{ inputs.test-suite }} == 'verdikjede' ]]; then
+          elif [[ ${{ inputs.test-suite }} == 'verdikjede' || ${{ inputs.test-suite }} == 'fplos' ]]; then
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
           else
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil
