@@ -25,7 +25,7 @@ jobs:
     name: Kjører ${{ inputs.test-suite }}-tester mot ${{ github.repository }} ${{ inputs.build-version }}
     permissions:
      id-token: write
-    runs-on: ${{ ((github.actor == 'dependabot[bot]' || inputs.test-suite == 'fpkalkulus') && 'ubuntu-latest') || 'ubuntu-latest-8-cores' }}
+    runs-on: ${{ ((github.actor == 'dependabot[bot]' || inputs.test-suite == 'fpkalkulus' || inputs.test-suite == 'fplos') && 'ubuntu-latest') || 'ubuntu-latest-8-cores' }}
     timeout-minutes: 15
     outputs:
       result: ${{ steps.result.outputs.result }}
