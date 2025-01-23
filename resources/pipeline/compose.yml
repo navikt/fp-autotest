@@ -306,8 +306,6 @@ services:
         condition: service_healthy
       fpsak:
         condition: service_started
-      fplos:
-        condition: service_started
   fpformidling:
     <<: *default-konfigurasjon
     image: $FPFORMIDLING_IMAGE
@@ -481,9 +479,7 @@ services:
     depends_on:
       oracle:
         condition: service_healthy
-      vtp:
-        condition: service_healthy
-      fptilgang:
+      fpsak:
         condition: service_healthy
   fpoversikt:
     <<: *default-konfigurasjon
