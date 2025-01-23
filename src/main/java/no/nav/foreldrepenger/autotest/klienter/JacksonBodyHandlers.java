@@ -51,4 +51,5 @@ public final class JacksonBodyHandlers {
             throw new TekniskException("F-208314", "Kunne ikke serialisere objekt til JSON", var2);
         }
     }
+
 }

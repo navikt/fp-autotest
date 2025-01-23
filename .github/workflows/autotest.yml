@@ -13,7 +13,7 @@ on:
         required: false
         default: '8'
       test-suite:
-        description: 'Test suite å kjøre (fpsak|fptilbake|fpkalkulus|verdikjede)'
+        description: 'Test suite å kjøre (fpsak|fptilbake|fpkalkulus|fplos|verdikjede)'
         type: string
         required: true
     outputs:
@@ -83,6 +83,10 @@ jobs:
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad-mottak" "fpoversikt" "foreldrepengesoknad-api" "fpkalkulus" "fpinntektsmelding")
           fi
 
+          if [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
+            services+=("fplos")
+          fi
+
           cd resources/pipeline
           ./update-versions.sh ${{ github.repository }} ${{ inputs.build-version }}
           echo "Kjører docker compose up på følgende applikasjoner: ${services[*]}"
@@ -123,6 +127,7 @@ jobs:
 
       - name: Generer testrapport
         if: inputs.test-suite != 'fpkalkulus' &&
+            inputs.test-suite != 'fplos' &&
             (success() || failure()) &&
             steps.setup.outcome == 'success' &&
             github.repository != 'navikt/fp-autotest'

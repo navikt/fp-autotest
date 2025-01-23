@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunkt
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -15,6 +16,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import no.nav.foreldrepenger.autotest.klienter.fplos.FplosKlient;
+
+import no.nav.foreldrepenger.autotest.klienter.fplos.LosOppgave;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.EndreUtlandMarkering;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +88,7 @@ public class Saksbehandler {
     protected final HistorikkFpsakKlient historikkKlient;
     protected final ProsesstaskFpsakKlient prosesstaskKlient;
     protected final RisikovurderingKlient risikovurderingKlient;
+    protected final FplosKlient fplosKlient;
 
     public Saksbehandler() {
         this(SaksbehandlerRolle.SAKSBEHANDLER);
@@ -93,6 +101,7 @@ public class Saksbehandler {
         historikkKlient = new HistorikkFpsakKlient(saksbehandlerRolle);
         prosesstaskKlient = new ProsesstaskFpsakKlient(saksbehandlerRolle);
         risikovurderingKlient = new RisikovurderingKlient(saksbehandlerRolle);
+        fplosKlient = new FplosKlient(saksbehandlerRolle);
     }
 
     /*
@@ -118,6 +127,11 @@ public class Saksbehandler {
 
     public void ventTilFagsakLøpende() {
         ventTilFagsakstatus(FagsakStatus.LØPENDE);
+    }
+
+    public void endreSaksmarkering(Saksnummer saksnummer, Set<String> saksmarkeringer) {
+        var endreUtlandMarkering = new EndreUtlandMarkering(saksnummer, saksmarkeringer);
+        fagsakKlient.endreFagsakMarkering(endreUtlandMarkering);
     }
 
     private void ventTilFagsakstatus(FagsakStatus... status) {
@@ -205,6 +219,28 @@ public class Saksbehandler {
         ventPåOgVelgSisteBehandling(behandlingstype, behandlingÅrsakType, åpenStatus, null);
     }
 
+    public List<LosOppgave> hentLosOppgaver(Saksnummer saksnummer) {
+        return hentLosOppgaver(saksnummer, null);
+    }
+
+    public List<LosOppgave> hentLosOppgaver(Saksnummer saksnummer, LocalDateTime opprettetEtterDateTime) {
+        return Vent.på(() -> {
+            LOG.info("Henter oppgaver fra LOS ...");
+            var oppgaver = fplosKlient.hentOppgaverForFagsaker(saksnummer);
+            if (oppgaver.isEmpty()) {
+                return null;
+            }
+            var senesteOpprettetTidspunkt = oppgaver.stream()
+                    .map(LosOppgave::opprettetTidspunkt)
+                    .max(Comparator.naturalOrder())
+                    .orElseThrow();
+            if (opprettetEtterDateTime != null && !senesteOpprettetTidspunkt.isAfter(opprettetEtterDateTime)) {
+                // dette er en mekanisme for å forsikre oss om at fplos har mottatt og behandlet meldinger
+                return null;
+            }
+            return oppgaver;
+        }, "Fant ikke Los-oppgaver innenfor fristen");
+    }
 
     /**
      * For å sikre at vi venter på riktig behandling og behandlingen er ferdig prossessert for konsistens venter vi på følgende:

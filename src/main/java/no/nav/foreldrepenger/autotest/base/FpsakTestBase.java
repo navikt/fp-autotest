@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.autotest.base;
 
+import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Oppgavestyrer;
+
 import org.junit.jupiter.api.BeforeEach;
 
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Beslutter;
@@ -18,6 +20,7 @@ public abstract class FpsakTestBase {
     protected Overstyrer overstyrer;
     protected Beslutter beslutter;
     protected Klagebehandler klagebehandler;
+    protected Oppgavestyrer oppgavestyrer;
 
 
     @BeforeEach
@@ -26,6 +29,7 @@ public abstract class FpsakTestBase {
         overstyrer = new Overstyrer();
         beslutter = new Beslutter();
         klagebehandler = new Klagebehandler();
+        oppgavestyrer = new Oppgavestyrer();
         LoggFormater.leggTilKjørendeTestCaseILogger();
     }
 
