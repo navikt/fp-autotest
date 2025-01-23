@@ -79,12 +79,10 @@ jobs:
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpkalkulus")
           elif [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
             services=("fpkalkulus")
+          elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
+            services=("fplos")
           else
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad-mottak" "fpoversikt" "foreldrepengesoknad-api" "fpkalkulus" "fpinntektsmelding")
-          fi
-
-          if [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
-            services+=("fplos")
           fi
 
           cd resources/pipeline
