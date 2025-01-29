@@ -24,7 +24,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
-        <vtp.versjon>1.2.4</vtp.versjon>
+        <vtp.versjon>2.0.1</vtp.versjon>
         <fp-felles.versjon>7.4.7</fp-felles.versjon>
         <fp-prosesstask.version>5.1.1</fp-prosesstask.version>
         <fp-kontrakter.version>9.2.2</fp-kontrakter.version>
