@@ -1,12 +1,10 @@
 package no.nav.foreldrepenger.generator.familie;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
+import no.nav.foreldrepenger.autotest.aktoerer.innsender.ApiMottak;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType;
-import no.nav.foreldrepenger.autotest.aktoerer.innsender.ApiMottak;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.DødfødselhendelseDto;
@@ -15,6 +13,9 @@ import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.personopplysning.BrukerModell;
+
+import java.time.LocalDate;
+import java.util.Optional;
 
 public class Familie {
 
@@ -26,13 +27,14 @@ public class Familie {
     private Far far;
     private Mor medmor;
 
-    public Familie(TestscenarioDto testscenarioDto, InnsenderType innsenderType) {
+    public Familie(TestscenarioDto testscenarioDto, InnsenderType innsenderType, SaksbehandlerRolle saksbehandlerRolle) {
         this.scenario = testscenarioDto;
         this.innsender = switch (innsenderType) {
-            case SEND_DOKUMENTER_MED_SELVBETJENING -> new ApiMottak();
-            case SEND_DOKUMENTER_UTEN_SELVBETJENING -> new Fordel();
+            case SEND_DOKUMENTER_MED_SELVBETJENING -> new ApiMottak(saksbehandlerRolle);
+            case SEND_DOKUMENTER_UTEN_SELVBETJENING -> new Fordel(saksbehandlerRolle);
         };
     }
+
 
     public Mor mor() {
         if (mor == null) {

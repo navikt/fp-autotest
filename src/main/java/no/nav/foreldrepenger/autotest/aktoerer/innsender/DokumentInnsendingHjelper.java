@@ -1,12 +1,5 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkAktør.ARBEIDSGIVER;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.List;
-
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
@@ -19,16 +12,19 @@ import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
+import java.util.List;
+
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkAktør.ARBEIDSGIVER;
+
 abstract class DokumentInnsendingHjelper implements Innsender {
 
     protected final FagsakKlient fagsakKlient;
     protected final BehandlingFpsakKlient behandlingerKlient;
     protected final HistorikkFpsakKlient historikkKlient;
     protected final JournalforingKlient journalpostKlient;
-
-    protected DokumentInnsendingHjelper() {
-        this(SaksbehandlerRolle.SAKSBEHANDLER);
-    }
 
     protected DokumentInnsendingHjelper(SaksbehandlerRolle saksbehandlerRolle) {
             fagsakKlient = new FagsakKlient(saksbehandlerRolle);
