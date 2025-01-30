@@ -3,15 +3,8 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.util.List;
 import java.util.UUID;
 
-public class BekreftedeAksjonspunkter {
+public record BekreftedeAksjonspunkter(UUID behandlingUuid,
+                                       int behandlingVersjon,
+                                       List<AksjonspunktBekreftelse> bekreftedeAksjonspunktDtoer) {
 
-    protected UUID behandlingUuid;
-    protected int behandlingVersjon;
-    protected List<AksjonspunktBekreftelse> bekreftedeAksjonspunktDtoer;
-
-    public BekreftedeAksjonspunkter(UUID behandlingUuid, int behandlingVersjon, List<AksjonspunktBekreftelse> bekreftedeAksjonspunktDtoer) {
-        this.behandlingUuid = behandlingUuid;
-        this.behandlingVersjon = behandlingVersjon;
-        this.bekreftedeAksjonspunktDtoer = bekreftedeAksjonspunktDtoer;
-    }
 }

@@ -22,6 +22,10 @@ public abstract class AksjonspunktBekreftelse {
         return this;
     }
 
+    public boolean erBeslutterAksjonspunkt() {
+        return false;
+    }
+
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + ": {kode:" + (kode != null ? kode : "") + ", begrunnelse:" +

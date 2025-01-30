@@ -63,6 +63,11 @@ public class FatterVedtakBekreftelse extends AksjonspunktBekreftelse {
         return "5016";
     }
 
+    @Override
+    public boolean erBeslutterAksjonspunkt() {
+        return true;
+    }
+
     public static class AksjonspunktGodkjenningDto {
         public String aksjonspunktKode;
         protected List<String> arsaker = new ArrayList<>();

@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.AsyncPolli
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingHenlegg;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.SettBehandlingPaVentDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.BekreftedeAksjonspunkter;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
@@ -41,6 +42,7 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
     public static final String SAKSNUMMER_NAME = "saksnummer";
     public static final String BEHANDLING_URL = "/behandling";
     public static final String BEHANDLING_AKSJONSPUNKT_URL = BEHANDLING_URL + "/aksjonspunkt";
+    public static final String BEHANDLING_AKSJONSPUNKT_BESLUTTER_URL = BEHANDLING_URL + "/aksjonspunkt/beslutt";
     public static final String BEHANDLINGER_URL = "/behandlinger";
     private static final String BEHANDLINGER_SETT_PA_VENT_URL = BEHANDLINGER_URL + "/sett-pa-vent";
     private static final String BEHANDLINGER_HENLEGG_URL = BEHANDLINGER_URL + "/henlegg";
@@ -149,10 +151,17 @@ public class BehandlingKlientFelles implements BehandlingerKlient {
     public void postBehandlingAksjonspunkt(BekreftedeAksjonspunkter aksjonspunkter) {
         var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, this.apiName)
                 .uri(fromUri(baseUrl)
-                        .path(BEHANDLING_AKSJONSPUNKT_URL)
+                        .path(utledPath(aksjonspunkter))
                         .build())
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(aksjonspunkter)));
         send(request.build());
+    }
+
+    private static String utledPath(BekreftedeAksjonspunkter aksjonspunkter) {
+        //Eget endepunkt for beslutter
+        return aksjonspunkter.bekreftedeAksjonspunktDtoer()
+                .stream()
+                .anyMatch(AksjonspunktBekreftelse::erBeslutterAksjonspunkt) ? BEHANDLING_AKSJONSPUNKT_BESLUTTER_URL : BEHANDLING_AKSJONSPUNKT_URL;
     }
 
 
