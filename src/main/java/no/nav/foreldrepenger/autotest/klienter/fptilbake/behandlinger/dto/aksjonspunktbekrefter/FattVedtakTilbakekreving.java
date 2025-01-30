@@ -14,6 +14,11 @@ public class FattVedtakTilbakekreving extends AksjonspunktBekreftelse {
     }
 
     @Override
+    public boolean erBeslutterAksjonspunkt() {
+        return true;
+    }
+
+    @Override
     public String aksjonspunktKode() {
         return "5005";
     }
