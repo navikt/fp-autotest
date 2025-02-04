@@ -111,16 +111,13 @@ public abstract class Arbeidsgiver {
         if(arbeidsforhold.size() == 1) {
             im.add(lagInntektsmeldingSVP());
         } else {
-            im.add(lagInntektsmeldingSVP());
-//
-//
-//            var stillingsprosentSamlet = arbeidsforhold.stream()
-//                    .map(Arbeidsforhold::stillingsprosent)
-//                    .mapToInt(Integer::intValue).sum();
-//
-//            arbeidsforhold.forEach(a ->
-//                    im.add(lagInntektsmeldingSVP(arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
-//                            a.arbeidsforholdId())));
+            var stillingsprosentSamlet = arbeidsforhold.stream()
+                    .map(Arbeidsforhold::stillingsprosent)
+                    .mapToInt(Integer::intValue).sum();
+
+            arbeidsforhold.forEach(a ->
+                    im.add(lagInntektsmeldingSVP(arbeidstaker.månedsinntekt() * a.stillingsprosent() / stillingsprosentSamlet,
+                            a.arbeidsforholdId())));
         }
         return im;
     }
