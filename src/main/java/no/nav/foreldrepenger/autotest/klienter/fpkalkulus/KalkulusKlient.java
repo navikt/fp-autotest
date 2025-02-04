@@ -27,6 +27,8 @@ public class KalkulusKlient {
     private static final String KALKULUS_BEREGN_URL = "/beregn";
     private static final String KALKULUS_AVKLARINGSBEHOV_URL = "/avklaringsbehov";
 
+    private static final Duration KALKULUS_TIMEOUT = Duration.ofSeconds(10);
+
     private final SaksbehandlerRolle saksbehandlerRolle;
 
     public KalkulusKlient(SaksbehandlerRolle saksbehandlerRolle) {
@@ -36,6 +38,7 @@ public class KalkulusKlient {
 
     public BeregningsgrunnlagGrunnlagDto hentDetaljertBeregningsgrunnlag(EnkelFpkalkulusRequestDto hentBeregningsgrunnlagRequest) {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
+                .timeout(KALKULUS_TIMEOUT)
                 .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
                         .path(KALKULUS_DETALJERT_GRUNNLAG_URL)
                         .build())
@@ -45,6 +48,7 @@ public class KalkulusKlient {
 
     public BeregningsgrunnlagDto hentGUIBeregningsgrunnlag(HentBeregningsgrunnlagGUIRequest hentBeregningsgrunnlagGUIRequest) {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
+                .timeout(KALKULUS_TIMEOUT)
                 .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
                         .path(KALKULUS_GUI_GRUNNLAG_URL)
                         .build())
@@ -55,7 +59,7 @@ public class KalkulusKlient {
 
     public TilstandResponse kjørBeregning(BeregnRequestDto beregnRequestDto) {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
-                .timeout(Duration.ofSeconds(10))
+                .timeout(KALKULUS_TIMEOUT)
                 .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
                         .path(KALKULUS_BEREGN_URL)
                         .build())
@@ -67,6 +71,7 @@ public class KalkulusKlient {
     public OppdateringRespons håndterBeregning(HåndterBeregningRequestDto håndterRequestDto) {
         håndterRequestDto.håndterBeregningDtoList().forEach(dto -> dto.setBegrunnelse("Løst av verdikjeden"));
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
+                .timeout(KALKULUS_TIMEOUT)
                 .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
                         .path(KALKULUS_AVKLARINGSBEHOV_URL)
                         .build())
