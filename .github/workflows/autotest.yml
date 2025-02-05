@@ -124,8 +124,7 @@ jobs:
           fi
 
       - name: Generer testrapport
-        if: inputs.test-suite != 'fpkalkulus' &&
-            inputs.test-suite != 'fplos' &&
+        if: inputs.test-suite != 'fplos' &&
             (success() || failure()) &&
             steps.setup.outcome == 'success' &&
             github.repository != 'navikt/fp-autotest'
