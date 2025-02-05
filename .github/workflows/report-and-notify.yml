@@ -134,11 +134,7 @@ jobs:
             elif [[ "$2" == 'success' ]]; then
               echo ":heavy_check_mark:  $1"
             else
-              if [[ "$1" == "Kalkulus" ]]; then
-                echo ":x:  $1"
-              else
-                echo ":x:  $1 -> se $3"
-              fi
+              echo ":x:  $1 -> se $3"
             fi
           }
 
