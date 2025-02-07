@@ -1,0 +1,52 @@
+services:
+  vtp:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fptilgang:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpabakus:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpkalkulus:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpsak:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpfordel:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpformidling:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpdokgen:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpoppdrag:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fptilbake:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fprisk:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpabonnent:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fplos:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpsoknad-mottak:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  foreldrepengesoknad-api:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpoversikt:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
+  fpinntektsmelding:
+    environment:
+      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
