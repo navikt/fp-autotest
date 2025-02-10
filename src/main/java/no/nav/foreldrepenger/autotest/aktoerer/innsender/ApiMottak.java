@@ -1,16 +1,11 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
-import static org.assertj.core.api.Assertions.fail;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi.MottakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.InntektsmeldingKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.SendInntektsmeldingDto;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
 import no.nav.foreldrepenger.common.domain.AktørId;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
@@ -34,12 +29,19 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalstatus;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
+import static org.assertj.core.api.Assertions.fail;
+
 public class ApiMottak extends DokumentInnsendingHjelper {
 
     private final MottakKlient mottakKlient;
     private final PdlLeesahKlient pdlLeesahKlient;
 
-    public ApiMottak() {
+    public ApiMottak(SaksbehandlerRolle saksbehandlerRolle) {
+        super(saksbehandlerRolle);
         mottakKlient = new MottakKlient();
         pdlLeesahKlient = new PdlLeesahKlient();
     }

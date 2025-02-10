@@ -1,17 +1,19 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsyn;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi.InnsynKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.common.innsyn.AnnenPartSak;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
 import no.nav.foreldrepenger.common.innsyn.EsSak;
 import no.nav.foreldrepenger.common.innsyn.FpSak;
 import no.nav.foreldrepenger.common.innsyn.Saker;
 import no.nav.foreldrepenger.common.innsyn.svp.SvpSak;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
 
 public class Innsyn {
     private static final Logger LOG = LoggerFactory.getLogger(Innsyn.class);
@@ -29,6 +31,10 @@ public class Innsyn {
     private Saker hentSaker() {
         LOG.info("Henter saker på bruker {}", fnr.value());
         return innsynKlient.hentSaker(fnr);
+    }
+
+    public AnnenPartSak hentAnnenpartsSak(Fødselsnummer annenpart, LocalDate familiehendelse) {
+        return innsynKlient.hentAnnenpartsSak(fnr, new InnsynKlient.AnnenPartSakIdentifikator(annenpart, null, familiehendelse));
     }
 
     public EsSak hentEsSakMedÅpenBehandlingTilstand(Saksnummer saksnummer, BehandlingTilstand behandlingTilstand) {
