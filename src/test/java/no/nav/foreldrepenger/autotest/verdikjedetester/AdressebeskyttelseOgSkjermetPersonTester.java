@@ -25,6 +25,7 @@ import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Støn
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @Tag("verdikjede")
@@ -87,7 +88,6 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThatThrownBy(() -> drifter.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> beslutter.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
 
-
         var far = familie.far();
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
                 .medFordeling(List.of(
@@ -102,6 +102,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato);
         saksbehandler6.ventTilFagsakLøpende();
 
+        // Hele fagsaken skal være beskyttet og krever KODE_6 tilgang, selv om far ikke har beskyttet addresse
         assertThatThrownBy(() -> saksbehandler.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> saksbehandler7.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> saksbehandlerEgenAnsatt.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
@@ -110,11 +111,21 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThatThrownBy(() -> drifter.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> beslutter.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
 
-        // TODO: Legg til sjekk på innsyn...
-        //assertThat(mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor).annenPart()).isNotNull();
-        //assertThat(mor.innsyn().hentAnnenpartsSak(far.fødselsnummer(), termindato)).isNotNull();
-        //assertThat(far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar).annenPart()).isNull();
-        //assertThat(far.innsyn().hentAnnenpartsSak(mor.fødselsnummer(), termindato)).isNull();
+        var morsSakInnsyn = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
+        assertThat(morsSakInnsyn).isNotNull();
+        assertThat(morsSakInnsyn.gjeldendeVedtak().perioder()).isNotEmpty();
+        assertThat(morsSakInnsyn.saksnummer().value()).isEqualTo(saksnummerMor.value());
+        assertThat(morsSakInnsyn.annenPart()).isNotNull(); // Far er ikke beskyttet
+        assertThat(morsSakInnsyn.annenPart().fnr().value()).isEqualTo(far.fødselsnummer().value()); // Far er ikke beskyttet
+        assertThat(mor.innsyn().hentAnnenpartsSak(far.fødselsnummer(), termindato)).isNotNull(); // Far er ikke beskyttet
+        assertThat(mor.innsyn().hentAnnenpartsSak(far.fødselsnummer(), termindato).perioder()).isNotEmpty(); // Far er ikke beskyttet
+
+        var farsSakInnsyn = far.innsyn().hentFpSakUtenÅpenBehandling(saksnummerFar);
+        assertThat(farsSakInnsyn).isNotNull();
+        assertThat(farsSakInnsyn.gjeldendeVedtak().perioder()).isNotEmpty();
+        assertThat(farsSakInnsyn.saksnummer().value()).isEqualTo(saksnummerFar.value());
+        assertThat(farsSakInnsyn.annenPart()).isNull(); // Mor er beskyttet
+        assertThat(far.innsyn().hentAnnenpartsSak(mor.fødselsnummer(), termindato)).isNull(); // Mor er beskyttet
     }
 
     @Test
@@ -145,5 +156,9 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         assertThatThrownBy(() -> veileder.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> drifter.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> beslutter.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+
+        var innsynSak = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
+        assertThat(innsynSak).isNotNull();
+        assertThat(innsynSak.saksnummer().value()).isEqualTo(saksnummerMor.value());
     }
 }

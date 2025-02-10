@@ -25,7 +25,7 @@ public class InnsynKlient {
                 .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
                         .path(API_SAKER_PATH)
                         .build())
-                .timeout(Duration.ofSeconds(30))
+                .timeout(Duration.ofSeconds(10))
                 .GET();
         return send(request.build(), Saker.class);
     }
@@ -35,7 +35,7 @@ public class InnsynKlient {
                 .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
                         .path(API_ANNENPARTS_VEDTAK_PATH)
                         .build())
-                .timeout(Duration.ofSeconds(30))
+                .timeout(Duration.ofSeconds(10))
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(identifikator)));
         return send(request.build(), AnnenPartSak.class);
     }
