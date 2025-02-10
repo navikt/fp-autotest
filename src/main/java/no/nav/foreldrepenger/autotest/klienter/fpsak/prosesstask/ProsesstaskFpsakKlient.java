@@ -1,22 +1,25 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask;
 
-import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPSAK_BASE;
-
-import java.util.List;
-
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 
+import java.util.List;
+
+import static no.nav.foreldrepenger.autotest.klienter.BaseUriProvider.FPSAK_BASE;
+
 public class ProsesstaskFpsakKlient implements ProsessTaskKlient {
 
     private final ProsesstaskKlientFelles prosesstaskKlient;
 
+    public ProsesstaskFpsakKlient() {
+        prosesstaskKlient = new ProsesstaskKlientFelles(FPSAK_BASE, "fpsak");
+    }
+
     public ProsesstaskFpsakKlient(SaksbehandlerRolle saksbehandlerRolle) {
         prosesstaskKlient = new ProsesstaskKlientFelles(FPSAK_BASE, saksbehandlerRolle, "fpsak");
     }
-
 
     @Override
     public List<ProsessTaskDataDto> alleProsesstaskPåBehandling() {

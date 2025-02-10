@@ -21,6 +21,7 @@ public abstract class FpsakTestBase {
     protected Beslutter beslutter;
     protected Klagebehandler klagebehandler;
     protected Oppgavestyrer oppgavestyrer;
+    // TODO: Drifter
 
 
     @BeforeEach
