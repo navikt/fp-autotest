@@ -1,17 +1,5 @@
 package no.nav.foreldrepenger.generator.kalkulus;
 
-import static no.nav.foreldrepenger.common.mapper.DefaultJsonMapper.MAPPER;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.UUID;
-
-import org.junit.jupiter.api.TestInfo;
-
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
 import no.nav.folketrygdloven.fpkalkulus.kontrakt.FpkalkulusYtelser;
 import no.nav.folketrygdloven.kalkulus.beregning.v1.ForeldrepengerGrunnlag;
@@ -23,7 +11,20 @@ import no.nav.folketrygdloven.kalkulus.felles.v1.Saksnummer;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
-import no.nav.folketrygdloven.kalkulus.typer.AktørId;
+import no.nav.foreldrepenger.common.domain.AktørId;
+import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
+import org.junit.jupiter.api.TestInfo;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.UUID;
+
+import static no.nav.foreldrepenger.common.mapper.DefaultJsonMapper.MAPPER;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 
 public class TestscenarioRepositoryImpl {
     public static final String KALKULATOR_INPUT_JSON_FIL_NAVN = "kalkulator-input.json";
@@ -104,8 +105,15 @@ public class TestscenarioRepositoryImpl {
     private BeregnRequestDto lesOgReturnerScenarioFraJsonfil(TestInfo testInfo,
                                                                String inputPrefix) throws FileNotFoundException {
         var kalkulatorInputDto = finnKalkulatorInput(testInfo, inputPrefix);
-        return genererNyRequest(kalkulatorInputDto,
-                AktørId.dummy().getAktørId(), Saksnummer.fra(UUID.randomUUID().toString().substring(0, 19).replace("-", "")));
+        var aktørId = opprettPersonIVTP();
+        return genererNyRequest(kalkulatorInputDto, aktørId.value(), Saksnummer.fra(UUID.randomUUID().toString().substring(0, 19).replace("-", "")));
+    }
+
+    private static AktørId opprettPersonIVTP() {
+        return FamilieGenerator.ny()
+                .forelder(mor().build())
+                .build()
+                .mor().aktørId();
     }
 
     private BeregnRequestDto lesOgReturnerScenarioFraJsonfil(TestInfo testInfo,
