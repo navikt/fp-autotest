@@ -8,7 +8,8 @@ public enum SaksbehandlerRolle {
     OVERSTYRER("O123456"),
     OPPGAVESTYRER("L123456"),
     KLAGEBEHANDLER("K123456"),
-    VEILEDER("V123456");
+    VEILEDER("V123456"),
+    DRIFTER("D123456");
 
     final String kode;
 

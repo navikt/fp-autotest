@@ -284,7 +284,8 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         tbksaksbehandler.sendNyttKravgrunnlag(kravgrunnlag, saksnummer, saksbehandler.valgtBehandling.id);
 
         tbksaksbehandler.ventTilBehandlingHarAktivtAksjonspunkt(7003);
-        tbksaksbehandler.startAutomatiskBehandlingBatchOgVentTilAutoPunktErKjørt(7003); // TODO: Litt hacky.
+        tbkdrifter.startAutomatiskBehandlingBatch(7003); // TODO: Litt hacky.
+        tbksaksbehandler.ventTILAutomatiskBehandlingBatchErKjørt(7003); // TODO: Litt hacky.
         tbksaksbehandler.ventTilAvsluttetBehandling();
         assertThat(tbksaksbehandler.hentResultat(tbksaksbehandler.valgtBehandling.uuid).getTilbakekrevingBeløp())
                 .as("Tilbakekrevingsbeløp")
