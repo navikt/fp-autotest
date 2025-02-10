@@ -174,6 +174,9 @@ services:
         condition: service_healthy
       vtp:
         condition: service_healthy
+      fptilgang:
+        condition: service_healthy
+
   fpsak:
     <<: *default-konfigurasjon
     image: $FPSAK_IMAGE
