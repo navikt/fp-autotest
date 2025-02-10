@@ -21,7 +21,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Aksjonspunkt;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
-import no.nav.foreldrepenger.autotest.klienter.fptilbake.historikk.HistorikkTypeFptilbake;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.BehandlingFptilbakeKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingIdBasicDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.BehandlingOpprett;
@@ -34,6 +33,7 @@ import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjon
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.FattVedtakTilbakekreving;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ForeslåVedtak;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.historikk.HistorikkFptilbakeKlient;
+import no.nav.foreldrepenger.autotest.klienter.fptilbake.historikk.HistorikkTypeFptilbake;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.OkonomiKlient;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.BeregningResultatPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.okonomi.dto.Kravgrunnlag;
@@ -324,10 +324,13 @@ public class TilbakekrevingSaksbehandler {
     }
 
     //Batch trigger
-    public void startAutomatiskBehandlingBatchOgVentTilAutoPunktErKjørt(int autopunkt){
+    public void startAutomatiskBehandlingBatch(int autopunkt){
         var prosessTaskOpprettInputDto = new ProsessTaskOpprettInputDto();
         prosessTaskOpprettInputDto.setTaskType("batch.automatisk.saksbehandling");
         prosesstaskKlient.create(prosessTaskOpprettInputDto);
+    }
+
+    public void ventTILAutomatiskBehandlingBatchErKjørt(int autopunkt){
         Vent.på(() -> hentAksjonspunkt(autopunkt) == null, "Kravgrunnlag skal være sendt og plukket opp av batch!");
     }
 }
