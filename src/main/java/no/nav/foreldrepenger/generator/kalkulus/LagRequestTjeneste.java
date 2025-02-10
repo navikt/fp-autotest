@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.generator.kalkulus;
 
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.EnkelFpkalkulusRequestDto;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.HentBeregningsgrunnlagGUIRequest;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelFpkalkulusRequestDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.HåndterBeregningDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHentBeregningsgrunnlagGUIRequest;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHåndterBeregningRequestDto;
 
 import java.util.Collections;
 
@@ -15,12 +15,12 @@ public class LagRequestTjeneste {
         // Skal ikkje instansieres
     }
 
-    public static HåndterBeregningRequestDto lagHåndterRequest(BeregnRequestDto request, HåndterBeregningDto håndterBeregningDto) {
-        return new HåndterBeregningRequestDto(request.behandlingUuid(), request.saksnummer(), request.kalkulatorInput(), Collections.singletonList(håndterBeregningDto));
+    public static EnkelHåndterBeregningRequestDto lagHåndterRequest(EnkelBeregnRequestDto request, HåndterBeregningDto håndterBeregningDto) {
+        return new EnkelHåndterBeregningRequestDto (request.behandlingUuid(), request.saksnummer(), request.kalkulatorInput(), Collections.singletonList(håndterBeregningDto));
     }
 
-    public static BeregnRequestDto getFortsettBeregningRequest(BeregnRequestDto request, BeregningSteg stegType) {
-        return new BeregnRequestDto(
+    public static EnkelBeregnRequestDto getFortsettBeregningRequest(EnkelBeregnRequestDto request, BeregningSteg stegType) {
+        return new EnkelBeregnRequestDto(
                 request.saksnummer(),
                 request.behandlingUuid(),
                 request.aktør(),
@@ -30,11 +30,11 @@ public class LagRequestTjeneste {
                 null);
     }
 
-    public static HentBeregningsgrunnlagGUIRequest getHentGUIRequest(BeregnRequestDto request) {
-        return new HentBeregningsgrunnlagGUIRequest(request.behandlingUuid(), request.saksnummer(), request.kalkulatorInput());
+    public static EnkelHentBeregningsgrunnlagGUIRequest getHentGUIRequest(EnkelBeregnRequestDto request) {
+        return new EnkelHentBeregningsgrunnlagGUIRequest(request.behandlingUuid(), request.saksnummer(), request.kalkulatorInput());
     }
 
-    public static EnkelFpkalkulusRequestDto getHentDetaljertRequest(BeregnRequestDto request) {
+    public static EnkelFpkalkulusRequestDto getHentDetaljertRequest(EnkelBeregnRequestDto request) {
         return new EnkelFpkalkulusRequestDto(request.behandlingUuid(), request.saksnummer());
     }
 }

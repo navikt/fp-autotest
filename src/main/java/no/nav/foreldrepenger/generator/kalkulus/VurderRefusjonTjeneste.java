@@ -6,8 +6,8 @@ import static no.nav.foreldrepenger.generator.kalkulus.LagRequestTjeneste.lagHå
 import java.time.LocalDate;
 import java.util.Collections;
 
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHåndterBeregningRequestDto ;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.refusjon.VurderRefusjonAndelBeregningsgrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.refusjon.VurderRefusjonBeregningsgrunnlagDto;
 
@@ -18,11 +18,11 @@ public class VurderRefusjonTjeneste {
         // Skal ikkje instansieres
     }
 
-    public static HåndterBeregningRequestDto lagVurderRefusjonRequest(BeregnRequestDto request, VurderRefusjonBeregningsgrunnlagDto dto) {
+    public static EnkelHåndterBeregningRequestDto  lagVurderRefusjonRequest(EnkelBeregnRequestDto request, VurderRefusjonBeregningsgrunnlagDto dto) {
         return lagHåndterRequest(request, dto);
     }
 
-    public static HåndterBeregningRequestDto lagVurderRefusjonRequest(BeregnRequestDto request, VurderRefusjonAndelBeregningsgrunnlagDto andelDto) {
+    public static EnkelHåndterBeregningRequestDto  lagVurderRefusjonRequest(EnkelBeregnRequestDto request, VurderRefusjonAndelBeregningsgrunnlagDto andelDto) {
         VurderRefusjonBeregningsgrunnlagDto dto = new VurderRefusjonBeregningsgrunnlagDto(Collections.singletonList(andelDto));
         return lagHåndterRequest(request, dto);
     }

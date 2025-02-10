@@ -9,10 +9,10 @@ import java.net.http.HttpRequest;
 import java.time.Duration;
 
 import io.qameta.allure.Step;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.EnkelFpkalkulusRequestDto;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.HentBeregningsgrunnlagGUIRequest;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelFpkalkulusRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHentBeregningsgrunnlagGUIRequest;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHåndterBeregningRequestDto ;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
@@ -46,7 +46,7 @@ public class KalkulusKlient {
         return send(request.build(), BeregningsgrunnlagGrunnlagDto.class);
     }
 
-    public BeregningsgrunnlagDto hentGUIBeregningsgrunnlag(HentBeregningsgrunnlagGUIRequest hentBeregningsgrunnlagGUIRequest) {
+    public BeregningsgrunnlagDto hentGUIBeregningsgrunnlag(EnkelHentBeregningsgrunnlagGUIRequest hentBeregningsgrunnlagGUIRequest) {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
                 .timeout(KALKULUS_TIMEOUT)
                 .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
@@ -57,7 +57,7 @@ public class KalkulusKlient {
     }
 
 
-    public TilstandResponse kjørBeregning(BeregnRequestDto beregnRequestDto) {
+    public TilstandResponse kjørBeregning(EnkelBeregnRequestDto beregnRequestDto) {
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
                 .timeout(KALKULUS_TIMEOUT)
                 .uri(fromUri(BaseUriProvider.KALKULUS_BASE)
@@ -68,7 +68,7 @@ public class KalkulusKlient {
     }
 
     @Step("Håndter aksjonspunkt")
-    public OppdateringRespons håndterBeregning(HåndterBeregningRequestDto håndterRequestDto) {
+    public OppdateringRespons håndterBeregning(EnkelHåndterBeregningRequestDto  håndterRequestDto) {
         håndterRequestDto.håndterBeregningDtoList().forEach(dto -> dto.setBegrunnelse("Løst av verdikjeden"));
         var request = requestMedInnloggetSaksbehandler(saksbehandlerRolle, KLIENT_ID)
                 .timeout(KALKULUS_TIMEOUT)

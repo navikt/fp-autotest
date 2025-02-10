@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.generator.kalkulus;
 
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.FpkalkulusYtelser;
+import no.nav.folketrygdloven.kalkulus.kodeverk.FagsakYtelseType;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
 import no.nav.folketrygdloven.kalkulus.beregning.v1.ForeldrepengerGrunnlag;
 import no.nav.folketrygdloven.kalkulus.beregning.v1.SvangerskapspengerGrunnlag;
 import no.nav.folketrygdloven.kalkulus.beregning.v1.YtelsespesifiktGrunnlagDto;
@@ -39,11 +39,11 @@ public class TestscenarioRepositoryImpl {
 
     private final File rootDir = new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource("kalkulus")).getFile());
 
-    public BeregnRequestDto hentScenario(TestInfo testInfo, String inputPrefix) throws FileNotFoundException {
+    public EnkelBeregnRequestDto hentScenario(TestInfo testInfo, String inputPrefix) throws FileNotFoundException {
         return lesOgReturnerScenarioFraJsonfil(testInfo, inputPrefix);
     }
 
-    public BeregnRequestDto hentScenario(TestInfo testInfo, String inputPrefix, BeregnRequestDto request) throws FileNotFoundException {
+    public EnkelBeregnRequestDto hentScenario(TestInfo testInfo, String inputPrefix, EnkelBeregnRequestDto request) throws FileNotFoundException {
         return lesOgReturnerScenarioFraJsonfil(testInfo, inputPrefix, request);
     }
 
@@ -102,7 +102,7 @@ public class TestscenarioRepositoryImpl {
         return null;
     }
 
-    private BeregnRequestDto lesOgReturnerScenarioFraJsonfil(TestInfo testInfo,
+    private EnkelBeregnRequestDto lesOgReturnerScenarioFraJsonfil(TestInfo testInfo,
                                                                String inputPrefix) throws FileNotFoundException {
         var kalkulatorInputDto = finnKalkulatorInput(testInfo, inputPrefix);
         var aktørId = opprettPersonIVTP();
@@ -116,9 +116,9 @@ public class TestscenarioRepositoryImpl {
                 .mor().aktørId();
     }
 
-    private BeregnRequestDto lesOgReturnerScenarioFraJsonfil(TestInfo testInfo,
+    private EnkelBeregnRequestDto lesOgReturnerScenarioFraJsonfil(TestInfo testInfo,
                                                                String inputPrefix,
-                                                               BeregnRequestDto originalRequest) throws FileNotFoundException {
+                                                               EnkelBeregnRequestDto originalRequest) throws FileNotFoundException {
         var kalkulatorInputDto = finnKalkulatorInput(testInfo, inputPrefix);
         var saksnummer = originalRequest.saksnummer();
         var aktørId = originalRequest.aktør().getIdent();
@@ -130,7 +130,6 @@ public class TestscenarioRepositoryImpl {
         if (scenarioFiles == null) {
             throw new FileNotFoundException("Fant ikke scenario med mappenavn [" + getTestName(testInfo) + "]");
         }
-
         try {
             String inputNavn = inputPrefix == null ? KALKULATOR_INPUT_JSON_FIL_NAVN : inputPrefix + "-" + KALKULATOR_INPUT_JSON_FIL_NAVN;
             File kalkulatorInputFil = hentFilSomMatcherStreng(scenarioFiles, inputNavn);
@@ -144,16 +143,16 @@ public class TestscenarioRepositoryImpl {
         throw new IllegalArgumentException("Kunne ikke finne kalkulatorinput for scenario");
     }
 
-    private BeregnRequestDto genererNyRequest(KalkulatorInputDto kalkulatorInputDto,
+    private EnkelBeregnRequestDto genererNyRequest(KalkulatorInputDto kalkulatorInputDto,
                                               String aktørId,
                                               Saksnummer saksnummer) {
         return genererNyRequest(kalkulatorInputDto, aktørId, saksnummer, null);
     }
 
-    private BeregnRequestDto genererNyRequest(KalkulatorInputDto kalkulatorInputDto,
+    private EnkelBeregnRequestDto genererNyRequest(KalkulatorInputDto kalkulatorInputDto,
                                               String aktørId,
                                               Saksnummer saksnummer, UUID originalKobling) {
-        return new BeregnRequestDto(
+        return new EnkelBeregnRequestDto(
                 saksnummer,
                 UUID.randomUUID(),
                 new AktørIdPersonident(aktørId),
@@ -165,11 +164,11 @@ public class TestscenarioRepositoryImpl {
     }
 
 
-    private FpkalkulusYtelser getYtelseSomSkalBeregnes(KalkulatorInputDto kalkulatorInputDto) {
+    private FagsakYtelseType getYtelseSomSkalBeregnes(KalkulatorInputDto kalkulatorInputDto) {
         YtelsespesifiktGrunnlagDto ytelsespesifiktGrunnlag = kalkulatorInputDto.getYtelsespesifiktGrunnlag();
         return switch (ytelsespesifiktGrunnlag) {
-            case ForeldrepengerGrunnlag ignored -> FpkalkulusYtelser.FORELDREPENGER;
-            case SvangerskapspengerGrunnlag ignored -> FpkalkulusYtelser.SVANGERSKAPSPENGER;
+            case ForeldrepengerGrunnlag ignored -> FagsakYtelseType.FORELDREPENGER;
+            case SvangerskapspengerGrunnlag ignored -> FagsakYtelseType.SVANGERSKAPSPENGER;
             case null, default -> throw new IllegalArgumentException("Ytelsetype støttes ikke");
         };
     }

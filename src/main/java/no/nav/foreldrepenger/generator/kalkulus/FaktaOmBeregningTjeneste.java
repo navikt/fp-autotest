@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHåndterBeregningRequestDto ;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.ArbeidstakerandelUtenIMMottarYtelseDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FaktaBeregningLagreDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fakta.FaktaOmBeregningHåndteringDto;
@@ -27,7 +27,7 @@ public class FaktaOmBeregningTjeneste {
         // Skal ikkje instansieres
     }
 
-    public static HåndterBeregningRequestDto lagFaktaOmBeregningHåndterRequest(BeregnRequestDto request, FaktaBeregningLagreDto fakta) {
+    public static EnkelHåndterBeregningRequestDto  lagFaktaOmBeregningHåndterRequest(EnkelBeregnRequestDto request, FaktaBeregningLagreDto fakta) {
         return lagHåndterRequest(request, new FaktaOmBeregningHåndteringDto(fakta));
     }
 

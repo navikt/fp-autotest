@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.HåndterBeregningRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelHåndterBeregningRequestDto ;
 import no.nav.folketrygdloven.kalkulus.felles.v1.Beløp;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FaktaOmFordelingHåndteringDto;
 import no.nav.folketrygdloven.kalkulus.håndtering.v1.fordeling.FordelBeregningsgrunnlagAndelDto;
@@ -27,7 +27,7 @@ public class FaktaOmFordelingTjeneste {
     }
 
 
-    public static HåndterBeregningRequestDto lagHåndterFordelingRequest(BeregnRequestDto request,
+    public static EnkelHåndterBeregningRequestDto  lagHåndterFordelingRequest(EnkelBeregnRequestDto request,
                                                                         BeregningsgrunnlagDto beregningsgrunnlagDto,
                                                                         Map<Long, Integer> beløpMap,
                                                                         Map<Long, Inntektskategori> inntektskategoriMap,
