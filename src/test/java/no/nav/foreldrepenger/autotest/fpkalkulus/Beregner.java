@@ -13,7 +13,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.TestInfo;
 
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.kodeverk.Inntektskategori;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.autotest.base.KalkulusTestBase;
 
 public class Beregner extends KalkulusTestBase {
 
-    protected BeregnRequestDto beregnMedAvvik(TestInfo testInfo, Map<Long, Integer> årsinntektPrAndel, Integer frilansinntekt, boolean skalVerifisere) throws IOException {
+    protected EnkelBeregnRequestDto beregnMedAvvik(TestInfo testInfo, Map<Long, Integer> årsinntektPrAndel, Integer frilansinntekt, boolean skalVerifisere) throws IOException {
         var request = opprettTestscenario(testInfo);
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
@@ -70,7 +70,7 @@ public class Beregner extends KalkulusTestBase {
         behandleUtenAksjonspunkter(testInfo, null, true);
     }
 
-    protected BeregnRequestDto behandleUtenAksjonspunkter(TestInfo testInfo, String inputPrefix, boolean skalVerifisereSluttresultat) throws IOException {
+    protected EnkelBeregnRequestDto behandleUtenAksjonspunkter(TestInfo testInfo, String inputPrefix, boolean skalVerifisereSluttresultat) throws IOException {
 
         var request = inputPrefix != null ? opprettTestscenario(testInfo, inputPrefix) : opprettTestscenario(testInfo);
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
@@ -119,7 +119,7 @@ public class Beregner extends KalkulusTestBase {
     }
 
 
-    protected BeregnRequestDto behandleMedManuellFordeling(TestInfo testInfo,
+    protected EnkelBeregnRequestDto behandleMedManuellFordeling(TestInfo testInfo,
                                                              String prefix, Map<Long, Integer> beløpMap,
                                                              Map<Long, Inntektskategori> inntektskategoriMap,
                                                              Map<Long, Integer> refusjonsMap, boolean skalVerifisereResultat) throws IOException {
@@ -152,14 +152,14 @@ public class Beregner extends KalkulusTestBase {
         return request;
     }
 
-    private TilstandResponse behandleTilFordel(BeregnRequestDto request, TestInfo testInfo) throws IOException {
+    private TilstandResponse behandleTilFordel(EnkelBeregnRequestDto request, TestInfo testInfo) throws IOException {
         behandleTilVurderVilkår(request, testInfo);
         TilstandResponse tilstandResponse;
         tilstandResponse = behandleFraVurderRefusjonTilFordel(request);
         return tilstandResponse;
     }
 
-    private void behandleTilVurderVilkår(BeregnRequestDto request, TestInfo testInfo) throws IOException {
+    private void behandleTilVurderVilkår(EnkelBeregnRequestDto request, TestInfo testInfo) throws IOException {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
@@ -186,7 +186,7 @@ public class Beregner extends KalkulusTestBase {
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
     }
 
-    private TilstandResponse behandleFraVurderRefusjonTilFordel(BeregnRequestDto request) {
+    private TilstandResponse behandleFraVurderRefusjonTilFordel(EnkelBeregnRequestDto request) {
         TilstandResponse tilstandResponse;
 
         var fortsettBeregningRequest = getFortsettBeregningRequest(request, BeregningSteg.VURDER_REF_BERGRUNN);

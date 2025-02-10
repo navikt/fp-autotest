@@ -2,11 +2,12 @@ package no.nav.foreldrepenger.autotest.base;
 
 import java.io.IOException;
 
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInfo;
 
 import io.qameta.allure.Step;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.detaljert.BeregningsgrunnlagGrunnlagDto;
 import no.nav.folketrygdloven.kalkulus.response.v1.beregningsgrunnlag.gui.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.autotest.klienter.fpkalkulus.KalkulusKlient;
@@ -25,17 +26,17 @@ public class KalkulusTestBase {
     }
 
     @Step("Oppretter testscenario {testInfo.testMethod} fra Json fil lokalisert i ftkalkulus-verdikjede")
-    protected BeregnRequestDto opprettTestscenario(TestInfo testInfo) throws IOException {
+    protected EnkelBeregnRequestDto opprettTestscenario(TestInfo testInfo) throws IOException {
         return testscenarioRepositoryImpl.hentScenario(testInfo, null);
     }
 
     @Step("Oppretter testscenario {testInfo.testMethod} fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var {inputPrefix}")
-    protected BeregnRequestDto opprettTestscenario(TestInfo testInfo, String inputPrefix) throws IOException {
+    protected EnkelBeregnRequestDto opprettTestscenario(TestInfo testInfo, String inputPrefix) throws IOException {
         return testscenarioRepositoryImpl.hentScenario(testInfo, inputPrefix);
     }
 
     @Step("Oppretter testscenario {testInfo.testMethod} fra Json fil lokalisert i ftkalkulus-verdikjede, prefix var {inputPrefix}")
-    protected BeregnRequestDto opprettTestscenario(TestInfo testInfo, String inputPrefix, BeregnRequestDto originalRequest) throws IOException {
+    protected EnkelBeregnRequestDto opprettTestscenario(TestInfo testInfo, String inputPrefix, EnkelBeregnRequestDto originalRequest) throws IOException {
         return testscenarioRepositoryImpl.hentScenario(testInfo, inputPrefix, originalRequest);
     }
 

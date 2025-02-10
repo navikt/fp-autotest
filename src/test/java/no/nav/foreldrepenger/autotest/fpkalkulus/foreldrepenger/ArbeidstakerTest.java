@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 
 import io.qameta.allure.Description;
-import no.nav.folketrygdloven.fpkalkulus.kontrakt.BeregnRequestDto;
+import no.nav.folketrygdloven.kalkulus.request.v1.enkel.EnkelBeregnRequestDto;
 import no.nav.folketrygdloven.kalkulus.kodeverk.BeregningSteg;
 import no.nav.folketrygdloven.kalkulus.response.v1.TilstandResponse;
 import no.nav.foreldrepenger.autotest.fpkalkulus.Beregner;
@@ -449,7 +449,7 @@ class ArbeidstakerTest extends Beregner {
         assertThat(beregningsgrunnlagGrunnlagDto).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(forventetResultat);
     }
 
-    private void kjørUtenAksjonspunkter(BeregnRequestDto request) {
+    private void kjørUtenAksjonspunkter(EnkelBeregnRequestDto request) {
         TilstandResponse tilstandResponse = saksbehandler.kjørBeregning(request);
         assertThat(tilstandResponse.getAvklaringsbehovMedTilstandDto()).isEmpty();
 
