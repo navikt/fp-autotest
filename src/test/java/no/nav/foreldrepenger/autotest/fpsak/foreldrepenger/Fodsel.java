@@ -584,6 +584,13 @@ class Fodsel extends FpsakTestBase {
                 .medArbeidsforholdId("9");
         arbeidsgiver2.sendInntektsmelding(saksnummer, inntektsmelding2);
 
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // Do nothing
+        }
+
+
         saksbehandler.hentFagsak(saksnummer);
         assertThat(saksbehandler.valgtBehandling.erSattPåVent())
                 .as("Behandling satt på vent")
