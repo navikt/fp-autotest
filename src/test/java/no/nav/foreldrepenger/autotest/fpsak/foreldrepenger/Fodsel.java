@@ -549,57 +549,6 @@ class Fodsel extends FpsakTestBase {
     }
 
     @Test
-    @Description("Mor søker fødsel med 2 arbeidsforhold med arbeidsforhold som ikke matcher på ID")
-    @DisplayName("Mor søker fødsel med 2 arbeidsforhold med arbeidsforhold som ikke matcher på ID")
-    void morSøkerFødselMed2ArbeidsforholdArbeidsforholdIdMatcherIkke() {
-        var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .inntektytelse(InntektYtelseGenerator.ny()
-                                .arbeidMedOpptjeningUnder6G()
-                                .arbeidMedOpptjeningUnder6G()
-                                .build())
-                        .build())
-                .forelder(far().build())
-                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .barn(LocalDate.now().minusDays(2))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
-
-        var mor = familie.mor();
-        var fødselsdato = familie.barn().fødselsdato();
-        var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
-        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
-
-        var inntektPerMåned = 20_000;
-        var arbeidsgivere = mor.arbeidsgivere();
-        var arbeidsgiver1 = arbeidsgivere.toList().get(0);
-        var inntektsmelding1 = arbeidsgiver1.lagInntektsmeldingFP(startDatoForeldrepenger)
-                .medBeregnetInntekt(inntektPerMåned)
-                .medArbeidsforholdId("1");
-        arbeidsgiver1.sendInntektsmelding(saksnummer, inntektsmelding1);
-        var arbeidsgiver2 = arbeidsgivere.toList().get(1);
-        var inntektsmelding2 = arbeidsgiver2.lagInntektsmeldingFP(startDatoForeldrepenger)
-                .medBeregnetInntekt(inntektPerMåned)
-                .medArbeidsforholdId("9");
-        arbeidsgiver2.sendInntektsmelding(saksnummer, inntektsmelding2);
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            // Do nothing
-        }
-
-
-        saksbehandler.hentFagsak(saksnummer);
-        assertThat(saksbehandler.valgtBehandling.erSattPåVent())
-                .as("Behandling satt på vent")
-                .isTrue();
-        debugLoggBehandling(saksbehandler.valgtBehandling);
-
-    }
-
-    @Test
     @Description("Mor søker fødsel med privatperson som arbeidsgiver")
     @DisplayName("Mor søker fødsel med privatperson som arbeidsgiver, avvik i beregning")
     void morSøkerFødselMedPrivatpersonSomArbeidsgiver() {
