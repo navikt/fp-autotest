@@ -40,7 +40,7 @@ echo ENGANGSSTONAD_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-mana
 echo FPOVERSIKT_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-oversikt")" >> .env
 echo FPSWAGGER_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-swagger")" >> .env
 echo FPTILGANG_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-tilgang")" >> .env
-echo FPINNTEKTSMELDING_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/ft-inntektsmelding")" >> .env
+echo FPINNTEKTSMELDING_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/fp-inntektsmelding")" >> .env
 echo FPINNTEKTSMELDINGFRONTEND_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/ft-inntektsmelding-frontend")" >> .env
 
 echo ".env fil opprettet - Klart for docker compose up"
