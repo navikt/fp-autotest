@@ -220,6 +220,8 @@ services:
         condition: service_started
       fpinntektsmelding:
         condition: service_started
+      fpkalkulus:
+        condition: service_started
   fpfrontend:
     <<: *default-konfigurasjon
     image: $FPFRONTEND_IMAGE
