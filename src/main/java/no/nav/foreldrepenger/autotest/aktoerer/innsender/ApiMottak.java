@@ -12,8 +12,12 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.navno.InntektsmeldingPortalMapper;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.Innsending;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.engangsstønad.EngangsstønadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.foreldrepenger.ForeldrepengesøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.svangerskapspenger.SvangerskapspengesøknadDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -128,19 +132,30 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+        mottakKlient.mellomlagreVedlegg(fnr, søknad);
         mottakKlient.sendSøknad(fnr, søknad);
-
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
+    private String tilFagsakYtelseType(Innsending innsending) {
+        if (innsending instanceof no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknadDto) {
+            if (søknadDto instanceof ForeldrepengesøknadDto) return "FORELDREPENGER";
+            if (søknadDto instanceof SvangerskapspengesøknadDto) return "SVANGERSKAPSPENGER";
+            if (søknadDto instanceof EngangsstønadDto) return "ENGANGSSTONAD";
+        }
+        if (innsending instanceof no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.endringssøknad.EndringssøknadDto endringssøknadDto) {
+            return "FORELDREPENGER";
+        }
+        return "FORELDREPENGER";
+    }
+
     @Step("Sender inn søknad: {fnr}")
-    private Saksnummer sendInnSøknad(Fødselsnummer fnr,
-                                     no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
+    private Saksnummer sendInnSøknad(Fødselsnummer fnr, no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+        mottakKlient.mellomlagreVedlegg(fnr, søknad);
         mottakKlient.sendSøknad(fnr, søknad);
-
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
@@ -149,8 +164,8 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+        mottakKlient.mellomlagreVedlegg(fnr, søknad);
         mottakKlient.sendSøknad(fnr, søknad);
-
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 

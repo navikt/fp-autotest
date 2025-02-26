@@ -1,6 +1,9 @@
 package no.nav.foreldrepenger.autotest.util;
 
+import no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi.MottakKlient;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -21,6 +24,17 @@ public final class ReadFileFromClassPathHelper {
 
         } catch (Exception e) {
             throw new IllegalArgumentException("Feil ved lesing av fil '" + filsti + "'", e);
+        }
+    }
+
+    public static byte[] readFileBytes(String resourcePath) {
+        try (var inputStream = MottakKlient.class.getClassLoader().getResourceAsStream(resourcePath)) {
+            if (inputStream == null) {
+                throw new IOException("Filen ble ikke funnet i resources: " + resourcePath);
+            }
+            return inputStream.readAllBytes();
+        } catch (IOException e) {
+            throw new RuntimeException("Kunne ikke lese filen: " + resourcePath, e);
         }
     }
 }
