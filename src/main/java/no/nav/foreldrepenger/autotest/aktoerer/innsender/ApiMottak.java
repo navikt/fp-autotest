@@ -128,19 +128,18 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+        mottakKlient.mellomlagreVedlegg(fnr, søknad);
         mottakKlient.sendSøknad(fnr, søknad);
-
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
     @Step("Sender inn søknad: {fnr}")
-    private Saksnummer sendInnSøknad(Fødselsnummer fnr,
-                                     no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
+    private Saksnummer sendInnSøknad(Fødselsnummer fnr, no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+        mottakKlient.mellomlagreVedlegg(fnr, søknad);
         mottakKlient.sendSøknad(fnr, søknad);
-
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
@@ -149,8 +148,8 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
+        mottakKlient.mellomlagreVedlegg(fnr, søknad);
         mottakKlient.sendSøknad(fnr, søknad);
-
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 

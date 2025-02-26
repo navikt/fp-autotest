@@ -1,21 +1,21 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
+import jakarta.ws.rs.core.MediaType;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.AzureTokenProvider;
+import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
+import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.vedtak.log.mdc.MDCOperations;
+
+import java.net.http.HttpRequest;
+import java.time.Duration;
+import java.util.Optional;
+
 import static jakarta.ws.rs.core.HttpHeaders.ACCEPT;
 import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_ALT_CALLID;
 import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CALLID;
 import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID;
-
-import java.net.http.HttpRequest;
-import java.time.Duration;
-import java.util.Optional;
-
-import jakarta.ws.rs.core.MediaType;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.AzureTokenProvider;
-import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.vedtak.log.mdc.MDCOperations;
 
 public final class HttpRequestProvider {
 

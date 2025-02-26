@@ -1,9 +1,12 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
-import static java.lang.Thread.sleep;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
-import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.vedtak.exception.IntegrasjonException;
+import no.nav.vedtak.exception.ManglerTilgangException;
+import no.nav.vedtak.exception.TekniskException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -14,15 +17,10 @@ import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import no.nav.vedtak.exception.IntegrasjonException;
-import no.nav.vedtak.exception.ManglerTilgangException;
-import no.nav.vedtak.exception.TekniskException;
+import static java.lang.Thread.sleep;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 
 public final class JavaHttpKlient {
     private static final Logger LOG = LoggerFactory.getLogger(JavaHttpKlient.class);
