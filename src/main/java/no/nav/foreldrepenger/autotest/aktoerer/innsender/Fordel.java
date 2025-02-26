@@ -123,7 +123,9 @@ public class Fordel extends DokumentInnsendingHjelper {
         debugSenderInnDokument("Foreldrepengesøknad", xml);
 
         var journalpostModell = lagJournalpostStrukturertDokument(xml, fnr.value(), dokumenttypeId);
-        søknad.getVedlegg().forEach(vedlegg -> journalpostModell.getDokumentModellList().add(dokumentmodellFraVedlegg(vedlegg)));
+        if (søknad != null) {
+            søknad.getVedlegg().forEach(vedlegg -> journalpostModell.getDokumentModellList().add(dokumentmodellFraVedlegg(vedlegg)));
+        }
         if (saksnummer != null) {
             journalpostModell.setSakId(saksnummer.value());
         }
