@@ -25,7 +25,9 @@ import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
 import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.mapper.SøknadMapper;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -124,7 +126,11 @@ public class Fordel extends DokumentInnsendingHjelper {
 
         var journalpostModell = lagJournalpostStrukturertDokument(xml, fnr.value(), dokumenttypeId);
         if (søknad != null) {
-            søknad.getVedlegg().forEach(vedlegg -> journalpostModell.getDokumentModellList().add(dokumentmodellFraVedlegg(vedlegg)));
+            for (var vedlegg : søknad.getVedlegg()) {
+                if (vedlegg.getInnsendingsType().equals(LASTET_OPP) && vedlegg.getInnhold() != null && vedlegg.getInnhold().length > 0) {
+                    journalpostModell.getDokumentModellList().add(dokumentmodellFraVedlegg(vedlegg));
+                }
+            }
         }
         if (saksnummer != null) {
             journalpostModell.setSakId(saksnummer.value());
@@ -222,6 +228,11 @@ public class Fordel extends DokumentInnsendingHjelper {
         var journalpostModell = lagJournalpostUstrukturertDokument(fnr.value(), DokumenttypeId.KLAGE_DOKUMENT);
         var journalpostId = journalpostKlient.journalfør(journalpostModell).journalpostId();
         knyttJournalpostTilFagsak(null, journalpostId, dokumentTypeIdOffisiellKode, dokumentKategori, aktørId, saksnummer);
+    }
+
+    @Override
+    public void ettersendVedlegg(Fødselsnummer fnr, Saksnummer saksnummer, YtelseType ytelseType, VedleggDto vedlegg) {
+        throw new IllegalStateException("Ikke implementert! Bruk innsending via selvbetjening!");
     }
 
     /*
