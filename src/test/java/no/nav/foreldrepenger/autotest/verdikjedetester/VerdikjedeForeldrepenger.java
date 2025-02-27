@@ -19,6 +19,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRealitetsbehandlingEllerKlage;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
@@ -32,6 +33,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengeandel;
@@ -42,6 +44,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.common.domain.felles.DokumentType;
+import no.nav.foreldrepenger.common.domain.felles.InnsendingsType;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.common.innsyn.Dekningsgrad;
@@ -55,11 +59,13 @@ import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.UttaksplanPeriodeDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.AnnenforelderBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
@@ -74,6 +80,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.REBEREGN_FERIEPENGER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
@@ -85,6 +92,7 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.beh
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.MINSTERETT;
+import static no.nav.foreldrepenger.common.domain.BrukerRolle.FAR;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.ARBEID;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.IKKE_OPPGITT;
 import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet.UTDANNING;
@@ -2134,6 +2142,51 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(trekkdager).isEqualTo(10);
         assertThat(uttak.getFirst().getFom()).isEqualTo(helgejustertTilMandag(fødselsdato));
     }
+
+    @Test
+    @DisplayName("Far søker termin hvor han velger SEND_SENERE på terminbekreftelse. Havner på vent pga kompletthet. Far ettersender og behandlingen forsetter")
+    @Description("Far søker og får innvilget på termin. Fødselen kommer og uttaket justeres")
+    void farSettesPåVentPåManglendeVedleggOgEttersenderVedleggSomFørerTilKomplettbehandlingOgAtDenTasAvVent() {
+        var familie = FamilieGenerator.ny()
+                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .build();
+        var termindato = LocalDate.now().minusWeeks(6);
+        var far = familie.far();
+        var søknad = lagSøknadForeldrepengerTermin(termindato, FAR)
+                .medFordeling(fordeling(uttaksperiode(FEDREKVOTE, termindato.plusWeeks(10), termindato.plusWeeks(16).minusDays(1))))
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
+                .medVedlegg(List.of(new VedleggDto(UUID.randomUUID(), DokumentType.I000141, InnsendingsType.SEND_SENERE, null, new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.Type.BARN, null, null))));
+
+        var saksnummer = far.søk(søknad.build());
+
+        var arbeidsgiver = far.arbeidsgiver();
+        ventPåInntektsmeldingForespørsel(saksnummer);
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, termindato.plusWeeks(3));
+
+        saksbehandler.hentFagsak(saksnummer);
+        assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD)).isTrue();
+
+        // Ettersend vedlegg som mangler
+        far.ettersendVedlegg(far.fødselsnummer(), YtelseType.FORELDREPENGER, DokumentType.I000141, new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.Type.BARN, null, null));
+
+        saksbehandler.hentFagsak(saksnummer);
+        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD).getStatus()).isEqualTo("UTFO");
+
+        var vurderManglendeFodselBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse());
+        vurderManglendeFodselBekreftelse.bekreftDokumentasjonIkkeForeligger();
+        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
+
+        var avklarFaktaAnnenForeldreHarRett = saksbehandler
+                .hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
+                .setAnnenforelderHarRett(true)
+                .setBegrunnelse("Både far og mor har rett!");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
+
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
+    }
+
 
     private Saksnummer sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
                                                                                               LocalDate fødselsdato,

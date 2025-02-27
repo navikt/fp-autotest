@@ -9,10 +9,14 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.Søknad;
+import no.nav.foreldrepenger.common.domain.felles.DokumentType;
+import no.nav.foreldrepenger.common.domain.felles.InnsendingsType;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadForeldrepengerDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.vedtak.log.mdc.MDCOperations;
 import org.slf4j.Logger;
@@ -269,6 +273,11 @@ public abstract class Søker {
         guardTrengerEksisterendeBehandling();
         genererUniktNavConsumerIdForDokument();
         innsender.sendInnKlage(aktørId, fødselsnummer, this.saksnummer);
+    }
+
+    public void ettersendVedlegg(Fødselsnummer fnr, YtelseType ytelseType, DokumentType skjemanummer, VedleggDto.Dokumenterer dokumenterer) {
+        var vedlegg = new VedleggDto(UUID.randomUUID(), skjemanummer, InnsendingsType.LASTET_OPP, null, dokumenterer);
+        innsender.ettersendVedlegg(fnr, saksnummer, ytelseType, vedlegg);
     }
 
     // Brukes bare i tilfelle hvor en ønsker å sende IM uten registret arbeidsforhold i Aareg!
