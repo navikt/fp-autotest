@@ -9,6 +9,7 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
+import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.Adressebeskyttelse;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.vedtak.exception.ManglerTilgangException;
@@ -91,6 +92,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         var far = familie.far();
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
                 .medFordeling(List.of(
+                        uttaksperiode(FEDREKVOTE, termindato, termindato.plusWeeks(1).minusDays(1), 100, UttaksperiodeType.SAMTIDIGUTTAK),
                         uttaksperiode(FEDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1))
                 ))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
