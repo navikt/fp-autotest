@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns7:soeknad xmlns="urn:no:nav:vedtak:felles:xml:soeknad:svangerskapspenger:v1" xmlns:ns6="urn:no:nav:vedtak:felles:xml:soeknad:engangsstoenad:v3" xmlns:ns5="urn:no:nav:vedtak:felles:xml:soeknad:uttak:v3" xmlns:ns7="urn:no:nav:vedtak:felles:xml:soeknad:v3" xmlns:ns2="urn:no:nav:vedtak:felles:xml:soeknad:felles:v3" xmlns:ns4="urn:no:nav:vedtak:felles:xml:soeknad:endringssoeknad:v3" xmlns:ns3="urn:no:nav:vedtak:felles:xml:soeknad:foreldrepenger:v3">
+    <ns7:mottattDato>2025-02-28</ns7:mottattDato>
+    <ns7:paakrevdeVedlegg>
+        <ns2:id>V66ef1759-cdec-4092-9aed-91d00e56ac3d</ns2:id>
+        <ns2:innsendingstype kodeverk="INNSENDINGSVALG" kode="LASTET_OPP"/>
+        <ns2:skjemanummer>I000109</ns2:skjemanummer>
+        <ns2:tilleggsinformasjon>Skjema for tilrettelegging og omplassering ved graviditet</ns2:tilleggsinformasjon>
+    </ns7:paakrevdeVedlegg>
+    <ns7:paakrevdeVedlegg>
+        <ns2:id>V8b4ce38a-2753-4781-9e74-a07822385410</ns2:id>
+        <ns2:innsendingstype kodeverk="INNSENDINGSVALG" kode="LASTET_OPP"/>
+        <ns2:skjemanummer>I000109</ns2:skjemanummer>
+        <ns2:tilleggsinformasjon>Skjema for tilrettelegging og omplassering ved graviditet</ns2:tilleggsinformasjon>
+    </ns7:paakrevdeVedlegg>
+    <ns7:sprakvalg kode="NB"/>
+    <ns7:omYtelse>
+        <svangerskapspenger>
+            <termindato>2025-03-28</termindato>
+            <medlemskap>
+                <ns2:iNorgeVedFoedselstidspunkt>true</ns2:iNorgeVedFoedselstidspunkt>
+                <ns2:boddINorgeSiste12Mnd>false</ns2:boddINorgeSiste12Mnd>
+                <ns2:borINorgeNeste12Mnd>false</ns2:borINorgeNeste12Mnd>
+            </medlemskap>
+            <opptjening/>
+            <tilretteleggingListe>
+                <tilrettelegging>
+                    <helTilrettelegging>
+                        <tilrettelagtArbeidFom>2025-03-14</tilrettelagtArbeidFom>
+                    </helTilrettelegging>
+                    <arbeidsforhold xsi:type="Virksomhet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <identifikator>992257822</identifikator>
+                    </arbeidsforhold>
+                    <behovForTilretteleggingFom>2025-02-21</behovForTilretteleggingFom>
+                    <vedlegg>V66ef1759-cdec-4092-9aed-91d00e56ac3d</vedlegg>
+                </tilrettelegging>
+                <tilrettelegging>
+                    <helTilrettelegging>
+                        <tilrettelagtArbeidFom>2025-03-21</tilrettelagtArbeidFom>
+                    </helTilrettelegging>
+                    <arbeidsforhold xsi:type="Virksomhet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <identifikator>889640782</identifikator>
+                    </arbeidsforhold>
+                    <behovForTilretteleggingFom>2025-02-28</behovForTilretteleggingFom>
+                    <vedlegg>V8b4ce38a-2753-4781-9e74-a07822385410</vedlegg>
+                </tilrettelegging>
+            </tilretteleggingListe>
+            <avtaltFerieListe/>
+        </svangerskapspenger>
+    </ns7:omYtelse>
+    <ns7:soeker>
+        <ns2:aktoerId>9908479638269</ns2:aktoerId>
+        <ns2:soeknadsrolle kodeverk="FORELDRE_TYPE" kode="MOR"/>
+    </ns7:soeker>
+</ns7:soeknad>

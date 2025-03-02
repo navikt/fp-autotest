@@ -1,0 +1,1 @@
+{"mottattdato":"2025-01-25","språkkode":"NB","barn":{"type":"adopsjon","antallBarn":1,"fødselsdatoer":["2015-02-25"],"adopsjonsdato":"2025-04-01","ankomstdato":"2025-04-01","adopsjonAvEktefellesBarn":false},"utenlandsopphold":[],"vedlegg":[]}
