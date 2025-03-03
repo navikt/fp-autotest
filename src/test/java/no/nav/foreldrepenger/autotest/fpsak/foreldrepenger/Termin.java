@@ -119,8 +119,6 @@ class Termin extends FpsakTestBase {
         // Løs 5085, ikke vent på inntektsmeldinger
         saksbehandler.fortsettUteninntektsmeldinger();
 
-        saksbehandler.hentAksjonspunkt(AksjonspunktKoder.VURDER_FAKTA_FOR_ATFL_SN);
-
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
         Vent.på(() -> {
