@@ -1,0 +1,1 @@
+{"fritekst":"Send brev","sendVarsel":"true","ventearsak":"UTV_FRIST","@type":"5026"}

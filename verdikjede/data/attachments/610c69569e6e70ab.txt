@@ -1,0 +1,1 @@
+{"mottattdato":"2025-03-03","språkkode":"NB","barn":{"type":"fødsel","antallBarn":1,"fødselsdato":"2025-02-03","termindato":"2025-02-03"},"utenlandsopphold":[],"vedlegg":[]}
