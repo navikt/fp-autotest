@@ -1,0 +1,1 @@
+{"begrunnelse":"Fordi.","klageVurdering":"MEDHOLD_I_KLAGE","klageMedholdArsak":"NYE_OPPLYSNINGER","klageVurderingOmgjoer":"GUNST_MEDHOLD_I_KLAGE","fritekstTilBrev":"Fritekst brev nfp.","vedtaksdatoPaklagdBehandling":"2025-03-05","@type":"5035"}
