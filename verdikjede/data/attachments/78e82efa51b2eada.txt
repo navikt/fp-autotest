@@ -1,0 +1,1 @@
+{"begrunnelse":"autotest begrunnelse","vurderingBehov":[{"fom":"2025-02-28","tom":"2025-05-15","type":"OVERFØRING","årsak":"SYKDOM_ANNEN_FORELDER","vurdering":"GODKJENT"}],"@type":"5074"}

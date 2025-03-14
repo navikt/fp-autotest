@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<soeknad xmlns="urn:no:nav:vedtak:felles:xml:soeknad:v3" xmlns:ns6="urn:no:nav:vedtak:felles:xml:soeknad:foreldrepenger:v3" xmlns:ns5="urn:no:nav:vedtak:felles:xml:soeknad:uttak:v3" xmlns:ns7="urn:no:nav:vedtak:felles:xml:soeknad:svangerskapspenger:v1" xmlns:ns2="urn:no:nav:vedtak:felles:xml:soeknad:felles:v3" xmlns:ns4="urn:no:nav:vedtak:felles:xml:soeknad:endringssoeknad:v3" xmlns:ns3="urn:no:nav:vedtak:felles:xml:soeknad:engangsstoenad:v3">
+    <mottattDato>2025-03-14</mottattDato>
+    <sprakvalg kode="NB"/>
+    <omYtelse>
+        <ns3:engangsstønad>
+            <ns3:soekersRelasjonTilBarnet xsi:type="ns2:Adopsjon" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <ns2:antallBarn>1</ns2:antallBarn>
+                <ns2:omsorgsovertakelsesdato>2025-04-14</ns2:omsorgsovertakelsesdato>
+                <ns2:ankomstdato>2025-04-14</ns2:ankomstdato>
+                <ns2:foedselsdato>2015-03-14</ns2:foedselsdato>
+                <ns2:adopsjonAvEktefellesBarn>false</ns2:adopsjonAvEktefellesBarn>
+            </ns3:soekersRelasjonTilBarnet>
+            <ns3:medlemskap>
+                <ns2:iNorgeVedFoedselstidspunkt>true</ns2:iNorgeVedFoedselstidspunkt>
+                <ns2:boddINorgeSiste12Mnd>false</ns2:boddINorgeSiste12Mnd>
+                <ns2:borINorgeNeste12Mnd>false</ns2:borINorgeNeste12Mnd>
+            </ns3:medlemskap>
+        </ns3:engangsstønad>
+    </omYtelse>
+    <soeker>
+        <ns2:aktoerId>9926477819086</ns2:aktoerId>
+        <ns2:soeknadsrolle kodeverk="FORELDRE_TYPE" kode="MOR"/>
+    </soeker>
+</soeknad>
