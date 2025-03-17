@@ -30,7 +30,7 @@
         <fp-kontrakter.version>9.2.4</fp-kontrakter.version>
         <fpsoknad-felles.version>3.2.5</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.2.1</foreldrepenge-api.version>
-        <ftberegning.version>5.6.7</ftberegning.version>
+        <ftberegning.version>5.6.9</ftberegning.version>
 
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.17</logback.version>
