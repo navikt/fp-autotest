@@ -46,25 +46,25 @@ jobs:
           repository: 'navikt/fp-autotest'
       - name: Henter testresultat for fpsak
         if: ${{ !contains(inputs.fpsak, 'skipped') }}
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # ratchet:actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # ratchet:actions/download-artifact@v4
         with:
           name: fpsak-testresultat
           path: .
       - name: Henter testresultat for fptilbake
         if: ${{ !contains(inputs.fptilbake, 'skipped') }}
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # ratchet:actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # ratchet:actions/download-artifact@v4
         with:
           name: fptilbake-testresultat
           path: .
       - name: Henter testresultat for kalkulus
         if: ${{ !contains(inputs.fpkalkulus, 'skipped') }}
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # ratchet:actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # ratchet:actions/download-artifact@v4
         with:
           name: fpkalkulus-testresultat
           path: .
       - name: Henter testresultat for verdikjede
         if: ${{ !contains(inputs.verdikjede, 'skipped') }}
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # ratchet:actions/download-artifact@v4
+        uses: actions/download-artifact@b14cf4c92620c250e1c074ab0a5800e37df86765 # ratchet:actions/download-artifact@v4
         with:
           name: verdikjede-testresultat
           path: .
