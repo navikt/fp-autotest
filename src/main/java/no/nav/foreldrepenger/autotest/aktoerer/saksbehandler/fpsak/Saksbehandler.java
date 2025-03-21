@@ -58,7 +58,9 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.EndreUtlandMarke
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkFpsakKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslagDokumentLinkDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.saf.SafKlient;
@@ -643,18 +645,24 @@ public class Saksbehandler {
     }
 
     public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkType type) {
-        return hentHistorikkinnslagAvType(type, valgtBehandling.uuid, valgtBehandling.id);
+        return hentHistorikkinnslagAvType(type, valgtBehandling.uuid, valgtBehandling.id).stream().findFirst().orElse(null);
     }
 
-    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkType type, UUID behandlingsUuid, int behandlingId) {
+    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkType type, DokumentTag dokumentTag) {
+        return hentHistorikkinnslagAvType(type, valgtBehandling.uuid, valgtBehandling.id).stream()
+                .filter(innslag -> innslag.dokumenter().stream().map(HistorikkInnslagDokumentLinkDto::tag).anyMatch(tag -> tag.contains(
+                        dokumentTag.tag())))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<HistorikkInnslag> hentHistorikkinnslagAvType(HistorikkType type, UUID behandlingsUuid, int behandlingId) {
         venterPåFerdigProssesseringOgOppdaterBehandling(behandlingsUuid, behandlingId);
         if (Objects.equals(HistorikkType.REVURD_OPPR, type)) {
             behandlingsUuid = null;
         }
         return hentHistorikkinnslagPåBehandling(behandlingsUuid).stream()
-                .filter(innslag -> innslag.erAvTypen(type))
-                .findFirst()
-                .orElse(null);
+                .filter(innslag -> innslag.erAvTypen(type)).toList();
     }
 
     public void ventTilHistorikkinnslag(HistorikkType... type) {

@@ -42,8 +42,11 @@ import static org.assertj.core.api.Assertions.within;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -794,6 +797,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Forventer at dagsatsen matchen den kalkulerte og alt går til søker")
                 .isZero();
 
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var brevAssertions = new HashMap<String, String>();
+        brevAssertions.put("Sjekk om riktig overskrift i brevet.", "Nav har innvilget søknaden din om 100 prosent foreldrepenger");
+        brevAssertions.put("Sjekk om riktig paragrafer i brevet.", "Vedtaket er gjort etter folketrygdloven §§ 14-13, 14-14 og 14-16.");
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertions, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
 
         // Endringssøknad: Far bestemmer seg for å gi fra seg alle periodene
         var fordelingGiFraSegAlt = List.of(
@@ -817,8 +825,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.valgtBehandling.hentUttaksperioder())
                 .as("Uttaksperioder for valgt behandling")
                 .isEmpty();
+
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        // TODO: Legg til støtte får å hente ut maltype på brevet som er produsert. Skal være FORELDREPENGER_ANNULLERT
+        brevAssertions.clear();
+        brevAssertions.put("Sjekk om riktig overskrift i brevet.", "Nav har endret foreldrepengene dine");
+        brevAssertions.put("Sjekk om riktig utsettelse tekst i brevet.", "Du har valgt å ikke ta ut din tidligere innvilgede periode med foreldrepenger");
+        brevAssertions.put("Sjekk om riktig paragrafer i brevet.", "Vedtaket er gjort etter folketrygdloven §§ 14-6, 14-7, 14-9, 14-10, 14-11 og 14-12.");
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertions, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_SENERE);
     }
 
     @Test
