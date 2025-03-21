@@ -5,7 +5,10 @@ import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -19,7 +22,6 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkårForutgåendeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
-import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
@@ -35,8 +37,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
     @Description("Mor er tredjelandsborger med statsborgerskap i USA og har ikke registrert medlemsskap i norsk folketrygd.")
     void MorTredjelandsborgerSøkerEngangsStønadTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
+                .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
@@ -47,8 +48,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         var saksnummer = familie.mor().søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
+        var avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
         avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
 
@@ -56,22 +56,16 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
 
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat")
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
-        assertThat(saksbehandler.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse())
-                .as("Beregnet tilkjent ytelse")
-                .isPositive();
+        assertThat(saksbehandler.valgtBehandling.getBeregningResultatEngangsstonad().getBeregnetTilkjentYtelse()).as(
+                "Beregnet tilkjent ytelse").isPositive();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dokumentId = saksbehandler
-                .hentHistorikkinnslagAvType(HistorikkType.BREV_SENDT)
-                .dokumenter().get(0)
-                .dokumentId();
-        var pdf = saksbehandler.hentJournalførtDokument(dokumentId, "ARKIV");
-        assertThat(Pdf.is_pdf(pdf))
-                .as("Sjekker om byte array er av typen PDF")
-                .isTrue();
+        var brevAssertions = new HashMap<String, String>();
+        brevAssertions.put("Sjekk om riktig overskrift i brevet.", OVERSKRIFT_ENGANGSSTØNAD_INNVILGET);
+        brevAssertions.putAll(engangsstønadStandardBrevAssertions());
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertions, familie.mor().fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET);
     }
 
     @Test
@@ -79,8 +73,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
     @Description("Verifiserer at innsyn har korrekt data og sammenligner med vedtaket med det saksbehandlerene ser")
     void mor_innsyn_verifsere() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor()
-                        .statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
+                .forelder(mor().statsborgerskap(List.of(new StatsborgerskapDto(CountryCode.US)))
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
                         .build())
                 .forelder(far().build())
@@ -92,8 +85,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
+        var avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
 
         var esSak = mor.innsyn().hentEsSakMedÅpenBehandlingTilstand(saksnummer, BehandlingTilstand.UNDER_BEHANDLING);
         assertThat(esSak.saksnummer().value()).isEqualTo(saksnummer.value());
@@ -120,5 +112,10 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         assertThat(esSakEtterVedtak.familiehendelse().antallBarn()).isEqualTo(1);
         assertThat(esSakEtterVedtak.familiehendelse().omsorgsovertakelse()).isNull();
 
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var brevAssertions = new HashMap<String, String>();
+        brevAssertions.put("Sjekk om riktig overskrift i brevet.", OVERSKRIFT_ENGANGSSTØNAD_INNVILGET);
+        brevAssertions.putAll(engangsstønadStandardBrevAssertions());
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertions, mor.fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET);
     }
 }
