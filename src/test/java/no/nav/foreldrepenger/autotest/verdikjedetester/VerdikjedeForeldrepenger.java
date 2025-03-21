@@ -595,8 +595,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.sjekkOmDetErOpptjeningFremTilSkjæringstidspunktet("FRILANS"))
                 .as("Forventer at det er registert en opptjeningsaktivitet med aktivitettype FRILANSER som har frilansinntekt på skjæringstidspunktet!")
                 .isTrue();
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
+        if (saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE)) { //TODO TFP-5383 får ikke lenger AP, så kan fjerne if'n her
+            saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
+            foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
+        } else {
+            saksbehandler.ventTilAvsluttetBehandling();
+        }
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
