@@ -5,10 +5,7 @@ import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-
-import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -21,6 +18,7 @@ import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkårForutgåendeBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.common.innsyn.BehandlingTilstand;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -62,10 +60,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 "Beregnet tilkjent ytelse").isPositive();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertions = new HashMap<String, String>();
-        brevAssertions.put("Sjekk om riktig overskrift i brevet.", OVERSKRIFT_ENGANGSSTØNAD_INNVILGET);
-        brevAssertions.putAll(engangsstønadStandardBrevAssertions());
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertions, familie.mor().fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET);
+        hentBrevOgSjekkAtInnholdetErRiktig(engangsstønadInnvilgetAssertionsBuilder(), familie.mor().fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET);
     }
 
     @Test
@@ -113,9 +108,6 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         assertThat(esSakEtterVedtak.familiehendelse().omsorgsovertakelse()).isNull();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertions = new HashMap<String, String>();
-        brevAssertions.put("Sjekk om riktig overskrift i brevet.", OVERSKRIFT_ENGANGSSTØNAD_INNVILGET);
-        brevAssertions.putAll(engangsstønadStandardBrevAssertions());
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertions, mor.fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET);
+        hentBrevOgSjekkAtInnholdetErRiktig(engangsstønadInnvilgetAssertionsBuilder(), mor.fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET);
     }
 }
