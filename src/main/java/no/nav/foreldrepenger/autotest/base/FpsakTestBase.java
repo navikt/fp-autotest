@@ -84,7 +84,7 @@ public abstract class FpsakTestBase {
         }
     }
 
-    protected static String formatBeløp(int beløp) {
+    protected static String formatKroner(int beløp) {
         var symbols = new DecimalFormatSymbols();
         symbols.setGroupingSeparator(' '); // Explicitly setting a normal space (U+0020)
         return new DecimalFormat("#,###", symbols).format(beløp);
@@ -142,5 +142,4 @@ public abstract class FpsakTestBase {
                 .medParagraf_14_12()
                 .medKapittelDuHarRettTilKlage();
     }
-
 }
