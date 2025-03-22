@@ -9,7 +9,6 @@ public class BrevAssertionBuilder {
 
     private BrevAssertionBuilder() {
         BREV_ASSERTIONS = new LinkedHashSet<>();
-        // Static class
     }
 
     public static BrevAssertionBuilder ny() {

@@ -205,7 +205,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
                 .medAleneomsorg()
                 .medEgenndefinertAssertion("Det er %s dager igjen av perioden med foreldrepenger. Disse dagene må være tatt ut innen barnet fyller tre år eller innen en ny foreldrepengeperiode for et nytt barn starter.".formatted(forventetRestPåKonto))
-                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formatBeløp(forventetDagsats)))
+                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formatKroner(forventetDagsats)))
                 .medTekstOmOpplysningerFraEnArbeidsgiver()
                 .medKapittelDetteHarViInnvilget()
                 .medParagraf_8_30()
@@ -334,7 +334,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
-                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formatBeløp((int)Math.ceil(avvikendeNæringsinntekt / 260))))
+                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(
+                        formatKroner((int)Math.ceil(avvikendeNæringsinntekt / 260))))
                 .medParagraf_8_35()
                 .medParagraf_14_9()
                 .medParagraf_14_10()
@@ -460,7 +461,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerInnvilget80ProsentAssertionsBuilder()
-                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formatBeløp((int)Math.ceil(((10_000 * 12)/260)*0.8))))
+                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(
+                        formatKroner((int)Math.ceil(((10_000 * 12)/260)*0.8))))
                 //.medKapittelDetteHarViInnvilget() bør være med?
                 .medParagraf_14_9()
                 .medParagraf_14_10()
@@ -512,7 +514,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
-                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formatBeløp(dagsatsMor)))
+                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formatKroner(dagsatsMor)))
                 .medParagraf_14_9()
                 .medParagraf_14_10()
                 .medParagraf_14_12()
@@ -615,7 +617,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
-                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formatBeløp(dagsatsFar)))
+                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formatKroner(dagsatsFar)))
                 .medKapittelDetteHarViInnvilget()
                 .medParagraf_14_9()
                 .medParagraf_14_12()
