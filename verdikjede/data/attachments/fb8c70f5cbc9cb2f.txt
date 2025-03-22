@@ -1,0 +1,1 @@
+{"begrunnelse":"Informasjon er hentet fra søknadden og godkjennes av autotest.","antallBarn":1,"utstedtdato":"2025-03-12","termindato":"2025-04-12","@type":"5001"}
