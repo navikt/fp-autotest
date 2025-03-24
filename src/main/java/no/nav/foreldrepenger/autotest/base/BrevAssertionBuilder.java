@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.base;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static no.nav.foreldrepenger.autotest.base.FpsakTestBase.formatKroner;
+import static no.nav.foreldrepenger.autotest.base.FpsakTestBase.formaterKroner;
 
 public class BrevAssertionBuilder {
 
@@ -62,7 +62,7 @@ public class BrevAssertionBuilder {
         return this;
     }
 
-    public BrevAssertionBuilder medTesktOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt() {
+    public BrevAssertionBuilder medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt() {
         brevAssertions.add("Hvis arbeidsgiver allerede har sendt inntektsmelding, kan du se bort fra denne henvendelsen.");
         return this;
     }
@@ -237,7 +237,7 @@ public class BrevAssertionBuilder {
     }
 
     public BrevAssertionBuilder medTekstOmDuFårXKronerUtbetalt(int beløp) {
-        brevAssertions.add("Du får %s kroner per dag før skatt".formatted(formatKroner(beløp)));
+        brevAssertions.add("Du får %s kroner per dag før skatt".formatted(formaterKroner(beløp)));
         return this;
     }
 

@@ -1,10 +1,13 @@
 package no.nav.foreldrepenger.autotest.base;
 
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.pdfbox.Loader;
@@ -63,7 +66,7 @@ public abstract class FpsakTestBase {
         var pdf = behandler.hentJournalførtDokument(dokumentId, "ARKIV");
         assertThat(Pdf.is_pdf(pdf)).as("Sjekker om byte array er av typen PDF").isTrue();
 
-        assertionBuilder.medEgenndefinertAssertion(formatFnr(fnr))
+        assertionBuilder.medEgenndefinertAssertion(formaterFnr(fnr))
                 .medKapittelDuHarRettTilInnsyn()
                 .medKapittelHarDuSpørsmål()
                 .medVennligHilsen()
@@ -72,7 +75,7 @@ public abstract class FpsakTestBase {
         sjekkAtBrevetInneholderTekst(pdf, assertionBuilder.build());
     }
 
-    protected static String formatFnr(Fødselsnummer fnr) {
+    protected static String formaterFnr(Fødselsnummer fnr) {
         return fnr.value().substring(0, 6) + " " + fnr.value().substring(6);
     }
 
@@ -91,10 +94,17 @@ public abstract class FpsakTestBase {
         }
     }
 
-    protected static String formatKroner(int beløp) {
+    protected static String formaterKroner(int beløp) {
         var symbols = new DecimalFormatSymbols();
         symbols.setGroupingSeparator(' '); // Explicitly setting a normal space (U+0020)
         return new DecimalFormat("#,###", symbols).format(beløp);
+    }
+
+    protected static String formaterDatoNorsk(LocalDate dato) {
+        if (dato == null) {
+            return null;
+        }
+        return dato.format(ofPattern("d. MMMM yyyy", Locale.forLanguageTag("NO")));
     }
 
     protected static BrevAssertionBuilder engangsstønadInnvilgetAssertionsBuilder() {

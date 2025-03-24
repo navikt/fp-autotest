@@ -170,11 +170,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
-
         var brevAssertionsBuilder = BrevAssertionBuilder.ny()
                 .medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin()
                 .medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding()
-                .medTesktOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
+                .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING);
 
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler
@@ -216,7 +215,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
                 .medTekstOmAleneomsorg()
                 .medTekstOmXDagerIgjenAvPeriodenMed(forventetRestPåKonto)
-                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formatKroner(forventetDagsats)))
+                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formaterKroner(forventetDagsats)))
                 .medTekstOmOpplysningerFraEnArbeidsgiver()
                 .medKapittelDetteHarViInnvilget()
                 .medParagraf_8_30()
@@ -349,7 +348,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medParagraf_14_9()
                 .medParagraf_14_10()
                 .medParagraf_14_12()
-                .medEgenndefinertAssertion("Vi har beregnet foreldrepengene dine ut fra en årsinntekt på %s kroner. Dette er gjennomsnittet av inntekten du hadde i 2".formatted(formatKroner((int)avvikendeNæringsinntekt)))
+                .medEgenndefinertAssertion("Vi har beregnet foreldrepengene dine ut fra en årsinntekt på %s kroner. Dette er gjennomsnittet av inntekten du hadde i 2".formatted(
+                        formaterKroner((int)avvikendeNæringsinntekt)))
                 .medParagraf_8_35();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
 
@@ -474,7 +474,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var brevAssertionsBuilder = foreldrepengerInnvilget80ProsentAssertionsBuilder()
                 .medEgenndefinertAssertion("Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medTekstOmDuFårXKronerUtbetalt((int)Math.ceil((beløpYtelse * 12 / 260) * 0.8))
-                .medEgenndefinertAssertion("Vi har beregnet foreldrepengene dine ut fra en inntekt på %s kroner i måneden før skatt. Dette er gjennomsnittet av inntekten du har fått fra Nav de siste tre månedene.".formatted(formatKroner(beløpYtelse)))
+                .medEgenndefinertAssertion("Vi har beregnet foreldrepengene dine ut fra en inntekt på %s kroner i måneden før skatt. Dette er gjennomsnittet av inntekten du har fått fra Nav de siste tre månedene.".formatted(
+                        formaterKroner(beløpYtelse)))
                 .medParagraf_14_9()
                 .medParagraf_14_10()
                 .medParagraf_14_12()
@@ -680,7 +681,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medParagraf_14_10()
                 .medParagraf_14_12()
                 .medEgenndefinertAssertion("Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
-                .medEgenndefinertAssertion("Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(formatKroner(SEKS_G_2025)))
+                .medEgenndefinertAssertion("Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(
+                        formaterKroner(SEKS_G_2025)))
                 .medParagraf_8_30()
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
@@ -725,7 +727,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medParagraf_14_9()
                 .medParagraf_14_12()
                 .medParagraf_14_13()
-                .medEgenndefinertAssertion("Inntekten din som frilanser er %s kroner i måneden. Oppdragsgiveren eller oppdragsgiverne dine har gitt oss disse opplysningene.".formatted(formatKroner(årslønnFar / 12 )))
+                .medEgenndefinertAssertion("Inntekten din som frilanser er %s kroner i måneden. Oppdragsgiveren eller oppdragsgiverne dine har gitt oss disse opplysningene.".formatted(
+                        formaterKroner(årslønnFar / 12 )))
                 .medEgenndefinertAssertion("Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide som frilanser, har vi brukt inntektene etter at du startet.")
                 .medParagraf_8_38();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
@@ -1000,7 +1003,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medParagraf_14_10()
                 .medParagraf_14_12()
                 .medEgenndefinertAssertion("Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
-                .medEgenndefinertAssertion("Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(formatKroner(SEKS_G_2025)))
+                .medEgenndefinertAssertion("Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(
+                        formaterKroner(SEKS_G_2025)))
                 .medParagraf_8_30()
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
@@ -1052,7 +1056,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medParagraf_14_12()
                 .medEgenndefinertAssertion(
                         "Du fikk %s kroner per dag før skatt i arbeidsavklaringspenger. Vi har brukt dette beløpet i beregningen av foreldrepengene dine.".formatted(
-                                formatKroner(dagsats)));
+                                formaterKroner(dagsats)));
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
 
         /* Mor: berørt sak */
@@ -1452,7 +1456,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medTekstOmAleneomsorg()
                 .medParagraf_14_15()
                 .medEgenndefinertAssertion("Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
-                .medEgenndefinertAssertion("Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(formatKroner(SEKS_G_2025)))
+                .medEgenndefinertAssertion("Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(
+                        formaterKroner(SEKS_G_2025)))
                 .medParagraf_8_30()
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
@@ -1619,7 +1624,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medParagraf_14_12()
                 .medParagraf_14_13()
                 .medEgenndefinertAssertion("Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
-                .medEgenndefinertAssertion("Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(formatKroner(SEKS_G_2025)))
+                .medEgenndefinertAssertion("Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(
+                        formaterKroner(SEKS_G_2025)))
                 .medParagraf_8_30();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
 
@@ -1791,7 +1797,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerAvslagAssertionsBuilder()
-                .medEgenndefinertAssertion("Du har ikke rett til foreldrepenger, fordi inntekten din er lavere enn %s kroner i året før skatt.".formatted(formatKroner(G_2025 / 2)))
+                .medEgenndefinertAssertion("Du har ikke rett til foreldrepenger, fordi inntekten din er lavere enn %s kroner i året før skatt.".formatted(
+                        formaterKroner(G_2025 / 2)))
                 .medEgenndefinertAssertion("Selv om du ikke har rett til foreldrepenger, kan det være at du har rett til engangsstønad.");
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_AVSLAG);
 
@@ -1899,6 +1906,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdatoMor);
 
         saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var brevAssertionsBuilder = BrevAssertionBuilder.ny()
+                .medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin()
+                .medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding()
+                .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt()
+                .medEgenndefinertAssertion("Vi kan ikke behandle søknaden din om foreldrepenger før vi har mottatt inntektsmelding fra arbeidsgiveren din.");
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING);
+
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
@@ -1915,8 +1930,22 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Saldoen for stønadskonton FELLESPERIODE")
                 .isZero();
 
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var dagsatsMor = (double) 600_000 / 260;
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
+                .medTekstOmDuFårXKronerUtbetalt((int)Math.ceil(dagsatsMor))
+                .medEgenndefinertAssertion("Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
+                .medParagraf_14_9()
+                .medParagraf_14_10()
+                .medParagraf_14_12()
+                .medEgenndefinertAssertion("Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
+                .medParagraf_8_30()
+                .medTekstOmAutomatiskVedtakUtenUndferskrift();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
+
         var differanseFødselTermin = 7;
-        familie.sendInnDødfødselhendelse(termindato.plusDays(differanseFødselTermin));
+        var dødsdato = termindato.plusDays(differanseFødselTermin);
+        familie.sendInnDødfødselhendelse(dødsdato);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -1989,6 +2018,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(uttakResultatPerioder.get(4).getPeriodeResultatÅrsak().isAvslåttÅrsak())
                 .as("Perioden burde være avslått fordi det er mottatt dødfødselshendelse")
                 .isTrue();
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        brevAssertionsBuilder = BrevAssertionBuilder.ny()
+                .medOverskriftOmInnvilgetEndringAvForeldrepenger()
+                .medEgenndefinertAssertion("Vi har fått opplyst at barnet ditt døde %s. Den siste dagen din med foreldrepenger er derfor %s.".formatted(formaterDatoNorsk(dødsdato), formaterDatoNorsk(dødsdato.plusWeeks(6).minusDays(1))))
+                .medEgenndefinertAssertion("Vedtaket er gjort etter folketrygdloven § 14-9 og forvaltningsloven § 35.");
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_OPPHØR);
     }
 
     @Test
