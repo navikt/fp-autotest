@@ -1444,6 +1444,19 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
 
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var dagsats = SEKS_G_2025 / 260;
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
+                .medTekstOmDuFårXKronerUtbetalt(dagsats)
+                .medEgenndefinertAssertion("Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
+                .medTekstOmAleneomsorg()
+                .medParagraf_14_15()
+                .medEgenndefinertAssertion("Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
+                .medEgenndefinertAssertion("Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(formatKroner(SEKS_G_2025)))
+                .medParagraf_8_30()
+                .medTekstOmAutomatiskVedtakUtenUndferskrift();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
+
         // AG sender inn en IM med endring i refusjon som skal føre til revurdering på far sin sak.
         var inntektsmeldingEndringFar = arbeidsgiver.lagInntektsmeldingFP(fpStartdatoFar)
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(50));
