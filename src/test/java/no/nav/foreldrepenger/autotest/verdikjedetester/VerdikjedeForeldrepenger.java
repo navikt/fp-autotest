@@ -2221,6 +2221,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var brevAssertionsBuilder = engangsstønadInnvilgetAssertionsBuilder()
+                .medEgenndefinertAssertion("Du har rett til engangsstønad og får utbetalt 92 648 kroner innen en uke.")
+                .medEgenndefinertAssertion("Stønaden er skattefri, og du kan sjekke utbetalingen din ved å logge inn på")
+                .medTekstOmAutomatiskVedtakUtenUndferskrift();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET);
+
         /* Far's søknad */
         var far = familie.far();
         var fpStartdatoFar = fødselsdato;
@@ -2239,11 +2246,17 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         ventPåInntektsmeldingForespørsel(saksnummerFar);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
+        saksbehandler.hentFagsak(saksnummerFar);
+        brevAssertionsBuilder = BrevAssertionBuilder.ny()
+                .medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin()
+                .medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding()
+                .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING);
+
         /*
         * Skal ikke få AP 5086 hvor saksbehandler må avklare om anneforelder har rett, ettersom mor allerede mottar engangsstønad
         * Mors aktivitet er ikke dokumentert for utsettelsesperioden og første uttaksperiode etter utsettelsen.
         * */
-        saksbehandler.hentFagsak(saksnummerFar);
         var vurderUttakDokBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
                 .ikkeDokumentert(utsettelsesperiode.tidsperiode())
@@ -2303,6 +2316,19 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(avslåtttUttaksperiode2.getPeriodeResultatÅrsak())
                 .as("Perioderesultatårsak")
                 .isEqualTo(IKKE_STØNADSDAGER_IGJEN);
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var dagsatsFar = (double) 600_000 / 260;
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
+                .medTekstOmDuFårXKronerUtbetalt((int) Math.ceil(dagsatsFar))
+                .medEgenndefinertAssertion("Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
+                .medParagraf_14_9()
+                .medParagraf_14_13()
+                .medParagraf_14_14()
+                .medParagraf_21_3()
+                .medEgenndefinertAssertion("Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
+                .medParagraf_8_30();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
     }
 
     @Test
