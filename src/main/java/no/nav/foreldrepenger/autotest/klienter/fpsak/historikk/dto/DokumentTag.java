@@ -2,9 +2,11 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto;
 
 public enum DokumentTag {
     FORELDREPENGER_INNVILGET("Innvilgelsesbrev foreldrepenger"),
+    FORELDREPENGER_AVSLAG("Avslagsbrev foreldrepenger"),
     FORELDREPENGER_ANNULERING("Annullering av foreldrepenger"),
     ENGANGSSTØNAD_INNVILGET("Innvilget engangsstønad"),
     ETTERLYS_INNTEKTSMELDING("Etterlys inntektsmelding"),
+    KLAGE_OMGJØRIN("Vedtak om omgjøring av klage"),
     ;
 
     private String tag;

@@ -51,11 +51,16 @@ public abstract class FpsakTestBase {
     protected void hentBrevOgSjekkAtInnholdetErRiktig(BrevAssertionBuilder assertionBuilder,
                                                       Fødselsnummer fnr,
                                                       DokumentTag dokumentTag) {
-        var dokumentId = saksbehandler.hentHistorikkinnslagAvType(HistorikkType.BREV_SENDT, dokumentTag)
+        var behandler = saksbehandler;
+        if (DokumentTag.KLAGE_OMGJØRIN.equals(dokumentTag)) {
+            behandler = klagebehandler;
+        }
+
+        var dokumentId = behandler.hentHistorikkinnslagAvType(HistorikkType.BREV_SENDT, dokumentTag)
                 .dokumenter()
                 .getFirst()
                 .dokumentId();
-        var pdf = saksbehandler.hentJournalførtDokument(dokumentId, "ARKIV");
+        var pdf = behandler.hentJournalførtDokument(dokumentId, "ARKIV");
         assertThat(Pdf.is_pdf(pdf)).as("Sjekker om byte array er av typen PDF").isTrue();
 
         assertionBuilder.medEgenndefinertAssertion(formatFnr(fnr))
@@ -98,6 +103,14 @@ public abstract class FpsakTestBase {
                 .medKapittelDuHarRettTilKlage()
                 .medTekstOmVedtaketEtterFolketrygdloven()
                 .medParagraf_14_17();
+    }
+
+    protected static BrevAssertionBuilder foreldrepengerAvslagAssertionsBuilder() {
+        return BrevAssertionBuilder.ny()
+                .medOverskriftOmAvslagAvForeldrepenger()
+                .medKapittelDuHarRettTilKlage()
+                .medTekstOmVedtaketEtterFolketrygdloven()
+                .medParagraf_14_7();
     }
 
     protected static BrevAssertionBuilder foreldrepengerInnvilget80ProsentAssertionsBuilder() {

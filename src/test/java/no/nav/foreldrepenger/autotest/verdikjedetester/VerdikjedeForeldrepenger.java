@@ -1789,6 +1789,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
 
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var brevAssertionsBuilder = foreldrepengerAvslagAssertionsBuilder()
+                .medEgenndefinertAssertion("Du har ikke rett til foreldrepenger, fordi inntekten din er lavere enn %s kroner i året før skatt.".formatted(formatKroner(G_2025 / 2)))
+                .medEgenndefinertAssertion("Selv om du ikke har rett til foreldrepenger, kan det være at du har rett til engangsstønad.");
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_AVSLAG);
+
         mor.sendInnKlage();
         klagebehandler.hentFagsak(saksnummer);
         klagebehandler.ventPåOgVelgKlageBehandling();
@@ -1801,10 +1807,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Super duper klage!");
         klagebehandler.bekreftAksjonspunkt(klageFormkravNfp);
 
+        var fritekst = "Fritektst til brev fra klagebehandler (vises i brevet).";
         var vurderingAvKlageNfpBekreftelse = klagebehandler
                 .hentAksjonspunktbekreftelse(new VurderingAvKlageNfpBekreftelse())
                 .bekreftMedholdGunst("PROSESSUELL_FEIL")
-                .fritekstBrev("Fritektst til brev fra klagebehandler.")
+                .fritekstBrev(fritekst)
                 .setBegrunnelse("Fordi");
         klagebehandler.bekreftAksjonspunkt(vurderingAvKlageNfpBekreftelse);
 
@@ -1815,6 +1822,16 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var fatterVedtakBekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         fatterVedtakBekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
         beslutter.bekreftAksjonspunkt(fatterVedtakBekreftelse);
+
+        klagebehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        brevAssertionsBuilder = BrevAssertionBuilder.ny()
+                .medEgenndefinertAssertion("Nav har omgjort vedtaket ditt om foreldrepenger")
+                .medEgenndefinertAssertion("Etter at du klaget har vi vurdert saken din på nytt. Vi har kommet fram til at vedtaket ditt må gjøres om.")
+                .medEgenndefinertAssertion("Dette har vi lagt vekt på i vurderingen vår")
+                .medEgenndefinertAssertion(fritekst)
+                .medKapittelDuMåMeldeOmEndringer()
+                .medEgenndefinertAssertion("Dersom det skjer endringer som kan ha betydning for stønaden du får utbetalt, må du straks melde fra til Nav.");
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.KLAGE_OMGJØRIN);
 
         // Saksbehandler oppretter ny revudering manuelt etter søker har fått medhold i klage.
         saksbehandler.opprettBehandlingRevurdering(BehandlingÅrsakType.RE_KLAGE_MED_END_INNTEKT);
@@ -1844,6 +1861,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
+
+        // TODO: Her produseres ikke noe brev fra revurdering etter en klage - er det riktig? Skjønner at man kanskje kopierer teksten og legger den inn i klage dokument?
 
     }
 

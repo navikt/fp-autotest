@@ -37,6 +37,11 @@ public class BrevAssertionBuilder {
         return this;
     }
 
+    public BrevAssertionBuilder medOverskriftOmAvslagAvForeldrepenger() {
+        brevAssertions.add("Nav har avslått søknaden din om foreldrepenger");
+        return this;
+    }
+
     public BrevAssertionBuilder medOverskriftOmInnvilgetAnnuleringAvForeldrepenger() {
         brevAssertions.add("Nav har endret foreldrepengene dine");
         return this;
