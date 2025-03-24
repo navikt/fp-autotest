@@ -4,6 +4,7 @@ public enum DokumentTag {
     FORELDREPENGER_INNVILGET("Innvilgelsesbrev foreldrepenger"),
     FORELDREPENGER_ANNULERING("Annullering av foreldrepenger"),
     ENGANGSSTØNAD_INNVILGET("Innvilget engangsstønad"),
+    ETTERLYS_INNTEKTSMELDING("Etterlys inntektsmelding"),
     ;
 
     private String tag;

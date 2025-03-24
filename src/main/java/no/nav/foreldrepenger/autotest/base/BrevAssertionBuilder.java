@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.autotest.base;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static no.nav.foreldrepenger.autotest.base.FpsakTestBase.formatKroner;
+
 public class BrevAssertionBuilder {
 
     private Set<String> BREV_ASSERTIONS;
@@ -15,7 +17,7 @@ public class BrevAssertionBuilder {
         return new BrevAssertionBuilder();
     }
 
-    public BrevAssertionBuilder medAleneomsorg() {
+    public BrevAssertionBuilder medTekstOmAleneomsorg() {
         BREV_ASSERTIONS.add("Du har aleneomsorgen for barnet og får derfor hele foreldrepengeperioden.");
         return this;
     }
@@ -42,6 +44,21 @@ public class BrevAssertionBuilder {
 
     public BrevAssertionBuilder medOverskriftOmInnvilgetEnagangsstønad() {
         BREV_ASSERTIONS.add("Nav har innvilget søknaden din om engangsstønad");
+        return this;
+    }
+
+    public BrevAssertionBuilder medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin() {
+        BREV_ASSERTIONS.add("Vi har bedt om opplysninger fra arbeidsgiveren din");
+        return this;
+    }
+
+    public BrevAssertionBuilder medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding() {
+        BREV_ASSERTIONS.add("Vi har bedt denne arbeidsgiveren om å sende inntektsmelding");
+        return this;
+    }
+
+    public BrevAssertionBuilder medTesktOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt() {
+        BREV_ASSERTIONS.add("Hvis arbeidsgiver allerede har sendt inntektsmelding, kan du se bort fra denne henvendelsen.");
         return this;
     }
 
@@ -159,6 +176,16 @@ public class BrevAssertionBuilder {
         return this;
     }
 
+    public BrevAssertionBuilder medParagraf_8_38() {
+        BREV_ASSERTIONS.add("8-38");
+        return this;
+    }
+
+    public BrevAssertionBuilder medParagraf_8_41() {
+        BREV_ASSERTIONS.add("8-41");
+        return this;
+    }
+
     public BrevAssertionBuilder medKapittelDuMåMeldeOmEndringer() {
         BREV_ASSERTIONS.add("Du må melde fra om endringer");
         return this;
@@ -191,6 +218,16 @@ public class BrevAssertionBuilder {
 
     public BrevAssertionBuilder medTekstOmDenAndreForelderenIkkeHarRettDerforFårDuAlt() {
         BREV_ASSERTIONS.add("Den andre forelderen har ikke rett til foreldrepenger. Derfor får du hele foreldrepengeperioden.");
+        return this;
+    }
+
+    public BrevAssertionBuilder medTekstOmXDagerIgjenAvPeriodenMed(int dagerIgjen) {
+        BREV_ASSERTIONS.add("Det er %s dager igjen av perioden med foreldrepenger. Disse dagene må være tatt ut innen barnet fyller tre år eller innen en ny foreldrepengeperiode for et nytt barn starter.".formatted(dagerIgjen));
+        return this;
+    }
+
+    public BrevAssertionBuilder medTekstOmDuFårXKronerUtbetalt(int beløp) {
+        BREV_ASSERTIONS.add("Du får %s kroner per dag før skatt".formatted(formatKroner(beløp)));
         return this;
     }
 

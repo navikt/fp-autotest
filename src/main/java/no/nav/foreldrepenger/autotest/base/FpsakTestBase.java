@@ -58,8 +58,7 @@ public abstract class FpsakTestBase {
         var pdf = saksbehandler.hentJournalførtDokument(dokumentId, "ARKIV");
         assertThat(Pdf.is_pdf(pdf)).as("Sjekker om byte array er av typen PDF").isTrue();
 
-        assertionBuilder
-                .medEgenndefinertAssertion(formatFnr(fnr))
+        assertionBuilder.medEgenndefinertAssertion(formatFnr(fnr))
                 .medKapittelDuHarRettTilInnsyn()
                 .medKapittelHarDuSpørsmål()
                 .medVennligHilsen()
@@ -76,9 +75,12 @@ public abstract class FpsakTestBase {
         try (var document = Loader.loadPDF(pdfBytes)) {
             // Fjerne linjeskift for å kunne søke på tvers av linjer
             var pdfTekst = new PDFTextStripper().getText(document).replace("\n", "");
-            var softAssertions = new SoftAssertions();
-            asserts.forEach(skalFinnes -> softAssertions.assertThat(pdfTekst.contains(skalFinnes)).as("'%s' finnes ikke".formatted(skalFinnes)).isTrue());
-            softAssertions.assertAll();
+            var softAssert = new SoftAssertions();
+            asserts.forEach(skalFinnes -> softAssert
+                    .assertThat(pdfTekst.contains(skalFinnes))
+                    .as("'%s' finnes ikke".formatted(skalFinnes))
+                    .isTrue());
+            softAssert.assertAll();
         } catch (IOException e) {
             Fail.fail("Kunne ikke lese PDFen", e);
         }
@@ -99,7 +101,9 @@ public abstract class FpsakTestBase {
     }
 
     protected static BrevAssertionBuilder foreldrepengerInnvilget80ProsentAssertionsBuilder() {
-        return foreldrepengerInnvilgetFellesAssertionBuilder().medOverskriftOmInnvilget80ProsentForeldrepenger();
+        return foreldrepengerInnvilgetFellesAssertionBuilder()
+                .medOverskriftOmInnvilget80ProsentForeldrepenger()
+                .medEgenndefinertAssertion("Fordi du har valgt 80 prosent foreldrepenger, får du mindre utbetalt i måneden.");
     }
 
     protected static BrevAssertionBuilder foreldrepengerInnvilget100ProsentAssertionsBuilder() {
@@ -130,9 +134,9 @@ public abstract class FpsakTestBase {
                 .medOverskriftOmInnvilgetAnnuleringAvForeldrepenger()
                 .medTekstOmDuMåSøkeNyForeldrepengerperiodePå()
                 .medTekstOmSøkeSenestDagenFørNyPeriodeEllerBarnetFyllerTreÅr()
+                .medEgenndefinertAssertion("Du har valgt å ikke ta ut din tidligere innvilgede periode med foreldrepenger")
                 .medEgenndefinertAssertion(
                         "Når det er 4 uker igjen til du skal ta ut foreldrepenger, må arbeidsgiveren din sende inn ny inntektsmelding.")
-                .medEgenndefinertAssertion("Du har valgt å ikke ta ut din tidligere innvilgede periode med foreldrepenger")
                 .medTekstOmVedtaketEtterFolketrygdloven()
                 .medParagraf_14_6()
                 .medParagraf_14_7()
