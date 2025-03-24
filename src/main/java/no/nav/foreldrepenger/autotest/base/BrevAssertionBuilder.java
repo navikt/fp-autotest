@@ -7,10 +7,10 @@ import static no.nav.foreldrepenger.autotest.base.FpsakTestBase.formatKroner;
 
 public class BrevAssertionBuilder {
 
-    private Set<String> BREV_ASSERTIONS;
+    private final Set<String> brevAssertions;
 
     private BrevAssertionBuilder() {
-        BREV_ASSERTIONS = new LinkedHashSet<>();
+        brevAssertions = new LinkedHashSet<>();
     }
 
     public static BrevAssertionBuilder ny() {
@@ -18,225 +18,225 @@ public class BrevAssertionBuilder {
     }
 
     public BrevAssertionBuilder medTekstOmAleneomsorg() {
-        BREV_ASSERTIONS.add("Du har aleneomsorgen for barnet og får derfor hele foreldrepengeperioden.");
+        brevAssertions.add("Du har aleneomsorgen for barnet og får derfor hele foreldrepengeperioden.");
         return this;
     }
 
     public BrevAssertionBuilder medOverskriftOmInnvilget100ProsentForeldrepenger() {
-        BREV_ASSERTIONS.add("Nav har innvilget søknaden din om 100 prosent foreldrepenger");
+        brevAssertions.add("Nav har innvilget søknaden din om 100 prosent foreldrepenger");
         return this;
     }
 
     public BrevAssertionBuilder medOverskriftOmInnvilget80ProsentForeldrepenger() {
-        BREV_ASSERTIONS.add("Nav har innvilget søknaden din om 80 prosent foreldrepenger");
+        brevAssertions.add("Nav har innvilget søknaden din om 80 prosent foreldrepenger");
         return this;
     }
 
     public BrevAssertionBuilder medOverskriftOmInnvilgetEndringAvForeldrepenger() {
-        BREV_ASSERTIONS.add("Nav har endret foreldrepengeperioden din");
+        brevAssertions.add("Nav har endret foreldrepengeperioden din");
         return this;
     }
 
     public BrevAssertionBuilder medOverskriftOmInnvilgetAnnuleringAvForeldrepenger() {
-        BREV_ASSERTIONS.add("Nav har endret foreldrepengene dine");
+        brevAssertions.add("Nav har endret foreldrepengene dine");
         return this;
     }
 
     public BrevAssertionBuilder medOverskriftOmInnvilgetEnagangsstønad() {
-        BREV_ASSERTIONS.add("Nav har innvilget søknaden din om engangsstønad");
+        brevAssertions.add("Nav har innvilget søknaden din om engangsstønad");
         return this;
     }
 
     public BrevAssertionBuilder medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin() {
-        BREV_ASSERTIONS.add("Vi har bedt om opplysninger fra arbeidsgiveren din");
+        brevAssertions.add("Vi har bedt om opplysninger fra arbeidsgiveren din");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding() {
-        BREV_ASSERTIONS.add("Vi har bedt denne arbeidsgiveren om å sende inntektsmelding");
+        brevAssertions.add("Vi har bedt denne arbeidsgiveren om å sende inntektsmelding");
         return this;
     }
 
     public BrevAssertionBuilder medTesktOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt() {
-        BREV_ASSERTIONS.add("Hvis arbeidsgiver allerede har sendt inntektsmelding, kan du se bort fra denne henvendelsen.");
+        brevAssertions.add("Hvis arbeidsgiver allerede har sendt inntektsmelding, kan du se bort fra denne henvendelsen.");
         return this;
     }
 
     public BrevAssertionBuilder medKapittelDuHarRettTilKlage() {
-        BREV_ASSERTIONS.add("Du har rett til å klage");
+        brevAssertions.add("Du har rett til å klage");
         return this;
     }
 
     public BrevAssertionBuilder medKapittelDuHarRettTilInnsyn() {
-        BREV_ASSERTIONS.add("Du har rett til innsyn");
+        brevAssertions.add("Du har rett til innsyn");
         return this;
     }
 
     public BrevAssertionBuilder medKapittelHarDuSpørsmål() {
-        BREV_ASSERTIONS.add("Har du spørsmål?");
+        brevAssertions.add("Har du spørsmål?");
         return this;
     }
 
     public BrevAssertionBuilder medVennligHilsen() {
-        BREV_ASSERTIONS.add("Med vennlig hilsen");
+        brevAssertions.add("Med vennlig hilsen");
         return this;
     }
 
     public BrevAssertionBuilder medUnderksriftNFP() {
-        BREV_ASSERTIONS.add("Nav Familie- og pensjonsytelser");
+        brevAssertions.add("Nav Familie- og pensjonsytelser");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmAutomatiskVedtakUtenUndferskrift() {
-        BREV_ASSERTIONS.add("Vedtaket har blitt automatisk saksbehandlet av vårt fagsystem. Vedtaksbrevet er derfor ikke underskrevet av saksbehandler.");
+        brevAssertions.add("Vedtaket har blitt automatisk saksbehandlet av vårt fagsystem. Vedtaksbrevet er derfor ikke underskrevet av saksbehandler.");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmOpplysningerFraEnArbeidsgiver() {
-        BREV_ASSERTIONS.add("Arbeidsgiveren din har gitt oss disse opplysningene.");
+        brevAssertions.add("Arbeidsgiveren din har gitt oss disse opplysningene.");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmOpplysningerFraFlereArbeidsgivere() {
-        BREV_ASSERTIONS.add("Arbeidsgiverne dine har gitt oss disse opplysningene.");
+        brevAssertions.add("Arbeidsgiverne dine har gitt oss disse opplysningene.");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmVedtaketEtterFolketrygdloven() {
-        BREV_ASSERTIONS.add("Vedtaket er gjort etter folketrygdloven §");
+        brevAssertions.add("Vedtaket er gjort etter folketrygdloven §");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmBeregningEtterFolketrygdloven() {
-        BREV_ASSERTIONS.add("Beregningen er gjort etter folketrygdloven §");
+        brevAssertions.add("Beregningen er gjort etter folketrygdloven §");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmInntektBruktIBeregningen() {
-        BREV_ASSERTIONS.add("Inntekt vi har brukt i beregningen");
+        brevAssertions.add("Inntekt vi har brukt i beregningen");
         return this;
     }
 
     public BrevAssertionBuilder medParagraf_14_17() {
-        BREV_ASSERTIONS.add("14-17");
+        brevAssertions.add("14-17");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_16() {
-        BREV_ASSERTIONS.add("14-16");
+        brevAssertions.add("14-16");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_15() {
-        BREV_ASSERTIONS.add("14-15");
+        brevAssertions.add("14-15");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_14() {
-        BREV_ASSERTIONS.add("14-14");
+        brevAssertions.add("14-14");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_13() {
-        BREV_ASSERTIONS.add("14-13");
+        brevAssertions.add("14-13");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_12() {
-        BREV_ASSERTIONS.add("14-12");
+        brevAssertions.add("14-12");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_11() {
-        BREV_ASSERTIONS.add("14-11");
+        brevAssertions.add("14-11");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_10() {
-        BREV_ASSERTIONS.add("14-10");
+        brevAssertions.add("14-10");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_9() {
-        BREV_ASSERTIONS.add("14-9");
+        brevAssertions.add("14-9");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_8() {
-        BREV_ASSERTIONS.add("14-8");
+        brevAssertions.add("14-8");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_7() {
-        BREV_ASSERTIONS.add("14-7");
+        brevAssertions.add("14-7");
         return this;
     }
     public BrevAssertionBuilder medParagraf_14_6() {
-        BREV_ASSERTIONS.add("14-6");
+        brevAssertions.add("14-6");
         return this;
     }
 
     public BrevAssertionBuilder medParagraf_8_30() {
-        BREV_ASSERTIONS.add("8-30");
+        brevAssertions.add("8-30");
         return this;
     }
 
     public BrevAssertionBuilder medParagraf_8_35() {
-        BREV_ASSERTIONS.add("8-35");
+        brevAssertions.add("8-35");
         return this;
     }
 
     public BrevAssertionBuilder medParagraf_8_38() {
-        BREV_ASSERTIONS.add("8-38");
+        brevAssertions.add("8-38");
         return this;
     }
 
     public BrevAssertionBuilder medParagraf_8_41() {
-        BREV_ASSERTIONS.add("8-41");
+        brevAssertions.add("8-41");
         return this;
     }
 
     public BrevAssertionBuilder medKapittelDuMåMeldeOmEndringer() {
-        BREV_ASSERTIONS.add("Du må melde fra om endringer");
+        brevAssertions.add("Du må melde fra om endringer");
         return this;
     }
 
     public BrevAssertionBuilder medKapittelDetteHarViInnvilget() {
-        BREV_ASSERTIONS.add("Dette har vi innvilget");
+        brevAssertions.add("Dette har vi innvilget");
         return this;
     }
 
     public BrevAssertionBuilder medKapittelDetteHarViAvslått() {
-        BREV_ASSERTIONS.add("Dette har vi avslått");
+        brevAssertions.add("Dette har vi avslått");
         return this;
     }
 
     public BrevAssertionBuilder medKapittelDuHarFlereAgbeidsgivere() {
-        BREV_ASSERTIONS.add("Du har flere arbeidsgivere");
+        brevAssertions.add("Du har flere arbeidsgivere");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmDuMåSøkeNyForeldrepengerperiodePå() {
-        BREV_ASSERTIONS.add("Du må søke om ny foreldrepengeperiode på ");
+        brevAssertions.add("Du må søke om ny foreldrepengeperiode på ");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmSøkeSenestDagenFørNyPeriodeEllerBarnetFyllerTreÅr() {
-        BREV_ASSERTIONS.add("senest dagen før ny foreldrepengeperiode for nytt barn starter, eller senest dagen før barnet fyller tre år.");
+        brevAssertions.add("senest dagen før ny foreldrepengeperiode for nytt barn starter, eller senest dagen før barnet fyller tre år.");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmDenAndreForelderenIkkeHarRettDerforFårDuAlt() {
-        BREV_ASSERTIONS.add("Den andre forelderen har ikke rett til foreldrepenger. Derfor får du hele foreldrepengeperioden.");
+        brevAssertions.add("Den andre forelderen har ikke rett til foreldrepenger. Derfor får du hele foreldrepengeperioden.");
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmXDagerIgjenAvPeriodenMed(int dagerIgjen) {
-        BREV_ASSERTIONS.add("Det er %s dager igjen av perioden med foreldrepenger. Disse dagene må være tatt ut innen barnet fyller tre år eller innen en ny foreldrepengeperiode for et nytt barn starter.".formatted(dagerIgjen));
+        brevAssertions.add("Det er %s dager igjen av perioden med foreldrepenger. Disse dagene må være tatt ut innen barnet fyller tre år eller innen en ny foreldrepengeperiode for et nytt barn starter.".formatted(dagerIgjen));
         return this;
     }
 
     public BrevAssertionBuilder medTekstOmDuFårXKronerUtbetalt(int beløp) {
-        BREV_ASSERTIONS.add("Du får %s kroner per dag før skatt".formatted(formatKroner(beløp)));
+        brevAssertions.add("Du får %s kroner per dag før skatt".formatted(formatKroner(beløp)));
         return this;
     }
 
     public BrevAssertionBuilder medEgenndefinertAssertion(String assertion) {
-        BREV_ASSERTIONS.add(assertion);
+        brevAssertions.add(assertion);
         return this;
     }
 
     public Set<String> build() {
-        return BREV_ASSERTIONS;
+        return brevAssertions;
     }
 }

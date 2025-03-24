@@ -674,7 +674,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
-                .medTekstOmDuFårXKronerUtbetalt((int)Math.ceil(SEKS_G_2025 / 260))
+                .medTekstOmDuFårXKronerUtbetalt(SEKS_G_2025 / 260)
                 .medEgenndefinertAssertion("Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf_14_9()
                 .medParagraf_14_10()
@@ -992,7 +992,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var morDagsats = (int) Math.ceil(SEKS_G_2025 / 260);
+        var morDagsats = SEKS_G_2025 / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
                 .medTekstOmDuFårXKronerUtbetalt(morDagsats)
                 .medEgenndefinertAssertion("Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
@@ -1178,7 +1178,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertFeriepenger(feriepengerTilSøker + feriepengerTilArbeidsgiver, 11297);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var morDagsats = (int) Math.ceil(480_000 / 260);
+        var morDagsats = 480_000 / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
                 .medTekstOmDuFårXKronerUtbetalt(morDagsats)
                 .medEgenndefinertAssertion("Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
