@@ -1324,11 +1324,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @Description("Mor søker med dagpenger som grunnlag. Kvalifiserer til automatisk besteberegning." +
             "Beregning etter etter §14-7, 3. ledd gir høyere inntekt enn beregning etter §14-7, 1. ledd")
     void MorSøkerMedDagpengerTest() {
+        var ytelseMor = 260_000;
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arbeidsforhold(LocalDate.now().minusMonths(10), LocalDate.now().minusMonths(5).minusDays(1))
-                                .arena(ArenaSakerDto.YtelseTema.DAG, LocalDate.now().minusMonths(5), LocalDate.now().minusWeeks(5), 21_667)
+                                .arena(ArenaSakerDto.YtelseTema.DAG, LocalDate.now().minusMonths(5), LocalDate.now().minusWeeks(5),
+                                        ytelseMor)
                                 .build())
                         .build())
                 .forelder(far().build())
@@ -1371,6 +1373,20 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
                 .as("Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!")
                 .isTrue();
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
+                .medEgenndefinertAssertion("Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
+                .medParagraf_14_9()
+                .medParagraf_14_10()
+                .medParagraf_14_12()
+                .medEgenndefinertAssertion("Når du har mottatt dagpenger i forkant av foreldrepenger kan du få beregnet foreldrepenger ut i "
+                        + "fra de 6 beste av de 10 siste månedene med inntekt, eller etter ordinære beregningsregler "
+                        + "avhengig av hva som gir deg best resultat.")
+                .medParagraf_8_49()
+                .medTekstOmAutomatiskVedtakUtenUndferskrift();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET);
+
     }
 
     @Test

@@ -186,6 +186,11 @@ public class BrevAssertionBuilder {
         return this;
     }
 
+    public BrevAssertionBuilder medParagraf_8_49() {
+        brevAssertions.add("8-49");
+        return this;
+    }
+
     public BrevAssertionBuilder medKapittelDuMåMeldeOmEndringer() {
         brevAssertions.add("Du må melde fra om endringer");
         return this;
