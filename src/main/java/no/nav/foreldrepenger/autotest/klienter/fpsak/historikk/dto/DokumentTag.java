@@ -8,6 +8,7 @@ public enum DokumentTag {
     ENGANGSSTØNAD_INNVILGET("Innvilget engangsstønad"),
     ETTERLYS_INNTEKTSMELDING("Etterlys inntektsmelding"),
     KLAGE_OMGJØRIN("Vedtak om omgjøring av klage"),
+    INNTEKSTMELDING("Inntektsmelding"),
     ;
 
     private String tag;

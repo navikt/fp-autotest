@@ -53,24 +53,27 @@ public abstract class FpsakTestBase {
 
     protected void hentBrevOgSjekkAtInnholdetErRiktig(BrevAssertionBuilder assertionBuilder,
                                                       Fødselsnummer fnr,
-                                                      DokumentTag dokumentTag) {
+                                                      DokumentTag dokumentTag,
+                                                      HistorikkType ventTilHistorikkinnslag) {
         var behandler = saksbehandler;
         if (DokumentTag.KLAGE_OMGJØRIN.equals(dokumentTag)) {
             behandler = klagebehandler;
         }
-
-        var dokumentId = behandler.hentHistorikkinnslagAvType(HistorikkType.BREV_SENDT, dokumentTag)
+        behandler.ventTilHistorikkinnslag(ventTilHistorikkinnslag);
+        var dokumentId = behandler.hentHistorikkinnslagAvType(ventTilHistorikkinnslag, dokumentTag)
                 .dokumenter()
                 .getFirst()
                 .dokumentId();
         var pdf = behandler.hentJournalførtDokument(dokumentId, "ARKIV");
         assertThat(Pdf.is_pdf(pdf)).as("Sjekker om byte array er av typen PDF").isTrue();
 
-        assertionBuilder.medEgenndefinertAssertion(formaterFnr(fnr))
-                .medKapittelDuHarRettTilInnsyn()
-                .medKapittelHarDuSpørsmål()
-                .medVennligHilsen()
-                .medUnderksriftNFP();
+        assertionBuilder.medEgenndefinertAssertion(formaterFnr(fnr));
+        if (!DokumentTag.INNTEKSTMELDING.equals(dokumentTag)) {
+            assertionBuilder.medKapittelDuHarRettTilInnsyn()
+                    .medKapittelHarDuSpørsmål()
+                    .medVennligHilsen()
+                    .medUnderksriftNFP();
+        }
 
         sjekkAtBrevetInneholderTekst(pdf, assertionBuilder.build());
     }
