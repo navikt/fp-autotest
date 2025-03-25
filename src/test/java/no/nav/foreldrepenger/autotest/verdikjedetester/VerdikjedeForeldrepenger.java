@@ -2725,6 +2725,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, termindato.plusWeeks(3));
 
+        validerInnsendtInntektsmelding(far.fødselsnummer(), termindato.plusWeeks(9).plusDays(2), far.månedsinntekt());
+
         saksbehandler.hentFagsak(saksnummer);
         assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD)).isTrue();
 
@@ -2745,6 +2747,20 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var dagsatsFar = Math.min(SEKS_G_2025, far.månedsinntekt() * 12) / 260;
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder()
+                .medTekstOmDuFårXKronerUtbetalt(dagsatsFar)
+                .medEgenndefinertAssertion("Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
+                .medEgenndefinertAssertion("Den andre forelderen har rett til foreldrepenger. Derfor får du ikke hele foreldrepengeperioden.")
+                .medEgenndefinertAssertion("Det er 45 dager igjen av kvoten din, og 80 dager som begge kan ta ut.")
+                .medEgenndefinertAssertion("Disse dagene må være tatt ut innen barnet fyller tre år eller innen en ny foreldrepengeperiode for et nytt barn starter.")
+                .medParagraf_14_12()
+                .medEgenndefinertAssertion("Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
+                .medParagraf_8_30();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+                HistorikkType.BREV_SENDT);
     }
 
 
