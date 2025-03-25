@@ -67,19 +67,16 @@ public abstract class FpsakTestBase {
         var pdf = behandler.hentJournalførtDokument(dokumentId, "ARKIV");
         assertThat(Pdf.is_pdf(pdf)).as("Sjekker om byte array er av typen PDF").isTrue();
 
-        assertionBuilder.medEgenndefinertAssertion(formaterFnr(fnr));
         if (!DokumentTag.INNTEKSTMELDING.equals(dokumentTag)) {
-            assertionBuilder.medKapittelDuHarRettTilInnsyn()
+            assertionBuilder.medEgenndefinertAssertion("Fødselsnummer: %s".formatted(formaterFnr(fnr)))
+                    .medEgenndefinertAssertion("Saksnummer: %s".formatted(behandler.valgtFagsak.saksnummer().value()))
+                    .medKapittelDuHarRettTilInnsyn()
                     .medKapittelHarDuSpørsmål()
                     .medVennligHilsen()
                     .medUnderksriftNFP();
         }
 
         sjekkAtBrevetInneholderTekst(pdf, assertionBuilder.build());
-    }
-
-    protected static String formaterFnr(Fødselsnummer fnr) {
-        return fnr.value().substring(0, 6) + " " + fnr.value().substring(6);
     }
 
     private static void sjekkAtBrevetInneholderTekst(byte[] pdfBytes, Set<String> asserts) {
@@ -97,13 +94,17 @@ public abstract class FpsakTestBase {
         }
     }
 
+    protected static String formaterFnr(Fødselsnummer fnr) {
+        return fnr.value().substring(0, 6) + " " + fnr.value().substring(6);
+    }
+
     protected static String formaterKroner(int beløp) {
         var symbols = new DecimalFormatSymbols();
         symbols.setGroupingSeparator(' '); // Explicitly setting a normal space (U+0020)
         return new DecimalFormat("#,###", symbols).format(beløp);
     }
 
-    protected static String formaterDatoNorsk(LocalDate dato) {
+    protected static String formaterDato(LocalDate dato) {
         if (dato == null) {
             return null;
         }
