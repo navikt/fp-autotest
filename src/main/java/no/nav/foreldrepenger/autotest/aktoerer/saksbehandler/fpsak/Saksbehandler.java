@@ -1,5 +1,25 @@
 package no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak;
 
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.AUTO_KØET_BEHANDLING;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidInntektsmeldingAksjonspunktÅrsak;
@@ -49,25 +69,6 @@ import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.AUTO_KØET_BEHANDLING;
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling.get;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugAksjonspunktbekreftelser;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugBehandlingsstatus;
 
 public class Saksbehandler {
     private final Logger LOG = LoggerFactory.getLogger(Saksbehandler.class);
@@ -635,7 +636,7 @@ public class Saksbehandler {
     }
 
     private boolean harHistorikkinnslagPåBehandling(UUID behandlingsId, HistorikkType... type) {
-        if (Arrays.stream(type).anyMatch(t -> Set.of(HistorikkType.VEDLEGG_MOTTATT, HistorikkType.REVURD_OPPR).contains(t))) {
+        if (Arrays.asList(type).contains(HistorikkType.REVURD_OPPR)) {
             behandlingsId = null;
         }
         return hentHistorikkinnslagPåBehandling(behandlingsId).stream().anyMatch(innslag -> innslag.erAvTypen(type));
@@ -647,7 +648,7 @@ public class Saksbehandler {
 
     public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkType type, UUID behandlingsUuid, int behandlingId) {
         venterPåFerdigProssesseringOgOppdaterBehandling(behandlingsUuid, behandlingId);
-        if (Set.of(HistorikkType.VEDLEGG_MOTTATT, HistorikkType.REVURD_OPPR).contains(type)) {
+        if (Objects.equals(HistorikkType.REVURD_OPPR, type)) {
             behandlingsUuid = null;
         }
         return hentHistorikkinnslagPåBehandling(behandlingsUuid).stream()
