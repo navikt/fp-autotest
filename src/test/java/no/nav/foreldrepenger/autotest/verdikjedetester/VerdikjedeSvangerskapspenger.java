@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.autotest.base.BrevAssertionBuilder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 
 import org.junit.jupiter.api.Disabled;
@@ -67,6 +70,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
 
+        validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), mor.månedsinntekt(), false);
+
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
@@ -93,6 +98,28 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
                 .as("Foventer at hele den utbetalte dagsatsen går til søker!")
                 .isTrue();
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var snittPerMåned = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260 * 260 / 12;
+        var brevAssertionsBuilder = svangerskapspengerInnvilgetAssertionsBuilder()
+                .medEgenndefinertAssertion("Du får i gjennomsnitt %s kroner i måneden før skatt.".formatted(formaterKroner(snittPerMåned)))
+                .medEgenndefinertAssertion("Svangerskapspengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like "
+                        + "mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
+                .medEgenndefinertAssertion("Pengene er på kontoen din innen den 25. hver måned. Sjekk utbetalingene dine på ")
+                .medEgenndefinertAssertion("I denne perioden får du svangerskapspenger")
+                .medTekstOmVedtaketEtterFolketrygdloven()
+                .medParagraf_14_4()
+                .medTekstOmInntektBruktIBeregningen()
+                .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(mor.månedsinntekt() * 12)))
+                .medEgenndefinertAssertion("Arbeidsgiveren din har gitt oss disse opplysningene. Dette er gjennomsnittet av inntekten din fra "
+                        + "de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen "
+                        + "din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
+                .medTekstOmBeregningEtterFolketrygdloven()
+                .medKapittelDuMåMeldeOmEndringer()
+                .medKapittelDuHarRettTilKlage()
+                .medParagraf_8_30();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
+                HistorikkType.BREV_SENDT);
     }
 
     @Test
@@ -121,6 +148,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
 
+        validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), mor.månedsinntekt(), false);
+
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
@@ -147,6 +176,30 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0))
                 .as("Foventer at hele den utbetalte dagsatsen går til søker!")
                 .isTrue();
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        int dagsats = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260; //2862
+        int dagsatsAvkortet = (int)(dagsats * (100 - tilrettelegginsprosent) / 100);
+        int snittPerMånedAvkortet = dagsatsAvkortet * 260 / 12;
+        var brevAssertionsBuilder = svangerskapspengerInnvilgetAssertionsBuilder()
+                .medEgenndefinertAssertion("Du får i gjennomsnitt %s kroner i måneden før skatt.".formatted(formaterKroner(snittPerMånedAvkortet)))
+                .medEgenndefinertAssertion("Svangerskapspengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like "
+                        + "mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
+                .medEgenndefinertAssertion("Pengene er på kontoen din innen den 25. hver måned. Sjekk utbetalingene dine på ")
+                .medEgenndefinertAssertion("I denne perioden får du svangerskapspenger")
+                .medTekstOmVedtaketEtterFolketrygdloven()
+                .medParagraf_14_4()
+                .medTekstOmInntektBruktIBeregningen()
+                .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(mor.månedsinntekt() * 12)))
+                .medEgenndefinertAssertion("Arbeidsgiveren din har gitt oss disse opplysningene. Dette er gjennomsnittet av inntekten din fra "
+                        + "de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen "
+                        + "din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
+                .medTekstOmBeregningEtterFolketrygdloven()
+                .medKapittelDuMåMeldeOmEndringer()
+                .medKapittelDuHarRettTilKlage()
+                .medParagraf_8_30();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
+                HistorikkType.BREV_SENDT);
     }
 
     @Test
@@ -260,6 +313,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         ventPåInntektsmeldingForespørsel(saksnummer1);
         arbeidsgiver.sendInntektsmelding(saksnummer1, inntektsmelding);
 
+        validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now().minusMonths(2), mor.månedsinntekt(), true);
+
         saksbehandler.hentFagsak(saksnummer1);
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
@@ -287,6 +342,28 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(arbeidsgiverIdentifikator, 100))
                 .as("Foventer at hele den utbetalte dagsatsen går til arbeidsgiver siden de ønsker full refusjon!")
                 .isTrue();
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        int dagsats = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260;
+        int dagsatsAvkortet = (int)(dagsats * (100 - tilrettelegginsprosent) / 100);
+        int snittPerMånedAvkortet = dagsatsAvkortet * 260 / 12;
+        var brevAssertionsBuilder = svangerskapspengerInnvilgetAssertionsBuilder()
+                .medEgenndefinertAssertion("Du får i gjennomsnitt %s kroner i måneden før skatt.".formatted(formaterKroner(snittPerMånedAvkortet)))
+                .medEgenndefinertAssertion("Vi utbetaler svangerskapspengene til arbeidsgiveren din fordi du får lønn mens du er borte fra jobb.")
+                .medEgenndefinertAssertion("I denne perioden får du svangerskapspenger")
+                .medTekstOmVedtaketEtterFolketrygdloven()
+                .medParagraf_14_4()
+                .medTekstOmInntektBruktIBeregningen()
+                .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(mor.månedsinntekt() * 12)))
+                .medEgenndefinertAssertion("Arbeidsgiveren din har gitt oss disse opplysningene. Dette er gjennomsnittet av inntekten din fra "
+                        + "de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen "
+                        + "din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
+                .medTekstOmBeregningEtterFolketrygdloven()
+                .medKapittelDuMåMeldeOmEndringer()
+                .medKapittelDuHarRettTilKlage()
+                .medParagraf_8_30();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
+                HistorikkType.BREV_SENDT);
 
         /* SØKNAD 2 */
         var tilrettelegging2 =
@@ -345,6 +422,19 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(beregningsresultatPeriodeAndeler.get(0).getTilSoker())
                 .as("Dagsats til søker")
                 .isZero();
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        brevAssertionsBuilder = BrevAssertionBuilder.ny()
+                .medEgenndefinertAssertion("Nav har endret svangerskapspengene dine")
+                .medEgenndefinertAssertion("Vi utbetaler svangerskapspengene til arbeidsgiveren din fordi du får lønn mens du er borte fra jobb.")
+                .medEgenndefinertAssertion("I disse periodene får du svangerskapspenger")
+                .medEgenndefinertAssertion("Som næringsdrivende")
+                .medTekstOmVedtaketEtterFolketrygdloven()
+                .medParagraf_14_4()
+                .medKapittelDuMåMeldeOmEndringer()
+                .medKapittelDuHarRettTilKlage();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
+                HistorikkType.BREV_SENDT);
     }
 
     @Test
@@ -385,12 +475,20 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var inntektsmedling1 = arbeidsgiver1.lagInntektsmeldingSVP()
                 .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
         arbeidsgiver1.sendInntektsmelding(saksnummer, inntektsmedling1);
+
+        saksbehandler.hentFagsak(saksnummer);
+        var månedsinntekt1 = mor.månedsinntekt(orgnummer1);
+        validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), månedsinntekt1, true);
+
         var arbeidsgiver2 = arbeidsgivere.get(1);
         var inntektsmedling2 = arbeidsgiver2.lagInntektsmeldingSVP()
                 .medRefusjonBeløpPerMnd(HUNDRE_PROSENT_AV_BEREGNET_INNTEKT);
         arbeidsgiver2.sendInntektsmelding(saksnummer, inntektsmedling2);
 
-        saksbehandler.hentFagsak(saksnummer);
+        var månedsinntekt2 = mor.månedsinntekt(orgnummer2);
+        validerInnsendtInntektsmelding(mor.fødselsnummer(), LocalDate.now(), månedsinntekt2, true, TypeYtelse.SVP,
+                1);
+
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
         avklarFaktaFødselOgTilrettelegging.setBegrunnelse("Begrunnelse");
@@ -410,9 +508,6 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-
-        var månedsinntekt1 = mor.månedsinntekt(orgnummer1);
-        var månedsinntekt2 = mor.månedsinntekt(orgnummer2);
         var beregnetDagsats = regnUtForventetDagsats(månedsinntekt1 + månedsinntekt2, tilrettelegginsprosent);
         var beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
                 .getBeregningsgrunnlagPeriode(0);
@@ -430,6 +525,27 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(orgnummer2, prosentTilArbeidforhold2))
                 .as("Foventer at hele den utbetalte dagsatsen går til søker!")
                 .isTrue();
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var brevAssertionsBuilder = svangerskapspengerInnvilgetAssertionsBuilder()
+                .medEgenndefinertAssertion("Vi utbetaler svangerskapspengene til arbeidsgiverne dine fordi du får lønn mens du er borte fra jobb.")
+                .medEgenndefinertAssertion("I disse periodene får du svangerskapspenger")
+                .medTekstOmVedtaketEtterFolketrygdloven()
+                .medParagraf_14_4()
+                .medTekstOmInntektBruktIBeregningen()
+                .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(månedsinntekt * 12)))
+                .medEgenndefinertAssertion("Arbeidsgiverne dine har gitt oss disse opplysningene. Dette er gjennomsnittet av inntekten din fra "
+                        + "de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen "
+                        + "din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
+                .medEgenndefinertAssertion("Svangerskapspengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i ".formatted(formaterKroner(Math.min(SEKS_G_2025, månedsinntekt * 12)))
+                        + "folketrygden. Du tjener mer enn dette, men du får ikke svangerskapspenger for den delen av "
+                        + "inntekten som overstiger seks ganger grunnbeløpet.")
+                .medTekstOmBeregningEtterFolketrygdloven()
+                .medKapittelDuMåMeldeOmEndringer()
+                .medKapittelDuHarRettTilKlage()
+                .medParagraf_8_30();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
+                HistorikkType.BREV_SENDT);
     }
 
     @Test
@@ -446,8 +562,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsforholdMor = mor.arbeidsforhold();
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
+        var tilrettelegginsprosent = 40.0;
         var tilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer), LocalDate.now())
-                .delvis(LocalDate.now(), 40.0)
+                .delvis(LocalDate.now(), tilrettelegginsprosent)
                 .build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato,
                 List.of(tilrettelegging));
@@ -458,6 +575,9 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmeldingerSVP(saksnummer);
 
         saksbehandler.hentFagsak(saksnummer);
+        var månedsinntektMor = mor.månedsinntekt();
+        validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), månedsinntektMor, false);
+
         var avklarFaktaFødselOgTilrettelegging = saksbehandler
                 .hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
 
@@ -490,6 +610,30 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(svpSakEtterVedtak.familiehendelse().fødselsdato()).isNull();
         assertThat(svpSakEtterVedtak.familiehendelse().antallBarn()).isZero();
         assertThat(svpSakEtterVedtak.familiehendelse().omsorgsovertakelse()).isNull();
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        int dagsats = Math.min(SEKS_G_2025, månedsinntektMor * 12) / 260; //2862
+        int dagsatsAvkortet = (int)Math.round(dagsats * (100 - tilrettelegginsprosent) / 100);
+        int snittPerMånedAvkortet = dagsatsAvkortet * 260 / 12;
+        var brevAssertionsBuilder = svangerskapspengerInnvilgetAssertionsBuilder()
+                .medEgenndefinertAssertion("Du får i gjennomsnitt %s kroner i måneden før skatt.".formatted(formaterKroner(snittPerMånedAvkortet)))
+                .medEgenndefinertAssertion("Svangerskapspengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like "
+                        + "mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
+                .medEgenndefinertAssertion("I denne perioden får du svangerskapspenger")
+                .medTekstOmVedtaketEtterFolketrygdloven()
+                .medParagraf_14_4()
+                .medTekstOmInntektBruktIBeregningen()
+                .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(
+                        månedsinntektMor * 12)))
+                .medEgenndefinertAssertion("Arbeidsgiveren din har gitt oss disse opplysningene. Dette er gjennomsnittet av inntekten din fra "
+                        + "de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen "
+                        + "din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
+                .medTekstOmBeregningEtterFolketrygdloven()
+                .medKapittelDuMåMeldeOmEndringer()
+                .medKapittelDuHarRettTilKlage()
+                .medParagraf_8_30();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
+                HistorikkType.BREV_SENDT);
     }
 
     private Integer regnUtForventetDagsats(Integer samletMånedsbeløp, Double tilrettelegginsprosent) {

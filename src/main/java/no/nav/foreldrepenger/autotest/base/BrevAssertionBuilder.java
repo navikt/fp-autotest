@@ -47,6 +47,11 @@ public class BrevAssertionBuilder {
         return this;
     }
 
+    public BrevAssertionBuilder medOverskriftOmInnvilgettSvangerskapspenger() {
+        brevAssertions.add("Nav har innvilget søknaden din om svangerskapspenger");
+        return this;
+    }
+
     public BrevAssertionBuilder medOverskriftOmInnvilgetEnagangsstønad() {
         brevAssertions.add("Nav har innvilget søknaden din om engangsstønad");
         return this;
@@ -166,8 +171,14 @@ public class BrevAssertionBuilder {
         brevAssertions.add("14-7");
         return this;
     }
+
     public BrevAssertionBuilder medParagraf_14_6() {
         brevAssertions.add("14-6");
+        return this;
+    }
+
+    public BrevAssertionBuilder medParagraf_14_4() {
+        brevAssertions.add("14-4");
         return this;
     }
 

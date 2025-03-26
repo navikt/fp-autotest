@@ -86,7 +86,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.feriepenger.Feriepengeandel;
@@ -128,9 +127,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
 
 @Tag("verdikjede")
 class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
-
-    private static final Integer G_2025 = 124028;
-    private static final Integer SEKS_G_2025 = G_2025 * 6;
 
     @Test
     @DisplayName("1: Mor automatisk førstegangssøknad termin (med fødselshendelse), aleneomsorg og avvik i beregning.")
@@ -2442,7 +2438,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, startdatoForeldrepengerMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        validerInnsendtInntektsmelding(mor.fødselsnummer(), startdatoForeldrepengerMor, mor.månedsinntekt());
+        validerInnsendtInntektsmeldingForeldrepenger(mor.fødselsnummer(), startdatoForeldrepengerMor, mor.månedsinntekt(), false);
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
@@ -2485,7 +2481,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, startdatoForeldrepengerFar);
 
-        validerInnsendtInntektsmelding(far.fødselsnummer(), fomFedrekvote, far.månedsinntekt());
+        validerInnsendtInntektsmeldingForeldrepenger(far.fødselsnummer(), fomFedrekvote, far.månedsinntekt(), false);
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -2587,7 +2583,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, startdatoForeldrepengerMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        validerInnsendtInntektsmelding(mor.fødselsnummer(), startdatoForeldrepengerMor, mor.månedsinntekt());
+        validerInnsendtInntektsmeldingForeldrepenger(mor.fødselsnummer(), startdatoForeldrepengerMor, mor.månedsinntekt(), false);
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandling();
@@ -2631,7 +2627,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 HistorikkType.BREV_SENDT);
 
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato);
-        validerInnsendtInntektsmelding(far.fødselsnummer(), termindato, far.månedsinntekt());
+        validerInnsendtInntektsmeldingForeldrepenger(far.fødselsnummer(), termindato, far.månedsinntekt(), false);
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -2725,7 +2721,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, termindato.plusWeeks(3));
 
-        validerInnsendtInntektsmelding(far.fødselsnummer(), termindato.plusWeeks(9).plusDays(2), far.månedsinntekt());
+        validerInnsendtInntektsmeldingForeldrepenger(far.fødselsnummer(), termindato.plusWeeks(9).plusDays(2), far.månedsinntekt(), false);
 
         saksbehandler.hentFagsak(saksnummer);
         assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD)).isTrue();
@@ -2785,7 +2781,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         ventPåInntektsmeldingForespørsel(saksnummerMor);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
 
-        validerInnsendtInntektsmelding(familie.mor().fødselsnummer(), fpStartdatoMor, mor.månedsinntekt());
+        validerInnsendtInntektsmeldingForeldrepenger(familie.mor().fødselsnummer(), fpStartdatoMor, mor.månedsinntekt(), false);
 
         return saksnummerMor;
     }

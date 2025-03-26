@@ -60,7 +60,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 "Beregnet tilkjent ytelse").isPositive();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        hentBrevOgSjekkAtInnholdetErRiktig(engangsstønadInnvilgetAssertionsBuilder(), familie.mor().fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING,
+        hentBrevOgSjekkAtInnholdetErRiktig(engangsstønadInnvilgetAssertionsBuilder(), familie.mor().fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -109,7 +109,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         assertThat(esSakEtterVedtak.familiehendelse().omsorgsovertakelse()).isNull();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        hentBrevOgSjekkAtInnholdetErRiktig(engangsstønadInnvilgetAssertionsBuilder(), mor.fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING,
+        hentBrevOgSjekkAtInnholdetErRiktig(engangsstønadInnvilgetAssertionsBuilder(), mor.fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 }

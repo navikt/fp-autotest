@@ -55,12 +55,20 @@ public abstract class FpsakTestBase {
                                                       Fødselsnummer fnr,
                                                       DokumentTag dokumentTag,
                                                       HistorikkType ventTilHistorikkinnslag) {
+        hentBrevOgSjekkAtInnholdetErRiktig(assertionBuilder, fnr, dokumentTag, ventTilHistorikkinnslag, 0);
+    }
+
+    protected void hentBrevOgSjekkAtInnholdetErRiktig(BrevAssertionBuilder assertionBuilder,
+                                                      Fødselsnummer fnr,
+                                                      DokumentTag dokumentTag,
+                                                      HistorikkType historikkInnslagType,
+                                                      int historikkInnslagIndeks) {
         var behandler = saksbehandler;
         if (DokumentTag.KLAGE_OMGJØRIN.equals(dokumentTag)) {
             behandler = klagebehandler;
         }
-        behandler.ventTilHistorikkinnslag(ventTilHistorikkinnslag);
-        var dokumentId = behandler.hentHistorikkinnslagAvType(ventTilHistorikkinnslag, dokumentTag)
+        behandler.ventTilHistorikkinnslag(historikkInnslagType);
+        var dokumentId = behandler.hentHistorikkinnslagAvTypeMedDokument(historikkInnslagType, dokumentTag, historikkInnslagIndeks)
                 .dokumenter()
                 .getFirst()
                 .dokumentId();
@@ -172,5 +180,10 @@ public abstract class FpsakTestBase {
                 .medParagraf_14_11()
                 .medParagraf_14_12()
                 .medKapittelDuHarRettTilKlage();
+    }
+
+    protected static BrevAssertionBuilder svangerskapspengerInnvilgetAssertionsBuilder() {
+        return BrevAssertionBuilder.ny()
+                .medOverskriftOmInnvilgettSvangerskapspenger();
     }
 }
