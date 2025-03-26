@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.*;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -108,7 +109,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medEgenndefinertAssertion("Pengene er på kontoen din innen den 25. hver måned. Sjekk utbetalingene dine på ")
                 .medEgenndefinertAssertion("I denne perioden får du svangerskapspenger")
                 .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf_14_4()
+                .medParagraf(P_14_4)
                 .medTekstOmInntektBruktIBeregningen()
                 .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(mor.månedsinntekt() * 12)))
                 .medEgenndefinertAssertion("Arbeidsgiveren din har gitt oss disse opplysningene. Dette er gjennomsnittet av inntekten din fra "
@@ -117,7 +118,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medTekstOmBeregningEtterFolketrygdloven()
                 .medKapittelDuMåMeldeOmEndringer()
                 .medKapittelDuHarRettTilKlage()
-                .medParagraf_8_30();
+                .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
@@ -188,7 +189,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medEgenndefinertAssertion("Pengene er på kontoen din innen den 25. hver måned. Sjekk utbetalingene dine på ")
                 .medEgenndefinertAssertion("I denne perioden får du svangerskapspenger")
                 .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf_14_4()
+                .medParagraf(P_14_4)
                 .medTekstOmInntektBruktIBeregningen()
                 .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(mor.månedsinntekt() * 12)))
                 .medEgenndefinertAssertion("Arbeidsgiveren din har gitt oss disse opplysningene. Dette er gjennomsnittet av inntekten din fra "
@@ -197,7 +198,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medTekstOmBeregningEtterFolketrygdloven()
                 .medKapittelDuMåMeldeOmEndringer()
                 .medKapittelDuHarRettTilKlage()
-                .medParagraf_8_30();
+                .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
@@ -352,7 +353,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medEgenndefinertAssertion("Vi utbetaler svangerskapspengene til arbeidsgiveren din fordi du får lønn mens du er borte fra jobb.")
                 .medEgenndefinertAssertion("I denne perioden får du svangerskapspenger")
                 .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf_14_4()
+                .medParagraf(P_14_4)
                 .medTekstOmInntektBruktIBeregningen()
                 .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(mor.månedsinntekt() * 12)))
                 .medEgenndefinertAssertion("Arbeidsgiveren din har gitt oss disse opplysningene. Dette er gjennomsnittet av inntekten din fra "
@@ -361,7 +362,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medTekstOmBeregningEtterFolketrygdloven()
                 .medKapittelDuMåMeldeOmEndringer()
                 .medKapittelDuHarRettTilKlage()
-                .medParagraf_8_30();
+                .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
@@ -430,7 +431,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medEgenndefinertAssertion("I disse periodene får du svangerskapspenger")
                 .medEgenndefinertAssertion("Som næringsdrivende")
                 .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf_14_4()
+                .medParagraf(P_14_4)
                 .medKapittelDuMåMeldeOmEndringer()
                 .medKapittelDuHarRettTilKlage();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
@@ -531,7 +532,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medEgenndefinertAssertion("Vi utbetaler svangerskapspengene til arbeidsgiverne dine fordi du får lønn mens du er borte fra jobb.")
                 .medEgenndefinertAssertion("I disse periodene får du svangerskapspenger")
                 .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf_14_4()
+                .medParagraf(P_14_4)
                 .medTekstOmInntektBruktIBeregningen()
                 .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(månedsinntekt * 12)))
                 .medEgenndefinertAssertion("Arbeidsgiverne dine har gitt oss disse opplysningene. Dette er gjennomsnittet av inntekten din fra "
@@ -543,7 +544,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medTekstOmBeregningEtterFolketrygdloven()
                 .medKapittelDuMåMeldeOmEndringer()
                 .medKapittelDuHarRettTilKlage()
-                .medParagraf_8_30();
+                .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
@@ -611,17 +612,19 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(svpSakEtterVedtak.familiehendelse().antallBarn()).isZero();
         assertThat(svpSakEtterVedtak.familiehendelse().omsorgsovertakelse()).isNull();
 
+        mor.arbeidsgiver(orgnummer)
+
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         int dagsats = Math.min(SEKS_G_2025, månedsinntektMor * 12) / 260; //2862
         int dagsatsAvkortet = (int)Math.round(dagsats * (100 - tilrettelegginsprosent) / 100);
         int snittPerMånedAvkortet = dagsatsAvkortet * 260 / 12;
         var brevAssertionsBuilder = svangerskapspengerInnvilgetAssertionsBuilder()
-                .medEgenndefinertAssertion("Du får i gjennomsnitt %s kroner i måneden før skatt.".formatted(formaterKroner(snittPerMånedAvkortet)))
+                .medTekstOmDuFårIGjennomsnittXKronerIMånedenFørSkatt(snittPerMånedAvkortet)
                 .medEgenndefinertAssertion("Svangerskapspengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like "
                         + "mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medEgenndefinertAssertion("I denne perioden får du svangerskapspenger")
                 .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf_14_4()
+                .medParagraf(P_14_4)
                 .medTekstOmInntektBruktIBeregningen()
                 .medEgenndefinertAssertion("Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(formaterKroner(
                         månedsinntektMor * 12)))
@@ -631,7 +634,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .medTekstOmBeregningEtterFolketrygdloven()
                 .medKapittelDuMåMeldeOmEndringer()
                 .medKapittelDuHarRettTilKlage()
-                .medParagraf_8_30();
+                .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }

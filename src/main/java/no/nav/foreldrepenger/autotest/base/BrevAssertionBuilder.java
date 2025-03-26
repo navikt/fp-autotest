@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.base;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -127,88 +128,13 @@ public class BrevAssertionBuilder {
         return this;
     }
 
-    public BrevAssertionBuilder medParagraf_14_17() {
-        brevAssertions.add("14-17");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_16() {
-        brevAssertions.add("14-16");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_15() {
-        brevAssertions.add("14-15");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_14() {
-        brevAssertions.add("14-14");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_13() {
-        brevAssertions.add("14-13");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_12() {
-        brevAssertions.add("14-12");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_11() {
-        brevAssertions.add("14-11");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_10() {
-        brevAssertions.add("14-10");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_9() {
-        brevAssertions.add("14-9");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_8() {
-        brevAssertions.add("14-8");
-        return this;
-    }
-    public BrevAssertionBuilder medParagraf_14_7() {
-        brevAssertions.add("14-7");
+    public BrevAssertionBuilder medParagrafer(Paragrafer... paragrafer) {
+        Arrays.stream(paragrafer).forEach(this::medParagraf);
         return this;
     }
 
-    public BrevAssertionBuilder medParagraf_14_6() {
-        brevAssertions.add("14-6");
-        return this;
-    }
-
-    public BrevAssertionBuilder medParagraf_14_4() {
-        brevAssertions.add("14-4");
-        return this;
-    }
-
-    public BrevAssertionBuilder medParagraf_8_30() {
-        brevAssertions.add("8-30");
-        return this;
-    }
-
-    public BrevAssertionBuilder medParagraf_8_35() {
-        brevAssertions.add("8-35");
-        return this;
-    }
-
-    public BrevAssertionBuilder medParagraf_8_38() {
-        brevAssertions.add("8-38");
-        return this;
-    }
-
-    public BrevAssertionBuilder medParagraf_8_41() {
-        brevAssertions.add("8-41");
-        return this;
-    }
-
-    public BrevAssertionBuilder medParagraf_8_49() {
-        brevAssertions.add("8-49");
-        return this;
-    }
-
-    public BrevAssertionBuilder medParagraf_21_3() {
-        brevAssertions.add("21-3");
+    public BrevAssertionBuilder medParagraf(Paragrafer paragraf) {
+        brevAssertions.add(paragraf.getKode());
         return this;
     }
 
@@ -252,8 +178,13 @@ public class BrevAssertionBuilder {
         return this;
     }
 
-    public BrevAssertionBuilder medTekstOmDuFårXKronerUtbetalt(int beløp) {
+    public BrevAssertionBuilder medTekstOmDuFårXKronerPerDagFørSkatt(int beløp) {
         brevAssertions.add("Du får %s kroner per dag før skatt".formatted(formaterKroner(beløp)));
+        return this;
+    }
+
+    public BrevAssertionBuilder medTekstOmDuFårIGjennomsnittXKronerIMånedenFørSkatt(int beløp) {
+        brevAssertions.add("Du får i gjennomsnitt %s kroner i måneden før skatt.".formatted(formaterKroner(beløp)));
         return this;
     }
 

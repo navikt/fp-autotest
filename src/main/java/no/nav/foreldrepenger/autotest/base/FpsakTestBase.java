@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.autotest.base;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
@@ -124,7 +125,7 @@ public abstract class FpsakTestBase {
                 .medOverskriftOmInnvilgetEnagangsstønad()
                 .medKapittelDuHarRettTilKlage()
                 .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf_14_17();
+                .medParagraf(Paragrafer.P_14_17);
     }
 
     protected static BrevAssertionBuilder foreldrepengerAvslagAssertionsBuilder() {
@@ -132,7 +133,7 @@ public abstract class FpsakTestBase {
                 .medOverskriftOmAvslagAvForeldrepenger()
                 .medKapittelDuHarRettTilKlage()
                 .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf_14_7();
+                .medParagraf(P_14_7);
     }
 
     protected static BrevAssertionBuilder foreldrepengerInnvilget80ProsentAssertionsBuilder() {
@@ -149,7 +150,7 @@ public abstract class FpsakTestBase {
         return BrevAssertionBuilder.ny()
                 .medTekstOmVedtaketEtterFolketrygdloven()
                 .medTekstOmBeregningEtterFolketrygdloven()
-                .medParagraf_14_7()
+                .medParagraf(P_14_7)
                 .medTekstOmInntektBruktIBeregningen()
                 .medKapittelDuMåMeldeOmEndringer()
                 .medKapittelDuHarRettTilKlage();
@@ -173,12 +174,12 @@ public abstract class FpsakTestBase {
                 .medEgenndefinertAssertion(
                         "Når det er 4 uker igjen til du skal ta ut foreldrepenger, må arbeidsgiveren din sende inn ny inntektsmelding.")
                 .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf_14_6()
-                .medParagraf_14_7()
-                .medParagraf_14_9()
-                .medParagraf_14_10()
-                .medParagraf_14_11()
-                .medParagraf_14_12()
+                .medParagraf(P_14_6)
+                .medParagraf(P_14_7)
+                .medParagraf(P_14_9)
+                .medParagraf(P_14_10)
+                .medParagraf(P_14_11)
+                .medParagraf(P_14_12)
                 .medKapittelDuHarRettTilKlage();
     }
 
