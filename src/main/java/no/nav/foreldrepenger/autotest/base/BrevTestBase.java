@@ -69,7 +69,8 @@ public class BrevTestBase {
     }
 
     private static BrevAssertionBuilder foreldrepengerInnvilgetFellesAssertionBuilder(Fødselsnummer fnr, Saksnummer saksnummer) {
-        return alleYtelserFellesAssertionsBuilder(fnr, saksnummer).medTekstOmVedtaketEtterFolketrygdloven()
+        return alleYtelserFellesAssertionsBuilder(fnr, saksnummer)
+                .medTekstOmVedtaketEtterFolketrygdloven()
                 .medTekstOmBeregningEtterFolketrygdloven()
                 .medParagraf(P_14_7)
                 .medTekstOmInntektBruktIBeregningen()
