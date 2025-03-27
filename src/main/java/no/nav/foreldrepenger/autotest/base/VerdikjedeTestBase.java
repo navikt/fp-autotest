@@ -2,12 +2,21 @@ package no.nav.foreldrepenger.autotest.base;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
+import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.Objects;
+
 // TODO: Fiks opp i testbasene
 public abstract class VerdikjedeTestBase extends FpsakTestBase {
+
+    protected static final Integer G_2025 = 124028;
+    protected static final Integer SEKS_G_2025 = G_2025 * 6;
 
     public void foreslårOgFatterVedtakVenterTilAvsluttetBehandling(Saksnummer saksnummer,
                                                                    boolean revurdering,
@@ -43,5 +52,6 @@ public abstract class VerdikjedeTestBase extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
     }
+
 
 }

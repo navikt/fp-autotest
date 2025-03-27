@@ -58,6 +58,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.EndreUtlandMarke
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.FagsakStatus;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.HistorikkFpsakKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkInnslag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.prosesstask.ProsesstaskFpsakKlient;
@@ -643,18 +644,44 @@ public class Saksbehandler {
     }
 
     public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkType type) {
-        return hentHistorikkinnslagAvType(type, valgtBehandling.uuid, valgtBehandling.id);
+        return hentHistorikkinnslagAvType(type, valgtBehandling.uuid, valgtBehandling.id).stream().findFirst().orElse(null);
     }
 
-    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkType type, UUID behandlingsUuid, int behandlingId) {
+    public HistorikkInnslag hentFørsteHistorikkinnslagAvTypeMedDokument(HistorikkType type, DokumentTag dokumentTag) {
+        return hentHistorikkinnslagAvTypeMedDokument(type, dokumentTag, 0);
+    }
+
+    /**
+     * Henter historikkinnslag av spesifisert type som inneholder et dokument med angitt tag.
+     * Hvis det er flere innslag som matcher, returneres det som er spesifisert med innslagIndeks.
+     *
+     * @param type          Type historikkinnslag som skal filtreres på
+     * @param dokumentTag   Tag på dokumentet som skal finnes i historikkinnslagene
+     * @param innslagIndeks Indeks til ønsket historikkinnslag hvis flere matcher (0-basert)
+     * @return Historikkinnslag som matcher kriteriene, eller null hvis ingen matcher
+     */
+    public HistorikkInnslag hentHistorikkinnslagAvTypeMedDokument(HistorikkType type, DokumentTag dokumentTag, int innslagIndeks) {
+        var filtrertHistorikkinnslag = hentHistorikkinnslagAvType(type, valgtBehandling.uuid, valgtBehandling.id).stream()
+                .filter(innslag -> innslag.dokumenter().stream()
+                        .anyMatch(dokLink -> dokLink.tag().contains(dokumentTag.tag())))
+                .toList();
+
+        if (filtrertHistorikkinnslag.isEmpty()) {
+            return null;
+        }
+
+        return innslagIndeks < filtrertHistorikkinnslag.size()
+                ? filtrertHistorikkinnslag.get(innslagIndeks)
+                : filtrertHistorikkinnslag.getFirst();
+    }
+
+    public List<HistorikkInnslag> hentHistorikkinnslagAvType(HistorikkType type, UUID behandlingsUuid, int behandlingId) {
         venterPåFerdigProssesseringOgOppdaterBehandling(behandlingsUuid, behandlingId);
         if (Objects.equals(HistorikkType.REVURD_OPPR, type)) {
             behandlingsUuid = null;
         }
         return hentHistorikkinnslagPåBehandling(behandlingsUuid).stream()
-                .filter(innslag -> innslag.erAvTypen(type))
-                .findFirst()
-                .orElse(null);
+                .filter(innslag -> innslag.erAvTypen(type)).toList();
     }
 
     public void ventTilHistorikkinnslag(HistorikkType... type) {
