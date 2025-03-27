@@ -78,7 +78,7 @@ public class BrevTestBase {
     }
 
     protected static BrevAssertionBuilder foreldrepengerInnvilgetEndringAssertionsBuilder(Fødselsnummer fnr, Saksnummer saksnummer) {
-        return BrevAssertionBuilder.ny()
+        return alleYtelserFellesAssertionsBuilder(fnr, saksnummer)
                 .medOverskriftOmInnvilgetEndringAvForeldrepenger()
                 .medKapittelDetteHarViInnvilget()
                 .medKapittelDuMåMeldeOmEndringer()

@@ -1647,9 +1647,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
-
-        // TODO: Her produseres ikke noe brev fra revurdering etter en klage - er det riktig? Skjønner at man kanskje kopierer teksten og legger den inn i klage dokument?
-
     }
 
 
