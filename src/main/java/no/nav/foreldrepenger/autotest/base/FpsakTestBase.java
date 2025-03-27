@@ -1,27 +1,21 @@
 package no.nav.foreldrepenger.autotest.base;
 
-import static java.time.format.DateTimeFormatter.ofPattern;
-import static no.nav.foreldrepenger.autotest.base.Paragrafer.*;
+import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.førsteArbeidsdagEtter;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
-import java.util.Locale;
-import java.util.Set;
+import java.util.Objects;
 
-import org.apache.pdfbox.Loader;
-import org.apache.pdfbox.text.PDFTextStripper;
-import org.assertj.core.api.Fail;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Beslutter;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Klagebehandler;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Oppgavestyrer;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Overstyrer;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Saksbehandler;
+import no.nav.foreldrepenger.autotest.brev.BrevAssertionBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
@@ -29,7 +23,9 @@ import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
 // TODO: Fiks opp i testbasene
-public abstract class FpsakTestBase {
+public abstract class FpsakTestBase extends BrevTestBase {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FpsakTestBase.class);
 
     /*
      * Aktører
@@ -39,8 +35,6 @@ public abstract class FpsakTestBase {
     protected Beslutter beslutter;
     protected Klagebehandler klagebehandler;
     protected Oppgavestyrer oppgavestyrer;
-    // TODO: Drifter
-
 
     @BeforeEach
     public void setUp() {
@@ -53,138 +47,91 @@ public abstract class FpsakTestBase {
     }
 
     protected void hentBrevOgSjekkAtInnholdetErRiktig(BrevAssertionBuilder assertionBuilder,
-                                                      Fødselsnummer fnr,
                                                       DokumentTag dokumentTag,
                                                       HistorikkType ventTilHistorikkinnslag) {
-        hentBrevOgSjekkAtInnholdetErRiktig(assertionBuilder, fnr, dokumentTag, ventTilHistorikkinnslag, 0);
+        hentBrevOgSjekkAtInnholdetErRiktig(assertionBuilder, dokumentTag, ventTilHistorikkinnslag, 0);
     }
 
-    protected void hentBrevOgSjekkAtInnholdetErRiktig(BrevAssertionBuilder assertionBuilder,
-                                                      Fødselsnummer fnr,
+    protected void hentBrevOgSjekkAtInnholdetErRiktig(BrevAssertionBuilder brevAssertions,
                                                       DokumentTag dokumentTag,
                                                       HistorikkType historikkInnslagType,
                                                       int historikkInnslagIndeks) {
+
         var behandler = saksbehandler;
         if (DokumentTag.KLAGE_OMGJØRIN.equals(dokumentTag)) {
             behandler = klagebehandler;
         }
+
+        var pdf = hentPdf(dokumentTag, historikkInnslagType, historikkInnslagIndeks, behandler);
+        assertThat(Pdf.is_pdf(pdf)).as("Sjekker om byte array er av typen PDF").isTrue();
+
+        var assertions = brevAssertions.build();
+        LOG.info("Sjekker {} assertions i {} brevet.", assertions.size(), dokumentTag.tag());
+        validerBrevetInneholderForventedeTekstavsnitt(pdf, assertions);
+    }
+
+    protected void validerInnsendtInntektsmeldingForeldrepenger(Fødselsnummer fødselsnummer,
+                                                                LocalDate førsteDagMedYtelsen,
+                                                                Integer månedsInntekt,
+                                                                boolean harRefusjon) {
+        validerInnsendtInntektsmeldingForeldrepenger(fødselsnummer, førsteDagMedYtelsen, månedsInntekt, harRefusjon, 0);
+    }
+
+    protected void validerInnsendtInntektsmeldingForeldrepenger(Fødselsnummer fødselsnummer,
+                                                                LocalDate førsteDagMedYtelsen,
+                                                                Integer månedsInntekt,
+                                                                boolean harRefusjon,
+                                                                int historikkInnslagIndeks) {
+        validerInnsendtInntektsmelding(fødselsnummer, førsteDagMedYtelsen, månedsInntekt, harRefusjon, TypeYtelse.FP,
+                historikkInnslagIndeks);
+    }
+
+    protected void validerInnsendtInntektsmeldingSvangerskapspenger(Fødselsnummer fødselsnummer,
+                                                                    LocalDate førsteDagMedYtelsen,
+                                                                    Integer månedsInntekt,
+                                                                    boolean harRefusjon) {
+        validerInnsendtInntektsmeldingSvangerskapspenger(fødselsnummer, førsteDagMedYtelsen, månedsInntekt, harRefusjon, 0);
+    }
+
+    protected void validerInnsendtInntektsmeldingSvangerskapspenger(Fødselsnummer fødselsnummer,
+                                                                    LocalDate førsteDagMedYtelsen,
+                                                                    Integer månedsInntekt,
+                                                                    boolean harRefusjon,
+                                                                    int historikkInnslagIndeks) {
+        validerInnsendtInntektsmelding(fødselsnummer, førsteDagMedYtelsen, månedsInntekt, harRefusjon, TypeYtelse.SVP,
+                historikkInnslagIndeks);
+    }
+
+    protected void validerInnsendtInntektsmelding(Fødselsnummer fødselsnummer,
+                                                  LocalDate førsteDagMedYtelsen,
+                                                  Integer månedsInntekt,
+                                                  boolean harRefusjon,
+                                                  TypeYtelse typeYtelse,
+                                                  int historikkInnslagIndeks) {
+
+        Objects.requireNonNull(typeYtelse, "ytelseType");
+        var førsteDagAvkortet = førsteDagMedYtelsen;
+        if (TypeYtelse.FP.equals(typeYtelse)) {
+            førsteDagAvkortet = førsteArbeidsdagEtter(førsteDagMedYtelsen);
+        }
+
+        var brevAssertionsBuilder = inntektsmeldingBrevAssertionsBuilder(fødselsnummer.value(), førsteDagAvkortet, månedsInntekt,
+                harRefusjon, typeYtelse);
+
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.INNTEKSTMELDING, HistorikkType.VEDLEGG_MOTTATT,
+                historikkInnslagIndeks);
+    }
+
+    private static byte[] hentPdf(DokumentTag dokumentTag,
+                                  HistorikkType historikkInnslagType,
+                                  int historikkInnslagIndeks,
+                                  Saksbehandler behandler) {
         behandler.ventTilHistorikkinnslag(historikkInnslagType);
         var dokumentId = behandler.hentHistorikkinnslagAvTypeMedDokument(historikkInnslagType, dokumentTag, historikkInnslagIndeks)
                 .dokumenter()
                 .getFirst()
                 .dokumentId();
-        var pdf = behandler.hentJournalførtDokument(dokumentId, "ARKIV");
-        assertThat(Pdf.is_pdf(pdf)).as("Sjekker om byte array er av typen PDF").isTrue();
-
-        if (!DokumentTag.INNTEKSTMELDING.equals(dokumentTag)) {
-            assertionBuilder.medEgenndefinertAssertion("Fødselsnummer: %s".formatted(formaterFnr(fnr)))
-                    .medEgenndefinertAssertion("Saksnummer: %s".formatted(behandler.valgtFagsak.saksnummer().value()))
-                    .medKapittelDuHarRettTilInnsyn()
-                    .medKapittelHarDuSpørsmål()
-                    .medVennligHilsen()
-                    .medUnderksriftNFP();
-        }
-
-        sjekkAtBrevetInneholderTekst(pdf, assertionBuilder.build());
+        return behandler.hentJournalførtDokument(dokumentId, "ARKIV");
     }
 
-    private static void sjekkAtBrevetInneholderTekst(byte[] pdfBytes, Set<String> asserts) {
-        try (var document = Loader.loadPDF(pdfBytes)) {
-            // Fjerne linjeskift for å kunne søke på tvers av linjer
-            var pdfTekst = new PDFTextStripper().getText(document).replace("\n", "");
-            var softAssert = new SoftAssertions();
-            asserts.forEach(skalFinnes -> softAssert
-                    .assertThat(pdfTekst.contains(skalFinnes))
-                    .as("'%s' finnes ikke".formatted(skalFinnes))
-                    .isTrue());
-            softAssert.assertAll();
-        } catch (IOException e) {
-            Fail.fail("Kunne ikke lese PDFen", e);
-        }
-    }
-
-    protected static String formaterFnr(Fødselsnummer fnr) {
-        return fnr.value().substring(0, 6) + " " + fnr.value().substring(6);
-    }
-
-    protected static String formaterKroner(int beløp) {
-        var symbols = new DecimalFormatSymbols();
-        symbols.setGroupingSeparator(' '); // Explicitly setting a normal space (U+0020)
-        return new DecimalFormat("#,###", symbols).format(beløp);
-    }
-
-    protected static String formaterDato(LocalDate dato) {
-        if (dato == null) {
-            return null;
-        }
-        return dato.format(ofPattern("d. MMMM yyyy", Locale.forLanguageTag("NO")));
-    }
-
-    protected static BrevAssertionBuilder engangsstønadInnvilgetAssertionsBuilder() {
-        return BrevAssertionBuilder.ny()
-                .medOverskriftOmInnvilgetEnagangsstønad()
-                .medKapittelDuHarRettTilKlage()
-                .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf(Paragrafer.P_14_17);
-    }
-
-    protected static BrevAssertionBuilder foreldrepengerAvslagAssertionsBuilder() {
-        return BrevAssertionBuilder.ny()
-                .medOverskriftOmAvslagAvForeldrepenger()
-                .medKapittelDuHarRettTilKlage()
-                .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf(P_14_7);
-    }
-
-    protected static BrevAssertionBuilder foreldrepengerInnvilget80ProsentAssertionsBuilder() {
-        return foreldrepengerInnvilgetFellesAssertionBuilder()
-                .medOverskriftOmInnvilget80ProsentForeldrepenger()
-                .medEgenndefinertAssertion("Fordi du har valgt 80 prosent foreldrepenger, får du mindre utbetalt i måneden.");
-    }
-
-    protected static BrevAssertionBuilder foreldrepengerInnvilget100ProsentAssertionsBuilder() {
-        return foreldrepengerInnvilgetFellesAssertionBuilder().medOverskriftOmInnvilget100ProsentForeldrepenger();
-    }
-
-    private static BrevAssertionBuilder foreldrepengerInnvilgetFellesAssertionBuilder() {
-        return BrevAssertionBuilder.ny()
-                .medTekstOmVedtaketEtterFolketrygdloven()
-                .medTekstOmBeregningEtterFolketrygdloven()
-                .medParagraf(P_14_7)
-                .medTekstOmInntektBruktIBeregningen()
-                .medKapittelDuMåMeldeOmEndringer()
-                .medKapittelDuHarRettTilKlage();
-    }
-
-    protected static BrevAssertionBuilder foreldrepengerInnvilgetEndringAssertionsBuilder() {
-        return BrevAssertionBuilder.ny()
-                .medOverskriftOmInnvilgetEndringAvForeldrepenger()
-                .medKapittelDetteHarViInnvilget()
-                .medKapittelDuMåMeldeOmEndringer()
-                .medKapittelDuHarRettTilKlage()
-                .medTekstOmVedtaketEtterFolketrygdloven();
-    }
-
-    protected static BrevAssertionBuilder foreldrepengerAnnuleringAssertionsBuilder() {
-        return BrevAssertionBuilder.ny()
-                .medOverskriftOmInnvilgetAnnuleringAvForeldrepenger()
-                .medTekstOmDuMåSøkeNyForeldrepengerperiodePå()
-                .medTekstOmSøkeSenestDagenFørNyPeriodeEllerBarnetFyllerTreÅr()
-                .medEgenndefinertAssertion("Du har valgt å ikke ta ut din tidligere innvilgede periode med foreldrepenger")
-                .medEgenndefinertAssertion(
-                        "Når det er 4 uker igjen til du skal ta ut foreldrepenger, må arbeidsgiveren din sende inn ny inntektsmelding.")
-                .medTekstOmVedtaketEtterFolketrygdloven()
-                .medParagraf(P_14_6)
-                .medParagraf(P_14_7)
-                .medParagraf(P_14_9)
-                .medParagraf(P_14_10)
-                .medParagraf(P_14_11)
-                .medParagraf(P_14_12)
-                .medKapittelDuHarRettTilKlage();
-    }
-
-    protected static BrevAssertionBuilder svangerskapspengerInnvilgetAssertionsBuilder() {
-        return BrevAssertionBuilder.ny()
-                .medOverskriftOmInnvilgettSvangerskapspenger();
-    }
 }

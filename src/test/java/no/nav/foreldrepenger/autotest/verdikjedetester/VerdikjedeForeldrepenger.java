@@ -47,13 +47,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
-import no.nav.foreldrepenger.autotest.base.BrevAssertionBuilder;
+import no.nav.foreldrepenger.autotest.brev.BrevAssertionBuilder;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
@@ -167,7 +169,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin()
                 .medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding()
                 .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ETTERLYS_INNTEKTSMELDING,
                 HistorikkType.BREV_SENDT);
 
         var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(
@@ -199,13 +201,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Forventer at 40% summen utbetales til søker og 60% av summen til arbeisdgiver pga 60% refusjon!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmAleneomsorg()
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummer).medTekstOmAleneomsorg()
                 .medTekstOmXDagerIgjenAvPeriodenMed(forventetRestPåKonto)
-                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(formaterKroner(forventetDagsats)))
+                .medEgenndefinertAssertion("Du får %s kroner per dag før skatt".formatted(BrevFormateringUtils.formaterKroner(forventetDagsats)))
                 .medTekstOmOpplysningerFraEnArbeidsgiver()
                 .medKapittelDetteHarViInnvilget()
                 .medParagrafer(P_8_30, P_14_10, P_14_15);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         // Fødselshendelse
@@ -235,10 +237,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 arbeidsgiver.arbeidsgiverIdentifikator().value(), true);
         assertFeriepenger(feriepengerTilSøker + feriepengerTilArbeidsgiver, 11297);
 
-        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder().medTekstOmXDagerIgjenAvPeriodenMed(
+        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder(mor.fødselsnummer(), saksnummer).medTekstOmXDagerIgjenAvPeriodenMed(
                         forventetRestForeldrepenger)
                 .medEgenndefinertAssertion("Foreldrepengene utgjør det samme som tidligere. Sjekk utbetalingene dine på");
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -309,15 +311,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummer).medTekstOmDuFårXKronerPerDagFørSkatt(
                         (int) Math.ceil(avvikendeNæringsinntekt / 260))
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medEgenndefinertAssertion(
-                        "Vi har beregnet foreldrepengene dine ut fra en årsinntekt på %s kroner. Dette er gjennomsnittet av inntekten du hadde i 2".formatted(
-                                formaterKroner((int) avvikendeNæringsinntekt)))
+                        "Vi har beregnet foreldrepengene dine ut fra en årsinntekt på %s kroner. Dette er gjennomsnittet av inntekten du hadde i ".formatted(
+                                BrevFormateringUtils.formaterKroner((int) avvikendeNæringsinntekt)))
                 .medParagraf(P_8_35);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
-                HistorikkType.BREV_SENDT);
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
 
         var dødsdato = LocalDate.now().minusDays(1);
         familie.sendInnDødshendelse(mor.fødselsnummer(), dødsdato);
@@ -350,9 +351,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var feriepenger = saksbehandler.valgtBehandling.getFeriepengegrunnlag();
         assertThat(feriepenger).isNull();
 
-        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder().medEgenndefinertAssertion(
+        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder(mor.fødselsnummer(), saksnummer).medEgenndefinertAssertion(
                 "Foreldrepengene utgjør det samme som tidligere. Sjekk utbetalingene dine på").medKapittelDetteHarViAvslått();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -416,17 +417,17 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = foreldrepengerInnvilget80ProsentAssertionsBuilder().medEgenndefinertAssertion(
+        var brevAssertionsBuilder = foreldrepengerInnvilget80ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummer).medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medTekstOmDuFårXKronerPerDagFørSkatt((int) Math.ceil((beløpYtelse * 12 / 260) * 0.8))
                 .medEgenndefinertAssertion(
                         "Vi har beregnet foreldrepengene dine ut fra en inntekt på %s kroner i måneden før skatt. Dette er gjennomsnittet av inntekten du har fått fra Nav de siste tre månedene.".formatted(
-                                formaterKroner(beløpYtelse)))
+                                BrevFormateringUtils.formaterKroner(beløpYtelse)))
                 .medParagraf(P_14_9)
                 .medParagraf(P_14_10)
                 .medParagraf(P_14_12);
 
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -469,7 +470,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
@@ -477,7 +478,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         /*
@@ -559,13 +560,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .orElse(0);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
                 .medKapittelDetteHarViInnvilget()
                 .medParagrafer(P_14_9, P_14_12, P_14_13, P_14_16)
                 .medEgenndefinertAssertion(
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -596,7 +597,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(
                         SEKS_G_2025 / 260)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
@@ -605,10 +606,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medEgenndefinertAssertion(
                         "Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(
-                                formaterKroner(SEKS_G_2025)))
+                                BrevFormateringUtils.formaterKroner(SEKS_G_2025)))
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         /*
@@ -642,7 +643,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(
                         (int) Math.ceil((double) årslønnFar / 260))
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
@@ -650,11 +651,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medParagrafer(P_14_9, P_14_12, P_14_13)
                 .medEgenndefinertAssertion(
                         "Inntekten din som frilanser er %s kroner i måneden. Oppdragsgiveren eller oppdragsgiverne dine har gitt oss disse opplysningene.".formatted(
-                                formaterKroner(årslønnFar / 12)))
+                                BrevFormateringUtils.formaterKroner(årslønnFar / 12)))
                 .medEgenndefinertAssertion(
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide som frilanser, har vi brukt inntektene etter at du startet.")
                 .medParagraf(P_8_38);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -800,7 +801,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isZero();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medParagraf(P_14_13)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medParagraf(P_14_13)
                 .medParagraf(P_14_14)
                 .medParagraf(P_14_16)
                 .medParagraf(P_8_30)
@@ -811,7 +812,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medEgenndefinertAssertion(
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medTekstOmDenAndreForelderenIkkeHarRettDerforFårDuAlt();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         // Endringssøknad: Far bestemmer seg for å gi fra seg alle periodene
@@ -834,7 +835,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.valgtBehandling.hentUttaksperioder()).as("Uttaksperioder for valgt behandling").isEmpty();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        hentBrevOgSjekkAtInnholdetErRiktig(foreldrepengerAnnuleringAssertionsBuilder(), familie.far().fødselsnummer(),
+        hentBrevOgSjekkAtInnholdetErRiktig(foreldrepengerAnnuleringAssertionsBuilder(familie.far().fødselsnummer(), saksnummerFar),
                 DokumentTag.FORELDREPENGER_ANNULERING, HistorikkType.BREV_SENDT);
     }
 
@@ -867,7 +868,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var morDagsats = SEKS_G_2025 / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(morDagsats)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(morDagsats)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_9)
@@ -877,10 +878,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medEgenndefinertAssertion(
                         "Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(
-                                formaterKroner(SEKS_G_2025)))
+                                BrevFormateringUtils.formaterKroner(SEKS_G_2025)))
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         /*
@@ -915,15 +916,15 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsats = ytelseFar / 260;
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsats)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsats)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medKapittelDetteHarViInnvilget()
                 .medParagraf(P_14_12)
                 .medEgenndefinertAssertion(
                         "Du fikk %s kroner per dag før skatt i arbeidsavklaringspenger. Vi har brukt dette beløpet i beregningen av foreldrepengene dine.".formatted(
-                                formaterKroner(dagsats)));
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+                                BrevFormateringUtils.formaterKroner(dagsats)));
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         /* Mor: berørt sak */
@@ -965,13 +966,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         }
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder().medEgenndefinertAssertion(
+        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor).medEgenndefinertAssertion(
                         "Foreldrepengene utgjør det samme som tidligere. Sjekk utbetalingene dine på")
                 .medParagraf(P_14_9)
                 .medParagraf(P_14_10)
                 .medParagraf(P_14_12)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -1035,7 +1036,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var morDagsats = 480_000 / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(morDagsats)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(morDagsats)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_9)
@@ -1045,7 +1046,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         /*
@@ -1106,7 +1107,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsFar = SEKS_G_2025 / 260;
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_9)
@@ -1119,7 +1120,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                                 + "siste året. Dette gjennomsnittet kan også inneholde arbeidsinntekten din. De er trukket fra i "
                                 + "beregningen av næringsinntekten.")
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         /* Mor: Berørt sak */
@@ -1144,14 +1145,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Siden perioden er avslått, forventes det 0 i dagsats i tilkjent ytelse").isZero();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder().medEgenndefinertAssertion(
+        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medEgenndefinertAssertion(
                         "Foreldrepengene utgjør det samme som tidligere. Sjekk utbetalingene dine på")
                 .medKapittelDetteHarViAvslått()
                 .medParagraf(P_14_9)
                 .medParagraf(P_14_10)
                 .medParagraf(P_14_12)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -1202,7 +1203,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medEgenndefinertAssertion(
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_9)
                 .medParagraf(P_14_10)
@@ -1213,7 +1214,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                                 + "avhengig av hva som gir deg best resultat.")
                 .medParagraf(P_8_49)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
     }
@@ -1265,7 +1266,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsats = SEKS_G_2025 / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsats)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(dagsats)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medTekstOmAleneomsorg()
@@ -1274,10 +1276,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medEgenndefinertAssertion(
                         "Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(
-                                formaterKroner(SEKS_G_2025)))
+                                BrevFormateringUtils.formaterKroner(SEKS_G_2025)))
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         // AG sender inn en IM med endring i refusjon som skal føre til revurdering på far sin sak.
@@ -1406,7 +1408,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsats = SEKS_G_2025 / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsats)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsats)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medEgenndefinertAssertion(
@@ -1418,9 +1420,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medEgenndefinertAssertion(
                         "Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten som overstiger seks ganger grunnbeløpet.".formatted(
-                                formaterKroner(SEKS_G_2025)))
+                                BrevFormateringUtils.formaterKroner(SEKS_G_2025)))
                 .medParagraf(P_8_30);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         /* MOR */
@@ -1451,7 +1453,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsMor = 480_000 / 260;
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_9)
@@ -1460,7 +1462,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         /* FAR: Berørt behandling */
@@ -1522,14 +1524,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder().medEgenndefinertAssertion(
+        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medEgenndefinertAssertion(
                         "Foreldrepengene utgjør det samme som tidligere. Sjekk utbetalingene dine på")
                 .medKapittelDetteHarViAvslått()
                 .medParagraf(P_14_9)
                 .medParagraf(P_14_10)
                 .medParagraf(P_14_12)
                 .medParagraf(P_14_13);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -1577,12 +1579,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = foreldrepengerAvslagAssertionsBuilder().medEgenndefinertAssertion(
+        var brevAssertionsBuilder = foreldrepengerAvslagAssertionsBuilder(familie.mor().fødselsnummer(), saksnummer).medEgenndefinertAssertion(
                         "Du har ikke rett til foreldrepenger, fordi inntekten din er lavere enn %s kroner i året før skatt.".formatted(
-                                formaterKroner(G_2025 / 2)))
-                .medEgenndefinertAssertion(
-                        "Selv om du ikke har rett til foreldrepenger, kan det være at du har rett til engangsstønad.");
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_AVSLAG,
+                                BrevFormateringUtils.formaterKroner(G_2025 / 2)));
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_AVSLAG,
                 HistorikkType.BREV_SENDT);
 
         mor.sendInnKlage();
@@ -1621,7 +1621,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medKapittelDuMåMeldeOmEndringer()
                 .medEgenndefinertAssertion(
                         "Dersom det skjer endringer som kan ha betydning for stønaden du får utbetalt, må du straks melde fra til Nav.");
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.KLAGE_OMGJØRIN,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.KLAGE_OMGJØRIN,
                 HistorikkType.BREV_SENDT);
 
         // Saksbehandler oppretter ny revudering manuelt etter søker har fått medhold i klage.
@@ -1688,7 +1688,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt()
                 .medEgenndefinertAssertion(
                         "Vi kan ikke behandle søknaden din om foreldrepenger før vi har mottatt inntektsmelding fra arbeidsgiveren din.");
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ETTERLYS_INNTEKTSMELDING,
                 HistorikkType.BREV_SENDT);
 
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -1705,7 +1705,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsMor = (double) 600_000 / 260;
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummer).medTekstOmDuFårXKronerPerDagFørSkatt(
                         (int) Math.ceil(dagsatsMor))
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
@@ -1716,7 +1716,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         var differanseFødselTermin = 7;
@@ -1784,9 +1784,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medOverskriftOmInnvilgetEndringAvForeldrepenger()
                 .medEgenndefinertAssertion(
                         "Vi har fått opplyst at barnet ditt døde %s. Den siste dagen din med foreldrepenger er derfor %s.".formatted(
-                                formaterDato(dødsdato), formaterDato(dødsdato.plusWeeks(6).minusDays(1))))
+                                BrevFormateringUtils.formaterDato(dødsdato), BrevFormateringUtils.formaterDato(dødsdato.plusWeeks(6).minusDays(1))))
                 .medEgenndefinertAssertion("Vedtaket er gjort etter folketrygdloven § 14-9 og forvaltningsloven § 35.");
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_OPPHØR,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_OPPHØR,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -1857,7 +1857,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsMor = 480_000 / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummer).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medEgenndefinertAssertion(" fordi du er helt avhengig av hjelp til å ta deg av barnet.")
@@ -1868,7 +1868,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medEgenndefinertAssertion(
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -1924,14 +1924,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsMor = 480_000 / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummer).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_12)
                 .medEgenndefinertAssertion(
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -1965,11 +1965,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = engangsstønadInnvilgetAssertionsBuilder().medEgenndefinertAssertion(
-                        "Du har rett til engangsstønad og får utbetalt 92 648 kroner innen en uke.")
-                .medEgenndefinertAssertion("Stønaden er skattefri, og du kan sjekke utbetalingen din ved å logge inn på")
+        var brevAssertionsBuilder = engangsstønadInnvilgetAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.ENGANGSSTØNAD_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ENGANGSSTØNAD_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         /* Far's søknad */
@@ -1999,7 +1997,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin()
                 .medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding()
                 .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ETTERLYS_INNTEKTSMELDING,
                 HistorikkType.BREV_SENDT);
 
         /*
@@ -2059,7 +2057,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsFar = (double) 600_000 / 260;
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(
                         (int) Math.ceil(dagsatsFar))
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
@@ -2070,7 +2068,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medEgenndefinertAssertion(
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -2098,7 +2096,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsMor = 480_000 / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_9)
@@ -2108,7 +2106,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         // Mor går på min side for innsyn på foreldrepengesaken sin. Verifisere innhold
@@ -2158,7 +2156,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsMor = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_9)
@@ -2168,12 +2166,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medEgenndefinertAssertion(
                         "Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i ".formatted(
-                                formaterKroner(SEKS_G_2025))
+                                BrevFormateringUtils.formaterKroner(SEKS_G_2025))
                                 + "folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten "
                                 + "som overstiger seks ganger grunnbeløpet.")
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         var far = familie.far();
@@ -2194,7 +2192,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin()
                 .medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding()
                 .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ETTERLYS_INNTEKTSMELDING,
                 HistorikkType.BREV_SENDT);
 
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, startdatoForeldrepengerFar);
@@ -2206,7 +2204,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsFar = Math.min(SEKS_G_2025, far.månedsinntekt() * 12) / 260;
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_12)
@@ -2214,12 +2212,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medEgenndefinertAssertion(
                         "Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i ".formatted(
-                                formaterKroner(SEKS_G_2025))
+                                BrevFormateringUtils.formaterKroner(SEKS_G_2025))
                                 + "folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten "
                                 + "som overstiger seks ganger grunnbeløpet.")
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         // Forventer omfordeling av feriepenger
@@ -2236,13 +2234,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder().medEgenndefinertAssertion(
+        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medEgenndefinertAssertion(
                         "Foreldrepengene utgjør det samme som tidligere. Sjekk utbetalingene dine på")
                 .medParagraf(P_14_9)
                 .medParagraf(P_14_10)
                 .medParagraf(P_14_12)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         var endringssøknad = lagEndringssøknad(søknadFar, saksnummerFar,
@@ -2270,11 +2268,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(trekkdager).isEqualTo(10);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder().medEgenndefinertAssertion(
+        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medEgenndefinertAssertion(
                         "Foreldrepengene utgjør det samme som tidligere. Sjekk utbetalingene dine på")
                 .medParagraf(P_14_12)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -2308,7 +2306,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsMor = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_9)
@@ -2318,12 +2316,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medEgenndefinertAssertion(
                         "Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i ".formatted(
-                                formaterKroner(SEKS_G_2025))
+                                BrevFormateringUtils.formaterKroner(SEKS_G_2025))
                                 + "folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten "
                                 + "som overstiger seks ganger grunnbeløpet.")
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         var far = familie.far();
@@ -2344,7 +2342,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin()
                 .medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding()
                 .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.ETTERLYS_INNTEKTSMELDING,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ETTERLYS_INNTEKTSMELDING,
                 HistorikkType.BREV_SENDT);
 
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato);
@@ -2355,7 +2353,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsFar = Math.min(SEKS_G_2025, far.månedsinntekt() * 12) / 260;
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medParagraf(P_14_12)
@@ -2363,12 +2361,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medEgenndefinertAssertion(
                         "Foreldrepengene dine er fastsatt til %s kroner i året, som er seks ganger grunnbeløpet i ".formatted(
-                                formaterKroner(SEKS_G_2025))
+                                BrevFormateringUtils.formaterKroner(SEKS_G_2025))
                                 + "folketrygden. Du tjener mer enn dette, men du får ikke foreldrepenger for den delen av inntekten "
                                 + "som overstiger seks ganger grunnbeløpet.")
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         // Forventer omfordeling av feriepenger før innsenidng av fødselshendelse
@@ -2404,22 +2402,22 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(uttak.getFirst().getFom()).isEqualTo(helgejustertTilMandag(fødselsdato));
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder().medEgenndefinertAssertion(
+        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medEgenndefinertAssertion(
                         "Foreldrepengene utgjør det samme som tidligere. Sjekk utbetalingene dine på")
                 .medParagraf(P_14_12)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
 
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder().medEgenndefinertAssertion(
+        brevAssertionsBuilder = foreldrepengerInnvilgetEndringAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medEgenndefinertAssertion(
                         "Foreldrepengene utgjør det samme som tidligere. Sjekk utbetalingene dine på")
                 .medParagraf(P_14_9)
                 .medParagraf(P_14_10)
                 .medParagraf(P_14_12)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.mor().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 
@@ -2472,7 +2470,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var dagsatsFar = Math.min(SEKS_G_2025, far.månedsinntekt() * 12) / 260;
-        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder().medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummer).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
                 .medEgenndefinertAssertion(
                         "Foreldrepengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.")
                 .medEgenndefinertAssertion(
@@ -2484,7 +2482,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medEgenndefinertAssertion(
                         "Dette er gjennomsnittet av inntekten din fra de siste tre månedene. Hvis du nettopp har begynt å arbeide, byttet arbeidsforhold eller lønnen din har endret seg, har vi brukt månedsinntektene etter at endringen skjedde.")
                 .medParagraf(P_8_30);
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, familie.far().fødselsnummer(), DokumentTag.FORELDREPENGER_INNVILGET,
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET,
                 HistorikkType.BREV_SENDT);
     }
 

@@ -1,10 +1,12 @@
-package no.nav.foreldrepenger.autotest.base;
+package no.nav.foreldrepenger.autotest.brev;
+
+import no.nav.foreldrepenger.autotest.base.Paragrafer;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static no.nav.foreldrepenger.autotest.base.FpsakTestBase.formaterKroner;
+import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.formaterKroner;
 
 public class BrevAssertionBuilder {
 
@@ -185,6 +187,26 @@ public class BrevAssertionBuilder {
 
     public BrevAssertionBuilder medTekstOmDuFårIGjennomsnittXKronerIMånedenFørSkatt(int beløp) {
         brevAssertions.add("Du får i gjennomsnitt %s kroner i måneden før skatt.".formatted(formaterKroner(beløp)));
+        return this;
+    }
+
+    public BrevAssertionBuilder medTekstOmAtSvpBlirUtbetaltForAlleDagerOgAtUtbetalingeneKanVariere() {
+        brevAssertions.add("Svangerskapspengene blir utbetalt for alle dager, unntatt lørdag og søndag. Fordi det ikke er like mange dager i hver måned, vil de månedlige utbetalingene dine variere.");
+        return this;
+    }
+
+    public BrevAssertionBuilder medTekstOmPengenePåKontoDen25HverMåned() {
+        brevAssertions.add("Pengene er på kontoen din innen den 25. hver måned. Sjekk utbetalingene dine på ");
+        return this;
+    }
+
+    public BrevAssertionBuilder medTekstOmAtViUtbetalerTilArbeidsgiveren() {
+        brevAssertions.add("Vi utbetaler svangerskapspengene til arbeidsgiveren din fordi du får lønn mens du er borte fra jobb.");
+        return this;
+    }
+
+    public BrevAssertionBuilder medTekstOmAtViUtbetalerTilFlereArbeidsgiverne() {
+        brevAssertions.add("Vi utbetaler svangerskapspengene til arbeidsgiverne dine fordi du får lønn mens du er borte fra jobb.");
         return this;
     }
 
