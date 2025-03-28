@@ -1,0 +1,1 @@
+{"begrunnelse":"Vurder varig endring for selvstendig næringsdrivende begrunnelse","erVarigEndretNaering":true,"bruttoBeregningsgrunnlag":380000,"@type":"5039"}
