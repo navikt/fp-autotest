@@ -161,7 +161,7 @@ public class BrevTestBase {
         var refusjon = "Nei";
         if (harRefusjon) {
             refusjon = "Ja";
-            brevAssertionsBuilder.medEgenndefinertAssertion("Refusjonsbeløp dere krever per måned%skr".formatted(månedslønnFormatert));
+            brevAssertionsBuilder.medEgenndefinertAssertion("Refusjonsbeløp dere krever per måned%s kr".formatted(månedslønnFormatert));
         }
         brevAssertionsBuilder.medEgenndefinertAssertion("Innsendt: %s".formatted(BrevFormateringUtils.formaterDato(LocalDate.now())))
                 .medEgenndefinertAssertion("Inntektsmelding %s".formatted(BrevFormateringUtils.ytelseNavn(typeYtelse)))
