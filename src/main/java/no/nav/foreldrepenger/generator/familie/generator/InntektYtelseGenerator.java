@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektYtelseType;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektkomponentDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.InntektsperiodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.OrganisasjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PesysDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.SigrunDto;
 
@@ -82,12 +83,12 @@ public class InntektYtelseGenerator {
         return arbeidsforhold(DEAFULT_STILLINGSPROSENT, fom, tom, årslønn, arbeidsavtaler);
     }
 
-    public  InntektYtelseGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
+    public InntektYtelseGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, LocalDate tom, ArbeidsavtaleDto... arbeidsavtaler) {
         return arbeidsforhold(stillingsprosent, fom, tom, DEFAULT_ÅRSLØNN, arbeidsavtaler);
     }
 
-    public  InntektYtelseGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
-        return arbeidsforhold(testOrganisasjoner.tilfeldigOrg(), testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, tom, årslønn, arbeidsavtaler);
+    public InntektYtelseGenerator arbeidsforhold(Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+        return arbeidsforhold(testOrganisasjoner.tilfeldigOrg(), testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, tom, årslønn, null, arbeidsavtaler);
     }
 
     public InntektYtelseGenerator arbeidsforhold(Arbeidsgiver arbeidsgiver, LocalDate fom, ArbeidsavtaleDto... arbeidsavtaler) {
@@ -107,23 +108,33 @@ public class InntektYtelseGenerator {
     }
 
     public InntektYtelseGenerator arbeidsforhold(Arbeidsgiver arbeidsgiver, String arbeidsforholdId, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
-        return arbeidsforhold(arbeidsgiver, arbeidsforholdId, DEAFULT_STILLINGSPROSENT, fom, tom, årslønn, arbeidsavtaler);
+        return arbeidsforhold(arbeidsgiver, arbeidsforholdId, DEAFULT_STILLINGSPROSENT, fom, tom, årslønn, null, arbeidsavtaler);
     }
 
     public InntektYtelseGenerator arbeidsforhold(Arbeidsgiver arbeidsgiver, Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
-        return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, null, årslønn, arbeidsavtaler);
+        return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, null, årslønn, null, arbeidsavtaler);
     }
 
     public InntektYtelseGenerator arbeidsforhold(Arbeidsgiver arbeidsgiver, String arbeidsforholdId, Integer stillingsprosent, LocalDate fom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
-        return arbeidsforhold(arbeidsgiver, arbeidsforholdId, stillingsprosent, fom, null, årslønn, arbeidsavtaler);
+        return arbeidsforhold(arbeidsgiver, arbeidsforholdId, stillingsprosent, fom, null, årslønn, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(Arbeidsgiver arbeidsgiver, String arbeidsforholdId,
+    public InntektYtelseGenerator arbeidsforhold(LocalDate fom, Integer årslønn, List<PermisjonDto> permisjoner) {
+        return arbeidsforhold(testOrganisasjoner.tilfeldigOrg(), testOrganisasjoner.arbeidsforholdId(), DEAFULT_STILLINGSPROSENT, fom, null, årslønn, permisjoner);
+    }
+
+    public InntektYtelseGenerator arbeidsforhold(Arbeidsgiver arbeidsgiver, String arbeidsforholdId, Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, ArbeidsavtaleDto... arbeidsavtaler) {
+        return arbeidsforhold(arbeidsgiver, arbeidsforholdId, stillingsprosent, fom, tom, årslønn, null, arbeidsavtaler);
+    }
+
+    public InntektYtelseGenerator arbeidsforhold(Arbeidsgiver arbeidsgiver,
+                                                 String arbeidsforholdId,
                                                  Integer stillingsprosent,
                                                  LocalDate fom,
                                                  LocalDate tom,
                                                  Integer årslønn,
-                                                 ArbeidsavtaleDto... arbeidsavtaler)  {
+                                                 List<PermisjonDto> permisjoner,
+                                                 ArbeidsavtaleDto... arbeidsavtaler) {
         var arbeidsforholdDto = ArbeidsforholdDto.builder()
                 .arbeidsgiver(arbeidsgiver)
                 .arbeidsforholdId(arbeidsforholdId)
@@ -131,6 +142,7 @@ public class InntektYtelseGenerator {
                 .ansettelsesperiodeTom(tom)
                 .arbeidsforholdstype(Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD)
                 .arbeidsavtaler(List.of(arbeidsavtaler).isEmpty() ? List.of(defaultArbeidsavtale(fom, tom, stillingsprosent)) : List.of(arbeidsavtaler))
+                .permisjoner(permisjoner)
                 .build();
         return arbeidsforhold(arbeidsforholdDto, årslønn);
     }
@@ -211,7 +223,6 @@ public class InntektYtelseGenerator {
                 InntektYtelseType.FASTLØNN,
                 InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
                 fraArbeidsforhold.arbeidsgiver()
-
         );
         return inntektsperiode(inntektsperiode);
     }
@@ -224,7 +235,6 @@ public class InntektYtelseGenerator {
                 InntektYtelseType.FASTLØNN,
                 InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
                 organisasjon
-
         );
         return inntektsperiode(inntektsperiode);
     }
@@ -266,7 +276,6 @@ public class InntektYtelseGenerator {
                 inntektYtelseType,
                 InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
                 TestOrganisasjoner.NAV_YTELSE_BETALING
-
         );
         return inntektsperiode(inntektsperiode);
     }
@@ -276,7 +285,6 @@ public class InntektYtelseGenerator {
     public InntektYtelseGenerator infotrygd(GrunnlagDto.Ytelse tema, LocalDate fom, LocalDate tom, GrunnlagDto.Status status, LocalDate fødselsdatoBarn) {
         var ytelsegrunnlag = new GrunnlagDto(tema, fom, tom, status, fødselsdatoBarn, List.of(
                 new GrunnlagDto.Vedtak(fom, tom, DEAFULT_STILLINGSPROSENT)));
-
 
         if(inntektYtelse.infotrygd() != null) {
             inntektYtelse.infotrygd().ytelser().add(ytelsegrunnlag);
@@ -296,7 +304,6 @@ public class InntektYtelseGenerator {
                 inntektYtelseType,
                 InntektsperiodeDto.InntektFordelDto.KONTANTYTELSE,
                 TestOrganisasjoner.NAV_YTELSE_BETALING
-
         );
         return inntektsperiode(inntektsperiode);
     }

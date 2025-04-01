@@ -49,7 +49,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.Permisjonstype;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -565,23 +566,30 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
     @Test
     @DisplayName("5: Far søker fellesperiode og fedrekvote som frilanser. Tar ut 2 uker ifm fødsel.")
-    @Description("Mor søker hele mødrekvoten og deler av fellesperiode, happy case. Far søker etter føsdsel og søker"
+    @Description("Mor søker hele mødrekvoten og deler av fellesperiode, happy case. Far søker etter fødsel og søker"
             + "noe av fellesperioden og hele fedrekvoten; 2 av disse tas ut ifm fødsel. Opplyser at han er frilanser og har frilanserinntekt frem til"
-            + "skjæringstidspunktet.")
+            + "skjæringstidspunktet. Mor har tidligere hatt permisjon under sitt uttak, men er tilbake i jobb. Far får ikke AP om uttaksdokumentasjon")
     void farSøkerSomFrilanserOgTarUt2UkerIfmFødsel() {
+        var fødselsdato = LocalDate.now().minusMonths(4);
+        var fpStartdatoMor = fødselsdato.minusWeeks(3);
+        var fpStartdatoFellesperiodeFar = fødselsdato.plusWeeks(18);
         var årslønnFar = 540_000;
+        var årslønnMor = 900_000;
+
         var familie = FamilieGenerator.ny()
                 .forelder(far().inntektytelse(InntektYtelseGenerator.ny().frilans(LocalDate.now().minusYears(2), årslønnFar).build())
                         .build())
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
+                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                        .arbeidsforhold(LocalDate.now().minusYears(3), årslønnMor,
+                                List.of(new PermisjonDto(100, fpStartdatoMor, fødselsdato.plusMonths(3),
+                                        Permisjonstype.PERMISJON_MED_FORELDREPENGER)))
+                        .build()).build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .barn(LocalDate.now().minusMonths(4))
+                .barn(fødselsdato)
                 .build();
 
+
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
-        var fødselsdato = familie.barn().fødselsdato();
-        var fpStartdatoMor = fødselsdato.minusWeeks(3);
-        var fpStartdatoFellesperiodeFar = fødselsdato.plusWeeks(18);
         var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(familie, fødselsdato,
                 fpStartdatoMor, fpStartdatoFellesperiodeFar);
 
