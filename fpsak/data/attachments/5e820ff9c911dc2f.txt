@@ -1,0 +1,1 @@
+{"begrunnelse":"Mor har ikke rett og er uføretrygded i følge pesys!","annenforelderHarRett":false,"@type":"5086"}
