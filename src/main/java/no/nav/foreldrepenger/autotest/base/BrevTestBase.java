@@ -28,7 +28,7 @@ public class BrevTestBase {
     protected static void validerBrevetInneholderForventedeTekstavsnitt(byte[] pdfBytes, Set<String> tekstavsnitt) {
         try (var document = Loader.loadPDF(pdfBytes)) {
             // Fjerne linjeskift for å kunne søke på tvers av linjer
-            var pdfTekst = new PDFTextStripper().getText(document).replace("\n", "");
+            var pdfTekst = new PDFTextStripper().getText(document).replace("\n", "").replace("\r", "");
             var softAssert = new SoftAssertions();
             tekstavsnitt.forEach(skalFinnes -> softAssert.assertThat(pdfTekst.contains(skalFinnes))
                     .as("'%s' finnes ikke".formatted(skalFinnes))
