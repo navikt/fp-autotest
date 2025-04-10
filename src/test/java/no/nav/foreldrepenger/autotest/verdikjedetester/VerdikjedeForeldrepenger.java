@@ -434,23 +434,31 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
     @Description("Mor har løpende fagsak med hele mødrekvoten og deler av fellesperioden. Far søker resten av fellesperioden"
             + "og hele fedrekvoten med gradert uttak. Far starter med opphold og har også opphold mellom uttak av"
             + "fellesperioden og fedrekvoten. Far har to arbeidsforhold i samme virksomhet, samme org.nr, men ulik"
-            + "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge.")
+            + "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge. Far søker med aktivitetskrav arbeid."
+            + "Mor har permisjon som trigger deling av fellesperioden og aksjonspunkt om uttaksdokumentasjon")
     void farSøkerForeldrepengerTest() {
-        var årslønn = 720_000;
+        // Dere kan også se på å la far søke med akt.krav arbeid i "4: Far søker resten av fellesperioden og..."
+        // og la mor ha en permisjon som sørger for aksjonspunkt og som trigger delingen av fellesperioden som foregår i testen
+        var fødselsdato = LocalDate.now().minusWeeks(25);
+        var fpStartdatoMor = fødselsdato.minusWeeks(3);
+        var fpSluttdatoMor = fødselsdato.plusWeeks(23);
+        var årslønnMor = 480_000;
+        var årslønnFar = 720_000;
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build()).build())
+                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                        .arbeidsforhold(LocalDate.now().minusYears(3), årslønnMor,
+                                List.of(new PermisjonDto(100, fpStartdatoMor, fpSluttdatoMor.plusWeeks(3),
+                                        Permisjonstype.PERMISJON_MED_FORELDREPENGER)))
+                        .build()).build())
                 .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
-                        .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 50, LocalDate.now().minusYears(2), årslønn)
+                        .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", 50, LocalDate.now().minusYears(2), årslønnFar)
                         .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-002", 50, LocalDate.now().minusYears(4), null)
                         .build()).build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .barn(LocalDate.now().minusWeeks(25))
+                .barn(fødselsdato)
                 .build();
 
         /* MOR: løpende fagsak med hele mødrekvoten og deler av fellesperioden */
-        var fødselsdato = familie.barn().fødselsdato();
-        var fpStartdatoMor = fødselsdato.minusWeeks(3);
-        var fpSluttdatoMor = fødselsdato.plusWeeks(23);
         var saksnummerMor = sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(familie, fødselsdato,
                 fpStartdatoMor, fpSluttdatoMor);
 
@@ -481,7 +489,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
          * FAR: Søker med to arbeidsforhold i samme virksomhet, orgn.nr, men med ulik
          * arbeidsforholdID. Starter med opphold og starter uttak med resten av fellesperiode etter oppholdet.
          * Far har også opphold mellom uttak av fellesperioden og fedrekvoten. Sender inn 2 IM med ulik
-         * arbeidsforholdID og refusjon på begge.
+         * arbeidsforholdID og refusjon på begge. Far søker med aktivitetskrav arbeid.
          */
         var far = familie.far();
         var fpStartdatoFar = fpSluttdatoMor.plusWeeks(3);
