@@ -9,6 +9,7 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅr
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_FEILUTBETALING_KODE;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
@@ -437,8 +438,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
             + "arbeidsforholdsID. To inntekstmeldinger sendes inn med refusjon på begge. Far søker med aktivitetskrav arbeid."
             + "Mor har permisjon som trigger deling av fellesperioden og aksjonspunkt om uttaksdokumentasjon")
     void farSøkerForeldrepengerTest() {
-        // Dere kan også se på å la far søke med akt.krav arbeid i "4: Far søker resten av fellesperioden og..."
-        // og la mor ha en permisjon som sørger for aksjonspunkt og som trigger delingen av fellesperioden som foregår i testen
         var fødselsdato = LocalDate.now().minusWeeks(25);
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fpSluttdatoMor = fødselsdato.plusWeeks(23);
@@ -514,7 +513,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmelding(saksnummerFar, inntektsmeldingFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
+        saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
+                .godkjennMorsAktivitet(AKTIVITETSKRAV_ARBEID));
 
         /*
          * Fellesperioden skal splittes slik at første periode på 8 uker blir avslått og
