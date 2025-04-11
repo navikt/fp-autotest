@@ -1,0 +1,1 @@
+{"ektefellesBarn":false,"@type":"5005"}
