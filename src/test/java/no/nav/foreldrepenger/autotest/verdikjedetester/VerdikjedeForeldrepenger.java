@@ -1,12 +1,27 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
-import static no.nav.foreldrepenger.autotest.base.Paragrafer.*;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_10;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_11;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_12;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_13;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_14;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_15;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_16;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_7;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_9;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_21_3;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_8_30;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_8_35;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_8_38;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_8_41;
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_8_49;
 import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.formaterDato;
 import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.formaterKroner;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.REBEREGN_FERIEPENGER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_DØD_FORELDER;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID;
@@ -40,18 +55,17 @@ import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.o
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.utsettelsesperiode;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 import static no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil.helgejustertTilMandag;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Permisjonstype;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -59,8 +73,8 @@ import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
-import no.nav.foreldrepenger.autotest.brev.BrevAssertionBuilder;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
+import no.nav.foreldrepenger.autotest.brev.BrevAssertionBuilder;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
@@ -120,6 +134,7 @@ import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.UttaksplanPeriodeDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.AnnenforelderBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
@@ -129,6 +144,8 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.Permisjonstype;
 
 
 @Tag("verdikjede")
@@ -2363,6 +2380,102 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
     }
 
+    @Test
+    @DisplayName("21: Mor engangstønad. Bare far har rett (BFHR). Far skal få 10 uker minsterett og 20 uker mor/arbeid.")
+    @Description(" Mor har engangstønad men begynner i en 75% stilling 26 uker etter fødsel. "
+            + "Far søker 10 uker Minsterett (fom uke 6 etter fødsel) + 20 uker mor/arbeid. "
+            + "Far skal få aksjonspunkt rundt uttaksdokumentasjon. Perioden fra F+16 til F+26 skal ha behov for avklaring.")
+    void farBfhrMinsterettOgUttakTest() {
+        var fødselsdato = LocalDate.now().minusMonths(1);
+        var familie = FamilieGenerator.ny()
+                .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
+                        .arbeidsforhold(LocalDate.now().minusYears(4),
+                                arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4)).build(),
+                                arbeidsavtale(LocalDate.now().minusMonths(4)).build())
+                        .build()).build())
+                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
+                        .arbeidsforhold(fødselsdato.plusWeeks(26),
+                                arbeidsavtale(fødselsdato.plusWeeks(26)).stillingsprosent(80).build())
+                        .build()).build())
+                .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
+                .barn(fødselsdato)
+                .build();
+
+        /* Mor's engangsstønad*/
+        var mor = familie.mor();
+        var saksnummerMor = mor.søk(lagEngangstønadFødsel(fødselsdato).build());
+        saksbehandler.hentFagsak(saksnummerMor);
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var brevAssertionsBuilder = engangsstønadInnvilgetAssertionsBuilder(familie.mor().fødselsnummer(),
+                saksnummerMor).medTekstOmAutomatiskVedtakUtenUndferskrift();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ENGANGSSTØNAD_INNVILGET, HistorikkType.BREV_SENDT);
+
+        /* Far's søknad */
+        var far = familie.far();
+        var fpStartdatoFar = fødselsdato.plusWeeks(6);
+        var uttaksperiodeFørste = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar,
+                fpStartdatoFar.plusWeeks(10).minusDays(1), IKKE_OPPGITT);
+        var uttaksperiodeAndre = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(10),
+                fpStartdatoFar.plusWeeks(20).minusDays(1), ARBEID);
+        var uttaksperiodeTredje = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(20),
+                fpStartdatoFar.plusWeeks(30).minusDays(1), ARBEID);
+        var fordeling = fordeling(uttaksperiodeFørste, uttaksperiodeAndre, uttaksperiodeTredje);
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR).medFordeling(fordeling)
+                .medAnnenForelder(AnnenforelderMaler.norskIkkeRett(familie.mor()))
+                .medMottattdato(fødselsdato.minusWeeks(1));
+        var saksnummerFar = far.søk(søknad.build());
+        var arbeidsgiver = far.arbeidsgiver();
+
+        ventPåInntektsmeldingForespørsel(saksnummerFar);
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
+
+        saksbehandler.hentFagsak(saksnummerFar);
+        brevAssertionsBuilder = BrevAssertionBuilder.ny()
+                .medOverskriftOmViHarBedtOmOpplysningerFraArbeidsgiverenDin()
+                .medTekstOmAtViHarBedtArbeidsgiverenOmInntektsmelding()
+                .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ETTERLYS_INNTEKTSMELDING, HistorikkType.BREV_SENDT);
+
+        var tidsperiodeMedVbTom = new ÅpenPeriodeDto(uttaksperiodeAndre.tidsperiode().fom(),
+                beregnVbTom(fødselsdato, uttaksperiodeAndre.tidsperiode().tom()));
+        var vurderUttakDokBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
+                .ikkeGodkjenn(tidsperiodeMedVbTom)
+                //.godkjenn(uttaksperiodeTredje.tidsperiode()) // TODO Thao: Hvorfor aksjonspunkt her når mor har 75% stilling i Aareg?
+                .setBegrunnelse("Mor er ikke i aktivitet for andre periode!");
+        saksbehandler.bekreftAksjonspunkt(vurderUttakDokBekreftelse);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
+
+        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
+
+        // UTTAKSPLAN
+        var avslåtteUttaksperioder = saksbehandler.hentAvslåtteUttaksperioder();
+        assertThat(avslåtteUttaksperioder).as("Forventer at det er 1 avslåtte uttaksperioder").hasSize(1);
+        assertThat(avslåtteUttaksperioder.getFirst().getPeriodeResultatÅrsak()).as("Perioderesultatårsak")
+                .isEqualTo(AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT);
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var dagsatsFar = (double) 600_000 / 260;
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
+                .medTekstOmDuFårXKronerPerDagFørSkatt((int) Math.ceil(dagsatsFar))
+                .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
+                .medParagrafer(P_14_13, P_14_14)
+                .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
+                .medParagrafer(P_14_7, P_8_30);
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
+    }
+
+    private LocalDate beregnVbTom(LocalDate fødselsdato, LocalDate tom) {
+        if (fødselsdato.getDayOfWeek() == DayOfWeek.MONDAY) {
+            return tom.plusDays(2);
+        } else if (fødselsdato.getDayOfWeek() == DayOfWeek.SUNDAY) {
+            return tom.plusDays(1);
+        } else {
+            return tom;
+        }
+    }
 
     private Saksnummer sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
                                                                                               LocalDate fødselsdato,
