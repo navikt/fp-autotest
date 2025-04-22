@@ -21,18 +21,12 @@ import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingM
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType.SAMTIDIGUTTAK;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.utsettelsesperiode;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
+import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
-
-import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
-import no.nav.foreldrepenger.vtp.kontrakter.v2.Permisjonstype;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -65,10 +59,13 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Stønadskont
 import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
+import no.nav.foreldrepenger.vtp.kontrakter.v2.Permisjonstype;
 
 @Tag("fpsak")
 @Tag("foreldrepenger")
@@ -655,12 +652,11 @@ class MorOgFarSammen extends FpsakTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(
                         InntektYtelseGenerator.ny()
-                                .arbeidsforhold(TestOrganisasjoner.NAV, 50, fødselsdato.minusYears(5), fødselsdato.plusWeeks(10).minusDays(1), årslønn, // 50% stilling
-                                        List.of(new PermisjonDto(100, fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(8).minusDays(1),
-                                                Permisjonstype.PERMISJON_MED_FORELDREPENGER)))
-                                .arbeidsforhold(TestOrganisasjoner.NAV, 100, fødselsdato.plusWeeks(10), null, årslønn, // 100% stilling
-                                        List.of(new PermisjonDto(100, fødselsdato.plusWeeks(10), fødselsdato.plusWeeks(12).minusDays(1),
-                                                Permisjonstype.PERMISJON_MED_FORELDREPENGER)))
+                                .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", null, fødselsdato.minusYears(5), null, årslønn,
+                                        List.of(new PermisjonDto(100, fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(11).minusDays(1),
+                                                Permisjonstype.PERMISJON_MED_FORELDREPENGER)),
+                                        arbeidsavtale(fødselsdato.minusYears(5)).tomGyldighetsperiode(fødselsdato.plusWeeks(10).minusDays(1)).stillingsprosent(50).build(),
+                                        arbeidsavtale(fødselsdato.plusWeeks(10)).stillingsprosent(100).build())
                                 .build()).build())
                 .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
@@ -671,7 +667,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var mor = familie.mor();
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fordelingMor = fordeling(
-                uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)), // 3 uker
+                uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdatoMor, fødselsdato.minusDays(1)),
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(7).minusDays(1)));
 
         var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR).medAnnenForelder(
@@ -686,7 +682,7 @@ class MorOgFarSammen extends FpsakTestBase {
         // Far's søknad og behandling
         var far = familie.far();
         var fordelingFar = fordeling(
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(11).minusDays(1), ARBEID));
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(20).minusDays(1), ARBEID));
 
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR).medAnnenForelder(
                         AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
@@ -697,39 +693,21 @@ class MorOgFarSammen extends FpsakTestBase {
         // Verifiser at far får aksjonspunkt for uttaksdokumentasjon
         saksbehandler.hentFagsak(saksnummerFar);
         assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE)).as(
-                "Far skal få aksjonspunkt for uttaksdokumentasjon").isTrue();
+                "Aksjonspunkt når mor har 50% stilling og 100% stilling").isTrue();
 
-        var tidsperiodeMedVbTom = new ÅpenPeriodeDto(fødselsdato.plusWeeks(4),
-                beregnVbTom(fødselsdato, fødselsdato.plusWeeks(5).minusDays(1)));
-        var tidsperiodeMedVbTom2 = new ÅpenPeriodeDto(fødselsdato.plusWeeks(16),
-                beregnVbTom(fødselsdato, fødselsdato.plusWeeks(17).minusDays(1)));
+        saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse()));
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
-        var vurderUttakDokBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .ikkeGodkjenn(tidsperiodeMedVbTom)
-                .ikkeGodkjenn(tidsperiodeMedVbTom2)
-                .godkjenn(new ÅpenPeriodeDto(fødselsdato.plusWeeks(21), fødselsdato.plusWeeks(22).minusDays(1)))
-                .setBegrunnelse("Aktivitetskrav ikke oppfylt for to perioder!");
+        beslutter.hentFagsak(saksnummerFar);
+        var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
+        bekreftelse.godkjennAksjonspunkter(beslutter.hentAksjonspunktSomSkalTilTotrinnsBehandling());
+        beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
+        beslutter.ventTilFagsakLøpende();
+        assertThat(beslutter.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
+                .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        saksbehandler.bekreftAksjonspunkt(vurderUttakDokBekreftelse);
-        /*foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
-
-        assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
-                .as("Behandlingsresultat").isEqualTo(BehandlingResultatType.INNVILGET);
-
-        var avslåtteUttaksperioder = saksbehandler.hentAvslåtteUttaksperioder();
-        assertThat(avslåtteUttaksperioder)
-                .as("Forventer at det er 2 avslåtte uttaksperioder").hasSize(2);*/
-
-    }
-
-    private LocalDate beregnVbTom(LocalDate fødselsdato, LocalDate tom) {
-        if (fødselsdato.getDayOfWeek() == DayOfWeek.MONDAY) {
-            return tom.plusDays(2);
-        } else if (fødselsdato.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            return tom.plusDays(1);
-        } else {
-            return tom;
-        }
+        var innvilgetUttaksperiode = saksbehandler.hentInnvilgedeUttaksperioder();
+        assertThat(innvilgetUttaksperiode).hasSize(3);
     }
 
     @Step("Behandle søknad for mor uregistrert")

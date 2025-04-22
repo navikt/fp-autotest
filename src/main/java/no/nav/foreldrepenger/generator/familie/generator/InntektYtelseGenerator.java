@@ -123,10 +123,6 @@ public class InntektYtelseGenerator {
         return arbeidsforhold(arbeidsgiver, arbeidsforholdId, stillingsprosent, fom, null, årslønn, null, arbeidsavtaler);
     }
 
-    public InntektYtelseGenerator arbeidsforhold(Arbeidsgiver arbeidsgiver, Integer stillingsprosent, LocalDate fom, LocalDate tom, Integer årslønn, List<PermisjonDto> permisjoner) {
-        return arbeidsforhold(arbeidsgiver, testOrganisasjoner.arbeidsforholdId(), stillingsprosent, fom, tom, årslønn, permisjoner);
-    }
-
     public InntektYtelseGenerator arbeidsforhold(LocalDate fom, Integer årslønn, List<PermisjonDto> permisjoner) {
         return arbeidsforhold(testOrganisasjoner.tilfeldigOrg(), testOrganisasjoner.arbeidsforholdId(), DEAFULT_STILLINGSPROSENT, fom, null, årslønn, permisjoner);
     }

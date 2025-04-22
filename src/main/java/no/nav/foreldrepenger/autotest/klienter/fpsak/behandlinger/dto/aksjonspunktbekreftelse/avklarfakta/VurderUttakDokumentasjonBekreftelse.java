@@ -123,6 +123,7 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
 
         enum Vurdering {
             GODKJENT,
+            GODKJENT_AUTOMATISK,
             IKKE_GODKJENT,
             IKKE_DOKUMENTERT
         }
