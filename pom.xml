@@ -28,9 +28,9 @@
         <fp-felles.versjon>7.4.15</fp-felles.versjon>
         <fp-prosesstask.version>5.1.5</fp-prosesstask.version>
         <fp-kontrakter.version>9.2.7</fp-kontrakter.version>
-        <fpsoknad-felles.version>3.2.6</fpsoknad-felles.version>
+        <fpsoknad-felles.version>3.2.7</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.2.1</foreldrepenge-api.version>
-        <ftberegning.version>5.6.17</ftberegning.version>
+        <ftberegning.version>5.6.20</ftberegning.version>
 
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.18</logback.version>
@@ -38,7 +38,7 @@
         <allure.maven.version>2.15.2</allure.maven.version>
         <assertj.version>3.27.3</assertj.version>
         <aspectj.version>1.9.23</aspectj.version>
-        <junit.version>5.12.1</junit.version>
+        <junit.version>5.12.2</junit.version>
         <jackson.version>2.18.3</jackson.version>
         <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
         <jersey.version>3.1.10</jersey.version>
