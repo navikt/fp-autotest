@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aks
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Vurdering.IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Vurdering.IKKE_GODKJENT;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,7 +35,12 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
     }
 
     public VurderUttakDokumentasjonBekreftelse godkjenn(ÅpenPeriodeDto åpenPeriodeDto) {
-        vurder(GODKJENT, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
+        vurder(GODKJENT, null, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
+        return this;
+    }
+
+    public VurderUttakDokumentasjonBekreftelse godkjenn(ÅpenPeriodeDto åpenPeriodeDto, BigDecimal stillingsprosent) {
+        vurder(GODKJENT, null, stillingsprosent, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
         return this;
     }
 
@@ -49,12 +55,12 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
     }
 
     public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(ÅpenPeriodeDto periode) {
-        vurder(IKKE_GODKJENT, null, periode.fom(), periode.tom());
+        vurder(IKKE_GODKJENT, null, null, periode.fom(), periode.tom());
         return this;
     }
 
     public VurderUttakDokumentasjonBekreftelse godkjennSykdom() {
-        vurder(GODKJENT, Behov.Årsak.SYKDOM_SØKER, null, null);
+        vurder(GODKJENT, Behov.Årsak.SYKDOM_SØKER, null, null, null);
         return this;
     }
 
@@ -70,31 +76,25 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
 
 
     public VurderUttakDokumentasjonBekreftelse ikkeDokumentert(ÅpenPeriodeDto åpenPeriodeDto) {
-        vurder(IKKE_DOKUMENTERT, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
+        vurder(IKKE_DOKUMENTERT, null, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
         return this;
     }
 
-    private void vurder(Vurdering vurdering,
-                        Behov.Årsak årsak,
-                        LukketPeriodeMedVedlegg periode) {
+    private void vurder(Vurdering vurdering, Behov.Årsak årsak, LukketPeriodeMedVedlegg periode) {
         if (periode == null) {
-            vurder(vurdering, årsak, null, null);
+            vurder(vurdering, årsak, null, null, null);
         } else {
-            vurder(vurdering, årsak, periode.getFom(), periode.getTom());
+            vurder(vurdering, årsak, null, periode.getFom(), periode.getTom());
         }
     }
 
-    private void vurder(Vurdering vurdering,
-                        Behov.Årsak årsak,
-                        LocalDate fom,
-                        LocalDate tom) {
+    private void vurder(Vurdering vurdering, Behov.Årsak årsak, BigDecimal stillingsprosent, LocalDate fom, LocalDate tom) {
         vurderingBehov = vurderingBehov.stream()
                 .map(vb -> likPeriode(fom, tom, vb) && årsak == null || vb.årsak == årsak ? new DokumentasjonVurderingBehov(vb.fom,
-                        vb.tom, vb.type, vb.årsak, vurdering) : vb)
+                        vb.tom, vb.type, vb.årsak, stillingsprosent, vurdering) : vb)
                 .toList();
         this.begrunnelse = "autotest begrunnelse";
     }
-
 
 
     private static boolean likPeriode(LocalDate fom, LocalDate tom, DokumentasjonVurderingBehov vb) {
@@ -112,13 +112,18 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
 
     @Override
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
-        this.vurderingBehov = behandling.getDokumentasjonVurderingBehov().stream()
-                .map(vb -> vb.vurdering != null ? vb : new DokumentasjonVurderingBehov(vb.fom, vb.tom, vb.type, vb.årsak, GODKJENT))
+        this.vurderingBehov = behandling.getDokumentasjonVurderingBehov()
+                .stream()
+                .map(vb -> vb.vurdering != null ? vb : new DokumentasjonVurderingBehov(vb.fom, vb.tom, vb.type, vb.årsak,
+                        vb.morsStillingsprosent, GODKJENT))
                 .toList();
     }
 
-    public record DokumentasjonVurderingBehov(LocalDate fom, LocalDate tom, Behov.Type type,
+    public record DokumentasjonVurderingBehov(LocalDate fom,
+                                              LocalDate tom,
+                                              Behov.Type type,
                                               Behov.Årsak årsak,
+                                              BigDecimal morsStillingsprosent,
                                               Vurdering vurdering) {
 
         enum Vurdering {

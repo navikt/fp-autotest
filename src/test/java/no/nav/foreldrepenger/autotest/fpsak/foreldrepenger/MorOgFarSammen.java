@@ -28,6 +28,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -649,13 +651,14 @@ class MorOgFarSammen extends FpsakTestBase {
     void kreverDokumentasjonBeggeRett() {
         var fødselsdato = LocalDate.now().minusMonths(2);
         var årslønn = 600_000;
+        var tomMor50Prosent = fødselsdato.plusWeeks(10).minusDays(1);
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(
                         InntektYtelseGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", null, fødselsdato.minusYears(5), null, årslønn,
                                         List.of(new PermisjonDto(100, fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(11).minusDays(1),
                                                 Permisjonstype.PERMISJON_MED_FORELDREPENGER)),
-                                        arbeidsavtale(fødselsdato.minusYears(5)).tomGyldighetsperiode(fødselsdato.plusWeeks(10).minusDays(1)).stillingsprosent(50).build(),
+                                        arbeidsavtale(fødselsdato.minusYears(5)).tomGyldighetsperiode(tomMor50Prosent).stillingsprosent(50).build(),
                                         arbeidsavtale(fødselsdato.plusWeeks(10)).stillingsprosent(100).build())
                                 .build()).build())
                 .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
@@ -681,8 +684,9 @@ class MorOgFarSammen extends FpsakTestBase {
 
         // Far's søknad og behandling
         var far = familie.far();
+        var fpStartdatoFar = fødselsdato.plusWeeks(7);
         var fordelingFar = fordeling(
-                uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(20).minusDays(1), ARBEID));
+                uttaksperiode(StønadskontoType.FELLESPERIODE, fpStartdatoFar , fødselsdato.plusWeeks(20).minusDays(1), ARBEID));
 
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR).medAnnenForelder(
                         AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
@@ -695,7 +699,11 @@ class MorOgFarSammen extends FpsakTestBase {
         assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_UTTAK_DOKUMENTASJON_KODE)).as(
                 "Aksjonspunkt når mor har 50% stilling og 100% stilling").isTrue();
 
-        saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse()));
+        // Mor har 50% stilling til og med 9 uker etter fødsel. Fra og med den tiende uke har hun 100% stilling.
+        var periode50Prosent = new ÅpenPeriodeDto(fpStartdatoFar, tomMor50Prosent);
+        saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
+                .godkjenn(periode50Prosent, BigDecimal.valueOf(50))
+        );
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummerFar);
