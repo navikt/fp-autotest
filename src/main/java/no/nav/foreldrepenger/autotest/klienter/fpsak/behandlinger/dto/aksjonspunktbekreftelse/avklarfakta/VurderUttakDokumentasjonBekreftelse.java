@@ -21,7 +21,7 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
 
     private List<DokumentasjonVurderingBehov> vurderingBehov;
 
-    List<DokumentasjonVurderingBehov> getVurderingBehov() {
+    public List<DokumentasjonVurderingBehov> getVurderingBehov() {
         return vurderingBehov == null ? List.of() : vurderingBehov;
     }
 

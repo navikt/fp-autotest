@@ -24,6 +24,7 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅr
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_FEILUTBETALING_KODE;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
@@ -60,7 +61,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
@@ -2438,11 +2438,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ETTERLYS_INNTEKTSMELDING, HistorikkType.BREV_SENDT);
 
-        var tidsperiodeMedVbTom = new ÅpenPeriodeDto(uttaksperiodeAndre.tidsperiode().fom(),
-                beregnVbTom(fødselsdato, uttaksperiodeAndre.tidsperiode().tom()));
+        var førsteVurderingBehov = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
+                .getVurderingBehov()
+                .stream()
+                .sorted(Comparator.comparing(DokumentasjonVurderingBehov::tom))
+                .toList().get(0);
+        var førstePeriode = new ÅpenPeriodeDto(førsteVurderingBehov.fom(), førsteVurderingBehov.tom());
         var vurderUttakDokBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .ikkeGodkjenn(tidsperiodeMedVbTom)
-                //.godkjenn(uttaksperiodeTredje.tidsperiode()) // TODO Thao: Hvorfor aksjonspunkt her når mor har 75% stilling i Aareg?
+                .ikkeGodkjenn(førstePeriode)
                 .setBegrunnelse("Mor er ikke i aktivitet for andre periode!");
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokBekreftelse);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
@@ -2465,16 +2468,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
                 .medParagrafer(P_14_7, P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
-    }
-
-    private LocalDate beregnVbTom(LocalDate fødselsdato, LocalDate tom) {
-        if (fødselsdato.getDayOfWeek() == DayOfWeek.MONDAY) {
-            return tom.plusDays(2);
-        } else if (fødselsdato.getDayOfWeek() == DayOfWeek.SUNDAY) {
-            return tom.plusDays(1);
-        } else {
-            return tom;
-        }
     }
 
     private Saksnummer sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
