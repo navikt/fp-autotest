@@ -53,7 +53,7 @@ public class FordelKlient {
 
     private Saksnummer tilSaksnummer(SaksnummerDto saksnummer) {
         if (saksnummer != null) {
-            return new Saksnummer(saksnummer.getSaksnummer());
+            return new Saksnummer(saksnummer.saksnummer());
         }
         return null;
     }
