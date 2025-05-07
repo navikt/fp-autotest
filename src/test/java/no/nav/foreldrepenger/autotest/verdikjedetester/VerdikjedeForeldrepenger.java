@@ -25,7 +25,6 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResult
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov;
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_FEILUTBETALING_KODE;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.Saldoer.SaldoVisningStønadskontoType.FORELDREPENGER;
@@ -103,7 +102,6 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.KontrollerBesteberegningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrUttaksperioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.papirsoknad.PapirSoknadForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
@@ -457,12 +455,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var fødselsdato = LocalDate.now().minusWeeks(25);
         var fpStartdatoMor = fødselsdato.minusWeeks(3);
         var fpSluttdatoMor = fødselsdato.plusWeeks(23);
+        var fpStartdatoFar = fpSluttdatoMor.plusWeeks(3);
+        var morsPermisjonsTom = fpStartdatoFar.plusWeeks(8).minusDays(1);
         var årslønnMor = 480_000;
         var årslønnFar = 720_000;
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(3), årslønnMor,
-                                List.of(new PermisjonDto(100, fpStartdatoMor, fpSluttdatoMor.plusWeeks(3),
+                                List.of(new PermisjonDto(100, fpStartdatoMor, morsPermisjonsTom,
                                         Permisjonstype.PERMISJON_MED_FORELDREPENGER)))
                         .build()).build())
                 .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
@@ -507,15 +507,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
          * arbeidsforholdID og refusjon på begge. Far søker med aktivitetskrav arbeid.
          */
         var far = familie.far();
-        var fpStartdatoFar = fpSluttdatoMor.plusWeeks(3);
         var orgNummerFar = far.arbeidsgiver().arbeidsgiverIdentifikator();
-        var graderingsperiodeFørste = graderingsperiodeArbeidstaker(FELLESPERIODE, fpStartdatoFar,
-                fpStartdatoFar.plusWeeks(16).minusDays(1), orgNummerFar, 50);
-        var graderingsperiodeSiste = graderingsperiodeArbeidstaker(FEDREKVOTE, fpStartdatoFar.plusWeeks(25),
+        var gradertFellesperiode = graderingsperiodeArbeidstaker(FELLESPERIODE, fpStartdatoFar,
+                fpStartdatoFar.plusWeeks(16).minusDays(1), orgNummerFar, 50, ARBEID);
+        var gradertFedrekvote = graderingsperiodeArbeidstaker(FEDREKVOTE, fpStartdatoFar.plusWeeks(25),
                 fpStartdatoFar.plusWeeks(55).minusDays(1), orgNummerFar, 50);
-        var fordelingFar = List.of(graderingsperiodeFørste,
+        var fordelingFar = List.of(gradertFellesperiode,
                 // Opphold på 9 uker
-                graderingsperiodeSiste);
+                gradertFedrekvote);
         var søknadFar = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR).medAnnenForelder(
                 AnnenforelderMaler.norskMedRettighetNorge(familie.mor())).medFordeling(fordelingFar);
         var saksnummerFar = far.søk(søknadFar.build());
@@ -530,33 +529,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .godkjennMorsAktivitet(AKTIVITETSKRAV_ARBEID));
+                .ikkeGodkjenn(new ÅpenPeriodeDto(gradertFellesperiode.tidsperiode().fom(), morsPermisjonsTom))
+                .godkjenn(new ÅpenPeriodeDto(morsPermisjonsTom.plusDays(1), gradertFellesperiode.tidsperiode().tom())));
 
-        /*
-         * Fellesperioden skal splittes slik at første periode på 8 uker blir avslått og
-         * en andre perioden (av splitten) skal stjele dager fra fedrekvoten. Deretter
-         * skal fedrekvoten reduseres med 8 uker. (trenger også en split).
-         * Bruker overstyrer ettersom uttaket er automatisk innvilget
-         */
-        overstyrer.hentFagsak(saksnummerFar);
-        overstyrer.velgSisteBehandling();
-        var overstyringUttak = new OverstyrUttaksperioder();
-        overstyringUttak.oppdaterMedDataFraBehandling(overstyrer.valgtFagsak, overstyrer.valgtBehandling);
-        var oppslittedePerioderFørstePeriode = overstyringUttak.splitPeriode(graderingsperiodeFørste.tidsperiode().fom(),
-                graderingsperiodeFørste.tidsperiode().tom(), fpStartdatoFar.plusWeeks(8).minusDays(1));
-        overstyringUttak.avslåPeriode(oppslittedePerioderFørstePeriode.getFirst(),
-                AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT, true);
-        overstyringUttak.innvilgPeriode(oppslittedePerioderFørstePeriode.get(1),
-                PeriodeResultatÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE, StønadskontoType.FEDREKVOTE);
-        var oppslittedePerioderAndrePeriode = overstyringUttak.splitPeriode(graderingsperiodeSiste.tidsperiode().fom(),
-                graderingsperiodeSiste.tidsperiode().tom(), fpStartdatoFar.plusWeeks(47).minusDays(1));
-        overstyringUttak.innvilgPeriode(oppslittedePerioderAndrePeriode.getFirst(),
-                PeriodeResultatÅrsak.GRADERING_KVOTE_ELLER_OVERFØRT_KVOTE);
-        overstyringUttak.avslåPeriode(oppslittedePerioderAndrePeriode.get(1), IKKE_STØNADSDAGER_IGJEN, false);
-        overstyringUttak.setBegrunnelse("Begrunnelse fra Autotest.");
-        overstyrer.overstyr(overstyringUttak);
-
-        saksbehandler.velgSisteBehandling();
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
@@ -743,7 +718,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Bare far har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
+        saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse()).godkjenn());
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
 
@@ -1383,7 +1358,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Både far og mor har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        saksbehandler.bekreftAksjonspunktMedDefaultVerdier(new VurderUttakDokumentasjonBekreftelse());
+        saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse()).godkjenn());
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
@@ -1473,7 +1448,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         // Siste periode skal slippes og delvis innvilges med resterende saldo
         var fastsatteUttaksperioder = fastsettUttaksperioderManueltBekreftelseMor.getPerioder();
-        var sistePeriode = fastsatteUttaksperioder.get(fastsatteUttaksperioder.size() - 1);
+        var sistePeriode = fastsatteUttaksperioder.getLast();
         fastsettUttaksperioderManueltBekreftelseMor.avslåPeriode(sistePeriode.getFom(), sistePeriode.getTom(), IKKE_STØNADSDAGER_IGJEN,
                 false);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelseMor);
@@ -1958,7 +1933,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var vurderUttakDokBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
                 .ikkeDokumentert(utsettelsesperiode.tidsperiode())
                 .ikkeDokumentert(uttaksperiodeEtterUtsettelse1.tidsperiode())
-                .setBegrunnelse("Mor er ikke i aktivitet for siste uttaksperiode!");
+                .godkjenn(uttaksperiodeEtterUtsettelse2.tidsperiode())
+                .setBegrunnelse("Mor er ikke i aktivitet!");
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokBekreftelse);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
 
@@ -2435,16 +2411,18 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medTekstOmDuKanSeBortFreDenneOmArbeidsgiverenHarSendt();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.ETTERLYS_INNTEKTSMELDING, HistorikkType.BREV_SENDT);
 
-        var førsteVurderingBehov = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .getVurderingBehov()
+        var vurderUttakDokumentasjonBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse());
+        var vurderingsbehov = vurderUttakDokumentasjonBekreftelse.getVurderingBehov()
                 .stream()
                 .sorted(Comparator.comparing(DokumentasjonVurderingBehov::tom))
-                .toList().get(0);
-        var førstePeriode = new ÅpenPeriodeDto(førsteVurderingBehov.fom(), førsteVurderingBehov.tom());
-        var vurderUttakDokBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .ikkeGodkjenn(førstePeriode)
+                .toList();
+        assertThat(vurderingsbehov.getLast().vurdering()).isNull();
+        var førsteVurderingBehov = vurderingsbehov.getFirst();
+        vurderUttakDokumentasjonBekreftelse
+                .ikkeGodkjenn(new ÅpenPeriodeDto(førsteVurderingBehov.fom(), førsteVurderingBehov.tom()))
+                .godkjenn(new ÅpenPeriodeDto(førsteVurderingBehov.tom().plusDays(1), uttaksperiodeAndre.tidsperiode().tom()))
                 .setBegrunnelse("Mor er ikke i aktivitet første periode!");
-        saksbehandler.bekreftAksjonspunkt(vurderUttakDokBekreftelse);
+        saksbehandler.bekreftAksjonspunkt(vurderUttakDokumentasjonBekreftelse);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")

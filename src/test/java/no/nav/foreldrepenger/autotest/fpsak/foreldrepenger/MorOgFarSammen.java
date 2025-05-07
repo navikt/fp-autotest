@@ -28,8 +28,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -65,6 +63,7 @@ import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.Permisjonstype;
@@ -652,14 +651,15 @@ class MorOgFarSammen extends FpsakTestBase {
         var fødselsdato = LocalDate.now().minusMonths(2);
         var årslønn = 600_000;
         var tomMor50Prosent = fødselsdato.plusWeeks(10).minusDays(1);
+        var morPermisjonTom = fødselsdato.plusWeeks(11).minusDays(1);
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(
                         InntektYtelseGenerator.ny()
                                 .arbeidsforhold(TestOrganisasjoner.NAV, "ARB001-001", null, fødselsdato.minusYears(5), null, årslønn,
-                                        List.of(new PermisjonDto(100, fødselsdato.minusWeeks(3), fødselsdato.plusWeeks(11).minusDays(1),
+                                        List.of(new PermisjonDto(100, fødselsdato.minusWeeks(3), morPermisjonTom,
                                                 Permisjonstype.PERMISJON_MED_FORELDREPENGER)),
                                         arbeidsavtale(fødselsdato.minusYears(5)).tomGyldighetsperiode(tomMor50Prosent).stillingsprosent(50).build(),
-                                        arbeidsavtale(fødselsdato.plusWeeks(10)).stillingsprosent(100).build())
+                                        arbeidsavtale(tomMor50Prosent.plusDays(1)).stillingsprosent(100).build())
                                 .build()).build())
                 .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
@@ -703,6 +703,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var periode50Prosent = new ÅpenPeriodeDto(fpStartdatoFar, tomMor50Prosent);
         saksbehandler.bekreftAksjonspunkt(saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
                 .godkjenn(periode50Prosent, BigDecimal.valueOf(50))
+                .godkjenn(new ÅpenPeriodeDto(tomMor50Prosent.plusDays(1), morPermisjonTom))
         );
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 

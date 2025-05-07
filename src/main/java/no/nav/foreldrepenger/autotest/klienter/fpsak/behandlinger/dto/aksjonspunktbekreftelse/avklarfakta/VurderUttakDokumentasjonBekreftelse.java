@@ -114,8 +114,6 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
     public void oppdaterMedDataFraBehandling(Fagsak fagsak, Behandling behandling) {
         this.vurderingBehov = behandling.getDokumentasjonVurderingBehov()
                 .stream()
-                .map(vb -> vb.vurdering != null ? vb : new DokumentasjonVurderingBehov(vb.fom, vb.tom, vb.type, vb.årsak,
-                        vb.morsStillingsprosent, GODKJENT))
                 .toList();
     }
 
@@ -126,7 +124,7 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
                                               BigDecimal morsStillingsprosent,
                                               Vurdering vurdering) {
 
-        enum Vurdering {
+        public enum Vurdering {
             GODKJENT,
             GODKJENT_AUTOMATISK,
             IKKE_GODKJENT,

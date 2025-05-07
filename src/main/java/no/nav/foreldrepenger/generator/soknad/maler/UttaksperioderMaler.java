@@ -54,13 +54,24 @@ public final class UttaksperioderMaler {
     }
 
     public static UttaksplanPeriodeDto graderingsperiodeArbeidstaker(StønadskontoType stønadskontoType,
-                                                                     LocalDate fom, LocalDate tom,
+                                                                     LocalDate fom,
+                                                                     LocalDate tom,
                                                                      ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
                                                                      Integer arbeidstidsprosentIOrgnr) {
+        return graderingsperiodeArbeidstaker(stønadskontoType, fom, tom, arbeidsgiverIdentifikator, arbeidstidsprosentIOrgnr,
+                null);
+    }
+
+    public static UttaksplanPeriodeDto graderingsperiodeArbeidstaker(StønadskontoType stønadskontoType,
+                                                                     LocalDate fom, LocalDate tom,
+                                                                     ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
+                                                                     Integer arbeidstidsprosentIOrgnr,
+                                                                     MorsAktivitet morsAktivitet) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.gradert(stønadskontoType, periode.fom, periode.tom, Double.valueOf(arbeidstidsprosentIOrgnr))
                 .medErArbeidstaker(true)
                 .medOrgnumre(List.of(arbeidsgiverIdentifikator.value()))
+                .medMorsAktivitetIPerioden(morsAktivitet == null ? null : morsAktivitet.name())
                 .build();
     }
 
