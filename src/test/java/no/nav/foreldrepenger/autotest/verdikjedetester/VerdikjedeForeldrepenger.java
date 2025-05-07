@@ -2365,7 +2365,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var familie = FamilieGenerator.ny()
                 .forelder(far().inntektytelse(InntektYtelseGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4),
-                                arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4)).build(),
+                                arbeidsavtale(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4).minusDays(1)).build(),
                                 arbeidsavtale(LocalDate.now().minusMonths(4)).build())
                         .build()).build())
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
