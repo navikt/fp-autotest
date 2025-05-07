@@ -2417,10 +2417,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var uttaksperiodeFørste = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar,
                 fpStartdatoFar.plusWeeks(10).minusDays(1), IKKE_OPPGITT);
         var uttaksperiodeAndre = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(10),
-                fpStartdatoFar.plusWeeks(20).minusDays(1), ARBEID);
-        var uttaksperiodeTredje = uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar.plusWeeks(20),
                 fpStartdatoFar.plusWeeks(30).minusDays(1), ARBEID);
-        var fordeling = fordeling(uttaksperiodeFørste, uttaksperiodeAndre, uttaksperiodeTredje);
+        var fordeling = fordeling(uttaksperiodeFørste, uttaksperiodeAndre);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR).medFordeling(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskIkkeRett(familie.mor()))
                 .medMottattdato(fødselsdato.minusWeeks(1));
@@ -2445,7 +2443,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var førstePeriode = new ÅpenPeriodeDto(førsteVurderingBehov.fom(), førsteVurderingBehov.tom());
         var vurderUttakDokBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
                 .ikkeGodkjenn(førstePeriode)
-                .setBegrunnelse("Mor er ikke i aktivitet for andre periode!");
+                .setBegrunnelse("Mor er ikke i aktivitet første periode!");
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokBekreftelse);
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
 
