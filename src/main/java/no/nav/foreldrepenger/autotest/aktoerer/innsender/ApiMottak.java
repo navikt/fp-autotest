@@ -1,5 +1,11 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
+import static org.assertj.core.api.Assertions.fail;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi.MottakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.InntektsmeldingKlient;
@@ -31,12 +37,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Journalstatus;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Mottakskanal.SKAN_IM;
-import static org.assertj.core.api.Assertions.fail;
-
 public class ApiMottak extends DokumentInnsendingHjelper {
 
     private final MottakKlient mottakKlient;
@@ -58,8 +58,6 @@ public class ApiMottak extends DokumentInnsendingHjelper {
                 .isEmpty()) {
             fail("Forventer å motta enn eller flere forespørsel for %s", saksnummer);
             return null;
-        } else {
-            LOG.info("Hentet {} forespørsel for {}", forespørsler.inntektmeldingForespørsler().size(), saksnummer);
         }
         var forespørslerFiltrert = forespørsler.inntektmeldingForespørsler()
                 .stream()
@@ -191,8 +189,10 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     public void ettersendVedlegg(Fødselsnummer fnr, Saksnummer saksnummer, YtelseType ytelseType, VedleggDto vedlegg) {
+        var vedleggMottattFraFørPåSak = antallEttersendelserMottattPåSak(saksnummer);
         mottakKlient.mellomlagreVedlegg(fnr, ytelseType, List.of(vedlegg));
         mottakKlient.ettersendVedlegg(fnr, saksnummer, List.of(vedlegg));
+        ventTilVedleggErMottatt(saksnummer, vedleggMottattFraFørPåSak);
     }
 
     public void sendInnKlage(Fødselsnummer fnr) {

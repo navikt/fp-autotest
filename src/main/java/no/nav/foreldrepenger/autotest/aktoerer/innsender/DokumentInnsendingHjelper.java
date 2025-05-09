@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkAktør.ARBEIDSGIVER;
+import static no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkAktør.SØKER;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
+import java.util.List;
+
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.BehandlingFpsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
@@ -11,13 +19,6 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.Saksbehandler
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.List;
-
-import static no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkAktør.ARBEIDSGIVER;
 
 abstract class DokumentInnsendingHjelper implements Innsender {
 
@@ -38,6 +39,7 @@ abstract class DokumentInnsendingHjelper implements Innsender {
      * Hvis inntektsmeldingen er sendt inn mens det foreligger en sak, venter vi på at saken oppdateres med VEDLEGG_MOTTATT
      */
     protected Saksnummer ventTilAlleInntekstmeldingeneErMottatt(Fødselsnummer fnr, Saksnummer saksnummer, Integer antallNyeInntektsmeldinger, Integer antallGamleInntekstmeldinger) {
+        LOG.info("Sender inn {} inntektsmelding(er) på fnr {} ...", antallNyeInntektsmeldinger, fnr.value());
         if (saksnummer != null) {
             final var saksnummerTemp = saksnummer;
             var forventetAntallInnteksmeldinger = antallGamleInntekstmeldinger + antallNyeInntektsmeldinger;
@@ -60,6 +62,22 @@ abstract class DokumentInnsendingHjelper implements Innsender {
         }
         return (int) historikkKlient.hentHistorikk(saksnummer).stream()
                 .filter(h -> h.erAvTypen(ARBEIDSGIVER, HistorikkType.VEDLEGG_MOTTATT))
+                .count();
+    }
+
+    protected void ventTilVedleggErMottatt(Saksnummer saksnummer, int antallVedleggMottattFraFør) {
+        var forventetAntallVedleggPåSak = antallVedleggMottattFraFør + 1;
+        Vent.på(() -> antallEttersendelserMottattPåSak(saksnummer) == forventetAntallVedleggPåSak,
+                () -> "Det er ikke mottatt vedlegg på sak " + saksnummer.value(),
+                10);
+    }
+
+    protected int antallEttersendelserMottattPåSak(Saksnummer saksnummer) {
+        if (saksnummer == null) {
+            throw new IllegalArgumentException("Kan ikke ettersende vedlegg uten sak");
+        }
+        return (int) historikkKlient.hentHistorikk(saksnummer).stream()
+                .filter(h -> h.erAvTypen(SØKER, HistorikkType.VEDLEGG_MOTTATT))
                 .count();
     }
 

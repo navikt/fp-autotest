@@ -357,8 +357,6 @@ public class Saksbehandler {
 
         // TODO: fiks dette!
         oppdaterLazyFelterForBehandling();
-
-        LOG.info("Behandling {} er prossessert og valgt!", valgtBehandling.uuid);
     }
 
     private void oppdaterLazyFelterForBehandling() {
@@ -556,16 +554,16 @@ public class Saksbehandler {
     }
 
     public void bekreftAksjonspunktbekreftelserer(List<AksjonspunktBekreftelse> bekreftelser) {
-        LOG.info("Løser aksjonspunkt {}", bekreftelser);
+        LOG.info("Løser aksjonspunkt {} ...", bekreftelser);
         debugAksjonspunktbekreftelser(bekreftelser, valgtBehandling.uuid);
         var aksjonspunkter = new BekreftedeAksjonspunkter(valgtBehandling.uuid, valgtBehandling.versjon, bekreftelser);
         behandlingerKlient.postBehandlingAksjonspunkt(aksjonspunkter);
         refreshBehandling();
         verifsierAPErHåndtert(bekreftelser);
+        LOG.info("Aksjonspunkt {} er løst", bekreftelser);
     }
 
     private void verifsierAPErHåndtert(List<AksjonspunktBekreftelse> bekreftelser) {
-        LOG.info("Verifiserer at aksjonspunkt er håndtert", bekreftelser);
         for (var bekreftelse : bekreftelser) {
             if (bekreftelse instanceof FatterVedtakBekreftelse f && f.harAvvisteAksjonspunkt()) {
                 verifiserAtAPErOpprettetPåNytt(f);
@@ -573,6 +571,13 @@ public class Saksbehandler {
                 verifsierAtAPErFerdigbehandlet(bekreftelse);
             }
         }
+    }
+
+    public boolean erAksjonspunktUtført(String aksjonspunktKode) {
+        return valgtBehandling.getAksjonspunkt()
+                .stream()
+                .filter(aksjonspunkt -> aksjonspunkt.getDefinisjon().equalsIgnoreCase(aksjonspunktKode))
+                .anyMatch(ap -> ap.getStatus().equalsIgnoreCase("UTFO"));
     }
 
     private void verifsierAtAPErFerdigbehandlet(AksjonspunktBekreftelse bekreftelse) {
@@ -643,14 +648,6 @@ public class Saksbehandler {
         return hentHistorikkinnslagPåBehandling(behandlingsId).stream().anyMatch(innslag -> innslag.erAvTypen(type));
     }
 
-    public HistorikkInnslag hentHistorikkinnslagAvType(HistorikkType type) {
-        return hentHistorikkinnslagAvType(type, valgtBehandling.uuid, valgtBehandling.id).stream().findFirst().orElse(null);
-    }
-
-    public HistorikkInnslag hentFørsteHistorikkinnslagAvTypeMedDokument(HistorikkType type, DokumentTag dokumentTag) {
-        return hentHistorikkinnslagAvTypeMedDokument(type, dokumentTag, 0);
-    }
-
     /**
      * Henter historikkinnslag av spesifisert type som inneholder et dokument med angitt tag.
      * Hvis det er flere innslag som matcher, returneres det som er spesifisert med innslagIndeks.
@@ -675,7 +672,7 @@ public class Saksbehandler {
                 : filtrertHistorikkinnslag.getFirst();
     }
 
-    public List<HistorikkInnslag> hentHistorikkinnslagAvType(HistorikkType type, UUID behandlingsUuid, int behandlingId) {
+    private List<HistorikkInnslag> hentHistorikkinnslagAvType(HistorikkType type, UUID behandlingsUuid, int behandlingId) {
         venterPåFerdigProssesseringOgOppdaterBehandling(behandlingsUuid, behandlingId);
         if (Objects.equals(HistorikkType.REVURD_OPPR, type)) {
             behandlingsUuid = null;

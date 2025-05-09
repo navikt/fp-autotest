@@ -2329,7 +2329,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.Type.BARN, null, null));
 
         saksbehandler.hentFagsak(saksnummer);
-        assertThat(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD).getStatus()).isEqualTo("UTFO");
+        assertThat(saksbehandler.erAksjonspunktUtført(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD)).isTrue();
 
         var vurderManglendeFodselBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse());
         vurderManglendeFodselBekreftelse.bekreftDokumentasjonIkkeForeligger();

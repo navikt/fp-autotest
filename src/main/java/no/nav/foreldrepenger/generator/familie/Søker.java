@@ -1,5 +1,20 @@
 package no.nav.foreldrepenger.generator.familie;
 
+import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
+import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilans;
+import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
+import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
+import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
+import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.ws.rs.NotSupportedException;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.aktoerer.innsyn.Innsyn;
@@ -19,20 +34,6 @@ import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.vedtak.log.mdc.MDCOperations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static no.nav.foreldrepenger.autotest.util.StreamUtils.distinctByKeys;
-import static no.nav.foreldrepenger.generator.familie.Aareg.arbeidsforholdFrilans;
-import static no.nav.foreldrepenger.generator.familie.Sigrun.hentNæringsinntekt;
-import static no.nav.foreldrepenger.generator.familie.Sigrun.startdato;
-import static no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype.ORDINÆRT_ARBEIDSFORHOLD;
-import static no.nav.vedtak.klient.http.CommonHttpHeaders.HEADER_NAV_CONSUMER_ID;
 
 public abstract class Søker {
 
@@ -276,8 +277,10 @@ public abstract class Søker {
     }
 
     public void ettersendVedlegg(Fødselsnummer fnr, YtelseType ytelseType, DokumentType skjemanummer, VedleggDto.Dokumenterer dokumenterer) {
+        LOG.info("Ettersender vedlegg {} for {} med saksnummer {} ...", skjemanummer, fnr.value(), this.saksnummer.value());
         var vedlegg = new VedleggDto(UUID.randomUUID(), skjemanummer, InnsendingsType.LASTET_OPP, null, dokumenterer);
         innsender.ettersendVedlegg(fnr, saksnummer, ytelseType, vedlegg);
+        LOG.info("Vedlegg er ettersendt.");
     }
 
     // Brukes bare i tilfelle hvor en ønsker å sende IM uten registret arbeidsforhold i Aareg!

@@ -28,7 +28,6 @@ public abstract class AksjonspunktBekreftelse {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + ": {kode:" + (kode != null ? kode : "") + ", begrunnelse:" +
-                (begrunnelse != null ? begrunnelse : "") + "}";
+        return aksjonspunktKode();
     }
 }

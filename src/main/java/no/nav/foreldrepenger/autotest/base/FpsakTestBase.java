@@ -66,8 +66,9 @@ public abstract class FpsakTestBase extends BrevTestBase {
         assertThat(Pdf.is_pdf(pdf)).as("Sjekker om byte array er av typen PDF").isTrue();
 
         var assertions = brevAssertions.build();
-        LOG.info("Sjekker {} assertions i {} brevet.", assertions.size(), dokumentTag.tag());
+        LOG.info("Sjekker {} assertions i {} brevet...", assertions.size(), dokumentTag.tag());
         validerBrevetInneholderForventedeTekstavsnitt(pdf, assertions);
+        LOG.info("Brevet {} er validering OK", dokumentTag.tag());
     }
 
     protected void validerInnsendtInntektsmeldingForeldrepenger(Fødselsnummer fødselsnummer,
