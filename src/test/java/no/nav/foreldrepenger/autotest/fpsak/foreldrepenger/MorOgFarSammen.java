@@ -21,6 +21,7 @@ import static no.nav.foreldrepenger.generator.soknad.maler.UttakMaler.fordelingM
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType.SAMTIDIGUTTAK;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.utsettelsesperiode;
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
+import static no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil.helgejustertTilMandag;
 import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,7 +63,6 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
-import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
@@ -326,7 +326,7 @@ class MorOgFarSammen extends FpsakTestBase {
         assertThat(saksbehandler.sakErKobletTilAnnenpart()).as("Saken er koblet til annenpart").isTrue();
         assertThat(saksbehandler.hentAvslåtteUttaksperioder()).as("Antall avslåtte uttaksperioder").hasSize(1);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder().get(0).getFom()).isEqualTo(
-                VirkedagUtil.helgejustertTilMandag(fpStartdatoFar.plusWeeks(8)));
+                helgejustertTilMandag(fpStartdatoFar.plusWeeks(8)));
         assertThat(saksbehandler.valgtBehandling.getSaldoer()
                 .stonadskontoer()
                 .get(Saldoer.SaldoVisningStønadskontoType.FEDREKVOTE)
@@ -684,7 +684,7 @@ class MorOgFarSammen extends FpsakTestBase {
 
         // Far's søknad og behandling
         var far = familie.far();
-        var fpStartdatoFar = fødselsdato.plusWeeks(7);
+        var fpStartdatoFar = helgejustertTilMandag(fødselsdato.plusWeeks(7));
         var fordelingFar = fordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fpStartdatoFar , fødselsdato.plusWeeks(20).minusDays(1), ARBEID));
 
