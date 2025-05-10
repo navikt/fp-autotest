@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<melding xmlns="http://seres.no/xsd/NAV/Inntektsmelding_M/20181211">
+    <Skjemainnhold>
+        <ytelse>Foreldrepenger</ytelse>
+        <aarsakTilInnsending>Ny</aarsakTilInnsending>
+        <arbeidsgiverPrivat>
+            <arbeidsgiverFnr>23529244967</arbeidsgiverFnr>
+            <kontaktinformasjon>
+                <kontaktinformasjonNavn>Privatelarsen</kontaktinformasjonNavn>
+                <telefonnummer>41925090</telefonnummer>
+            </kontaktinformasjon>
+        </arbeidsgiverPrivat>
+        <arbeidstakerFnr>04518820066</arbeidstakerFnr>
+        <naerRelasjon>false</naerRelasjon>
+        <arbeidsforhold>
+            <arbeidsforholdId xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+            <foersteFravaersdag>2025-04-17</foersteFravaersdag>
+            <beregnetInntekt>
+                <beloep>10000</beloep>
+            </beregnetInntekt>
+        </arbeidsforhold>
+        <refusjon>
+            <refusjonsbeloepPrMnd>25000</refusjonsbeloepPrMnd>
+            <endringIRefusjonListe>
+                <endringIRefusjon>
+                    <endringsdato>2025-06-08</endringsdato>
+                    <refusjonsbeloepPrMnd>10000</refusjonsbeloepPrMnd>
+                </endringIRefusjon>
+            </endringIRefusjonListe>
+        </refusjon>
+        <startdatoForeldrepengeperiode>2025-04-17</startdatoForeldrepengeperiode>
+        <avsendersystem>
+            <systemnavn>FS22</systemnavn>
+            <systemversjon>1.0</systemversjon>
+            <innsendingstidspunkt>2025-05-10T19:25:32.571190592</innsendingstidspunkt>
+        </avsendersystem>
+    </Skjemainnhold>
+</melding>

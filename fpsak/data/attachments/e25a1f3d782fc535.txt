@@ -1,0 +1,1 @@
+{"aksjonspunktGodkjenningDtos":[{"aksjonspunktKode":"5006","arsaker":[],"godkjent":true},{"aksjonspunktKode":"5005","arsaker":[],"godkjent":true}],"@type":"5016"}

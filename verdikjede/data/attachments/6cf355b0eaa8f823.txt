@@ -1,0 +1,1 @@
+{"begrunnelse":"Mor er ikke i aktivitet første periode!","vurderingBehov":[{"fom":"2025-07-31","tom":"2025-10-08","type":"UTTAK","årsak":"AKTIVITETSKRAV_ARBEID","vurdering":"IKKE_GODKJENT"},{"fom":"2025-10-09","tom":"2025-12-17","type":"UTTAK","årsak":"AKTIVITETSKRAV_ARBEID","vurdering":"GODKJENT"}],"@type":"5074"}

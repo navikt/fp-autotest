@@ -1,0 +1,1 @@
+{"beregningsaktivitetLagreDtoList":[{"opptjeningAktivitetType":"AAP","fom":"2024-05-10","tom":"2025-07-10","skalBrukes":true},{"opptjeningAktivitetType":"ARBEID","fom":"2024-05-10","tom":"2026-05-10","oppdragsgiverOrg":"992257822","arbeidsforholdRef":"84cbc7cc-dbfe-4c47-933f-3efde9aba9e4","skalBrukes":false}],"@type":"5052"}

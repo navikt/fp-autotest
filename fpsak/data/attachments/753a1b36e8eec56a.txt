@@ -1,0 +1,1 @@
+{"begrunnelse":"Begrunnelse","inntektPrAndelList":[{"inntekt":500000,"andelsnr":2}],"inntektFrilanser":500000,"@type":"5038"}

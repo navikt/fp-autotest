@@ -1,0 +1,1 @@
+{"begrunnelse":"blabla","erKlagerPart":true,"erFristOverholdt":true,"erKonkret":true,"erSignert":true,"vedtakBehandlingUuid":"0c46fa4a-5e6b-4e27-97b9-682f22c215bf","@type":"5082"}
