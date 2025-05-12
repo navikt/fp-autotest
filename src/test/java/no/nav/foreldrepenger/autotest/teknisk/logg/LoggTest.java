@@ -62,6 +62,9 @@ class LoggTest {
             "FP-018669:Feil ved kall til Abakus: Kunne ikke hente grunnlag fra abakus", // Logges i fpsak som konsekvens av det nedenfor
             "duplicate key value violates unique constraint \\\"uidx_kobling_1\\\"" // Logges i fpabakus
     );
+    private static final List<String> IGNORE_SENSITIV_INFO_FROM = List.of(
+            "Dummy MinSideVarsel-producer sender" // Logges lokalt i fpoversikt i en overgangsfase ved lokalt testing av varsler
+    );
 
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fpkalkulus", "fager-api", "valkey");
     private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api", "fpkalkulus", "fager-api", "valkey");
@@ -100,7 +103,7 @@ class LoggTest {
                         var inneholderSensistivOpplysning = currentLine.matches(sensitiv.getData());
                         var msg = String.format("Fant sensitiv opplysning i logg (syntetisk): [%s] for applikasjon: [%s], linje[%s]=%s, type=%s",
                                 sensitiv.getData(), containerNavn, linePos, currentLine, sensitiv.getKilde());
-                        if (inneholderSensistivOpplysning) {
+                        if (inneholderSensistivOpplysning && IGNORE_SENSITIV_INFO_FROM.stream().noneMatch(currentLine::contains)) {
                             assertEquals("", sensitiv.getData(), msg);
                         }
                     }
