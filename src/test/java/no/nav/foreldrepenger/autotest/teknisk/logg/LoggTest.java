@@ -66,8 +66,8 @@ class LoggTest {
             "Dummy MinSideVarsel-producer sender" // Logges lokalt i fpoversikt i en overgangsfase ved lokalt testing av varsler
     );
 
-    private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fpkalkulus", "fager-api", "valkey");
-    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api", "fpkalkulus", "fager-api", "valkey");
+    private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fpkalkulus", "fager-api", "fpcache");
+    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api", "fpkalkulus", "fager-api", "fpcache");
     private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
 
     private static String toNumericPattern(String s) {
