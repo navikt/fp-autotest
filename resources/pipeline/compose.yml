@@ -103,7 +103,7 @@ services:
       GRUPPE_OID_SKJERMET: 63b3f84f-1ec5-444b-ad33-2ad2d3495da1
       GRUPPE_OID_STRENGTFORTROLIG: df650e66-9590-4c96-8ecb-8efea46f1306
       GRUPPE_OID_FORTROLIG: bc7fde53-c4c3-4fff-9079-c6440ca5ff5e
-      REDIS_HOST: valkey
+      REDIS_HOST: fpcache
       REDIS_PORT: 6379
       REDIS_PASSWORD:
       APP_NAME: fptilgang
@@ -122,7 +122,7 @@ services:
     depends_on:
       audit.nais:
         condition: service_started
-      valkey:
+      fpcache:
         condition: service_started
       vtp:
         condition: service_healthy
@@ -615,7 +615,7 @@ services:
       --sso.session-cookie-name=selvbetjening-session
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
-      --redis.uri=redis://valkey:6379
+      --redis.uri=redis://fpcache:6379
       --auto-login=true
       --log-level=debug
       --bind-address=0.0.0.0:9300
@@ -626,7 +626,7 @@ services:
     env_file:
       - *common-properties
     depends_on:
-      - valkey
+      - fpcache
       - wonderwall-selvbetjening-sso-server
 
   fpinntektsmelding-frontend:
@@ -851,9 +851,9 @@ services:
     depends_on:
       fpsak:
         condition: service_started
-  valkey:
-    image: valkey/valkey:8
-    container_name: valkey
+  fpcache:
+    image: redis:8
+    container_name: fpcache
     ports:
       - "127.0.0.1:6379:6379"
   wonderwall-selvbetjening-sso-server:
@@ -864,7 +864,7 @@ services:
       --openid.provider=idporten
       --ingress=http://localhost:9111
       --bind-address=0.0.0.0:9111
-      --redis.uri=redis://valkey:6379
+      --redis.uri=redis://fpcache:6379
       --sso.enabled=true
       --sso.mode=server
       --sso.domain=localhost
@@ -878,7 +878,7 @@ services:
     env_file:
       - *common-properties
     depends_on:
-      - valkey
+      - fpcache
   wonderwall-foreldrepengeoversikt:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
@@ -890,7 +890,7 @@ services:
       --sso.session-cookie-name=selvbetjening-session
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
-      --redis.uri=redis://valkey:6379
+      --redis.uri=redis://fpcache:6379
       --auto-login=true
       --log-level=debug
       --bind-address=0.0.0.0:9100
@@ -901,7 +901,7 @@ services:
     env_file:
       - *common-properties
     depends_on:
-      - valkey
+      - fpcache
       - wonderwall-selvbetjening-sso-server
   wonderwall-foreldrepengesoknad:
     <<: *default-konfigurasjon
@@ -914,7 +914,7 @@ services:
       --sso.session-cookie-name=selvbetjening-session
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
-      --redis.uri=redis://valkey:6379
+      --redis.uri=redis://fpcache:6379
       --auto-login=true
       --log-level=debug
       --ingress=http://localhost:9101
@@ -925,7 +925,7 @@ services:
     env_file:
       - *common-properties
     depends_on:
-      - valkey
+      - fpcache
       - wonderwall-selvbetjening-sso-server
   wonderwall-svangerskapspengesoknad:
     <<: *default-konfigurasjon
@@ -938,7 +938,7 @@ services:
       --sso.session-cookie-name=selvbetjening-session
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
-      --redis.uri=redis://valkey:6379
+      --redis.uri=redis://fpcache:6379
       --auto-login=true
       --log-level=debug
       --ingress=http://localhost:9102
@@ -949,7 +949,7 @@ services:
     env_file:
       - *common-properties
     depends_on:
-      - valkey
+      - fpcache
       - wonderwall-selvbetjening-sso-server
   wonderwall-engangsstonad:
     <<: *default-konfigurasjon
@@ -962,7 +962,7 @@ services:
       --sso.session-cookie-name=selvbetjening-session
       --encryption-key=G8BBWhxLFKVZkPLLgy01SrLLsvW0uc9t7wG7EbtClW8=
       --sso.server-url=http://localhost:9111
-      --redis.uri=redis://valkey:6379
+      --redis.uri=redis://fpcache:6379
       --auto-login=true
       --log-level=debug
       --ingress=http://localhost:9103
@@ -973,5 +973,5 @@ services:
     env_file:
       - *common-properties
     depends_on:
-      - valkey
+      - fpcache
       - wonderwall-selvbetjening-sso-server
