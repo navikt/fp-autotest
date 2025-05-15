@@ -1,5 +1,21 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
+import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
+import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
+import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Beslutter;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Saksbehandler;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
@@ -13,21 +29,6 @@ import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.Adressebeskyttelse;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.vedtak.exception.ManglerTilgangException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FEDREKVOTE;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.FORELDREPENGER_FØR_FØDSEL;
-import static no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType.MØDREKVOTE;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
-import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
-import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @Tag("verdikjede")
 class AdressebeskyttelseOgSkjermetPersonTester {
@@ -102,7 +103,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         saksbehandler6.hentFagsak(saksnummerFar);
         saksbehandler6.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato);
-        saksbehandler6.ventTilFagsakLøpende();
+        saksbehandler6.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Hele fagsaken skal være beskyttet og krever KODE_6 tilgang, selv om far ikke har beskyttet addresse
         assertThatThrownBy(() -> saksbehandler.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);

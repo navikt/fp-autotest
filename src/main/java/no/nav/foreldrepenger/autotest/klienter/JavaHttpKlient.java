@@ -1,12 +1,9 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.vedtak.exception.IntegrasjonException;
-import no.nav.vedtak.exception.ManglerTilgangException;
-import no.nav.vedtak.exception.TekniskException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.lang.Thread.sleep;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
+import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -17,10 +14,15 @@ import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static java.lang.Thread.sleep;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
-import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import no.nav.vedtak.exception.IntegrasjonException;
+import no.nav.vedtak.exception.ManglerTilgangException;
+import no.nav.vedtak.exception.TekniskException;
 
 public final class JavaHttpKlient {
     private static final Logger LOG = LoggerFactory.getLogger(JavaHttpKlient.class);
@@ -103,8 +105,7 @@ public final class JavaHttpKlient {
             return null;
         }
         if (statusCode == HttpURLConnection.HTTP_UNAUTHORIZED || statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
-            logRequest(response);
-            throw new ManglerTilgangException("NO-AUTH", String.format("[HTTP %s] Mangler tilgang. Feilet mot %s", statusCode, endpoint));
+            throw new ManglerTilgangException("NO-AUTH", String.format("[HTTP %s] Mangler tilgang. Feilet mot %s. Med headers %s", statusCode, endpoint, response.headers()));
         }
         if ((statusCode >= HttpURLConnection.HTTP_OK && statusCode < HttpURLConnection.HTTP_MULT_CHOICE)) {
             return responseFunction.apply(response);
