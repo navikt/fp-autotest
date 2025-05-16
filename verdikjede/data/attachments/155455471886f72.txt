@@ -1,0 +1,1 @@
+{"begrunnelse":"Dette er begrunnelsen","videreBehandling":"TILBAKEKR_OPPRETT","@type":"5084"}

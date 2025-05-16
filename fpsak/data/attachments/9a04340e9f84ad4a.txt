@@ -1,0 +1,1 @@
+{"begrunnelse":"Mor har rett!","annenforelderHarRett":true,"@type":"5086"}

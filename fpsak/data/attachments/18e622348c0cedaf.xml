@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns7:soeknad xmlns="urn:no:nav:vedtak:felles:xml:soeknad:endringssoeknad:v3" xmlns:ns6="urn:no:nav:vedtak:felles:xml:soeknad:svangerskapspenger:v1" xmlns:ns5="urn:no:nav:vedtak:felles:xml:soeknad:engangsstoenad:v3" xmlns:ns7="urn:no:nav:vedtak:felles:xml:soeknad:v3" xmlns:ns2="urn:no:nav:vedtak:felles:xml:soeknad:uttak:v3" xmlns:ns4="urn:no:nav:vedtak:felles:xml:soeknad:felles:v3" xmlns:ns3="urn:no:nav:vedtak:felles:xml:soeknad:foreldrepenger:v3">
+    <ns7:mottattDato>2025-05-16</ns7:mottattDato>
+    <ns7:sprakvalg kode="NB"/>
+    <ns7:omYtelse>
+        <ns3:foreldrepenger>
+            <ns3:annenForelder xsi:type="ns4:AnnenForelderMedNorskIdent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <ns4:aktoerId>9901459616450</ns4:aktoerId>
+            </ns3:annenForelder>
+            <ns3:rettigheter>
+                <ns4:harAnnenForelderRett>true</ns4:harAnnenForelderRett>
+                <ns4:harOmsorgForBarnetIPeriodene>true</ns4:harOmsorgForBarnetIPeriodene>
+                <ns4:harAleneomsorgForBarnet>false</ns4:harAleneomsorgForBarnet>
+                <ns4:harMorUforetrygd>false</ns4:harMorUforetrygd>
+                <ns4:harAnnenForelderTilsvarendeRettEOS>false</ns4:harAnnenForelderTilsvarendeRettEOS>
+            </ns3:rettigheter>
+            <ns3:relasjonTilBarnet xsi:type="ns4:Foedsel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <ns4:antallBarn>1</ns4:antallBarn>
+                <ns4:foedselsdato>2025-01-16</ns4:foedselsdato>
+                <ns4:termindato>2025-01-16</ns4:termindato>
+            </ns3:relasjonTilBarnet>
+            <ns3:medlemskap>
+                <ns4:iNorgeVedFoedselstidspunkt>true</ns4:iNorgeVedFoedselstidspunkt>
+                <ns4:boddINorgeSiste12Mnd>false</ns4:boddINorgeSiste12Mnd>
+                <ns4:borINorgeNeste12Mnd>false</ns4:borINorgeNeste12Mnd>
+            </ns3:medlemskap>
+            <ns3:opptjening/>
+            <ns3:fordeling>
+                <ns2:annenForelderErInformert>true</ns2:annenForelderErInformert>
+                <ns2:perioder xsi:type="ns2:Uttaksperiode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <ns2:fom>2025-06-06</ns2:fom>
+                    <ns2:tom>2025-06-20</ns2:tom>
+                    <ns2:type kode="FEDREKVOTE" kodeverk="UTTAK_PERIODE_TYPE"/>
+                    <ns2:oenskerSamtidigUttak>false</ns2:oenskerSamtidigUttak>
+                    <ns2:morsAktivitetIPerioden kode="-" kodeverk="MORS_AKTIVITET"/>
+                    <ns2:oenskerFlerbarnsdager>false</ns2:oenskerFlerbarnsdager>
+                    <ns2:samtidigUttakProsent>0.0</ns2:samtidigUttakProsent>
+                </ns2:perioder>
+                <ns2:oenskerKvoteOverfoert kode="-" kodeverk="OVERFOERING_AARSAK_TYPE"/>
+            </ns3:fordeling>
+            <ns3:dekningsgrad>
+                <ns3:dekningsgrad kode="100" kodeverk="IKKE_DEFINERT"/>
+            </ns3:dekningsgrad>
+        </ns3:foreldrepenger>
+    </ns7:omYtelse>
+    <ns7:soeker>
+        <ns4:aktoerId>9925457539382</ns4:aktoerId>
+        <ns4:soeknadsrolle kodeverk="FORELDRE_TYPE" kode="FAR"/>
+    </ns7:soeker>
+</ns7:soeknad>
