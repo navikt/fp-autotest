@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.klienter;
 
-import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.fromJson;
 import static no.nav.foreldrepenger.autotest.klienter.JacksonBodyHandlers.toJson;
@@ -26,7 +25,7 @@ import no.nav.vedtak.exception.TekniskException;
 
 public final class JavaHttpKlient {
     private static final Logger LOG = LoggerFactory.getLogger(JavaHttpKlient.class);
-    private static final int MAX_RETRY = 3;
+    private static final int MAX_RETRY = 2;
 
     private static final HttpClient klient = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_1_1)
@@ -71,26 +70,45 @@ public final class JavaHttpKlient {
     }
 
     private static <T> HttpResponse<T> send(HttpRequest request, HttpResponse.BodyHandler<T> responseHandler) {
+        int i = MAX_RETRY;
+        while (i-- > 0) {
+            try {
+                return doSend(request, responseHandler);
+            } catch (IntegrasjonException e) {
+                var antallForsøk = MAX_RETRY - i;
+                LOG.info("F-157390 IntegrasjonException ved kall {} til endepunkt {}. Prøver på nytt...", antallForsøk, request.uri());
+                sleepWithBackoff(antallForsøk);
+            }
+        }
+        return doSend(request, responseHandler);
+    }
+
+
+    private static <T> HttpResponse<T> doSend(HttpRequest request, HttpResponse.BodyHandler<T> responseHandler) {
         try {
             var response = klient.send(request, responseHandler);
-            var antallForsøk = 1;
-            while (retryOn5xxFailures(response, antallForsøk)) {
-                LOG.warn("5xx feil mot {} for {}. gang. Prøver på nytt.", request.uri(), antallForsøk);
-                int ventSekunder = Math.min(2000, 1000 * antallForsøk++);
-                sleep(ventSekunder);
-                response = klient.send(request, responseHandler);
+            if (is5xxStatus(response)) {
+                throw new IntegrasjonException("F-157390", "5xx feil mot " + request.uri());
             }
             return response;
         } catch (IOException e) {
-            throw new TekniskException("F-432937", String.format("Kunne ikke sende request %s", request), e);
+            throw new IntegrasjonException("F-157391", "Uventet IO-exception mot endepunkt", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new TekniskException("F-432938", "InterruptedException ved henting av data.", e);
+            throw new IntegrasjonException("F-157392", "InterruptedException ved kall mot endepunkt", e);
         }
     }
 
-    private static <T> boolean retryOn5xxFailures(HttpResponse<T> response, int antallForsøk) {
-        return antallForsøk < MAX_RETRY && is5xxStatus(response);
+    private static void sleepWithBackoff(int antallForsøk) {
+        int baseMillis = 500;
+        int maxMillis = 1_500;
+        int delay = Math.min(maxMillis, baseMillis * antallForsøk); // simple linear backoff
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IntegrasjonException("F-157393", "Thread ble avbrutt under venting mellom retries", e);
+        }
     }
 
     private static <T> boolean is5xxStatus(HttpResponse<T> response) {
