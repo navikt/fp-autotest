@@ -6,11 +6,17 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 // TODO: Fiks opp i testbasene
 public abstract class VerdikjedeTestBase extends FpsakTestBase {
 
+    protected static final Integer G_2024 = 124_028;
     protected static final Integer G_2025 = 130_160;
+    protected static final Integer SEKS_G_2024 = G_2024 * 6;
     protected static final Integer SEKS_G_2025 = G_2025 * 6;
+    protected static final Integer DAGSATS_VED_6_G_2025 = BigDecimal.valueOf(SEKS_G_2025).divide(BigDecimal.valueOf(260), RoundingMode.HALF_EVEN).intValue();
 
     public void foreslårOgFatterVedtakVenterTilAvsluttetBehandling(Saksnummer saksnummer,
                                                                    boolean revurdering,
