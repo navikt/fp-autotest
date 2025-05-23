@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -32,6 +32,7 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlie
 import no.nav.foreldrepenger.autotest.util.DockerUtils;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
+import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.ArbeidsforholdModell;
 
 @Tag("logger")
@@ -67,7 +68,7 @@ class LoggTest {
     );
 
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fager-api", "fpcache");
-    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api", "fager-api", "fpcache");
+    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpkalkulus", "fpsoknad-mottak", "foreldrepengesoknad-api", "fager-api", "fpcache");
     private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
 
     private static String toNumericPattern(String s) {
@@ -166,13 +167,27 @@ class LoggTest {
     private Set<SensitivInformasjon> sensitivArbeidsgiverInformasjon(TestscenarioDto testscenarioDto) {
         return Optional.ofNullable(testscenarioDto.scenariodata())
             .map(InntektYtelseModell::arbeidsforholdModell)
-            .map(ArbeidsforholdModell::arbeidsforhold)
-            .map(o -> o.stream()
-                .map(f -> f.arbeidsgiverAktorId() != null
-                    ? new SensitivInformasjon("aktørId på arbeidsgiver", toNumericPattern(f.arbeidsgiverAktorId()))
-                    : new SensitivInformasjon("orgnr på arbeidsgiver", toNumericPattern(f.arbeidsgiverOrgnr())))
-                .collect(Collectors.toSet()))
-            .orElse(Collections.emptySet());
+            .map(ArbeidsforholdModell::arbeidsforhold).orElseGet(List::of).stream()
+            .map(LoggTest::sensitivForArbeidsforhold)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toSet());
+    }
+
+    private static List<SensitivInformasjon> sensitivForArbeidsforhold(Arbeidsforhold arbeidsforhold) {
+        List<SensitivInformasjon> sensitiv = new ArrayList<>();
+        if (arbeidsforhold.arbeidsgiverOrgnr() != null) {
+            sensitiv.add(new SensitivInformasjon("orgnr på arbeidsgiver", toNumericPattern(arbeidsforhold.arbeidsgiverOrgnr())));
+        }
+        if (arbeidsforhold.arbeidsgiverAktorId() != null) {
+            sensitiv.add(new SensitivInformasjon("aktørID på arbeidsgiver", toNumericPattern(arbeidsforhold.arbeidsgiverAktorId())));
+        }
+        if (arbeidsforhold.personArbeidsgiver() != null && arbeidsforhold.personArbeidsgiver().getAktørIdent() != null) {
+            sensitiv.add(new SensitivInformasjon("aktørID på arbeidsgiver", toNumericPattern(arbeidsforhold.personArbeidsgiver().getAktørIdent())));
+        }
+        if (arbeidsforhold.personArbeidsgiver() != null && arbeidsforhold.personArbeidsgiver().getIdent() != null) {
+            sensitiv.add(new SensitivInformasjon("FNR/DNR på arbeidsgiver", toNumericPattern(arbeidsforhold.personArbeidsgiver().getIdent())));
+        }
+        return sensitiv;
     }
 
     private static class SensitivInformasjon {

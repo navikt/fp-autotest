@@ -44,7 +44,7 @@ public final class JacksonBodyHandlers {
 
     public static <T> T fromJson(String json, ObjectMapper mapper, TypeReference<T> typeReference) {
         try {
-            return fellesObjectmapper.readValue(json, typeReference);
+            return mapper.readValue(json, typeReference);
         } catch (IOException e) {
             throw new TekniskException("FP-713328", "Fikk IO exception ved deserialisering av JSON", e);
         }
