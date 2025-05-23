@@ -2416,7 +2416,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .stream()
                 .sorted(Comparator.comparing(DokumentasjonVurderingBehov::tom))
                 .toList();
-        assertThat(vurderingsbehov.getLast().vurdering()).isNull();
+        assertThat(vurderingsbehov.getFirst().vurdering()).isNull(); // Uttaket før mor begynner i arbeid 26 uker etter fødsel
+        assertThat(vurderingsbehov.getLast().vurdering()).isEqualTo(DokumentasjonVurderingBehov.Vurdering.GODKJENT_AUTOMATISK); // Mor i arbeid med 80% stilling
         var førsteVurderingBehov = vurderingsbehov.getFirst();
         vurderUttakDokumentasjonBekreftelse
                 .ikkeGodkjenn(new ÅpenPeriodeDto(førsteVurderingBehov.fom(), førsteVurderingBehov.tom()))
