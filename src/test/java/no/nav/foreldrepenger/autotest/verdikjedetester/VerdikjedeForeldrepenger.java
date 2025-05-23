@@ -116,7 +116,6 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.Saksbehandler
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.felles.DokumentType;
-import no.nav.foreldrepenger.common.domain.felles.InnsendingsType;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
 import no.nav.foreldrepenger.common.innsyn.Dekningsgrad;
@@ -138,6 +137,7 @@ import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.Barn
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggInnsendingType;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
@@ -2307,7 +2307,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var søknad = lagSøknadForeldrepengerTermin(termindato, FAR).medFordeling(
                         fordeling(uttaksperiode(FEDREKVOTE, termindato.plusWeeks(9).plusDays(2), termindato.plusWeeks(15).plusDays(1))))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
-                .medVedlegg(List.of(new VedleggDto(UUID.randomUUID(), DokumentType.I000141, InnsendingsType.SEND_SENERE, null,
+                .medVedlegg(List.of(new VedleggDto(UUID.randomUUID(), DokumentType.I000141, VedleggInnsendingType.SEND_SENERE, null,
                         new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.Type.BARN, null, null))));
 
         var saksnummer = far.søk(søknad.build());
