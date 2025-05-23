@@ -56,6 +56,11 @@ public final class JavaHttpKlient {
                 getDefualtErrorConsumer());
     }
 
+    public static <T> T send(HttpRequest request, ObjectMapper mapper, TypeReference<T> typeReference) {
+        return handleResponse(sendStringRequest(request), httpResponse -> fromJson(httpResponse.body(), mapper, typeReference),
+                getDefualtErrorConsumer());
+    }
+
     public static byte[] sendOgHentByteArray(HttpRequest request) {
         return handleResponse(sendByteArrayRequest(request), HttpResponse::body,
                 null); // TODO

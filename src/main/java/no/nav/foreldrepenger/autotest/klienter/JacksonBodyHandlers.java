@@ -39,6 +39,10 @@ public final class JacksonBodyHandlers {
     }
 
     public static <T> T fromJson(String json, TypeReference<T> typeReference) {
+        return fromJson(json, fellesObjectmapper, typeReference);
+    }
+
+    public static <T> T fromJson(String json, ObjectMapper mapper, TypeReference<T> typeReference) {
         try {
             return fellesObjectmapper.readValue(json, typeReference);
         } catch (IOException e) {
