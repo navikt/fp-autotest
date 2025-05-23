@@ -598,11 +598,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor)
-                .medTekstOmDuFårXKronerPerDagFørSkatt(SEKS_G_2025 / 260)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(SEKS_G_2024 / 260)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2024)
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -856,12 +856,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var morDagsats = SEKS_G_2025 / 260;
+        var morDagsats = SEKS_G_2024 / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(morDagsats)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2024)
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -1079,15 +1079,15 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .isEqualTo(dagsats - dagsatsTilAF);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsatsFar = SEKS_G_2025 / 260;
         brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
-                .medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagraf(P_14_9)
                 .medParagraf(P_14_12)
                 .medParagraf(P_8_41)
+                // OBS: Beløpet som sendes til formidling avrundes ikke riktig. Beregning sier 415 115.99 men formidling sier 415 115 istedenfor 415 116. Matcher ikke med avrunding gjort i skjermbilder
                 .medEgenndefinertAssertion(
-                        "Næringsinntekten din er fastsatt til 372 945 kroner i året. Når vi beregner foreldrepenger ut fra "
+                        "Næringsinntekten din er fastsatt til 415 115 kroner i året. Når vi beregner foreldrepenger ut fra "
                                 + "næringsinntekten din, bruker vi gjennomsnittet av de siste tre årene vi har fått oppgitt av "
                                 + "Skatteetaten. Hvis du nettopp har begynt å arbeide, bruker vi inntekten vi har fått opplyst for det "
                                 + "siste året. Dette gjennomsnittet kan også inneholde arbeidsinntekten din. De er trukket fra i "
@@ -1231,14 +1231,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsats = SEKS_G_2025 / 260;
+        var dagsats = SEKS_G_2024 / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
                 .medTekstOmDuFårXKronerPerDagFørSkatt(dagsats)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medTekstOmAleneomsorg()
                 .medParagraf(P_14_15)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2024)
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -1368,14 +1368,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsats = SEKS_G_2025 / 260;
+        var dagsats = SEKS_G_2024 / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
                 .medTekstOmDuFårXKronerPerDagFørSkatt(dagsats)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medTekstOmDenAndreForelderenSomHarRettOgså()
                 .medParagrafer(P_14_9, P_14_12, P_14_13)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2024)
                 .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
 
@@ -1528,7 +1528,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerAvslagAssertionsBuilder(familie.mor().fødselsnummer(), saksnummer).medEgenndefinertAssertion(
                         "Du har ikke rett til foreldrepenger, fordi inntekten din er lavere enn %s kroner i året før skatt.".formatted(
-                                formaterKroner(G_2025 / 2)));
+                                formaterKroner(G_2024 / 2)));
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_AVSLAG, HistorikkType.BREV_SENDT);
 
         mor.sendInnKlage();
@@ -2072,12 +2072,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsatsMor = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260;
+        var dagsatsMor = Math.min(SEKS_G_2024, mor.månedsinntekt() * 12) / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2024)
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -2110,8 +2110,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsatsFar = Math.min(SEKS_G_2025, far.månedsinntekt() * 12) / 260;
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagraf(P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
@@ -2201,12 +2200,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandling();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsatsMor = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260;
+        var dagsatsMor = Math.min(SEKS_G_2024, mor.månedsinntekt() * 12) / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
+                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2024)
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
@@ -2237,8 +2236,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsatsFar = Math.min(SEKS_G_2025, far.månedsinntekt() * 12) / 260;
-        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
+        brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar).medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagraf(P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
