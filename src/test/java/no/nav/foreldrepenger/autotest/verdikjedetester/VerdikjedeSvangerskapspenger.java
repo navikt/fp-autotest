@@ -7,6 +7,7 @@ import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -141,7 +142,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 "Foventer at hele den utbetalte dagsatsen går til søker!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        int dagsats = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260; //2862
+        int dagsats = BigDecimal.valueOf(Math.min(SEKS_G_2025, mor.månedsinntekt() * 12)).divide(BigDecimal.valueOf(260), RoundingMode.HALF_UP).intValue(); //3004
         int dagsatsAvkortet = (int) (dagsats * (100 - tilrettelegginsprosent) / 100);
         int snittPerMånedAvkortet = dagsatsAvkortet * 260 / 12;
         sjekkInnvilgetBrev(mor.fødselsnummer(), mor.månedsinntekt(), harRefusjon, false, snittPerMånedAvkortet);
@@ -392,7 +393,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
-        var beregnetDagsats = regnUtForventetDagsats(månedsinntekt1 + månedsinntekt2, tilrettelegginsprosent);
+        // var beregnetDagsats = regnUtForventetDagsats(månedsinntekt1 + månedsinntekt2, tilrettelegginsprosent);  Pga 2 andeler med akkurat 1/3 og 2/3 av grunnlaget vil vanlig "enkel" utregning gi 1 krone avvik med årets (2025) G. Setter derfor dagsats manuelt
+        var beregnetDagsats = 3003; // "Skulle" blitt 3004
         var beregningsgrunnlagPeriode = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPeriode(0);
         assertThat(beregningsgrunnlagPeriode.getDagsats()).as(
                         "Forventer at dagsatsen blir justert ut i fra 6G og utbeatlinsggrad, og IKKE arbeidstakers årsinntekt!")
