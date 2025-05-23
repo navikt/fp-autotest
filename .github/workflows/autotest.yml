@@ -76,7 +76,7 @@ jobs:
         shell: bash
         run: |
           if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
-            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpkalkulus")
+            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fpabakus" "fptilbake" "fprisk" "fpkalkulus")
           elif [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
             services=("fpkalkulus")
           elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
@@ -105,7 +105,7 @@ jobs:
           elif [[ ${{ inputs.test-suite }} == 'verdikjede' || ${{ inputs.test-suite }} == 'fplos' ]]; then
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen
           elif [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
-            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpabonnent
+            mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P logger -DikkeSjekkLengdeAvContainer=fpdokgen,fpabonnent
           else
             mvn test -e --batch-mode -s settings.xml -Djuipter.parallelism=${{ inputs.parallellitet }} -P loggfeil
           fi

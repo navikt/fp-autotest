@@ -66,8 +66,8 @@ class LoggTest {
             "Dummy MinSideVarsel-producer sender" // Logges lokalt i fpoversikt i en overgangsfase ved lokalt testing av varsler
     );
 
-    private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fpkalkulus", "fager-api", "fpcache");
-    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api", "fpkalkulus", "fager-api", "fpcache");
+    private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fager-api", "fpcache");
+    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api", "fager-api", "fpcache");
     private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
 
     private static String toNumericPattern(String s) {
@@ -133,7 +133,7 @@ class LoggTest {
                 }
 
                 if (!IKKE_SJEKK_LENGDE_AV_CONTAINERE.contains(containerNavn) && linePos < 75) {
-                    fail(String.format("Det forventes minst 75 linjer i loggen for applijasjon: %s, men var %s.",
+                    fail(String.format("Det forventes minst 75 linjer i loggen for applikasjon: %s, men var %s.",
                             containerNavn, linePos));
                 }
             }
