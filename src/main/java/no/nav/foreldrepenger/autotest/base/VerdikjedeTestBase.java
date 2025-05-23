@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
 // TODO: Fiks opp i testbasene
 public abstract class VerdikjedeTestBase extends FpsakTestBase {
 
-    protected static final Integer G_2025 = 124028;
+    protected static final Integer G_2025 = 130_160;
     protected static final Integer SEKS_G_2025 = G_2025 * 6;
 
     public void foreslårOgFatterVedtakVenterTilAvsluttetBehandling(Saksnummer saksnummer,
