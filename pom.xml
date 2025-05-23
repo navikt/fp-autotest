@@ -26,11 +26,11 @@
 
         <vtp.versjon>2.0.4</vtp.versjon>
         <fp-felles.versjon>7.5.6</fp-felles.versjon>
-        <fp-prosesstask.version>5.1.7</fp-prosesstask.version>
+        <fp-prosesstask.version>5.1.8</fp-prosesstask.version>
         <fp-kontrakter.version>9.3.5</fp-kontrakter.version>
         <fpsoknad-felles.version>3.2.7</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.2.1</foreldrepenge-api.version>
-        <ftberegning.version>5.8.4</ftberegning.version>
+        <ftberegning.version>5.8.5</ftberegning.version>
 
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.18</logback.version>
