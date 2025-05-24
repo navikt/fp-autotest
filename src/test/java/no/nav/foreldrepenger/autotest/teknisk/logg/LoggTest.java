@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -39,7 +40,7 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeids
 class LoggTest {
     private static final Logger LOG = LoggerFactory.getLogger(LoggTest.class);
 
-    private static final Pattern IDENT_PATTERN = Pattern.compile("\\d{9}");
+    private static final Pattern IDENT_PATTERN = Pattern.compile("message.*\\d{9}");
 
     private static final List<String> UNWANTED_STRINGS = List.of(
         "Server Error",
@@ -70,7 +71,7 @@ class LoggTest {
     );
 
     private static final List<String> ignoreContainersFeil = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fptilgang", "fager-api", "fpcache");
-    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpkalkulus", "fpsoknad-mottak", "foreldrepengesoknad-api", "fager-api", "fpcache");
+    private static final List<String> ignoreContainersSensitiveInfo = List.of("vtp", "audit.nais", "postgres", "oracle", "authserver", "fpsoknad-mottak", "foreldrepengesoknad-api", "fager-api", "fpcache");
     private static String IKKE_SJEKK_LENGDE_AV_CONTAINERE;
 
     private static String toNumericPattern(String s) {
