@@ -1528,7 +1528,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerAvslagAssertionsBuilder(familie.mor().fødselsnummer(), saksnummer).medEgenndefinertAssertion(
                         "Du har ikke rett til foreldrepenger, fordi inntekten din er lavere enn %s kroner i året før skatt.".formatted(
-                                formaterKroner(G_2024 / 2)));
+                                formaterKroner(G_2025 / 2)));
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_AVSLAG, HistorikkType.BREV_SENDT);
 
         mor.sendInnKlage();
