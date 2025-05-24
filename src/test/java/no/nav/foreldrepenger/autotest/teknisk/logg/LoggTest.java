@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -38,6 +38,8 @@ import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeids
 @Tag("logger")
 class LoggTest {
     private static final Logger LOG = LoggerFactory.getLogger(LoggTest.class);
+
+    private static final Pattern IDENT_PATTERN = Pattern.compile("\\d{9}");
 
     private static final List<String> UNWANTED_STRINGS = List.of(
         "Server Error",
@@ -80,7 +82,7 @@ class LoggTest {
     }
 
     @BeforeAll
-    public static void setup() {
+    static void setup() {
         IKKE_SJEKK_LENGDE_AV_CONTAINERE = Optional.ofNullable(System.getProperty("ikkeSjekkLengdeAvContainer"))
                 .or(() -> Optional.ofNullable(System.getenv("ikkeSjekkLengdeAvContainer")))
                 .orElse("sjekker alle");
@@ -100,12 +102,14 @@ class LoggTest {
                 while (scanner.hasNextLine()) {
                     var currentLine = scanner.nextLine();
                     linePos++;
-                    for (var sensitiv : sensitiveStrenger) {
-                        var inneholderSensistivOpplysning = currentLine.matches(sensitiv.getData());
-                        var msg = String.format("Fant sensitiv opplysning i logg (syntetisk): [%s] for applikasjon: [%s], linje[%s]=%s, type=%s",
-                                sensitiv.getData(), containerNavn, linePos, currentLine, sensitiv.getKilde());
-                        if (inneholderSensistivOpplysning && IGNORE_SENSITIV_INFO_FROM.stream().noneMatch(currentLine::contains)) {
-                            assertEquals("", sensitiv.getData(), msg);
+                    if (IDENT_PATTERN.matcher(currentLine).find()) {
+                        for (var sensitiv : sensitiveStrenger) {
+                            var inneholderSensistivOpplysning = currentLine.matches(sensitiv.data());
+                            var msg = String.format("Fant sensitiv opplysning i logg (syntetisk): [%s] for applikasjon: [%s], linje[%s]=%s, type=%s",
+                                    sensitiv.data(), containerNavn, linePos, currentLine, sensitiv.kilde());
+                            if (inneholderSensistivOpplysning && IGNORE_SENSITIV_INFO_FROM.stream().noneMatch(currentLine::contains)) {
+                                assertEquals("", sensitiv.data(), msg);
+                            }
                         }
                     }
                 }
@@ -145,10 +149,10 @@ class LoggTest {
         return currentLine.contains(unwantedString) && IGNORE_EXCEPTION_IF_CONTAINS.stream().noneMatch(currentLine::contains);
     }
 
-    private List<SensitivInformasjon> hentSensitiveStrengerFraVTP() {
+    private Set<SensitivInformasjon> hentSensitiveStrengerFraVTP() {
         var scenarioKlient = new TestscenarioKlient();
         var testscenarioDtos = scenarioKlient.hentAlleScenarier();
-        List<SensitivInformasjon> sensitiveStrenger = new ArrayList<>();
+        Set<SensitivInformasjon> sensitiveStrenger = new LinkedHashSet<>();
 
         testscenarioDtos.forEach(testscenarioDto -> {
             sensitiveStrenger.add(new SensitivInformasjon("FNR/DNR på person", toNumericPattern(testscenarioDto.personopplysninger().søkerIdent())));
@@ -173,8 +177,8 @@ class LoggTest {
             .collect(Collectors.toSet());
     }
 
-    private static List<SensitivInformasjon> sensitivForArbeidsforhold(Arbeidsforhold arbeidsforhold) {
-        List<SensitivInformasjon> sensitiv = new ArrayList<>();
+    private static Set<SensitivInformasjon> sensitivForArbeidsforhold(Arbeidsforhold arbeidsforhold) {
+        Set<SensitivInformasjon> sensitiv = new LinkedHashSet<>();
         if (arbeidsforhold.arbeidsgiverOrgnr() != null) {
             sensitiv.add(new SensitivInformasjon("orgnr på arbeidsgiver", toNumericPattern(arbeidsforhold.arbeidsgiverOrgnr())));
         }
@@ -190,21 +194,6 @@ class LoggTest {
         return sensitiv;
     }
 
-    private static class SensitivInformasjon {
-        private final String kilde;
-        private final String data;
-
-        private SensitivInformasjon(String kilde, String data) {
-            this.kilde = kilde;
-            this.data = data;
-        }
-
-        public String getKilde() {
-            return kilde;
-        }
-
-        public String getData() {
-            return data;
-        }
+    private record SensitivInformasjon(String kilde, String data) {
     }
 }
