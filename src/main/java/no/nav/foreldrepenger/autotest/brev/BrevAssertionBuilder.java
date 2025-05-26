@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.autotest.brev;
 
-import no.nav.foreldrepenger.autotest.base.Paragrafer;
+import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.formaterKroner;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.formaterKroner;
+import no.nav.foreldrepenger.autotest.base.Paragrafer;
 
 public class BrevAssertionBuilder {
 
@@ -160,13 +160,15 @@ public class BrevAssertionBuilder {
         return this;
     }
 
-    public BrevAssertionBuilder medTekstOmDuMåSøkeNyForeldrepengerperiodePå() {
-        brevAssertions.add("Du må søke om ny foreldrepengeperiode på ");
+    public BrevAssertionBuilder medDuTarIkkeUtForeldrepengerFør() {
+        brevAssertions.add("Du tar ikke ut foreldrepenger før ");
         return this;
     }
 
-    public BrevAssertionBuilder medTekstOmSøkeSenestDagenFørNyPeriodeEllerBarnetFyllerTreÅr() {
-        brevAssertions.add("senest dagen før ny foreldrepengeperiode for nytt barn starter, eller senest dagen før barnet fyller tre år.");
+    public BrevAssertionBuilder medTekstKanIkkeBehandleFørSenere() {
+        brevAssertions.add("Søknaden din om foreldrepenger");
+        brevAssertions.add("kan ikke behandles før");
+        brevAssertions.add("fordi foreldrepenger skal beregnes ut fra den inntekten du har når du starter uttaket ditt");
         return this;
     }
 
