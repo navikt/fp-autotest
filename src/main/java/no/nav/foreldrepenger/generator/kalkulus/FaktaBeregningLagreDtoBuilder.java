@@ -138,7 +138,8 @@ public class FaktaBeregningLagreDtoBuilder {
                 fastsettEtterlønnSluttpakke,
                 mottarYtelse,
                 vurderMilitaer,
-                refusjonskravGyldighet
+                refusjonskravGyldighet,
+                null
         );
     }
 
