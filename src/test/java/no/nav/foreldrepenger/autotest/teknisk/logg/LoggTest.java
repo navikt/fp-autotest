@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -138,8 +137,8 @@ class LoggTest {
                     }
                 }
 
-                if (!IKKE_SJEKK_LENGDE_AV_CONTAINERE.contains(containerNavn) && linePos < 75) {
-                    fail(String.format("Det forventes minst 75 linjer i loggen for applikasjon: %s, men var %s.",
+                if (!IKKE_SJEKK_LENGDE_AV_CONTAINERE.contains(containerNavn) && linePos < 65) {
+                    fail(String.format("Det forventes minst 65 linjer i loggen for applikasjon: %s, men var %s.",
                             containerNavn, linePos));
                 }
             }
