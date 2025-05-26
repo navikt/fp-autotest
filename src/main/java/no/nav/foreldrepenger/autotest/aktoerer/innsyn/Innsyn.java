@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.common.innsyn.svp.SvpSak;
 public class Innsyn {
     private static final Logger LOG = LoggerFactory.getLogger(Innsyn.class);
     private static final int API_PROGRESSIV_VENTETID = 3000;
-    private static final int API_TIMEOUT_SEKUNDER = 40;
+    private static final int API_TIMEOUT_SEKUNDER = 30;
 
     private final InnsynKlient innsynKlient;
     private final Fødselsnummer fnr;
