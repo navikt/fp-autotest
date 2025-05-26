@@ -441,7 +441,6 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         validerInnsendtInntektsmeldingSvangerskapspenger(mor.fødselsnummer(), LocalDate.now(), månedsinntektMor, harRefusjon);
 
         var avklarFaktaFødselOgTilrettelegging = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
-
         var svpSak = mor.innsyn().hentSvpSakMedÅpenBehandlingTilstand(saksnummer, BehandlingTilstand.UNDER_BEHANDLING);
         assertThat(svpSak.saksnummer().value()).isEqualTo(saksnummer.value());
         assertThat(svpSak.sakAvsluttet()).isFalse();

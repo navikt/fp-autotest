@@ -1,5 +1,18 @@
 package no.nav.foreldrepenger.autotest.aktoerer.innsender;
 
+import static no.nav.foreldrepenger.autotest.aktoerer.innsender.DokumentIDFraSøknad.dokumentTypeFraRelasjon;
+import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGenerator.lagJournalpostStrukturertDokument;
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGenerator.lagJournalpostUstrukturertDokument;
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD;
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL;
+import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
@@ -10,6 +23,7 @@ import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.Søknad;
 import no.nav.foreldrepenger.common.domain.engangsstønad.Engangsstønad;
 import no.nav.foreldrepenger.common.domain.felles.DokumentType;
+import no.nav.foreldrepenger.common.domain.felles.InnsendingsType;
 import no.nav.foreldrepenger.common.domain.felles.Vedlegg;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.Endringssøknad;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.Foreldrepenger;
@@ -37,20 +51,6 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumentTilkny
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Dokumentkategori;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.DokumentIDFraSøknad.dokumentTypeFraRelasjon;
-import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugSenderInnDokument;
-import static no.nav.foreldrepenger.common.domain.felles.InnsendingsType.LASTET_OPP;
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGenerator.lagJournalpostStrukturertDokument;
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.JournalpostModellGenerator.lagJournalpostUstrukturertDokument;
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.FORELDREPENGER_ENDRING_SØKNAD;
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL;
-import static no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.DokumenttypeId.SØKNAD_FORELDREPENGER_FØDSEL;
 
 public class Fordel extends DokumentInnsendingHjelper {
 
@@ -107,7 +107,7 @@ public class Fordel extends DokumentInnsendingHjelper {
 
     private static void populerVedleggMedInnhold(Søknad søknad) {
         søknad.getVedlegg().stream()
-                .filter(v -> v.getMetadata().innsendingsType() == null || LASTET_OPP.equals(v.getMetadata().innsendingsType()))
+                .filter(v -> v.getMetadata().innsendingsType() == null || InnsendingsType.LASTET_OPP.equals(v.getMetadata().innsendingsType()))
                 .forEach(v -> v.setInnhold(ReadFileFromClassPathHelper.readFileBytes("dummy.pdf")));
     }
 
@@ -127,7 +127,7 @@ public class Fordel extends DokumentInnsendingHjelper {
         var journalpostModell = lagJournalpostStrukturertDokument(xml, fnr.value(), dokumenttypeId);
         if (søknad != null) {
             for (var vedlegg : søknad.getVedlegg()) {
-                if (vedlegg.getInnsendingsType().equals(LASTET_OPP) && vedlegg.getInnhold() != null && vedlegg.getInnhold().length > 0) {
+                if (vedlegg.getInnsendingsType().equals(InnsendingsType.LASTET_OPP) && vedlegg.getInnhold() != null && vedlegg.getInnhold().length > 0) {
                     journalpostModell.getDokumentModellList().add(dokumentmodellFraVedlegg(vedlegg));
                 }
             }
