@@ -617,10 +617,9 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
          * fedrekvoten
          */
         var far = familie.far();
-        var fellesperiodeMorArbeid = uttaksperiode(FELLESPERIODE, fpStartdatoFellesperiodeFar, fpStartdatoFellesperiodeFar.plusWeeks(4).minusDays(1), ARBEID);
         var fordelingFar = List.of(
                 uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK),
-                fellesperiodeMorArbeid,
+                uttaksperiode(FELLESPERIODE, fpStartdatoFellesperiodeFar, fpStartdatoFellesperiodeFar.plusWeeks(4).minusDays(1), ARBEID),
                 uttaksperiode(FEDREKVOTE, fpStartdatoFellesperiodeFar.plusWeeks(4), fpStartdatoFellesperiodeFar.plusWeeks(17).minusDays(1)));
         var opptjeningFar = OpptjeningMaler.frilansOpptjening();
         var søknadFar = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR).medSøker(
@@ -707,7 +706,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medMottattdato(fødselsdato.minusWeeks(2))
                 .medVedlegg(List.of(
                         dokumenterUttak(fordelingFar, MorsAktivitet.ARBEID, VedleggInnsendingType.AUTOMATISK),
-                        dokumenterUttak(fordelingFar, MorsAktivitet.ARBEID_OG_UTDANNING, VedleggInnsendingType.AUTOMATISK)
+                        dokumenterUttak(fordelingFar, MorsAktivitet.ARBEID_OG_UTDANNING, VedleggInnsendingType.LASTET_OPP)
                 ))
                 .build();
         var saksnummerFar = far.søk(søknadFar);
@@ -1387,7 +1386,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .setAnnenforelderHarRett(true)
                 .setBegrunnelse("Både far og mor har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
-        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse()); // Ikke totrinn
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse()); // Ikke totrinn
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
