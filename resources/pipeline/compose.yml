@@ -32,8 +32,7 @@ services:
   postgres:
     image: $POSTGRES_IMAGE
     container_name: postgres
-    mem_limit: 128mb
-    shm_size: 128mb
+    mem_limit: 256mb
     environment:
       TZ: Europe/Oslo
       PGPORT: 5999
@@ -278,6 +277,7 @@ services:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-fpfrontend
+    mem_limit: 16mb
     command: |
       --openid.provider=azure
       --ingress=http://localhost:9000
@@ -608,6 +608,7 @@ services:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-fpinntektsmelding-frontend
+    mem_limit: 16mb
     command: |
       --openid.provider=idporten
       --sso.enabled=true
@@ -837,6 +838,7 @@ services:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-swagger
+    mem_limit: 16mb
     command: |
       --openid.provider=azure
       --ingress=http://localhost:9200
@@ -860,6 +862,7 @@ services:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-selvbetjening-sso-server
+    mem_limit: 16mb
     command: |
       --openid.provider=idporten
       --ingress=http://localhost:9111
@@ -883,6 +886,7 @@ services:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-foreldrepengeoversikt
+    mem_limit: 16mb
     command: |
       --openid.provider=idporten
       --sso.enabled=true
@@ -907,6 +911,7 @@ services:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-foreldrepengesoknad
+    mem_limit: 16mb
     command: |
       --openid.provider=idporten
       --sso.enabled=true
@@ -931,6 +936,7 @@ services:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-svangerskapspengesoknad
+    mem_limit: 16mb
     command: |
       --openid.provider=idporten
       --sso.enabled=true
@@ -955,6 +961,7 @@ services:
     <<: *default-konfigurasjon
     image: ghcr.io/nais/wonderwall:latest
     container_name: wonderwall-engangsstonad
+    mem_limit: 16mb
     command: |
       --openid.provider=idporten
       --sso.enabled=true
