@@ -1,0 +1,1 @@
+{"begrunnelse":"Begrunnelse","termindato":"2025-08-27","bekreftetSvpArbeidsforholdList":[{"tilretteleggingId":999951,"tilretteleggingBehovFom":"2025-05-27","tilretteleggingDatoer":[{"fom":"2025-05-27","type":"INGEN_TILRETTELEGGING"}],"kopiertFraTidligereBehandling":false,"mottattTidspunkt":"2025-05-27T11:36:26.701582","skalBrukes":true}],"@type":"5091"}

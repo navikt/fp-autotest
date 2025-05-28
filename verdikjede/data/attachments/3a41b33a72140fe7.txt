@@ -1,0 +1,1 @@
+{"type":"dødshendelse","endringstype":"OPPRETTET","fnr":"09457346422","doedsdato":"2025-05-27"}
