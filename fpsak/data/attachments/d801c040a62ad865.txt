@@ -1,0 +1,1 @@
+{"begrunnelse":"Endret av Autotest.","fakta":{"fastsettArbeidUnderAap":{"fastsattPrMnd":10000},"faktaOmBeregningTilfeller":["FASTSETT_INNTEKT_FOR_ARBEID_UNDER_AAP","FASTSETT_INNTEKT_FOR_ARBEID_UNDER_AAP"],"refusjonskravGyldighet":[]},"@type":"5058"}

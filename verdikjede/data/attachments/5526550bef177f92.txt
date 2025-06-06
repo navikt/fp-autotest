@@ -1,0 +1,1 @@
+{"begrunnelse":"Super duper klage!","erKlagerPart":true,"erFristOverholdt":true,"erKonkret":true,"erSignert":true,"vedtakBehandlingUuid":"77044e19-b7d9-44ee-be5a-65d171837f2c","@type":"5082"}

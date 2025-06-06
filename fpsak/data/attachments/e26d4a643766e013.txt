@@ -1,0 +1,1 @@
+{"begrunnelse":"autotest begrunnelse","vurderingBehov":[{"fom":"2026-03-20","tom":"2026-04-02","type":"UTTAK","årsak":"AKTIVITETSKRAV_ARBEID","vurdering":"GODKJENT"}],"@type":"5074"}

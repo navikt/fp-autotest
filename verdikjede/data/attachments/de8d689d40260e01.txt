@@ -1,0 +1,1 @@
+{"begrunnelse":"Bare far har rett!","annenforelderHarRett":false,"@type":"5086"}
