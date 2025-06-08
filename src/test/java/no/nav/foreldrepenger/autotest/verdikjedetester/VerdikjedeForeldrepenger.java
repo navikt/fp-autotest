@@ -2102,12 +2102,12 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsatsMor = Math.min(SEKS_G_2024, mor.månedsinntekt() * 12) / 260;
+        var dagsatsMor = Math.min(DAGSATS_VED_6_G_2025, (mor.månedsinntekt() * 12) / 260);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(mor.fødselsnummer(), saksnummerMor).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsMor)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2024)
+                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
