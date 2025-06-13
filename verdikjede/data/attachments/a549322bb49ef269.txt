@@ -1,0 +1,1 @@
+{"mottattdato":"2025-06-13","språkkode":"NB","barn":{"type":"termin","antallBarn":1,"termindato":"2025-07-04","terminbekreftelseDato":"2025-06-04"},"utenlandsopphold":[],"vedlegg":[]}
