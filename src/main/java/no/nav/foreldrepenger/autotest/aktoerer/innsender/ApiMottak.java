@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.generator.inntektsmelding.builders.navno.Inntektsme
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -106,15 +106,6 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
-    public Saksnummer sendInnSøknad(no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad,
-                                    AktørId aktørId,
-                                    Fødselsnummer fnr,
-                                    AktørId aktørIdAnnenpart,
-                                    Saksnummer saksnummer) {
-        return sendInnSøknad(fnr, søknad);
-    }
-
-    @Override
     public Saksnummer sendInnSøknad(EndringssøknadDto søknad,
                                     AktørId aktørId,
                                     Fødselsnummer fnr,
@@ -123,7 +114,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         return sendInnSøknad(fnr, søknad);
     }
 
-    @Step("[{søknad.søker.rolle}]: Sender inn søknad: {fnr}")
+    @Step("[{søknad.rolle}]: Sender inn søknad: {fnr}")
     private Saksnummer sendInnSøknad(Fødselsnummer fnr, SøknadDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
@@ -133,17 +124,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
-    @Step("Sender inn søknad: {fnr}")
-    private Saksnummer sendInnSøknad(Fødselsnummer fnr, no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
-        AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
-        var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
-        var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
-        mottakKlient.mellomlagreVedlegg(fnr, søknad);
-        mottakKlient.sendSøknad(fnr, søknad);
-        return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
-    }
-
-    @Step("[{søknad.søker.rolle}]: Sender inn endrignssøknad: {fnr}")
+    @Step("[{søknad.rolle}]: Sender inn endrignssøknad: {fnr}")
     private Saksnummer sendInnSøknad(Fødselsnummer fnr, EndringssøknadDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();

@@ -171,7 +171,7 @@ class Termin extends FpsakTestBase {
                         termindato.plusWeeks(21).minusDays(1), arbeidsgiveridentifikator1, 30)
         );
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
-                .medFordeling(fordeling)
+                .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -237,7 +237,7 @@ class Termin extends FpsakTestBase {
                 uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(15).minusDays(1))
         );
         var søknad = lagSøknadForeldrepengerTermin(termindato, MOR)
-                .medFordeling(fordeling)
+                .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 

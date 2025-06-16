@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.common.domain.felles.DokumentType;
-import no.nav.foreldrepenger.common.innsyn.MorsAktivitet;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.UttaksplanPeriodeDto;
+import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggInnsendingType;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.UtsettelsesPeriodeDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.UttaksPeriodeDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.UttaksplanDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.Uttaksplanperiode;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.svangerskapspenger.TilretteleggingbehovDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggInnsendingType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.svangerskapspenger.TilretteleggingbehovDto;
 
 public class VedleggMaler {
 
@@ -18,37 +21,43 @@ public class VedleggMaler {
     }
 
     public static VedleggDto dokumenterTermin(VedleggInnsendingType innsendingType) {
-        var dokumenterer = new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.Type.BARN, null, null);
+        var dokumenterer = new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.DokumentererType.BARN, null, null);
         return new VedleggDto(UUID.randomUUID(), DokumentType.I000141, innsendingType, null, dokumenterer);
     }
 
-    public static VedleggDto dokumenterUttak(List<UttaksplanPeriodeDto> uttaksplan, MorsAktivitet morsAktivitet, VedleggInnsendingType innsendingType) {
+    public static VedleggDto dokumenterUttak(UttaksplanDto uttaksplan, MorsAktivitet morsAktivitet, VedleggInnsendingType innsendingType) {
+        return dokumenterUttak(uttaksplan.uttaksperioder(), morsAktivitet, innsendingType);
+    }
+
+    public static VedleggDto dokumenterUttak(List<Uttaksplanperiode> uttaksplan, MorsAktivitet morsAktivitet, VedleggInnsendingType innsendingType) {
         var uttaksperiodeSomSkalDokumenteres = uttaksplan.stream()
-                .filter(uttaksperiode -> morsAktivitet.name().equals(uttaksperiode.morsAktivitetIPerioden()))
-                .map(uttaksperiode -> uttaksperiode.tidsperiode())
+                .filter(periode ->
+                        periode instanceof UttaksPeriodeDto uttak && morsAktivitet.equals(uttak.morsAktivitetIPerioden()) ||
+                        periode instanceof UtsettelsesPeriodeDto utsettelse && morsAktivitet.equals(utsettelse.morsAktivitetIPerioden()))
+                .map(uttaksperiode -> new ÅpenPeriodeDto(uttaksperiode.fom(), uttaksperiode.tom()))
                 .toList();
         if (uttaksperiodeSomSkalDokumenteres.isEmpty()) {
             throw new IllegalArgumentException("UTVIKLERFEIL: Uttaksplan har ingen perioder med morsAktivitet: " + morsAktivitet);
         }
         var dokumentTypeFraAktivitet = dokumentypeFraAktivitet(morsAktivitet);
-        var dokumenterer = new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.Type.UTTAK, null, uttaksperiodeSomSkalDokumenteres);
+        var dokumenterer = new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.DokumentererType.UTTAK, null, uttaksperiodeSomSkalDokumenteres);
         return new VedleggDto(UUID.randomUUID(), dokumentTypeFraAktivitet, innsendingType, null, dokumenterer);
     }
 
 
-    public static VedleggDto dokumenterUttak(UttaksplanPeriodeDto uttaksperiode, VedleggInnsendingType innsendingType) {
+    public static VedleggDto dokumenterUttak(UttaksPeriodeDto uttaksperiode, VedleggInnsendingType innsendingType) {
         if (uttaksperiode.morsAktivitetIPerioden() == null) {
             throw new IllegalArgumentException("UTVIKLERFEIL: Uttaksperiode må ha noe å dokumentere. Morsk aktivitet er null.");
         }
 
-        var dokumentTypeFraAktivitet = dokumentypeFraAktivitet(MorsAktivitet.valueOf(uttaksperiode.morsAktivitetIPerioden()));
-        var åpenPeriode = new ÅpenPeriodeDto(uttaksperiode.tidsperiode().fom(), uttaksperiode.tidsperiode().tom());
-        var dokumenterer = new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.Type.UTTAK, null, List.of(åpenPeriode));
+        var dokumentTypeFraAktivitet = dokumentypeFraAktivitet(uttaksperiode.morsAktivitetIPerioden());
+        var åpenPeriode = new ÅpenPeriodeDto(uttaksperiode.fom(), uttaksperiode.tom());
+        var dokumenterer = new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.DokumentererType.UTTAK, null, List.of(åpenPeriode));
         return new VedleggDto(UUID.randomUUID(), dokumentTypeFraAktivitet, innsendingType, null, dokumenterer);
     }
 
     public static VedleggDto dokumenterTilrettelegging(TilretteleggingbehovDto tilretteleggingbehovDto, VedleggInnsendingType innsendingType) {
-        var dokumenterer = new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.Type.TILRETTELEGGING, tilretteleggingbehovDto.arbeidsforhold(), null);
+        var dokumenterer = new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.DokumentererType.TILRETTELEGGING, tilretteleggingbehovDto.arbeidsforhold(), null);
         return new VedleggDto(UUID.randomUUID(), DokumentType.I000109, innsendingType, null, dokumenterer);
     }
 

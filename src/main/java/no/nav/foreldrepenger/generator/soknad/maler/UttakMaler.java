@@ -13,7 +13,8 @@ import java.util.List;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.UttaksplanPeriodeDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.UttaksplanDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.Uttaksplanperiode;
 
 /**
  * Fordeling == Uttaksplan
@@ -23,14 +24,14 @@ public final class UttakMaler {
     private UttakMaler() {
     }
 
-    public static List<UttaksplanPeriodeDto> fordelingHappyCase(LocalDate familehendelseDato, BrukerRolle søkerRolle) {
+    public static List<Uttaksplanperiode> fordelingHappyCase(LocalDate familehendelseDato, BrukerRolle søkerRolle) {
         if (søkerRolle == BrukerRolle.MOR) {
             return fordelingMorHappyCaseLong(familehendelseDato);
         }
         return fordelingFarHappyCase(familehendelseDato);
     }
 
-    public static List<UttaksplanPeriodeDto> fordelingMorHappyCase(LocalDate familehendelseDato) {
+    public static List<Uttaksplanperiode> fordelingMorHappyCase(LocalDate familehendelseDato) {
         return List.of(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, familehendelseDato, familehendelseDato.plusWeeks(10))
@@ -38,7 +39,7 @@ public final class UttakMaler {
     }
 
 
-    public static List<UttaksplanPeriodeDto> fordelingMorHappyCaseLong(LocalDate familehendelseDato) {
+    public static List<Uttaksplanperiode> fordelingMorHappyCaseLong(LocalDate familehendelseDato) {
         return List.of(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)),
                 uttaksperiode(MØDREKVOTE, familehendelseDato, familehendelseDato.plusWeeks(15).minusDays(1)),
@@ -46,26 +47,26 @@ public final class UttakMaler {
         );
     }
 
-    public static List<UttaksplanPeriodeDto> fordelingFarHappyCase(LocalDate familehendelseDato) {
+    public static List<Uttaksplanperiode> fordelingFarHappyCase(LocalDate familehendelseDato) {
         return List.of(
                 uttaksperiode(FELLESPERIODE, familehendelseDato.plusWeeks(3), familehendelseDato.plusWeeks(5))
         );
     }
 
-    public static List<UttaksplanPeriodeDto> fordelingEndringssøknadGradering(StønadskontoType stønadskonto, LocalDate fom, LocalDate tom, ArbeidsgiverIdentifikator identifikator, Integer arbeidstidsprosentIOrgnr) {
+    public static List<Uttaksplanperiode> fordelingEndringssøknadGradering(StønadskontoType stønadskonto, LocalDate fom, LocalDate tom, ArbeidsgiverIdentifikator identifikator, Integer arbeidstidsprosentIOrgnr) {
         return List.of(
                 graderingsperiodeArbeidstaker(stønadskonto, fom, tom, identifikator, arbeidstidsprosentIOrgnr)
         );
     }
 
-    public static List<UttaksplanPeriodeDto> fordelingFarAleneomsorg(LocalDate familehendelseDato) {
+    public static List<Uttaksplanperiode> fordelingFarAleneomsorg(LocalDate familehendelseDato) {
         return List.of(
                 uttaksperiode(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(20))
         );
                 //.erAnnenForelderInformert(false); // TODO
     }
 
-    public static List<UttaksplanPeriodeDto> fordelingMorAleneomsorgHappyCase(LocalDate familehendelseDato) {
+    public static List<Uttaksplanperiode> fordelingMorAleneomsorgHappyCase(LocalDate familehendelseDato) {
         return List.of(
                 uttaksperiode(FORELDREPENGER_FØR_FØDSEL, familehendelseDato.minusWeeks(3), familehendelseDato.minusDays(1)),
                 uttaksperiode(FORELDREPENGER, familehendelseDato, familehendelseDato.plusWeeks(100))
@@ -73,7 +74,7 @@ public final class UttakMaler {
                 // .erAnnenForelderInformert(false); // TODO
     }
 
-    public static List<UttaksplanPeriodeDto> fordeling(UttaksplanPeriodeDto... perioder) {
-        return List.of(perioder);
+    public static UttaksplanDto fordeling(Uttaksplanperiode... perioder) {
+        return new UttaksplanDto(null, List.of(perioder));
     }
 }

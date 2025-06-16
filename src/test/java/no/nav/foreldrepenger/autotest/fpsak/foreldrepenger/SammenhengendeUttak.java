@@ -89,7 +89,7 @@ class SammenhengendeUttak extends FpsakTestBase {
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødsel.plusWeeks(18), fødsel.plusWeeks(21).minusDays(1))
         );
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel(fødsel, BrukerRolle.MOR)
-                .medFordeling(fordelingMor)
+                .medUttaksplan(fordelingMor)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fpStartdato.minusWeeks(3));
         var saksnummer = mor.søk(søknad.build());
@@ -103,11 +103,11 @@ class SammenhengendeUttak extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         var vurderUttakDokumentasjonBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .godkjenn(utsettelseInstitusjsoppholdBarn.tidsperiode())
-                .godkjenn(utsettelseInstitusjsoppholdSøker.tidsperiode())
-                .godkjenn(utsettelseSykdom.tidsperiode())
-                .godkjenn(utsettelseHvØvelse.tidsperiode())
-                .godkjenn(utsettelseNavTiltak.tidsperiode());
+                .godkjenn(utsettelseInstitusjsoppholdBarn)
+                .godkjenn(utsettelseInstitusjsoppholdSøker)
+                .godkjenn(utsettelseSykdom)
+                .godkjenn(utsettelseHvØvelse)
+                .godkjenn(utsettelseNavTiltak);
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokumentasjonBekreftelse);
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
@@ -163,7 +163,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var opprinneligFordeling = UttakMaler.fordelingMorHappyCaseLong(fødselsdato);
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medFordeling(opprinneligFordeling)
+                .medUttaksplan(opprinneligFordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fpStartdato.minusWeeks(3))
                 .build();
@@ -281,7 +281,7 @@ class SammenhengendeUttak extends FpsakTestBase {
                 uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fødselsdato.minusWeeks(3), fødselsdato.minusDays(1)),
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medFordeling(fordeling)
+                .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fpStartdato.minusWeeks(3))
                 .build();
@@ -378,7 +378,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         );
 
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medFordeling(fordeling)
+                .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fødselsdato)
                 .build();

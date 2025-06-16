@@ -17,10 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -31,6 +27,7 @@ import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -48,8 +45,9 @@ import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Stønadskont
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
@@ -309,8 +307,8 @@ class BeregningVerdikjede extends FpsakTestBase {
                 graderingsperiodeSN(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1), 50)
         );
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medSøker(new SøkerBuilder(BrukerRolle.MOR).medSelvstendigNæringsdrivendeInformasjon(List.of(opptjening)).build())
-                .medFordeling(fordeling)
+                .medSelvstendigNæringsdrivendeInformasjon(opptjening)
+                .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -325,15 +323,15 @@ class BeregningVerdikjede extends FpsakTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
         // FORDEL BEREGNINGSGRUNNLAG //
-        var graderingsperiode = fordeling.get(2);
+        var graderingsperiode = fordeling.uttaksperioder().get(2);
         var fordelBeregningsgrunnlagBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new FordelBeregningsgrunnlagBekreftelse())
-                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.tidsperiode().fom(), 500_000, 500_000,
+                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.fom(), 500_000, 500_000,
                         Inntektskategori.ARBEIDSTAKER, 1)
-                .settFastsattBeløpOgInntektskategori(graderingsperiode.tidsperiode().fom(), 235_138, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2)
-                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.tidsperiode().tom().plusDays(1), 720_000, 720_000,
+                .settFastsattBeløpOgInntektskategori(graderingsperiode.fom(), 235_138, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2)
+                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.tom().plusDays(1), 720_000, 720_000,
                         Inntektskategori.ARBEIDSTAKER, 1)
-                .settFastsattBeløpOgInntektskategori(graderingsperiode.tidsperiode().tom().plusDays(1), 0, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2);
+                .settFastsattBeløpOgInntektskategori(graderingsperiode.tom().plusDays(1), 0, Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2);
         saksbehandler.bekreftAksjonspunkt(fordelBeregningsgrunnlagBekreftelse);
 
         // FORESLÅ VEDTAK //
@@ -482,7 +480,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var opptjening = OpptjeningMaler.frilansOpptjening();
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medSøker(new SøkerBuilder(BrukerRolle.MOR).medFrilansInformasjon(opptjening).build())
+                .medFrilansInformasjon(opptjening)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -608,7 +606,6 @@ class BeregningVerdikjede extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
-                .medSøker(new SøkerBuilder(BrukerRolle.MOR).build())
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 

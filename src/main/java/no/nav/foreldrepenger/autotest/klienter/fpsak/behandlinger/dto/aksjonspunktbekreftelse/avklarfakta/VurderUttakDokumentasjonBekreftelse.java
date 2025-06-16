@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.LukketPeriodeMedVedlegg;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.Uttaksplanperiode;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
 
 public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse {
@@ -34,6 +35,10 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
+    public VurderUttakDokumentasjonBekreftelse godkjenn(Uttaksplanperiode uttaksplanperiode) {
+        vurder(GODKJENT, null, null, uttaksplanperiode.fom(), uttaksplanperiode.tom());
+        return this;
+    }
     public VurderUttakDokumentasjonBekreftelse godkjenn(ÅpenPeriodeDto åpenPeriodeDto) {
         vurder(GODKJENT, null, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());
         return this;
@@ -47,6 +52,10 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
     public VurderUttakDokumentasjonBekreftelse godkjenn(LukketPeriodeMedVedlegg periode) {
         vurder(GODKJENT, null, periode);
         return this;
+    }
+
+    public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(Uttaksplanperiode periode) {
+        return ikkeGodkjenn(new ÅpenPeriodeDto(periode.fom(), periode.tom()));
     }
 
     public VurderUttakDokumentasjonBekreftelse ikkeGodkjenn(LukketPeriodeMedVedlegg periode) {
@@ -74,6 +83,11 @@ public class VurderUttakDokumentasjonBekreftelse extends AksjonspunktBekreftelse
         return this;
     }
 
+
+    public VurderUttakDokumentasjonBekreftelse ikkeDokumentert(Uttaksplanperiode uttaksplanperiode) {
+        vurder(IKKE_DOKUMENTERT, null, null, uttaksplanperiode.fom(), uttaksplanperiode.tom());
+        return this;
+    }
 
     public VurderUttakDokumentasjonBekreftelse ikkeDokumentert(ÅpenPeriodeDto åpenPeriodeDto) {
         vurder(IKKE_DOKUMENTERT, null, null, åpenPeriodeDto.fom(), åpenPeriodeDto.tom());

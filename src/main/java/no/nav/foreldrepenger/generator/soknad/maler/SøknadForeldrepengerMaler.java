@@ -7,8 +7,7 @@ import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenge
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.AnnenforelderBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.ForeldrepengerBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.MedlemsskapMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.UtenlandsoppholdMaler;
 
 public final class SøknadForeldrepengerMaler {
 
@@ -17,10 +16,10 @@ public final class SøknadForeldrepengerMaler {
 
     private static ForeldrepengerBuilder lagSøknadForeldrepenger(LocalDate familiehendelse, BrukerRolle brukerRolle) {
         return new ForeldrepengerBuilder()
-                .medFordeling(UttakMaler.fordelingHappyCase(familiehendelse, brukerRolle))
+                .medRolle(brukerRolle)
+                .medUttaksplan(UttakMaler.fordelingHappyCase(familiehendelse, brukerRolle))
                 .medDekningsgrad(Dekningsgrad.HUNDRE)
-                .medMedlemsskap(MedlemsskapMaler.medlemsskapNorge())
-                .medSøker(new SøkerBuilder(brukerRolle).build())
+                .medUtenlandsopphold(UtenlandsoppholdMaler.oppholdBareINorge())
                 .medAnnenForelder(AnnenforelderBuilder.ukjentForelder());
     }
 
@@ -43,7 +42,6 @@ public final class SøknadForeldrepengerMaler {
         return lagSøknadForeldrepenger(termindato, brukerRolle)
             .medBarn(BarnBuilder.fødsel(1, fødselsdato)
                     .medTermindato(termindato)
-                    .medTerminbekreftelseDato(termindato.minusMonths(1))
                     .build());
     }
 

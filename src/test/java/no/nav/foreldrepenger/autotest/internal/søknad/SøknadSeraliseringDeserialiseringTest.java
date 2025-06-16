@@ -19,11 +19,10 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.MedlemsskapMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBehovBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBehovBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.ArbeidsforholdMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.UtenlandsoppholdMaler;
 
 public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBase {
 
@@ -36,11 +35,6 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
     }
 
     @Test
-    public void søkerTest() {
-        test(foreldrepengesøknad.søker());
-    }
-
-    @Test
     public void foreldrepengerYtelseTest() {
         test(foreldrepengesøknad);
     }
@@ -49,10 +43,10 @@ public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBas
     public void foreldrepengersøknadTest() {
         test(foreldrepengesøknad);
         test(lagSøknadForeldrepengerTermin(LocalDate.now().minusWeeks(4), MOR)
-                .medMedlemsskap(MedlemsskapMaler.medlemskapUtlandetForrige12mnd())
+                .medUtenlandsopphold(UtenlandsoppholdMaler.oppholdIUtlandetForrige12mnd())
                 .build());
         test(lagSøknadForeldrepengerAdopsjon(LocalDate.now(), MOR, true)
-                .medSøker(new SøkerBuilder(MOR).medSelvstendigNæringsdrivendeInformasjon(List.of(OpptjeningMaler.egenNaeringOpptjening("992261005"))).build())
+                .medSelvstendigNæringsdrivendeInformasjon(OpptjeningMaler.egenNaeringOpptjening("992261005"))
                 .build());
     }
 

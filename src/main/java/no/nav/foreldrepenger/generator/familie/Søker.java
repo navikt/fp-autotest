@@ -27,11 +27,10 @@ import no.nav.foreldrepenger.common.domain.Søknad;
 import no.nav.foreldrepenger.common.domain.felles.DokumentType;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggInnsendingType;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadForeldrepengerDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.VedleggInnsendingType;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
@@ -48,7 +47,7 @@ public abstract class Søker {
     private Innsyn innsyn;
     private Saksnummer saksnummer = null;
     private SøknadDto førstegangssøknad = null;
-    private no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto førstegangssøknadV2 = null;
+    private no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto førstegangssøknadV2 = null;
 
     Søker(Fødselsnummer fødselsnummer, AktørId aktørId, AktørId aktørIdAnnenpart, InntektYtelseModell inntektYtelseModell, Innsender innsender) {
         this.fødselsnummer = fødselsnummer;
@@ -211,15 +210,6 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
-    public Saksnummer søk(no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad) {
-        genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
-        this.førstegangssøknadV2 = søknad;
-        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, null);
-        LOG.info("Søknad sendt inn og behandling opprettet på {}", this.saksnummer.value());
-        return this.saksnummer;
-    }
-
     public Saksnummer søk(SøknadDto søknad, Saksnummer saksnummer) {
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
@@ -229,18 +219,9 @@ public abstract class Søker {
         return this.saksnummer;
     }
 
-    public Saksnummer søk(no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.dto.SøknadDto søknad, Saksnummer saksnummer) {
-        genererUniktNavConsumerIdForDokument();
-        LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
-        this.førstegangssøknadV2 = søknad;
-        this.saksnummer = innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
-        LOG.info("Søknad sendt inn og behandling opprettet på fagsak {}", saksnummer.value());
-        return this.saksnummer;
-    }
-
     public Saksnummer søk(EndringssøknadDto søknad) {
         genererUniktNavConsumerIdForDokument();
-        this.saksnummer = ((EndringssøknadForeldrepengerDto) søknad).saksnummer();
+        this.saksnummer = søknad.saksnummer();
         LOG.info("Sender inn endringssøknadsøknad for {} med saksnummer {} ...", fødselsnummer.value(), this.saksnummer);
         innsender.sendInnSøknad(søknad, aktørId, fødselsnummer, aktørIdAnnenpart, saksnummer);
         LOG.info("Endringssøknad sendt inn og fagsak {} er oppdatert", saksnummer.value());

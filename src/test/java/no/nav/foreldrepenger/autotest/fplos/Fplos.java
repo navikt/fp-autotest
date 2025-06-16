@@ -17,8 +17,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -32,6 +30,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderPerioderOpptjeningBekreftelse;
@@ -50,10 +49,9 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SøkerBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBehovBuilder;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.builder.TilretteleggingBehovBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.v2.util.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fplos")
@@ -126,9 +124,9 @@ class Fplos extends FpsakTestBase {
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
                 graderingsperiodeSN(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
                         50));
-        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR).medSøker(
-                        new SøkerBuilder(BrukerRolle.MOR).medSelvstendigNæringsdrivendeInformasjon(List.of(opptjening)).build())
-                .medFordeling(fordeling)
+        var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
+                .medSelvstendigNæringsdrivendeInformasjon(opptjening)
+                .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
@@ -141,15 +139,15 @@ class Fplos extends FpsakTestBase {
         debugLoggBehandling(saksbehandler.valgtBehandling);
 
         // FORDEL BEREGNINGSGRUNNLAG //
-        var graderingsperiode = fordeling.get(2);
+        var graderingsperiode = fordeling.uttaksperioder().get(2);
         var fordelBeregningsgrunnlagBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new FordelBeregningsgrunnlagBekreftelse())
-                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.tidsperiode().fom(), 500_000, 500_000,
+                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.fom(), 500_000, 500_000,
                         Inntektskategori.ARBEIDSTAKER, 1)
-                .settFastsattBeløpOgInntektskategori(graderingsperiode.tidsperiode().fom(), 235_138,
+                .settFastsattBeløpOgInntektskategori(graderingsperiode.fom(), 235_138,
                         Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2)
-                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.tidsperiode().tom().plusDays(1), 720_000, 720_000,
+                .settFastsattBeløpOgInntektskategoriMedRefusjon(graderingsperiode.tom().plusDays(1), 720_000, 720_000,
                         Inntektskategori.ARBEIDSTAKER, 1)
-                .settFastsattBeløpOgInntektskategori(graderingsperiode.tidsperiode().tom().plusDays(1), 0,
+                .settFastsattBeløpOgInntektskategori(graderingsperiode.tom().plusDays(1), 0,
                         Inntektskategori.SELVSTENDIG_NÆRINGSDRIVENDE, 2);
         var oppgaverFør = saksbehandler.hentLosOppgaver(saksnummer);
         assertThat(oppgaverFør).first()

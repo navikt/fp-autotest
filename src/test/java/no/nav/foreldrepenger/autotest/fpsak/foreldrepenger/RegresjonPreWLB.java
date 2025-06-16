@@ -91,7 +91,7 @@ class RegresjonPreWLB extends FpsakTestBase {
                 uttaksperiode3
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
-                .medFordeling(fordeling)
+                .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.annenpartIkkeRettOgMorHarUføretrygd(familie.mor()))
                 .medMottattdato(fødselsdato);
         var saksnummer = far.søk(søknad.build());
@@ -109,10 +109,10 @@ class RegresjonPreWLB extends FpsakTestBase {
 
         var kontrollerAktivitetskravBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .ikkeDokumentert(uttaksperiode1.tidsperiode())
-                .ikkeDokumentert(utsettelsesperiode1.tidsperiode())
-                .ikkeDokumentert(uttaksperiode2.tidsperiode())
-                .ikkeDokumentert(utsettelsesperiode2.tidsperiode())
+                .ikkeDokumentert(uttaksperiode1)
+                .ikkeDokumentert(utsettelsesperiode1)
+                .ikkeDokumentert(uttaksperiode2)
+                .ikkeDokumentert(utsettelsesperiode2)
                 .setBegrunnelse("Mor er ikke i aktivtet i perioden som det søkes om, med unntak av siste periode som søkes uten aktivitetskrav");
         saksbehandler.bekreftAksjonspunkt(kontrollerAktivitetskravBekreftelse);
 
@@ -196,7 +196,7 @@ class RegresjonPreWLB extends FpsakTestBase {
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(20), fødselsdato.plusWeeks(26).minusDays(1), ARBEID)
         );
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
-                .medFordeling(fordeling)
+                .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medMottattdato(fødselsdato);
         var saksnummer = far.søk(søknad.build());
@@ -212,13 +212,13 @@ class RegresjonPreWLB extends FpsakTestBase {
 
         var avklarFaktaUttakPerioder = saksbehandler
                 .hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
-                .ikkeGodkjenn(uttaksperiodeIfmFødsel.tidsperiode())
+                .ikkeGodkjenn(uttaksperiodeIfmFødsel)
                 .godkjennMorsAktivitet(VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov.Behov.Årsak.AKTIVITETSKRAV_ARBEID);
         saksbehandler.bekreftAksjonspunkt(avklarFaktaUttakPerioder);
 
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new FastsettUttaksperioderManueltBekreftelse())
-                .avslåPeriode(uttaksperiodeIfmFødsel.tidsperiode().fom(), uttaksperiodeIfmFødsel.tidsperiode().tom(), DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
+                .avslåPeriode(uttaksperiodeIfmFødsel.fom(), uttaksperiodeIfmFødsel.tom(), DEN_ANDRE_PART_SYK_SKADET_IKKE_OPPFYLT);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());

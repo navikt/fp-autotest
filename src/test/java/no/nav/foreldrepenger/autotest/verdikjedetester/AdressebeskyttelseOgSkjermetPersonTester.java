@@ -68,7 +68,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
                 .build();
         var termindato = LocalDate.now().minusWeeks(2);
         var søknadMor = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medFordeling(List.of(
+                .medUttaksplan(List.of(
                         uttaksperiode(FORELDREPENGER_FØR_FØDSEL, termindato.minusWeeks(3), termindato.minusDays(1)),
                         uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1))
                 ))
@@ -92,7 +92,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
 
         var far = familie.far();
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
-                .medFordeling(List.of(
+                .medUttaksplan(List.of(
                         uttaksperiode(FEDREKVOTE, termindato, termindato.plusWeeks(1).minusDays(1), 100, UttaksperiodeType.SAMTIDIGUTTAK),
                         uttaksperiode(FEDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1))
                 ))
