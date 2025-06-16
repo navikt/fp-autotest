@@ -25,6 +25,11 @@ public class AnnenforelderMaler {
     }
 
     public static AnnenForelderDto annenpartIkkeRettOgMorHarUføretrygd(Søker søker) {
-        return AnnenforelderBuilder.aleneomsorgAnnenpartIkkeRettOgMorHarUføretrygd(søker.fødselsnummer()).build();
+        return new AnnenforelderBuilder.NorskForelderBuilder(søker.fødselsnummer())
+                .medErAleneOmOmsorg(false)
+                .medHarRettPåForeldrepenger(false)
+                .medErInformertOmSøknaden(true)
+                .medHarMorUføretrygd(true)
+                .build();
     }
 }
