@@ -172,7 +172,7 @@ class BeregningVerdikjede extends FpsakTestBase {
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(2), 10_000)
-                                .arbeidsforhold(LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(12))
+                                .arbeidsforhold(LocalDate.now().minusMonths(10), LocalDate.now().plusMonths(12))
                                 .build())
                         .build())
                 .forelder(far().build())
