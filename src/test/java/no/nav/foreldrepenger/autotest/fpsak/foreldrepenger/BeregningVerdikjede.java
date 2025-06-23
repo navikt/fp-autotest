@@ -118,7 +118,6 @@ class BeregningVerdikjede extends FpsakTestBase {
                         0));
     }
 
-    @Disabled("flaky")
     @Test
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som tilkommer etter skjæringstidspunktet")
     void morSøkerFødselMedFullAAPOgArbeidsforhold() {
@@ -167,6 +166,7 @@ class BeregningVerdikjede extends FpsakTestBase {
                 lagBGAndelMedFordelt(arbeidsgiver.arbeidsgiverIdentifikator(), 0, totaltBg, totaltBg, inntektPerMåned * 12));
     }
 
+    @Disabled("flaky")
     @Test
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som ikke skal benyttes.")
     void morSøkerFødselMedFullAAPOgArbeidsforholdSomErAktivtPåStp() {
