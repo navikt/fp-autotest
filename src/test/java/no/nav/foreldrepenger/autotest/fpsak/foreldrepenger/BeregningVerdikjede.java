@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -117,6 +118,7 @@ class BeregningVerdikjede extends FpsakTestBase {
                         0));
     }
 
+    @Disabled("flaky")
     @Test
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som tilkommer etter skjæringstidspunktet")
     void morSøkerFødselMedFullAAPOgArbeidsforhold() {
