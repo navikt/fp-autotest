@@ -171,7 +171,7 @@ class BeregningVerdikjede extends FpsakTestBase {
                 lagBGAndelMedFordelt(arbeidsgiver.arbeidsgiverIdentifikator(), 0, totaltBg, totaltBg, inntektPerMåned * 12));
     }
 
-    @Disabled("flaky")
+
     @Test
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som ikke skal benyttes.")
     void morSøkerFødselMedFullAAPOgArbeidsforholdSomErAktivtPåStp() {
@@ -203,6 +203,7 @@ class BeregningVerdikjede extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
          //AVKLAR AKTIVITETER
+        assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.AVKLAR_AKTIVITETER)).isTrue();
                 var avklarAktiviteterBekreftelse = saksbehandler
                     .hentAksjonspunktbekreftelse(new AvklarAktiviteterBekreftelse())
                     .setSkalBrukes(true, arbeidsgiverIdentifikator);
