@@ -17,13 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
-import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
-
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -34,6 +28,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -202,17 +197,14 @@ class BeregningVerdikjede extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-         //AVKLAR AKTIVITETER
-        assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.AVKLAR_AKTIVITETER)).isTrue();
-                var avklarAktiviteterBekreftelse = saksbehandler
-                    .hentAksjonspunktbekreftelse(new AvklarAktiviteterBekreftelse())
-                    .setSkalBrukes(true, arbeidsgiverIdentifikator);
-            saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse);
+        //AVKLAR AKTIVITETER
+        var avklarAktiviteterBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new AvklarAktiviteterBekreftelse())
+                .setSkalBrukes(true, arbeidsgiverIdentifikator);
+        saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse);
 
-         // FAKTA BEREGNING //
-        var vurderFaktaOmBeregningBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
-                    .leggTilMånedsinntektArbeidUnderAAP(10_000)
+        // FAKTA BEREGNING //
+        var vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
+                .leggTilMånedsinntektArbeidUnderAAP(10_000)
                 .setBegrunnelse("Endret av Autotest.");
         saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
 
