@@ -17,6 +17,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
+import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -166,7 +171,7 @@ class BeregningVerdikjede extends FpsakTestBase {
                 lagBGAndelMedFordelt(arbeidsgiver.arbeidsgiverIdentifikator(), 0, totaltBg, totaltBg, inntektPerMåned * 12));
     }
 
-    @Disabled("flaky")
+
     @Test
     @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som ikke skal benyttes.")
     void morSøkerFødselMedFullAAPOgArbeidsforholdSomErAktivtPåStp() {
@@ -196,6 +201,13 @@ class BeregningVerdikjede extends FpsakTestBase {
         arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
+
+         //AVKLAR AKTIVITETER
+        assertThat(saksbehandler.harAksjonspunkt(AksjonspunktKoder.AVKLAR_AKTIVITETER)).isTrue();
+                var avklarAktiviteterBekreftelse = saksbehandler
+                    .hentAksjonspunktbekreftelse(new AvklarAktiviteterBekreftelse())
+                    .setSkalBrukes(true, arbeidsgiverIdentifikator);
+            saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse);
 
          // FAKTA BEREGNING //
         var vurderFaktaOmBeregningBekreftelse = saksbehandler
