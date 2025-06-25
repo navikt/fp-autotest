@@ -513,6 +513,7 @@ public class Saksbehandler {
     }
 
     public <T extends AksjonspunktBekreftelse> T hentAksjonspunktbekreftelse(T bekreftelse) {
+        hentAksjonspunkt(bekreftelse.aksjonspunktKode()); //Henter for å kaste exception hvis aksjonspunkt ikke finnes
         bekreftelse.oppdaterMedDataFraBehandling(valgtFagsak, valgtBehandling);
         return bekreftelse;
     }
