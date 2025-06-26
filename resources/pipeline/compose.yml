@@ -586,6 +586,7 @@ services:
       INNTEKTSMELDING_SKJEMA_LENKE: http://localhost:9300/fp-im-dialog
       DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
       ALTINN_TRE_BASE_URL: http://localhost:8060/rest/dummy/altinn-tre
+      ALTINN_TRE_TOKEN_EXCHANGE_PATH: http://localhost:8060/rest/dummy/altinn-tre/authentication/api/v1/exchange/maskinporten
       ALTINN_TRE_INNTEKTSMELDING_RESSURS: nav_foreldrepenger_inntektsmelding
     env_file:
       - *common-properties
