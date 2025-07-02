@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum OpptjeningAktivitetType {
     AAP,
     ARBEID,
-    ARBEID_UNDER_AAP,
     DAGPENGER,
     FORELDREPENGER,
     ETTERLØNN_SLUTTPAKKE,

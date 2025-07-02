@@ -62,12 +62,6 @@ public class VurderFaktaOmBeregningBekreftelse extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public VurderFaktaOmBeregningBekreftelse leggTilMånedsinntektArbeidUnderAAP(int maanedsinntekt) {
-        fakta.leggTilMaanedsinntektArbeidUnderAAP(maanedsinntekt);
-        fakta.leggTilFaktaOmBeregningTilfeller(FaktaOmBeregningTilfelle.FASTSETT_INNTEKT_FOR_ARBEID_UNDER_AAP);
-        return this;
-    }
-
     public VurderFaktaOmBeregningBekreftelse leggTilAndelerYtelse(double beløp, Inntektskategori inntektskategori) {
         fakta.leggTilAndelerYtelse(beløp, inntektskategori);
         return this;

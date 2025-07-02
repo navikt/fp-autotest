@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
-import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
@@ -197,38 +196,26 @@ class BeregningVerdikjede extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        //AVKLAR AKTIVITETER
-        var avklarAktiviteterBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new AvklarAktiviteterBekreftelse())
-                .setSkalBrukes(true, arbeidsgiverIdentifikator);
+        // AVKLAR AKTIVITETER //
+        var avklarAktiviteterBekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(new AvklarAktiviteterBekreftelse())
+                .setSkalBrukes(false, arbeidsgiverIdentifikator);
         saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse);
 
-        // FAKTA BEREGNING //
-        var vurderFaktaOmBeregningBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderFaktaOmBeregningBekreftelse())
-                .leggTilMånedsinntektArbeidUnderAAP(10_000)
-                .setBegrunnelse("Endret av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(vurderFaktaOmBeregningBekreftelse);
-
-         // AVVIKSVURDERING  //
-        var andelArbeid = getAndelsnr(saksbehandler.valgtBehandling.getBeregningsgrunnlag(), OpptjeningAktivitetType.ARBEID);
-        var andelArbeidUnderAAP = getAndelsnr(saksbehandler.valgtBehandling.getBeregningsgrunnlag(), OpptjeningAktivitetType.ARBEID_UNDER_AAP);
-        var vurderBeregnetInntektsAvvikBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(
-                new VurderBeregnetInntektsAvvikBekreftelse()).leggTilInntekt(månedsinntekt * 12, andelArbeid).leggTilInntekt(120_000, andelArbeidUnderAAP).setBegrunnelse("Begrunnelse");
-        saksbehandler.bekreftAksjonspunkt(vurderBeregnetInntektsAvvikBekreftelse);
+        // FORDEL BEREGNINGSGRUNNLAG //
+        var aapAndel = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
+                .getBeregningsgrunnlagPeriode(0)
+                .getBeregningsgrunnlagPrStatusOgAndel()
+                .stream().filter(a -> a.getAndelsnr() == 1)
+                .findFirst().orElseThrow();
+        var totaltBg = aapAndel.getBeregnetPrAar();
 
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
-        var andeler = saksbehandler.valgtBehandling.getBeregningsgrunnlag().getBeregningsgrunnlagPerioder().getFirst().getBeregningsgrunnlagPrStatusOgAndel();
-
-        var aapAndel = andeler.stream().filter(a -> a.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)).findFirst().orElseThrow();
-        assertThat(aapAndel.getBruttoPrAar()).isEqualTo(260_000);
-        assertThat(aapAndel.getBeregnetPrAar()).isEqualTo(260_000);
-
-        var arbeidsforholdAndel = andeler.stream().filter(a -> a.getAndelsnr() == andelArbeid).findFirst().orElseThrow();
-        assertThat(arbeidsforholdAndel.getBruttoPrAar()).isEqualTo(månedsinntekt * 12);
-        assertThat(arbeidsforholdAndel.getBeregnetPrAar()).isEqualTo(månedsinntekt * 12);
-
-        var arbeidUnderAAPAndel = andeler.stream().filter(a -> a.getAndelsnr() == andelArbeidUnderAAP).findFirst().orElseThrow();
-        assertThat(arbeidUnderAAPAndel.getBruttoPrAar()).isEqualTo(120_000);
-        assertThat(arbeidUnderAAPAndel.getBeregnetPrAar()).isEqualTo(120_000);
+        var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
+        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
+                lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().getKode(), (int) totaltBg, 0, 0));
+        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
+                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 0, (int) totaltBg, totaltBg, månedsinntekt * 12));
     }
 
 
@@ -659,9 +646,6 @@ class BeregningVerdikjede extends FpsakTestBase {
     }
 
     private boolean matchAndel(BGAndelHelper andelHelper, BeregningsgrunnlagPrStatusOgAndelDto andel) {
-        if (andelHelper.andelsnr != 0) {
-            return andelHelper.andelsnr == andel.getAndelsnr();
-        }
         return andelTilhørerArbeidsgiverMedId(andelHelper, andel)
                 || andelTilhørerAktivitetMedStatus(andelHelper, andel);
     }
@@ -669,17 +653,6 @@ class BeregningVerdikjede extends FpsakTestBase {
     private boolean andelTilhørerAktivitetMedStatus(BGAndelHelper bgAndelHelper,
                                                     BeregningsgrunnlagPrStatusOgAndelDto andel) {
         return andel.getAktivitetStatus().getKode().equals(bgAndelHelper.aktivitetstatus);
-    }
-
-    private Integer getAndelsnr(Beregningsgrunnlag beregningsgrunnlag, OpptjeningAktivitetType type) {
-        return beregningsgrunnlag.getBeregningsgrunnlagPerioder()
-                .getFirst()
-                .getBeregningsgrunnlagPrStatusOgAndel()
-                .stream()
-                .filter(a -> a.getArbeidsforhold() != null && Objects.equals(a.getArbeidsforhold().getArbeidsforholdType(), type))
-                .map(BeregningsgrunnlagPrStatusOgAndelDto::getAndelsnr)
-                .findFirst()
-                .orElseThrow();
     }
 
     private void assertAndeler(BeregningsgrunnlagPrStatusOgAndelDto andel, BGAndelHelper BGAndelHelper) {
@@ -706,15 +679,6 @@ class BeregningVerdikjede extends FpsakTestBase {
         andel.bruttoPrÅr = bruttoPrÅr;
         andel.naturalytelseBortfaltPrÅr = bortfaltNaturalytelseBeløp;
         andel.refusjonPrÅr = refusjonskravPrÅr;
-        return andel;
-    }
-
-    private BGAndelHelper lagBGAndelForAndelsnr(long andelsnr, double beregnetPrÅr, double bruttoPrÅr, double refusjonPrÅr) {
-        var andel = new BGAndelHelper();
-        andel.andelsnr = andelsnr;
-        andel.beregnetPrÅr = beregnetPrÅr;
-        andel.bruttoPrÅr = bruttoPrÅr;
-        andel.refusjonPrÅr = refusjonPrÅr;
         return andel;
     }
 
@@ -769,7 +733,6 @@ class BeregningVerdikjede extends FpsakTestBase {
         private double beregnetPrÅr;
         private double fordeltPrÅr;
         private double refusjonPrÅr;
-        private double andelsnr;
         private double naturalytelseBortfaltPrÅr;
         private String arbeidsgiverId;
     }
