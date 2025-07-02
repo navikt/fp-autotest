@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 public class FaktaOmBeregningLagreDto {
 
     protected FastsettMaanedsinntektFL fastsettMaanedsinntektFL;
-    protected FastsettMaanedsinntektArbeidUnderAAP fastsettArbeidUnderAap;
     protected FastsettMaanedsinntektUtenInntektsmelding fastsattUtenInntektsmelding;
     protected List<FaktaOmBeregningTilfelle> faktaOmBeregningTilfeller = new ArrayList<>();
     protected MottarYtelse mottarYtelse;
@@ -81,11 +80,6 @@ public class FaktaOmBeregningLagreDto {
 
     public FaktaOmBeregningLagreDto leggTilMaanedsinntektFL(int maanedsinntekt) {
         fastsettMaanedsinntektFL = new FastsettMaanedsinntektFL(maanedsinntekt);
-        return this;
-    }
-
-    public FaktaOmBeregningLagreDto leggTilMaanedsinntektArbeidUnderAAP(int maanedsinntekt) {
-        fastsettArbeidUnderAap = new FastsettMaanedsinntektArbeidUnderAAP(maanedsinntekt);
         return this;
     }
 
