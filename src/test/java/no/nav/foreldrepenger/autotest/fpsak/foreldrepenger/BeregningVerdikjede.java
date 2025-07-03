@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.AktivitetStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AvklarAktiviteterBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FordelBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -167,13 +166,13 @@ class BeregningVerdikjede extends FpsakTestBase {
 
 
     @Test
-    @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold som ikke skal benyttes.")
+    @DisplayName("Mor søker fødsel med full AAP og et arbeidsforhold.")
     void morSøkerFødselMedFullAAPOgArbeidsforholdSomErAktivtPåStp() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny()
                                 .arena(ArenaSakerDto.YtelseTema.AAP, LocalDate.now().minusMonths(12), LocalDate.now().plusMonths(2), 10_000)
-                                .arbeidsforhold(LocalDate.now().minusMonths(10), LocalDate.now().plusMonths(12))
+                                .arbeidsforhold(LocalDate.now().minusMonths(15), LocalDate.now().plusMonths(12), 450_000)
                                 .build())
                         .build())
                 .forelder(far().build())
@@ -191,31 +190,26 @@ class BeregningVerdikjede extends FpsakTestBase {
         var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
         var månedsinntekt = mor.månedsinntekt(arbeidsgiverIdentifikator);
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
-                .medRefusjonBeløpPerMnd(månedsinntekt);
+                .medRefusjonBeløpPerMnd(månedsinntekt)
+                .medBeregnetInntekt(månedsinntekt);
         arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
 
-        // AVKLAR AKTIVITETER //
-        var avklarAktiviteterBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarAktiviteterBekreftelse())
-                .setSkalBrukes(false, arbeidsgiverIdentifikator);
-        saksbehandler.bekreftAksjonspunkt(avklarAktiviteterBekreftelse);
-
-        // FORDEL BEREGNINGSGRUNNLAG //
-        var aapAndel = saksbehandler.valgtBehandling.getBeregningsgrunnlag()
-                .getBeregningsgrunnlagPeriode(0)
-                .getBeregningsgrunnlagPrStatusOgAndel()
-                .stream().filter(a -> a.getAndelsnr() == 1)
-                .findFirst().orElseThrow();
-        var totaltBg = aapAndel.getBeregnetPrAar();
-
         // ASSERT FASTSATT BEREGNINGSGRUNNLAG //
         var beregningsgrunnlag = saksbehandler.valgtBehandling.getBeregningsgrunnlag();
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
-                lagBGAndelMedFordelt(aapAndel.getAktivitetStatus().getKode(), (int) totaltBg, 0, 0));
-        verifiserAndelerIPeriode(beregningsgrunnlag.getBeregningsgrunnlagPeriode(0),
-                lagBGAndelMedFordelt(arbeidsgiverIdentifikator, 0, (int) totaltBg, totaltBg, månedsinntekt * 12));
+        var arbeidsandel = beregningsgrunnlag.getBeregningsgrunnlagPeriode(0)
+                .getBeregningsgrunnlagPrStatusOgAndel()
+                .stream()
+                .filter(a -> a.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSTAKER))
+                .findFirst().orElseThrow();
+        var aapAndel = beregningsgrunnlag.getBeregningsgrunnlagPeriode(0)
+                .getBeregningsgrunnlagPrStatusOgAndel()
+                .stream()
+                .filter(a -> a.getAktivitetStatus().equals(AktivitetStatus.ARBEIDSAVKLARINGSPENGER))
+                .findFirst().orElseThrow();
+        assertThat(arbeidsandel.getDagsats()).isEqualTo(1731);
+        assertThat(aapAndel.getDagsats()).isEqualTo(1000);
     }
 
 
