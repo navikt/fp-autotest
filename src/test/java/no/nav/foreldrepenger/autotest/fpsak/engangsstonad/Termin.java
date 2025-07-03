@@ -22,7 +22,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.SjekkManglendeFødsel;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkTerminbekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -56,20 +56,18 @@ class Termin extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
-        avklarFaktaTerminBekreftelse
-                .setAntallBarn(1)
+
+        var sjekkTerminbekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new SjekkTerminbekreftelse())
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
+        saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
 
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
         beslutter.hentFagsak(saksnummer);
 
         FatterVedtakBekreftelse bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
-        bekreftelse.godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_TERMINBEKREFTELSE));
+        bekreftelse.godkjennAksjonspunkt(saksbehandler.hentAksjonspunkt(AksjonspunktKoder.SJEKK_TERMINBEKREFTELSE));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         assertThat(beslutter.valgtBehandling.behandlingsresultat.type())
@@ -100,13 +98,11 @@ class Termin extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
-        avklarFaktaTerminBekreftelse
-                .setAntallBarn(1)
+        var sjekkTerminbekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(new SjekkTerminbekreftelse())
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
+        saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
 
         overstyrer.hentFagsak(saksnummer);
 
@@ -151,13 +147,11 @@ class Termin extends FpsakTestBase {
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        AvklarFaktaTerminBekreftelse avklarFaktaTerminBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
-        avklarFaktaTerminBekreftelse
-                .setAntallBarn(1)
+        var sjekkTerminbekreftelse = saksbehandler
+                .hentAksjonspunktbekreftelse(new SjekkTerminbekreftelse())
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
+        saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
 
         assertThat(saksbehandler.valgtBehandling.behandlingsresultat.type())
                 .as("Behandlingsresultat")
