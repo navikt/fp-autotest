@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
@@ -413,10 +413,9 @@ class BeregningVerdikjede extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
 
         // FAKTA OM FØDSEL
-        var vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse())
-                .bekreftDokumentasjonForeligger(1, fødselsdato);
-        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
+                .bekreftBarnErFødt(1, fødselsdato);
+        saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
         // FAKTA OM BEREGNING: Vurder gyldighet for refusjonskrav som har kommet for
         // sent

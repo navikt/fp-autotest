@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaVergeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkårForutgåendeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
@@ -70,7 +70,7 @@ class Fodsel extends FpsakTestBase {
 
     @Test
     @DisplayName("Mor søker fødsel - avvist")
-    @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i tps")
+    @Description("Mor søker fødsel - avvist fordi dokumentasjon mangler og barn er ikke registrert i freg")
     void morSøkerFødselAvvist() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor()
@@ -91,10 +91,9 @@ class Fodsel extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse());
-        vurderManglendeFodselBekreftelse.bekreftDokumentasjonIkkeForeligger();
-        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
+
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse()).bekreftBarnErIkkeFødt();
+        saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
@@ -166,10 +165,9 @@ class Fodsel extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        VurderManglendeFodselBekreftelse vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse());
-        vurderManglendeFodselBekreftelse.bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(1));
-        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
+                .bekreftBarnErFødt(1, LocalDate.now().minusMonths(1));
+        saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingstatus")

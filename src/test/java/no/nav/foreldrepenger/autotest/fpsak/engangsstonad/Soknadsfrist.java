@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderManglendeFodselBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -52,10 +52,9 @@ class Soknadsfrist extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        var vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse())
-                .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
-        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
+                .bekreftBarnErFødt(1, LocalDate.now().minusMonths(7));
+        saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
         var vurderSoknadsfristBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new VurderSoknadsfristBekreftelse())
@@ -103,10 +102,10 @@ class Soknadsfrist extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var vurderManglendeFodselBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderManglendeFodselBekreftelse())
-                .bekreftDokumentasjonForeligger(1, LocalDate.now().minusMonths(7));
-        saksbehandler.bekreftAksjonspunkt(vurderManglendeFodselBekreftelse);
+
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
+                .bekreftBarnErFødt(1, LocalDate.now().minusMonths(7));
+        saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
         saksbehandler.bekreftAksjonspunkt(new VurderSoknadsfristBekreftelse());
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());

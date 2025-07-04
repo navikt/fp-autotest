@@ -16,7 +16,7 @@ import com.neovisionaries.i18n.CountryCode;
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaTerminBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkTerminbekreftelseBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkårForutgåendeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
@@ -46,9 +46,10 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         var saksnummer = familie.mor().søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
-        avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
+
+        var sjekkTerminbekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new SjekkTerminbekreftelseBekreftelse())
+                .setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
+        saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
 
         saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse());
 
@@ -81,9 +82,6 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         var mor = familie.mor();
         var saksnummer = mor.søk(søknad.build());
 
-        saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaTerminBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaTerminBekreftelse());
-
         var esSak = mor.innsyn().hentEsSakMedÅpenBehandlingTilstand(saksnummer, BehandlingTilstand.UNDER_BEHANDLING);
         assertThat(esSak.saksnummer().value()).isEqualTo(saksnummer.value());
         assertThat(esSak.sakAvsluttet()).isFalse();
@@ -94,8 +92,12 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         assertThat(esSak.familiehendelse().antallBarn()).isEqualTo(1);
         assertThat(esSak.familiehendelse().omsorgsovertakelse()).isNull();
 
-        avklarFaktaTerminBekreftelse.setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaTerminBekreftelse);
+        saksbehandler.hentFagsak(saksnummer);
+
+        var sjekkTerminbekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new SjekkTerminbekreftelseBekreftelse())
+                .setBegrunnelse("Informasjon er hentet fra søknadden og godkjennes av autotest.");
+        saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
+
         saksbehandler.bekreftAksjonspunkt(new VurderMedlemskapsvilkårForutgåendeBekreftelse());
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
 

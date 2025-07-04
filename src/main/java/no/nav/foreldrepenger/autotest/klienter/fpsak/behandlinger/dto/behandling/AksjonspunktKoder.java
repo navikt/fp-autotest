@@ -20,7 +20,7 @@ public class AksjonspunktKoder {
     public static final String AVKLAR_ADOPSJONSDOKUMENTAJON = "5004";
     public static final String AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN = "5005";
     public static final String AVKLAR_OM_SØKER_ER_MANN_SOM_ADOPTERER_ALENE = "5006";
-    public static final String AVKLAR_TERMINBEKREFTELSE = "5001";
+    public static final String SJEKK_TERMINBEKREFTELSE = "5001";
     public static final String AVKLAR_TILLEGGSOPPLYSNINGER = "5009";
     public static final String AVKLAR_VILKÅR_FOR_OMSORGSOVERTAKELSE = "5008";
     public static final String AVKLAR_VILKÅR_FOR_FORELDREANSVAR = "5054";
