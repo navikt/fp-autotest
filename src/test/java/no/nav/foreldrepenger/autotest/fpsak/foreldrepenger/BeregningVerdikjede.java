@@ -186,7 +186,6 @@ class BeregningVerdikjede extends FpsakTestBase {
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad.build());
 
-
         var arbeidsgiver = mor.arbeidsgiver();
         var arbeidsgiverIdentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
         var månedsinntekt = mor.månedsinntekt(arbeidsgiverIdentifikator);
