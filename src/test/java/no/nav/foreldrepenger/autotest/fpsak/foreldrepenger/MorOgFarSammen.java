@@ -44,7 +44,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.SjekkManglendeFødsel;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristForeldrepengerBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
@@ -726,7 +726,7 @@ class MorOgFarSammen extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødsel())
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
                 .bekreftBarnErFødt(1, fødselsdato);
         saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
@@ -746,7 +746,7 @@ class MorOgFarSammen extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødsel())
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
                 .bekreftBarnErFødt(1, fødselsdato);
         saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
@@ -789,7 +789,7 @@ class MorOgFarSammen extends FpsakTestBase {
 
         assertThat(saksbehandler.sakErKobletTilAnnenpart()).as("Sak koblet til annenpart").isTrue();
 
-        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødsel())
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
                 .bekreftBarnErFødt(1, LocalDate.now().minusMonths(4));
         saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 

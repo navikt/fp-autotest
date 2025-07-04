@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Soknad;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto.Fagsak;
 
-public class SjekkTerminbekreftelse extends AksjonspunktBekreftelse {
+public class SjekkTerminbekreftelseBekreftelse extends AksjonspunktBekreftelse {
 
     protected int antallBarn;
     protected LocalDate utstedtdato;
@@ -26,12 +26,12 @@ public class SjekkTerminbekreftelse extends AksjonspunktBekreftelse {
         this.termindato = soknad.getTermindato();
     }
 
-    public SjekkTerminbekreftelse setUtstedtdato(LocalDate utstedtdato) {
+    public SjekkTerminbekreftelseBekreftelse setUtstedtdato(LocalDate utstedtdato) {
         this.utstedtdato = utstedtdato;
         return this;
     }
 
-    public SjekkTerminbekreftelse setTermindato(LocalDate termindato) {
+    public SjekkTerminbekreftelseBekreftelse setTermindato(LocalDate termindato) {
         this.termindato = termindato;
         return this;
     }

@@ -21,8 +21,8 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingStatus;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.SjekkManglendeFødsel;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkTerminbekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkTerminbekreftelseBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrFodselsvilkaaret;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -57,7 +57,7 @@ class Termin extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        var sjekkTerminbekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new SjekkTerminbekreftelse())
+        var sjekkTerminbekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new SjekkTerminbekreftelseBekreftelse())
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
@@ -99,7 +99,7 @@ class Termin extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var sjekkTerminbekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new SjekkTerminbekreftelse())
+                .hentAksjonspunktbekreftelse(new SjekkTerminbekreftelseBekreftelse())
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
@@ -148,7 +148,7 @@ class Termin extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
         var sjekkTerminbekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new SjekkTerminbekreftelse())
+                .hentAksjonspunktbekreftelse(new SjekkTerminbekreftelseBekreftelse())
                 .setUtstedtdato(LocalDate.now().minusMonths(1))
                 .setTermindato(LocalDate.now().plusMonths(1));
         saksbehandler.bekreftAksjonspunkt(sjekkTerminbekreftelse);
@@ -224,7 +224,7 @@ class Termin extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødsel())
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
                 .bekreftBarnErFødt(1, LocalDate.now().minusMonths(1));
         saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 

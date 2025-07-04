@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.VurderÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.SjekkManglendeFødsel;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderSoknadsfristBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -52,7 +52,7 @@ class Soknadsfrist extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødsel())
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
                 .bekreftBarnErFødt(1, LocalDate.now().minusMonths(7));
         saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
@@ -103,7 +103,7 @@ class Soknadsfrist extends FpsakTestBase {
 
         saksbehandler.hentFagsak(saksnummer);
 
-        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødsel())
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
                 .bekreftBarnErFødt(1, LocalDate.now().minusMonths(7));
         saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
