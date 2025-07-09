@@ -44,8 +44,8 @@ jobs:
       - uses: navikt/github-app-token-generator@v1
         id: get-token
         with:
-          private-key: "${{ secrets.APP_GITHUB_PRIVATE_KEY }}"
-          app-id: "${{ secrets.APP_GITHUB_ID }}"
+          private-key: ${{ secrets.APP_GITHUB_PRIVATE_KEY }}
+          app-id: ${{ secrets.APP_GITHUB_ID }}
           repo: navikt/fp-autotest
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
         with:
