@@ -41,9 +41,15 @@ jobs:
     continue-on-error: true
     timeout-minutes: 5
     steps:
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          private-key: "${{ secrets.PRIVATE_KEY }}"
+          app-id: "${{ secrets.APP_ID }}"
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
         with:
           repository: 'navikt/fp-autotest'
+          token: ${{ steps.get-token.outputs.token }}
       - name: Henter testresultat for fpsak
         if: ${{ !contains(inputs.fpsak, 'skipped') }}
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # ratchet:actions/download-artifact@v4
@@ -94,7 +100,7 @@ jobs:
           target_branch: gh-pages
           build_dir: gh-pages
         env:
-          GH_PAT: ${{ secrets.PAT_AUTOTEST }}
+          token: ${{ steps.get-token.outputs.token }}
   notify-slack:
     name: Notify slack om testresultat
     runs-on: ubuntu-latest
