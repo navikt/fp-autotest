@@ -1,0 +1,1 @@
+{"fakta":{"fastsattUtenInntektsmelding":{"andelListe":[{"andelsnr":1,"fastsattBeløp":25000}]},"faktaOmBeregningTilfeller":["FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING","FASTSETT_MÅNEDSLØNN_ARBEIDSTAKER_UTEN_INNTEKTSMELDING"],"mottarYtelse":{"arbeidstakerUtenIMMottarYtelse":[{"andelsnr":1,"mottarYtelse":false}]},"refusjonskravGyldighet":[]},"@type":"5058"}

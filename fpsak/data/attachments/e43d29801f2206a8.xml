@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns7:soeknad xmlns="urn:no:nav:vedtak:felles:xml:soeknad:svangerskapspenger:v1" xmlns:ns6="urn:no:nav:vedtak:felles:xml:soeknad:engangsstoenad:v3" xmlns:ns5="urn:no:nav:vedtak:felles:xml:soeknad:uttak:v3" xmlns:ns7="urn:no:nav:vedtak:felles:xml:soeknad:v3" xmlns:ns2="urn:no:nav:vedtak:felles:xml:soeknad:felles:v3" xmlns:ns4="urn:no:nav:vedtak:felles:xml:soeknad:endringssoeknad:v3" xmlns:ns3="urn:no:nav:vedtak:felles:xml:soeknad:foreldrepenger:v3">
+    <ns7:mottattDato>2025-07-11</ns7:mottattDato>
+    <ns7:paakrevdeVedlegg>
+        <ns2:id>Vc5f04519-33b2-4c46-ae7a-6a3ae7c56de1</ns2:id>
+        <ns2:innsendingstype kodeverk="INNSENDINGSVALG" kode="LASTET_OPP"/>
+        <ns2:skjemanummer>I000109</ns2:skjemanummer>
+        <ns2:tilleggsinformasjon>Skjema for tilrettelegging og omplassering ved graviditet</ns2:tilleggsinformasjon>
+    </ns7:paakrevdeVedlegg>
+    <ns7:paakrevdeVedlegg>
+        <ns2:id>Ve9e6883e-7ce8-4b3f-abac-b0141dba4433</ns2:id>
+        <ns2:innsendingstype kodeverk="INNSENDINGSVALG" kode="LASTET_OPP"/>
+        <ns2:skjemanummer>I000109</ns2:skjemanummer>
+        <ns2:tilleggsinformasjon>Skjema for tilrettelegging og omplassering ved graviditet</ns2:tilleggsinformasjon>
+    </ns7:paakrevdeVedlegg>
+    <ns7:paakrevdeVedlegg>
+        <ns2:id>V5d5d758d-ace2-4078-8aec-7d023ddba951</ns2:id>
+        <ns2:innsendingstype kodeverk="INNSENDINGSVALG" kode="LASTET_OPP"/>
+        <ns2:skjemanummer>I000109</ns2:skjemanummer>
+        <ns2:tilleggsinformasjon>Skjema for tilrettelegging og omplassering ved graviditet</ns2:tilleggsinformasjon>
+    </ns7:paakrevdeVedlegg>
+    <ns7:sprakvalg kode="NB"/>
+    <ns7:omYtelse>
+        <svangerskapspenger>
+            <termindato>2025-10-11</termindato>
+            <medlemskap>
+                <ns2:iNorgeVedFoedselstidspunkt>true</ns2:iNorgeVedFoedselstidspunkt>
+                <ns2:boddINorgeSiste12Mnd>false</ns2:boddINorgeSiste12Mnd>
+                <ns2:borINorgeNeste12Mnd>false</ns2:borINorgeNeste12Mnd>
+            </medlemskap>
+            <opptjening/>
+            <tilretteleggingListe>
+                <tilrettelegging>
+                    <helTilrettelegging>
+                        <tilrettelagtArbeidFom>2025-07-11</tilrettelagtArbeidFom>
+                    </helTilrettelegging>
+                    <arbeidsforhold xsi:type="Virksomhet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <identifikator>991078045</identifikator>
+                    </arbeidsforhold>
+                    <behovForTilretteleggingFom>2025-07-11</behovForTilretteleggingFom>
+                    <vedlegg>Vc5f04519-33b2-4c46-ae7a-6a3ae7c56de1</vedlegg>
+                </tilrettelegging>
+                <tilrettelegging>
+                    <delvisTilrettelegging>
+                        <tilrettelagtArbeidFom>2025-08-11</tilrettelagtArbeidFom>
+                        <stillingsprosent>40.0</stillingsprosent>
+                    </delvisTilrettelegging>
+                    <arbeidsforhold xsi:type="Virksomhet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <identifikator>992257822</identifikator>
+                    </arbeidsforhold>
+                    <behovForTilretteleggingFom>2025-08-11</behovForTilretteleggingFom>
+                    <vedlegg>Ve9e6883e-7ce8-4b3f-abac-b0141dba4433</vedlegg>
+                </tilrettelegging>
+                <tilrettelegging>
+                    <ingenTilrettelegging>
+                        <slutteArbeidFom>2025-08-11</slutteArbeidFom>
+                    </ingenTilrettelegging>
+                    <arbeidsforhold xsi:type="Virksomhet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <identifikator>889640782</identifikator>
+                    </arbeidsforhold>
+                    <behovForTilretteleggingFom>2025-08-11</behovForTilretteleggingFom>
+                    <vedlegg>V5d5d758d-ace2-4078-8aec-7d023ddba951</vedlegg>
+                </tilrettelegging>
+            </tilretteleggingListe>
+            <avtaltFerieListe/>
+        </svangerskapspenger>
+    </ns7:omYtelse>
+    <ns7:soeker>
+        <ns2:aktoerId>9905459715462</ns2:aktoerId>
+        <ns2:soeknadsrolle kodeverk="FORELDRE_TYPE" kode="MOR"/>
+    </ns7:soeker>
+</ns7:soeknad>

@@ -1,0 +1,1 @@
+{"type":"dødshendelse","endringstype":"OPPRETTET","fnr":"09449943861","doedsdato":"2025-07-10"}
