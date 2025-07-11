@@ -80,7 +80,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         saksbehandler6.hentFagsak(saksnummerMor);
         saksbehandler6.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato);
-        saksbehandler6.ventTilFagsakLøpende();
+        saksbehandler6.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThatThrownBy(() -> saksbehandler.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> saksbehandler7.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
@@ -150,7 +150,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         saksbehandlerEgenAnsatt.hentFagsak(saksnummerMor);
         saksbehandlerEgenAnsatt.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato);
-        saksbehandlerEgenAnsatt.ventTilFagsakLøpende();
+        saksbehandlerEgenAnsatt.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         assertThatThrownBy(() -> saksbehandler.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> saksbehandler6.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
