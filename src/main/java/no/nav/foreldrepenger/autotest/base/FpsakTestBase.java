@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Saksbehandler
 import no.nav.foreldrepenger.autotest.brev.BrevAssertionBuilder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
-import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 import no.nav.foreldrepenger.autotest.util.pdf.Pdf;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 
@@ -43,7 +42,6 @@ public abstract class FpsakTestBase extends BrevTestBase {
         beslutter = new Beslutter();
         klagebehandler = new Klagebehandler();
         oppgavestyrer = new Oppgavestyrer();
-        LoggFormater.leggTilKjørendeTestCaseILogger();
     }
 
     protected void hentBrevOgSjekkAtInnholdetErRiktig(BrevAssertionBuilder assertionBuilder,

@@ -1,8 +1,19 @@
 package no.nav.foreldrepenger.generator.familie.generator;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
+import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
 import no.nav.foreldrepenger.generator.familie.Familie;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsforholdDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
@@ -11,16 +22,11 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.PersonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PrivatArbeidsgiver;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.Rolle;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.SivilstandDto;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import no.nav.vedtak.log.mdc.MDCOperations;
 
 
 public class FamilieGenerator {
+    private static final Logger LOG = LoggerFactory.getLogger(FamilieGenerator.class);
 
     private static final TestscenarioKlient TESTSCENARIO_JERSEY_KLIENT = new TestscenarioKlient();
 
@@ -113,6 +119,8 @@ public class FamilieGenerator {
         return build(InnsenderType.SEND_DOKUMENTER_MED_SELVBETJENING);
     }
     public Familie build(InnsenderType innsenderType) {
+        MDCOperations.putCallId();
+        LOG.info("Testcase: {}", LoggFormater.navnPåTestCaseSomKjører());
         guardMinstEnPart();
         guardForeldresammensetning();
         opprettFamilieRelasjonForFødteBarn();

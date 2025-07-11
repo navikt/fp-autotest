@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.autotest.util.log;
 import java.util.Arrays;
 
 import io.qameta.allure.Allure;
-import no.nav.vedtak.log.mdc.MDCOperations;
 
 public final class LoggFormater {
 
@@ -11,14 +10,16 @@ public final class LoggFormater {
         // Skal ikke instansieres
     }
 
-    public static void leggTilKjørendeTestCaseILogger() {
+    public static String navnPåTestCaseSomKjører() {
         var lifecycle = Allure.getLifecycle();
-        lifecycle.getCurrentTestCase().ifPresentOrElse(
-                t -> lifecycle.updateTestCase(testResult -> MDCOperations.putCallId(testNavn(testResult))),
-                MDCOperations::removeCallId);
+        final String[] testCaseName = {"Ikke funnet!"};
+        if (lifecycle.getCurrentTestCase().isPresent()) {
+            lifecycle.updateTestCase(testResult -> testCaseName[0] = formaterTestNavn(testResult));
+        }
+        return testCaseName[0];
     }
 
-    private static String testNavn(io.qameta.allure.model.TestResult testResult) {
+    private static String formaterTestNavn(io.qameta.allure.model.TestResult testResult) {
         var fullName = testResult.getFullName();
         var split = Arrays.asList(fullName.split("\\."));
         return split.get(split.size() - 1);
