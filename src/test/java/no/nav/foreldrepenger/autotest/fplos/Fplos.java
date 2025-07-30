@@ -90,6 +90,7 @@ class Fplos extends FpsakTestBase {
 
         saksbehandler.endreSaksmarkering(saksnummerSVP, Set.of("SAMMENSATT_KONTROLL"));
 
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BYTT_ENHET);
         var bekreftSvangerskapspengervilkår = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
         bekreftSvangerskapspengervilkår.godkjenn().setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår);
