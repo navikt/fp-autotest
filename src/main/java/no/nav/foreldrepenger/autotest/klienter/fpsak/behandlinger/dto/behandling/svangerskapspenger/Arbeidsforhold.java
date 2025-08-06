@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Arbeidsforhold {
 
+    protected List<AvklartOpphold> avklarteOppholdPerioder;
     protected Integer tilretteleggingId;
     protected LocalDate tilretteleggingBehovFom;
     protected List<Tilretteleggingsdato> tilretteleggingDatoer = new ArrayList<>();
@@ -44,6 +45,10 @@ public class Arbeidsforhold {
 
     public String getInternArbeidsforholdReferanse() {
         return internArbeidsforholdReferanse;
+    }
+
+    public List<AvklartOpphold> getAvklarteOppholdPerioder() {
+        return avklarteOppholdPerioder;
     }
 
 }
