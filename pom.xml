@@ -36,7 +36,7 @@
         <logback.version>1.5.18</logback.version>
         <allure.version>2.29.1</allure.version>
         <allure.maven.version>2.15.2</allure.maven.version>
-        <assertj.version>3.27.3</assertj.version>
+        <assertj.version>3.27.4</assertj.version>
         <aspectj.version>1.9.24</aspectj.version>
         <junit.version>5.13.4</junit.version>
         <jackson.version>2.19.2</jackson.version>
