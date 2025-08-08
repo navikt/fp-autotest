@@ -10,6 +10,7 @@ public record AvklartOpphold(@NotNull LocalDate fom, @NotNull LocalDate tom, @No
     public enum SvpOppholdKilde {
         SØKNAD,
         INNTEKTSMELDING,
-        REGISTRERT_AV_SAKSBEHANDLER
+        REGISTRERT_AV_SAKSBEHANDLER,
+        TIDLIGERE_VEDTAK
     }
 }
