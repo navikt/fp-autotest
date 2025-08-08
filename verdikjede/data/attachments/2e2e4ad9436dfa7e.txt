@@ -1,0 +1,1 @@
+{"begrunnelse":"Begrunnelse fra autotest","antallBarn":1,"utstedtdato":"2025-07-11","termindato":"2025-09-19","@type":"5001"}

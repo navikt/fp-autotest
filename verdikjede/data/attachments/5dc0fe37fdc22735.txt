@@ -1,0 +1,1 @@
+{"fakta":{"faktaOmBeregningTilfeller":["FASTSETT_BG_KUN_YTELSE"],"kunYtelseFordeling":{"andeler":[{"andelsnr":1,"fastsattBeløp":4000.0,"inntektskategori":"ARBEIDSTAKER","lagtTilAvSaksbehandler":false,"nyAndel":false}]},"refusjonskravGyldighet":[]},"@type":"5058"}

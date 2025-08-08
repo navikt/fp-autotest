@@ -1,0 +1,1 @@
+{"begrunnelse":"Avvist av beslutter","aksjonspunktGodkjenningDtos":[{"aksjonspunktKode":"5035","arsaker":["FEIL_REGEL"],"godkjent":false}],"@type":"5016"}
