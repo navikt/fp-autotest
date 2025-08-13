@@ -788,7 +788,8 @@ class Fodsel extends FpsakTestBase {
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAleneomsorgBekreftelse = saksbehandler
                 .hentAksjonspunktbekreftelse(new AvklarFaktaAleneomsorgBekreftelse())
-                .bekreftBrukerHarAleneomsorg();
+                .bekreftBrukerHarAleneomsorg()
+                .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();

@@ -104,6 +104,8 @@ class RegresjonPreWLB extends FpsakTestBase {
         var avklarFaktaAnnenForeldreHarRett = saksbehandler
                 .hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
                 .setAnnenforelderHarRett(false)
+                .setAnnenForelderHarRettEØS(false)
+                .setAnnenforelderMottarUføretrygd(true)
                 .setBegrunnelse("Mor har ikke rett og er uføretrygded i følge pesys!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 

@@ -6,7 +6,7 @@ public class AvklarFaktaAnnenForeldreHarRett extends AksjonspunktBekreftelse {
 
     protected boolean annenforelderHarRett;
     protected Boolean annenforelderMottarUføretrygd;
-    protected Boolean annenforelderMottarStønadEØS;
+    protected Boolean annenForelderHarRettEØS;
 
     public AvklarFaktaAnnenForeldreHarRett setAnnenforelderHarRett(boolean annenforelderHarRett) {
         this.annenforelderHarRett = annenforelderHarRett;
@@ -18,8 +18,8 @@ public class AvklarFaktaAnnenForeldreHarRett extends AksjonspunktBekreftelse {
         return this;
     }
 
-    public AvklarFaktaAnnenForeldreHarRett setAnnenforelderMottarStønadEØS(boolean annenforelderMottarStønadEØS) {
-        this.annenforelderMottarStønadEØS = annenforelderMottarStønadEØS;
+    public AvklarFaktaAnnenForeldreHarRett setAnnenForelderHarRettEØS(boolean annenForelderHarRettEØS) {
+        this.annenForelderHarRettEØS = annenForelderHarRettEØS;
         return this;
     }
 

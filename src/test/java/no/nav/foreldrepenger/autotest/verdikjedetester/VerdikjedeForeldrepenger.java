@@ -730,6 +730,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummerFar);
         var avklarFaktaAnnenForeldreHarRett = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
                 .setAnnenforelderHarRett(false)
+                .setAnnenForelderHarRettEØS(false)
+                .setAnnenforelderMottarUføretrygd(false)
                 .setBegrunnelse("Bare far har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
@@ -1246,7 +1248,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 new AvklarFaktaAdopsjonsdokumentasjonBekreftelse()).setBegrunnelse("Adopsjon behandlet av Autotest.");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
         var avklarFaktaAleneomsorgBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaAleneomsorgBekreftelse())
-                .bekreftBrukerHarAleneomsorg();
+                .bekreftBrukerHarAleneomsorg()
+                .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
 
