@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static java.util.function.Predicate.not;
 import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_4;
 import static no.nav.foreldrepenger.autotest.brev.BrevFormateringUtils.formaterKroner;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +25,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakManueltBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaFødselOgTilrettelegging;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.BekreftSvangerskapspengervilkår;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.AvklartOpphold;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.TilretteleggingType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.svangerskapspenger.Tilretteleggingsdato;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.DokumentTag;
@@ -35,6 +38,7 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadSvangerskapspengerMaler;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.svangerskapspenger.AvtaltFerieDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
@@ -92,12 +96,13 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 "Foventer at hele den utbetalte dagsatsen går til søker!").isTrue();
 
         var snittPerMånedUtbetaltDirekte = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260 * 260 / 12;
-        sjekkInnvilgetBrev(mor.fødselsnummer(), mor.månedsinntekt(), harRefusjon, false, snittPerMånedUtbetaltDirekte);
+        sjekkInnvilgetBrev(mor.fødselsnummer(), mor.månedsinntekt(), harRefusjon, false, snittPerMånedUtbetaltDirekte, false);
     }
 
     @Test
     @DisplayName("2: Mor søker gradert uttak med inntekt over 6G")
-    @Description("Mor søker delvis tilrettelegging for en 100% stilling hvor hun har inntekt over 6G.")
+    @Description("Mor søker delvis tilrettelegging for en 100% stilling hvor hun har inntekt over 6G. Hun har en periode med ferie midt i. "
+            + "Endrer tilretteleggingen med ny fra dato og arbeidsprosent. Ferien skal beholdes.")
     void morSøkerDelvisTilretteleggingMedInntektOver6GTest() {
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
@@ -108,10 +113,15 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var orgnummer = arbeidsforholdMor.arbeidsgiverIdentifikasjon();
         var tilrettelegginsprosent = 40.0;
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet(((Orgnummer) orgnummer)),
-                LocalDate.now()).delvis(LocalDate.now(), tilrettelegginsprosent).build();
+        var arbeidsforholdDto = ArbeidsforholdMaler.virksomhet(((Orgnummer) orgnummer));
+        var tilrettelegging = new TilretteleggingBehovBuilder(arbeidsforholdDto, LocalDate.now()).delvis(LocalDate.now(),
+                tilrettelegginsprosent).build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging));
-        var saksnummer = mor.søk(søknad.build());
+        //Legger til opphold som ferie
+        var startDatoFerie = LocalDate.now().plusMonths(2);
+        var sluttdatoFerie = startDatoFerie.plusWeeks(1);
+        var avtaltFerie = new AvtaltFerieDto(arbeidsforholdDto, startDatoFerie, sluttdatoFerie);
+        var saksnummer = mor.søk(søknad.medAvtaltFerie(List.of(avtaltFerie)).build());
 
         var arbeidsgiver = mor.arbeidsgiver();
         ventPåInntektsmeldingForespørsel(saksnummer);
@@ -140,12 +150,53 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 .isEqualTo(beregnetDagsats);
         assertThat(saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilKorrektPartForAllePerioder(0)).as(
                 "Foventer at hele den utbetalte dagsatsen går til søker!").isTrue();
+        //Verifiserer at ferie er lagt til i avklarte opphold
+        var avklarteOppholdsperioder = avklarFaktaFødselOgTilrettelegging.getBekreftetSvpArbeidsforholdList()
+                .getFirst()
+                .getAvklarteOppholdPerioder();
+        assertThat(avklarteOppholdsperioder).first()
+                .matches(not(AvklartOpphold::forVisning), "avklart opphold skal være redigerbart, dvs ikke for visning")
+                .matches(l -> l.oppholdKilde() == AvklartOpphold.SvpOppholdKilde.SØKNAD, "søknad er kilde til oppholdet")
+                .matches(l -> Objects.equals(l.fom(), startDatoFerie), "fom datoer er like")
+                .matches(l -> Objects.equals(l.tom(), sluttdatoFerie), "tom datoer er like");
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        int dagsats = BigDecimal.valueOf(Math.min(SEKS_G_2025, mor.månedsinntekt() * 12)).divide(BigDecimal.valueOf(260), RoundingMode.HALF_UP).intValue(); //3004
+        int dagsats = BigDecimal.valueOf(Math.min(SEKS_G_2025, mor.månedsinntekt() * 12))
+                .divide(BigDecimal.valueOf(260), RoundingMode.HALF_UP)
+                .intValue(); //3004
         int dagsatsAvkortet = (int) (dagsats * (100 - tilrettelegginsprosent) / 100);
         int snittPerMånedAvkortet = dagsatsAvkortet * 260 / 12;
-        sjekkInnvilgetBrev(mor.fødselsnummer(), mor.månedsinntekt(), harRefusjon, false, snittPerMånedAvkortet);
+
+        sjekkInnvilgetBrev(mor.fødselsnummer(), mor.månedsinntekt(), harRefusjon, false, snittPerMånedAvkortet, true);
+
+        /* SØKNAD 2 */
+        var tilretteleggingeNyPeriode = new TilretteleggingBehovBuilder(arbeidsforholdDto, LocalDate.now()).delvis(
+                sluttdatoFerie.minusDays(1), 30.0).build();
+        var søknad2 = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato, List.of(tilretteleggingeNyPeriode))
+                .build();
+        var saksnummer2 = mor.søk(søknad2);
+
+        saksbehandler.hentFagsak(saksnummer2);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        var avklarFaktaFødselOgTilrettelegging2 = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaFødselOgTilrettelegging());
+        avklarFaktaFødselOgTilrettelegging2.setBegrunnelse("Ny Periode og ferie skal være lik som forrige behandling");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaFødselOgTilrettelegging2);
+
+        var bekreftSvangerskapspengervilkår2 = saksbehandler.hentAksjonspunktbekreftelse(new BekreftSvangerskapspengervilkår());
+        bekreftSvangerskapspengervilkår2.godkjenn().setBegrunnelse("Godkjenner vilkår");
+        saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår2);
+        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
+        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+
+        //Sjekker at ferie fortsatt er lik som på første behandling, men med kile tidligere vedtak
+        var avklarteOppholdsperioderBeh2 = avklarFaktaFødselOgTilrettelegging2.getBekreftetSvpArbeidsforholdList()
+                .getFirst()
+                .getAvklarteOppholdPerioder();
+        assertThat(avklarteOppholdsperioderBeh2).first()
+                .matches(not(AvklartOpphold::forVisning), "avklart opphold skal være redigerbart, dvs ikke for visning")
+                .matches(l -> l.oppholdKilde() == AvklartOpphold.SvpOppholdKilde.TIDLIGERE_VEDTAK, "søknad er kilde til oppholdet")
+                .matches(l -> Objects.equals(l.fom(), startDatoFerie), "fom datoer er like")
+                .matches(l -> Objects.equals(l.tom(), avtaltFerie.tom()), "tom datoer er like");
     }
 
     @Test
@@ -270,7 +321,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         int dagsats = Math.min(SEKS_G_2025, mor.månedsinntekt() * 12) / 260;
         int dagsatsAvkortet = (int) (dagsats * (100 - tilrettelegginsprosent) / 100);
         int snittPerMånedAvkortet = dagsatsAvkortet * 260 / 12;
-        sjekkInnvilgetBrev(mor.fødselsnummer(), mor.månedsinntekt(), harRefusjon, false, snittPerMånedAvkortet);
+        sjekkInnvilgetBrev(mor.fødselsnummer(), mor.månedsinntekt(), harRefusjon, false, snittPerMånedAvkortet, false);
 
         /* SØKNAD 2 */
         var tilrettelegging2 = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.selvstendigNæringsdrivende(),
@@ -298,7 +349,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         bekreftSvangerskapspengervilkår2.godkjenn().setBegrunnelse("Godkjenner vilkår");
         saksbehandler.bekreftAksjonspunkt(bekreftSvangerskapspengervilkår2);
 
-        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer2, harRefusjon, false);
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer2, true, false);
 
         assertThat(
                 saksbehandler.verifiserUtbetaltDagsatsMedRefusjonGårTilArbeidsgiverForAllePeriode(arbeidsgiverIdentifikator, 100)).as(
@@ -320,8 +371,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         assertThat(beregningsresultatPeriodeAndeler.get(0).getTilSoker()).as("Dagsats til søker").isZero();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = alleYtelserFellesAssertionsBuilder(familie.mor().fødselsnummer(), saksbehandler.valgtFagsak.saksnummer())
-                .medEgenndefinertAssertion("Nav har endret svangerskapspengene dine")
+        var brevAssertionsBuilder = alleYtelserFellesAssertionsBuilder(familie.mor().fødselsnummer(),
+                saksbehandler.valgtFagsak.saksnummer()).medEgenndefinertAssertion("Nav har endret svangerskapspengene dine")
                 .medEgenndefinertAssertion(
                         "Vi utbetaler svangerskapspengene til arbeidsgiveren din fordi du får lønn mens du er borte fra jobb.")
                 .medEgenndefinertAssertion("I disse periodene får du svangerskapspenger")
@@ -352,7 +403,6 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var arbeidsforhold2 = arbeidsforholdene.get(1);
         var orgnummer2 = arbeidsforhold2.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
-        var tilrettelegginsprosent = 0.0;
         var tilrettelegging1 = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1),
                 LocalDate.now()).ingen(LocalDate.now()).build();
         var tilrettelegging2 = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer2),
@@ -410,7 +460,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                 prosentTilArbeidforhold2)).as("Foventer at hele den utbetalte dagsatsen går til søker!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        sjekkInnvilgetBrev(mor.fødselsnummer(), månedsinntekt, harRefusjon, true, 0);
+        sjekkInnvilgetBrev(mor.fødselsnummer(), månedsinntekt, harRefusjon, true, 0, false);
     }
 
     @Test
@@ -472,7 +522,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         int dagsats = Math.min(SEKS_G_2025, månedsinntektMor * 12) / 260;
         int dagsatsAvkortet = (int) Math.round(dagsats * (100 - tilrettelegginsprosent) / 100);
         int snittPerMånedAvkortet = dagsatsAvkortet * 260 / 12;
-        sjekkInnvilgetBrev(mor.fødselsnummer(), mor.månedsinntekt(), harRefusjon, false, snittPerMånedAvkortet);
+        sjekkInnvilgetBrev(mor.fødselsnummer(), mor.månedsinntekt(), harRefusjon, false, snittPerMånedAvkortet, false);
     }
 
     private Integer regnUtForventetDagsats(Integer samletMånedsbeløp, Double tilrettelegginsprosent) {
@@ -489,13 +539,14 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                                     int månedsinntektMor,
                                     boolean harRefusjon,
                                     boolean harFlereArbeidsgivere,
-                                    int snittUtbetalingPerMåned) {
+                                    int snittUtbetalingPerMåned,
+                                    boolean harFlereUtbetalingsperioder) {
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var brevAssertionsBuilder = svangerskapspengerInnvilgetAssertionsBuilder(fnrMor, saksbehandler.valgtFagsak.saksnummer(), harRefusjon, harFlereArbeidsgivere)
-                .medEgenndefinertAssertion(
+        var brevAssertionsBuilder = svangerskapspengerInnvilgetAssertionsBuilder(fnrMor, saksbehandler.valgtFagsak.saksnummer(),
+                harRefusjon, harFlereArbeidsgivere).medEgenndefinertAssertion(
                 "Vi har brukt %s kroner i året før skatt i beregningen av svangerskapspengene dine".formatted(
                         formaterKroner(månedsinntektMor * 12)));
-        if (!harFlereArbeidsgivere) {
+        if (!harFlereArbeidsgivere && !harFlereUtbetalingsperioder) {
             brevAssertionsBuilder.medTekstOmDuFårIGjennomsnittXKronerIMånedenFørSkatt(snittUtbetalingPerMåned);
         }
         if (månedsinntektMor * 12 > SEKS_G_2025) {
@@ -505,7 +556,6 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
                             + "folketrygden. Du tjener mer enn dette, men du får ikke svangerskapspenger for den delen av "
                             + "inntekten som overstiger seks ganger grunnbeløpet.");
         }
-        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.SVANGERSKAPSPENGER_INNVILGET,
-                HistorikkType.BREV_SENDT);
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.SVANGERSKAPSPENGER_INNVILGET, HistorikkType.BREV_SENDT);
     }
 }
