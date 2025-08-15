@@ -1,0 +1,1 @@
+{"type":"dødshendelse","endringstype":"OPPRETTET","fnr":"01417035822","doedsdato":"2025-08-14"}
