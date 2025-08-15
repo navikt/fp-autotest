@@ -512,6 +512,7 @@
     "ytelsespesifiktGrunnlag": {
         "ytelseType": "FP",
         "dekningsgrad": 100,
+        "førsteUttaksdato": "2022-11-01",
         "kvalifisererTilBesteberegning": false
     },
     "skjæringstidspunkt": "2022-11-01"

@@ -838,6 +838,7 @@
     },
     "ytelsespesifiktGrunnlag": {
         "ytelseType": "FP",
+        "førsteUttaksdato": "2020-10-29",
         "dekningsgrad": 100,
         "kvalifisererTilBesteberegning": false,
         "aktivitetGradering": {
