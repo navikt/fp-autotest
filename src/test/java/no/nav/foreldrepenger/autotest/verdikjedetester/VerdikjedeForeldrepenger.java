@@ -1402,7 +1402,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
                 .medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
-                .medTekstOmDenAndreForelderenSomHarRettOgså()
                 .medParagrafer(P_14_9, P_14_12, P_14_13)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
                 .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
@@ -2376,7 +2375,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var dagsatsFar = Math.min(SEKS_G_2025, far.månedsinntekt() * 12) / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummer).medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
-                .medTekstOmDenAndreForelderenSomHarRettOgså()
                 .medEgenndefinertAssertion("Det er 45 dager igjen av kvoten din, og 80 dager som begge kan ta ut.")
                 .medTekstOmDageneMåVæreTattUtFørTreÅrEllerNyttBarn()
                 .medParagraf(P_14_12)

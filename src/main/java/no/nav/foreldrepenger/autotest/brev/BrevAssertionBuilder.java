@@ -21,7 +21,7 @@ public class BrevAssertionBuilder {
     }
 
     public BrevAssertionBuilder medTekstOmAleneomsorg() {
-        brevAssertions.add("Du har aleneomsorgen for barnet og får derfor hele foreldrepengeperioden.");
+        brevAssertions.add("Du har aleneomsorgen for barnet, og får derfor hele foreldrepengeperioden.");
         return this;
     }
 
@@ -185,11 +185,6 @@ public class BrevAssertionBuilder {
 
     public BrevAssertionBuilder medTekstOmDageneMåVæreTattUtFørTreÅrEllerNyttBarn() {
         brevAssertions.add("Disse dagene må være tatt ut innen barnet fyller tre år eller innen en ny foreldrepengeperiode for et nytt barn starter.");
-        return this;
-    }
-
-    public BrevAssertionBuilder medTekstOmDenAndreForelderenSomHarRettOgså() {
-        brevAssertions.add("Den andre forelderen har rett til foreldrepenger. Derfor får du ikke hele foreldrepengeperioden.");
         return this;
     }
 
