@@ -11,7 +11,7 @@
    
    Alternativ installasjon for Mac:
     ```bash
-      brew install --cask docker temurin21
+      brew install --cask docker temurin@21
       brew install maven
     ```
 
