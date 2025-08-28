@@ -779,7 +779,7 @@ class Fodsel extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
                 .medUttaksplan(fordelingFarAleneomsorg(fødselsdato))
-                .medAnnenForelder(AnnenforelderMaler.norskIkkeRettAleneomsorg(familie.mor()));
+                .medAnnenForelder(AnnenforelderMaler.norskAleneomsorg(familie.mor()));
         var saksnummer = far.søk(søknad.build());
         var arbeidsgiver = far.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fødselsdato);
@@ -983,7 +983,7 @@ class Fodsel extends FpsakTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medUttaksplan(fordelingMorAleneomsorgHappyCase(fødselsdato))
-                .medAnnenForelder(AnnenforelderBuilder.ukjentForelder());
+                .medAnnenForelder(AnnenforelderMaler.ukjentForelder());
         var saksnummer = mor.søk(søknad.build());
 
         var arbeidsgiver = mor.arbeidsgiver();

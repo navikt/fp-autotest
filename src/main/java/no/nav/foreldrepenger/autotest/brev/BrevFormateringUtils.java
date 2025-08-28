@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.brev;
 
-import no.nav.foreldrepenger.autotest.base.BrevTestBase;
+import static java.time.format.DateTimeFormatter.ofPattern;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -8,7 +8,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Locale;
 
-import static java.time.format.DateTimeFormatter.ofPattern;
+import no.nav.foreldrepenger.autotest.base.BrevTestBase;
 
 public class BrevFormateringUtils {
 

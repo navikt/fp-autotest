@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.autotest.verdikjedetester;
 
+import static no.nav.foreldrepenger.autotest.base.Paragrafer.EØS_ARTIKKEL;
 import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_10;
 import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_11;
 import static no.nav.foreldrepenger.autotest.base.Paragrafer.P_14_12;
@@ -23,6 +24,7 @@ import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅr
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType.RE_HENDELSE_FØDSEL;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_ARBEID_IKKE_OPPFYLT;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.AKTIVITETSKRAVET_UTDANNING_IKKE_DOKUMENTERT;
+import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.ANNENPART_SAMTIDIG_UTTAK_I_EØS;
 import static no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak.IKKE_STØNADSDAGER_IGJEN;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse.DokumentasjonVurderingBehov;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_FEILUTBETALING_KODE;
@@ -72,6 +74,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import com.neovisionaries.i18n.CountryCode;
+
 import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fptilbake.TilbakekrevingSaksbehandler;
 import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
@@ -97,10 +101,12 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurdereAnnenYtelseFørVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageNfpBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarAnnenforelderEøsPerioder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.KontrollerBesteberegningBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.MerkOpptjeningUtlandDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkTerminbekreftelseBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderUttakDokumentasjonBekreftelse;
@@ -139,7 +145,6 @@ import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenge
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.UttaksPeriodeDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.UttaksplanDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.AnnenforelderBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
@@ -171,7 +176,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 uttaksperiode(StønadskontoType.FORELDREPENGER, termindato.plusWeeks(20), termindato.plusWeeks(36).minusDays(1)));
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medUttaksplan(fordeling)
-                .medAnnenForelder(AnnenforelderMaler.norskIkkeRettAleneomsorg(familie.far()))
+                .medAnnenForelder(AnnenforelderMaler.norskAleneomsorg(familie.far()))
                 .medVedlegg(List.of(dokumenterTermin(VedleggInnsendingType.SEND_SENERE)))
                 .medMottattdato(termindato.minusWeeks(5));
         var saksnummer = mor.søk(søknad.build());
@@ -1235,7 +1240,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var fordelingFar = List.of(
                 uttaksperiode(StønadskontoType.FORELDREPENGER, fpStartdatoFar, fpStartdatoFar.plusWeeks(46).minusDays(1)));
         var søknadFar = lagSøknadForeldrepengerAdopsjon(omsorgsovertakelsedatoe, BrukerRolle.FAR, false).medUttaksplan(fordelingFar)
-                .medAnnenForelder(AnnenforelderBuilder.ukjentForelder())
+                .medAnnenForelder(AnnenforelderMaler.ukjentForelder())
                 .medMottattdato(fpStartdatoFar.minusWeeks(3));
         var saksnummerFar = far.søk(søknadFar.build());
         var arbeidsgiver = far.arbeidsgiver();
@@ -2369,6 +2374,22 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Både far og mor har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
+        var avklarAnnenforelderEøsPerioder = saksbehandler.hentAksjonspunktbekreftelse(new AvklarAnnenforelderEøsPerioder())
+                .setPerioder(List.of(
+                        new AvklarAnnenforelderEøsPerioder.EøsUttakPeriodeDto(
+                                termindato,
+                                termindato.plusWeeks(6).minusDays(1),
+                                BigDecimal.TEN,
+                                MØDREKVOTE),
+                        new AvklarAnnenforelderEøsPerioder.EøsUttakPeriodeDto(
+                                termindato.plusWeeks(6),
+                                termindato.plusWeeks(10).minusDays(1),
+                                BigDecimal.valueOf(20),
+                                FELLESPERIODE)
+                ));
+                //.setPerioder(List.of());
+        saksbehandler.bekreftAksjonspunkt(avklarAnnenforelderEøsPerioder);
+
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
@@ -2472,6 +2493,125 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
                 .medParagrafer(P_14_7, P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
+    }
+
+    @Test
+    @DisplayName("22: Far søker med mor rett og har tatt ut mødrekvote og deler av fellesperioden i EØS. ")
+    @Description("Mor har tatt ut tilsvarende foreldrepenger i Sverige. "
+            + "Far søker og oppgir mor har rett i EØS, mens saksbehandler avklarer og registerer perioder mor har tatt ut i EØS."
+            + "Far får delvis avslag på overlappende uttak, og avslag de siste ukene av fellesperioden pga tom for konto når mor er hensyntatt."
+            + "Far får innvilget resten.")
+    void farBfhrMinsterettasdasdaOgUttakTest() {
+        var familie = FamilieGenerator.ny()
+                .forelder(far().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
+                .barn(LocalDate.now().minusWeeks(8))
+                .build();
+        var fødselsdato = familie.barn().fødselsdato();
+        var startdatoForeldrepenger = fødselsdato.plusWeeks(8);
+        var far = familie.far();
+        var fellesperiodeFar = uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(23), fødselsdato.plusWeeks(39).minusDays(1), ARBEID);
+        var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, FAR)
+                .medUttaksplan(fordeling(
+                        uttaksperiode(FEDREKVOTE, startdatoForeldrepenger, fødselsdato.plusWeeks(23).minusDays(1)), fellesperiodeFar
+                ))
+                .medAnnenForelder(AnnenforelderMaler.utenlandskMedRettighetEØS("999999999999", CountryCode.SE))
+                .build();
+
+        var saksnummer = far.søk(søknad);
+        saksbehandler.hentFagsak(saksnummer);
+        var sedAksjonspunkt = saksbehandler.hentAksjonspunktbekreftelse(new MerkOpptjeningUtlandDto())
+                .setDokStatus(MerkOpptjeningUtlandDto.UtlandDokumentasjonStatus.DOKUMENTASJON_ER_INNHENTET)
+                .setBegrunnelse("Mor har uttak i EØS!");
+        saksbehandler.bekreftAksjonspunkt(sedAksjonspunkt);
+
+        ventPåInntektsmeldingForespørsel(saksnummer);
+        var arbeidsgiver = far.arbeidsgiver();
+        arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startdatoForeldrepenger);
+
+        validerInnsendtInntektsmeldingForeldrepenger(far.fødselsnummer(), startdatoForeldrepenger, far.månedsinntekt(), false);
+
+        saksbehandler.hentFagsak(saksnummer);
+        var avklarFaktaAnnenForeldreHarRett = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
+                .setAnnenforelderHarRett(false)
+                .setAnnenForelderHarRettEØS(true)
+                .setBegrunnelse("Mor har rett og har uttak i EØS!");
+        saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
+
+        var avklarAnnenforelderEøsPerioder = saksbehandler.hentAksjonspunktbekreftelse(new AvklarAnnenforelderEøsPerioder())
+                .setPerioder(List.of(
+                        new AvklarAnnenforelderEøsPerioder.EøsUttakPeriodeDto(
+                                fødselsdato,
+                                fødselsdato.plusWeeks(6).minusDays(1),
+                                BigDecimal.valueOf(30),
+                                MØDREKVOTE),
+                        new AvklarAnnenforelderEøsPerioder.EøsUttakPeriodeDto(
+                                fødselsdato.plusWeeks(6),
+                                fødselsdato.plusWeeks(10).minusDays(1),
+                                BigDecimal.valueOf(10),
+                                FELLESPERIODE)
+                ));
+        saksbehandler.bekreftAksjonspunkt(avklarAnnenforelderEøsPerioder);
+
+        var vurderUttakDokumentasjonBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderUttakDokumentasjonBekreftelse())
+                .godkjenn(fellesperiodeFar);
+        saksbehandler.bekreftAksjonspunkt(vurderUttakDokumentasjonBekreftelse);
+
+        var fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new FastsettUttaksperioderManueltBekreftelse())
+                .avslåPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1), ANNENPART_SAMTIDIG_UTTAK_I_EØS)
+                .avslåPeriode(fødselsdato.plusWeeks(37), fødselsdato.plusWeeks(39).minusDays(1), IKKE_STØNADSDAGER_IGJEN);
+        saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
+
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
+
+        saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
+        var dagsatsFar = (int) Math.ceil(Math.min(SEKS_G_2025, (double) far.månedsinntekt() * 12) / 260);
+        var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummer)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(dagsatsFar)
+                .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
+                .medEgenndefinertAssertion("Den andre forelderen har rett til en pengestøtte i et annet EU/EØS-land som tilsvarer foreldrepenger i Norge. "
+                        + "Når begge foreldrene har opptjent rett til foreldrepenger, deles perioden inn i kvoter og en fellesperiode. "
+                        + "Det samme gjelder også om en av foreldrene har mottatt en utbetaling som tilsvarer foreldrepenger i et annet EU/EØS-land. "
+                        + "Den andre forelderens dager med utbetaling i EU/EØS-landet kan påvirke lengden på fellesperioden i Norge.")
+                .medEgenndefinertAssertion(String.format("Vi har fått opplyst at den andre forelderen har tatt ut en pengestøtte som tilsvarer foreldrepenger "
+                        + "for barnet. Mellom %s og %s har den andre forelderen tatt ut 10 dager som tilsvarer fellesperiode, "
+                        + "som fører til en reduksjon i dine stønadsdager med fellesperiode i Norge. "
+                        + "Du har derfor krav på fedrekvoten og 70 dager av fellesperioden.",
+                        formaterDato(fødselsdato), formaterDato(fødselsdato.plusWeeks(10).minusDays(1))))
+                .medEgenndefinertAssertion("Det er 10 dager igjen av kvoten din.")
+                .medTekstOmDageneMåVæreTattUtFørTreÅrEllerNyttBarn()
+                .medKapittelDetteHarViAvslått()
+                .medEgenndefinertAssertion(String.format("Du kan ikke ta ut foreldrepenger fra og med %s til og med %s fordi "
+                        + "den andre forelderen tar ut en pengestøtte tilsvarende foreldrepenger i et annet EU/EØS-land i "
+                        + "samme periode.",
+                                formaterDato(fastsettUttaksperioderManueltBekreftelse.getPerioder().getFirst().getFom()),
+                                formaterDato(fastsettUttaksperioderManueltBekreftelse.getPerioder().getFirst().getTom())
+                        )
+                )
+                .medEgenndefinertAssertion(String.format(
+                        "Du har ikke rett til foreldrepenger fra og med %s til og med %s fordi det ikke er flere dager igjen av foreldrepengeperioden.",
+                        formaterDato(fødselsdato.plusWeeks(37)), formaterDato(fellesperiodeFar.tom())))
+                .medParagrafer(P_14_9, P_14_10, P_14_12, P_14_13, EØS_ARTIKKEL)
+                .medTekstOmGjennomsnittInntektFraTreSisteMåndene();
+        hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
+
+        // Verifiser innsyn har korrekt uttak periode for annenpart EØS
+        var innsynSak = far.innsyn().hentFpSakUtenÅpenBehandling(saksnummer);
+        var uttakPeriodeAnnenpartEøs = innsynSak.gjeldendeVedtak().perioderAnnenpartEøs();
+        assertThat(uttakPeriodeAnnenpartEøs).hasSize(2);
+
+        var førstePeriodeInnsyn = uttakPeriodeAnnenpartEøs.get(0);
+        var førsteAvklarAnnenforelderEøsPeriodeFpsak = avklarAnnenforelderEøsPerioder.getPerioder().get(0);
+        assertThat(førstePeriodeInnsyn.fom()).isEqualTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.fom());
+        assertThat(førstePeriodeInnsyn.tom()).isEqualTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.tom());
+        assertThat(førstePeriodeInnsyn.trekkonto()).isEqualTo(no.nav.foreldrepenger.common.innsyn.KontoType.MØDREKVOTE);
+        assertThat(førstePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(førsteAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
+
+        var andrePeriodeInnsyn = uttakPeriodeAnnenpartEøs.get(1);
+        var andreAvklarAnnenforelderEøsPeriodeFpsak = avklarAnnenforelderEøsPerioder.getPerioder().get(1);
+        assertThat(andrePeriodeInnsyn.fom()).isEqualTo(andreAvklarAnnenforelderEøsPeriodeFpsak.fom());
+        assertThat(andrePeriodeInnsyn.tom()).isEqualTo(andreAvklarAnnenforelderEøsPeriodeFpsak.tom());
+        assertThat(andrePeriodeInnsyn.trekkonto()).isEqualTo(no.nav.foreldrepenger.common.innsyn.KontoType.FELLESPERIODE);
+        assertThat(andrePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(andreAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
     }
 
     private Saksnummer sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
