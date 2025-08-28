@@ -2374,22 +2374,6 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .setBegrunnelse("Både far og mor har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
 
-        var avklarAnnenforelderEøsPerioder = saksbehandler.hentAksjonspunktbekreftelse(new AvklarAnnenforelderEøsPerioder())
-                .setPerioder(List.of(
-                        new AvklarAnnenforelderEøsPerioder.EøsUttakPeriodeDto(
-                                termindato,
-                                termindato.plusWeeks(6).minusDays(1),
-                                BigDecimal.TEN,
-                                MØDREKVOTE),
-                        new AvklarAnnenforelderEøsPerioder.EøsUttakPeriodeDto(
-                                termindato.plusWeeks(6),
-                                termindato.plusWeeks(10).minusDays(1),
-                                BigDecimal.valueOf(20),
-                                FELLESPERIODE)
-                ));
-                //.setPerioder(List.of());
-        saksbehandler.bekreftAksjonspunkt(avklarAnnenforelderEøsPerioder);
-
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
