@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 
 public class AvklarAnnenforelderEøsPerioder extends AksjonspunktBekreftelse {
@@ -37,6 +38,6 @@ public class AvklarAnnenforelderEøsPerioder extends AksjonspunktBekreftelse {
 
     @Override
     public String aksjonspunktKode() {
-        return "5103";
+        return AksjonspunktKoder.AVKLAR_UTTAK_I_EØS_FOR_ANNENPART_KODE;
     }
 }

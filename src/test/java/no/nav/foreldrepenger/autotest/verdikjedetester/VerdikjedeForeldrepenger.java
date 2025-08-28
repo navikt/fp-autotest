@@ -134,6 +134,7 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.generator.soknad.maler.SøknadEndringMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
@@ -2596,6 +2597,21 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         assertThat(andrePeriodeInnsyn.tom()).isEqualTo(andreAvklarAnnenforelderEøsPeriodeFpsak.tom());
         assertThat(andrePeriodeInnsyn.trekkonto()).isEqualTo(no.nav.foreldrepenger.common.innsyn.KontoType.FELLESPERIODE);
         assertThat(andrePeriodeInnsyn.trekkdager().verdi()).isEqualByComparingTo(andreAvklarAnnenforelderEøsPeriodeFpsak.trekkdager());
+
+
+        // Revurdering
+        // Skal utlede aksjonspunkt på nytt for revuderinger!
+        var endringUttaksplan = fordeling(
+                uttaksperiode(FEDREKVOTE, startdatoForeldrepenger.plusWeeks(2), fødselsdato.plusWeeks(23).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(23), fødselsdato.plusWeeks(35).minusDays(1), ARBEID)
+        );
+        var endringssøknad = SøknadEndringMaler.lagEndringssøknad(søknad, saksnummer, endringUttaksplan)
+                .build();
+        far.søk(endringssøknad);
+
+        saksbehandler.hentFagsak(saksnummer);
+        saksbehandler.ventPåOgVelgRevurderingBehandling();
+        saksbehandler.harAksjonspunkt(AksjonspunktKoder.AVKLAR_UTTAK_I_EØS_FOR_ANNENPART_KODE);
     }
 
     private Saksnummer sendInnSøknadOgIMAnnenpartMorMødrekvoteOgDelerAvFellesperiodeHappyCase(Familie familie,
