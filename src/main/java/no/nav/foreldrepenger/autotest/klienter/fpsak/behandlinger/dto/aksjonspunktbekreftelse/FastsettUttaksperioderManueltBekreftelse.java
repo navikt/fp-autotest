@@ -14,6 +14,7 @@ import java.util.List;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.UttakresultatUtsettelseÅrsak;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.uttak.UttakResultatPeriodeAktivitet;
@@ -28,7 +29,7 @@ public class FastsettUttaksperioderManueltBekreftelse extends AksjonspunktBekref
 
     @Override
     public String aksjonspunktKode() {
-        return "5071";
+        return AksjonspunktKoder.FASTSETT_UTTAKPERIODER;
     }
 
     @Override

@@ -28,6 +28,7 @@ public enum Paragrafer {
     P_8_49("8-49"),
 
     P_21_3("21-3"),
+    EØS_ARTIKKEL("artikkel 5 i Forordning (EF) 883/2004"),
     ;
 
     private String kode;

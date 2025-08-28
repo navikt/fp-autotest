@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.Dekningsgrad;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.AnnenforelderBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.ForeldrepengerBuilder;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.UtenlandsoppholdMaler;
@@ -20,7 +19,7 @@ public final class SøknadForeldrepengerMaler {
                 .medUttaksplan(UttakMaler.fordelingHappyCase(familiehendelse, brukerRolle))
                 .medDekningsgrad(Dekningsgrad.HUNDRE)
                 .medUtenlandsopphold(UtenlandsoppholdMaler.oppholdBareINorge())
-                .medAnnenForelder(AnnenforelderBuilder.ukjentForelder());
+                .medAnnenForelder(AnnenforelderMaler.ukjentForelder());
     }
 
     public static ForeldrepengerBuilder lagSøknadForeldrepengerTermin(LocalDate termindato, BrukerRolle brukerRolle) {

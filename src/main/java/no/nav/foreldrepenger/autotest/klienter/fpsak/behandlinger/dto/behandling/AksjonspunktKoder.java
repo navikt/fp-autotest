@@ -109,6 +109,8 @@ public class AksjonspunktKoder {
     public static final String VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING = "5085";
     public static final String VURDER_FEILUTBETALING_KODE = "5084";
 
+    public static final String AVKLAR_UTTAK_I_EØS_FOR_ANNENPART_KODE = "5103";
+
     private AksjonspunktKoder() {
     }
 }

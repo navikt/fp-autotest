@@ -122,7 +122,7 @@ public enum PeriodeResultatÅrsak {
     SØKERS_SYKDOM_ELLER_SKADE_SEKS_UKER_IKKE_DOKUMENTERT("4115", "§14-11, jf §21-3: Søkers sykdom/skade første 6 uker ikke dokumentert"),
     SØKERS_INNLEGGELSE_SEKS_UKER_IKKE_DOKUMENTERT("4116", "§14-11, jf §21-3: Søkers innleggelse første 6 uker ikke dokumentert"),
     BARNETS_INNLEGGELSE_SEKS_UKER_IKKE_DOKUMENTERT("4117", "§14-11, jf §21-3: Barnets innleggelse første 6 uker ikke dokumentert"),
-    ;
+    ANNENPART_SAMTIDIG_UTTAK_I_EØS("4108", "§14-10 sjette ledd, artikkel 5 i Forordning (EF) 883/2004: Annen part har overlappende uttak i EØS, det er ikke søkt/innvilget samtidig uttak");
 
 
     @JsonValue
