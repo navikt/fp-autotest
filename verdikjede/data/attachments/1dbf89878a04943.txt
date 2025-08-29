@@ -1,0 +1,1 @@
+{"begrunnelse":"Mor har rett og har uttak i EØS!","annenforelderHarRett":false,"annenForelderHarRettEØS":true,"@type":"5086"}

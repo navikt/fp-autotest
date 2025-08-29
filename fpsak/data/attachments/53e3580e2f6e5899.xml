@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns7:soeknad xmlns="urn:no:nav:vedtak:felles:xml:soeknad:endringssoeknad:v3" xmlns:ns6="urn:no:nav:vedtak:felles:xml:soeknad:svangerskapspenger:v1" xmlns:ns5="urn:no:nav:vedtak:felles:xml:soeknad:engangsstoenad:v3" xmlns:ns7="urn:no:nav:vedtak:felles:xml:soeknad:v3" xmlns:ns2="urn:no:nav:vedtak:felles:xml:soeknad:uttak:v3" xmlns:ns4="urn:no:nav:vedtak:felles:xml:soeknad:felles:v3" xmlns:ns3="urn:no:nav:vedtak:felles:xml:soeknad:foreldrepenger:v3">
+    <ns7:mottattDato>2025-08-29</ns7:mottattDato>
+    <ns7:sprakvalg kode="NB"/>
+    <ns7:omYtelse>
+        <endringssoeknad>
+            <saksnummer>344</saksnummer>
+            <fordeling>
+                <ns2:annenForelderErInformert>true</ns2:annenForelderErInformert>
+                <ns2:oenskerJustertVedFoedsel>false</ns2:oenskerJustertVedFoedsel>
+                <ns2:perioder xsi:type="ns2:Gradering" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <ns2:fom>2025-12-16</ns2:fom>
+                    <ns2:tom>2026-01-05</ns2:tom>
+                    <ns2:type kodeverk="UTTAK_PERIODE_TYPE" kode="FELLESPERIODE"/>
+                    <ns2:oenskerSamtidigUttak>false</ns2:oenskerSamtidigUttak>
+                    <ns2:morsAktivitetIPerioden kodeverk="MORS_AKTIVITET" kode="-"/>
+                    <ns2:oenskerFlerbarnsdager>false</ns2:oenskerFlerbarnsdager>
+                    <ns2:arbeidtidProsent>40.0</ns2:arbeidtidProsent>
+                    <ns2:erArbeidstaker>true</ns2:erArbeidstaker>
+                    <ns2:erFrilanser>false</ns2:erFrilanser>
+                    <ns2:erSelvst.næringsdrivende>false</ns2:erSelvst.næringsdrivende>
+                    <ns2:arbeidsgiver xsi:type="ns2:Virksomhet">
+                        <ns2:identifikator>991078045</ns2:identifikator>
+                    </ns2:arbeidsgiver>
+                    <ns2:arbeidsforholdSomSkalGraderes>true</ns2:arbeidsforholdSomSkalGraderes>
+                </ns2:perioder>
+                <ns2:oenskerKvoteOverfoert kodeverk="OVERFOERING_AARSAK_TYPE" kode="-"/>
+            </fordeling>
+        </endringssoeknad>
+    </ns7:omYtelse>
+    <ns7:soeker>
+        <ns4:aktoerId>9905419824269</ns4:aktoerId>
+        <ns4:soeknadsrolle kodeverk="FORELDRE_TYPE" kode="MOR"/>
+    </ns7:soeker>
+</ns7:soeknad>
