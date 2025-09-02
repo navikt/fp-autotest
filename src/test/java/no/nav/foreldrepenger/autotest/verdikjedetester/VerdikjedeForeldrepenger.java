@@ -59,6 +59,7 @@ import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.u
 import static no.nav.foreldrepenger.generator.soknad.maler.UttaksperioderMaler.uttaksperiode;
 import static no.nav.foreldrepenger.generator.soknad.maler.VedleggMaler.dokumenterTermin;
 import static no.nav.foreldrepenger.generator.soknad.maler.VedleggMaler.dokumenterUttak;
+import static no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil.helgejustertTilFredag;
 import static no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil.helgejustertTilMandag;
 import static no.nav.foreldrepenger.vtp.kontrakter.v2.ArbeidsavtaleDto.arbeidsavtale;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -2492,12 +2493,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .barn(LocalDate.now().minusWeeks(8))
                 .build();
         var fødselsdato = familie.barn().fødselsdato();
-        var startdatoForeldrepenger = fødselsdato.plusWeeks(8);
+        var helgejustertFødselsdato = helgejustertTilMandag(fødselsdato);
+        var startdatoForeldrepenger = helgejustertFødselsdato.plusWeeks(8);
         var far = familie.far();
-        var fellesperiodeFar = uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(23), fødselsdato.plusWeeks(39).minusDays(1), ARBEID);
+        var fellesperiodeFar = uttaksperiode(FELLESPERIODE, startdatoForeldrepenger.plusWeeks(15), startdatoForeldrepenger.plusWeeks(31).minusDays(1), ARBEID);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, FAR)
                 .medUttaksplan(fordeling(
-                        uttaksperiode(FEDREKVOTE, startdatoForeldrepenger, fødselsdato.plusWeeks(23).minusDays(1)), fellesperiodeFar
+                        uttaksperiode(FEDREKVOTE, startdatoForeldrepenger, startdatoForeldrepenger.plusWeeks(15).minusDays(1)), fellesperiodeFar
                 ))
                 .medAnnenForelder(AnnenforelderMaler.utenlandskMedRettighetEØS("999999999999", CountryCode.SE))
                 .build();
@@ -2525,13 +2527,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         var avklarAnnenforelderEøsPerioder = saksbehandler.hentAksjonspunktbekreftelse(new AvklarAnnenforelderEøsPerioder())
                 .setPerioder(List.of(
                         new AvklarAnnenforelderEøsPerioder.EøsUttakPeriodeDto(
-                                fødselsdato,
-                                fødselsdato.plusWeeks(6).minusDays(1),
+                                helgejustertFødselsdato,
+                                helgejustertFødselsdato.plusWeeks(6).minusDays(1),
                                 BigDecimal.valueOf(30),
                                 MØDREKVOTE),
                         new AvklarAnnenforelderEøsPerioder.EøsUttakPeriodeDto(
-                                fødselsdato.plusWeeks(6),
-                                fødselsdato.plusWeeks(10).minusDays(1),
+                                helgejustertFødselsdato.plusWeeks(6),
+                                helgejustertFødselsdato.plusWeeks(10).minusDays(1),
                                 BigDecimal.valueOf(10),
                                 FELLESPERIODE)
                 ));
@@ -2541,9 +2543,10 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .godkjenn(fellesperiodeFar);
         saksbehandler.bekreftAksjonspunkt(vurderUttakDokumentasjonBekreftelse);
 
+        var helgejustertSistedatoForeldrepenger = helgejustertTilFredag(startdatoForeldrepenger.plusWeeks(31).minusDays(1));
         var fastsettUttaksperioderManueltBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new FastsettUttaksperioderManueltBekreftelse())
-                .avslåPeriode(fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1), ANNENPART_SAMTIDIG_UTTAK_I_EØS)
-                .avslåPeriode(fødselsdato.plusWeeks(37), fødselsdato.plusWeeks(39).minusDays(1), IKKE_STØNADSDAGER_IGJEN);
+                .avslåPeriode(startdatoForeldrepenger, startdatoForeldrepenger.plusWeeks(2).minusDays(1), ANNENPART_SAMTIDIG_UTTAK_I_EØS)
+                .avslåPeriode(startdatoForeldrepenger.plusWeeks(29), helgejustertSistedatoForeldrepenger, IKKE_STØNADSDAGER_IGJEN);
         saksbehandler.bekreftAksjonspunkt(fastsettUttaksperioderManueltBekreftelse);
 
         foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
@@ -2602,8 +2605,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         // Revurdering
         // Skal utlede aksjonspunkt på nytt for revuderinger!
         var endringUttaksplan = fordeling(
-                uttaksperiode(FEDREKVOTE, startdatoForeldrepenger.plusWeeks(2), fødselsdato.plusWeeks(23).minusDays(1)),
-                uttaksperiode(FELLESPERIODE, fødselsdato.plusWeeks(23), fødselsdato.plusWeeks(35).minusDays(1), ARBEID)
+                uttaksperiode(FEDREKVOTE, startdatoForeldrepenger.plusWeeks(2), startdatoForeldrepenger.plusWeeks(15).minusDays(1)),
+                uttaksperiode(FELLESPERIODE, startdatoForeldrepenger.plusWeeks(15), startdatoForeldrepenger.plusWeeks(27).minusDays(1), ARBEID)
         );
         var endringssøknad = SøknadEndringMaler.lagEndringssøknad(søknad, saksnummer, endringUttaksplan)
                 .build();
