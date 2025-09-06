@@ -25,9 +25,9 @@
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
         <vtp.versjon>2.0.5</vtp.versjon>
-        <fp-felles.versjon>7.5.10</fp-felles.versjon>
-        <fp-prosesstask.version>5.1.11</fp-prosesstask.version>
-        <fp-kontrakter.version>9.3.8</fp-kontrakter.version>
+        <fp-felles.versjon>7.6.0</fp-felles.versjon>
+        <fp-prosesstask.version>5.2.0</fp-prosesstask.version>
+        <fp-kontrakter.version>9.4.1</fp-kontrakter.version>
         <fpsoknad-felles.version>3.3.2</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.2.4</foreldrepenge-api.version>
         <ftberegning.version>6.1.1</ftberegning.version>
@@ -40,8 +40,8 @@
         <aspectj.version>1.9.24</aspectj.version>
         <junit.version>5.13.4</junit.version>
         <jackson.version>2.20.0</jackson.version>
-        <jakarta.jakartaee-bom.version>10.0.0</jakarta.jakartaee-bom.version>
-        <jersey.version>3.1.11</jersey.version>
+        <jakarta.jakartaee-bom.version>11.0.0</jakarta.jakartaee-bom.version>
+        <jersey.version>4.0.0-M3</jersey.version>
     </properties>
 
     <dependencyManagement>
