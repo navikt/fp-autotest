@@ -1,0 +1,1 @@
+{"type":"dødfødselhendelse","endringstype":"OPPRETTET","fnr":"21478822275","doedfoedselsdato":"2025-08-30"}

@@ -1,0 +1,1 @@
+{"antallBarn":1,"utstedtdato":"2025-08-05","termindato":"2025-10-05","@type":"5001"}

@@ -1,0 +1,1 @@
+{"begrunnelse":"Mor har ikke rett og er uføretrygded i følge pesys!","annenforelderHarRett":false,"annenforelderMottarUføretrygd":true,"annenForelderHarRettEØS":false,"@type":"5086"}

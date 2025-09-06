@@ -1,0 +1,1 @@
+{"erBarnFødt":true,"barn":[{"fødselsdato":"2025-08-05"}],"@type":"5027"}
