@@ -2564,7 +2564,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                         + "for barnet. Mellom %s og %s har den andre forelderen tatt ut 10 dager som tilsvarer fellesperiode, "
                         + "som fører til en reduksjon i dine stønadsdager med fellesperiode i Norge. "
                         + "Du har derfor krav på fedrekvoten og 70 dager av fellesperioden.",
-                        formaterDato(fødselsdato), formaterDato(fødselsdato.plusWeeks(10).minusDays(1))))
+                        formaterDato(helgejustertFødselsdato), formaterDato(helgejustertFødselsdato.plusWeeks(10).minusDays(1))))
                 .medEgenndefinertAssertion("Det er 10 dager igjen av kvoten din.")
                 .medTekstOmDageneMåVæreTattUtFørTreÅrEllerNyttBarn()
                 .medKapittelDetteHarViAvslått()
@@ -2577,7 +2577,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 )
                 .medEgenndefinertAssertion(String.format(
                         "Du har ikke rett til foreldrepenger fra og med %s til og med %s fordi det ikke er flere dager igjen av foreldrepengeperioden.",
-                        formaterDato(fødselsdato.plusWeeks(37)), formaterDato(fellesperiodeFar.tom())))
+                        formaterDato(startdatoForeldrepenger.plusWeeks(29)), formaterDato(fellesperiodeFar.tom())))
                 .medParagrafer(P_14_9, P_14_10, P_14_12, P_14_13, EØS_ARTIKKEL)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
