@@ -1269,14 +1269,13 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 "Forventer at hele summen utbetales til søker, og derfor ingenting til arbeidsgiver!").isTrue();
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
-        var dagsats = SEKS_G_2024 / 260;
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(far.fødselsnummer(), saksnummerFar)
-                .medTekstOmDuFårXKronerPerDagFørSkatt(dagsats)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medTekstOmAleneomsorg()
                 .medParagraf(P_14_15)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2024)
+                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
