@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<melding xmlns="http://seres.no/xsd/NAV/Inntektsmelding_M/20181211">
+    <Skjemainnhold>
+        <ytelse>Foreldrepenger</ytelse>
+        <aarsakTilInnsending>Ny</aarsakTilInnsending>
+        <arbeidsgiver>
+            <virksomhetsnummer>889640782</virksomhetsnummer>
+            <kontaktinformasjon>
+                <kontaktinformasjonNavn>Corpolarsen</kontaktinformasjonNavn>
+                <telefonnummer>41925090</telefonnummer>
+            </kontaktinformasjon>
+        </arbeidsgiver>
+        <arbeidstakerFnr>29479838281</arbeidstakerFnr>
+        <naerRelasjon>false</naerRelasjon>
+        <arbeidsforhold>
+            <arbeidsforholdId>ARB001-001</arbeidsforholdId>
+            <foersteFravaersdag>2025-04-21</foersteFravaersdag>
+            <beregnetInntekt>
+                <beloep>37500.0</beloep>
+            </beregnetInntekt>
+        </arbeidsforhold>
+        <refusjon>
+            <refusjonsbeloepPrMnd>29000</refusjonsbeloepPrMnd>
+        </refusjon>
+        <startdatoForeldrepengeperiode>2025-04-21</startdatoForeldrepengeperiode>
+        <avsendersystem>
+            <systemnavn>FS22</systemnavn>
+            <systemversjon>1.0</systemversjon>
+            <innsendingstidspunkt>2025-09-12T15:04:36.511475078</innsendingstidspunkt>
+        </avsendersystem>
+    </Skjemainnhold>
+</melding>

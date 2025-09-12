@@ -1,0 +1,1 @@
+{"id":999958,"uuid":"489cc7be-e8a2-4505-bed9-50fceeb93380","versjon":5,"fagsakId":999954,"type":"BT-002","status":"UTRED","opprettet":"2025-09-12T15:02:43","behandlingHenlagt":false,"behandlingPaaVent":false,"behandlingÅrsaker":[{"behandlingArsakType":"RE-END-INNTEKTSMELD","manueltOpprettet":false}],"harVerge":false,"vilkår":[]}
