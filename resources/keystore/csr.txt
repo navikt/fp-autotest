@@ -22,3 +22,5 @@ DNS.1=fpmock2
 DNS.2=vtp
 DNS.3=localhost
 DNS.4=host.docker.internal
+DNS.5=kafka
+ 

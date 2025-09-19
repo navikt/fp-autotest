@@ -46,3 +46,7 @@ keytool -import -trustcacerts -alias localhost-ssl -file ${CERT_PEM} -keystore $
 
 # clean up
 rm ${CERT_PEM}
+
+echo "${KEYSTORE_PASS}" > keystore_creds
+echo "${KEYSTORE_PASS}" > key_creds
+echo "${TRUSTSTORE_PASS}" > truststore_creds
