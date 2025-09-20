@@ -1,0 +1,1 @@
+{"perioder":[{"fom":"2025-07-28","tom":"2025-09-07","trekkdager":30,"trekkonto":"MØDREKVOTE"},{"fom":"2025-09-08","tom":"2025-10-05","trekkdager":10,"trekkonto":"FELLESPERIODE"}],"@type":"5103"}

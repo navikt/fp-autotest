@@ -1,0 +1,1 @@
+{"fnr":"05487227112","gyldigFom":"2024-09-19","gyldigTom":"2027-09-19","mandatTekst":"Hva er dette","navn":"Verge vergesen","sokerErKontaktPerson":true,"sokerErUnderTvungenForvaltning":false,"vergeType":"BARN","@type":"5030"}

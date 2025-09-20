@@ -1,0 +1,1 @@
+{"begrunnelse":"Fordi","klageVurdering":"MEDHOLD_I_KLAGE","klageMedholdArsak":"PROSESSUELL_FEIL","klageVurderingOmgjoer":"GUNST_MEDHOLD_I_KLAGE","fritekstTilBrev":"Fritektst til brev fra klagebehandler.","vedtaksdatoPaklagdBehandling":"2025-09-19","@type":"5035"}
