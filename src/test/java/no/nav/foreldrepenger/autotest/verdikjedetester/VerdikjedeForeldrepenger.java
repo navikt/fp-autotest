@@ -2367,7 +2367,8 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         saksbehandler.hentFagsak(saksnummer);
         assertThat(saksbehandler.erAksjonspunktUtført(AksjonspunktKoder.AUTO_VENTER_PÅ_KOMPLETT_SØKNAD)).isTrue();
 
-        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse()).bekreftBarnErIkkeFødt();
+        var sjekkManglendeFødsel = saksbehandler.hentAksjonspunktbekreftelse(new SjekkManglendeFødselBekreftelse())
+                .bekreftBarnErIkkeFødt(termindato);
         saksbehandler.bekreftAksjonspunkt(sjekkManglendeFødsel);
 
         var avklarFaktaAnnenForeldreHarRett = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())

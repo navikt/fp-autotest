@@ -8,23 +8,27 @@ import java.util.List;
 
 public class SjekkManglendeFødselBekreftelse extends AksjonspunktBekreftelse {
 
-    protected Boolean erBarnFødt;
     protected List<BekreftetBarnDto> barn = new ArrayList<>();
+    protected LocalDate termindato;
 
     public SjekkManglendeFødselBekreftelse() {
         super();
     }
 
-    public SjekkManglendeFødselBekreftelse bekreftBarnErFødt(int antallBarn, LocalDate dato) {
-        erBarnFødt = true;
+    public SjekkManglendeFødselBekreftelse bekreftBarnErFødt(int antallBarn, LocalDate fødselsdato) {
+        return bekreftBarnErFødt(antallBarn, fødselsdato, fødselsdato);
+    }
+
+    public SjekkManglendeFødselBekreftelse bekreftBarnErFødt(int antallBarn, LocalDate fødselsdato, LocalDate termindato) {
         for (int i = 0; i < antallBarn; i++) {
-            barn.add(new BekreftetBarnDto(dato, null));
+            barn.add(new BekreftetBarnDto(fødselsdato, null));
         }
+        this.termindato = termindato;
         return this;
     }
 
-    public SjekkManglendeFødselBekreftelse bekreftBarnErIkkeFødt() {
-        erBarnFødt = false;
+    public SjekkManglendeFødselBekreftelse bekreftBarnErIkkeFødt(LocalDate termindato) {
+        this.termindato = termindato;
         return this;
     }
 
