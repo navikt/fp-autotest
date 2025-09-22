@@ -36,7 +36,7 @@
         <logback.version>1.5.18</logback.version>
         <allure.version>2.29.1</allure.version>
         <allure.maven.version>2.15.2</allure.maven.version>
-        <assertj.version>3.27.4</assertj.version>
+        <assertj.version>3.27.6</assertj.version>
         <aspectj.version>1.9.24</aspectj.version>
         <junit.version>5.13.4</junit.version>
         <jackson.version>2.20.0</jackson.version>
@@ -177,7 +177,7 @@
         <dependency>
             <groupId>io.smallrye</groupId>
             <artifactId>jandex</artifactId>
-            <version>3.4.0</version>
+            <version>3.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -226,12 +226,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.3</version>
+                    <version>3.5.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.14.0</version>
+                    <version>3.14.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
