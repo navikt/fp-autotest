@@ -609,11 +609,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
 
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.BREV_SENDT);
         var brevAssertionsBuilder = foreldrepengerInnvilget100ProsentAssertionsBuilder(familie.mor().fødselsnummer(), saksnummerMor)
-                .medTekstOmDuFårXKronerPerDagFørSkatt(SEKS_G_2024 / 260)
+                .medTekstOmDuFårXKronerPerDagFørSkatt(DAGSATS_VED_6_G_2025)
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_10, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2024)
+                .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
                 .medParagraf(P_8_30)
                 .medTekstOmAutomatiskVedtakUtenUndferskrift();
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
