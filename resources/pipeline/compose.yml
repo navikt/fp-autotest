@@ -68,14 +68,14 @@ services:
         pdl.leesah-v1,
         teamdokumenthandtering.aapen-dok-journalfoering,
         klage.behandling-events.v1
+    env_file:
+      - *common-properties
     volumes:
       - *sertifikat-volum
     ports:
       - "127.0.0.1:8060:8060"
       - "127.0.0.1:8063:8063"
       - "127.0.0.1:8636:8636"
-      - "127.0.0.1:9093:9093"
-      - "127.0.0.1:9092:9092"
       - "127.0.0.1:1337:1337"
       - "127.0.0.1:8389:8389"
     healthcheck:
@@ -83,6 +83,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    build: ./vtp
+    depends_on:
+      - kafka
   fptilgang:
     <<: *default-konfigurasjon
     image: $FPTILGANG_IMAGE
@@ -186,7 +189,7 @@ services:
       FPOPPDRAG_OVERRIDE_PROXY_URL: http://localhost:9000/fpoppdrag/api
       UFORE_RS_URL: http://vtp:8060/rest/api/pesys/ufo
       EXTRA_CLASS_PATH: :vtp-lib/*
-      #JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     env_file:
       - *common-properties
       - fpsak_datasource.env
@@ -194,7 +197,7 @@ services:
       - *sertifikat-volum
     ports:
       - "127.0.0.1:8080:8080"
-      #- "127.0.0.1:5005:5005"
+      - "127.0.0.1:5005:5005"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpsak/internal/health/isReady" ]
       interval: 10s
@@ -986,3 +989,85 @@ services:
     depends_on:
       - fpcache
       - wonderwall-selvbetjening-sso-server
+
+  kafka:
+    image: apache/kafka:latest
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - "9093:9093"   # SSL for secured clients
+    volumes:
+      - ~/.modig:/etc/kafka/secrets
+    env_file:
+      - *common-properties
+    environment:
+      # Cluster ID for KRaft mode
+      CLUSTER_ID: "5L6g3nShT-eMCtK--X86sw"
+
+      # Required for KRaft mode
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9094
+
+      # Listeners
+      KAFKA_LISTENERS: SSL://:9093,CONTROLLER://:9094
+      KAFKA_ADVERTISED_LISTENERS: SSL://kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,SSL:SSL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL
+
+      # SSL configs using filename format for Apache Kafka Docker image
+      KAFKA_SSL_KEYSTORE_FILENAME: keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: key_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: truststore_creds
+      KAFKA_SSL_CLIENT_AUTH: required
+
+      JAVA_TOOL_OPTIONS: "-Djavax.net.debug=ssl,handshake"
+
+      # Development-friendly settings
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 3
+
+      # Enable KRaft format storage
+      KAFKA_ENABLE_KRAFT: yes
+
+  kafka-init:
+    image: apache/kafka:latest
+    depends_on:
+      - kafka
+    volumes:
+      - ~/.modig:/etc/kafka/secrets
+    entrypoint: |
+      sh -c '
+        echo "Waiting for Kafka to be ready..." &&
+        sleep 10
+
+        cat <<EOF > /tmp/client.properties
+      security.protocol=SSL
+      ssl.keystore.location=/etc/kafka/secrets/keystore.jks
+      ssl.keystore.password=devillokeystore1234
+      ssl.key.password=devillokeystore1234
+      ssl.truststore.location=/etc/kafka/secrets/truststore.jks
+      ssl.truststore.password=changeit
+      EOF
+
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.behandling-hendelse-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.familie-vedtakfattet-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.tilbakekreving-dvh-vedtak-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.fpoversikt-migrering-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.fpsak-dvh-stonadsstatistikk-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic personoversikt.modia-soknadsstatus-hendelse --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic pdl.leesah-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamdokumenthandtering.aapen-dok-journalfoering --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic klage.behandling-events.v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties
+      '
+
+volumes:
+  kafka-logs:
+
