@@ -57,6 +57,8 @@ services:
     environment:
       NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE: /app/.modig/keystore.jks
       JAVAX_NET_SSL_TRUSTSTORE: /app/.modig/truststore.jks
+      KAFKA_PDL_LEESAH_TOPIC: pdl.leesah-v1
+      KAFKA_TOPIC_JOURNAL_HENDELSE: teamdokumenthandtering.aapen-dok-journalfoering
       CREATE_TOPICS: >-
         teamforeldrepenger.behandling-hendelse-v1,
         teamforeldrepenger.familie-vedtakfattet-v1,
@@ -68,8 +70,6 @@ services:
         pdl.leesah-v1,
         teamdokumenthandtering.aapen-dok-journalfoering,
         klage.behandling-events.v1
-    env_file:
-      - *common-properties
     volumes:
       - *sertifikat-volum
     ports:
