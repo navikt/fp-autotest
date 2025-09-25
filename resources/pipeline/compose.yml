@@ -70,7 +70,7 @@ services:
       timeout: 5s
       retries: 10
     depends_on:
-      - kafka-init
+      - kafka
   fptilgang:
     <<: *default-konfigurasjon
     image: $FPTILGANG_IMAGE
@@ -174,7 +174,7 @@ services:
       FPOPPDRAG_OVERRIDE_PROXY_URL: http://localhost:9000/fpoppdrag/api
       UFORE_RS_URL: http://vtp:8060/rest/api/pesys/ufo
       EXTRA_CLASS_PATH: :vtp-lib/*
-      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      #JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     env_file:
       - *common-properties
       - fpsak_datasource.env
