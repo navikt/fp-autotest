@@ -199,7 +199,7 @@ services:
       - *sertifikat-volum
     ports:
       - "127.0.0.1:8080:8080"
-      - "127.0.0.1:5005:5005"
+      #- "127.0.0.1:5005:5005"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/fpsak/internal/health/isReady" ]
       interval: 10s
