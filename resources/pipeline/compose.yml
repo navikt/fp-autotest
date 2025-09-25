@@ -68,6 +68,8 @@ services:
         pdl.leesah-v1,
         teamdokumenthandtering.aapen-dok-journalfoering,
         klage.behandling-events.v1
+    env_file:
+      - *common-properties
     volumes:
       - *sertifikat-volum
     ports:
