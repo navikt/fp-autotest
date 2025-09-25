@@ -1056,14 +1056,14 @@ services:
       ssl.truststore.password=changeit
       EOF
 
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.behandling-hendelse-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.familie-vedtakfattet-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.tilbakekreving-dvh-vedtak-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.fpoversikt-migrering-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.fpsak-dvh-stonadsstatistikk-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic personoversikt.modia-soknadsstatus-hendelse --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic pdl.leesah-v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamdokumenthandtering.aapen-dok-journalfoering --partitions 3 --replication-factor 1 --command-config /tmp/client.properties &&
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic klage.behandling-events.v1 --partitions 3 --replication-factor 1 --command-config /tmp/client.properties
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.behandling-hendelse-v1 --partitions 1 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.familie-vedtakfattet-v1 --partitions 1 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.tilbakekreving-dvh-saksstatistikk-v1 --partitions 1 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.tilbakekreving-dvh-vedtak-v1 --partitions 1 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.fpoversikt-migrering-v1 --partitions 1 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamforeldrepenger.fpsak-dvh-stonadsstatistikk-v1 --partitions 1 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic personoversikt.modia-soknadsstatus-hendelse --partitions 1 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic pdl.leesah-v1 --partitions 1 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic teamdokumenthandtering.aapen-dok-journalfoering --partitions 1 --replication-factor 1 --command-config /tmp/client.properties &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9093 --create --if-not-exists --topic klage.behandling-events.v1 --partitions 1 --replication-factor 1 --command-config /tmp/client.properties
       '
