@@ -1,0 +1,1 @@
+{"barn":[{"fødselsdato":"2025-08-27"},{"fødselsdato":"2025-08-27"}],"termindato":"2025-08-27","@type":"5027"}

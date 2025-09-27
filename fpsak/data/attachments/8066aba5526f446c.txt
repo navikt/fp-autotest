@@ -1,0 +1,1 @@
+{"mannAdoptererAlene":false,"@type":"5006"}
