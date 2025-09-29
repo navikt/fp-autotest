@@ -1036,10 +1036,10 @@ services:
       cat <<EOF > /tmp/client.properties
       security.protocol=SSL
       ssl.keystore.location=/etc/kafka/secrets/keystore.jks
-      ssl.keystore.password=devillokeystore1234
-      ssl.key.password=devillokeystore1234
+      ssl.keystore.password=vtpvtp
+      ssl.key.password=vtpvtp
       ssl.truststore.location=/etc/kafka/secrets/truststore.jks
-      ssl.truststore.password=changeit
+      ssl.truststore.password=vtpvtp
       EOF
 
       # Define topics

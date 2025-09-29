@@ -4,9 +4,9 @@ SERVERKEYSTORE=serverkeystore.p12
 CERT_PEM=cert.pem
 KEY_PEM=key.pem
 KEYSTORE_FILE=keystore.jks
-KEYSTORE_PASS=devillokeystore1234
+KEYSTORE_PASS=vtpvtp
 TRUSTSTORE_FILE=truststore.jks
-TRUSTSTORE_PASS=changeit
+TRUSTSTORE_PASS=vtpvtp
 CONFIG_FILE=csr.txt
 
 cd $(dirname "$0")
