@@ -52,8 +52,7 @@ services:
     <<: *default-konfigurasjon
     image: $VTP_IMAGE
     container_name: vtp
-    mem_limit: 1gb
-    shm_size: 512mb
+    mem_limit: 512mb
     env_file:
       - *common-properties
     volumes:
@@ -71,7 +70,7 @@ services:
       retries: 10
     depends_on:
       kafka:
-        condition: service_healthy
+        condition: service_started
   fptilgang:
     <<: *default-konfigurasjon
     image: $FPTILGANG_IMAGE
@@ -980,6 +979,7 @@ services:
     image: apache/kafka:latest
     container_name: kafka
     hostname: kafka
+    mem_limit: 512m
     ports:
       - "9093:9093"   # SSL for secured clients
     volumes:
@@ -998,7 +998,7 @@ services:
       # Listeners
       KAFKA_LISTENERS: SSL://:9093,CONTROLLER://:9094
       KAFKA_ADVERTISED_LISTENERS: SSL://kafka:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,SSL:SSL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,SSL:SSL
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_INTER_BROKER_LISTENER_NAME: SSL
 
@@ -1010,17 +1010,23 @@ services:
       KAFKA_SSL_TRUSTSTORE_CREDENTIALS: truststore_creds
       KAFKA_SSL_CLIENT_AUTH: required
 
-      # Development-friendly settings
+      # Optimization
+      KAFKA_HEAP_OPTS: "-Xmx256m -Xms128m"
+      KAFKA_LOG_SEGMENT_BYTES: 1048576   # 1 MB segments
+      KAFKA_LOG_RETENTION_BYTES: 10485760  # 10 MB max log size
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_NETWORK_THREADS: 4
+      KAFKA_NUM_IO_THREADS: 4
       KAFKA_NUM_PARTITIONS: 1
 
       # Enable KRaft format storage
       KAFKA_ENABLE_KRAFT: yes
 
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG4J_LOGGERS: "kafka.server.DefaultAutoTopicCreationManager=WARN"
     healthcheck:
       test: ["CMD-SHELL", "nc -z kafka 9094 || exit 1"]
       interval: 1s
