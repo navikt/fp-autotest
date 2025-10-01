@@ -14,11 +14,7 @@ public class ProsesstaskFpsakKlient implements ProsessTaskKlient {
     private final ProsesstaskKlientFelles prosesstaskKlient;
 
     public ProsesstaskFpsakKlient() {
-        prosesstaskKlient = new ProsesstaskKlientFelles(FPSAK_BASE, "fpsak");
-    }
-
-    public ProsesstaskFpsakKlient(SaksbehandlerRolle saksbehandlerRolle) {
-        prosesstaskKlient = new ProsesstaskKlientFelles(FPSAK_BASE, saksbehandlerRolle, "fpsak");
+        prosesstaskKlient = new ProsesstaskKlientFelles(FPSAK_BASE, SaksbehandlerRolle.DRIFTER, "fpsak");
     }
 
     @Override
