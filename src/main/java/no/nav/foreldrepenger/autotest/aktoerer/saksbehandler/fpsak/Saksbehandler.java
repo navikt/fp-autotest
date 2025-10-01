@@ -97,7 +97,7 @@ public class Saksbehandler {
         fagsakKlient = new FagsakKlient(saksbehandlerRolle);
         behandlingerKlient = new BehandlingFpsakKlient(saksbehandlerRolle);
         historikkKlient = new HistorikkFpsakKlient(saksbehandlerRolle);
-        prosesstaskKlient = new ProsesstaskFpsakKlient(saksbehandlerRolle);
+        prosesstaskKlient = new ProsesstaskFpsakKlient();
         risikovurderingKlient = new RisikovurderingKlient(saksbehandlerRolle);
         fplosKlient = new FplosKlient(saksbehandlerRolle);
     }
