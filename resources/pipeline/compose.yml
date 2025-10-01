@@ -53,8 +53,11 @@ services:
     image: $VTP_IMAGE
     container_name: vtp
     mem_limit: 512mb
+    environment:
+      JAVAX_NET_SSL_KEYSTORE: /app/.modig/keystore.jks
+      JAVAX_NET_SSL_KEYSTOREPASSWORD: vtpvtp
     env_file:
-      - *common-properties
+      - "common.env"
     volumes:
       - *sertifikat-volum
     ports:
