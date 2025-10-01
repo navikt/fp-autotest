@@ -57,7 +57,7 @@ services:
       JAVAX_NET_SSL_KEYSTORE: /app/.modig/keystore.jks
       JAVAX_NET_SSL_KEYSTOREPASSWORD: vtpvtp
     env_file:
-      - "common.env"
+      - *common-properties
     volumes:
       - *sertifikat-volum
     ports:
