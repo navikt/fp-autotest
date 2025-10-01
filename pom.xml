@@ -33,9 +33,9 @@
         <ftberegning.version>6.1.1</ftberegning.version>
 
         <slf4j.version>2.0.17</slf4j.version>
-        <logback.version>1.5.18</logback.version>
-        <allure.version>2.29.1</allure.version>
-        <allure.maven.version>2.15.2</allure.maven.version>
+        <logback.version>1.5.19</logback.version>
+        <allure.version>2.30.0</allure.version>
+        <allure.maven.version>2.16.1</allure.maven.version>
         <assertj.version>3.27.6</assertj.version>
         <aspectj.version>1.9.24</aspectj.version>
         <junit.version>5.13.4</junit.version>
