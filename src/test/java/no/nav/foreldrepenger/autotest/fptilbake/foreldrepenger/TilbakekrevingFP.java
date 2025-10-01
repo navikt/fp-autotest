@@ -61,8 +61,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .build();
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer);
@@ -75,8 +74,8 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
         );
-        var søknadE = lagEndringssøknad(søknad, saksnummer, fordeling);
-        mor.søk(søknadE.build());
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
+        mor.søk(søknadE);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -139,7 +138,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fpStartdato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer);
 
@@ -247,7 +246,7 @@ class TilbakekrevingFP extends FptilbakeTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fpStartdato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         lagOgSendInntektsmelding(familie, fpStartdato, saksnummer);
 

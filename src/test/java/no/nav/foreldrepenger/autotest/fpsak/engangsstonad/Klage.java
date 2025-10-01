@@ -46,7 +46,7 @@ class Klage extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(fødselsdato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         opprettForstegangssoknadVedtak(saksnummer);
 
@@ -100,7 +100,7 @@ class Klage extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(fødselsdato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
         opprettForstegangssoknadVedtak(saksnummer);
 
         // Motta og behandle klage - NFP

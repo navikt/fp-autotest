@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.generator.familie;
 
+import static no.nav.foreldrepenger.common.util.StreamUtil.safeStream;
+
 import java.util.List;
 
 import no.nav.foreldrepenger.common.domain.AktørId;
@@ -14,13 +16,13 @@ final class Aareg {
     }
 
     static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg) {
-        return aareg.arbeidsforhold().stream()
+        return safeStream(aareg.arbeidsforhold())
                 .map(Aareg::mapTilArbeidsforhold)
                 .toList();
     }
 
     static List<Arbeidsforhold> arbeidsforholdene(ArbeidsforholdModell aareg, ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
-        return aareg.arbeidsforhold().stream()
+        return safeStream(aareg.arbeidsforhold())
                 .filter(a -> erArbeidsgiver(arbeidsgiverIdentifikator, a))
                 .map(Aareg::mapTilArbeidsforhold)
                 .toList();
@@ -38,7 +40,7 @@ final class Aareg {
         return new Arbeidsforhold(
                 a.arbeidsgiverOrgnr() != null ? new Orgnummer(a.arbeidsgiverOrgnr()) : new AktørId(a.arbeidsgiverAktorId()),
                 new ArbeidsforholdId(a.arbeidsforholdId()), a.ansettelsesperiodeFom(), a.ansettelsesperiodeTom(),
-                a.arbeidsforholdstype(), a.arbeidsavtaler().get(0).stillingsprosent());
+                a.arbeidsforholdstype(), a.arbeidsavtaler().getFirst().stillingsprosent());
     }
 
     private static boolean erArbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator, no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold a) {

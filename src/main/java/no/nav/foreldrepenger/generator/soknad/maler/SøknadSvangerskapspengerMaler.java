@@ -3,12 +3,11 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggInnsendingType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.svangerskapspenger.TilretteleggingbehovDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.SvangerskapspengerBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.UtenlandsoppholdMaler;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggInnsendingType;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.svangerskapspenger.TilretteleggingbehovDto;
+import no.nav.foreldrepenger.generator.soknad.builder.BarnBuilder;
+import no.nav.foreldrepenger.generator.soknad.builder.SvangerskapspengerBuilder;
 
 public final class SøknadSvangerskapspengerMaler {
 

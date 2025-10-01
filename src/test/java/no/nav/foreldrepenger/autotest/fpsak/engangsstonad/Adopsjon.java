@@ -23,11 +23,11 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseVilkårAksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.AdopsjonDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EngangsstønadDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.AdopsjonDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.engangsstønad.EngangsstønadDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
@@ -55,7 +55,7 @@ class Adopsjon extends FpsakTestBase {
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
@@ -93,7 +93,7 @@ class Adopsjon extends FpsakTestBase {
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
@@ -134,7 +134,7 @@ class Adopsjon extends FpsakTestBase {
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
@@ -183,7 +183,7 @@ class Adopsjon extends FpsakTestBase {
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = far.søk(søknad.build());
+        var saksnummer = far.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
@@ -219,7 +219,7 @@ class Adopsjon extends FpsakTestBase {
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = far.søk(søknad.build());
+        var saksnummer = far.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())

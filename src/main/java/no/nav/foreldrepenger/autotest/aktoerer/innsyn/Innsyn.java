@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi.InnsynKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpoversikt.InnsynKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;

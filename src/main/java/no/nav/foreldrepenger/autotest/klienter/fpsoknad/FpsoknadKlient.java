@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi;
+package no.nav.foreldrepenger.autotest.klienter.fpsoknad;
 
 import static jakarta.ws.rs.core.UriBuilder.fromUri;
 import static no.nav.foreldrepenger.autotest.klienter.HttpRequestProvider.requestMedInnloggetBruker;
@@ -12,23 +12,22 @@ import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.MultipartBodyPublisher;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EndringssøknadForeldrepengerDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EngangsstønadDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ForeldrepengesøknadDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SvangerskapspengesøknadDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggInnsendingType;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ettersendelse.EttersendelseDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Kvittering;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.Innsending;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.EttersendelseDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggInnsendingType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.engangsstønad.EngangsstønadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.ForeldrepengesøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.svangerskapspenger.SvangerskapspengesøknadDto;
 
-public class MottakKlient {
+public class FpsoknadKlient {
 
-    private static final String API_SEND_PATH = "/rest/soknad";
+    private static final String API_SEND_PATH = "/api/soknad";
     private static final String API_ENDRING_PATH = API_SEND_PATH + "/foreldrepenger/endre";
     private static final String API_ETTERSEND_PATH = API_SEND_PATH + "/ettersend";
 
@@ -39,26 +38,28 @@ public class MottakKlient {
             case ForeldrepengesøknadDto ignored -> API_SEND_PATH + "/foreldrepenger";
             default -> throw new IllegalStateException("Unexpected value: " + søknad);
         };
+        var json = toJson(søknad);
         var request = requestMedInnloggetBruker(fnr)
-                .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
+                .uri(fromUri(BaseUriProvider.FPSOKNAD)
                         .path(path)
                         .build())
                 .timeout(Duration.ofSeconds(20))
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));
+                .POST(HttpRequest.BodyPublishers.ofString(json));
         return send(request.build(), Kvittering.class);
     }
 
-    public Kvittering sendSøknad(Fødselsnummer fnr, EndringssøknadDto søknad) {
+    public Kvittering sendSøknad(Fødselsnummer fnr, EndringssøknadForeldrepengerDto søknad) {
+        var json = toJson(søknad);
         var request = requestMedInnloggetBruker(fnr)
-                .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
+                .uri(fromUri(BaseUriProvider.FPSOKNAD)
                         .path(API_ENDRING_PATH)
                         .build())
                 .timeout(Duration.ofSeconds(20))
-                .POST(HttpRequest.BodyPublishers.ofString(toJson(søknad)));
+                .POST(HttpRequest.BodyPublishers.ofString(json));
         return send(request.build(), Kvittering.class);
     }
 
-    public void mellomlagreVedlegg(Fødselsnummer fnr, Innsending søknad) {
+    public void mellomlagreVedlegg(Fødselsnummer fnr, SøknadDto søknad) {
         mellomlagreVedlegg(fnr, tilYtelseType(søknad), søknad.vedlegg());
     }
 
@@ -68,8 +69,8 @@ public class MottakKlient {
                 var multipartBody = new MultipartBodyPublisher();
                 multipartBody.addFile("vedlegg", "dummy.pdf");
                 var request = requestMedInnloggetBruker(fnr)
-                        .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
-                                .path(String.format("/rest/storage/%s/vedlegg", ytelseType.name()))
+                        .uri(fromUri(BaseUriProvider.FPSOKNAD)
+                                .path(String.format("/api/storage/%s/vedlegg", ytelseType.name()))
                                 .queryParam("uuid", vedlegg.uuid())
                                 .build())
                         .setHeader("Content-Type", multipartBody.getContentType())
@@ -80,13 +81,13 @@ public class MottakKlient {
         }
     }
 
-    private static YtelseType tilYtelseType(Innsending innsending) {
-        if (innsending instanceof no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto søknadDto) {
+    private static YtelseType tilYtelseType(SøknadDto innsending) {
+        if (innsending instanceof no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto søknadDto) {
             if (søknadDto instanceof ForeldrepengesøknadDto) return YtelseType.FORELDREPENGER;
             if (søknadDto instanceof SvangerskapspengesøknadDto) return YtelseType.SVANGERSKAPSPENGER;
             if (søknadDto instanceof EngangsstønadDto) return YtelseType.ENGANGSSTØNAD;
         }
-        if (innsending instanceof no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto) {
+        if (innsending instanceof EndringssøknadForeldrepengerDto) {
             return YtelseType.FORELDREPENGER;
         }
         return YtelseType.FORELDREPENGER;
@@ -98,12 +99,11 @@ public class MottakKlient {
                 YtelseType.FORELDREPENGER,
                 saksnummer,
                 null,
-                null,
                 vedlegg
         );
 
         var request = requestMedInnloggetBruker(fnr)
-                .uri(fromUri(BaseUriProvider.FORELDREPENGESOKNAD_API_BASE)
+                .uri(fromUri(BaseUriProvider.FPSOKNAD)
                         .path(API_ETTERSEND_PATH)
                         .build())
                 .timeout(Duration.ofSeconds(10))

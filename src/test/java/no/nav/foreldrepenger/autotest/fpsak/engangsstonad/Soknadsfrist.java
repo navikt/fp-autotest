@@ -48,7 +48,7 @@ class Soknadsfrist extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusMonths(7);
         var søknad = lagEngangstønadFødsel(fødselsdato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -99,7 +99,7 @@ class Soknadsfrist extends FpsakTestBase {
         var mor = familie.mor();
         var fødselsdato = LocalDate.now().minusMonths(7);
         var søknad = lagEngangstønadFødsel(fødselsdato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 

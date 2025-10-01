@@ -53,7 +53,7 @@ class Revurdering extends FpsakTestBase {
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())

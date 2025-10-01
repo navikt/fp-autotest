@@ -64,8 +64,8 @@ import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.UttaksplanDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ÅpenPeriodeDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.foreldrepenger.uttaksplan.UttaksplanDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ÅpenPeriodeDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.PermisjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.Permisjonstype;
@@ -95,7 +95,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 utsettelsesperiode(SYKDOM, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)));
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR).medUttaksplan(fordelingMor)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummerMor = mor.søk(søknad.build());
+        var saksnummerMor = mor.søk(søknad);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, fpstartdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -108,7 +108,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
                 .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()));
-        var saksnummerFar = far.søk(søknadFar.build());
+        var saksnummerFar = far.søk(søknadFar);
         saksbehandler.hentFagsak(saksnummerFar);
         assertThat(saksbehandler.valgtFagsak.status()).as("Fagsak status").isEqualTo(FagsakStatus.UNDER_BEHANDLING);
         assertThat(saksbehandler.valgtBehandling.erSattPåVent()).as("Behandling er satt på vent").isTrue();
@@ -167,8 +167,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknadMor = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medUttaksplan(fordelingMor)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .medMottattdato(fødselsdato)
-                .build();
+                .medMottattdato(fødselsdato);
         var morSaksnummer = mor.søk(søknadMor);
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(morSaksnummer, fpStartdatoMor);
@@ -184,7 +183,7 @@ class MorOgFarSammen extends FpsakTestBase {
                                 fellesPeriodeMorFørstegangssøknad.fom().plusWeeks(6).minusDays(1))))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medMottattdato(fødselsdato.plusWeeks(1));
-        var farSaksnummer = far.søk(søknadFar.build());
+        var farSaksnummer = far.søk(søknadFar);
 
         saksbehandler.hentFagsak(farSaksnummer);
         saksbehandler.ventPåOgVelgÅpenFørstegangsbehandling();
@@ -197,9 +196,9 @@ class MorOgFarSammen extends FpsakTestBase {
 
         var fordelingMorEndring = fordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(7), fødselsdato.plusWeeks(8).minusDays(1)));
-        var endringssøknadMor = lagEndringssøknad(søknadMor, morSaksnummer, fordelingMorEndring).medMottattdato(
+        var endringssøknadMor = lagEndringssøknad(søknadMor.build(), morSaksnummer, fordelingMorEndring).medMottattdato(
                 fødselsdato.plusWeeks(2));
-        mor.søk(endringssøknadMor.build());
+        mor.søk(endringssøknadMor);
 
         saksbehandler.hentFagsak(morSaksnummer);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -248,8 +247,8 @@ class MorOgFarSammen extends FpsakTestBase {
          */
         var fordeling2 = fordeling(uttaksperiode(StønadskontoType.FELLESPERIODE, fellesPeriodeMorFørstegangssøknad.fom(),
                 uttaksperiodeEndringssøknadMor.tom()));
-        var endringssøknadMor2 = lagEndringssøknad(søknadMor, morSaksnummer, fordeling2).medMottattdato(fødselsdato.plusWeeks(3));
-        mor.søk(endringssøknadMor2.build());
+        var endringssøknadMor2 = lagEndringssøknad(søknadMor.build(), morSaksnummer, fordeling2).medMottattdato(fødselsdato.plusWeeks(3));
+        mor.søk(endringssøknadMor2);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER, 2);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -285,7 +284,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR).medUttaksplan(fordelingMor)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fødselsdato.minusWeeks(3));
-        var saksnummerMor = mor.søk(søknadMor.build());
+        var saksnummerMor = mor.søk(søknadMor);
 
         var arbeidsgivere = mor.arbeidsgivere();
         arbeidsgivere.sendDefaultInntektsmeldingerFP(saksnummerMor, fpstartdatoMor);
@@ -309,7 +308,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 .medUttaksplan(fordelingFar)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medMottattdato(fødselsdato);
-        var saksnummerFar = far.søk(søknadFar.build());
+        var saksnummerFar = far.søk(søknadFar);
 
         far.arbeidsgivere().sendDefaultInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
@@ -417,7 +416,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var fordelingFrasiPerioder = fordeling(utsettelsesperiode(FRI, farOpprinneligStartdato, farOpprinneligStartdato.plusWeeks(2)),
                 uttaksperiode(FEDREKVOTE, farUtsattStartDato, farUtsattStartDato.plusWeeks(10)));
         var søknad = lagEndringssøknad(far.førstegangssøknad(), saksnummerFar, fordelingFrasiPerioder);
-        far.søk(søknad.build());
+        far.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummerFar);
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(
@@ -453,24 +452,23 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknadMor = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var mor = familie.mor();
-        var saksnummerMor = mor.søk(søknadMor.build());
+        var saksnummerMor = mor.søk(søknadMor);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, fødselsdato.minusWeeks(3));
         saksbehandler.hentFagsak(saksnummerMor);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.FAR)
                 .medUttaksplan(fordeling(uttaksperiode(FEDREKVOTE, fødselsdato, fødselsdato.plusWeeks(2).minusDays(1), SAMTIDIGUTTAK)))
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
-                .build();
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()));
         var saksnummerFar = far.søk(søknadFar);
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, fødselsdato);
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        var endringssøknad = lagEndringssøknad(søknadFar, saksnummerFar,
+        var endringssøknad = lagEndringssøknad(søknadFar.build(), saksnummerFar,
                 fordeling(utsettelsesperiode(FRI, fødselsdato, fødselsdato.plusWeeks(1).minusDays(1)),
                         uttaksperiode(FEDREKVOTE, fødselsdato.plusWeeks(1), fødselsdato.plusWeeks(3).minusDays(1), SAMTIDIGUTTAK)));
-        far.søk(endringssøknad.build());
+        far.søk(endringssøknad);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
         var vurderTilbakekrevingVedNegativSimulering = saksbehandler.hentAksjonspunktbekreftelse(
@@ -523,7 +521,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 utsettelsesperiode(FRI, farOpprinneligStartdato, farOpprinneligStartdato.plusWeeks(2).minusDays(1)),
                 uttaksperiode(StønadskontoType.FEDREKVOTE, farUtsattStartDato, farUtsattStartDato.plusWeeks(2).minusDays(1)));
         var søknad = lagEndringssøknad(far.førstegangssøknad(), saksnummerFar, fordelingFrasiPerioder);
-        far.søk(søknad.build());
+        far.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummerFar);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -574,7 +572,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(17), fødselsdato.plusWeeks(30).minusDays(1)));
         var mor = familie.mor();
         var søknad = lagEndringssøknad(mor.førstegangssøknad(), saksnummerMor, fordeling);
-        mor.søk(søknad.build());
+        mor.søk(søknad);
 
         overstyrer.hentFagsak(saksnummerMor);
         overstyrer.ventPåOgVelgRevurderingBehandling();
@@ -675,7 +673,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknadMor = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR).medAnnenForelder(
                         AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medUttaksplan(fordelingMor);
-        var saksnummerMor = mor.søk(søknadMor.build());
+        var saksnummerMor = mor.søk(søknadMor);
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
@@ -690,7 +688,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknadFar = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR).medAnnenForelder(
                         AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medUttaksplan(fordelingFar);
-        var saksnummerFar = far.søk(søknadFar.build());
+        var saksnummerFar = far.søk(søknadFar);
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, fødselsdato.plusWeeks(7));
 
         // Verifiser at far får aksjonspunkt for uttaksdokumentasjon
@@ -806,7 +804,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var mor = familie.mor();
         var fordeling = fordelingMorHappyCase(fødselsdatoBarn);
         var søknad = lagEndringssøknad(mor.førstegangssøknad(), saksnummerMor, new UttaksplanDto(false, fordeling));
-        mor.søk(søknad.build());
+        mor.søk(søknad);
     }
 
     private Saksnummer behandleSøknadForFarSattPåVent(Familie familie, LocalDate fødselsdato) {
@@ -831,7 +829,7 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medUttaksplan(fordelingMorHappyCase(fødselsdato))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        return mor.søk(søknad.build());
+        return mor.søk(søknad);
     }
 
     private void sendInnInntektsmeldingMor(Familie familie, LocalDate fødselsdato, Saksnummer saksnummer) {
@@ -856,6 +854,6 @@ class MorOgFarSammen extends FpsakTestBase {
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.FAR)
                 .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()));
-        return saksnummer != null ? far.søk(søknad.build(), saksnummer) : far.søk(søknad.build());
+        return saksnummer != null ? far.søk(søknad, saksnummer) : far.søk(søknad);
     }
 }

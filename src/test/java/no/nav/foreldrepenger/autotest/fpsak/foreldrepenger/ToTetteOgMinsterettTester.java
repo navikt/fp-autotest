@@ -108,7 +108,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 .medUttaksplan(fordelingBarn1)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fødselsdatoBarn1.minusWeeks(2));
-        var saksnummerBarn1 = mor.søk(søknadBarn1.build());
+        var saksnummerBarn1 = mor.søk(søknadBarn1);
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerBarn1, fpStartdatoBarn1);
@@ -121,7 +121,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         var startdatoForeldrepengerMorBarn2 = termindatoBarn2.minusWeeks(3);
         var søknadBarn2 = lagSøknadForeldrepengerTermin(termindatoBarn2, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummerBarn2 = mor.søk(søknadBarn2.build());
+        var saksnummerBarn2 = mor.søk(søknadBarn2);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerBarn2, startdatoForeldrepengerMorBarn2);
 
         saksbehandler.hentFagsak(saksnummerBarn2);
@@ -202,8 +202,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
         var søknadBarn1 = lagSøknadForeldrepengerFødsel(fødselsdatoBarn1, MOR)
                 .medUttaksplan(fordelingBarn1)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .medMottattdato(fødselsdatoBarn1.minusWeeks(2))
-                .build();
+                .medMottattdato(fødselsdatoBarn1.minusWeeks(2));
         var saksnummerMorBarn1 = mor.søk(søknadBarn1);
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -226,7 +225,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
                 .medMottattdato(fødselsdatoBarn1.minusWeeks(1));
-        var saksnummerFarBarn1 = far.søk(søknadFar.build());
+        var saksnummerFarBarn1 = far.søk(søknadFar);
 
         far.arbeidsgivere().sendDefaultInntektsmeldingerFP(saksnummerFarBarn1, fødselsdatoBarn1);
 
@@ -247,7 +246,7 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 .medUttaksplan(fordelingMorBarn2)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(morStartdatoBarn2);
-        var saksnummerMorBarn2 = mor.søk(søknadMorBarn2.build());
+        var saksnummerMorBarn2 = mor.søk(søknadMorBarn2);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerMorBarn2, morStartdatoBarn2);
 
         saksbehandler.hentFagsak(saksnummerMorBarn2);
@@ -302,8 +301,8 @@ class ToTetteOgMinsterettTester extends FpsakTestBase {
                 uttaksperiode(MØDREKVOTE, termindatoBarn2.plusWeeks(6), termindatoBarn2.plusWeeks(9).minusDays(1)),
                 uttaksperiode(FELLESPERIODE, termindatoBarn2.plusWeeks(9), termindatoBarn2.plusWeeks(14).minusDays(1))
         );
-        var endringssøknadMorBarn1 = lagEndringssøknad(søknadBarn1, saksnummerMorBarn1, fordelingEndringBarn1);
-        var saksnummerMorBarn1Endring = mor.søk(endringssøknadMorBarn1.build());
+        var endringssøknadMorBarn1 = lagEndringssøknad(søknadBarn1.build(), saksnummerMorBarn1, fordelingEndringBarn1);
+        var saksnummerMorBarn1Endring = mor.søk(endringssøknadMorBarn1);
 
         beslutter.hentFagsak(saksnummerMorBarn1Endring);
         beslutter.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
