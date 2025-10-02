@@ -65,7 +65,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
 
 
         var søknad = lagEngangstønadOmsorg(omsorgsovertakelsedato);
-//        var saksnummer = medmor.søk(søknad.build());
+//        var saksnummer = medmor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
@@ -112,7 +112,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = lagEngangstønadOmsorg(omsorgsovertakelsedato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
@@ -157,7 +157,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = lagEngangstønadOmsorg(omsorgsovertakelsedato);
-        var saksnummer = far.søk(søknad.build());
+        var saksnummer = far.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler
@@ -201,7 +201,7 @@ class Omsorgsovertakelse extends FpsakTestBase {
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = lagEngangstønadOmsorg(omsorgsovertakelsedato);
-        var saksnummer = far.søk(søknad.build());
+        var saksnummer = far.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         AvklarFaktaOmsorgOgForeldreansvarBekreftelse avklarFaktaOmsorgOgForeldreansvarBekreftelse = saksbehandler

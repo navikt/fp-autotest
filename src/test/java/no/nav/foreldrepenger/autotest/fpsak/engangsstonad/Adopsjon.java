@@ -53,7 +53,7 @@ class Adopsjon extends FpsakTestBase {
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
@@ -95,7 +95,7 @@ class Adopsjon extends FpsakTestBase {
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
@@ -141,7 +141,7 @@ class Adopsjon extends FpsakTestBase {
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
@@ -195,7 +195,7 @@ class Adopsjon extends FpsakTestBase {
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = far.søk(søknad.build());
+        var saksnummer = far.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
@@ -239,7 +239,7 @@ class Adopsjon extends FpsakTestBase {
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
-        var saksnummer = far.søk(søknad.build());
+        var saksnummer = far.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
