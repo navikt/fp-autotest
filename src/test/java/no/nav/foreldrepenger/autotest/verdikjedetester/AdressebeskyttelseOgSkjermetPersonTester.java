@@ -82,8 +82,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
                         uttaksperiode(FORELDREPENGER_FØR_FØDSEL, termindato.minusWeeks(3), termindato.minusDays(1)),
                         uttaksperiode(MØDREKVOTE, termindato, termindato.plusWeeks(6).minusDays(1))
                 ))
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .build();
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var mor = familie.mor();
         var saksnummerMor = mor.søk(søknadMor);
 
@@ -108,8 +107,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
                         uttaksperiode(FEDREKVOTE, termindato, termindato.plusWeeks(1).minusDays(1), 100, UttaksperiodeType.SAMTIDIGUTTAK),
                         uttaksperiode(FEDREKVOTE, termindato.plusWeeks(6), termindato.plusWeeks(9).minusDays(1))
                 ))
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()))
-                .build();
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.mor()));
         var saksnummerFar = far.søk(søknadFar);
 
         saksbehandler6.hentFagsak(saksnummerFar);
@@ -156,8 +154,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
                 .build();
         var termindato = LocalDate.now().minusWeeks(2);
         var søknadMor = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .build();
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var mor = familie.mor();
         var saksnummerMor = mor.søk(søknadMor);
 

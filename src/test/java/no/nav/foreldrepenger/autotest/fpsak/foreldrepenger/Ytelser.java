@@ -50,7 +50,7 @@ class Ytelser extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -101,7 +101,7 @@ class Ytelser extends FpsakTestBase {
         var startDatoForeldrepenger = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, startDatoForeldrepenger);
