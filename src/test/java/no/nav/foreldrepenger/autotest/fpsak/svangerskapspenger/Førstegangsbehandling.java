@@ -30,10 +30,10 @@ import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.Orgnummer;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.generator.soknad.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.generator.soknad.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBehovBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fpsak")
@@ -69,7 +69,7 @@ class Førstegangsbehandling extends FpsakTestBase {
                 .hel(LocalDate.now().plusWeeks(3))
                 .build();
         var søknad = lagSvangerskapspengerSøknad(termindato, List.of(forsteTilrettelegging, andreTilrettelegging2));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var arbeidsgivere = mor.arbeidsgivere();
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummer);
@@ -141,7 +141,7 @@ class Førstegangsbehandling extends FpsakTestBase {
                 .ingen(termindato.minusMonths(2))
                 .build();
         var søknad = lagSvangerskapspengerSøknad(termindato, List.of(helTilrettelegging, delvisTilrettelegging, ingenTilrettelegging));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var arbeidsgivere = mor.arbeidsgivere();
         var arbeidsgiver1 = arbeidsgivere.toList().getFirst();
@@ -221,7 +221,7 @@ class Førstegangsbehandling extends FpsakTestBase {
                 .delvis(termindato.minusMonths(3), 50.0)
                 .build();
         var søknad = lagSvangerskapspengerSøknad(termindato, List.of(forsteTilrettelegging));
-        var saksnummerSVP = mor.søk(søknad.build());
+        var saksnummerSVP = mor.søk(søknad);
 
         var arbeidsgivere = mor.arbeidsgivere();
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
@@ -236,7 +236,7 @@ class Førstegangsbehandling extends FpsakTestBase {
                 .ingen(termindato.minusMonths(1))
                 .build();
         var søknad2 = lagSvangerskapspengerSøknad(termindato, List.of(andreTilrettelegging));
-        mor.søk(søknad2.build(), saksnummerSVP);
+        mor.søk(søknad2, saksnummerSVP);
 
         saksbehandler.hentFagsak(saksnummerSVP);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -303,7 +303,7 @@ class Førstegangsbehandling extends FpsakTestBase {
                 .hel(helTilretteleggingFom)
                 .build();
         var søknad = lagSvangerskapspengerSøknad(termindato, List.of(førsteTilrettelegging));
-        var saksnummerSVP = mor.søk(søknad.build());
+        var saksnummerSVP = mor.søk(søknad);
 
         var arbeidsgivere = mor.arbeidsgivere();
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
@@ -322,7 +322,7 @@ class Førstegangsbehandling extends FpsakTestBase {
         // Innvilg FP fom Termin-4uker
         var søknadFP = lagSøknadForeldrepengerTermin(termindato.minusWeeks(1), BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummerFP = mor.søk(søknadFP.build());
+        var saksnummerFP = mor.søk(søknadFP);
         var arbeidsgiver = mor.arbeidsgiver();
         var startdatoForeldrepenger = termindato.minusWeeks(4);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFP, startdatoForeldrepenger);

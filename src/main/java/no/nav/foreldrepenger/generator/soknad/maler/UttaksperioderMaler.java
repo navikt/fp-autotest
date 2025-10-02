@@ -7,14 +7,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.foreldrepenger.uttaksplan.Uttaksplanperiode;
 import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Oppholdsårsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Overføringsårsak;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.Uttaksplanperiode;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.UttakplanPeriodeBuilder;
+import no.nav.foreldrepenger.generator.soknad.builder.UttakplanPeriodeBuilder;
 
 
 public final class UttaksperioderMaler {

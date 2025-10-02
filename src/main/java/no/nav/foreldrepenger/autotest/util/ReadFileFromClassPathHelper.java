@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.util;
 
-import no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi.MottakKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.FpsoknadKlient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public final class ReadFileFromClassPathHelper {
     }
 
     public static byte[] readFileBytes(String resourcePath) {
-        try (var inputStream = MottakKlient.class.getClassLoader().getResourceAsStream(resourcePath)) {
+        try (var inputStream = FpsoknadKlient.class.getClassLoader().getResourceAsStream(resourcePath)) {
             if (inputStream == null) {
                 throw new IOException("Filen ble ikke funnet i resources: " + resourcePath);
             }

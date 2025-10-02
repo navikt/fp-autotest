@@ -53,8 +53,7 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .medMottattdato(fpStartdato)
-                .build();
+                .medMottattdato(fpStartdato);
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -70,8 +69,8 @@ class TilbakekrevingRevurdering extends FptilbakeTestBase {
         var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
         );
-        var søknadE = lagEndringssøknad(søknad, saksnummer, fordeling);
-        var saksnummerE = mor.søk(søknadE.build());
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
+        var saksnummerE = mor.søk(søknadE);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
