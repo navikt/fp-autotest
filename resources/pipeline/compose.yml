@@ -16,6 +16,7 @@ services:
   oracle:
     image: $ORACLE_IMAGE
     container_name: oracle
+    mem_limit: 3gb
     environment:
       TZ: Europe/Oslo
       ORACLE_SID: FREE
@@ -629,6 +630,7 @@ services:
     <<: *default-konfigurasjon
     image: $FPINNTEKTSMELDINGFRONTEND_IMAGE
     container_name: fpinntektsmelding-frontend
+    mem_limit: 128m
     ports:
       - "127.0.0.1:9050:9050"
     env_file:
@@ -686,6 +688,7 @@ services:
     <<: *default-konfigurasjon
     image: $FORELDREPENGEOVERSIKT_IMAGE
     container_name: foreldrepengeoversikt
+    mem_limit: 128m
     ports:
       - "127.0.0.1:9066:9066"
     env_file:
@@ -700,6 +703,7 @@ services:
     <<: *default-konfigurasjon
     image: $FORELDREPENGESOKNAD_IMAGE
     container_name: foreldrepengesoknad
+    mem_limit: 128m
     ports:
       - "127.0.0.1:9067:9067"
     env_file:
@@ -715,6 +719,7 @@ services:
     <<: *default-konfigurasjon
     image: $SVANGERSKAPSPENGESOKNAD_IMAGE
     container_name: svangerskapspengesoknad
+    mem_limit: 128m
     ports:
       - "127.0.0.1:9068:9068"
     env_file:
@@ -730,6 +735,7 @@ services:
     <<: *default-konfigurasjon
     image: $ENGANGSSTONAD_IMAGE
     container_name: engangsstonad
+    mem_limit: 128m
     ports:
       - "127.0.0.1:9069:9069"
     env_file:
@@ -851,6 +857,7 @@ services:
   fpcache:
     image: redis:8
     container_name: fpcache
+    mem_limit: 32m
     ports:
       - "127.0.0.1:6379:6379"
   wonderwall-selvbetjening-sso-server:
