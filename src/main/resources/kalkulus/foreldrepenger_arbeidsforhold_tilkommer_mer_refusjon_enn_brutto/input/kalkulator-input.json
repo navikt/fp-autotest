@@ -1,22 +1,70 @@
 {
-    "refusjonskravDatoer": [
+    "refusjonskravPrArbeidsgiver": [
         {
             "arbeidsgiver": {
                 "identType": "ORGNUMMER",
                 "ident": "974652269"
             },
-            "førsteDagMedRefusjonskrav": "2019-07-16",
-            "førsteInnsendingAvRefusjonskrav": "2019-07-15",
-            "harRefusjonFraStart": true
+            "sisteSøktePerioder":
+            {
+                "innsendingsdato": "2019-07-15",
+                "refusjonsperioder": [
+                    {
+                        "periode": {
+                            "fom": "2019-07-16",
+                            "tom": "9999-12-31"
+                        },
+                        "beløp": 44733.33
+                    }
+                ]
+            },
+            "alleSøktePerioder": [
+                {
+                    "innsendingsdato": "2019-07-15",
+                    "refusjonsperioder": [
+                        {
+                            "periode": {
+                                "fom": "2019-07-16",
+                                "tom": "9999-12-31"
+                            },
+                            "beløp": 44733.33
+                        }
+                    ]
+                }
+            ]
         },
         {
             "arbeidsgiver": {
                 "identType": "ORGNUMMER",
                 "ident": "974761076"
             },
-            "førsteDagMedRefusjonskrav": "2019-10-01",
-            "førsteInnsendingAvRefusjonskrav": "2019-10-01",
-            "harRefusjonFraStart": false
+            "sisteSøktePerioder":
+            {
+                "innsendingsdato": "2019-10-01",
+                "refusjonsperioder": [
+                    {
+                        "periode": {
+                            "fom": "2019-10-01",
+                            "tom": "9999-12-31"
+                        },
+                        "beløp": 44733.33
+                    }
+                ]
+            },
+            "alleSøktePerioder": [
+                {
+                    "innsendingsdato": "2019-10-01",
+                    "refusjonsperioder": [
+                        {
+                            "periode": {
+                                "fom": "2019-10-01",
+                                "tom": "9999-12-31"
+                            },
+                            "beløp": 44733.33
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "iayGrunnlag": {

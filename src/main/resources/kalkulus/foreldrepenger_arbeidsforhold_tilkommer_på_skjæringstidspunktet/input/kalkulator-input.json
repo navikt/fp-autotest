@@ -10,6 +10,41 @@
             "harRefusjonFraStart": true
         }
     ],
+    "refusjonskravPrArbeidsgiver": [
+        {
+            "arbeidsgiver": {
+                "identType": "ORGNUMMER",
+                "ident": "974652269"
+            },
+            "sisteSøktePerioder":
+            {
+                "innsendingsdato": "2019-07-15",
+                "refusjonsperioder": [
+                    {
+                        "periode": {
+                            "fom": "2019-07-16",
+                            "tom": "9999-12-31"
+                        },
+                        "beløp": 44733.33
+                    }
+                ]
+            },
+            "alleSøktePerioder": [
+                {
+                    "innsendingsdato": "2019-07-15",
+                    "refusjonsperioder": [
+                        {
+                            "periode": {
+                                "fom": "2019-07-16",
+                                "tom": "9999-12-31"
+                            },
+                            "beløp": 44733.33
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
     "iayGrunnlag": {
         "arbeidDto": {
             "yrkesaktiviteter": [
