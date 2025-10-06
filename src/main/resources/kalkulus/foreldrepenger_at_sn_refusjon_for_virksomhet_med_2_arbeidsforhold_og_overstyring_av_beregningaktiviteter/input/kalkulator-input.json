@@ -1,13 +1,37 @@
 {
-    "refusjonskravDatoer": [
+    "refusjonskravPrArbeidsgiver": [
         {
             "arbeidsgiver": {
                 "identType": "ORGNUMMER",
                 "ident": "891046642"
             },
-            "førsteDagMedRefusjonskrav": "2020-01-01",
-            "førsteInnsendingAvRefusjonskrav": "2020-01-01",
-            "harRefusjonFraStart": true
+            "sisteSøktePerioder":
+            {
+                "innsendingsdato": "2020-01-01",
+                "refusjonsperioder": [
+                    {
+                        "periode": {
+                            "fom": "2020-01-01",
+                            "tom": "9999-12-31"
+                        },
+                        "beløp": 44733.33
+                    }
+                ]
+            },
+            "alleSøktePerioder": [
+                {
+                    "innsendingsdato": "2020-01-01",
+                    "refusjonsperioder": [
+                        {
+                            "periode": {
+                                "fom": "2020-01-01",
+                                "tom": "9999-12-31"
+                            },
+                            "beløp": 44733.33
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "iayGrunnlag": {

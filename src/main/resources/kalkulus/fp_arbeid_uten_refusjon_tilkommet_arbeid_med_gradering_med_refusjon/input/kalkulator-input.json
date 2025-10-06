@@ -1,4 +1,72 @@
 {
+    "refusjonskravPrArbeidsgiver": [
+        {
+            "arbeidsgiver": {
+                "identType": "ORGNUMMER",
+                "ident": "974652269"
+            },
+            "sisteSøktePerioder":
+            {
+                "innsendingsdato": "2020-10-29",
+                "refusjonsperioder": [
+                    {
+                        "periode": {
+                            "fom": "2020-10-29",
+                            "tom": "9999-12-31"
+                        },
+                        "beløp": 44733.33
+                    }
+                ]
+            },
+            "alleSøktePerioder": [
+                {
+                    "innsendingsdato": "2020-10-29",
+                    "refusjonsperioder": [
+                        {
+                            "periode": {
+                                "fom": "2020-10-29",
+                                "tom": "9999-12-31"
+                            },
+                            "beløp": 44733.33
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "arbeidsgiver": {
+                "identType": "ORGNUMMER",
+                "ident": "874652202"
+            },
+            "sisteSøktePerioder":
+            {
+                "innsendingsdato": "2020-10-29",
+                "refusjonsperioder": [
+                    {
+                        "periode": {
+                            "fom": "2020-10-29",
+                            "tom": "9999-12-31"
+                        },
+                        "beløp": 44733.33
+                    }
+                ]
+            },
+            "alleSøktePerioder": [
+                {
+                    "innsendingsdato": "2020-10-29",
+                    "refusjonsperioder": [
+                        {
+                            "periode": {
+                                "fom": "2020-10-29",
+                                "tom": "9999-12-31"
+                            },
+                            "beløp": 44733.33
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
     "iayGrunnlag": {
         "arbeidDto": {
             "yrkesaktiviteter": [
