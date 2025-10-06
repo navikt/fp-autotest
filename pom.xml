@@ -17,7 +17,7 @@
     </licenses>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,15 +25,15 @@
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
         <vtp.versjon>2.0.5</vtp.versjon>
-        <fp-felles.versjon>7.6.0</fp-felles.versjon>
-        <fp-prosesstask.version>5.2.0</fp-prosesstask.version>
-        <fp-kontrakter.version>9.4.1</fp-kontrakter.version>
+        <fp-felles.versjon>7.6.6</fp-felles.versjon>
+        <fp-prosesstask.version>5.2.1</fp-prosesstask.version>
+        <fp-kontrakter.version>9.4.3</fp-kontrakter.version>
         <fpsoknad-felles.version>3.3.4</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.2.4</foreldrepenge-api.version>
         <ftberegning.version>6.1.1</ftberegning.version>
 
         <slf4j.version>2.0.17</slf4j.version>
-        <logback.version>1.5.18</logback.version>
+        <logback.version>1.5.19</logback.version>
         <allure.version>2.29.1</allure.version>
         <allure.maven.version>2.15.2</allure.maven.version>
         <assertj.version>3.27.6</assertj.version>
@@ -41,7 +41,7 @@
         <junit.version>5.13.4</junit.version>
         <jackson.version>2.20.0</jackson.version>
         <jakarta.jakartaee-bom.version>11.0.0</jakarta.jakartaee-bom.version>
-        <jersey.version>4.0.0-M3</jersey.version>
+        <jersey.version>4.0.0-M4</jersey.version>
     </properties>
 
     <dependencyManagement>
