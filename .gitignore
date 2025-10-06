@@ -31,6 +31,7 @@ target
 _*.sh
 *.local
 *.localz
+.tool-versions
 es.properties
 *.versionsBackup
 bin
