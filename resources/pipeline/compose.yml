@@ -510,6 +510,31 @@ services:
         condition: service_healthy
       fptilbake:
         condition: service_healthy
+  foreldrepengesoknad-api:
+    <<: *default-konfigurasjon
+    image: $FORELDREPENGESOKNADAPI_IMAGE
+    container_name: foreldrepengesoknad-api
+    mem_limit: 512mb
+    environment:
+      SPRING_PROFILES_ACTIVE: test
+      NAIS_CLUSTER_NAME: test
+      IDPORTEN_WELL_KNOWN_URL: http://vtp:8060/rest/idporten/.well-known/openid-configuration
+      IDPORTEN_CLIENT_ID: vtp
+      TOKEN_X_PRIVATE_JWK: /tokenx/jwk.json
+    env_file:
+      - *common-properties
+    volumes:
+      - *sertifikat-volum
+      - ./tokenx:/tokenx
+    ports:
+      - "127.0.0.1:9002:9002"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9002/internal/actuator" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      - fpoversikt
   fpsoknad:
     <<: *default-konfigurasjon
     image: $FPSOKNAD_IMAGE
