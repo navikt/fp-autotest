@@ -38,12 +38,6 @@ services:
   fplos:
     environment:
       JAVA_TOOL_OPTIONS: -XX:UseSVE=0
-  fpsoknad-mottak:
-    environment:
-      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
-  foreldrepengesoknad-api:
-    environment:
-      JAVA_TOOL_OPTIONS: -XX:UseSVE=0
   fpoversikt:
     environment:
       JAVA_TOOL_OPTIONS: -XX:UseSVE=0

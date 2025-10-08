@@ -92,7 +92,7 @@ class SammenhengendeUttak extends FpsakTestBase {
                 .medUttaksplan(fordelingMor)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
                 .medMottattdato(fpStartdato.minusWeeks(3));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato);
@@ -165,8 +165,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medUttaksplan(opprinneligFordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .medMottattdato(fpStartdato.minusWeeks(3))
-                .build();
+                .medMottattdato(fpStartdato.minusWeeks(3));
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -186,9 +185,9 @@ class SammenhengendeUttak extends FpsakTestBase {
         var fordelingUtsettelseEndring = fordeling(
                 utsettelsesperiode(UtsettelsesÅrsak.ARBEID, utsettelseFom, utsettelseFom.plusWeeks(2).minusDays(1)),
                 uttaksperiode(StønadskontoType.FELLESPERIODE, utsettelseFom.plusWeeks(2), utsettelseFom.plusWeeks(16).minusDays(1)));
-        var endretSøknad = lagEndringssøknad(søknad, saksnummer, fordelingUtsettelseEndring)
+        var endretSøknad = lagEndringssøknad(søknad.build(), saksnummer, fordelingUtsettelseEndring)
                 .medMottattdato(utsettelseFom.minusWeeks(3));
-        var saksnummerE = mor.søk(endretSøknad.build());
+        var saksnummerE = mor.søk(endretSøknad);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -283,8 +282,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .medMottattdato(fpStartdato.minusWeeks(3))
-                .build();
+                .medMottattdato(fpStartdato.minusWeeks(3));
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -296,9 +294,9 @@ class SammenhengendeUttak extends FpsakTestBase {
         var fordelingEndring = fordeling(
                 uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(30).minusDays(1))
         );
-        var søknadE = lagEndringssøknad(søknad, saksnummer, fordelingEndring)
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndring)
                 .medMottattdato(fødselsdato.plusWeeks(5));
-        var saksnummerE = mor.søk(søknadE.build());
+        var saksnummerE = mor.søk(søknadE);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -380,8 +378,7 @@ class SammenhengendeUttak extends FpsakTestBase {
         var søknad = SøknadForeldrepengerMaler.lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .medMottattdato(fødselsdato)
-                .build();
+                .medMottattdato(fødselsdato);
         var saksnummer = mor.søk(søknad);
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
 
@@ -396,9 +393,9 @@ class SammenhengendeUttak extends FpsakTestBase {
         var fordelingEndringssøknad = fordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, utsettelseStart, utsettelseStart.plusWeeks(1).minusDays(1))
         );
-        var søknadE = lagEndringssøknad(søknad, saksnummer, fordelingEndringssøknad)
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndringssøknad)
                 .medMottattdato(utsettelseStart.minusWeeks(3));
-        mor.søk(søknadE.build());
+        mor.søk(søknadE);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling(RE_ENDRING_FRA_BRUKER);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();

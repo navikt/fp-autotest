@@ -64,7 +64,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1).plusWeeks(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false)
                 .medMottattdato(LocalDate.now().minusMonths(1));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
@@ -174,7 +174,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(fødselsdato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 

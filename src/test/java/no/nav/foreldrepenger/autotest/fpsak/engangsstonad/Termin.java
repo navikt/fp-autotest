@@ -53,7 +53,7 @@ class Termin extends FpsakTestBase {
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(termindato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -95,7 +95,7 @@ class Termin extends FpsakTestBase {
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(termindato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var sjekkTerminbekreftelse = saksbehandler
@@ -144,7 +144,7 @@ class Termin extends FpsakTestBase {
         var far = familie.far();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(termindato);
-        var saksnummer = far.søk(søknad.build());
+        var saksnummer = far.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         var sjekkTerminbekreftelse = saksbehandler
@@ -177,7 +177,7 @@ class Termin extends FpsakTestBase {
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = lagEngangstønadTermin(termindato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -220,7 +220,7 @@ class Termin extends FpsakTestBase {
         var termindato = LocalDate.now().minusDays(26);
         var søknad = lagEngangstønadTermin(termindato)
                 .medMottattdato(termindato.plusDays(25));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 

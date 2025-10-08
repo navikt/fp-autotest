@@ -48,10 +48,10 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
+import no.nav.foreldrepenger.generator.soknad.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBehovBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
+import no.nav.foreldrepenger.generator.soknad.maler.ArbeidsforholdMaler;
+import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fplos")
@@ -78,7 +78,7 @@ class Fplos extends FpsakTestBase {
                 .delvis(termindato.minusMonths(3), 50.0)
                 .build();
         var søknad = lagSvangerskapspengerSøknad(termindato, List.of(forsteTilrettelegging));
-        var saksnummerSVP = mor.søk(søknad.build());
+        var saksnummerSVP = mor.søk(søknad);
 
         var arbeidsgivere = mor.arbeidsgivere();
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
@@ -129,7 +129,7 @@ class Fplos extends FpsakTestBase {
                 .medSelvstendigNæringsdrivendeInformasjon(opptjening)
                 .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato).medRefusjonBeløpPerMnd(Prosent.valueOf(100));
@@ -183,7 +183,7 @@ class Fplos extends FpsakTestBase {
         var termindato = fødselsdato.plusDays(2);
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         if (!saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_OPPTJENINGSVILKÅRET)) {

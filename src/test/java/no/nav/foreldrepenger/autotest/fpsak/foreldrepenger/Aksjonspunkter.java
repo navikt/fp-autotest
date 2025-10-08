@@ -24,8 +24,8 @@ import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaresignalerDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaOmsorgOgForeldreansvarBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.SjekkManglendeFødselBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
 import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
@@ -33,10 +33,10 @@ import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
+import no.nav.foreldrepenger.generator.soknad.builder.BarnBuilder;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
+import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.GrunnlagDto;
@@ -98,7 +98,7 @@ class Aksjonspunkter extends FpsakTestBase {
                 .medBarn(adopsjon)
                 .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_ADOPSJONSDOKUMENTAJON);
@@ -123,7 +123,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1L);
         var søknad = SøknadEngangsstønadMaler.lagEngangstønadOmsorg(omsorgsovertakelsedato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -152,7 +152,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -188,7 +188,7 @@ class Aksjonspunkter extends FpsakTestBase {
                 .medUttaksplan(fordeling)
                 .medSelvstendigNæringsdrivendeInformasjon(næringOpptjening)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato)
                 .medRefusjonBeløpPerMnd(Prosent.valueOf(100));
@@ -224,7 +224,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medAndreInntekterSiste10Mnd(List.of(OpptjeningMaler.utenlandskArbeidsforhold(CountryCode.NO)))
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.hentAksjonspunkt(AksjonspunktKoder.AUTOMATISK_MARKERING_AV_UTENLANDSSAK_KODE);
@@ -248,7 +248,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
@@ -280,7 +280,7 @@ class Aksjonspunkter extends FpsakTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);

@@ -66,7 +66,7 @@ class Revurdering extends FpsakTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, fpStartdato);
@@ -126,8 +126,7 @@ class Revurdering extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .build();
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -151,8 +150,8 @@ class Revurdering extends FpsakTestBase {
         var fordeling = fordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(8), fødselsdato.plusWeeks(10).minusDays(1))
         );
-        var søknadE = lagEndringssøknad(søknad, saksnummer, fordeling);
-        var saksnummerE = mor.søk(søknadE.build());
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordeling);
+        var saksnummerE = mor.søk(søknadE);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -186,8 +185,7 @@ class Revurdering extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
-                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .build();
+                .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -206,8 +204,8 @@ class Revurdering extends FpsakTestBase {
         var arbeidsgiveridentifikator = arbeidsgiver.arbeidsgiverIdentifikator();
         var fordelingGradering = fordelingEndringssøknadGradering(StønadskontoType.FELLESPERIODE, graderingFom, graderingTom,
                 arbeidsgiveridentifikator, 40);
-        var endretSøknad = lagEndringssøknad(søknad, saksnummer, fordelingGradering);
-        var saksnummerE = mor.søk(endretSøknad.build());
+        var endretSøknad = lagEndringssøknad(søknad.build(), saksnummer, fordelingGradering);
+        var saksnummerE = mor.søk(endretSøknad);
 
         saksbehandler.hentFagsak(saksnummerE);
         saksbehandler.ventPåOgVelgRevurderingBehandling();
@@ -257,8 +255,7 @@ class Revurdering extends FpsakTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .medMottattdato(fødselsdato.plusWeeks(9))
-                .build();
+                .medMottattdato(fødselsdato.plusWeeks(9));
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -271,9 +268,9 @@ class Revurdering extends FpsakTestBase {
         var fordelingEndringssøknad = fordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(14).minusDays(1))
         );
-        var søknadE = lagEndringssøknad(søknad, saksnummer, fordelingEndringssøknad)
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndringssøknad)
                 .medMottattdato(fødselsdato.plusWeeks(10));
-        mor.søk(søknadE.build());
+        mor.søk(søknadE);
 
         saksbehandler.velgSisteBehandling();
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -311,8 +308,7 @@ class Revurdering extends FpsakTestBase {
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medUttaksplan(fordeling)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()))
-                .medMottattdato(fødselsdato.plusWeeks(18))
-                .build();
+                .medMottattdato(fødselsdato.plusWeeks(18));
         var saksnummer = mor.søk(søknad);
 
         var arbeidsgiver = mor.arbeidsgiver();
@@ -339,9 +335,9 @@ class Revurdering extends FpsakTestBase {
         var fordelingEndringssøknad = fordeling(
                 uttaksperiode(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(13), fødselsdato.plusWeeks(12).plusWeeks(2))
         );
-        var søknadE = lagEndringssøknad(søknad, saksnummer, fordelingEndringssøknad)
+        var søknadE = lagEndringssøknad(søknad.build(), saksnummer, fordelingEndringssøknad)
                 .medMottattdato(fødselsdato.plusWeeks(10));
-        mor.søk(søknadE.build());
+        mor.søk(søknadE);
 
         saksbehandler.ventPåOgVelgRevurderingBehandling();
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
