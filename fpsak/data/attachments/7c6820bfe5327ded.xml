@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<melding xmlns="http://seres.no/xsd/NAV/Inntektsmelding_M/20181211">
+    <Skjemainnhold>
+        <ytelse>Svangerskapspenger</ytelse>
+        <aarsakTilInnsending>Ny</aarsakTilInnsending>
+        <arbeidsgiver>
+            <virksomhetsnummer>992257822</virksomhetsnummer>
+            <kontaktinformasjon>
+                <kontaktinformasjonNavn>Corpolarsen</kontaktinformasjonNavn>
+                <telefonnummer>41925090</telefonnummer>
+            </kontaktinformasjon>
+        </arbeidsgiver>
+        <arbeidstakerFnr>29418628047</arbeidstakerFnr>
+        <naerRelasjon>false</naerRelasjon>
+        <arbeidsforhold>
+            <arbeidsforholdId>ARB001-001</arbeidsforholdId>
+            <foersteFravaersdag xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+            <beregnetInntekt>
+                <beloep>75000</beloep>
+            </beregnetInntekt>
+        </arbeidsforhold>
+        <startdatoForeldrepengeperiode xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+        <avsendersystem>
+            <systemnavn>FS32</systemnavn>
+            <systemversjon>1.0</systemversjon>
+            <innsendingstidspunkt>2025-10-10T16:37:30.628740709</innsendingstidspunkt>
+        </avsendersystem>
+    </Skjemainnhold>
+</melding>
