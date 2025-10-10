@@ -15,7 +15,7 @@ imageVersion () {
   fi
 }
 
-echo POSTGRES_IMAGE="postgres:17" > .env
+echo POSTGRES_IMAGE="postgres:18" > .env
 echo ORACLE_IMAGE="gvenzl/oracle-free:23-slim-faststart" >> .env
 echo AUDIT_NAIS_IMAGE="$(imageVersion "ghcr.io/navikt/fp-autotest/audit-nais-mock")" >> .env
 echo VTP_IMAGE="$(imageVersion "europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/vtp")" >> .env
