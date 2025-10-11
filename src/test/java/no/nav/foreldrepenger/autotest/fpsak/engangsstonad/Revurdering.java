@@ -17,12 +17,12 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Venteårsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VarselOmRevurderingBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderEktefellesBarnBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -56,14 +56,10 @@ class Revurdering extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
-                .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
-        var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
-                .bekreftBarnErIkkeEktefellesBarn();
-        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .oppfylt(OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato, false,
+                        Adopsjon.lagFødselsdatoer(søknad.build()));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
 
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
@@ -71,7 +67,7 @@ class Revurdering extends FpsakTestBase {
 
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(
-                beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
+                beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_OMSORGSOVERTAKELSEVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         assertThat(beslutter.valgtBehandling.behandlingsresultat.type())

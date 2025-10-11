@@ -72,7 +72,7 @@ class EnumSeraliseringDeserialiseringTest extends SerializationTestBase {
 
     @Test
     void OmsorgsovertakelseVilkårTypeTest() {
-        test(OmsorgsovertakelseVilkårType.FORELDREANSVARSVILKÅRET_2_LEDD);
+        test(OmsorgsovertakelseVilkårType.ES_FORELDREANSVARSVILKÅRET_2_LEDD);
     }
 
     @Test

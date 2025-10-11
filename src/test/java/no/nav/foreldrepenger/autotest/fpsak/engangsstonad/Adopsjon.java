@@ -17,15 +17,17 @@ import io.qameta.allure.Description;
 import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.MannAdoptererAleneBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderEktefellesBarnBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.overstyr.OverstyrAdopsjonsvilkaaret;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.AdopsjonDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.engangsstønad.EngangsstønadDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
@@ -56,14 +58,10 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
-                .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
-        var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
-                .bekreftBarnErIkkeEktefellesBarn();
-        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .oppfylt(OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato, false,
+                        lagFødselsdatoer(søknad.build()));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
 
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         beslutter.hentFagsak(saksnummer);
@@ -98,15 +96,10 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
-                .setBarnetsAnkomstTilNorgeDato(LocalDate.now())
-                .endreFødselsdato(1, LocalDate.now().minusYears(16));
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
-        var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
-                .bekreftBarnErIkkeEktefellesBarn();
-        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .ikkeOppfylt(Avslagsårsak.BARN_OVER_15_ÅR, OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato,
+                        false, LocalDate.now().minusYears(16));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
 
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
         beslutter.hentFagsak(saksnummer);
@@ -144,21 +137,16 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
-                .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
-        var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
-                .bekreftBarnErIkkeEktefellesBarn();
-        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .oppfylt(OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato, false,
+                        lagFødselsdatoer(søknad.build()));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
 
         overstyrer.hentFagsak(saksnummer);
-
-        var overstyr = new OverstyrAdopsjonsvilkaaret();
-        overstyr.avvis(Avslagsårsak.BARN_OVER_15_ÅR);
-        overstyr.setBegrunnelse("avvist");
-        overstyrer.overstyr(overstyr);
+        var revurderOmsorgsovertakelse = overstyrer.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .ikkeOppfylt(Avslagsårsak.BARN_OVER_15_ÅR, OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato,
+                        false, LocalDate.now().minusYears(16));
+        overstyrer.bekreftAksjonspunkt(revurderOmsorgsovertakelse);
 
         assertThat(overstyrer.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingstatus")
@@ -198,18 +186,10 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
-                .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
-        var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
-                .bekreftBarnErIkkeEktefellesBarn();
-        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
-        var mannAdoptererAleneBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new MannAdoptererAleneBekreftelse())
-                .bekreftMannAdoptererAlene();
-        saksbehandler.bekreftAksjonspunkt(mannAdoptererAleneBekreftelse);
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .oppfylt(OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato, false,
+                        lagFødselsdatoer(søknad.build()));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
 
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakBekreftelse());
 
@@ -242,20 +222,12 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new AvklarFaktaAdopsjonsdokumentasjonBekreftelse())
-                .setBarnetsAnkomstTilNorgeDato(LocalDate.now());
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelse);
-        var vurderEktefellesBarnBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new VurderEktefellesBarnBekreftelse())
-                .bekreftBarnErEktefellesBarn();
-        saksbehandler.bekreftAksjonspunkt(vurderEktefellesBarnBekreftelse);
-        var mannAdoptererAleneBekreftelse = saksbehandler
-                .hentAksjonspunktbekreftelse(new MannAdoptererAleneBekreftelse())
-                .bekreftMannAdoptererIkkeAlene();
-        saksbehandler.bekreftAksjonspunkt(mannAdoptererAleneBekreftelse);
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .ikkeOppfylt(Avslagsårsak.EKTEFELLES_SAMBOERS_BARN, OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET,
+                        omsorgsovertakelsedato, true, lagFødselsdatoer(søknad.build()));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
 
-        assertThat(saksbehandler.vilkårStatus("FP_VK_4"))
+        assertThat(saksbehandler.vilkårStatus(VilkarTypeKoder.OMSORGSOVERTAKELSEVILKÅRET))
                 .as("Vilkårstatus for adopsjon")
                 .isEqualTo("IKKE_OPPFYLT");
         assertThat(saksbehandler.valgtBehandling.hentAvslagsarsak())
@@ -268,11 +240,16 @@ class Adopsjon extends FpsakTestBase {
 
         var bekreftelse = beslutter.hentAksjonspunktbekreftelse(new FatterVedtakBekreftelse());
         bekreftelse.godkjennAksjonspunkt(
-                beslutter.hentAksjonspunkt(AksjonspunktKoder.AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN));
+                beslutter.hentAksjonspunkt(AksjonspunktKoder.VURDER_OMSORGSOVERTAKELSEVILKÅRET));
         beslutter.fattVedtakOgVentTilAvsluttetBehandling(bekreftelse);
 
         assertThat(beslutter.valgtBehandling.hentBehandlingsresultat())
                 .as("Behandlingstatus")
                 .isEqualTo(BehandlingResultatType.AVSLÅTT);
+    }
+
+    static LocalDate[] lagFødselsdatoer(SøknadDto engangsstønadDto) {
+        var adopsjonDto = ((EngangsstønadDto) engangsstønadDto).barn();
+        return ((AdopsjonDto)adopsjonDto).fødselsdatoer().toArray(LocalDate[]::new);
     }
 }
