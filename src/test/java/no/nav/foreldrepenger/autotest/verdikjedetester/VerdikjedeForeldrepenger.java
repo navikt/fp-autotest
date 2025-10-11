@@ -86,6 +86,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingÅrsakType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FastsettUttaksperioderManueltBekreftelse;
@@ -97,13 +98,13 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRealitetsbehandlingEllerKlage;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurdereAnnenYtelseFørVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderingAvKlageNfpBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarAnnenforelderEøsPerioder;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAdopsjonsdokumentasjonBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAleneomsorgBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaAnnenForeldreHarRett;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.KontrollerBesteberegningBekreftelse;
@@ -140,9 +141,12 @@ import no.nav.foreldrepenger.generator.soknad.maler.SøknadForeldrepengerMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.UttaksperiodeType;
 import no.nav.foreldrepenger.generator.soknad.util.VirkedagUtil;
 import no.nav.foreldrepenger.kontrakter.risk.kodeverk.RisikoklasseType;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.AdopsjonDto;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggInnsendingType;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
+import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.ForeldrepengesøknadDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.KontoType;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.UttaksPeriodeDto;
 import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.uttaksplan.UttaksplanDto;
@@ -1251,16 +1255,17 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler.hentAksjonspunktbekreftelse(
-                new AvklarFaktaAdopsjonsdokumentasjonBekreftelse()).setBegrunnelse("Adopsjon behandlet av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .oppfylt(OmsorgsovertakelseVilkårType.FP_ADOPSJONSVILKÅRET, omsorgsovertakelsedatoe, false,
+                        lagFødselsdatoer(søknadFar.build()));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
         var avklarFaktaAleneomsorgBekreftelse = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaAleneomsorgBekreftelse())
                 .bekreftBrukerHarAleneomsorg()
                 .setBegrunnelse("Begrunnelse");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAleneomsorgBekreftelse);
-        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
 
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        saksbehandler.hentFagsak(saksnummerFar);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
 
@@ -1276,8 +1281,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medParagraf(P_14_15)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
                 .medTekstOmInntektOverSeksGBeløp(SEKS_G_2025)
-                .medParagraf(P_8_30)
-                .medTekstOmAutomatiskVedtakUtenUndferskrift();
+                .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
 
         // AG sender inn en IM med endring i refusjon som skal føre til revurdering på far sin sak.
@@ -1388,16 +1392,19 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiverFar.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler.hentAksjonspunktbekreftelse(
-                new AvklarFaktaAdopsjonsdokumentasjonBekreftelse()).setBegrunnelse("Adopsjon behandlet av Autotest");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .oppfylt(OmsorgsovertakelseVilkårType.FP_ADOPSJONSVILKÅRET, omsorgsovertakelsedatoe, false,
+                        lagFødselsdatoer(søknadFar.build()));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
 
         var avklarFaktaAnnenForeldreHarRett = saksbehandler.hentAksjonspunktbekreftelse(new AvklarFaktaAnnenForeldreHarRett())
                 .setAnnenforelderHarRett(true)
                 .setBegrunnelse("Både far og mor har rett!");
         saksbehandler.bekreftAksjonspunkt(avklarFaktaAnnenForeldreHarRett);
-        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse()); // Ikke totrinn
 
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerFar, false, false);
+
+        saksbehandler.hentFagsak(saksnummerFar);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder()).as("Forventer alle fars sine peridoder er innvilget").isEmpty();
@@ -1429,13 +1436,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiverMor.sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelseMor = saksbehandler.hentAksjonspunktbekreftelse(
-                new AvklarFaktaAdopsjonsdokumentasjonBekreftelse());
-        avklarFaktaAdopsjonsdokumentasjonBekreftelseMor.setBegrunnelse("Adopsjon behandlet av Autotest.");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseMor);
-        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
+        var vurderOmsorgsovertakelseMor = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .oppfylt(OmsorgsovertakelseVilkårType.FP_ADOPSJONSVILKÅRET, omsorgsovertakelsedatoe, false,
+                        lagFødselsdatoer(søknadMor.build()));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelseMor);
 
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummerMor, false, false);
+
+        saksbehandler.hentFagsak(saksnummerMor);
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.INNVILGET);
         assertThat(saksbehandler.hentAvslåtteUttaksperioder()).as("Forventer alle mors sine peridoder er innvilget").isEmpty();
@@ -1447,8 +1455,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .medTekstOmForeldrepengerUtbetaltForAlleDagerMenVarierer()
                 .medParagrafer(P_14_9, P_14_12)
                 .medTekstOmGjennomsnittInntektFraTreSisteMåndene()
-                .medParagraf(P_8_30)
-                .medTekstOmAutomatiskVedtakUtenUndferskrift();
+                .medParagraf(P_8_30);
         hentBrevOgSjekkAtInnholdetErRiktig(brevAssertionsBuilder, DokumentTag.FORELDREPENGER_INNVILGET, HistorikkType.BREV_SENDT);
 
         /* FAR: Berørt behandling */
@@ -1867,13 +1874,14 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, omsorgsovertagelsesdato);
 
         saksbehandler.hentFagsak(saksnummer);
-        var avklarFaktaAdopsjonsdokumentasjonBekreftelseFar = saksbehandler.hentAksjonspunktbekreftelse(
-                new AvklarFaktaAdopsjonsdokumentasjonBekreftelse()).setBegrunnelse("Adopsjon behandlet av Autotest");
-        saksbehandler.bekreftAksjonspunkt(avklarFaktaAdopsjonsdokumentasjonBekreftelseFar);
-        saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+                .oppfylt(OmsorgsovertakelseVilkårType.FP_ADOPSJONSVILKÅRET, omsorgsovertagelsesdato, false,
+                        lagFødselsdatoer(søknad.build()));
+        saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
 
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        foreslårOgFatterVedtakVenterTilAvsluttetBehandling(saksnummer, false, false);
 
+        saksbehandler.hentFagsak(saksnummer);
         var saldoer = saksbehandler.valgtBehandling.getSaldoer();
         assertThat(saldoer.stonadskontoer().get(SaldoVisningStønadskontoType.MØDREKVOTE).saldo()).as(
                 "Saldo for stønadskontoen MØDREKVOTE").isZero();
@@ -2656,6 +2664,11 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
                 .filter(andel -> andel.erBrukerMottaker() == brukerErMottaker)
                 .mapToInt(andel -> andel.årsbeløp().intValue())
                 .sum();
+    }
+
+    static LocalDate[] lagFødselsdatoer(SøknadDto søknadDto) {
+        var adopsjonDto = ((ForeldrepengesøknadDto) søknadDto).barn();
+        return ((AdopsjonDto) adopsjonDto).fødselsdatoer().toArray(LocalDate[]::new);
     }
 
 }
