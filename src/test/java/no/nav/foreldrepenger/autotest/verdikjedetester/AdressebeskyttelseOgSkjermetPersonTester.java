@@ -54,7 +54,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
     }
 
     @Test
-    void adressebeskyttet_strengt_fortrolig_kun_saksbehandles_av_sakbehanlder_med_strengt_fortrolig_ad_gruppe() {
+    void adressebeskyttet_strengt_fortrolig_kun_saksbehandles_av_sakbehanlder_med_strengt_fortrolig_ad_gruppe() throws InterruptedException {
         var familie = FamilieGenerator.ny(SaksbehandlerRolle.SAKSBEHANDLER_KODE_6)
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
@@ -106,6 +106,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         saksbehandler6.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Hele fagsaken skal være beskyttet og krever KODE_6 tilgang, selv om far ikke har beskyttet addresse
+        Thread.sleep(2_000);
         assertThatThrownBy(() -> saksbehandler.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> saksbehandler7.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> saksbehandlerEgenAnsatt.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
