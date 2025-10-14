@@ -105,6 +105,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
                 .build();
         var saksnummerFar = far.søk(søknadFar);
 
+        Thread.sleep(2_000); // Venter slik at ugradert sak ikke blir cachet
         saksbehandler6.hentFagsak(saksnummerFar);
         saksbehandler6.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato);
