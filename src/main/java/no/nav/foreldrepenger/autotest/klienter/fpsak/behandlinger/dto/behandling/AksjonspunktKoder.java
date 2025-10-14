@@ -5,47 +5,29 @@ public class AksjonspunktKoder {
     public static final String AUTO_MANUELT_SATT_PÅ_VENT = "7001";
     public static final String AUTO_VENT_PÅ_FØDSELREGISTRERING = "7002";
     public static final String AUTO_VENTER_PÅ_KOMPLETT_SØKNAD = "7003"; // IM
-    public static final String AUTO_VENT_PÅ_FØDSEL = "7004";
     public static final String AUTO_SATT_PÅ_VENT_REVURDERING = "7005";
-    public static final String AUTO_VENT_PÅ_OPPTJENINGSOPPLYSNINGER = "7006";
     public static final String AUTO_VENT_PÅ_SCANNING = "7007";
     public static final String AUTO_VENT_PGA_FOR_TIDLIG_SØKNAD = "7008";
-    public static final String AUTO_VENT_KOMPLETT_OPPDATERING = "7009";
-    public static final String AUTO_VENT_PÅ_REGISTEROPPLYSNINGER = "7010";
     public static final String AUTO_KØET_BEHANDLING = "7011";
     public static final String AUTO_VENT_PÅ_SØKNAD = "7013";
     public static final String AUTO_VENT_PÅ_INNTEKT_RAPPORTERINGSFRIST = "7014";
     public static final String AUTO_VENT_ETTERLYST_INNTEKTSMELDING_KODE = "7030";
 
-    public static final String AVKLAR_ADOPSJONSDOKUMENTAJON = "5004";
-    public static final String AVKLAR_OM_ADOPSJON_GJELDER_EKTEFELLES_BARN = "5005";
-    public static final String AVKLAR_OM_SØKER_ER_MANN_SOM_ADOPTERER_ALENE = "5006";
     public static final String SJEKK_TERMINBEKREFTELSE = "5001";
-    public static final String AVKLAR_TILLEGGSOPPLYSNINGER = "5009";
-    public static final String AVKLAR_VILKÅR_FOR_OMSORGSOVERTAKELSE = "5008";
-    public static final String AVKLAR_VILKÅR_FOR_FORELDREANSVAR = "5054";
     public static final String AVKLAR_VERGE = "5030";
     public static final String AVKLAR_OM_SØKER_HAR_MOTTATT_STØTTE = "5031";
-    public static final String AVKLAR_OM_ANNEN_FORELDRE_HAR_MOTTATT_STØTTE = "5032";
-    public static final String AVKLAR_FORTSATT_MEDLEMSKAP = "5053";
 
     public static final String FATTER_VEDTAK = "5016";
 
-    public static final String FORESLÅ_VEDTAK = "5015"; // $NON-NL
+    public static final String FORESLÅ_VEDTAK = "5015";
     public static final String FORESLÅ_VEDTAK_MANUELT = "5028";
 
-    public static final String MANUELL_VURDERING_AV_FORELDREANSVARSVILKÅRET_2_LEDD = "5013";
-    public static final String MANUELL_VURDERING_AV_FORELDREANSVARSVILKÅRET_4_LEDD = "5014";
-    public static final String MANUELL_VURDERING_AV_MEDLEMSKAP = "5010";
-    public static final String MANUELL_VURDERING_AV_OMSORGSVILKÅRET = "5011";
+    public static final String VURDER_OMSORGSOVERTAKELSEVILKÅRET = "5018";
     public static final String MANUELL_VURDERING_AV_SØKNADSFRISTVILKÅRET = "5007";
 
     public static final String AVKLAR_FØDSEL_OG_TILRETTELEGGING = "5091";
     public static final String BEKREFT_SVANGERSKAPSPENGER_VILKÅR = "5092";
 
-    public static final String OVERSTYRING_AV_ADOPSJONSVILKÅRET = "6004";
-    public static final String OVERSTYRING_AV_ADOPSJONSVILKÅRET_FP = "6010";
-    public static final String OVERSTYRING_AV_BEREGNING = "6007";
     public static final String OVERSTYRING_AV_FØDSELSVILKÅRET = "6003";
     public static final String OVERSTYRING_AV_FØDSELSVILKÅRET_FAR_MEDMOR = "6009";
     public static final String OVERSTYRING_AV_MEDLEMSKAPSVILKÅRET = "6005";
@@ -54,16 +36,12 @@ public class AksjonspunktKoder {
 
     public static final String REGISTRER_PAPIRSØKNAD_ENGANGSSTØNAD = "5012";
 
-    public static final String SØKERS_OPPLYSNINGSPLIKT_MANU = "5017";
     public static final String SØKERS_OPPLYSNINGSPLIKT_OVST = "6002";
 
-    public static final String VARSEL_REVURDERING_ETTERKONTROLL = "5025";
     public static final String VARSEL_REVURDERING_MANUELL = "5026";
     public static final String KONTROLLER_REVURDERINGSBEHANDLING = "5055";
 
     public static final String SJEKK_MANGLENDE_FØDSEL = "5027";
-
-    public static final String LEDIG_TIL_FRI_BRUK = "5018";
 
     public static final String VURDERE_ANNEN_YTELSE_FØR_VEDTAK = "5033";
     public static final String VURDERE_DOKUMENT_FØR_VEDTAK = "5034";
@@ -98,14 +76,10 @@ public class AksjonspunktKoder {
     public static final String VURDER_UTTAK_DOKUMENTASJON_KODE = "5074";
 
     public static final String KONTROLLER_REALITETSBEHANDLING_ELLER_KLAGE = "5073";
-    public static final String KONTROLLER_OPPLYSNINGER_OM_FORDELING_AV_STØNADSPERIODEN = "5075";
     public static final String KONTROLLER_OPPLYSNINGER_OM_DØD = "5076";
     public static final String KONTROLLER_OPPLYSNINGER_OM_SØKNADSFRIST = "5077";
-    public static final String KONTROLLER_TILSTØTENDE_YTELSER_INNVILGET = "5078";
-    public static final String KONTROLLER_TILSTØTENDE_YTELSER_OPPHØRT = "5079";
 
     public static final String VURDER_PERIODER_MED_OPPTJENING = "5051";
-    public static final String VURDER_ARBEIDSFORHOLD = "5080";
     public static final String VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING = "5085";
     public static final String VURDER_FEILUTBETALING_KODE = "5084";
 
