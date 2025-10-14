@@ -15,12 +15,15 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Beslutter;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Saksbehandler;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
+import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
@@ -32,6 +35,8 @@ import no.nav.vedtak.exception.ManglerTilgangException;
 
 @Tag("verdikjede")
 class AdressebeskyttelseOgSkjermetPersonTester {
+    private static final Logger LOG = LoggerFactory.getLogger(AdressebeskyttelseOgSkjermetPersonTester.class);
+
     private Beslutter beslutter;
     private Saksbehandler saksbehandler;
     private Saksbehandler saksbehandler6;
@@ -106,7 +111,7 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         saksbehandler6.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Hele fagsaken skal være beskyttet og krever KODE_6 tilgang, selv om far ikke har beskyttet addresse
-        Thread.sleep(2_000);
+        ventTilFagsakErBeskyttet(saksnummerFar);
         assertThatThrownBy(() -> saksbehandler.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> saksbehandler7.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
         assertThatThrownBy(() -> saksbehandlerEgenAnsatt.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
@@ -164,5 +169,21 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         var innsynSak = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
         assertThat(innsynSak).isNotNull();
         assertThat(innsynSak.saksnummer().value()).isEqualTo(saksnummerMor.value());
+    }
+
+    private void ventTilFagsakErBeskyttet(Saksnummer saksnummerFar) {
+        for (int i = 0; i < 10; i++) {
+            try {
+                saksbehandler.hentFagsak(saksnummerFar);
+                LOG.info("Venter på at fagsak {} skal bli beskyttet...", saksnummerFar.value());
+                Thread.sleep(1000);
+            } catch (ManglerTilgangException e) {
+                LOG.info("Fagsak {} er nå beskyttet", saksnummerFar.value());
+                return;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
