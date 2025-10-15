@@ -4,6 +4,8 @@ x-common-env: &common-properties
   "common.env"
 x-default-konfigurasjon: &default-konfigurasjon
   restart: on-failure
+x-default-oracle-jdbc-config: &default-oracle-jdbc-config
+  "./vault-init/config:/var/run/secrets/nais.io/defaultDSconfig/"
 
 services:
   audit.nais:
@@ -81,6 +83,7 @@ services:
     container_name: fptilgang
     mem_limit: 512mb
     environment:
+      NAIS_APP_NAME: fptilgang
       # Gruppe OID for roller fra Entra (MS AD) - tilsvarer de fra nav-ansatt.json i VTP.
       # De første kan droppes - finnes i fp-felles ansattgruppeprovider-vtp.properties
       GRUPPE_OID_SAKSBEHANDLER: eb211c0d-9ca6-467f-8863-9def2cc06fd3
@@ -97,8 +100,6 @@ services:
       REDIS_HOST: fpcache
       REDIS_PORT: 6379
       REDIS_PASSWORD:
-      APP_NAME: fptilgang
-      NAIS_APP_NAME: fptilgang
     env_file:
       - *common-properties
     volumes:
@@ -125,6 +126,8 @@ services:
     env_file:
       - *common-properties
       - fpabakus_datasource.env
+    environment:
+      NAIS_APP_NAME: fpabakus
     volumes:
       - *sertifikat-volum
     ports:
@@ -149,6 +152,8 @@ services:
     env_file:
       - *common-properties
       - fpkalkulus_datasource.env
+    environment:
+      NAIS_APP_NAME: fpkalkulus
     volumes:
       - *sertifikat-volum
     ports:
@@ -175,6 +180,7 @@ services:
     mem_limit: 1gb
     shm_size: 256mb
     environment:
+      NAIS_APP_NAME: fpsak
       FPOPPDRAG_OVERRIDE_PROXY_URL: http://localhost:9000/fpoppdrag/api
       UFORE_RS_URL: http://vtp:8060/rest/api/pesys/ufo
       EXTRA_CLASS_PATH: :vtp-lib/*
@@ -184,6 +190,8 @@ services:
       - fpsak_datasource.env
     volumes:
       - *sertifikat-volum
+      - *default-oracle-jdbc-config
+      - ./vault-init/fpsak:/var/run/secrets/nais.io/
     ports:
       - "127.0.0.1:8080:8080"
       #- "127.0.0.1:5005:5005"
@@ -289,12 +297,15 @@ services:
     container_name: fpfordel
     mem_limit: 512mb
     environment:
+      NAIS_APP_NAME: fpfordel
       DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
     env_file:
       - *common-properties
       - fpfordel_datasource.env
     volumes:
       - *sertifikat-volum
+      - *default-oracle-jdbc-config
+      - ./vault-init/fpfordel:/var/run/secrets/nais.io/
       - ./tokenx:/tokenx
     ports:
       - "127.0.0.1:8090:8080"
@@ -316,6 +327,7 @@ services:
     container_name: fpformidling
     mem_limit: 512mb
     environment:
+      NAIS_APP_NAME: fpformidling
       DOKGEN_REST_BASE_URL: http://fpdokgen:8080
       DOKDIST_REST_BASE_URL: http://vtp:8060/rest/dokdist/v1
       JOURNALPOST_REST_V1_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
@@ -363,8 +375,12 @@ services:
     env_file:
       - *common-properties
       - fpoppdrag_datasource.env
+    environment:
+      NAIS_APP_NAME: fpoppdrag
     volumes:
       - *sertifikat-volum
+      - *default-oracle-jdbc-config
+      - ./vault-init/fpoppdrag:/var/run/secrets/nais.io/
     ports:
       - "127.0.0.1:8070:8080"
     healthcheck:
@@ -384,6 +400,8 @@ services:
     mem_limit: 768mb
     shm_size: 256mb
     environment:
+      APP_NAME: fptilbake
+      NAIS_APP_NAME: fptilbake
       CONTEXT_PATH: /fptilbake
       DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
       DOKDIST_REST_DISTRIBUER_JOURNALPOST: http://vtp:8060/rest/dokdist/v1/distribuerjournalpost
@@ -399,6 +417,8 @@ services:
       - fptilbake_datasource.env
     volumes:
       - *sertifikat-volum
+      - *default-oracle-jdbc-config
+      - ./vault-init/fptilbake:/var/run/secrets/nais.io/
     ports:
       - "127.0.0.1:8030:8080"
     healthcheck:
@@ -419,12 +439,15 @@ services:
     container_name: fprisk
     mem_limit: 512mb
     environment:
+      NAIS_APP_NAME: fprisk
       BRREG_DIRECT_URL: http://vtp:8060/rest/dummy/brreg
     env_file:
       - fprisk_datasource.env
       - *common-properties
     volumes:
       - *sertifikat-volum
+      - *default-oracle-jdbc-config
+      - ./vault-init/fprisk:/var/run/secrets/nais.io/
     ports:
       - "127.0.0.1:8075:8080"
     healthcheck:
@@ -444,9 +467,12 @@ services:
     mem_limit: 512mb
     env_file:
       - *common-properties
-      - fpabonnent_datasource.env
+    environment:
+      NAIS_APP_NAME: fpabonnent
     volumes:
       - *sertifikat-volum
+      - *default-oracle-jdbc-config
+      - ./vault-init/fpabonnent:/var/run/secrets/nais.io/
     ports:
       - "127.0.0.1:8065:8080"
     healthcheck:
@@ -467,12 +493,15 @@ services:
     container_name: fplos
     mem_limit: 512mb
     environment:
+      NAIS_APP_NAME: fplos
       AXSYS_URL: http://vtp:8060/rest/axsys-enhetstilgang
     env_file:
       - *common-properties
       - fplos_datasource.env
     volumes:
       - *sertifikat-volum
+      - *default-oracle-jdbc-config
+      - ./vault-init/fplos:/var/run/secrets/nais.io/
     ports:
       - "127.0.0.1:8071:8080"
     healthcheck:
@@ -491,6 +520,7 @@ services:
     container_name: fpoversikt
     mem_limit: 512mb
     environment:
+      NAIS_APP_NAME: fpoversikt
       TOKEN_X_PRIVATE_JWK:
         "{
           \"p\": \"2dZeNRmZow7uWKzqpOolNf7FUIr6dP5bThwnqpcDca7sP96fzPGaryZmYAawZj7h1UthpDp9b2D5v0-D0fSrbdp-MisaOz_ZL-2kdwyTSIP0ii-4yPHpFqaZuGTbuLmROwDhklTGMoYC4fN8vb0jgE6cR33bA52JH255qz5R1rc\",
@@ -571,6 +601,7 @@ services:
     container_name: fpinntektsmelding
     mem_limit: 512mb
     environment:
+      NAIS_APP_NAME: fpinntektsmelding
       FPDOKGEN_URL: http://fpdokgen:8080
       ARBEIDSGIVER_NOTIFIKASJON_URL: http://vtp:8060/rest/api/fager/graphql
       ARBEIDSGIVER_NOTIFIKASJON_SCOPES: api://vtp.teamforeldrepenger.vtp/.default
