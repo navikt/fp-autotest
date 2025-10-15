@@ -442,8 +442,8 @@ services:
       NAIS_APP_NAME: fprisk
       BRREG_DIRECT_URL: http://vtp:8060/rest/dummy/brreg
     env_file:
-      - fprisk_datasource.env
       - *common-properties
+      - fprisk_datasource.env
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
@@ -467,6 +467,7 @@ services:
     mem_limit: 512mb
     env_file:
       - *common-properties
+      - fpabonnent_datasource.env
     environment:
       NAIS_APP_NAME: fpabonnent
     volumes:
