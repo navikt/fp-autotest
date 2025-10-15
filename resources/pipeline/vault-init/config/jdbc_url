@@ -1,0 +1,1 @@
+jdbc:oracle:thin:@//oracle:1521/FREEPDB1
