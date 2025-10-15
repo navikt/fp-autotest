@@ -18,12 +18,11 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Beslutter;
 import no.nav.foreldrepenger.autotest.aktoerer.saksbehandler.fpsak.Saksbehandler;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.FagsakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
@@ -35,31 +34,37 @@ import no.nav.vedtak.exception.ManglerTilgangException;
 
 @Tag("verdikjede")
 class AdressebeskyttelseOgSkjermetPersonTester {
-    private static final Logger LOG = LoggerFactory.getLogger(AdressebeskyttelseOgSkjermetPersonTester.class);
 
-    private Beslutter beslutter;
-    private Saksbehandler saksbehandler;
+    private static final Logger LOG = LoggerFactory.getLogger(AdressebeskyttelseOgSkjermetPersonTester.class);
     private Saksbehandler saksbehandler6;
-    private Saksbehandler saksbehandler7;
     private Saksbehandler saksbehandlerEgenAnsatt;
-    private Saksbehandler overstyrer;
-    private Saksbehandler veileder;
-    private Saksbehandler drifter;
+
+    private FagsakKlient fpsakKlientBeslutter;
+    private FagsakKlient fpsakKlientSaksbehandler;
+    private FagsakKlient fpsakKlientSaksbehandler6;
+    private FagsakKlient fpsakKlientSaksbehandler7;
+    private FagsakKlient fpsakKlientSaksbehandlerEgenAnsatt;
+    private FagsakKlient fpsakKlientOverstyrer;
+    private FagsakKlient fpsakKlientVeileder;
+    private FagsakKlient fpsakKlientDrifter;
 
     @BeforeEach
     void setUp() {
-        beslutter = new Beslutter();
-        saksbehandler = new Saksbehandler(SaksbehandlerRolle.SAKSBEHANDLER);
         saksbehandler6 = new Saksbehandler(SaksbehandlerRolle.SAKSBEHANDLER_KODE_6);
-        saksbehandler7 = new Saksbehandler(SaksbehandlerRolle.SAKSBEHANDLER_KODE_7);
         saksbehandlerEgenAnsatt = new Saksbehandler(SaksbehandlerRolle.SAKSBEHANDLER_EGEN_ANSATT);
-        overstyrer = new Saksbehandler(SaksbehandlerRolle.OVERSTYRER);
-        veileder = new Saksbehandler(SaksbehandlerRolle.VEILEDER);
-        drifter = new Saksbehandler(SaksbehandlerRolle.DRIFTER);
+
+        fpsakKlientSaksbehandler6 = new FagsakKlient(SaksbehandlerRolle.SAKSBEHANDLER_KODE_6);
+        fpsakKlientSaksbehandlerEgenAnsatt = new FagsakKlient(SaksbehandlerRolle.SAKSBEHANDLER_EGEN_ANSATT);
+        fpsakKlientBeslutter = new FagsakKlient(SaksbehandlerRolle.BESLUTTER);
+        fpsakKlientSaksbehandler = new FagsakKlient(SaksbehandlerRolle.SAKSBEHANDLER);
+        fpsakKlientSaksbehandler7 = new FagsakKlient(SaksbehandlerRolle.SAKSBEHANDLER_KODE_7);
+        fpsakKlientOverstyrer = new FagsakKlient(SaksbehandlerRolle.OVERSTYRER);
+        fpsakKlientVeileder = new FagsakKlient(SaksbehandlerRolle.VEILEDER);
+        fpsakKlientDrifter = new FagsakKlient(SaksbehandlerRolle.DRIFTER);
     }
 
     @Test
-    void adressebeskyttet_strengt_fortrolig_kun_saksbehandles_av_sakbehanlder_med_strengt_fortrolig_ad_gruppe() throws InterruptedException {
+    void adressebeskyttet_strengt_fortrolig_kun_saksbehandles_av_sakbehanlder_med_strengt_fortrolig_ad_gruppe() {
         var familie = FamilieGenerator.ny(SaksbehandlerRolle.SAKSBEHANDLER_KODE_6)
                 .forelder(mor()
                         .inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningUnder6G().build())
@@ -87,13 +92,15 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato);
         saksbehandler6.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        assertThatThrownBy(() -> saksbehandler.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> saksbehandler7.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> saksbehandlerEgenAnsatt.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> overstyrer.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> veileder.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> drifter.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> beslutter.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        LOG.info("Sjekker om fagsak er beskyttet ...");
+        assertThatThrownBy(() -> fpsakKlientSaksbehandler.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientSaksbehandler7.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientSaksbehandlerEgenAnsatt.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientOverstyrer.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientVeileder.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientDrifter.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientBeslutter.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        LOG.info("Fagsak er beskyttet!");
 
         var far = familie.far();
         var søknadFar = SøknadForeldrepengerMaler.lagSøknadForeldrepengerTermin(termindato, BrukerRolle.FAR)
@@ -105,21 +112,21 @@ class AdressebeskyttelseOgSkjermetPersonTester {
                 .build();
         var saksnummerFar = far.søk(søknadFar);
 
-        Thread.sleep(2_000); // Venter slik at ugradert sak ikke blir cachet
         saksbehandler6.hentFagsak(saksnummerFar);
         saksbehandler6.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
         far.arbeidsgiver().sendInntektsmeldingerFP(saksnummerFar, termindato);
         saksbehandler6.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
         // Hele fagsaken skal være beskyttet og krever KODE_6 tilgang, selv om far ikke har beskyttet addresse
-        ventTilFagsakErBeskyttet(saksnummerFar);
-        assertThatThrownBy(() -> saksbehandler.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> saksbehandler7.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> saksbehandlerEgenAnsatt.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> overstyrer.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> veileder.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> drifter.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> beslutter.hentFagsak(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
+        LOG.info("Sjekker om fagsak er beskyttet ...");
+        assertThatThrownBy(() -> fpsakKlientSaksbehandler.hentFagsakFull(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientSaksbehandler7.hentFagsakFull(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientSaksbehandlerEgenAnsatt.hentFagsakFull(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientOverstyrer.hentFagsakFull(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientVeileder.hentFagsakFull(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientDrifter.hentFagsakFull(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientBeslutter.hentFagsakFull(saksnummerFar)).isExactlyInstanceOf(ManglerTilgangException.class);
+        LOG.info("Fagsak er beskyttet!");
 
         var morsSakInnsyn = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
         assertThat(morsSakInnsyn).isNotNull();
@@ -159,32 +166,18 @@ class AdressebeskyttelseOgSkjermetPersonTester {
         mor.arbeidsgiver().sendInntektsmeldingerFP(saksnummerMor, termindato);
         saksbehandlerEgenAnsatt.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
 
-        assertThatThrownBy(() -> saksbehandler.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> saksbehandler6.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> saksbehandler7.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> overstyrer.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> veileder.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> drifter.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
-        assertThatThrownBy(() -> beslutter.hentFagsak(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        LOG.info("Sjekker om fagsak er beskyttet ...");
+        assertThatThrownBy(() -> fpsakKlientSaksbehandler.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientSaksbehandler6.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientSaksbehandler7.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientOverstyrer.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientVeileder.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientDrifter.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        assertThatThrownBy(() -> fpsakKlientBeslutter.hentFagsakFull(saksnummerMor)).isExactlyInstanceOf(ManglerTilgangException.class);
+        LOG.info("Fagsak er beskyttet!");
 
         var innsynSak = mor.innsyn().hentFpSakUtenÅpenBehandling(saksnummerMor);
         assertThat(innsynSak).isNotNull();
         assertThat(innsynSak.saksnummer().value()).isEqualTo(saksnummerMor.value());
-    }
-
-    private void ventTilFagsakErBeskyttet(Saksnummer saksnummerFar) {
-        for (int i = 0; i < 10; i++) {
-            try {
-                saksbehandler.hentFagsak(saksnummerFar);
-                LOG.info("Venter på at fagsak {} skal bli beskyttet...", saksnummerFar.value());
-                Thread.sleep(1000);
-            } catch (ManglerTilgangException e) {
-                LOG.info("Fagsak {} er nå beskyttet", saksnummerFar.value());
-                return;
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
-            }
-        }
     }
 }

@@ -24,6 +24,7 @@ public class FagsakKlient {
     private static final String API_NAME = "fpsak";
 
     private static final String FAGSAK_URL = "/fagsak";
+    private static final String FAGSAK_FULL_URL = FAGSAK_URL + "/full";
     private static final String FAGSAK_SØK_URL = FAGSAK_URL + "/sok";
     private static final String ENDRE_FAGSAK_MARKERING = FAGSAK_URL + "/endre-utland";
 
@@ -42,6 +43,16 @@ public class FagsakKlient {
                 .GET();
         return Optional.ofNullable(send(request.build(), Fagsak.class))
                 .orElseThrow(() -> new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer));
+    }
+
+    public void hentFagsakFull(Saksnummer saksnummer) {
+        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
+                .uri(fromUri(BaseUriProvider.FPSAK_BASE)
+                        .path(FAGSAK_FULL_URL)
+                        .queryParam("saksnummer", saksnummer.value())
+                        .build())
+                .GET();
+        send(request.build()); // Ignorerer respons, brukes kun for å sjekke tilgangskontroll
     }
 
     public List<Fagsak> søk(Fødselsnummer fnr) {
