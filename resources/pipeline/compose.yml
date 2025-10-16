@@ -312,7 +312,7 @@ services:
                     "path": "/fplos/api",
                     "scopes": "api://vtp.teamforeldrepenger.fplos/.default",
                     "url": "http://fplos:8080"
-                },
+                }
             ]
         }
     env_file:
