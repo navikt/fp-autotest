@@ -351,7 +351,7 @@ services:
     container_name: fp-journalforing
     mem_limit: 128mb
     environment:
-      PORT: 9091
+      PORT: 9092
       HOST: http://localhost
       CORS_ALLOWED_METHODS: GET, POST
       CORS_EXPOSED_HEADERS: Location
@@ -375,7 +375,7 @@ services:
     env_file:
       - *common-properties
     ports:
-      - "127.0.0.1:9091:9091"
+      - "127.0.0.1:9092:9092"
     depends_on:
       wonderwall-fp-journalforing:
         condition: service_started
