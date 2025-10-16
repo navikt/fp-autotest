@@ -13,7 +13,7 @@ services:
     mem_limit: 512mb
   fpsak:
     mem_limit: 3gb
-  fpfrontend:
+  fp-frontend:
     mem_limit: 64mb
   fpfordel:
     mem_limit: 1gb
