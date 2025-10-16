@@ -1,43 +1,25 @@
 {
-    "refusjonskravDatoer": null,
-    "refusjonskravPrArbeidsgiver": [
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "993110469"
-            },
-            "internreferanse": {
-                "abakusReferanse": "d6335c24-b9f8-444a-b310-650db2a5e194"
-            },
-            "alleSøktePerioder": [
-                {
-                    "innsendingsdato": "2022-04-04",
-                    "refusjonsperioder": [
-                        {
-                            "periode": {
-                                "fom": "2022-03-12",
-                                "tom": "9999-12-31"
-                            },
-                            "beløp": 50000
-                        }
-                    ]
-                }
-            ],
-            "sisteSøktePerioder": {
-                "innsendingsdato": "2022-03-12",
-                "refusjonsperioder": [
-                    {
-                        "periode": {
-                            "fom": "2022-03-12",
-                            "tom": "9999-12-31"
-                        },
-                        "beløp": 0
-                    }
-                ]
-            }
-        }
-    ],
     "iayGrunnlag": {
+        "alleInntektsmeldingerPåSak": [
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "993110469"
+                },
+                "inntektBeløp": 45000,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": {
+                    "abakusReferanse": "d6335c24-b9f8-444a-b310-650db2a5e194"
+                },
+                "startDatoPermisjon": "2022-03-12",
+                "innsendingsdato": "2022-03-12",
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 45000,
+                "journalpostId": null,
+                "kanalreferanse": null
+            }
+        ],
         "arbeidDto": {
             "yrkesaktiviteter": [
                 {

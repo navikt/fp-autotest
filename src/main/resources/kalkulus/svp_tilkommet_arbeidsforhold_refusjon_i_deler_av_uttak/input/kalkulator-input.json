@@ -1,71 +1,33 @@
 {
-    "refusjonskravPrArbeidsgiver": [
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "974652269"
-            },
-            "sisteSøktePerioder": {
-                "innsendingsdato": "2021-02-23",
-                "refusjonsperioder": [
-                    {
-                        "periode": {
-                            "fom": "2021-01-21",
-                            "tom": "9999-12-31"
-                        },
-                        "beløp": 41773
-                    }
-                ]
-            },
-            "alleSøktePerioder": [
-                {
-                    "innsendingsdato": "2021-02-23",
-                    "refusjonsperioder": [
-                        {
-                            "periode": {
-                                "fom": "2021-01-21",
-                                "tom": "9999-12-31"
-                            },
-                            "beløp": 41773
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "874652202"
-            },
-            "sisteSøktePerioder": {
-                "innsendingsdato": "2021-02-02",
-                "refusjonsperioder": [
-                    {
-                        "periode": {
-                            "fom": "2021-02-01",
-                            "tom": "9999-12-31"
-                        },
-                        "beløp": 41773.25
-                    }
-                ]
-            },
-            "alleSøktePerioder": [
-                {
-                    "innsendingsdato": "2021-02-02",
-                    "refusjonsperioder": [
-                        {
-                            "periode": {
-                                "fom": "2021-02-01",
-                                "tom": "9999-12-31"
-                            },
-                            "beløp": 41773.25
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
     "iayGrunnlag": {
+        "alleInntektsmeldingerPåSak": [
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "874652202"
+                },
+                "inntektBeløp": 41773.25,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "startDatoPermisjon": "2021-02-02",
+                "innsendingsdato": "2021-02-02",
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 41773.25
+            },
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "974652269"
+                },
+                "inntektBeløp": 41773,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "startDatoPermisjon": "2021-01-21",
+                "innsendingsdato": "2021-02-23",
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 41773
+            }
+        ],
         "arbeidDto": {
             "yrkesaktiviteter": [
                 {

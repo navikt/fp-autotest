@@ -1,40 +1,63 @@
 {
-    "refusjonskravPrArbeidsgiver": [
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "891046642"
-            },
-            "sisteSøktePerioder":
-            {
-                "innsendingsdato": "2020-01-01",
-                "refusjonsperioder": [
-                    {
-                        "periode": {
-                            "fom": "2020-01-01",
-                            "tom": "9999-12-31"
-                        },
-                        "beløp": 44733.33
-                    }
-                ]
-            },
-            "alleSøktePerioder": [
-                {
-                    "innsendingsdato": "2020-01-01",
-                    "refusjonsperioder": [
-                        {
-                            "periode": {
-                                "fom": "2020-01-01",
-                                "tom": "9999-12-31"
-                            },
-                            "beløp": 44733.33
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
     "iayGrunnlag": {
+        "alleInntektsmeldingerPåSak": [
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "991078045"
+                },
+                "inntektBeløp": 4310,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": null,
+                "innsendingsdato": "2020-01-01",
+                "startDatoPermisjon": "2020-01-01",
+                "refusjonOpphører": null,
+                "refusjonBeløpPerMnd": null
+            },
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "891046642"
+                },
+                "inntektBeløp": 16900.59,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": null,
+                "innsendingsdato": "2020-01-01",
+                "startDatoPermisjon": "2020-01-01",
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 16900.59
+            },
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "974652277"
+                },
+                "inntektBeløp": 33785,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": null,
+                "innsendingsdato": "2020-01-01",
+                "startDatoPermisjon": "2020-01-27",
+                "refusjonOpphører": null,
+                "refusjonBeløpPerMnd": null
+            },
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "991076573"
+                },
+                "inntektBeløp": 2940,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": null,
+                "innsendingsdato": "2020-01-01",
+                "startDatoPermisjon": "2020-01-01",
+                "refusjonOpphører": null,
+                "refusjonBeløpPerMnd": null
+            }
+        ],
         "arbeidDto": {
             "yrkesaktiviteter": [
                 {
