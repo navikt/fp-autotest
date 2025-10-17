@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.generator.familie;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.ApiMottak;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Fordel;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
@@ -13,9 +16,6 @@ import no.nav.foreldrepenger.vtp.kontrakter.FødselshendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.kontrakter.TestscenarioDto;
 import no.nav.foreldrepenger.vtp.testmodell.personopplysning.BrukerModell;
-
-import java.time.LocalDate;
-import java.util.Optional;
 
 public class Familie {
 
