@@ -291,6 +291,112 @@ services:
       - "127.0.0.1:9000:9000"
     env_file:
       - *common-properties
+
+# Frontend for avdelingsledere
+  fp-avdelingsleder:
+    <<: *default-konfigurasjon
+    image: $AVDELINGSLEDER_IMAGE
+    container_name: fp-avdelingsleder
+    mem_limit: 128mb
+    environment:
+      PORT: 9091
+      HOST: http://localhost
+      CORS_ALLOWED_METHODS: GET, POST
+      CORS_EXPOSED_HEADERS: Location
+      CORS_ALLOWED_HEADERS: Referer, Origin, Content-Type, Accept, X-Requested-With, cache-control, x_Nav-CallId, pragma, expires, X-Forwarded-Proto
+      NODE_ENV: development
+      PROXY_CONFIG: |
+        {
+            "apis": [
+                {
+                    "path": "/fplos/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fplos/.default",
+                    "url": "http://fplos:8080"
+                }
+            ]
+        }
+    env_file:
+      - *common-properties
+    ports:
+      - "127.0.0.1:9091:9091"
+    depends_on:
+      wonderwall-fp-avdelingsleder:
+        condition: service_started
+      fplos:
+        condition: service_started
+
+  wonderwall-fp-avdelingsleder:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-fp-avdelingsleder
+    mem_limit: 16mb
+    command: |
+      --openid.provider=azure
+      --ingress=http://localhost:9004
+      --bind-address=0.0.0.0:9004
+      --upstream-host=fp-avdelingsleder:9091
+      --auto-login=true
+      --session.max-lifetime=12h0m0s
+      --session.inactivity-timeout=12h0m0s
+      --log-level=debug
+    ports:
+      - "127.0.0.1:9004:9004"
+    env_file:
+      - *common-properties
+
+  # Frontend for journalføring
+  fp-journalforing:
+    <<: *default-konfigurasjon
+    image: $JOURNALFORING_IMAGE
+    container_name: fp-journalforing
+    mem_limit: 128mb
+    environment:
+      PORT: 9092
+      HOST: http://localhost
+      CORS_ALLOWED_METHODS: GET, POST
+      CORS_EXPOSED_HEADERS: Location
+      CORS_ALLOWED_HEADERS: Referer, Origin, Content-Type, Accept, X-Requested-With, cache-control, x_Nav-CallId, pragma, expires, X-Forwarded-Proto
+      NODE_ENV: development
+      PROXY_CONFIG: |
+        {
+            "apis": [
+                {
+                    "path": "/fpfordel/api",
+                    "scopes": "api://vtp.teamforeldrepenger.fpfordel/.default",
+                    "url": "http://fpfordel:8080"
+                }
+            ]
+        }
+    env_file:
+      - *common-properties
+    ports:
+      - "127.0.0.1:9092:9092"
+    depends_on:
+      wonderwall-fp-journalforing:
+        condition: service_started
+      fpsak:
+        condition: service_started
+      fpfordel:
+        condition: service_started
+  wonderwall-fp-journalforing:
+    <<: *default-konfigurasjon
+    image: ghcr.io/nais/wonderwall:latest
+    container_name: wonderwall-fp-journalforing
+    mem_limit: 16mb
+    command: |
+      --openid.provider=azure
+      --ingress=http://localhost:9005
+      --bind-address=0.0.0.0:9005
+      --upstream-host=fp-journalforing:9092
+      --auto-login=true
+      --session.max-lifetime=12h0m0s
+      --session.inactivity-timeout=12h0m0s
+      --log-level=debug
+    ports:
+      - "127.0.0.1:9005:9005"
+    env_file:
+      - *common-properties
+
   fpfordel:
     <<: *default-konfigurasjon
     image: $FPFORDEL_IMAGE
