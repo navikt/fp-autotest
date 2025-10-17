@@ -361,11 +361,6 @@ services:
         {
             "apis": [
                 {
-                    "path": "/fpsak/api",
-                    "scopes": "api://vtp.teamforeldrepenger.fpsak/.default",
-                    "url": "http://fpsak:8080"
-                },
-                {
                     "path": "/fpfordel/api",
                     "scopes": "api://vtp.teamforeldrepenger.fpfordel/.default",
                     "url": "http://fpfordel:8080"
