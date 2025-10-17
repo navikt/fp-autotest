@@ -1,40 +1,22 @@
 {
-    "refusjonskravDatoer": null,
-    "refusjonskravPrArbeidsgiver": [
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "993110469"
-            },
-            "alleSøktePerioder": [
-                {
-                    "innsendingsdato": "2022-04-04",
-                    "refusjonsperioder": [
-                        {
-                            "periode": {
-                                "fom": "2022-03-12",
-                                "tom": "9999-12-31"
-                            },
-                            "beløp": 50000
-                        }
-                    ]
-                }
-            ],
-            "sisteSøktePerioder": {
-                "innsendingsdato": "2022-03-12",
-                "refusjonsperioder": [
-                    {
-                        "periode": {
-                            "fom": "2022-03-12",
-                            "tom": "9999-12-31"
-                        },
-                        "beløp": 50000
-                    }
-                ]
-            }
-        }
-    ],
     "iayGrunnlag": {
+        "alleInntektsmeldingerPåSak": [
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "993110469"
+                },
+                "inntektBeløp": 45000,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "startDatoPermisjon": "2022-03-12",
+                "innsendingsdato": "2022-04-04",
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 45000,
+                "journalpostId": null,
+                "kanalreferanse": null
+            }
+        ],
         "arbeidDto": {
             "yrkesaktiviteter": [
                 {

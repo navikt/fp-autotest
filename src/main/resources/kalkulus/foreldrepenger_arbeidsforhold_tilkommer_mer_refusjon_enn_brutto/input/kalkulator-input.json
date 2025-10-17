@@ -1,73 +1,39 @@
 {
-    "refusjonskravPrArbeidsgiver": [
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "974652269"
-            },
-            "sisteSøktePerioder":
-            {
-                "innsendingsdato": "2019-07-15",
-                "refusjonsperioder": [
-                    {
-                        "periode": {
-                            "fom": "2019-07-16",
-                            "tom": "9999-12-31"
-                        },
-                        "beløp": 44733.33
-                    }
-                ]
-            },
-            "alleSøktePerioder": [
-                {
-                    "innsendingsdato": "2019-07-15",
-                    "refusjonsperioder": [
-                        {
-                            "periode": {
-                                "fom": "2019-07-16",
-                                "tom": "9999-12-31"
-                            },
-                            "beløp": 44733.33
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "974761076"
-            },
-            "sisteSøktePerioder":
-            {
-                "innsendingsdato": "2019-10-01",
-                "refusjonsperioder": [
-                    {
-                        "periode": {
-                            "fom": "2019-10-01",
-                            "tom": "9999-12-31"
-                        },
-                        "beløp": 44733.33
-                    }
-                ]
-            },
-            "alleSøktePerioder": [
-                {
-                    "innsendingsdato": "2019-10-01",
-                    "refusjonsperioder": [
-                        {
-                            "periode": {
-                                "fom": "2019-10-01",
-                                "tom": "9999-12-31"
-                            },
-                            "beløp": 44733.33
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
     "iayGrunnlag": {
+        "alleInntektsmeldingerPåSak": [
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "974652269"
+                },
+                "inntektBeløp": 45000.00,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": {
+                    "abakusReferanse": "127b7791-8f38-4910-9424-0d764d7b2298"
+                },
+                "innsendingsdato": "2019-07-15",
+                "startDatoPermisjon": "2019-07-16",
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 35000.00
+            },
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "974761076"
+                },
+                "inntektBeløp": 45000.00,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": {
+                    "abakusReferanse": "dc3601cc-4676-4fc5-af86-35f825c91804"
+                },
+                "innsendingsdato": "2019-07-15",
+                "startDatoPermisjon": "2019-10-01",
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 45000.00
+            }
+        ],
         "arbeidDto": {
             "yrkesaktiviteter": [
                 {

@@ -1,51 +1,23 @@
 {
-    "refusjonskravDatoer": [
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "974652269"
-            },
-            "førsteDagMedRefusjonskrav": "2020-01-01",
-            "førsteInnsendingAvRefusjonskrav": "2020-01-01",
-            "harRefusjonFraStart": true
-        }
-    ],
-    "refusjonskravPrArbeidsgiver": [
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "974652269"
-            },
-            "sisteSøktePerioder":
-            {
-                "innsendingsdato": "2020-01-01",
-                "refusjonsperioder": [
-                    {
-                        "periode": {
-                            "fom": "2020-01-01",
-                            "tom": "9999-12-31"
-                        },
-                        "beløp": 44733.33
-                    }
-                ]
-            },
-            "alleSøktePerioder": [
-                {
-                    "innsendingsdato": "2020-01-01",
-                    "refusjonsperioder": [
-                        {
-                            "periode": {
-                                "fom": "2020-01-01",
-                                "tom": "9999-12-31"
-                            },
-                            "beløp": 44733.33
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
     "iayGrunnlag": {
+        "alleInntektsmeldingerPåSak": [
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "974652269"
+                },
+                "inntektBeløp": 44733.33,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": {
+                    "abakusReferanse": "127b7791-8f38-4910-9424-0d764d7b2298"
+                },
+                "startDatoPermisjon": "2020-01-01",
+                "innsendingsdato": "2020-01-01",
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 44733.33
+            }
+        ],
         "arbeidDto": {
             "yrkesaktiviteter": [
                 {

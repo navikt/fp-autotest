@@ -1,40 +1,44 @@
 {
-    "refusjonskravPrArbeidsgiver": [
-        {
-            "arbeidsgiver": {
-                "identType": "ORGNUMMER",
-                "ident": "874652202"
-            },
-            "sisteSøktePerioder":
+    "iayGrunnlag": {
+        "alleInntektsmeldingerPåSak": [
             {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "874652202"
+                },
+                "inntektBeløp": 39186.5,
+                "naturalYtelser": [],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": null,
+                "startDatoPermisjon": "2020-02-03",
                 "innsendingsdato": "2020-02-14",
-                "refusjonsperioder": [
+                "refusjonOpphører": "9999-12-31",
+                "refusjonBeløpPerMnd": 39186.5
+            },
+            {
+                "arbeidsgiver": {
+                    "identType": "ORGNUMMER",
+                    "ident": "991013628"
+                },
+                "inntektBeløp": 38010,
+                "naturalYtelser": [
                     {
                         "periode": {
-                            "fom": "2020-02-03",
-                            "tom": "9999-12-31"
+                            "fom": "0001-01-01",
+                            "tom": "2019-12-15"
                         },
-                        "beløp": 44733.33
+                        "beløp": 500,
+                        "type": "KOSTBESPARELSE_HJEM"
                     }
-                ]
-            },
-            "alleSøktePerioder": [
-                {
-                    "innsendingsdato": "2020-02-14",
-                    "refusjonsperioder": [
-                        {
-                            "periode": {
-                                "fom": "2020-02-03",
-                                "tom": "9999-12-31"
-                            },
-                            "beløp": 44733.33
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    "iayGrunnlag": {
+                ],
+                "endringerRefusjon": [],
+                "arbeidsforholdRef": null,
+                "startDatoPermisjon": "2019-12-16",
+                "innsendingsdato": "2020-02-14",
+                "refusjonOpphører": null,
+                "refusjonBeløpPerMnd": null
+            }
+        ],
         "arbeidDto": {
             "yrkesaktiviteter": [
                 {
