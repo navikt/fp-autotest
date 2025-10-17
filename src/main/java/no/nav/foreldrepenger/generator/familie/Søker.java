@@ -207,7 +207,7 @@ public abstract class Søker {
 
     public Saksnummer søk(SøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(fødselsnummer, "Søker's navn hardkodet i Autotest", registrerteArbeidsforhold()))
+                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
                 .build();
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn søknad for {} ...", fødselsnummer.value());
@@ -219,7 +219,7 @@ public abstract class Søker {
 
     public Saksnummer søk(SøknadBuilder søknadBuilder, Saksnummer saksnummer) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(fødselsnummer, "Søker's navn fra Autotest", registrerteArbeidsforhold()))
+                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
                 .build();
         genererUniktNavConsumerIdForDokument();
         LOG.info("Sender inn søknad for {} med saksnummer {} ...", fødselsnummer.value(), saksnummer.value());
@@ -231,7 +231,7 @@ public abstract class Søker {
 
     public Saksnummer søk(EndringssøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder
-                .medSøkerinfo(new SøkerDto(fødselsnummer, "Søker's navn fra Autotest", registrerteArbeidsforhold()))
+                .medSøkerinfo(new SøkerDto(fødselsnummer, new SøkerDto.Navn("Fornavnet", "Mellomnavnet", "Etternavnet hardkodet"), registrerteArbeidsforhold()))
                 .build();
         genererUniktNavConsumerIdForDokument();
         this.saksnummer = søknad.saksnummer();
