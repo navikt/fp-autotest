@@ -24,11 +24,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <user.timezone>Europe/Oslo</user.timezone> <!-- Sørger for samme tidssone lokalt og på github -->
 
-        <vtp.versjon>2.0.5</vtp.versjon>
-        <fp-felles.versjon>7.6.6</fp-felles.versjon>
+        <vtp.versjon>2.1.1</vtp.versjon>
+        <fp-felles.versjon>7.6.8</fp-felles.versjon>
         <fp-prosesstask.version>5.2.1</fp-prosesstask.version>
         <fp-kontrakter.version>9.4.3</fp-kontrakter.version>
-        <fpsoknad-felles.version>3.3.4</fpsoknad-felles.version>
+        <fpsoknad-felles.version>3.3.5</fpsoknad-felles.version>
         <foreldrepenge-api.version>0.2.4</foreldrepenge-api.version>
         <ftberegning.version>6.1.6</ftberegning.version>
 
