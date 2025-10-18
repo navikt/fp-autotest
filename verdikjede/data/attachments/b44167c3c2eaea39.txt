@@ -1,0 +1,1 @@
+{"type":"dødfødselhendelse","endringstype":"OPPRETTET","fnr":"05509537021","doedfoedselsdato":"2025-10-11"}
