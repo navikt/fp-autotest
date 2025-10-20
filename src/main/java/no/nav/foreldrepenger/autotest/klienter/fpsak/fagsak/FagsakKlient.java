@@ -37,22 +37,12 @@ public class FagsakKlient {
     public Fagsak hentFagsak(Saksnummer saksnummer) {
         var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
                 .uri(fromUri(BaseUriProvider.FPSAK_BASE)
-                        .path(FAGSAK_URL)
+                        .path(FAGSAK_FULL_URL)
                         .queryParam("saksnummer", saksnummer.value())
                         .build())
                 .GET();
         return Optional.ofNullable(send(request.build(), Fagsak.class))
                 .orElseThrow(() -> new RuntimeException("Finner ikke fagsak på saksnummer " + saksnummer));
-    }
-
-    public void hentFagsakFull(Saksnummer saksnummer) {
-        var request = requestMedInnloggetSaksbehandler(this.saksbehandlerRolle, API_NAME)
-                .uri(fromUri(BaseUriProvider.FPSAK_BASE)
-                        .path(FAGSAK_FULL_URL)
-                        .queryParam("saksnummer", saksnummer.value())
-                        .build())
-                .GET();
-        send(request.build()); // Ignorerer respons, brukes kun for å sjekke tilgangskontroll
     }
 
     public List<Fagsak> søk(Fødselsnummer fnr) {

@@ -19,7 +19,7 @@ class FagsakDtoSeraliseringDeserialiseringTest extends SerializationTestBase {
 
     @Test
     void FagsakTest() {
-        test(new Fagsak(new Saksnummer("123456789"), FagsakStatus.LØPENDE, LocalDate.now()), true);
+        test(new Fagsak(new Saksnummer("123456789"), FagsakStatus.LØPENDE), true);
     }
 
     @Test
