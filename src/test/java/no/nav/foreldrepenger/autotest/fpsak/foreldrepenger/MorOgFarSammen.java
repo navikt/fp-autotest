@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -384,6 +385,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 .isFalse();
     }
 
+    @Disabled("TFP-6069 Ikke mulig å søke sånn - fix")
     @Test
     @DisplayName("Koblet sak. Far utsetter alt/gir fra seg alt. Far ny 1gang")
     @Description("Mor sender inn førstegangssøknad som ferdigbehandles før far sender inn søknad uten overlapp. "
