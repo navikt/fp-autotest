@@ -191,6 +191,7 @@ services:
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
+      - ./vault-init/config:/var/run/secrets/nais.io/dvhDSconfig/
       - ./vault-init/fpsak:/var/run/secrets/nais.io/
     ports:
       - "127.0.0.1:8080:8080"
@@ -301,7 +302,6 @@ services:
       DOKARKIV_BASE_URL: http://vtp:8060/rest/dokarkiv/rest/journalpostapi/v1/journalpost
     env_file:
       - *common-properties
-      - fpfordel_datasource.env
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
@@ -374,7 +374,6 @@ services:
     mem_limit: 512mb
     env_file:
       - *common-properties
-      - fpoppdrag_datasource.env
     environment:
       NAIS_APP_NAME: fpoppdrag
     volumes:
@@ -443,7 +442,6 @@ services:
       BRREG_DIRECT_URL: http://vtp:8060/rest/dummy/brreg
     env_file:
       - *common-properties
-      - fprisk_datasource.env
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
@@ -498,7 +496,6 @@ services:
       AXSYS_URL: http://vtp:8060/rest/axsys-enhetstilgang
     env_file:
       - *common-properties
-      - fplos_datasource.env
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
