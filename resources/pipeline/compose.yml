@@ -465,7 +465,6 @@ services:
     mem_limit: 512mb
     env_file:
       - *common-properties
-      - fpabonnent_datasource.env
     environment:
       NAIS_APP_NAME: fpabonnent
     volumes:
