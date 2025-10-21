@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseVilkårAksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaVergeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkårForutgåendeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
@@ -71,7 +71,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .oppfylt(OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato, false,
                         lagFødselsdatoer(søknad.build()));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);

@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVi
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 
 
-public class VurderOmsorgsovertakelseDto extends AksjonspunktBekreftelse {
+public class VurderOmsorgsovertakelseVilkårAksjonspunktDto extends AksjonspunktBekreftelse {
 
     public record OmsorgsovertakelseBarnDto(LocalDate fødselsdato, Integer barnNummer) {
     }
@@ -17,39 +17,39 @@ public class VurderOmsorgsovertakelseDto extends AksjonspunktBekreftelse {
     private Avslagsårsak avslagskode;
     private OmsorgsovertakelseVilkårType delvilkår;
     private LocalDate omsorgsovertakelseDato;
-    private List<OmsorgsovertakelseBarnDto> fødselsdatoer;
+    private List<OmsorgsovertakelseBarnDto> barn;
     private boolean ektefellesBarn;
 
-    public VurderOmsorgsovertakelseDto() {
+    public VurderOmsorgsovertakelseVilkårAksjonspunktDto() {
         super();
     }
 
-    public VurderOmsorgsovertakelseDto oppfylt(OmsorgsovertakelseVilkårType delvilkår,
-                                               LocalDate omsorgsovertakelseDato,
-                                               boolean ektefellesBarn,
-                                               LocalDate... fødselsdatoene) {
+    public VurderOmsorgsovertakelseVilkårAksjonspunktDto oppfylt(OmsorgsovertakelseVilkårType delvilkår,
+                                                                 LocalDate omsorgsovertakelseDato,
+                                                                 boolean ektefellesBarn,
+                                                                 LocalDate... fødselsdatoene) {
         this.delvilkår = delvilkår;
         this.omsorgsovertakelseDato = omsorgsovertakelseDato;
         this.ektefellesBarn = ektefellesBarn;
-        this.fødselsdatoer = new ArrayList<>();
+        this.barn = new ArrayList<>();
         for (int i = 0; i < fødselsdatoene.length; i++) {
-            this.fødselsdatoer.add(new OmsorgsovertakelseBarnDto(fødselsdatoene[i], i+1));
+            this.barn.add(new OmsorgsovertakelseBarnDto(fødselsdatoene[i], i+1));
         }
         return this;
     }
 
-    public VurderOmsorgsovertakelseDto ikkeOppfylt(Avslagsårsak avslagsårsak,
-                                                   OmsorgsovertakelseVilkårType delvilkår,
-                                                   LocalDate omsorgsovertakelseDato,
-                                                   boolean ektefellesBarn,
-                                                   LocalDate... fødselsdatoene) {
+    public VurderOmsorgsovertakelseVilkårAksjonspunktDto ikkeOppfylt(Avslagsårsak avslagsårsak,
+                                                                     OmsorgsovertakelseVilkårType delvilkår,
+                                                                     LocalDate omsorgsovertakelseDato,
+                                                                     boolean ektefellesBarn,
+                                                                     LocalDate... fødselsdatoene) {
         this.avslagskode = avslagsårsak;
         this.delvilkår = delvilkår;
         this.omsorgsovertakelseDato = omsorgsovertakelseDato;
         this.ektefellesBarn = ektefellesBarn;
-        this.fødselsdatoer = new ArrayList<>();
+        this.barn = new ArrayList<>();
         for (int i = 0; i < fødselsdatoene.length; i++) {
-            this.fødselsdatoer.add(new OmsorgsovertakelseBarnDto(fødselsdatoene[i], i+1));
+            this.barn.add(new OmsorgsovertakelseBarnDto(fødselsdatoene[i], i+1));
         }
         return this;
     }

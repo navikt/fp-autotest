@@ -98,7 +98,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.KontrollerRealitetsbehandlingEllerKlage;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderBeregnetInntektsAvvikBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderFaktaOmBeregningBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseVilkårAksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderRefusjonBeregningsgrunnlagBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderTilbakekrevingVedNegativSimulering;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderVarigEndringEllerNyoppstartetSNBekreftelse;
@@ -1255,7 +1255,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .oppfylt(OmsorgsovertakelseVilkårType.FP_ADOPSJONSVILKÅRET, omsorgsovertakelsedatoe, false,
                         lagFødselsdatoer(søknadFar.build()));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
@@ -1392,7 +1392,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiverFar.sendInntektsmeldingerFP(saksnummerFar, fpStartdatoFar);
 
         saksbehandler.hentFagsak(saksnummerFar);
-        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .oppfylt(OmsorgsovertakelseVilkårType.FP_ADOPSJONSVILKÅRET, omsorgsovertakelsedatoe, false,
                         lagFødselsdatoer(søknadFar.build()));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
@@ -1436,7 +1436,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiverMor.sendInntektsmeldingerFP(saksnummerMor, fpStartdatoMor);
 
         saksbehandler.hentFagsak(saksnummerMor);
-        var vurderOmsorgsovertakelseMor = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelseMor = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .oppfylt(OmsorgsovertakelseVilkårType.FP_ADOPSJONSVILKÅRET, omsorgsovertakelsedatoe, false,
                         lagFødselsdatoer(søknadMor.build()));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelseMor);
@@ -1874,7 +1874,7 @@ class VerdikjedeForeldrepenger extends VerdikjedeTestBase {
         arbeidsgiver.sendInntektsmeldingerFP(saksnummer, omsorgsovertagelsesdato);
 
         saksbehandler.hentFagsak(saksnummer);
-        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .oppfylt(OmsorgsovertakelseVilkårType.FP_ADOPSJONSVILKÅRET, omsorgsovertagelsesdato, false,
                         lagFødselsdatoer(søknad.build()));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
