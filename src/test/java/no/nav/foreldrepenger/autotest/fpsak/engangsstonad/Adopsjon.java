@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatTy
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.FatterVedtakBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseVilkårAksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
@@ -58,7 +58,7 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .oppfylt(OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato, false,
                         lagFødselsdatoer(søknad.build()));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
@@ -96,7 +96,7 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .ikkeOppfylt(Avslagsårsak.BARN_OVER_15_ÅR, OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato,
                         false, LocalDate.now().minusYears(16));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
@@ -137,13 +137,13 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = mor.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .oppfylt(OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato, false,
                         lagFødselsdatoer(søknad.build()));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
 
         overstyrer.hentFagsak(saksnummer);
-        var revurderOmsorgsovertakelse = overstyrer.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var revurderOmsorgsovertakelse = overstyrer.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .ikkeOppfylt(Avslagsårsak.BARN_OVER_15_ÅR, OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato,
                         false, LocalDate.now().minusYears(16));
         overstyrer.bekreftAksjonspunkt(revurderOmsorgsovertakelse);
@@ -186,7 +186,7 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .oppfylt(OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET, omsorgsovertakelsedato, false,
                         lagFødselsdatoer(søknad.build()));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
@@ -222,7 +222,7 @@ class Adopsjon extends FpsakTestBase {
         var saksnummer = far.søk(søknad.build());
 
         saksbehandler.hentFagsak(saksnummer);
-        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseDto())
+        var vurderOmsorgsovertakelse = saksbehandler.hentAksjonspunktbekreftelse(new VurderOmsorgsovertakelseVilkårAksjonspunktDto())
                 .ikkeOppfylt(Avslagsårsak.EKTEFELLES_SAMBOERS_BARN, OmsorgsovertakelseVilkårType.ES_ADOPSJONSVILKÅRET,
                         omsorgsovertakelsedato, true, lagFødselsdatoer(søknad.build()));
         saksbehandler.bekreftAksjonspunkt(vurderOmsorgsovertakelse);
