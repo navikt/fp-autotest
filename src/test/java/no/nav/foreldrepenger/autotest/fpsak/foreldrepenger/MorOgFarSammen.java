@@ -385,16 +385,15 @@ class MorOgFarSammen extends FpsakTestBase {
                 .isFalse();
     }
 
-    @Disabled("TFP-6069 Ikke mulig å søke sånn - fix")
     @Test
     @DisplayName("Koblet sak. Far utsetter alt/gir fra seg alt. Far ny 1gang")
     @Description("Mor sender inn førstegangssøknad som ferdigbehandles før far sender inn søknad uten overlapp. "
             + "Far sin sak ferdigbehandles. Far tar deretter å sender inn en endringssøknad for å gi fra seg alle "
-            + "innvilgede periodene. Etter dette så sender far inn en ny førstegangssøknad, med senere start.")
+            + "innvilgede periodene.")
     void kobletSakFarUtsetterAlt() {
         var fødselsdato = LocalDate.now().minusMonths(4);
         var farOpprinneligStartdato = fødselsdato.plusWeeks(10).plusDays(1);
-        var farUtsattStartDato = fødselsdato.plusWeeks(20).plusDays(1);
+        var farUtsattStartDato = fødselsdato.plusWeeks(50).plusDays(1);
         var familie = FamilieGenerator.ny()
                 .forelder(mor().inntektytelse(InntektYtelseGenerator.ny()
                         .arbeidsforhold(LocalDate.now().minusYears(4), LocalDate.now().minusMonths(4), 900_000)
@@ -415,7 +414,8 @@ class MorOgFarSammen extends FpsakTestBase {
 
         // FAR: Endringssøknad som sier opp innvilget uttak fra start
         var far = familie.far();
-        var fordelingFrasiPerioder = fordeling(utsettelsesperiode(FRI, farOpprinneligStartdato, farOpprinneligStartdato.plusWeeks(2)));
+        var fordelingFrasiPerioder = fordeling(utsettelsesperiode(FRI, farOpprinneligStartdato, farOpprinneligStartdato.plusWeeks(2)),
+                uttaksperiode(FEDREKVOTE, farUtsattStartDato, farUtsattStartDato.plusWeeks(10)));
         var søknad = lagEndringssøknad(far.førstegangssøknad(), saksnummerFar, fordelingFrasiPerioder);
         far.søk(søknad.build());
 
@@ -424,7 +424,7 @@ class MorOgFarSammen extends FpsakTestBase {
                 new VurderTilbakekrevingVedNegativSimulering()).avventSamordningIngenTilbakekreving();
         saksbehandler.bekreftAksjonspunkt(vurderTilbakekrevingVedNegativSimulering);
         saksbehandler.bekreftAksjonspunkt(new ForeslåVedtakManueltBekreftelse());
-        saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
+        saksbehandler.ventTilAvsluttetBehandling();
 
         assertThat(saksbehandler.valgtBehandling.hentBehandlingsresultat()).as("Behandlingsresultat")
                 .isEqualTo(BehandlingResultatType.FORELDREPENGER_SENERE);
@@ -434,10 +434,6 @@ class MorOgFarSammen extends FpsakTestBase {
         assertThat(saksbehandler.valgtBehandling.getBehandlingÅrsaker()
                 .stream()
                 .map(BehandlingÅrsak::behandlingArsakType)).doesNotContain(BERØRT_BEHANDLING);
-
-
-        // Sender ny førstegangssøknad
-        behandleSøknadForFarUtenOverlapp(familie, fødselsdato, farUtsattStartDato, saksnummerFar);
     }
 
     @Test
