@@ -5,7 +5,7 @@ x-common-env: &common-properties
 x-default-konfigurasjon: &default-konfigurasjon
   restart: on-failure
 x-default-oracle-jdbc-config: &default-oracle-jdbc-config
-  "./vault-init/config:/var/run/secrets/nais.io/defaultDSconfig/"
+  "./vault-init/dbConfig:/var/run/secrets/nais.io/defaultDSconfig/"
 
 services:
   audit.nais:
@@ -191,7 +191,7 @@ services:
     volumes:
       - *sertifikat-volum
       - *default-oracle-jdbc-config
-      - ./vault-init/config:/var/run/secrets/nais.io/dvhDSconfig/
+      - ./vault-init/dbConfig:/var/run/secrets/nais.io/dvhDSconfig/
       - ./vault-init/fpsak:/var/run/secrets/nais.io/
     ports:
       - "127.0.0.1:8080:8080"
