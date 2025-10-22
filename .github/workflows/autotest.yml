@@ -84,7 +84,7 @@ jobs:
           elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
             services=("fplos")
           else
-            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad" "fpoversikt" "foreldrepengesoknad-api" "fpkalkulus" "fpinntektsmelding")
+            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
           fi
 
           cd resources/pipeline

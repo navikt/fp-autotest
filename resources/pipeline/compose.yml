@@ -653,6 +653,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: test
       NAIS_CLUSTER_NAME: test
+      FPSOKNAD_MOTTAK_OVERRIDE_URL: http://fpsoknad-mottak:9001/api
+      FORELDREPENGESOKNAD_API_OVERRIDE_URL: http://fpsoknad-mottak:9002/api
       IDPORTEN_WELL_KNOWN_URL: http://vtp:8060/rest/idporten/.well-known/openid-configuration
       IDPORTEN_CLIENT_ID: vtp
       TOKEN_X_PRIVATE_JWK: /tokenx/jwk.json
