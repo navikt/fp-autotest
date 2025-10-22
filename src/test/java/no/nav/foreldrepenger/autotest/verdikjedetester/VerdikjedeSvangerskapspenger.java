@@ -105,7 +105,7 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
             + "Endrer tilretteleggingen med ny fra dato og arbeidsprosent. Ferien skal beholdes.")
     void morSøkerDelvisTilretteleggingMedInntektOver6GTest() {
         var familie = FamilieGenerator.ny()
-                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().frilans(LocalDate.now().minusYears(2)).arbeidMedOpptjeningOver6G().build()).build())
+                .forelder(mor().inntektytelse(InntektYtelseGenerator.ny().arbeidMedOpptjeningOver6G().build()).build())
                 .build();
 
         var mor = familie.mor();
