@@ -13,33 +13,35 @@ public class AnnenforelderBuilder {
     }
 
     public static NorskForelderBuilder norskMedRettighetNorge(Fødselsnummer fnr) {
-        return new NorskForelderBuilder(fnr).medHarRettPåForeldrepenger(true).medErInformertOmSøknaden(true);
+        return new NorskForelderBuilder(fnr)
+                .medHarRettPåForeldrepenger(true)
+                .medErInformertOmSøknaden(true);
     }
 
     public static NorskForelderBuilder norskIkkeRett(Fødselsnummer fnr) {
-        return new NorskForelderBuilder(fnr).medErAleneOmOmsorg(false)
-            .medHarRettPåForeldrepenger(false)
-            .medErInformertOmSøknaden(false)
-            .medHarMorUføretrygd(false);
+        return new NorskForelderBuilder(fnr)
+                .medErAleneOmOmsorg(false)
+                .medHarRettPåForeldrepenger(false)
+                .medHarAnnenForelderOppholdtSegIEØS(false);
     }
 
     public static NorskForelderBuilder aleneomsorg(Fødselsnummer fnr) {
         return new NorskForelderBuilder(fnr).medErAleneOmOmsorg(true);
     }
 
-    public static NorskForelderBuilder annenpartIkkeRettOgMorHarUføretrygd(Fødselsnummer fnr) {
-        return new NorskForelderBuilder(fnr).medErAleneOmOmsorg(false)
-            .medHarRettPåForeldrepenger(false)
-            .medErInformertOmSøknaden(true)
-            .medHarMorUføretrygd(true);
+    public static NorskForelderBuilder norskIkkeRettOgMorUføretrygd(Fødselsnummer fnr) {
+        return new NorskForelderBuilder(fnr)
+                .medErAleneOmOmsorg(false)
+                .medHarRettPåForeldrepenger(false)
+                .medHarAnnenForelderOppholdtSegIEØS(false)
+                .medHarMorUføretrygd(true);
     }
 
     public static UtenlandskForelderBuilder utenlandskForelderRettEØS(Fødselsnummer fnr, CountryCode bostedsland) {
-        return new UtenlandskForelderBuilder(fnr, bostedsland).medHarRettPåForeldrepenger(false)
-            .medHarAnnenForelderOppholdtSegIEØS(true)
-            .medHarAnnenForelderTilsvarendeRettEØS(true)
-            .medErInformertOmSøknaden(true)
-            .medHarMorUføretrygd(true);
+        return new UtenlandskForelderBuilder(fnr, bostedsland)
+                .medHarRettPåForeldrepenger(false)
+                .medHarAnnenForelderOppholdtSegIEØS(true)
+                .medHarAnnenForelderTilsvarendeRettEØS(true);
     }
 
 

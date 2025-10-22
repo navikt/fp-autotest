@@ -217,7 +217,8 @@ class VerdikjedeSvangerskapspenger extends VerdikjedeTestBase {
         var orgnummer1 = arbeidsforhold1.arbeidsgiverIdentifikasjon();
         var termindato = LocalDate.now().plusMonths(3);
         var tilrettelegginsprosent = 0.0;
-        var tilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1),
+        var tilrettelegging = new TilretteleggingBehovBuilder(
+                ArbeidsforholdMaler.virksomhet((Orgnummer) orgnummer1),
                 LocalDate.now()).ingen(LocalDate.now()).build();
         var søknad = SøknadSvangerskapspengerMaler.lagSvangerskapspengerSøknad(termindato, List.of(tilrettelegging));
         var saksnummer = mor.søk(søknad);

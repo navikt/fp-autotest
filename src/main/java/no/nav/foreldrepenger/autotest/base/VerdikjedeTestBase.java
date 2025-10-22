@@ -50,6 +50,7 @@ public abstract class VerdikjedeTestBase extends FpsakTestBase {
 
     protected void ventPåInntektsmeldingForespørsel(Saksnummer saksnummer) {
         saksbehandler.hentFagsak(saksnummer);
+        LOG.info("Venter på inntektsmelding forespørsel for saksnummer {}...", saksnummer.value());
         saksbehandler.ventTilHistorikkinnslag(HistorikkType.MIN_SIDE_ARBEIDSGIVER);
     }
 

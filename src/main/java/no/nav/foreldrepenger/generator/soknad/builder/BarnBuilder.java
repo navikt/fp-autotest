@@ -11,22 +11,28 @@ import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.TerminDto;
 public final class BarnBuilder {
 
     public static FødselBuilder fødsel(int antallBarn, LocalDate fødselsdato) {
-        return new FødselBuilder(antallBarn).medFødselsdato(fødselsdato).medTermindato(fødselsdato);
+        return new FødselBuilder(antallBarn)
+            .medFødselsdato(fødselsdato)
+            .medTermindato(fødselsdato);
     }
 
     public static TerminBuilder termin(int antallBarn, LocalDate termindato) {
-        return new TerminBuilder(antallBarn).medTermindato(termindato).medTerminbekreftelseDato(termindato.minusMonths(1));
+        return new TerminBuilder(antallBarn)
+            .medTermindato(termindato)
+            .medTerminbekreftelseDato(termindato.minusMonths(1));
     }
 
     public static AdopsjonBuilder adopsjon(LocalDate omsorgsovertakelsesdato, boolean ektefellesBarn) {
-        return new AdopsjonBuilder(1).medFødselsdatoer(List.of(LocalDate.now().minusYears(10)))
+        return new AdopsjonBuilder(1)
+            .medFødselsdatoer(List.of(LocalDate.now().minusYears(10)))
             .medAdopsjonsdato(omsorgsovertakelsesdato)
             .medAnkomstdato(omsorgsovertakelsesdato)
             .medAdopsjonAvEktefellesBarn(ektefellesBarn);
     }
 
     public static OmsorgsovertakelseBuilder omsorgsovertakelse(LocalDate omsorgsovertakelsedato) {
-        return new OmsorgsovertakelseBuilder(1).medFødselsdatoer(List.of(LocalDate.now().minusMonths(6)))
+        return new OmsorgsovertakelseBuilder(1)
+            .medFødselsdatoer(List.of(LocalDate.now().minusMonths(6)))
             .medForeldreansvarsdato(omsorgsovertakelsedato);
     }
 

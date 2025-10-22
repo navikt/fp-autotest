@@ -313,7 +313,7 @@ public abstract class Søker {
     }
 
     private static SøkerDto.Arbeidsforhold tilArbeidsforhold(Arbeidsforhold af) {
-        var hardkodetNavn = "Navn på arbeidsgiver " + af.arbeidsgiverIdentifikasjon().value();
+        var hardkodetNavn = "ARBEIDSGIVERS NAVN AS";
         return new SøkerDto.Arbeidsforhold(
                 hardkodetNavn,
                 new Orgnummer(af.arbeidsgiverIdentifikasjon().value()),

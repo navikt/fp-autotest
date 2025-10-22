@@ -7,7 +7,7 @@ import static no.nav.foreldrepenger.autotest.klienter.JavaHttpKlient.send;
 
 import java.net.http.HttpRequest;
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
@@ -95,9 +95,10 @@ public class FpsoknadKlient {
 
     public void ettersendVedlegg(Fødselsnummer fnr, Saksnummer saksnummer, List<VedleggDto> vedlegg) {
         var ettersendelseDto = new EttersendelseDto(
-                LocalDate.now(),
-                YtelseType.FORELDREPENGER,
+                LocalDateTime.now(),
                 saksnummer,
+                fnr,
+                YtelseType.FORELDREPENGER,
                 null,
                 vedlegg
         );

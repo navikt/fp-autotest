@@ -33,7 +33,7 @@ public class AnnenforelderMaler {
     }
 
     public static AnnenForelderDto annenpartIkkeRettOgMorHarUføretrygd(Søker søker) {
-        return AnnenforelderBuilder.annenpartIkkeRettOgMorHarUføretrygd(søker.fødselsnummer()).build();
+        return AnnenforelderBuilder.norskIkkeRettOgMorUføretrygd(søker.fødselsnummer()).build();
     }
 
     public static AnnenForelderDto ukjentForelder() {

@@ -22,7 +22,7 @@ public class VedleggMaler {
 
     public static VedleggDto dokumenterTermin(VedleggInnsendingType innsendingType) {
         var dokumenterer = new VedleggDto.Dokumenterer(VedleggDto.Dokumenterer.DokumentererType.BARN, null, null);
-        return new VedleggDto(UUID.randomUUID(), DokumentType.I000141, innsendingType, null, dokumenterer);
+        return new VedleggDto(null, DokumentType.I000141, innsendingType, null, dokumenterer);
     }
 
     public static VedleggDto dokumenterUttak(UttaksplanDto uttaksplan, MorsAktivitet morsAktivitet, VedleggInnsendingType innsendingType) {
