@@ -7,9 +7,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import io.qameta.allure.Step;
-import no.nav.foreldrepenger.autotest.klienter.foreldrepengesoknapi.MottakKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.InntektsmeldingKlient;
 import no.nav.foreldrepenger.autotest.klienter.fpinntektsmelding.dto.SendInntektsmeldingDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.FpsoknadKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EndringssøknadForeldrepengerDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.pdl.PdlLeesahKlient;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.AllureHelper;
@@ -18,10 +22,6 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.navno.InntektsmeldingPortalMapper;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -39,12 +39,12 @@ import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.koder.Variantformat;
 
 public class ApiMottak extends DokumentInnsendingHjelper {
 
-    private final MottakKlient mottakKlient;
+    private final FpsoknadKlient fpsoknadKlient;
     private final PdlLeesahKlient pdlLeesahKlient;
 
     public ApiMottak(SaksbehandlerRolle saksbehandlerRolle) {
         super(saksbehandlerRolle);
-        mottakKlient = new MottakKlient();
+        fpsoknadKlient = new FpsoknadKlient();
         pdlLeesahKlient = new PdlLeesahKlient();
     }
 
@@ -86,6 +86,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
             fail("Forventer at det sendes kun 1 inntektsmelding per arbeidsgiver for %s", saksnummer);
             return null;
         }
+        LOG.info("Sender inn inntektsmelding for sak {} og arbeidsgiver {}", saksnummer, inntektsmeldinger.getFirst().arbeidsgiver().arbeidsgiverIdentifikator());
         return sendInnInntektsmelding(inntektsmeldinger.getFirst(), aktørId, fnr, saksnummer);
     }
 
@@ -106,7 +107,7 @@ public class ApiMottak extends DokumentInnsendingHjelper {
     }
 
     @Override
-    public Saksnummer sendInnSøknad(EndringssøknadDto søknad,
+    public Saksnummer sendInnSøknad(EndringssøknadForeldrepengerDto søknad,
                                     AktørId aktørId,
                                     Fødselsnummer fnr,
                                     AktørId aktørIdAnnenpart,
@@ -119,18 +120,18 @@ public class ApiMottak extends DokumentInnsendingHjelper {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
-        mottakKlient.mellomlagreVedlegg(fnr, søknad);
-        mottakKlient.sendSøknad(fnr, søknad);
+        fpsoknadKlient.mellomlagreVedlegg(fnr, søknad);
+        fpsoknadKlient.sendSøknad(fnr, søknad);
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
     @Step("[{søknad.rolle}]: Sender inn endrignssøknad: {fnr}")
-    private Saksnummer sendInnSøknad(Fødselsnummer fnr, EndringssøknadDto søknad) {
+    private Saksnummer sendInnSøknad(Fødselsnummer fnr, EndringssøknadForeldrepengerDto søknad) {
         AllureHelper.tilJsonOgPubliserIAllureRapport(søknad);
         var skjæringsTidspunktForNyBehandling = LocalDateTime.now();
         var antallEksistrendeFagsakerPåSøker = antallEksistrendeFagsakerPåSøker(fnr);
-        mottakKlient.mellomlagreVedlegg(fnr, søknad);
-        mottakKlient.sendSøknad(fnr, søknad);
+        fpsoknadKlient.mellomlagreVedlegg(fnr, søknad);
+        fpsoknadKlient.sendSøknad(fnr, søknad);
         return ventTilFagsakOgBehandlingErOpprettet(fnr, skjæringsTidspunktForNyBehandling, antallEksistrendeFagsakerPåSøker);
     }
 
@@ -171,8 +172,8 @@ public class ApiMottak extends DokumentInnsendingHjelper {
 
     public void ettersendVedlegg(Fødselsnummer fnr, Saksnummer saksnummer, YtelseType ytelseType, VedleggDto vedlegg) {
         var vedleggMottattFraFørPåSak = antallEttersendelserMottattPåSak(saksnummer);
-        mottakKlient.mellomlagreVedlegg(fnr, ytelseType, List.of(vedlegg));
-        mottakKlient.ettersendVedlegg(fnr, saksnummer, List.of(vedlegg));
+        fpsoknadKlient.mellomlagreVedlegg(fnr, ytelseType, List.of(vedlegg));
+        fpsoknadKlient.ettersendVedlegg(fnr, saksnummer, List.of(vedlegg));
         ventTilVedleggErMottatt(saksnummer, vedleggMottattFraFørPåSak);
     }
 

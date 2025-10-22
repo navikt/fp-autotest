@@ -67,7 +67,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
         var fpStartdato = fødselsdato.minusWeeks(3);
         var søknad = lagSøknadForeldrepengerFødsel(fødselsdato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var orgnummer = new Orgnummer("889640782");
         var inntektsmelding = lagInntektsmelding(mor.månedsinntekt(), mor.fødselsnummer(), fpStartdato, orgnummer);
@@ -116,7 +116,7 @@ class ArbeidsforholdVarianter extends FpsakTestBase {
         var termindato = fødselsdato.plusDays(2);
         var søknad = lagSøknadForeldrepengerTermin(termindato, BrukerRolle.MOR)
                 .medAnnenForelder(AnnenforelderMaler.norskMedRettighetNorge(familie.far()));
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         if (!saksbehandler.harAksjonspunkt(AksjonspunktKoder.VURDER_OPPTJENINGSVILKÅRET)) {

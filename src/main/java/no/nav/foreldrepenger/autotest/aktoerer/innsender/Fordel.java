@@ -15,6 +15,10 @@ import java.util.UUID;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.fordel.FordelKlient;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EndringssøknadForeldrepengerDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggDto;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.ReadFileFromClassPathHelper;
 import no.nav.foreldrepenger.common.domain.AktørId;
@@ -34,14 +38,10 @@ import no.nav.foreldrepenger.common.innsending.mappers.V3EngangsstønadDomainMap
 import no.nav.foreldrepenger.common.innsending.mappers.V3ForeldrepengerDomainMapper;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Inntektsmelding;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.xml.InntektsmeldingXmlMapper;
+import no.nav.foreldrepenger.generator.soknad.mapper.SøknadMapper;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostKnyttningDto;
 import no.nav.foreldrepenger.kontrakter.fordel.JournalpostMottakDto;
 import no.nav.foreldrepenger.kontrakter.fordel.OpprettSakDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.endringssøknad.EndringssøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.ettersendelse.YtelseType;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.mapper.SøknadMapper;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.VedleggDto;
 import no.nav.foreldrepenger.vtp.kontrakter.PersonhendelseDto;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentModell;
 import no.nav.foreldrepenger.vtp.testmodell.dokument.modell.DokumentVariantInnhold;
@@ -72,7 +72,7 @@ public class Fordel extends DokumentInnsendingHjelper {
     }
 
     @Override
-    public Saksnummer sendInnSøknad(EndringssøknadDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
+    public Saksnummer sendInnSøknad(EndringssøknadForeldrepengerDto søknad, AktørId aktørId, Fødselsnummer fnr, AktørId aktørIdAnnenpart, Saksnummer saksnummer) {
         return sendInnSøknad(SøknadMapper.tilSøknad(søknad, søknad.mottattdato()), aktørId, fnr, aktørIdAnnenpart, FORELDREPENGER_ENDRING_SØKNAD, saksnummer);
     }
 

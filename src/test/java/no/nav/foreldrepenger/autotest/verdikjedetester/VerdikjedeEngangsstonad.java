@@ -43,7 +43,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
                 .build();
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(termindato);
-        var saksnummer = familie.mor().søk(søknad.build());
+        var saksnummer = familie.mor().søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
 
@@ -80,7 +80,7 @@ class VerdikjedeEngangsstonad extends VerdikjedeTestBase {
         var termindato = LocalDate.now().plusWeeks(3);
         var søknad = SøknadEngangsstønadMaler.lagEngangstønadTermin(termindato);
         var mor = familie.mor();
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         var esSak = mor.innsyn().hentEsSakMedÅpenBehandlingTilstand(saksnummer, BehandlingTilstand.UNDER_BEHANDLING);
         assertThat(esSak.saksnummer().value()).isEqualTo(saksnummer.value());

@@ -17,12 +17,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.autotest.internal.SerializationTestBase;
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.SøknadDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.TilretteleggingBehovBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.ArbeidsforholdMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.OpptjeningMaler;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.maler.UtenlandsoppholdMaler;
+import no.nav.foreldrepenger.generator.soknad.builder.TilretteleggingBehovBuilder;
+import no.nav.foreldrepenger.generator.soknad.maler.ArbeidsforholdMaler;
+import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
+import no.nav.foreldrepenger.generator.soknad.maler.UtenlandsoppholdMaler;
 
 public class SøknadSeraliseringDeserialiseringTest extends SerializationTestBase {
 

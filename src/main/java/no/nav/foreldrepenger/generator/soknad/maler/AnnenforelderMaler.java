@@ -2,10 +2,10 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 
 import com.neovisionaries.i18n.CountryCode;
 
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.foreldrepenger.annenpart.AnnenForelderDto;
 import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 import no.nav.foreldrepenger.generator.familie.Søker;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.dto.foreldrepenger.annenpart.AnnenForelderDto;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.AnnenforelderBuilder;
+import no.nav.foreldrepenger.generator.soknad.builder.AnnenforelderBuilder;
 
 public class AnnenforelderMaler {
 
@@ -33,7 +33,7 @@ public class AnnenforelderMaler {
     }
 
     public static AnnenForelderDto annenpartIkkeRettOgMorHarUføretrygd(Søker søker) {
-        return AnnenforelderBuilder.annenpartIkkeRettOgMorHarUføretrygd(søker.fødselsnummer()).build();
+        return AnnenforelderBuilder.norskIkkeRettOgMorUføretrygd(søker.fødselsnummer()).build();
     }
 
     public static AnnenForelderDto ukjentForelder() {

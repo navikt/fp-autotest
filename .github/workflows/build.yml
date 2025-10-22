@@ -3,8 +3,7 @@ name: Kjører Autotestene ved bygg
 on:
   push:
     branches:
-      - master
-  pull_request_target:
+      - '**'
     paths-ignore:
       - '**.md'
       - '**.MD'

@@ -60,7 +60,7 @@ services:
       JAVAX_NET_SSL_KEYSTORE: /app/.modig/keystore.jks
       JAVAX_NET_SSL_KEYSTOREPASSWORD: vtpvtp
     env_file:
-      - *common-properties
+      - "common.env"
     volumes:
       - *sertifikat-volum
     ports:
@@ -624,21 +624,6 @@ services:
     mem_limit: 512mb
     environment:
       NAIS_APP_NAME: fpoversikt
-      TOKEN_X_PRIVATE_JWK:
-        "{
-          \"p\": \"2dZeNRmZow7uWKzqpOolNf7FUIr6dP5bThwnqpcDca7sP96fzPGaryZmYAawZj7h1UthpDp9b2D5v0-D0fSrbdp-MisaOz_ZL-2kdwyTSIP0ii-4yPHpFqaZuGTbuLmROwDhklTGMoYC4fN8vb0jgE6cR33bA52JH255qz5R1rc\",
-          \"kty\": \"RSA\",
-          \"q\": \"pIt7sgMqDPGZDMiksZ19R9iuUZk5ZcsnPeI0yAGIaEp75Nc7IH9F1LQ8mPw-wtV3Yde26mByszjeskVfldlReZmzeCTXq4jgu5WEi2GM7craTZj-ES7SLkuP21uvbgxGCLxEizr4RCdZD8TtkxcSG2-GPkp-N4IX9187kvWbWl8\",
-          \"d\": \"R_P82iKNJflwkPnpOr5eGmtekLvTq1cZwJ7M0vbox3LlVmpIP9iRPKVEwuBva0ybRu1pkvM4S3DFgYK6gKjHVzPYl6lHvKZxbFyP8lJoaj1km2NhA3cwqJjqkx4VAJhLlEuG5wDlTSRXNpzqfamdZcH-XMG2rM-nh6yFqbSzyaeO99ZnGMDp5mZvzGuR0VmV6IXPXqelP4uT9cPQD60h1v2DaOKlmd-0ghGfdHa0hzR5S8C55oZ5hF1_bhgx6tA8VzC1jp41mDbKmKAOKvcFG2T9JQRBml2izRVVaCsVN0_ZCR7NhQYrkreqgVN_ZLlgzI6YSA2EN1FWmc9GvNFAbQ\",
-          \"e\": \"AQAB\",
-          \"use\": \"sig\",
-          \"kid\": \"ut-Fle8JH9IdPqo7QDDakblWR1DdvMIijJT9A-lVntk\",
-          \"qi\": \"uoncSFVC9_vS652rNSZQO8I7KCk0b2bpt38Sb1iQ8Vha5lYkrTp-AsZLoduj7TscCCqlftm9R-FkfERjEYZLdPKQIaGcCQ-L0RzIG_K3w48Tk2T_EEiMqds4UeBpQxccMjUvX-t_b7pwMjFL1RIEBSWAxg5YShT8C83hv0llh9Y\",
-          \"dp\": \"BLMxWSfyPqhl0Bf7AA_lOaMDktdMzBVo1uiYmn-jnWJOypn9DKjx03Gap9u9Fpeou7dipe51ImAPQ2dtyqvivv4F1wNDD6AzCWuxLrhgvSHLtueMrxk5FDoH-wiCDRxD2-gK9eNKW3C0wzdDq7xW9b-8c3ZtsUhG2xzBF0bC8UU\",
-          \"alg\": \"RS256\",
-          \"dq\": \"R_ji4BhWOlcq9NaGg1I5zEVQ6kw1OPtFbOIW6C0Td1qtGomySSKibslvgBNFeH9auqdaUOZjBVWowx1pE-h8pM3AHJsw4sz6T9K0qSrAM_r4xdxXtThfovRWNkLCV0ZzE7sV2DixA06avDUNHbuHpgyAEZsP3kO_K-qx6jQYAc0\",
-          \"n\": \"jAQFAKQ9omNtb_I2iSryCulJnkB56qGf35fA1RrDBLup7ysJCez9dnu-HTZ62SKoe-9Pxu-4WzjjBNQacotUXYTIi7GFWM5Pyb4ha-bBJprbiwhyrYGIVzZw4LIcleexWPcIOI0cTKmpM6qKb9_6CTFa-A6uX_16n-n3fQjWGPKrJBY7mcIalJ4YTmLhavs6yt6efSD67SaJ2FabzjouRa_yeDmsGPq2LA-4FymDvuGCHeeMtPO9ClnA2eWC15L7n3-Pagm5pso5GchORl2Rwr_bhCmNCKsC_Qh6TqTHJyymuJwZIuSOv88cf-5UsSidRSJ9r0dBl0S0KgndCagD6Q\"
-        }"
     env_file:
       - *common-properties
       - fpoversikt_datasource.env
@@ -660,44 +645,62 @@ services:
         condition: service_healthy
       fptilbake:
         condition: service_healthy
-  fpsoknad-mottak:
+  foreldrepengesoknad-api:
     <<: *default-konfigurasjon
-    image: $FPSOKNAD_MOTTAK_IMAGE
-    container_name: fpsoknad-mottak
+    image: $FORELDREPENGESOKNADAPI_IMAGE
+    container_name: foreldrepengesoknad-api
     mem_limit: 512mb
     environment:
       SPRING_PROFILES_ACTIVE: test
       NAIS_CLUSTER_NAME: test
-      MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: true
-      AAREG_RS_URL: http://vtp:8060/rest/aareg-services/api
-      SECURITYTOKENSERVICE_USERNAME: vtp
-      SECURITYTOKENSERVICE_PASSWORD: vtp
-      KAFKA_USERNAME: vtp
-      KAFKA_PASSWORD: vtp
-      PDL_GRAPHQL_BASE_URL: http://vtp:8060/rest/api/pdl/graphql
-      DIGDIR_BASE_URL: http://vtp:8060/rest/digdir
-      OPPSLAG_URL: http://vtp:8060/rest/dummy/oppslag
-      FPFORDEL_MAX: 20
-      AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://vtp:8060/rest/azuread/token
-      AZURE_APP_CLIENT_ID: lokal:teamforeldrepenger:fpsoknad-mottak
-      AZURE_APP_JWK: /tokenx/jwk.json
+      IDPORTEN_WELL_KNOWN_URL: http://vtp:8060/rest/idporten/.well-known/openid-configuration
+      IDPORTEN_CLIENT_ID: vtp
       TOKEN_X_PRIVATE_JWK: /tokenx/jwk.json
-      OIDC_STS_ISSUER_URL: http://vtp:8060 # TODO Erstat med samme syntax som resten av applikasjonene
     env_file:
       - *common-properties
     volumes:
       - *sertifikat-volum
       - ./tokenx:/tokenx
     ports:
-      - "127.0.0.1:9001:9001"
+      - "127.0.0.1:9002:9002"
     healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9001/api/actuator" ]
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9002/internal/actuator" ]
       interval: 5s
       timeout: 10s
       retries: 20
     depends_on:
-      - vtp
-      - fpfordel
+      - fpoversikt
+  fpsoknad:
+    <<: *default-konfigurasjon
+    image: $FPSOKNAD_IMAGE
+    container_name: fpsoknad
+    mem_limit: 512mb
+    environment:
+      DOKGEN_REST_BASE_URL: http://fpdokgen:8080
+      KRYPTERING_PASSWORD: testnokkelforvtp
+    env_file:
+      - *common-properties
+      - fpsoknad_datasource.env
+    volumes:
+      - *sertifikat-volum
+    ports:
+      - "127.0.0.1:8999:8080"
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:8080/internal/health/isReady" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      vtp:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      fpdokgen:
+        condition: service_started
+      fpsak:
+        condition: service_started
+      fptilbake:
+        condition: service_started
   fpinntektsmelding:
     <<: *default-konfigurasjon
     image: $FPINNTEKTSMELDING_IMAGE
@@ -790,34 +793,6 @@ services:
       - fpinntektsmelding
       - wonderwall-fpinntektsmelding-frontend
 
-  ## SELVBETJENING SPESIFIKK
-  foreldrepengesoknad-api:
-    <<: *default-konfigurasjon
-    image: $FORELDREPENGESOKNADAPI_IMAGE
-    container_name: foreldrepengesoknad-api
-    mem_limit: 512mb
-    environment:
-      SPRING_PROFILES_ACTIVE: test
-      NAIS_CLUSTER_NAME: test
-      IDPORTEN_WELL_KNOWN_URL: http://vtp:8060/rest/idporten/.well-known/openid-configuration
-      IDPORTEN_CLIENT_ID: vtp
-      TOKEN_X_PRIVATE_JWK: /tokenx/jwk.json
-    env_file:
-      - *common-properties
-    volumes:
-      - *sertifikat-volum
-      - ./tokenx:/tokenx
-    ports:
-      - "127.0.0.1:9002:9002"
-    healthcheck:
-      test: [ "CMD", "wget", "--no-verbose","--tries=1", "--spider", "http://localhost:9002/internal/actuator" ]
-      interval: 5s
-      timeout: 10s
-      retries: 20
-    depends_on:
-      - fpsoknad-mottak
-      - fpoversikt
-
   foreldrepengeoversikt:
     <<: *default-konfigurasjon
     image: $FORELDREPENGEOVERSIKT_IMAGE
@@ -831,7 +806,7 @@ services:
       PORT: 9066
       PUBLIC_PATH: /foreldrepenger/oversikt
     depends_on:
-      - foreldrepengesoknad-api
+      - fpoversikt
       - wonderwall-foreldrepengeoversikt
   foreldrepengesoknad:
     <<: *default-konfigurasjon
@@ -847,7 +822,7 @@ services:
       PUBLIC_PATH: /foreldrepenger/soknad
       PORT: 9067
     depends_on:
-      - foreldrepengesoknad-api
+      - fpsoknad
       - wonderwall-foreldrepengesoknad
   svangerskapspengesoknad:
     <<: *default-konfigurasjon
@@ -863,7 +838,7 @@ services:
       PUBLIC_PATH: /svangerskapspenger/soknad
       PORT: 9068
     depends_on:
-      - foreldrepengesoknad-api
+      - fpsoknad
       - wonderwall-svangerskapspengesoknad
   engangsstonad:
     <<: *default-konfigurasjon
@@ -879,7 +854,7 @@ services:
       PUBLIC_PATH: /engangsstonad/soknad
       PORT: 9069
     depends_on:
-      - foreldrepengesoknad-api
+      - fpsoknad
       - wonderwall-engangsstonad
   ## Swagger
   fpswagger:

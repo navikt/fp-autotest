@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import no.nav.foreldrepenger.common.oppslag.dkif.Målform;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.BarnBuilder;
-import no.nav.foreldrepenger.selvbetjening.kontrakt.innsending.util.builder.EngangsstønadBuilder;
+import no.nav.foreldrepenger.generator.soknad.builder.BarnBuilder;
+import no.nav.foreldrepenger.generator.soknad.builder.EngangsstønadBuilder;
 
 public final class SøknadEngangsstønadMaler {
 

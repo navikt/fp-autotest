@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.common.domain.Fødselsnummer;
 // TODO: Fiks opp i testbasene
 public abstract class FpsakTestBase extends BrevTestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FpsakTestBase.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(FpsakTestBase.class);
 
     /*
      * Aktører

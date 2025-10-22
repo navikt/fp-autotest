@@ -44,7 +44,7 @@ class Innsyn extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(
                 fødselsdato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
@@ -90,7 +90,7 @@ class Innsyn extends FpsakTestBase {
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(
                 fødselsdato);
-        var saksnummer = mor.søk(søknad.build());
+        var saksnummer = mor.søk(søknad);
 
         saksbehandler.hentFagsak(saksnummer);
         saksbehandler.ventTilAvsluttetBehandlingOgFagsakLøpendeEllerAvsluttet();
