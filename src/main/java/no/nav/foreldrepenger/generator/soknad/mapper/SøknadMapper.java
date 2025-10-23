@@ -24,12 +24,8 @@ public final class SøknadMapper {
 
     public static Søknad tilSøknad(SøknadDto innsending, LocalDateTime mottattDato) {
         var påkrevdeVedlegg = innsending.vedlegg();
-        if (innsending instanceof SøknadDto søknadV2) {
-            return tilSøknad(søknadV2, påkrevdeVedlegg, mottattDato);
-        } else if (innsending instanceof EndringssøknadForeldrepengerDto endrringsøknad) {
-            return tilEndringssøknad(endrringsøknad, påkrevdeVedlegg, mottattDato);
-        }
-        throw new IllegalArgumentException("Utviklerfeil: Ukjent søknad " + innsending.getClass().getSimpleName());
+        var mappet = tilSøknad(innsending, påkrevdeVedlegg, mottattDato);
+        return mappet;
     }
 
     private static Søknad tilSøknad(SøknadDto søknad, List<VedleggDto> påkrevdeVedlegg, LocalDateTime mottattDato) {
@@ -41,6 +37,9 @@ public final class SøknadMapper {
         }
         if (søknad instanceof SvangerskapspengesøknadDto s) {
             return tilSvangerskapspengesøknad(s, påkrevdeVedlegg, mottattDato);
+        }
+        if (søknad instanceof EndringssøknadForeldrepengerDto endrringsøknad) {
+            return tilEndringssøknad(endrringsøknad, påkrevdeVedlegg, mottattDato);
         }
         throw new IllegalArgumentException("Ukjent søknad " + søknad.getClass().getSimpleName());
     }

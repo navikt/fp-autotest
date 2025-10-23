@@ -196,7 +196,7 @@ public final class CommonMapper {
     }
 
     public static no.nav.foreldrepenger.common.domain.felles.Vedlegg tilVedlegg(VedleggDto vedlegg) {
-        var vedleggMetadata = new VedleggMetaData(tilVedleggsreferanse(UUID.randomUUID()), //TODO
+        var vedleggMetadata = new VedleggMetaData(tilVedleggsreferanse(vedlegg.uuid()),
             tilInnsendingsType(vedlegg.innsendingsType()),
             vedlegg.skjemanummer(),
             vedlegg.beskrivelse());
@@ -217,6 +217,6 @@ public final class CommonMapper {
     }
 
     public static no.nav.foreldrepenger.common.domain.felles.VedleggReferanse tilVedleggsreferanse(UUID vedleggsreferanse) {
-        return new no.nav.foreldrepenger.common.domain.felles.VedleggReferanse(vedleggsreferanse.toString());
+        return new no.nav.foreldrepenger.common.domain.felles.VedleggReferanse("V" + vedleggsreferanse.toString());
     }
 }
