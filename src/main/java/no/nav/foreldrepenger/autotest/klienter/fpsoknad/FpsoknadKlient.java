@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.InnsendingType;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.EttersendelseDto;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.YtelseType;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
-import no.nav.foreldrepenger.common.domain.Kvittering;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 public class FpsoknadKlient {
@@ -31,7 +30,7 @@ public class FpsoknadKlient {
     private static final String API_ENDRING_PATH = API_SEND_PATH + "/foreldrepenger/endre";
     private static final String API_ETTERSEND_PATH = API_SEND_PATH + "/ettersend";
 
-    public Kvittering sendSøknad(Fødselsnummer fnr, SøknadDto søknad) {
+    public void sendSøknad(Fødselsnummer fnr, SøknadDto søknad) {
         var path = switch (søknad) {
             case EngangsstønadDto ignored -> API_SEND_PATH + "/engangsstonad";
             case SvangerskapspengesøknadDto ignored -> API_SEND_PATH + "/svangerskapspenger";
@@ -45,10 +44,10 @@ public class FpsoknadKlient {
                         .build())
                 .timeout(Duration.ofSeconds(20))
                 .POST(HttpRequest.BodyPublishers.ofString(json));
-        return send(request.build(), Kvittering.class);
+        send(request.build());
     }
 
-    public Kvittering sendSøknad(Fødselsnummer fnr, EndringssøknadForeldrepengerDto søknad) {
+    public void sendSøknad(Fødselsnummer fnr, EndringssøknadForeldrepengerDto søknad) {
         var json = toJson(søknad);
         var request = requestMedInnloggetBruker(fnr)
                 .uri(fromUri(BaseUriProvider.FPSOKNAD)
@@ -56,7 +55,7 @@ public class FpsoknadKlient {
                         .build())
                 .timeout(Duration.ofSeconds(20))
                 .POST(HttpRequest.BodyPublishers.ofString(json));
-        return send(request.build(), Kvittering.class);
+        send(request.build());
     }
 
     public void mellomlagreVedlegg(Fødselsnummer fnr, SøknadDto søknad) {

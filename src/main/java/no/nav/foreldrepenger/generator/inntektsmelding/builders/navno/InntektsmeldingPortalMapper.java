@@ -39,10 +39,10 @@ public class InntektsmeldingPortalMapper {
 
     public static SendInntektsmeldingDto map(Inntektsmelding im, InntektsmeldingKlient.InntektsmeldingForespørselDto forespørsel) {
         return new SendInntektsmeldingDto(
-                forespørsel.uuid(), //  tilkommet arbeidsforhold => ikke id, eller forespørsel
+                forespørsel.uuid(),
                 forespørsel.aktørid(),
                 forespørsel.ytelsetype(),
-                null, //SendInntektsmeldingDto.ArbeidsgiverinitiertÅrsakDto.NYANSATT, // Settes bare ved tilkommet arbeidsforhold
+                null,
                 forespørsel.arbeidsgiverident(),
                 new SendInntektsmeldingDto.KontaktpersonRequestDto(im.arbeidsgiver().navn(), im.arbeidsgiver().kontaktnummer()),
                 forespørsel.startDato(),

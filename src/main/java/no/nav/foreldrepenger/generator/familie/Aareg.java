@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.generator.familie;
 
-import static no.nav.foreldrepenger.common.util.StreamUtil.safeStream;
+
+import static no.nav.foreldrepenger.autotest.util.StreamUtils.safeStream;
 
 import java.util.List;
 

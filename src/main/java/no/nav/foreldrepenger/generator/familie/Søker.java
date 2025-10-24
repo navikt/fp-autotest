@@ -15,10 +15,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.ws.rs.NotSupportedException;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.aktoerer.innsyn.Innsyn;
-import no.nav.foreldrepenger.common.domain.Søknad;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
 import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
@@ -198,12 +196,6 @@ public abstract class Søker {
         var årstall = startdato(inntektYtelseModell.sigrunModell());
         return LocalDate.now().withYear(årstall);
     }
-
-    public Søknad lagSøknad() {
-        throw new NotSupportedException();
-    }
-
-
 
     public Saksnummer søk(SøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder

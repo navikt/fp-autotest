@@ -152,10 +152,6 @@ public abstract class Arbeidsgiver {
         return innsender.sendInnInntektsmelding(inntektsmelding.build(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
     }
 
-    public Saksnummer sendInntektsmeldingUtenForespørsel(Saksnummer saksnummer, InntektsmeldingBuilder inntektsmelding) {
-        return innsender.sendInnInntektsmelding(inntektsmelding.build(), arbeidstaker.aktørId(), arbeidstaker.fødselsnummer(), saksnummer);
-    }
-
     private List<Inntektsmelding> buildInntektsmeldinger(List<InntektsmeldingBuilder> inntektsmeldingStream) {
         return inntektsmeldingStream.stream().map(InntektsmeldingBuilder::build).toList();
     }
