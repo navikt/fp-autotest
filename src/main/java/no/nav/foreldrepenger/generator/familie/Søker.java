@@ -18,21 +18,20 @@ import org.slf4j.LoggerFactory;
 import jakarta.ws.rs.NotSupportedException;
 import no.nav.foreldrepenger.autotest.aktoerer.innsender.Innsender;
 import no.nav.foreldrepenger.autotest.aktoerer.innsyn.Innsyn;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøkerDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggInnsendingType;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ettersendelse.YtelseType;
-import no.nav.foreldrepenger.common.domain.AktørId;
-import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
 import no.nav.foreldrepenger.common.domain.Søknad;
-import no.nav.foreldrepenger.common.domain.felles.DokumentType;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.InntektsmeldingBuilder;
-import no.nav.foreldrepenger.generator.soknad.builder.EndringssøknadBuilder;
-import no.nav.foreldrepenger.generator.soknad.builder.SøknadBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.SøkerDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.SøknadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.EndringssøknadBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.SøknadBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.YtelseType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.DokumentTypeId;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.Dokumenterer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.InnsendingType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.VedleggDto;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.InntektYtelseModell;
 import no.nav.vedtak.log.mdc.MDCOperations;
 
@@ -79,7 +78,7 @@ public abstract class Søker {
 
     public Arbeidsforhold arbeidsforhold() {
         guardFlereArbeidsgivere();
-        return arbeidsforholdene().get(0);
+        return arbeidsforholdene().getFirst();
     }
 
     public List<Arbeidsforhold> arbeidsforholdene() {
@@ -91,17 +90,22 @@ public abstract class Søker {
 
     public Arbeidsforhold arbeidsforhold(String orgnummer) {
         return arbeidsforholdene().stream()
-                .filter(arbeidsforhold -> orgnummer.equals(arbeidsforhold.arbeidsgiverIdentifikasjon().value()))
+                .filter(arbeidsforhold -> orgnummer.equals(arbeidsforhold.arbeidsgiverIdentifikasjon()))
                 .findFirst()
                 .orElseThrow();
     }
-    private List<Arbeidsforhold> arbeidsforholdene(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
-        return Aareg.arbeidsforholdene(inntektYtelseModell.arbeidsforholdModell(), arbeidsgiverIdentifikator);
+
+    private List<Arbeidsforhold> arbeidsforholdene(AktørId identifikator) {
+        return Aareg.arbeidsforholdene(inntektYtelseModell.arbeidsforholdModell(), identifikator);
+    }
+
+    private List<Arbeidsforhold> arbeidsforholdene(Orgnummer identifikator) {
+        return Aareg.arbeidsforholdene(inntektYtelseModell.arbeidsforholdModell(), identifikator);
     }
 
     public Arbeidsgiver arbeidsgiver(String orgnummer) {
         return arbeidsgivere().toList().stream()
-                .filter(a -> orgnummer.equals(a.arbeidsgiverIdentifikator().value()))
+                .filter(a -> orgnummer.equals(a.arbeidsgiverIdentifikator()))
                 .findFirst()
                 .orElseThrow();
     }
@@ -124,40 +128,30 @@ public abstract class Søker {
     }
 
     private boolean leggTilArbeidsforhold(ArrayList<Arbeidsgiver> arbeidsgivere, no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold arbeidsforhold) {
-        var arbeidsgiverIdentifikator = getArbeidsgiverIdentifikator(arbeidsforhold);
-        if (arbeidsgiverIdentifikator instanceof Orgnummer orgnummer) {
-            return arbeidsgivere.add(new Virksomhet(arbeidsgiverIdentifikator,
-                    new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(orgnummer)),
-                    arbeidsforholdene(arbeidsgiverIdentifikator),
-                    innsender));
-        } else if (arbeidsgiverIdentifikator instanceof AktørId) {
-            var personarbeidsgiver = arbeidsforhold.personArbeidsgiver();
-            var fnrArbeidsgiver = new Fødselsnummer(personarbeidsgiver.getIdent());
-            var aktørIdArbeidsgiver = new AktørId(personarbeidsgiver.getAktørIdent());
-            return arbeidsgivere.add(new PersonArbeidsgiver(arbeidsgiverIdentifikator,
-                    new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(fnrArbeidsgiver)),
-                    arbeidsforholdene(aktørIdArbeidsgiver),
-                    innsender, fnrArbeidsgiver));
-        }
-        return false;
-    }
-
-    private ArbeidsgiverIdentifikator getArbeidsgiverIdentifikator(no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforhold arbeidsforhold) {
         if (arbeidsforhold.arbeidsgiverOrgnr() != null) {
-            return new Orgnummer(arbeidsforhold.arbeidsgiverOrgnr());
+            var orgnummer = new Orgnummer(arbeidsforhold.arbeidsgiverOrgnr());
+            return arbeidsgivere.add(new Virksomhet(orgnummer,
+                    new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(orgnummer)),
+                    arbeidsforholdene(orgnummer),
+                    innsender));
         }
-        return new AktørId(arbeidsforhold.personArbeidsgiver().getAktørIdent());
-
+        var personarbeidsgiver = arbeidsforhold.personArbeidsgiver();
+        var fnrArbeidsgiver = new Fødselsnummer(personarbeidsgiver.getIdent());
+        var aktørIdArbeidsgiver = new AktørId(personarbeidsgiver.getAktørIdent());
+        return arbeidsgivere.add(new PersonArbeidsgiver(aktørIdArbeidsgiver,
+                new Arbeidstaker(fødselsnummer, aktørId, månedsinntekt(fnrArbeidsgiver)),
+                arbeidsforholdene(aktørIdArbeidsgiver),
+                innsender, fnrArbeidsgiver));
     }
 
     public Arbeidsgivere arbeidsgivere(String orgnummer){
         return new Arbeidsgivere(arbeidsgivere().toList().stream()
-               .filter(a -> orgnummer.equals(a.arbeidsgiverIdentifikator().value()))
+               .filter(a -> orgnummer.equals(a.arbeidsgiverIdentifikator()))
                .toList());
     }
 
     public LocalDate frilansAnnsettelsesFom() {
-        return arbeidsforholdFrilans(inntektYtelseModell.arbeidsforholdModell()).get(0)
+        return arbeidsforholdFrilans(inntektYtelseModell.arbeidsforholdModell()).getFirst()
                 .ansettelsesperiodeFom();
     }
 
@@ -166,8 +160,12 @@ public abstract class Søker {
         return Inntektskomponenten.månedsinntekt(inntektYtelseModell.inntektskomponentModell());
     }
 
-    public int månedsinntekt(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
-        return Inntektskomponenten.månedsinntekt(inntektYtelseModell.inntektskomponentModell(), arbeidsgiverIdentifikator);
+    public int månedsinntekt(String identifikator) {
+        return Inntektskomponenten.månedsinntekt(inntektYtelseModell.inntektskomponentModell(), identifikator);
+    }
+
+    public int månedsinntekt(Orgnummer orgnummer) {
+        return Inntektskomponenten.månedsinntekt(inntektYtelseModell.inntektskomponentModell(), orgnummer);
     }
 
     public int månedsinntekt(Fødselsnummer fnrArbeidsgiver) {
@@ -180,7 +178,7 @@ public abstract class Søker {
                 .map(Arbeidsforhold::stillingsprosent)
                 .mapToInt(Integer::intValue).sum();
 
-        return månedsinntekt(orgnummer) * stillingsproentAF / stillingsprosentSamlet;
+        return månedsinntekt(orgnummer.value()) * stillingsproentAF / stillingsprosentSamlet;
     }
 
     public Integer stillingsprosent(Orgnummer orgnummer, ArbeidsforholdId arbeidsforholdId) {
@@ -204,6 +202,8 @@ public abstract class Søker {
     public Søknad lagSøknad() {
         throw new NotSupportedException();
     }
+
+
 
     public Saksnummer søk(SøknadBuilder søknadBuilder) {
         var søknad = søknadBuilder
@@ -270,18 +270,17 @@ public abstract class Søker {
         innsender.sendInnKlage(aktørId, fødselsnummer, this.saksnummer);
     }
 
-    public void ettersendVedlegg(Fødselsnummer fnr, YtelseType ytelseType, DokumentType skjemanummer, VedleggDto.Dokumenterer dokumenterer) {
+    public void ettersendVedlegg(Fødselsnummer fnr, YtelseType ytelseType, DokumentTypeId skjemanummer, Dokumenterer dokumenterer) {
         LOG.info("Ettersender vedlegg {} for {} med saksnummer {} ...", skjemanummer, fnr.value(), this.saksnummer.value());
-        var vedlegg = new VedleggDto(UUID.randomUUID(), skjemanummer, VedleggInnsendingType.LASTET_OPP, null, dokumenterer);
+        var vedlegg = new VedleggDto(UUID.randomUUID(), skjemanummer, InnsendingType.LASTET_OPP, null, dokumenterer);
         innsender.ettersendVedlegg(fnr, saksnummer, ytelseType, vedlegg);
         LOG.info("Vedlegg er ettersendt.");
     }
 
     // Brukes bare i tilfelle hvor en ønsker å sende IM uten registret arbeidsforhold i Aareg!
-    // TODO: Gjøres på en annen måte?
-    public void sendIMBasertPåInntekskomponenten(InntektsmeldingBuilder inntektsmelding) {
+    public void sendIMBasertPåInntekskomponenten(InntektsmeldingBuilder inntektsmelding, LocalDate startdato) {
         genererUniktNavConsumerIdForDokument();
-        innsender.sendInnInntektsmelding(inntektsmelding.build(), aktørId, fødselsnummer, this.saksnummer);
+        innsender.sendInnInntektsmeldingUtenForespørsel(inntektsmelding.build(), startdato, aktørId, fødselsnummer, this.saksnummer, false);
     }
 
     private void guardFlereArbeidsgivere() {
@@ -316,7 +315,7 @@ public abstract class Søker {
         var hardkodetNavn = "ARBEIDSGIVERS NAVN AS";
         return new SøkerDto.Arbeidsforhold(
                 hardkodetNavn,
-                new Orgnummer(af.arbeidsgiverIdentifikasjon().value()),
+                new Orgnummer(af.arbeidsgiverIdentifikasjon()),
                 (double) af.stillingsprosent(),
                 af.ansettelsesperiodeFom(),
                 af.ansettelsesperiodeTom());

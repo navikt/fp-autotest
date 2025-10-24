@@ -3,14 +3,15 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandlin
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UttakResultatPeriodeAktivitet implements Serializable {
 
-    protected StønadskontoType stønadskontoType = null;
+    protected UttakKontoType stønadskontoType = null;
     protected BigDecimal trekkdagerDesimaler = null;
     protected BigDecimal prosentArbeid = null;
     protected BigDecimal utbetalingsgrad = null;
@@ -37,12 +38,20 @@ public class UttakResultatPeriodeAktivitet implements Serializable {
         this.trekkdagerDesimaler = trekkdagerDesimaler;
     }
 
-    public StønadskontoType getStønadskontoType() {
-        return stønadskontoType;
+    public KontoType getKontoType() {
+        if (stønadskontoType == null) {
+            return null;
+        }
+        return stønadskontoType.tilKontoType();
     }
 
-    public void setStønadskontoType(StønadskontoType stønadskontoType) {
+    public void setStønadskontoType(UttakKontoType stønadskontoType) {
         this.stønadskontoType = stønadskontoType;
+    }
+
+    @JsonIgnore
+    public void setKontotype(KontoType kontotype) {
+        this.stønadskontoType = UttakKontoType.tilUttakKontoType(kontotype);
     }
 
     public String getArbeidsgiverReferanse() {

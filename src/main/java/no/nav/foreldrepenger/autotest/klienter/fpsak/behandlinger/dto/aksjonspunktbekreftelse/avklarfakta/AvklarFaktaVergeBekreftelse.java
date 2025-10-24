@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspu
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.AksjonspunktBekreftelse;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
 
 public class AvklarFaktaVergeBekreftelse extends AksjonspunktBekreftelse {
 

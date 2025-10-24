@@ -2,12 +2,11 @@ package no.nav.foreldrepenger.generator.familie;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
 import no.nav.foreldrepenger.vtp.testmodell.inntektytelse.arbeidsforhold.Arbeidsforholdstype;
 
 public class Arbeidsforhold {
 
-    private final ArbeidsgiverIdentifikator arbeidsgiverIdentifikasjon;
+    private final String arbeidsgiverIdentifikasjon;
     private final ArbeidsforholdId arbeidsforholdId;
     private final LocalDate ansettelsesperiodeFom;
     private final LocalDate ansettelsesperiodeTom;
@@ -15,7 +14,7 @@ public class Arbeidsforhold {
     private final int stillingsprosent; // TODO Skriv stillingsprosent til egen klasse!
 
 
-    Arbeidsforhold(ArbeidsgiverIdentifikator arbeidsgiverIdentifikasjon, ArbeidsforholdId arbeidsforholdId,
+    Arbeidsforhold(String arbeidsgiverIdentifikasjon, ArbeidsforholdId arbeidsforholdId,
                    LocalDate ansettelsesperiodeFom, LocalDate ansettelsesperiodeTom,
                    Arbeidsforholdstype arbeidsforholdType, int stillingsprosent) {
         this.arbeidsgiverIdentifikasjon = arbeidsgiverIdentifikasjon;
@@ -26,7 +25,7 @@ public class Arbeidsforhold {
         this.ansettelsesperiodeTom = ansettelsesperiodeTom;
     }
 
-    public ArbeidsgiverIdentifikator arbeidsgiverIdentifikasjon() {
+    public String arbeidsgiverIdentifikasjon() {
         return arbeidsgiverIdentifikasjon;
     }
 

@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.autotest.klienter.fpsak.fagsak.dto;
 
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 import java.util.Set;
 

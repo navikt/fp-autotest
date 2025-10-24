@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import io.qameta.allure.Step;
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 import no.nav.foreldrepenger.vtp.kontrakter.TilbakekrevingKonsistensDto;
 
 public class VTPTilbakekrevingKlient {

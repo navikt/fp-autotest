@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.neovisionaries.i18n.CountryCode;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.UtenlandsoppholdsperiodeDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.UtenlandsoppholdsperiodeDto;
 
 
 public final class UtenlandsoppholdMaler {

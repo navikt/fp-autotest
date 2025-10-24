@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.Behandling;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 public class BehandlingKlientFelles implements BehandlingerKlient {
     private static final Logger LOG = LoggerFactory.getLogger(BehandlingKlientFelles.class);

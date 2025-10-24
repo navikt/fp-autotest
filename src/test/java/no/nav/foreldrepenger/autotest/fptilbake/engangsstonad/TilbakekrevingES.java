@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import com.neovisionaries.i18n.CountryCode;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType;
 import no.nav.foreldrepenger.autotest.base.FptilbakeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
@@ -26,8 +25,8 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseVilkårAksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.AvklarFaktaVergeBekreftelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.avklarfakta.VurderMedlemskapsvilkårForutgåendeBekreftelse;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.AdopsjonDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EngangsstønadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.barn.AdopsjonDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.EngangsstønadDto;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApFaktaFeilutbetaling;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVerge;
 import no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto.aksjonspunktbekrefter.ApVilkårsvurdering;
@@ -169,7 +168,7 @@ class TilbakekrevingES extends FptilbakeTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
-                .build(InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING); // Bypasser selvbetjeing + 18 års aldergrense for innsending
+                .build(); // Bypasser selvbetjeing + 18 års aldergrense for innsending
 
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();

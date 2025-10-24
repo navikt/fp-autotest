@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.common.domain.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VurderRefusjonAndelBeregningsgrunnlagDto {

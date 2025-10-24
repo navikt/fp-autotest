@@ -3,10 +3,9 @@ package no.nav.foreldrepenger.generator.familie;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 public class Arbeidsgivere {
 
@@ -22,14 +21,7 @@ public class Arbeidsgivere {
 
     public Arbeidsgiver arbeidgiver(Orgnummer orgnummer) {
         return alleArbeidsgivere.stream()
-                .filter(a -> a.arbeidsgiverIdentifikator.value().equals(orgnummer.value()))
-                .findFirst()
-                .orElseThrow();
-    }
-
-    public Arbeidsgiver arbeidsgiver(ArbeidsgiverIdentifikator arbeidsgiverIdentifikator) {
-        return alleArbeidsgivere.stream()
-                .filter(a -> a.arbeidsgiverIdentifikator().equals(arbeidsgiverIdentifikator))
+                .filter(a -> a.arbeidsgiverIdentifikator.equals(orgnummer.value()))
                 .findFirst()
                 .orElseThrow();
     }

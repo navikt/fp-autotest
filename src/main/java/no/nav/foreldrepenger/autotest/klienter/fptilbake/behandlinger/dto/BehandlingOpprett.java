@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.autotest.klienter.fptilbake.behandlinger.dto;
 
 import java.util.UUID;
 
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 public class BehandlingOpprett {
     protected Saksnummer saksnummer;

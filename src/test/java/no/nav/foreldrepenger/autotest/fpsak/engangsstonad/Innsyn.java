@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadFødsel;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.InnsynResultatType;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.ForeslåVedtakBekreftelse;
@@ -26,7 +25,7 @@ import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
-class Innsyn extends FpsakTestBase {
+class Innsyn extends VerdikjedeTestBase {
 
     @Test
     @DisplayName("Behandle innsyn for mor - godkjent")
@@ -39,7 +38,7 @@ class Innsyn extends FpsakTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(
@@ -85,7 +84,7 @@ class Innsyn extends FpsakTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusMonths(1))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var søknad = lagEngangstønadFødsel(

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.fpsak.engangsstonad;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.mor;
 import static no.nav.foreldrepenger.generator.soknad.maler.SøknadEngangsstønadMaler.lagEngangstønadAdopsjon;
@@ -14,7 +13,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Avslagsårsak;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.BehandlingResultatType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.OmsorgsovertakelseVilkårType;
@@ -23,17 +22,17 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspun
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.aksjonspunktbekreftelse.VurderOmsorgsovertakelseVilkårAksjonspunktDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.VilkarTypeKoder;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.AdopsjonDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EngangsstønadDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.EngangsstønadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.SøknadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.barn.AdopsjonDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.ArenaSakerDto;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fpsak")
 @Tag("engangsstonad")
-class Adopsjon extends FpsakTestBase {
+class Adopsjon extends VerdikjedeTestBase {
 
     @Test
     @DisplayName("Mor søker adopsjon - godkjent")
@@ -50,7 +49,7 @@ class Adopsjon extends FpsakTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
 
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
@@ -89,7 +88,7 @@ class Adopsjon extends FpsakTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
@@ -130,7 +129,7 @@ class Adopsjon extends FpsakTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);
@@ -178,7 +177,7 @@ class Adopsjon extends FpsakTestBase {
                         .build())
                 .forelder(mor().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
 
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
@@ -215,7 +214,7 @@ class Adopsjon extends FpsakTestBase {
                         .build())
                 .forelder(mor().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var far = familie.far();
         var omsorgsovertakelsedato = LocalDate.now().plusMonths(1);
         var søknad = lagEngangstønadAdopsjon(omsorgsovertakelsedato, false);

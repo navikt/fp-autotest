@@ -12,18 +12,18 @@ import java.util.List;
 
 import no.nav.foreldrepenger.autotest.klienter.BaseUriProvider;
 import no.nav.foreldrepenger.autotest.klienter.MultipartBodyPublisher;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EndringssøknadForeldrepengerDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.EngangsstønadDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ForeldrepengesøknadDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SvangerskapspengesøknadDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.VedleggInnsendingType;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ettersendelse.EttersendelseDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ettersendelse.YtelseType;
-import no.nav.foreldrepenger.common.domain.Fødselsnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.EndringssøknadForeldrepengerDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.EngangsstønadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.ForeldrepengesøknadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.SvangerskapspengesøknadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.SøknadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.VedleggDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.vedlegg.InnsendingType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.EttersendelseDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.ettersendelse.YtelseType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Fødselsnummer;
 import no.nav.foreldrepenger.common.domain.Kvittering;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 public class FpsoknadKlient {
 
@@ -65,7 +65,7 @@ public class FpsoknadKlient {
 
     public void mellomlagreVedlegg(Fødselsnummer fnr, YtelseType ytelseType, List<VedleggDto> vedleggene) {
         for (var vedlegg : vedleggene) {
-            if (vedlegg.innsendingsType().equals(VedleggInnsendingType.LASTET_OPP)) {
+            if (vedlegg.innsendingsType().equals(InnsendingType.LASTET_OPP)) {
                 var multipartBody = new MultipartBodyPublisher();
                 multipartBody.addFile("vedlegg", "dummy.pdf");
                 var request = requestMedInnloggetBruker(fnr)
@@ -82,7 +82,7 @@ public class FpsoknadKlient {
     }
 
     private static YtelseType tilYtelseType(SøknadDto innsending) {
-        if (innsending instanceof no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto søknadDto) {
+        if (innsending instanceof no.nav.foreldrepenger.kontrakter.fpsoknad.SøknadDto søknadDto) {
             if (søknadDto instanceof ForeldrepengesøknadDto) return YtelseType.FORELDREPENGER;
             if (søknadDto instanceof SvangerskapspengesøknadDto) return YtelseType.SVANGERSKAPSPENGER;
             if (søknadDto instanceof EngangsstønadDto) return YtelseType.ENGANGSSTØNAD;

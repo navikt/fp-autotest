@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.Saksbehandler
 import no.nav.foreldrepenger.autotest.klienter.vtp.tilbakekreving.VTPTilbakekrevingKlient;
 import no.nav.foreldrepenger.autotest.util.vent.Lazy;
 import no.nav.foreldrepenger.autotest.util.vent.Vent;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskOpprettInputDto;
 import org.slf4j.Logger;

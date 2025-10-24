@@ -12,9 +12,10 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record SendInntektsmeldingDto(@NotNull @Valid UUID foresporselUuid,
+public record SendInntektsmeldingDto(@Valid UUID foresporselUuid,
                                      @NotNull @Valid AktørIdDto aktorId,
                                      @NotNull @Valid YtelseType ytelse,
+                                     @Valid ArbeidsgiverinitiertÅrsakDto arbeidsgiverinitiertÅrsak,
                                      @NotNull @Valid ArbeidsgiverDto arbeidsgiverIdent,
                                      @NotNull @Valid KontaktpersonRequestDto kontaktperson,
                                      @NotNull LocalDate startdato,
@@ -22,6 +23,11 @@ public record SendInntektsmeldingDto(@NotNull @Valid UUID foresporselUuid,
                                      @NotNull List<@Valid Refusjon> refusjon,
                                      @NotNull List<@Valid BortfaltNaturalytelseRequestDto> bortfaltNaturalytelsePerioder,
                                      @NotNull List<@Valid EndringsårsakerRequestDto> endringAvInntektÅrsaker) {
+
+    public enum ArbeidsgiverinitiertÅrsakDto {
+        NYANSATT,
+        UREGISTRERT,
+    }
 
     public record Refusjon(@NotNull LocalDate fom,
                            @NotNull @Min(0) @Max(Integer.MAX_VALUE) @Digits(integer = 20, fraction = 2) BigDecimal beløp) {

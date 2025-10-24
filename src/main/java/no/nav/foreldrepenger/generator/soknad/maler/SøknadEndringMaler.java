@@ -3,13 +3,13 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.ForeldrepengesøknadDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.SøknadDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.foreldrepenger.uttaksplan.UttaksplanDto;
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.foreldrepenger.uttaksplan.Uttaksplanperiode;
-import no.nav.foreldrepenger.common.domain.Saksnummer;
-import no.nav.foreldrepenger.common.oppslag.dkif.Målform;
-import no.nav.foreldrepenger.generator.soknad.builder.EndringssøknadBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.ForeldrepengesøknadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Målform;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.SøknadDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.EndringssøknadBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UttaksplanDto;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Uttaksplanperiode;
 
 public class SøknadEndringMaler {
 
@@ -22,7 +22,7 @@ public class SøknadEndringMaler {
         return new EndringssøknadBuilder(saksnummer)
                 .medSpråkkode(Målform.NB)
                 .medSøkerinfo(søknadDto.søkerinfo())
-                .medRolle(søknadDto.rolle())
+                .medRolle(foreldrepengesøknadFS.rolle())
                 .medAnnenForelder(foreldrepengesøknadFS.annenForelder())
                 .medBarn(søknadDto.barn())
                 .medUttaksplan(uttaksplanDto);

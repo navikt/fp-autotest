@@ -7,14 +7,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.foreldrepenger.uttaksplan.Uttaksplanperiode;
-import no.nav.foreldrepenger.common.domain.ArbeidsgiverIdentifikator;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.MorsAktivitet;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Oppholdsårsak;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.Overføringsårsak;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.UtsettelsesÅrsak;
-import no.nav.foreldrepenger.generator.soknad.builder.UttakplanPeriodeBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.UttakplanPeriodeBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.MorsAktivitet;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Oppholdsårsak;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Overføringsårsak;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.UtsettelsesÅrsak;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.Uttaksplanperiode;
 
 
 public final class UttaksperioderMaler {
@@ -22,24 +21,24 @@ public final class UttaksperioderMaler {
     private UttaksperioderMaler() {
     }
 
-    public static Uttaksplanperiode uttaksperiode(StønadskontoType stønadskontoType, LocalDate fom, LocalDate tom) {
+    public static Uttaksplanperiode uttaksperiode(KontoType stønadskontoType, LocalDate fom, LocalDate tom) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.uttak(stønadskontoType, periode.fom, periode.tom).build();
     }
 
-    public static Uttaksplanperiode uttaksperiode(StønadskontoType stønadskonto, LocalDate fom, LocalDate tom, MorsAktivitet morsAktivitet) {
+    public static Uttaksplanperiode uttaksperiode(KontoType stønadskonto, LocalDate fom, LocalDate tom, MorsAktivitet morsAktivitet) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.uttak(stønadskonto, periode.fom, periode.tom)
                 .medMorsAktivitetIPerioden(morsAktivitet)
                 .build();
     }
 
-    public static Uttaksplanperiode uttaksperiode(StønadskontoType stønadskontoType, LocalDate fom, LocalDate tom,
+    public static Uttaksplanperiode uttaksperiode(KontoType stønadskontoType, LocalDate fom, LocalDate tom,
                                               UttaksperiodeType... uttaksperiodeTyper) {
         return uttaksperiode(stønadskontoType, fom, tom, 100, uttaksperiodeTyper);
     }
 
-    public static Uttaksplanperiode uttaksperiode(StønadskontoType stønadskontoType, LocalDate fom, LocalDate tom,
+    public static Uttaksplanperiode uttaksperiode(KontoType stønadskontoType, LocalDate fom, LocalDate tom,
                                               int uttaksprosent, UttaksperiodeType... uttaksperiodeTyper) {
         var periode = justerPeriodeHelg(fom, tom);
         var periodetype = Set.of(uttaksperiodeTyper);
@@ -50,29 +49,29 @@ public final class UttaksperioderMaler {
                 .build();
     }
 
-    public static Uttaksplanperiode graderingsperiodeArbeidstaker(StønadskontoType stønadskontoType,
+    public static Uttaksplanperiode graderingsperiodeArbeidstaker(KontoType stønadskontoType,
                                                                      LocalDate fom,
                                                                      LocalDate tom,
-                                                                     ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
+                                                                     String arbeidsgiverIdentifikator,
                                                                      Integer arbeidstidsprosentIOrgnr) {
         return graderingsperiodeArbeidstaker(stønadskontoType, fom, tom, arbeidsgiverIdentifikator, arbeidstidsprosentIOrgnr,
                 null);
     }
 
-    public static Uttaksplanperiode graderingsperiodeArbeidstaker(StønadskontoType stønadskontoType,
+    public static Uttaksplanperiode graderingsperiodeArbeidstaker(KontoType stønadskontoType,
                                                                      LocalDate fom, LocalDate tom,
-                                                                     ArbeidsgiverIdentifikator arbeidsgiverIdentifikator,
+                                                                  String arbeidsgiverIdentifikator,
                                                                      Integer arbeidstidsprosentIOrgnr,
                                                                      MorsAktivitet morsAktivitet) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.gradert(stønadskontoType, periode.fom, periode.tom, Double.valueOf(arbeidstidsprosentIOrgnr))
                 .medErArbeidstaker(true)
-                .medOrgnumre(List.of(arbeidsgiverIdentifikator.value()))
+                .medOrgnumre(List.of(arbeidsgiverIdentifikator))
                 .medMorsAktivitetIPerioden(morsAktivitet)
                 .build();
     }
 
-    public static Uttaksplanperiode graderingsperiodeFL(StønadskontoType stønadskontoType,
+    public static Uttaksplanperiode graderingsperiodeFL(KontoType stønadskontoType,
                                                            LocalDate fom, LocalDate tom,
                                                            Integer arbeidstidsprosent) {
         var periode = justerPeriodeHelg(fom, tom);
@@ -81,7 +80,7 @@ public final class UttaksperioderMaler {
                 .build();
     }
 
-    public static Uttaksplanperiode graderingsperiodeSN(StønadskontoType stønadskontoType,
+    public static Uttaksplanperiode graderingsperiodeSN(KontoType stønadskontoType,
                                                            LocalDate fom, LocalDate tom,
                                                            Integer arbeidstidsprosent) {
         var periode = justerPeriodeHelg(fom, tom);
@@ -108,7 +107,7 @@ public final class UttaksperioderMaler {
     }
 
     public static Uttaksplanperiode overføringsperiode(Overføringsårsak overføringÅrsak,
-                                                        StønadskontoType stønadskontoType,
+                                                       KontoType stønadskontoType,
                                                         LocalDate fom, LocalDate tom) {
         var periode = justerPeriodeHelg(fom, tom);
         return UttakplanPeriodeBuilder.overføring(overføringÅrsak, stønadskontoType, periode.fom, periode.tom)

@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.autotest.util;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.FpsoknadKlient;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import no.nav.foreldrepenger.autotest.klienter.fpsoknad.FpsoknadKlient;
 
 public final class ReadFileFromClassPathHelper {
     private ReadFileFromClassPathHelper() {

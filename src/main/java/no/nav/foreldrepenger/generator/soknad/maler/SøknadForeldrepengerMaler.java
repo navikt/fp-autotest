@@ -2,10 +2,10 @@ package no.nav.foreldrepenger.generator.soknad.maler;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.autotest.klienter.fpsoknad.kontrakt.foreldrepenger.Dekningsgrad;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.generator.soknad.builder.BarnBuilder;
-import no.nav.foreldrepenger.generator.soknad.builder.ForeldrepengerBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.BarnBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.ForeldrepengerBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.Dekningsgrad;
 
 public final class SøknadForeldrepengerMaler {
 

@@ -77,12 +77,10 @@ jobs:
         id: setup
         shell: bash
         run: |
-          if [[ ${{ inputs.test-suite }} == 'fpsak' ]]; then
-            services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fpabakus" "fptilbake" "fprisk" "fpkalkulus")
-          elif [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
+          if [[ ${{ inputs.test-suite }} == 'fpkalkulus' ]]; then
             services=("fpkalkulus")
           elif [[ ${{ inputs.test-suite }} == 'fplos' ]]; then
-            services=("fplos")
+            services=("fplos" "fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
           else
             services=("fpsak" "fpformidling" "fpdokgen" "fpoppdrag" "fptilbake" "fprisk" "fpabonnent" "fpfordel" "fpsoknad" "fpoversikt" "fpkalkulus" "fpinntektsmelding")
           fi

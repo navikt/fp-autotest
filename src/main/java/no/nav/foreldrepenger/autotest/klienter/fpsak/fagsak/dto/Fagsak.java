@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.common.domain.Saksnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Saksnummer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Fagsak(Saksnummer saksnummer, FagsakStatus status, LocalDate barnFodt) {

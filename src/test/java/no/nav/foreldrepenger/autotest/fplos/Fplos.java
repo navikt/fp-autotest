@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.autotest.fplos;
 
-import static no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType.SEND_DOKUMENTER_UTEN_SELVBETJENING;
 import static no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.AksjonspunktKoder.VURDER_ARBEIDSFORHOLD_INNTEKTSMELDING;
 import static no.nav.foreldrepenger.autotest.util.AllureHelper.debugLoggBehandling;
 import static no.nav.foreldrepenger.generator.familie.generator.PersonGenerator.far;
@@ -22,7 +21,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import io.qameta.allure.Description;
-import no.nav.foreldrepenger.autotest.base.FpsakTestBase;
+import no.nav.foreldrepenger.autotest.base.VerdikjedeTestBase;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.ArbeidsforholdKomplettVurderingType;
 import no.nav.foreldrepenger.autotest.domain.foreldrepenger.Inntektskategori;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.BehandlingIdVersjonDto;
@@ -41,21 +40,21 @@ import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.arbeidInntektsmelding.ManueltArbeidsforholdDto;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.behandlinger.dto.behandling.beregning.ArbeidstakerandelUtenIMMottarYtelse;
 import no.nav.foreldrepenger.autotest.klienter.fpsak.historikk.dto.HistorikkType;
-import no.nav.foreldrepenger.common.domain.BrukerRolle;
-import no.nav.foreldrepenger.common.domain.Orgnummer;
-import no.nav.foreldrepenger.common.domain.foreldrepenger.fordeling.StønadskontoType;
 import no.nav.foreldrepenger.generator.familie.generator.FamilieGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.InntektYtelseGenerator;
 import no.nav.foreldrepenger.generator.familie.generator.TestOrganisasjoner;
 import no.nav.foreldrepenger.generator.inntektsmelding.builders.Prosent;
-import no.nav.foreldrepenger.generator.soknad.builder.TilretteleggingBehovBuilder;
 import no.nav.foreldrepenger.generator.soknad.maler.AnnenforelderMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.ArbeidsforholdMaler;
 import no.nav.foreldrepenger.generator.soknad.maler.OpptjeningMaler;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.BrukerRolle;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.Orgnummer;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.builder.TilretteleggingBehovBuilder;
+import no.nav.foreldrepenger.kontrakter.fpsoknad.foreldrepenger.uttaksplan.KontoType;
 import no.nav.foreldrepenger.vtp.kontrakter.v2.FamilierelasjonModellDto;
 
 @Tag("fplos")
-class Fplos extends FpsakTestBase {
+class Fplos extends VerdikjedeTestBase {
 
     @Test
     @DisplayName("Saksmarkering i fpsak gir oppgaveegenskap i LOS")
@@ -67,20 +66,21 @@ class Fplos extends FpsakTestBase {
                         .build())
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
 
         var mor = familie.mor();
         var termindato = LocalDate.now().plusWeeks(6);
         var arbeidsforholdene = mor.arbeidsforholdene();
         var arbeidsforhold1 = arbeidsforholdene.getFirst().arbeidsgiverIdentifikasjon();
 
-        var forsteTilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet((Orgnummer) arbeidsforhold1), termindato.minusMonths(3))
+        var forsteTilrettelegging = new TilretteleggingBehovBuilder(ArbeidsforholdMaler.virksomhet(new Orgnummer(arbeidsforhold1)), termindato.minusMonths(3))
                 .delvis(termindato.minusMonths(3), 50.0)
                 .build();
         var søknad = lagSvangerskapspengerSøknad(termindato, List.of(forsteTilrettelegging));
         var saksnummerSVP = mor.søk(søknad);
 
         var arbeidsgivere = mor.arbeidsgivere();
+        ventPåInntektsmeldingForespørsel(saksnummerSVP);
         arbeidsgivere.sendDefaultInnteksmeldingerSVP(saksnummerSVP);
 
         saksbehandler.hentFagsak(saksnummerSVP);
@@ -115,15 +115,16 @@ class Fplos extends FpsakTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now().minusDays(2))
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var fpStartdato = fødselsdato.minusWeeks(3);
-        var opptjening = OpptjeningMaler.egenNaeringOpptjening(mor.arbeidsforhold().arbeidsgiverIdentifikasjon().value(),
+        var opptjening = OpptjeningMaler.egenNaeringOpptjening(mor.arbeidsforhold().arbeidsgiverIdentifikasjon(),
                 mor.næringStartdato(), LocalDate.now(), false, 30_000, false);
-        var fordeling = fordeling(uttaksperiode(StønadskontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
-                uttaksperiode(StønadskontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
-                graderingsperiodeSN(StønadskontoType.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
+        var fordeling = fordeling(
+                uttaksperiode(KontoType.FORELDREPENGER_FØR_FØDSEL, fpStartdato, fødselsdato.minusDays(1)),
+                uttaksperiode(KontoType.MØDREKVOTE, fødselsdato, fødselsdato.plusWeeks(6).minusDays(1)),
+                graderingsperiodeSN(KontoType.FELLESPERIODE, fødselsdato.plusWeeks(6), fødselsdato.plusWeeks(10).minusDays(1),
                         50));
         var søknad = lagSøknadForeldrepengerTerminFødsel(fødselsdato, BrukerRolle.MOR)
                 .medSelvstendigNæringsdrivendeInformasjon(opptjening)
@@ -133,6 +134,7 @@ class Fplos extends FpsakTestBase {
 
         var arbeidsgiver = mor.arbeidsgiver();
         var inntektsmelding = arbeidsgiver.lagInntektsmeldingFP(fpStartdato).medRefusjonBeløpPerMnd(Prosent.valueOf(100));
+        ventPåInntektsmeldingForespørsel(saksnummer);
         arbeidsgiver.sendInntektsmelding(saksnummer, inntektsmelding);
 
         saksbehandler.hentFagsak(saksnummer);
@@ -177,7 +179,7 @@ class Fplos extends FpsakTestBase {
                 .forelder(far().build())
                 .relasjonForeldre(FamilierelasjonModellDto.Relasjon.EKTE)
                 .barn(LocalDate.now())
-                .build(SEND_DOKUMENTER_UTEN_SELVBETJENING);
+                .build();
         var mor = familie.mor();
         var fødselsdato = familie.barn().fødselsdato();
         var termindato = fødselsdato.plusDays(2);

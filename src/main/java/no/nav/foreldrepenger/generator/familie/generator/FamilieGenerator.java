@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.autotest.aktoerer.innsender.InnsenderType;
 import no.nav.foreldrepenger.autotest.klienter.vtp.sikkerhet.azure.SaksbehandlerRolle;
 import no.nav.foreldrepenger.autotest.klienter.vtp.testscenario.TestscenarioKlient;
 import no.nav.foreldrepenger.autotest.util.log.LoggFormater;
@@ -116,9 +115,6 @@ public class FamilieGenerator {
     }
 
     public Familie build() {
-        return build(InnsenderType.SEND_DOKUMENTER_MED_SELVBETJENING);
-    }
-    public Familie build(InnsenderType innsenderType) {
         MDCOperations.putCallId();
         LOG.info("Testcase: {}", LoggFormater.navnPåTestCaseSomKjører());
         guardMinstEnPart();
@@ -136,7 +132,7 @@ public class FamilieGenerator {
                 .collect(Collectors.toSet());
         privateArbeidsgiver.forEach(p -> parter.add(privatArbeidsgiver(p)));
         var testscenarioDto = TESTSCENARIO_JERSEY_KLIENT.opprettTestscenario(parter);
-        return new Familie(testscenarioDto, innsenderType, saksbehandlerRolle);
+        return new Familie(testscenarioDto, saksbehandlerRolle);
     }
 
     private void guardForeldresammensetning() {
